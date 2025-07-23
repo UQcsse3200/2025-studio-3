@@ -8,5 +8,5 @@ You are welcome to use the game engine for your own purposes. It is released und
 
 ## Documentation and Reports
 
-- [JavaDoc](https://uqdeco2800.github.io/game-engine/)
-- [SonarCloud](https://sonarcloud.io/project/overview?id=UQdeco2800_game-engine)
+- [JavaDoc](https://uqcsse3200.github.io/2025-studio-3/)
+- [SonarCloud](https://sonarcloud.io/project/overview?id=UQcsse3200_2025-studio-3)
