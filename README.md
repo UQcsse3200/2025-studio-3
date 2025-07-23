@@ -1,4 +1,4 @@
-# UQ Game Engine
+# UQ 2025 Studio 3
 
 ## Description
 
