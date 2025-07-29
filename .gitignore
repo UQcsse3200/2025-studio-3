@@ -1,4 +1,7 @@
 .idea/
 
+# Big thanks to mac for adding these
+.DS_Store
+
 ### Gradle ###
 .gradle/
