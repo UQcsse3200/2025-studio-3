@@ -79,31 +79,31 @@
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
-      <recent name="com.deco2800.game.files" />
-      <recent name="com.deco2800.game.components.tasks" />
-      <recent name="com.deco2800.game.rendering" />
-      <recent name="com.deco2800.game.utils" />
-      <recent name="com.deco2800.game.concurrency" />
+      <recent name="com.csse3200.game.files" />
+      <recent name="com.csse3200.game.components.tasks" />
+      <recent name="com.csse3200.game.rendering" />
+      <recent name="com.csse3200.game.utils" />
+      <recent name="com.csse3200.game.concurrency" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.deco2800.game.events.listeners" />
-      <recent name="com.deco2800.game.events" />
+      <recent name="com.csse3200.game.events.listeners" />
+      <recent name="com.csse3200.game.events" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\assets" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\src\com\deco2800\game\physics" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\src\com\deco2800\game\rendering" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\src\com\deco2800\game" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\assets" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\src\com\csse3200\game\physics" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\src\com\csse3200\game\rendering" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\src\com\csse3200\game" />
     </key>
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\assets\flat-earth\skin\fonts" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\assets\flat-earth\skin" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\assets\flat-earth" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core\assets" />
-      <recent name="C:\Coding\Repos\deco2800-engine\Source\core" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\assets\flat-earth\skin\fonts" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\assets\flat-earth\skin" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\assets\flat-earth" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core\assets" />
+      <recent name="C:\Coding\Repos\csse3200-engine\Source\core" />
     </key>
   </component>
   <component name="RunManager" selected="Gradle.Generate Javadoc">
@@ -327,7 +327,7 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/core/src/test/com/deco2800/game/physics/PhysicsTestUtils.java</url>
+          <url>file://$PROJECT_DIR$/core/src/test/com/csse3200/game/physics/PhysicsTestUtils.java</url>
           <line>15</line>
           <option name="timeStamp" value="2" />
         </line-breakpoint>

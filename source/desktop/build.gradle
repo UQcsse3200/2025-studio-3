@@ -4,7 +4,7 @@ OperatingSystem os = OperatingSystem.current()
 sourceSets.main.java.srcDirs = [ "src/" ]
 sourceSets.main.resources.srcDirs = ["../core/assets"]
 
-project.ext.mainClassName = "com.deco2800.game.desktop.DesktopLauncher"
+project.ext.mainClassName = "com.csse3200.game.desktop.DesktopLauncher"
 project.ext.assetsDir = new File("../core/assets")
 
 task run(dependsOn: classes, type: JavaExec) {
