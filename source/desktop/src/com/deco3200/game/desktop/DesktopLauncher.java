@@ -1,8 +1,8 @@
-package com.deco2800.game.desktop;
+package com.csse3200.game.desktop;
 
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-import com.deco2800.game.GdxGame;
+import com.csse3200.game.GdxGame;
 
 /** This is the launch class for the desktop game. Passes control to libGDX to run GdxGame(). */
 public class DesktopLauncher {
