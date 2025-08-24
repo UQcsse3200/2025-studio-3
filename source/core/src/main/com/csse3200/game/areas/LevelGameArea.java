@@ -1,6 +1,9 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -12,7 +15,7 @@ public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
             "images/box_boy_leaf.png",
-            "images/level-1-map.png",
+            "images/level-1-map-v1.png",
             "images/ghost_king.png",
             "images/ghost_1.png"
     };
@@ -25,6 +28,16 @@ public class LevelGameArea extends GameArea{
     private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
     private static final String[] levelMusic = {backgroundMusic};
 
+    private final TerrainFactory terrainFactory;
+
+    /**
+     * Initialise this LevelGameArea to use the provided TerrainFactory.
+     * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
+     */
+    public LevelGameArea(TerrainFactory terrainFactory) {
+        super();
+        this.terrainFactory = terrainFactory;
+    }
 
     @Override
     public void create() {
@@ -58,9 +71,27 @@ public class LevelGameArea extends GameArea{
     }
 
     private void spawnMap() {
+        logger.debug("Spawning level one map");
 
+        // Create the background terrain (single image map)
+        terrain = terrainFactory.createTerrain(TerrainType.LEVEL_ONE_MAP);
 
+        // Wrap in an entity
+        Entity mapEntity = new Entity().addComponent(terrain);
+
+        // Compute world size
+        float tileWidth = terrain.getTileSize();
+        float tileHeight = terrain.getTileSize();
+        GridPoint2 bounds = terrain.getMapBounds(0);
+
+        float worldWidth = bounds.x * tileWidth;
+        float worldHeight = bounds.y * tileHeight;
+
+        mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
+
+        spawnEntity(mapEntity);
     }
+
 
     private void playMusic() {
         Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
