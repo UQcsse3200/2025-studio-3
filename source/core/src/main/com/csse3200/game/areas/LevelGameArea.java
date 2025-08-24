@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LevelGameArea extends GameArea{
-    private static final Logger logger = LoggerFactory.getLogger(LevelOneGameArea.class);
+    private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
             "images/box_boy_leaf.png",
             "images/level-1-map.png",
