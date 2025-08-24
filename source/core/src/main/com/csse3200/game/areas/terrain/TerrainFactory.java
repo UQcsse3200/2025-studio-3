@@ -80,10 +80,37 @@ public class TerrainFactory {
         TextureRegion hexRocks =
             new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
         return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
+      case LEVEL_ONE_MAP:
+      TextureRegion levelMap =
+            new TextureRegion(resourceService.getAsset("images/level-1-map-v1.png", Texture.class));
+        return createLevelMap(levelMap);
       default:
         return null;
     }
   }
+
+  private TerrainComponent createLevelMap(TextureRegion levelMap) {
+    // Scale based on height so image fills viewport vertically
+    float worldHeight = camera.viewportHeight;
+    float scale = worldHeight / levelMap.getRegionHeight();
+    float worldWidth = levelMap.getRegionWidth() * scale;
+
+    // Create fake tiled map with one cell
+    TiledMap tiledMap = new TiledMap();
+    TerrainTile mapTile = new TerrainTile(levelMap);
+
+    TiledMapTileLayer layer = new TiledMapTileLayer(1, 1, (int) worldWidth, (int) worldHeight);
+    Cell cell = new Cell();
+    cell.setTile(mapTile);
+    layer.setCell(0, 0, cell);
+
+    tiledMap.getLayers().add(layer);
+
+    TiledMapRenderer renderer = createRenderer(tiledMap, scale);
+
+    return new TerrainComponent(camera, tiledMap, renderer, orientation, worldWidth);
+  }
+
 
   private TerrainComponent createForestDemoTerrain(
       float tileWorldSize, TextureRegion grass, TextureRegion grassTuft, TextureRegion rocks) {
@@ -155,6 +182,7 @@ public class TerrainFactory {
   public enum TerrainType {
     FOREST_DEMO,
     FOREST_DEMO_ISO,
-    FOREST_DEMO_HEX
+    FOREST_DEMO_HEX,
+    LEVEL_ONE_MAP
   }
 }
