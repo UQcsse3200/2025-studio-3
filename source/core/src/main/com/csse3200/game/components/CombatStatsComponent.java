@@ -43,11 +43,7 @@ public class CombatStatsComponent extends Component {
    * @param health health
    */
   public void setHealth(int health) {
-    if (health >= 0) {
-      this.health = health;
-    } else {
-      this.health = 0;
-    }
+    this.health = health;
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
     }

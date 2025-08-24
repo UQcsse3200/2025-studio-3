@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.services.GameTime;
@@ -42,7 +43,18 @@ public class AnimationRenderComponent extends RenderComponent {
   private String currentAnimationName;
   private float animationPlayTime;
 
-  /**
+  private final Color tint = new Color(Color.WHITE);
+
+  public AnimationRenderComponent setTint(Color c) {
+      this.tint.set(c);
+      return this;
+  }
+
+  public Color getTint() {
+      return tint;
+  }
+
+    /**
    * Create the component for a given texture atlas.
    * @param atlas libGDX-supported texture atlas containing desired animations
    */
@@ -91,8 +103,27 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /** Scale the entity to a width of 1 and a height matching the texture's ratio */
   public void scaleEntity() {
-    TextureRegion defaultTexture = this.atlas.findRegion("default");
-    entity.setScale(1f, (float) defaultTexture.getRegionHeight() / defaultTexture.getRegionWidth());
+      TextureRegion tex = this.atlas.findRegion("default");
+
+      if (tex == null) {
+          // Prefer any added animation's first frame
+          if (!animations.isEmpty()) {
+              Animation<TextureRegion> anyAnim = animations.values().iterator().next();
+              tex = anyAnim.getKeyFrame(0f);
+          } else {
+              // Fall back to the atlas' first region
+              Array<TextureAtlas.AtlasRegion> regs = atlas.getRegions();
+              if (regs != null && regs.size > 0) {
+                  tex = regs.first();
+              }
+          }
+      }
+
+      if (tex != null) {
+          entity.setScale(1f, (float) tex.getRegionHeight() / tex.getRegionWidth());
+      } else {
+          logger.warn("No texture regions found to scale entity; leaving default scale.");
+      }
   }
 
   /**
@@ -173,7 +204,12 @@ public class AnimationRenderComponent extends RenderComponent {
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
+
+    Color old = batch.getColor();
+    batch.setColor(tint);
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
+    batch.setColor(old);
+
     animationPlayTime += timeSource.getDeltaTime();
   }
 
