@@ -44,7 +44,7 @@ public class WanderTask extends DefaultTask implements PriorityTask {
 
     waitTask = new WaitTask(waitTime);
     waitTask.create(owner);
-    movementTask = new MovementTask(new Vector2(0, startPos.y));
+    movementTask = new MovementTask(new Vector2(0, startPos.y)); //entity move left
     movementTask.create(owner);
 
     movementTask.start();
@@ -55,6 +55,7 @@ public class WanderTask extends DefaultTask implements PriorityTask {
 
   @Override
   public void update() {
+    // do nothing
 
   }
 
