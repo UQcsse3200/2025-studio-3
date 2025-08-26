@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.services.GameTime;
@@ -89,6 +90,16 @@ public class AnimationRenderComponent extends RenderComponent {
     return true;
   }
 
+  private final Color tint = new Color(Color.WHITE);
+
+  public AnimationRenderComponent setTint(Color c) {
+      this.tint.set(c);
+      return this;
+  }
+  public Color getTint() {
+      return tint;
+  }
+
   /** Scale the entity to a width of 1 and a height matching the texture's ratio */
   public void scaleEntity() {
     TextureRegion defaultTexture = this.atlas.findRegion("default");
@@ -165,7 +176,7 @@ public class AnimationRenderComponent extends RenderComponent {
     return currentAnimation != null && currentAnimation.isAnimationFinished(animationPlayTime);
   }
 
-  @Override
+    @Override
   protected void draw(SpriteBatch batch) {
     if (currentAnimation == null) {
       return;
@@ -173,7 +184,11 @@ public class AnimationRenderComponent extends RenderComponent {
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
+
+    Color prev = new Color(batch.getColor());
+    batch.setColor(tint);
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
+    batch.setColor(prev);
     animationPlayTime += timeSource.getDeltaTime();
   }
 

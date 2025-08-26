@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -61,6 +62,28 @@ public class NPCFactory {
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
     return ghost;
+  }
+
+  public static Entity createRobot(Entity target) {
+      Entity robot = createBaseNPC(target);
+      BaseEntityConfig config = configs.robot;
+
+      AnimationRenderComponent animator =
+              new AnimationRenderComponent(
+                      ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
+      animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
+      animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // cyan tint to show distinction
+
+      robot
+              .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+              .addComponent(animator)
+              .addComponent(new GhostAnimationController());
+
+      robot.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+      return robot;
   }
 
   /**
