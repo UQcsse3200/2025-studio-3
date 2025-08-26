@@ -71,8 +71,9 @@ public class NPCFactory {
       AnimationRenderComponent animator =
               new AnimationRenderComponent(
                       ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
-      animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
       animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+      animator.startAnimation("float");
 
       animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // cyan tint to show distinction
 
@@ -125,11 +126,11 @@ public class NPCFactory {
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
-            .addComponent(new PhysicsMovementComponent())
+            // .addComponent(new PhysicsMovementComponent()) //commented out to have static robots
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-            .addComponent(aiComponent);
+            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f));
+            //.addComponent(aiComponent); //commented out to have static robots
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;

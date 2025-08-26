@@ -146,7 +146,7 @@ public class ForestGameArea extends GameArea {
       GridPoint2 minPos = new GridPoint2(0, 0);
       GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-      for (int i = 0; i < NUM_GHOSTS; i++) {
+      for (int i = 0; i < NUM_ROBOTS; i++) {
           GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
           Entity robot = NPCFactory.createRobot(player);
           spawnEntityAt(robot, randomPos, true, true);

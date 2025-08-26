@@ -5,9 +5,11 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +48,8 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+
+        spawnRobot(18.5f, 8f);
 
         playMusic();
     }
@@ -115,6 +119,22 @@ public class LevelGameArea extends GameArea{
         ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
         this.unloadAssets();
     }
-}
 
+    private void spawnRobot(float x, float y) {
+        Entity robot = NPCFactory.createRobot(null);
+        spawnEntity(robot);
+
+        robot.getComponent(AnimationRenderComponent.class).scaleEntity();
+        robot.setScale(robot.getScale().x * 1.5f, robot.getScale().y * 1.5f);
+
+        robot.setPosition(x, y);
+    }
+
+    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
+        for (int i = 0; i < count; i++) {
+            float y = startY - i * spacing;
+            spawnRobot(startX, y);
+        }
+    }
+}
 
