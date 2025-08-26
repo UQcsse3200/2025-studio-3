@@ -10,7 +10,7 @@ public class Statistics {
         this.kills = 0;
         this.shotsFired = 0;
         this.levelsPassed = 0;
-        this.numDefencesUnlocked = 10;
+        this.numDefencesUnlocked = 10; //temp
     }
 
     public int getKills() {
@@ -25,7 +25,7 @@ public class Statistics {
         return levelsPassed;
     }
 
-    public int getDefencesUnlocked() {
+    public int getNumDefencesUnlocked() {
         return numDefencesUnlocked;
     }
 
@@ -47,7 +47,7 @@ public class Statistics {
         }
     }
 
-    public void setNumPlantsUnlocked(int numPlantsUnlocked) {
+    public void setNumDefencesUnlocked(int numPlantsUnlocked) {
         if (numPlantsUnlocked >= 0) {
             this.numDefencesUnlocked = numPlantsUnlocked;
         }
@@ -65,8 +65,12 @@ public class Statistics {
         this.levelsPassed++;
     }
 
-    public void increaseNumPlantsUnlocked() {
+    public void increaseNumDefencesUnlocked() {
         this.numDefencesUnlocked++;
+    }
+
+    public void increaseNumDefencesUnlockedBySpecific(int extraDefences) {
+        this.numDefencesUnlocked += extraDefences;
     }
 
 }
