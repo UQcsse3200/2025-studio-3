@@ -44,7 +44,7 @@ public class WanderTask extends DefaultTask implements PriorityTask {
 
     waitTask = new WaitTask(waitTime);
     waitTask.create(owner);
-    movementTask = new MovementTask(getRandomPosInRange());
+    movementTask = new MovementTask(new Vector2(0, startPos.y));
     movementTask.create(owner);
 
     movementTask.start();
@@ -55,14 +55,7 @@ public class WanderTask extends DefaultTask implements PriorityTask {
 
   @Override
   public void update() {
-    if (currentTask.getStatus() != Status.ACTIVE) {
-      if (currentTask == movementTask) {
-        startWaiting();
-      } else {
-        startMoving();
-      }
-    }
-    currentTask.update();
+
   }
 
   private void startWaiting() {

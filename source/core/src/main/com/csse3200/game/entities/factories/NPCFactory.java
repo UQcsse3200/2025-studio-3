@@ -8,6 +8,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.ChaseTask;
+import com.csse3200.game.components.tasks.MarchLeftTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
@@ -99,6 +100,7 @@ public class NPCFactory {
         new AITaskComponent()
             .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
             .addTask(new ChaseTask(target, 10, 3f, 4f));
+            //.addTask(new MarchLeftTask());
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
