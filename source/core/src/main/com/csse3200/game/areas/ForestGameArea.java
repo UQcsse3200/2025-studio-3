@@ -9,6 +9,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.LeftMovementComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -136,6 +138,9 @@ public class ForestGameArea extends GameArea {
     for (int i = 0; i < NUM_GHOSTS; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
       Entity ghost = NPCFactory.createGhost(player);
+      // add ghost moving left
+      ghost.addComponent(new PhysicsComponent());
+      ghost.addComponent(new LeftMovementComponent());
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
