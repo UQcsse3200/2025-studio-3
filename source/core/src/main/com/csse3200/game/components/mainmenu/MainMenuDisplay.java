@@ -35,6 +35,7 @@ public class MainMenuDisplay extends UIComponent {
                 .getAsset("images/box_boy_title.png", Texture.class));
 
     TextButton startBtn = new TextButton("Start", skin);
+    TextButton shopButton = new TextButton("Shop", skin);
     TextButton loadBtn = new TextButton("Load", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
     TextButton exitBtn = new TextButton("Exit", skin);
@@ -48,6 +49,16 @@ public class MainMenuDisplay extends UIComponent {
             entity.getEvents().trigger("start");
           }
         });
+
+    shopButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Shop button clicked");
+            entity.getEvents().trigger("shop");
+          }
+        }
+    );
 
     loadBtn.addListener(
         new ChangeListener() {
@@ -80,6 +91,8 @@ public class MainMenuDisplay extends UIComponent {
     table.add(title);
     table.row();
     table.add(startBtn).padTop(30f);
+    table.row();
+    table.add(shopButton).padTop(15f);
     table.row();
     table.add(loadBtn).padTop(15f);
     table.row();

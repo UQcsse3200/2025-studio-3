@@ -23,6 +23,7 @@ public class MainMenuActions extends Component {
   public void create() {
     entity.getEvents().addListener("start", this::onStart);
     entity.getEvents().addListener("load", this::onLoad);
+    entity.getEvents().addListener("shop", this::onShop);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
   }
@@ -51,6 +52,14 @@ public class MainMenuActions extends Component {
   private void onExit() {
     logger.info("Exit game");
     game.exit();
+  }
+
+  /**
+   * Swaps to the Shop screen.
+   */
+  private void onShop() {
+    logger.info("Opening shop");
+    game.setScreen(GdxGame.ScreenType.SHOP);
   }
 
   /**

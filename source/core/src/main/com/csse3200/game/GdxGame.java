@@ -13,6 +13,7 @@ import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.SkillTreeScreen;
 import com.csse3200.game.screens.StatisticsScreen;
 import com.csse3200.game.screens.ProfileScreen;
+import com.csse3200.game.screens.ShopScreen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,13 +90,16 @@ public class GdxGame extends Game {
          return new StatisticsScreen(this);
       case ACHIEVEMENTS:
         return new AchievementsScreen(this);
+      case SHOP:
+        return new ShopScreen(this);
+      
       default:
         return null;
     }
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS
+    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP
   }
 
   /**
