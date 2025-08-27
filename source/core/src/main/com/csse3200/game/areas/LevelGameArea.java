@@ -130,11 +130,11 @@ public class LevelGameArea extends GameArea{
         robot.setPosition(x, y);
     }
 
-    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
-        for (int i = 0; i < count; i++) {
-            float y = startY - i * spacing;
-            spawnRobot(startX, y);
-        }
-    }
-}
+//    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
+//        for (int i = 0; i < count; i++) {
+//            float y = startY - i * spacing;
+//            spawnRobot(startX, y);
+//        }
+//    }
+//}
 
