@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.csse3200.game.Achievements.AchievementManager;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
@@ -23,6 +24,7 @@ public class ServiceLocator {
   private static GameTime timeSource;
   private static InputService inputService;
   private static ResourceService resourceService;
+  public static AchievementManager achievementManager;
 
 
   public static EntityService getEntityService() {
@@ -47,6 +49,16 @@ public class ServiceLocator {
 
   public static ResourceService getResourceService() {
     return resourceService;
+  }
+
+  // --- AchievementManager registration ---
+  public static void registerAchievementManager(AchievementManager manager) {
+    logger.debug("Registering achievement manager {}", manager);
+    achievementManager = manager;
+  }
+
+  public static AchievementManager getAchievementManager() {
+    return achievementManager;
   }
 
   public static void registerEntityService(EntityService service) {
@@ -79,6 +91,10 @@ public class ServiceLocator {
     resourceService = source;
   }
 
+
+
+
+
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -86,9 +102,11 @@ public class ServiceLocator {
     timeSource = null;
     inputService = null;
     resourceService = null;
+    //achievementManager = null;
   }
 
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
+
 }

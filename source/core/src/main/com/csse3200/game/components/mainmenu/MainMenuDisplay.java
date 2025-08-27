@@ -37,6 +37,7 @@ public class MainMenuDisplay extends UIComponent {
     TextButton startBtn = new TextButton("Start", skin);
     TextButton loadBtn = new TextButton("Load", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
+    TextButton achievementsBtn = new TextButton("Achievements", skin);
     TextButton exitBtn = new TextButton("Exit", skin);
 
     // Triggers an event when the button is pressed
@@ -67,6 +68,15 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
+      achievementsBtn.addListener(
+              new ChangeListener() {
+                  @Override
+                  public void changed(ChangeEvent changeEvent, Actor actor) {
+                      logger.debug("Achievements button clicked");
+                      entity.getEvents().trigger("achievements");  // new event
+                  }
+              });
+
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -84,6 +94,8 @@ public class MainMenuDisplay extends UIComponent {
     table.add(loadBtn).padTop(15f);
     table.row();
     table.add(settingsBtn).padTop(15f);
+    table.row();
+    table.add(achievementsBtn).padTop(15f);
     table.row();
     table.add(exitBtn).padTop(15f);
 
