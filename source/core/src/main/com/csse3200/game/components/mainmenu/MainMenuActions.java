@@ -21,6 +21,7 @@ public class MainMenuActions extends Component {
   public void create() {
     entity.getEvents().addListener("start", this::onStart);
     entity.getEvents().addListener("load", this::onLoad);
+    entity.getEvents().addListener("skilltree", this::onSkilltree);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
   }
@@ -41,6 +42,11 @@ public class MainMenuActions extends Component {
     logger.info("Load game");
   }
 
+
+  private void onSkilltree() {
+        logger.info("Access skill tree");
+        game.setScreen(GdxGame.ScreenType.SKILLTREE);
+    }
   /**
    * Exits the game.
    */

@@ -36,6 +36,7 @@ public class MainMenuDisplay extends UIComponent {
 
     TextButton startBtn = new TextButton("Start", skin);
     TextButton loadBtn = new TextButton("Load", skin);
+    TextButton skilltreeBtn = new TextButton("Skill Tree", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
     TextButton exitBtn = new TextButton("Exit", skin);
 
@@ -57,6 +58,15 @@ public class MainMenuDisplay extends UIComponent {
             entity.getEvents().trigger("load");
           }
         });
+
+    skilltreeBtn.addListener(
+            new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent changeEvent, Actor actor) {
+                    logger.debug("Skill tree button clicked");
+                    entity.getEvents().trigger("skilltree");
+                }
+            });
 
     settingsBtn.addListener(
         new ChangeListener() {
@@ -82,6 +92,8 @@ public class MainMenuDisplay extends UIComponent {
     table.add(startBtn).padTop(30f);
     table.row();
     table.add(loadBtn).padTop(15f);
+    table.row();
+    table.add(skilltreeBtn).padTop(15f);
     table.row();
     table.add(settingsBtn).padTop(15f);
     table.row();
