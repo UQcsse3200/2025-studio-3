@@ -49,7 +49,8 @@ public class LevelGameArea extends GameArea{
 
         spawnMap();
 
-        spawnRobot(18.5f, 8f);
+        spawnRobot(18.5f, 8f); // hard coded temporary robot spawn for now
+                                      // Replace with lane? later
 
         playMusic();
     }
