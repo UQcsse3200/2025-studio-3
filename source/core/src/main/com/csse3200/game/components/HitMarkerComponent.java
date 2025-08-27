@@ -3,6 +3,8 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +23,11 @@ public class HitMarkerComponent extends Component {
 
     @Override
     public void update() {
-        TextureRenderComponent render = entity.getComponent(TextureRenderComponent.class);
+        RenderComponent render = entity.getComponent(TextureRenderComponent.class);
+        if (render == null) {
+            render = entity.getComponent(AnimationRenderComponent.class);
+        }
+
         if (flashTime > 0f) {
             flashTime -= Gdx.graphics.getDeltaTime();
             render.colour.set(FLASH_COLOUR);

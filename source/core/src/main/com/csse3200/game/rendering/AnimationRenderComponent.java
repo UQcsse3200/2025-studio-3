@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -173,7 +174,9 @@ public class AnimationRenderComponent extends RenderComponent {
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
+    batch.setColor(colour);
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
+    batch.setColor(Color.WHITE);
     animationPlayTime += timeSource.getDeltaTime();
   }
 

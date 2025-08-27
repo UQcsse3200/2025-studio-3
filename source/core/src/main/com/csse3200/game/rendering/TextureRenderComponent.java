@@ -10,7 +10,6 @@ import com.csse3200.game.services.ServiceLocator;
 public class TextureRenderComponent extends RenderComponent {
   private final Texture texture;
   // global
-  public Color colour = new Color(1, 1, 1, 1);
   /**
    * @param texturePath Internal path of static texture to render.
    *                    Will be scaled to the entity's scale.
