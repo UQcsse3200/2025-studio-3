@@ -1,16 +1,28 @@
 package com.csse3200.game.components.statistics;
 
+import com.csse3200.game.GdxGame;
+
 public class Statistics {
     int kills;
     int shotsFired;
     int levelsPassed;
     int numDefencesUnlocked;
+    int totalCoinsEarned;
 
     public Statistics() {
         this.kills = 0;
         this.shotsFired = 0;
         this.levelsPassed = 0;
         this.numDefencesUnlocked = 10; //temp
+        this.totalCoinsEarned = 100;
+    }
+
+    public Statistics(int kills, int shotsFired, int levelsPassed, int numDefencesUnlocked, int totalCoinsEarned) {
+        this.kills = kills;
+        this.shotsFired = shotsFired;
+        this.levelsPassed = levelsPassed;
+        this.numDefencesUnlocked = numDefencesUnlocked;
+        this.totalCoinsEarned = totalCoinsEarned;
     }
 
     public int getKills() {
@@ -27,6 +39,10 @@ public class Statistics {
 
     public int getNumDefencesUnlocked() {
         return numDefencesUnlocked;
+    }
+
+    public int getTotalCoinsEarned() {
+        return totalCoinsEarned;
     }
 
     public void setKills(int kills) {
@@ -53,6 +69,12 @@ public class Statistics {
         }
     }
 
+    public void setTotalCoinsEarned(int totalCoinsEarned) {
+        if (totalCoinsEarned >= 0) {
+            this.totalCoinsEarned = totalCoinsEarned;
+        }
+    }
+
     public void increaseKills() {
         this.kills++;
     }
@@ -73,4 +95,11 @@ public class Statistics {
         this.numDefencesUnlocked += extraDefences;
     }
 
+    public void increaseTotalCoinsEarned() {
+        this.totalCoinsEarned++;
+    }
+
+    public void increaseTotalCoinsEarnedBySpecific(int extraCoinsEarned) {
+        this.totalCoinsEarned += extraCoinsEarned;
+    }
 }
