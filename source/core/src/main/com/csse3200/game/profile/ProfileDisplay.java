@@ -58,11 +58,7 @@ public class ProfileDisplay extends UIComponent {
     }
 
     private void createTitle() {
-        Label.LabelStyle titleStyle = new Label.LabelStyle();
-        titleStyle.font = skin.getFont("default-font");
-        titleStyle.fontColor = Color.WHITE;
-        
-        Label titleLabel = new Label("PROFILE", titleStyle);
+        Label titleLabel = new Label("Profile", skin, "title");
         
         // Center title above the buttons
         float titleX = (stage.getWidth() - titleLabel.getWidth()) / 2f;
@@ -160,24 +156,22 @@ public class ProfileDisplay extends UIComponent {
 
     private TextButton createStyledButton(String text) {
         // Create light grey background for buttons
-        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
-        pixmap.setColor(0.7f, 0.7f, 0.7f, 1f); // Light grey
-        pixmap.fill();
+        // Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGB888);
+        // pixmap.setColor(0.7f, 0.7f, 0.7f, 1f); // Light grey
+        // pixmap.fill();
         
-        Texture buttonTexture = new Texture(pixmap);
-        pixmap.dispose();
+        // Texture buttonTexture = new Texture(pixmap);
+        // pixmap.dispose();
         
-        TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
-        buttonStyle.up = new TextureRegionDrawable(buttonTexture);
-        buttonStyle.font = skin.getFont("default-font");
-        buttonStyle.fontColor = Color.WHITE;
+        // TextButton.TextButtonStyle buttonStyle = new TextButton.TextButtonStyle();
+        // buttonStyle.up = new TextureRegionDrawable(buttonTexture);
+        // buttonStyle.fontColor = Color.WHITE;
         
-        return new TextButton(text, buttonStyle);
+        return new TextButton(text, skin);
     }
 
     @Override
     public void draw(SpriteBatch batch) {
-        // Draw is handled by the stage
     }
 
     @Override

@@ -22,12 +22,9 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class ProfileScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ProfileScreen.class);
-
-  private final GdxGame game;
   private final Renderer renderer;
 
   public ProfileScreen(GdxGame game) {
-    this.game = game;
 
     logger.debug("Initialising profile screen services");
     ServiceLocator.registerInputService(new InputService());
