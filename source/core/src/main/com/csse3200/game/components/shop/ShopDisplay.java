@@ -136,19 +136,4 @@ public class ShopDisplay extends UIComponent {
     super.dispose();
   }
 
-  // private void onSelect(Item item) {
-  //   logger.info("Shop item selected: {}", item);
-  //   // Open a dialog box with the item name, description, price etc.
-  //   // Show two buttons, to go 'back' or to 'buy'
-  // }
-
-  // private void onPurchase(Item item) {
-  //   logger.info("Shop item purchased: {}", item);
-  //   Profile profile = ServiceLocator.getProfileService().get();
-  //   profile.wallet().deduct(item.getCost());
-  //   profile.inventory().addItem(item);
-
-  //   // Show a popup saying item has been added to inventory
-
-  // }
 }

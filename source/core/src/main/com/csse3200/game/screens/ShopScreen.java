@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.mainmenu.MainMenuActions;
-import com.csse3200.game.components.mainmenu.MainMenuDisplay;
+import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
+import com.csse3200.game.components.shop.ShopScreenButtonsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -111,16 +111,17 @@ public class ShopScreen extends ScreenAdapter {
 
   /**
    * Creates the shop screen's ui including components for rendering ui elements
-   * to the screen and
-   * capturing and handling ui input.
+   * to the screen and capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
     ui.addComponent(new ShopDisplay(game))
-        .addComponent(new InputDecorator(stage, 10));
-    // .addComponent(new ShopActions(game));
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new ShopScreenButtonsDisplay())
+        .addComponent(new ShopActions(game));
+
     ServiceLocator.getEntityService().register(ui);
   }
 }
