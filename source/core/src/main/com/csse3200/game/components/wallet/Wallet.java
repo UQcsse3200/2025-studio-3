@@ -9,6 +9,11 @@ public class Wallet {
         this.skillsPoints = 0;
     }
 
+    public Wallet(int coins, int skillsPoints) {
+        this.coins = coins;
+        this.skillsPoints = skillsPoints;
+    }
+
     public int getCoins() {
         return coins;
     }
