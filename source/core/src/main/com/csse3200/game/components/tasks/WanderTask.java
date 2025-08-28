@@ -44,7 +44,7 @@ public class WanderTask extends DefaultTask implements PriorityTask {
 
     waitTask = new WaitTask(waitTime);
     waitTask.create(owner);
-    movementTask = new MovementTask(new Vector2(0, startPos.y)); //entity move left
+    movementTask = new MovementTask(new Vector2(0, startPos.y)); //enemy robots move left
     movementTask.create(owner);
 
     movementTask.start();
