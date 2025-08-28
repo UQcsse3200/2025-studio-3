@@ -1,0 +1,17 @@
+{
+  "wave1": {
+    "weight": 30,
+    "expGained": 10,
+    "minZombieSpawn": 5
+  },
+  "wave2": {
+    "weight": 50,
+    "expGained": 20,
+    "minZombieSpawn": 10
+  },
+  "wave3": {
+    "weight": 75,
+    "expGained": 30,
+    "minZombieSpawn": 15
+  }
+}
