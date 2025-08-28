@@ -1,4 +1,4 @@
-package com.csse3200.game.components.maingame;
+package com.csse3200.game.components.hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;

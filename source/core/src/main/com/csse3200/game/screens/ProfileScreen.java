@@ -5,12 +5,13 @@ import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.profile.ProfileDisplay;
+import com.csse3200.game.components.profile.ProfileDisplayActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.profile.ProfileDisplay;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
@@ -23,8 +24,10 @@ import com.csse3200.game.services.ServiceLocator;
 public class ProfileScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ProfileScreen.class);
   private final Renderer renderer;
+  private final GdxGame game;
 
   public ProfileScreen(GdxGame game) {
+    this.game = game;
 
     logger.debug("Initialising profile screen services");
     ServiceLocator.registerInputService(new InputService());
@@ -60,14 +63,16 @@ public class ProfileScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the setting screen's ui including components for rendering ui elements to the screen
+   * Creates the setting screen's ui including components for rendering ui
+   * elements to the screen
    * and capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new ProfileDisplay()).addComponent(new InputDecorator(stage, 10));
+    ui.addComponent(new ProfileDisplay()).addComponent(new InputDecorator(stage, 10))
+        .addComponent(new ProfileDisplayActions(game));
     ServiceLocator.getEntityService().register(ui);
   }
 }

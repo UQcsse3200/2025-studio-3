@@ -1,4 +1,4 @@
-package com.csse3200.game.profile;
+package com.csse3200.game.components.profile;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
