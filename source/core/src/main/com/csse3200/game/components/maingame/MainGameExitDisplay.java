@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Displays a button to exit the Main Game screen to the Main Menu screen.
+ * 
+ * Will need to be renamed
  */
 public class MainGameExitDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainGameExitDisplay.class);
@@ -28,17 +30,28 @@ public class MainGameExitDisplay extends UIComponent {
     table.top().right();
     table.setFillParent(true);
 
-    TextButton mainMenuBtn = new TextButton("Exit", skin);
+    // Add Shop button
+    TextButton shopButton = new TextButton("Shop", skin);
+    shopButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Shop button clicked");
+            entity.getEvents().trigger("shop");
+          }
+        });
+    table.add(shopButton).padTop(10f).padRight(10f);
 
-    // Triggers an event when the button is pressed.
+    // Add Exit button
+    TextButton mainMenuBtn = new TextButton("Exit", skin);
     mainMenuBtn.addListener(
-      new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("Exit button clicked");
-          entity.getEvents().trigger("exit");
-        }
-      });
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Exit button clicked");
+            entity.getEvents().trigger("exit");
+          }
+        });
 
     table.add(mainMenuBtn).padTop(10f).padRight(10f);
 

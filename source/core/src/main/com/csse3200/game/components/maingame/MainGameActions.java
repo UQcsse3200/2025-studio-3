@@ -20,6 +20,7 @@ public class MainGameActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("exit", this::onExit);
+    entity.getEvents().addListener("shop", this::onShop);
   }
 
   /**
@@ -28,5 +29,13 @@ public class MainGameActions extends Component {
   private void onExit() {
     logger.info("Exiting main game screen");
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+  }
+
+  /**
+   * Swaps to the Shop screen.
+   */
+  private void onShop() {
+    logger.info("Entering shop screen");
+    game.setScreen(GdxGame.ScreenType.SHOP);
   }
 }

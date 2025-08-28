@@ -22,7 +22,8 @@ public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = { "images/shopbackground.png" };
+  private static final String[] shopTextures = { "images/shopbackground2.png", "images/heart.png", "images/box_boy.png",
+      "images/tree.png" };
 
   /**
    * Initialises the shop screen.
@@ -117,9 +118,9 @@ public class ShopScreen extends ScreenAdapter {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new ShopDisplay())
+    ui.addComponent(new ShopDisplay(game))
         .addComponent(new InputDecorator(stage, 10));
-        //.addComponent(new ShopActions(game));
+    // .addComponent(new ShopActions(game));
     ServiceLocator.getEntityService().register(ui);
   }
 }
