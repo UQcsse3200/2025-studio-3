@@ -24,6 +24,7 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,7 +138,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new MainGameExitDisplay())
         .addComponent(new Terminal())
         .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+        .addComponent(new TerminalDisplay())
+        .addComponent(new CurrentWaveDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }
