@@ -18,7 +18,7 @@ import java.util.Map;
  * Contains methods for registering, and getting a list and individual sprite data.
  */
 public class MenuSpriteService {
-    private static final Logger logger = LoggerFactory.getLogger(MenuSpriteData.class);
+    private static final Logger logger = LoggerFactory.getLogger(MenuSpriteService.class);
     private final Map<GdxGame.ScreenType, Map<Enum<?>, MenuSpriteData>> menuSprites;
 
     public MenuSpriteService() {
