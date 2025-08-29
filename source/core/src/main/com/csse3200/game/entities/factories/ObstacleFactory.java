@@ -46,7 +46,7 @@ public class ObstacleFactory {
 
       tile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
       tile.getComponent(TextureRenderComponent.class).scaleEntity();
-      // tile.scaleHeight(1.3f);
+      tile.scaleHeight(1.25f);
       // tile.scaleWidth(1.3f);
       // PhysicsUtils.setScaledCollider(tile, 0.5f, 0.2f);
       return tile;
