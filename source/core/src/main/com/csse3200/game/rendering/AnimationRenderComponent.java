@@ -90,16 +90,6 @@ public class AnimationRenderComponent extends RenderComponent {
     return true;
   }
 
-  private final Color tint = new Color(Color.WHITE);
-
-  public AnimationRenderComponent setTint(Color c) {
-      this.tint.set(c);
-      return this;
-  }
-  public Color getTint() {
-      return tint;
-  }
-
   /** Scale the entity to a width of 1 and a height matching the texture's ratio */
   public void scaleEntity() {
     TextureRegion defaultTexture = this.atlas.findRegion("default");
@@ -184,17 +174,15 @@ public class AnimationRenderComponent extends RenderComponent {
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
-
-    Color prev = new Color(batch.getColor());
-    batch.setColor(tint);
+    batch.setColor(colour);
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
-    batch.setColor(prev);
+    batch.setColor(Color.WHITE);
     animationPlayTime += timeSource.getDeltaTime();
   }
 
   @Override
   public void dispose() {
-    atlas.dispose();
+    //atlas.dispose();
     super.dispose();
   }
 }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
@@ -24,6 +25,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.physics.PhysicsLayer;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -58,6 +60,7 @@ public class NPCFactory {
     ghost
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
+        .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
 
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -79,6 +82,7 @@ public class NPCFactory {
       robot
               .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
               .addComponent(animator)
+              .addComponent(new HitMarkerComponent())
               .addComponent(new RobotAnimationController());
 
       robot.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -106,6 +110,7 @@ public class NPCFactory {
     ghostKing
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
+            .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -128,7 +133,7 @@ public class NPCFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+//            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
             .addComponent(aiComponent);
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
