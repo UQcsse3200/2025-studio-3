@@ -106,14 +106,16 @@ public class LevelGameArea extends GameArea{
     }
 
     private void spawnTiles() {
-        for (int i = 0; i < 90; i++) {
+        for (int i = 0; i < 50; i++) {
             Entity tile;
-            if ((i / 15) % 2 == 1) {
+            if ((i / 10) % 2 == 1) {
                 tile = ObstacleFactory.createTile(i % 2);
             } else {
                 tile = ObstacleFactory.createTile(1- (i % 2));
             }
-            tile.setPosition((float) (3 + (1*i % 14)), 2 + i / 15);
+            //need to make scale dynamic to screen size
+            float scale = 1.25F;
+            tile.setPosition((float) (3 + scale * (i % 10)), (float) (1.8 + scale * (i / 10)));
             spawnEntity(tile);
         }
     }
