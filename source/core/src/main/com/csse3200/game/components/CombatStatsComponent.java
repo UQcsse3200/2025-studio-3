@@ -48,6 +48,12 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
+    logger.info(String.valueOf(this.health));
+    if (this.health == 0) {
+      // Ask whoever spawned me to despawn this entity
+      entity.getEvents().trigger("despawnGhost", entity);
+    }
+
     if (entity != null) {
       entity.getEvents().trigger("updateHealth", this.health);
     }
