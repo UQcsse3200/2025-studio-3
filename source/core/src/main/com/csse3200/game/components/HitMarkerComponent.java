@@ -12,8 +12,8 @@ import org.slf4j.LoggerFactory;
 public class HitMarkerComponent extends Component {
     private final Logger logger = LoggerFactory.getLogger(HitMarkerComponent.class);
     private static final float FLASH_DURATION = 0.13f;
-    private static final Color FLASH_COLOUR = new Color(0.8f, 0, 0, 0.9f);
-    private float flashTime = 0f;
+    protected static final Color FLASH_COLOUR = new Color(0.8f, 1f, 0, 0.2f);
+    protected float flashTime = 0f;
 
     @Override
     public void create() {
@@ -27,6 +27,9 @@ public class HitMarkerComponent extends Component {
         if (render == null) {
             render = entity.getComponent(AnimationRenderComponent.class);
         }
+        if (render == null) {
+            return;
+        }
 
         if (flashTime > 0f) {
             flashTime -= Gdx.graphics.getDeltaTime();
@@ -39,7 +42,5 @@ public class HitMarkerComponent extends Component {
     private void onHitMarkerStart(Entity entity) {
         logger.info("Hit marker started for entity: {}", entity);
         flashTime = FLASH_DURATION;
-
     }
-
 }
