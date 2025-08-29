@@ -10,6 +10,9 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.rendering.TextureRenderComponent;
+//import com.csse3200.game.components.SimpleSpriteControlComponent;
+import com.csse3200.game.ui.DragAndDropDemo;
 
 public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
@@ -17,7 +20,8 @@ public class LevelGameArea extends GameArea{
             "images/box_boy_leaf.png",
             "images/level-1-map-v1.png",
             "images/ghost_king.png",
-            "images/ghost_1.png"
+            "images/ghost_1.png",
+            "images/box_boy.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -46,9 +50,59 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+        testUI_1();
+
+        testUI_2();
+        testUI_3();
 
         playMusic();
+
     }
+
+    private void testUI_1() {
+//    Entity dragUI = new Entity();
+//    dragUI.addComponent(new com.csse3200.game.ui.DragAndDropDemo());
+//    spawnEntity(dragUI);
+        Entity ui = new Entity();
+        DragAndDropDemo dragUI = new DragAndDropDemo();
+        dragUI.setTexture("images/ghost_1.png"); // choose which image
+        dragUI.setOffsets(0f, 500f); // bottom-right-ish
+        dragUI.setScale(0.1f); // smaller
+        ui.addComponent(dragUI);
+        spawnEntity(ui);
+
+    }
+
+    private void testUI_2() {
+//    Entity dragUI = new Entity();
+//    dragUI.addComponent(new com.csse3200.game.ui.DragAndDropDemo());
+//    spawnEntity(dragUI);
+        Entity ui = new Entity();
+        DragAndDropDemo dragUI = new DragAndDropDemo();
+        dragUI.setTexture("images/box_boy.png"); // choose which image
+        dragUI.setOffsets(0f, 0f); // bottom-right-ish
+        dragUI.setScale(0.1f); // smaller
+        ui.addComponent(dragUI);
+        spawnEntity(ui);
+
+    }
+
+    private void testUI_3() {
+//    Entity dragUI = new Entity();
+//    dragUI.addComponent(new com.csse3200.game.ui.DragAndDropDemo());
+//    spawnEntity(dragUI);
+        Entity ui = new Entity();
+        DragAndDropDemo dragUI = new DragAndDropDemo();
+        dragUI.setTexture("images/ghost_1.png"); // choose which image
+        dragUI.setOffsets(0f, 250f); // bottom-right-ish
+        dragUI.setScale(0.1f); // smaller
+        ui.addComponent(dragUI);
+        spawnEntity(ui);
+
+    }
+
+
+
 
     private void loadAssets() {
         logger.debug("Loading assets");
