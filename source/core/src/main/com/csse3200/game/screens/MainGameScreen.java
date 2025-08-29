@@ -23,6 +23,7 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
+import com.csse3200.game.context.Persistence;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 
@@ -45,6 +46,8 @@ public class MainGameScreen extends ScreenAdapter {
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
+
+    // TODO: Check that profile has loaded
 
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());

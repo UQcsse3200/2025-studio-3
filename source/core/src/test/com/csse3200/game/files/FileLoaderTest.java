@@ -1,5 +1,6 @@
 package com.csse3200.game.files;
 
+import com.csse3200.game.context.FileLoader;
 import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -7,9 +7,11 @@ import static org.mockito.Mockito.when;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Graphics.DisplayMode;
+import com.csse3200.game.context.UserSettings;
+import com.csse3200.game.context.UserSettings.DisplaySettings;
+import com.csse3200.game.context.UserSettings.Settings;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.files.UserSettings.DisplaySettings;
-import com.csse3200.game.files.UserSettings.Settings;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

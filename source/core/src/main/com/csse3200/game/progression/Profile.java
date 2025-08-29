@@ -1,4 +1,4 @@
-package com.csse3200.game.profile;
+package com.csse3200.game.progression;
 
 // import java.util.HashSet;
 // import java.util.Set;
