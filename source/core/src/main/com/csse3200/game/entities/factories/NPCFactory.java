@@ -8,6 +8,7 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.ChaseTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -70,16 +71,15 @@ public class NPCFactory {
 
       AnimationRenderComponent animator =
               new AnimationRenderComponent(
-                      ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
-      animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-      animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+                      ServiceLocator.getResourceService().getAsset("images/robot_placeholder.atlas", TextureAtlas.class));
+      animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("chill", 0.2f, Animation.PlayMode.LOOP);
 
-      animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // cyan tint to show distinction
 
       robot
               .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
               .addComponent(animator)
-              .addComponent(new GhostAnimationController());
+              .addComponent(new RobotAnimationController());
 
       robot.getComponent(AnimationRenderComponent.class).scaleEntity();
 
