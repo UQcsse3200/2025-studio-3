@@ -20,7 +20,7 @@ public class RobotFactory {
                 ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
         animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-        animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // differentiate
+        //animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // differentiate
 
         // Build the entity
         Entity robot = new Entity()
