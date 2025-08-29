@@ -114,8 +114,8 @@ public class LevelGameArea extends GameArea{
                 tile = ObstacleFactory.createTile(1- (i % 2));
             }
             //need to make scale dynamic to screen size
-            float scale = 1.25F;
-            tile.setPosition((float) (3 + scale * (i % 10)), (float) (1.8 + scale * (i / 10)));
+            float scale = 1.4F;
+            tile.setPosition((float) (2.9 + scale * (i % 10)), (float) (1.45 + scale * (i / 10)));
             spawnEntity(tile);
         }
     }
