@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.components.items.BombComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemConfigs;
 import com.csse3200.game.entities.configs.ItemEntityConfig;
@@ -28,7 +29,9 @@ public class ItemFactory {
     Entity bomb = createBaseItem();
     ItemEntityConfig config = configs.bomb;
 
-    bomb.addComponent(new TextureRenderComponent("images/bomb.png"));
+    bomb
+            .addComponent(new TextureRenderComponent("images/bomb.png"))
+            .addComponent(new BombComponent());
 
     return bomb;
   }

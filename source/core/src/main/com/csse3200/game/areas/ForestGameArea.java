@@ -75,9 +75,6 @@ public class ForestGameArea extends GameArea {
     spawnGhosts();
     spawnGhostKing();
 
-    Entity bomb = ItemFactory.createBomb();
-    spawnEntityAt(bomb, PLAYER_SPAWN, true, true);
-
     playMusic();
   }
 
