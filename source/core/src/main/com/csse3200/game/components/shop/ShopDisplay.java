@@ -46,7 +46,7 @@ public class ShopDisplay extends UIComponent {
   private void addActors() {
     Image backgroundImage = new Image(
         ServiceLocator.getResourceService()
-            .getAsset("images/shopbackground2.png", Texture.class));
+            .getAsset("images/shopbackground.jpg", Texture.class));
 
     backgroundImage.setFillParent(true);
     stage.addActor(backgroundImage);

@@ -22,7 +22,7 @@ public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = { "images/shopbackground2.png", "images/heart.png", "images/box_boy.png",
+  private static final String[] shopTextures = { "images/shopbackground.jpg", "images/heart.png", "images/box_boy.png",
       "images/tree.png" };
 
   /**
