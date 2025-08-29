@@ -1,0 +1,11 @@
+{
+  "Slingshot": {
+    "health": 1,
+    "base-attack": 1,
+    "type": "ranged",
+    "range": 4,
+    "state": "idle",
+    "attack-speed": 1,
+    "crit-chance": 0
+  }
+}
