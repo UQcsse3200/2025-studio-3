@@ -13,7 +13,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LevelGameArea extends GameArea{
+public class LevelGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
             "images/box_boy_leaf.png",
@@ -34,6 +34,7 @@ public class LevelGameArea extends GameArea{
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
+     *
      * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
      */
     public LevelGameArea(TerrainFactory terrainFactory) {
@@ -129,6 +130,7 @@ public class LevelGameArea extends GameArea{
 
         robot.setPosition(x, y);
     }
+}
 
 //    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
 //        for (int i = 0; i < count; i++) {
