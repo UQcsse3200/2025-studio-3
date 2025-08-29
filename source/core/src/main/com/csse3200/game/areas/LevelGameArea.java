@@ -13,6 +13,9 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.areas.RobotSpawner;
+
 public class LevelGameArea extends GameArea {
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
@@ -31,6 +34,7 @@ public class LevelGameArea extends GameArea {
     private static final String[] levelMusic = {backgroundMusic};
 
     private final TerrainFactory terrainFactory;
+    private RobotSpawner robotSpawner;
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -50,7 +54,7 @@ public class LevelGameArea extends GameArea {
 
         spawnMap();
 
-        spawnRobot(18.5f, 8f);
+        new RobotSpawner(this).spawnRobot(18.5f, 8f);
 
         playMusic();
     }
@@ -121,15 +125,15 @@ public class LevelGameArea extends GameArea {
         this.unloadAssets();
     }
 
-    private void spawnRobot(float x, float y) {
-        Entity robot = NPCFactory.createRobot(null);
-        spawnEntity(robot);
-
-        robot.getComponent(AnimationRenderComponent.class).scaleEntity();
-        robot.setScale(robot.getScale().x * 1.5f, robot.getScale().y * 1.5f);
-
-        robot.setPosition(x, y);
-    }
+//    private void spawnRobot(float x, float y) {
+//        Entity robot = NPCFactory.createRobot(null);
+//        spawnEntity(robot);
+//
+//        robot.getComponent(AnimationRenderComponent.class).scaleEntity();
+//        robot.setScale(robot.getScale().x * 1.5f, robot.getScale().y * 1.5f);
+//
+//        robot.setPosition(x, y);
+//    }
 }
 
 //    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
