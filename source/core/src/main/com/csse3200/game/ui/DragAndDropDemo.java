@@ -110,6 +110,27 @@ public class DragAndDropDemo extends UIComponent {
     }
 
 
+
+    @Override
+    public void update() {
+        super.update();
+
+        if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            float mx = Gdx.input.getX();
+            float my = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            if (mx >= image.getX() && mx <= image.getX() + image.getWidth()
+                    && my >= image.getY() && my <= image.getY() + image.getHeight()) {
+
+                Gdx.app.postRunnable(() -> {
+                    image.remove();
+                    entity.dispose();
+                });
+            }
+        }
+    }
+
+
     public void setTexture(String path) { this.texturePath = path; }
     public void setOffsets(float x, float y) { this.offsetX = x; this.offsetY = y; }
     public void setScale(float scale) { this.scale = scale; }
