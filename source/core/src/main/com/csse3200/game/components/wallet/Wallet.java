@@ -38,16 +38,13 @@ public class Wallet {
         this.coins += coins;
     }
 
-    public void addSkillsPoints(int achievement) { //will be Achievement achievement
-        this.skillsPoints += achievement; //will be something like achievement.getPoints()
+    public void addSkillsPoints(int achievementSkillPoints) {
+        this.skillsPoints += achievementSkillPoints;
     }
 
-    public void unlockSkill(int skill) {//will be Skill skill
-        if (skillsPoints >= skill) {//will be something like skill.getCost()
-            this.skillsPoints -= skill; //will be something like skill.getCost()
-        } else {
-            //throw Exception;
-        }
+    //Skill will now handle purchase functionality re checking have enough skillPoints to unlock
+    public void unlockSkill(int skillCost) {
+        this.skillsPoints -= skillCost;
     }
 
     public void purchaseShopItem(int item) {//will be ShopItem item
