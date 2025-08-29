@@ -5,9 +5,11 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.utils.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +19,9 @@ public class LevelGameArea extends GameArea{
             "images/box_boy_leaf.png",
             "images/level-1-map-v1.png",
             "images/ghost_king.png",
-            "images/ghost_1.png"
+            "images/ghost_1.png",
+            "images/olive_tile.png",
+            "images/green_tile.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -46,6 +50,7 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+        spawnTiles();
 
         playMusic();
     }
@@ -98,6 +103,19 @@ public class LevelGameArea extends GameArea{
         music.setLooping(true);
         music.setVolume(0.3f);
         music.play();
+    }
+
+    private void spawnTiles() {
+        for (int i = 0; i < 90; i++) {
+            Entity tile;
+            if ((i / 15) % 2 == 1) {
+                tile = ObstacleFactory.createTile(i % 2);
+            } else {
+                tile = ObstacleFactory.createTile(1- (i % 2));
+            }
+            tile.setPosition((float) (3 + (1*i % 14)), 2 + i / 15);
+            spawnEntity(tile);
+        }
     }
 
     private void unloadAssets() {
