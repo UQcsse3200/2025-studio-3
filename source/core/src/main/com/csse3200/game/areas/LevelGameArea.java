@@ -5,12 +5,11 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ObstacleFactory;
+import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.ui.DragAndDropDemo;
-import com.csse3200.game.utils.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +51,8 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
-        spawnTiles();
+        float scale = 1.4f;
+        spawnTiles(scale);
         testUI_1();
 
         testUI_2();
@@ -154,17 +154,18 @@ public class LevelGameArea extends GameArea{
         music.play();
     }
 
-    private void spawnTiles() {
+    private void spawnTiles(float scale) {
         for (int i = 0; i < 50; i++) {
             Entity tile;
+            float tileX = (float) (2.9 + scale * (i % 10));
+            float tileY = (float) (1.45 + scale * (i / 10));
+            // logic for alternating tile images
             if ((i / 10) % 2 == 1) {
-                tile = ObstacleFactory.createTile(i % 2);
+                tile = GridFactory.createTile(i % 2, scale, tileX, tileY);
             } else {
-                tile = ObstacleFactory.createTile(1- (i % 2));
+                tile = GridFactory.createTile(1- (i % 2), scale, tileX, tileY);
             }
-            //need to make scale dynamic to screen size
-            float scale = 1.4F;
-            tile.setPosition((float) (2.9 + scale * (i % 10)), (float) (1.45 + scale * (i / 10)));
+            tile.setPosition(tileX, tileY);
             spawnEntity(tile);
         }
     }
