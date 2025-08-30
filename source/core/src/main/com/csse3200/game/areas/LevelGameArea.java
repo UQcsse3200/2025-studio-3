@@ -5,14 +5,14 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.ui.DragAndDropDemo;
+import com.csse3200.game.utils.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.rendering.TextureRenderComponent;
-//import com.csse3200.game.components.SimpleSpriteControlComponent;
-import com.csse3200.game.ui.DragAndDropDemo;
 
 public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
@@ -21,6 +21,8 @@ public class LevelGameArea extends GameArea{
             "images/level-1-map-v1.png",
             "images/ghost_king.png",
             "images/ghost_1.png",
+            "images/olive_tile.png",
+            "images/green_tile.png",
             "images/box_boy.png"
     };
 
@@ -50,6 +52,7 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+        spawnTiles();
         testUI_1();
 
         testUI_2();
@@ -101,9 +104,6 @@ public class LevelGameArea extends GameArea{
 
     }
 
-
-
-
     private void loadAssets() {
         logger.debug("Loading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -152,6 +152,21 @@ public class LevelGameArea extends GameArea{
         music.setLooping(true);
         music.setVolume(0.3f);
         music.play();
+    }
+
+    private void spawnTiles() {
+        for (int i = 0; i < 50; i++) {
+            Entity tile;
+            if ((i / 10) % 2 == 1) {
+                tile = ObstacleFactory.createTile(i % 2);
+            } else {
+                tile = ObstacleFactory.createTile(1- (i % 2));
+            }
+            //need to make scale dynamic to screen size
+            float scale = 1.4F;
+            tile.setPosition((float) (2.9 + scale * (i % 10)), (float) (1.45 + scale * (i / 10)));
+            spawnEntity(tile);
+        }
     }
 
     private void unloadAssets() {
