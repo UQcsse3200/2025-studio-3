@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
@@ -11,7 +12,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
@@ -35,6 +35,17 @@ public class LevelGameArea extends GameArea{
 
     private final TerrainFactory terrainFactory;
 
+    private final int levelOneRows = 5;
+    private final int levelOneCols = 10;
+
+    private final int levelTwoRows = 7;
+    private final int levelTwoCols = 8;
+
+    private final float xOffset = 2.9f;
+    private final float yOffset = 1.45f;
+
+    private LevelGameGrid grid;
+
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
      * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
@@ -51,9 +62,10 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
-
         float scale = 1.4f;
-        spawnTiles(scale);
+        spawnGrid(levelOneRows, levelOneCols, scale);
+        //spawnGrid(levelTwoRows, levelTwoCols, scale);
+
         playMusic();
 
     }
@@ -108,20 +120,23 @@ public class LevelGameArea extends GameArea{
         music.play();
     }
 
-    private void spawnTiles(float scale) {
-        for (int i = 0; i < 50; i++) {
+    private void spawnGrid(int rows, int cols, float scale) {
+        LevelGameGrid grid = new LevelGameGrid(rows, cols);
+        for (int i = 0; i < rows * cols; i++) {
             Entity tile;
-            float tileX = (float) (2.9 + scale * (i % 10));
-            float tileY = (float) (1.45 + scale * (i / 10));
+            float tileX = xOffset + scale * (i % cols);
+            float tileY = yOffset + scale * (float)(i / cols);
             // logic for alternating tile images
-            if ((i / 10) % 2 == 1) {
+            if ((i / cols) % 2 == 1) {
                 tile = GridFactory.createTile(i % 2, scale, tileX, tileY);
             } else {
-                tile = GridFactory.createTile(1- (i % 2), scale, tileX, tileY);
+                tile = GridFactory.createTile(1 - (i % 2), scale, tileX, tileY);
             }
             tile.setPosition(tileX, tileY);
+            grid.addTile(i, tile);
             spawnEntity(tile);
         }
+        this.grid = grid;
     }
 
     private void unloadAssets() {
