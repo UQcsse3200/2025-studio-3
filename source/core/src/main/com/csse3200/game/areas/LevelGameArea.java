@@ -51,9 +51,13 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+
         float scale = 1.4f;
         spawnTiles(scale);
         playMusic();
+
+        playMusic();
+
     }
 
 

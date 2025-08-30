@@ -1,66 +1,53 @@
 package com.csse3200.game.ui;
 
-import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.UIComponent;
 
-
-
-public class DragAndDropDemo extends UIComponent {
+/**
+ * A draggable character UI component that can be moved around the screen.
+ * The character can be removed by clicking on it and pressing the 'R' key.
+ */
+public class DraggableCharacter extends UIComponent {
 
     private DragAndDrop dragAndDrop;
-    private Image image;
+    private Image image; // The image representing the character
 
-    // Customizable fields
-    private String texturePath = "images/box_boy_leaf.png";
-    private float offsetX = 0f;
-    private float offsetY = 500f;
-    private float scale = 0.15f;
+    // Default values for the customisable parameters
+    private String texturePath = "images/box_boy_leaf.png"; // Default texture path
+    private float offsetX = 0f; // Default y position
+    private float offsetY = 0f; // Default x position
+    private float scale = 0.15f; // Scale factor for the image size
 
+    /**
+     * Initializes the draggable character by adding the image actor to the stage
+     * and setting up the drag-and-drop functionality.
+     */
     @Override
     public void create() {
-        // I should probably change the skin tbh instead of using default skin on UIComponent
         super.create();
         addActors();
         setupDragAndDrop();
     }
 
+    /**
+     * Adds the character image actor to the stage
+     * with the specified image and scale. */
     private void addActors() {
-
         image = new Image(ServiceLocator.getResourceService().getAsset(texturePath, Texture.class));
-        //float scale = 0.15f;
         image.setSize(image.getWidth() * scale, image.getHeight() * scale);
-        image.setPosition(100, 100); // this is somewhere
         stage.addActor(image);
-        Gdx.input.setInputProcessor(stage);
     }
 
-    //    private void setupDragAndDrop() {
-//        dragAndDrop = new DragAndDrop();
-//
-//        dragAndDrop.addSource(new DragAndDrop.Source(boxBoy) {
-//            @Override
-//            public DragAndDrop.Payload dragStart(InputEvent event, float x, float y, int pointer) {
-//                DragAndDrop.Payload payload = new DragAndDrop.Payload();
-//                payload.setDragActor(new Image(boxBoy.getDrawable())); // this seems super wrong
-//                return payload;
-//            }
-//
-//            @Override
-//            public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target) {
-//                boxBoy.setPosition(x - boxBoy.getWidth() / 2, y - boxBoy.getHeight() / 2);
-//            }
-//        });
-//    }
+    /**
+     * Sets up the drag-and-drop functionality for the character image.
+     * Allows the image to be dragged around the screen.
+     */
     private void setupDragAndDrop() {
         dragAndDrop = new DragAndDrop();
 
@@ -68,59 +55,56 @@ public class DragAndDropDemo extends UIComponent {
             @Override
             public DragAndDrop.Payload dragStart(InputEvent event, float x, float y, int pointer) {
                 DragAndDrop.Payload payload = new DragAndDrop.Payload();
-
-
                 Image dragImg = new Image(image.getDrawable());
                 dragImg.setSize(image.getWidth(), image.getHeight());
-
-
-                dragAndDrop.setDragActorPosition(-dragImg.getWidth() / 2f, -dragImg.getHeight() / 2f);
-
-
-                payload.setDragActor(dragImg);
-                payload.setValidDragActor(dragImg);
-                payload.setInvalidDragActor(dragImg);
-
-
-                payload.setObject("boxBoy"); // come back to this line to store whats being dragged
-
+                payload.setDragActor(dragImg); // Attaches the image to payload
+                payload.setObject(texturePath); // Sets the texture path as the payload object.
+                // This will be helpful for other teams to know which character has been selected
                 return payload;
             }
 
             @Override
             public void dragStop(InputEvent event, float x, float y, int pointer,
                                  DragAndDrop.Payload payload, DragAndDrop.Target target) {
-                // Drop the original image where released
+
                 image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
             }
         });
     }
 
+    /**
+     * Disposes of the character image.
+     */
     @Override
     public void dispose() {
         super.dispose();
         image.remove();
     }
 
+    /**
+     * Draws the character image at the specified offsets.
+     * @param batch The SpriteBatch used for drawing.
+     */
     @Override
     protected void draw(SpriteBatch batch) {
-//        float offsetX = 0f;
-//        float offsetY = 500f;
         image.setPosition(offsetX, offsetY);
     }
 
 
 
+    /**
+     * A function that checks if the 'R' key is pressed while the mouse is over the character image.
+     * If so, it removes the image from the stage and disposes of the entity.
+     */
     @Override
     public void update() {
-        super.update();
-
         if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            float mx = Gdx.input.getX();
-            float my = Gdx.graphics.getHeight() - Gdx.input.getY();
+            float x = Gdx.input.getX();
+            float y = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-            if (mx >= image.getX() && mx <= image.getX() + image.getWidth()
-                    && my >= image.getY() && my <= image.getY() + image.getHeight()) {
+            if (x >= image.getX() && x <= image.getX() + image.getWidth()
+                    && y >= image.getY() && y <= image.getY() + image.getHeight()) {
+
 
                 Gdx.app.postRunnable(() -> {
                     image.remove();
@@ -130,7 +114,7 @@ public class DragAndDropDemo extends UIComponent {
         }
     }
 
-
+    // Setters for the customisable parameters
     public void setTexture(String path) { this.texturePath = path; }
     public void setOffsets(float x, float y) { this.offsetX = x; this.offsetY = y; }
     public void setScale(float scale) { this.scale = scale; }
