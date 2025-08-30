@@ -35,14 +35,17 @@ public class LevelGameArea extends GameArea{
 
     private final TerrainFactory terrainFactory;
 
+    private final float xOffset = 2.9f;
+    private final float yOffset = 1.45f;
+
+    private final float gridHeight = 7f;
+    private final float gridWidth = 14f;
+
     private final int levelOneRows = 5;
     private final int levelOneCols = 10;
 
     private final int levelTwoRows = 7;
-    private final int levelTwoCols = 8;
-
-    private final float xOffset = 2.9f;
-    private final float yOffset = 1.45f;
+    private final int levelTwoCols = 14;
 
     private LevelGameGrid grid;
 
@@ -62,8 +65,9 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
-        float scale = 1.4f;
+        float scale = gridHeight / levelOneRows;
         spawnGrid(levelOneRows, levelOneCols, scale);
+        //float scale = gridHeight / levelTwoRows;
         //spawnGrid(levelTwoRows, levelTwoCols, scale);
 
         playMusic();
