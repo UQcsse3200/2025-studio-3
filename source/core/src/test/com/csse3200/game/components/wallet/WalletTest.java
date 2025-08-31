@@ -17,8 +17,8 @@ class WalletTest {
         wallet.addCoins(10);
         coins = 210;
         assertEquals(coins, wallet.getCoins());
-        wallet.purchaseShopItem(20);//will change to Item input
-        coins = 190;//will change to Item get price function
+        wallet.purchaseShopItem(20);
+        coins = 190;
         assertEquals(coins, wallet.getCoins());
     }
 
@@ -33,8 +33,8 @@ class WalletTest {
         wallet.addCoins(10);
         coins = 210;
         assertEquals(coins, wallet.getCoins());
-        wallet.purchaseShopItem(20);//will change to Item input
-        coins = 190;//will change to Item get price function
+        wallet.purchaseShopItem(20);
+        coins = 190;
         assertEquals(coins, wallet.getCoins());
     }
 
@@ -49,8 +49,8 @@ class WalletTest {
         wallet.addSkillsPoints(10);
         skillPoints = 20;
         assertEquals(skillPoints, wallet.getSkillsPoints());
-        wallet.unlockSkill(2);//will change to Skills input
-        skillPoints = 18;//will change to Skill get cost function
+        wallet.unlockSkill(2);
+        skillPoints = 18;
         assertEquals(skillPoints, wallet.getSkillsPoints());
     }
 
@@ -65,8 +65,8 @@ class WalletTest {
         wallet.addSkillsPoints(10);
         skillPoints = 20;
         assertEquals(skillPoints, wallet.getSkillsPoints());
-        wallet.unlockSkill(2);//will change to Skills input
-        skillPoints = 18;//will change to Skill get cost function
+        wallet.unlockSkill(2);
+        skillPoints = 18;
         assertEquals(skillPoints, wallet.getSkillsPoints());
     }
 }

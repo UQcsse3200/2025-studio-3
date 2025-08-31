@@ -1,6 +1,18 @@
 package com.csse3200.game.components.wallet;
 
+import com.csse3200.game.entities.Entity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/** The Wallet class enables a player to collect, store and spend coins and skills points which allow purchase
+ * of Shop Items and unlocking of Skills to use in-level.
+ *
+ * A Wallet is created within and assigned to a Profile.
+ *
+ * A Wallet can be created with preset or variable coins and skillsPoints. *
+ */
 public class Wallet {
+    private static final Logger logger = LoggerFactory.getLogger(Wallet.class);
     int coins;
     int skillsPoints;
 
@@ -42,16 +54,20 @@ public class Wallet {
         this.skillsPoints += achievementSkillPoints;
     }
 
-    //Skill will now handle purchase functionality re checking have enough skillPoints to unlock
+    // Skill will now handle purchase functionality re checking have enough skillPoints to unlock
     public void unlockSkill(int skillCost) {
         this.skillsPoints -= skillCost;
     }
 
-    public void purchaseShopItem(int item) {//will be ShopItem item
-        if (coins >= item) {//will be something like item.getCost()
-            this.coins -= item;//will be something like item.getCost()
+    // Purchases Shop Item where Wallet has sufficient coins, and returns true, otherwise returns false
+    public boolean purchaseShopItem(int itemCost) {
+        if (coins >= itemCost) {
+            this.coins -= itemCost;
+            logger.info("Item purchased");
+            return true;
         } else {
-            //throw Exception;
+            logger.error("Not enough coins to purchase");
+            return false;
         }
     }
 }
