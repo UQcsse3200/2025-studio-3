@@ -18,8 +18,8 @@ import org.slf4j.LoggerFactory;
 public class ProfileDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(ProfileDisplay.class);
     private static final float Z_INDEX = 2f;
-    private static final int BUTTON_SIZE = 120;
-    private static final int CORNER_BUTTON_SIZE = 80;
+    private static final int BUTTON_SIZE = 320;
+    private static final int CORNER_BUTTON_SIZE = 150;
 
     @Override
     public void create() {
@@ -60,24 +60,24 @@ public class ProfileDisplay extends UIComponent {
         
         // Center title above the buttons
         float titleX = (stage.getWidth() - titleLabel.getWidth()) / 2f;
-        float titleY = stage.getHeight() / 2f + 100f;
+        float titleY = stage.getHeight() / 2f + 400f;
         
         titleLabel.setPosition(titleX, titleY);
         stage.addActor(titleLabel);
     }
 
     private void createProfileButtons() {
-        String[] buttonLabels = {"Inventory", "Achievements", "Skills", "Stats"};
-        String[] buttonEvents = {"inventory", "achievements", "skills", "stats"};
-        
+        String[] buttonLabels = {"Inventory", "Achievements", "Skills", "Stats", "Shop"};
+        String[] buttonEvents = {"inventory", "achievements", "skills", "stats", "shop"};
+
         float centerY = stage.getHeight() / 2f;
-        float totalWidth = (BUTTON_SIZE * 4) + (30f * 3); // 4 buttons + 3 gaps of 30px
+        float totalWidth = (BUTTON_SIZE * 5) + (50f * 4); // 5 buttons + 4 gaps of 50px
         float startX = (stage.getWidth() - totalWidth) / 2f;
-        
-        for (int i = 0; i < 4; i++) {
+
+        for (int i = 0; i < 5; i++) {
             TextButton button = createStyledButton(buttonLabels[i]);
-            
-            float buttonX = startX + (i * (BUTTON_SIZE + 30f));
+
+            float buttonX = startX + (i * (BUTTON_SIZE + 50f));
             float buttonY = centerY - (BUTTON_SIZE / 2f);
             
             button.setPosition(buttonX, buttonY);
@@ -101,7 +101,7 @@ public class ProfileDisplay extends UIComponent {
         // Back button (top left)
         TextButton backBtn = createStyledButton("Back");
         backBtn.setPosition(20f, stage.getHeight() - CORNER_BUTTON_SIZE - 20f);
-        backBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE);
+        backBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE/2);
         backBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -115,7 +115,7 @@ public class ProfileDisplay extends UIComponent {
         TextButton exitBtn = createStyledButton("Exit");
         exitBtn.setPosition(stage.getWidth() - CORNER_BUTTON_SIZE - 20f, 
                            stage.getHeight() - CORNER_BUTTON_SIZE - 20f);
-        exitBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE);
+        exitBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE/2);
         exitBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -128,7 +128,7 @@ public class ProfileDisplay extends UIComponent {
         // Save button (bottom left)
         TextButton saveBtn = createStyledButton("Save");
         saveBtn.setPosition(20f, 20f);
-        saveBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE);
+        saveBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE/2);
         saveBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -141,7 +141,7 @@ public class ProfileDisplay extends UIComponent {
         // Settings button (bottom right)
         TextButton settingsBtn = createStyledButton("Settings");
         settingsBtn.setPosition(stage.getWidth() - CORNER_BUTTON_SIZE - 20f, 20f);
-        settingsBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE);
+        settingsBtn.setSize(CORNER_BUTTON_SIZE, CORNER_BUTTON_SIZE/2);
         settingsBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {

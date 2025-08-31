@@ -1,8 +1,8 @@
-package com.csse3200.game.context;
+package com.csse3200.game.persistence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.csse3200.game.context.FileLoader.Location;
+import com.csse3200.game.persistence.FileLoader.Location;
 
 import java.io.File;
 

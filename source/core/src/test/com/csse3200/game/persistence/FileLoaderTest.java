@@ -1,7 +1,8 @@
-package com.csse3200.game.files;
+package com.csse3200.game.persistence;
 
-import com.csse3200.game.context.FileLoader;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.FileLoader;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.slf4j.Logger;

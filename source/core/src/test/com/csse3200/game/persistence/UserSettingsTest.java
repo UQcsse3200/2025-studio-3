@@ -1,4 +1,4 @@
-package com.csse3200.game.files;
+package com.csse3200.game.persistence;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -7,10 +7,10 @@ import static org.mockito.Mockito.when;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.csse3200.game.context.UserSettings;
-import com.csse3200.game.context.UserSettings.DisplaySettings;
-import com.csse3200.game.context.UserSettings.Settings;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.UserSettings;
+import com.csse3200.game.persistence.UserSettings.DisplaySettings;
+import com.csse3200.game.persistence.UserSettings.Settings;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

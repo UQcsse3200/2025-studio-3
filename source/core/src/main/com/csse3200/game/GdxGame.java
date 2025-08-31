@@ -3,7 +3,7 @@ package com.csse3200.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.context.UserSettings;
+import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.LoadGameScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;

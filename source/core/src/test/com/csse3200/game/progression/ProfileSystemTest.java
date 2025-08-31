@@ -1,4 +1,4 @@
-package com.csse3200.game.profile;
+package com.csse3200.game.progression;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import com.csse3200.game.context.ProfileService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.ProfileService;
 import com.csse3200.game.progression.Profile;
 
 @ExtendWith(GameExtension.class)

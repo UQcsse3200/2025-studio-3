@@ -13,6 +13,7 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -22,8 +23,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-import com.csse3200.game.components.maingame.MainGameExitDisplay;
-import com.csse3200.game.context.Persistence;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 
@@ -47,7 +46,9 @@ public class MainGameScreen extends ScreenAdapter {
   public MainGameScreen(GdxGame game) {
     this.game = game;
 
-    // TODO: Check that profile has loaded
+    if (Persistence.profile() == null) {
+      throw new IllegalStateException("No profile loaded, cannot start game");
+    }
 
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());

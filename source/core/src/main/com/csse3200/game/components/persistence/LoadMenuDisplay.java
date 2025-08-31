@@ -6,21 +6,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.csse3200.game.context.Persistence;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.List;
 
 /**
- * A UI component for displaying the Load menu with save file slots.
+ * A UI component for displaying the load menu with current saves.
  */
 public class LoadMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(LoadMenuDisplay.class);
     private static final float Z_INDEX = 2f;
     private Table table;
-    private List<Persistence.Savefile> saveFiles;
+    private List<Savefile> saveFiles;
 
     @Override
     public void create() {
@@ -56,21 +56,21 @@ public class LoadMenuDisplay extends UIComponent {
         for (int i = 0; i < 3; i++) {
             if (i < saveFiles.size()) {
                 // Active save slot
-                Persistence.Savefile save = saveFiles.get(i);
-                String buttonText = save.name + "\n" + save.date;
+                Savefile save = saveFiles.get(i);
+                String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
                 saveSlotButtons[i] = new TextButton(buttonText, skin);
                 
                 final int slotIndex = i;
                 saveSlotButtons[i].addListener(new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).name);
+                        logger.debug("Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).getName());
                         entity.getEvents().trigger("loadGame", saveFiles.get(slotIndex));
                     }
                 });
             } else {
                 // Empty save slot
-                saveSlotButtons[i] = new TextButton("No Save Data", skin);
+                saveSlotButtons[i] = new TextButton("Empty", skin);
                 saveSlotButtons[i].setDisabled(true);
             }
         }

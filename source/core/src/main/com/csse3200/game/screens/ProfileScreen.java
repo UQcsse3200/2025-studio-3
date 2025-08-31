@@ -63,8 +63,7 @@ public class ProfileScreen extends ScreenAdapter {
 
   /**
    * Creates the setting screen's ui including components for rendering ui
-   * elements to the screen
-   * and capturing and handling ui input.
+   * elements to the screen and capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating ui");

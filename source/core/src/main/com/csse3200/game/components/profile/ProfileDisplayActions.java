@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.persistence.Persistence;
 
 /**
  * Handles actions for the profile menu display.
@@ -26,6 +27,7 @@ public class ProfileDisplayActions extends Component {
     entity.getEvents().addListener("profile_exit", this::onExit);
     entity.getEvents().addListener("profile_save", this::onSave);
     entity.getEvents().addListener("profile_settings", this::onSettings);
+    entity.getEvents().addListener("profile_shop", this::onShop);
   }
 
   private void onBack() {
@@ -53,6 +55,11 @@ public class ProfileDisplayActions extends Component {
     // game.setScreen(GdxGame.ScreenType.STATS);
   }
 
+  private void onShop() {
+    logger.info("Opening shop");
+    // game.setScreen(GdxGame.ScreenType.SHOP);
+  }
+
   private void onExit() {
     logger.info("Exiting game");
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
@@ -60,7 +67,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onSave() {
     logger.info("Saving game");
-    // profile.save();
+    Persistence.save();
   }
 
   private void onSettings() {

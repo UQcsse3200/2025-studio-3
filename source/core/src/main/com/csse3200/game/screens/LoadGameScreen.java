@@ -17,13 +17,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The game screen containing the main menu.
+ * The game screen containing the load menu.
  */
 public class LoadGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(LoadGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
 
+  /**
+   * Constructor for the load game screen.
+   * @param game
+   */
   public LoadGameScreen(GdxGame game) {
     this.game = game;
     logger.debug("Initialising load game screen services");
@@ -64,7 +68,7 @@ public class LoadGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the main menu's ui including components for rendering ui elements to the screen and
+   * Creates the load menu's ui including components for rendering ui elements to the screen and
    * capturing and handling ui input.
    */
   private void createUI() {
