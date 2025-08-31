@@ -3,9 +3,11 @@ package com.csse3200.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.files.UserSettings;
+import com.csse3200.game.persistence.UserSettings;
+import com.csse3200.game.screens.LoadGameScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
+import com.csse3200.game.screens.ProfileScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +26,7 @@ public class GdxGame extends Game {
   public void create() {
     logger.info("Creating game");
     loadSettings();
-
+   
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
 
@@ -72,13 +74,17 @@ public class GdxGame extends Game {
         return new MainGameScreen(this);
       case SETTINGS:
         return new SettingsScreen(this);
+      case PROFILE:
+        return new ProfileScreen(this);
+      case LOAD_GAME:
+        return new LoadGameScreen(this);
       default:
         return null;
     }
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS
+    MAIN_MENU, MAIN_GAME, SETTINGS, PROFILE, LOAD_GAME
   }
 
   /**

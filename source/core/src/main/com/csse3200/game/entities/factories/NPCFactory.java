@@ -13,7 +13,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.GhostKingConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
-import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;

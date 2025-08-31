@@ -23,8 +23,7 @@ public class ServiceLocator {
   private static GameTime timeSource;
   private static InputService inputService;
   private static ResourceService resourceService;
-
-
+  
   public static EntityService getEntityService() {
     return entityService;
   }

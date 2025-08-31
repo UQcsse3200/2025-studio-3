@@ -1,8 +1,8 @@
-package com.csse3200.game.files;
+package com.csse3200.game.persistence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
-import com.csse3200.game.files.FileLoader.Location;
+import com.csse3200.game.persistence.FileLoader.Location;
 
 import java.io.File;
 
@@ -10,7 +10,7 @@ import java.io.File;
  * Reading, Writing, and applying user settings in the game.
  */
 public class UserSettings {
-  private static final String ROOT_DIR = "CSSE3200Game";
+  private static final String ROOT_DIR = "The Day We Fought Back";
   private static final String SETTINGS_FILE = "settings.json";
 
   private static final int WINDOW_WIDTH = 1280;
