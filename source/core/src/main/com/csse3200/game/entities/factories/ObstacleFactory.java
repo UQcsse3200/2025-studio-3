@@ -7,6 +7,9 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.TouchAttackComponent;
+
 
 /**
  * Factory to create obstacle entities.
@@ -33,7 +36,37 @@ public class ObstacleFactory {
     return tree;
   }
 
-  /**
+    /**
+     * creates a laser projectile entity
+     * @return entity
+     */
+    public static Entity createLaser() {
+        Entity laser =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("images/laser.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
+                                .setSensor(false))
+                        .addComponent(new CombatStatsComponent(1, 0)) // damage
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY));
+
+        laser.getComponent(PhysicsComponent.class).setBodyType(BodyType.KinematicBody);
+        laser.getComponent(TextureRenderComponent.class).scaleEntity();
+        laser.scaleHeight(2.0f);
+        laser.scaleWidth(0.2f);
+        PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
+
+        laser.getComponent(PhysicsComponent.class).setLinearVelocity(0f, 15f);
+
+        laser.getComponent(TextureRenderComponent.class).scaleEntity();
+        laser.scaleHeight(1.0f);  // adjust size as needed
+        PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
+
+        return laser;
+    }
+
+
+    /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
    * @param height Wall height in world units
