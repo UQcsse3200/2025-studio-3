@@ -54,9 +54,14 @@ public class LevelGameArea extends GameArea{
 
         float scale = 1.4f;
         spawnTiles(scale);
+        playMusic();
 
         playMusic();
+
     }
+
+
+
 
     private void loadAssets() {
         logger.debug("Loading assets");
