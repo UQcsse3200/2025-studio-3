@@ -54,13 +54,14 @@ public class ObstacleFactory {
         PhysicsUtils.setScaledCollider(Projectile, 0.2f, 0.8f);
         Vector2 velocity = new Vector2(0, 15f);  // adjust speed as needed
         Projectile.getComponent(PhysicsComponent.class).setLinearVelocity(velocity);
-        Projectile.addComponent(new Component() {
+        Entity entity = Projectile.addComponent(new Component() {
 
+
+            private float deltaTime;
+
+            @Override
             public void update(float deltaTime) {
-                float y = Projectile.getComponent(PhysicsComponent.class).getBody().getPosition().y;
-                if (y> 1000) {  // assuming 1000 is top of your screen/world
-                    Projectile.dispose();
-                }
+                this.deltaTime = deltaTime;
             }
         });
         return Projectile;
