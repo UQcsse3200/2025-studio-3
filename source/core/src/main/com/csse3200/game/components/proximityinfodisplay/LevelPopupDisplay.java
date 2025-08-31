@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.components.player.PlayerActions;
+import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.ui.UIComponent;
@@ -19,6 +20,21 @@ public class LevelPopupDisplay extends UIComponent {
     private Window popupDisplay;
     /*popup window's visibility*/
     private boolean isDisplayed = false;
+    private MenuSpriteData spriteData;
+
+    /**
+     * Default constructor for when no arguments are passed.
+     */
+    public LevelPopupDisplay() {
+    }
+
+    /**
+     * Constructor for when level sprite data argument is passed to the class.
+     * @param spriteData level sprite data.
+     */
+    public LevelPopupDisplay(MenuSpriteData spriteData) {
+        this.spriteData = spriteData;
+    }
 
     /**
      *  Creation of the popup display and collision event.
@@ -31,16 +47,16 @@ public class LevelPopupDisplay extends UIComponent {
         entity.getEvents().addListener("collisionStart", this::onCollisionStart);
 
         // Creates popup display.
-        popupDisplay = new Window ("Tree", skin);
+        popupDisplay = new Window (setLevelTitle(spriteData), skin);
         popupDisplay.setMovable(false);
-        popupDisplay.setSize(100, 200);
+        popupDisplay.setSize(200, 200);
         popupDisplay.setPosition(
                 (Gdx.graphics.getWidth() - popupDisplay.getWidth()) / 2f,
                 (Gdx.graphics.getHeight() - popupDisplay.getHeight()) / 2f
         );
 
         // Adds text in the popup display.
-        Label message = new Label("Tree", skin);
+        Label message = new Label(setLevelDescription(spriteData), skin);
         popupDisplay.add(message).pad(10).row();
 
         // Sets popup display to false when created.
@@ -78,11 +94,33 @@ public class LevelPopupDisplay extends UIComponent {
      */
     private void onCollisionStart(Fixture entity, Fixture other) {
         Entity otherEntity = ((BodyUserData) other.getBody().getUserData()).entity;
-        // Checks 'other' is the player by checking a component unique to the player
+        // Checks 'other' is the player by checking a component unique to the player.
         if (otherEntity.getComponent(PlayerActions.class) != null) {
             popupDisplay.setVisible(true);
             isDisplayed = true;
         }
+    }
+
+    /**
+     * Gets the level's title.
+     * @return level's title
+     */
+    private String setLevelTitle(MenuSpriteData spriteData){
+        if (spriteData == null) {
+            return "Title";
+        }
+        return spriteData.getName();
+    }
+
+    /**
+     *  Gets the level's title.
+     * @return level's title
+     */
+    private String setLevelDescription(MenuSpriteData spriteData) {
+        if (spriteData == null) {
+            return "Description\nDescription";
+        }
+        return spriteData.getDescription();
     }
 
     /**
