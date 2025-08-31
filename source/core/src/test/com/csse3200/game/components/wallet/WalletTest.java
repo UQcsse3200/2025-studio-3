@@ -2,6 +2,8 @@ package com.csse3200.game.components.wallet;
 
 import org.junit.jupiter.api.Test;
 
+import com.csse3200.game.progression.wallet.Wallet;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class WalletTest {

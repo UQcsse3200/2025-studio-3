@@ -1,6 +1,5 @@
 package com.csse3200.game.components.hud;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -9,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -98,7 +98,7 @@ public class HudDisplay extends UIComponent {
     public void updateGoldDisplay() {
         try {
             // Get coins from profile wallet
-            int coins = 100; //ServiceLocator.getProfileService().get().wallet().getCoins();
+            int coins = Persistence.profile().wallet().getCoins();
             goldLabel.setText(String.valueOf(coins));
         } catch (Exception e) {
             logger.warn("Could not get coins from profile: {}", e.getMessage());
