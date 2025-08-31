@@ -1,0 +1,56 @@
+sling_shooter.png
+size: 1632, 102
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 68, 102
+float
+  bounds: 0, 0, 68, 102
+float
+  bounds: 68, 0, 68, 102
+float
+  bounds: 136, 0, 68, 102
+float
+  bounds: 204, 0, 68, 102
+float
+  bounds: 272, 0, 68, 102
+float
+  bounds: 340, 0, 68, 102
+float
+  bounds: 408, 0, 68, 102
+float
+  bounds: 476, 0, 68, 102
+float
+  bounds: 544, 0, 68, 102
+float
+  bounds: 612, 0, 68, 102
+float
+  bounds: 680, 0, 68, 102
+float
+  bounds: 748, 0, 68, 102
+float
+  bounds: 816, 0, 68, 102
+float
+  bounds: 884, 0, 68, 102
+float
+  bounds: 952, 0, 68, 102
+float
+  bounds: 1020, 0, 68, 102
+float
+  bounds: 1088, 0, 68, 102
+float
+  bounds: 1156, 0, 68, 102
+float
+  bounds: 1224, 0, 68, 102
+float
+  bounds: 1292, 0, 68, 102
+float
+  bounds: 1360, 0, 68, 102
+float
+  bounds: 1428, 0, 68, 102
+float
+  bounds: 1496, 0, 68, 102
+float
+  bounds: 1564, 0, 68, 102
