@@ -214,7 +214,12 @@ public class ColliderComponent extends Component {
     }
   }
 
-  private Shape makeBoundingBox() {
+    @Override
+    public void update(float deltaTime) {
+
+    }
+
+    private Shape makeBoundingBox() {
     PolygonShape bbox = new PolygonShape();
     Vector2 center = entity.getScale().scl(0.5f);
     bbox.setAsBox(center.x, center.y, center, 0f);

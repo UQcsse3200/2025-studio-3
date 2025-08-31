@@ -30,7 +30,12 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     }
   }
 
-  /**
+    @Override
+    public void update(float deltaTime) {
+
+    }
+
+    /**
    * Enable/disable movement for the controller. Disabling will immediately set velocity to 0.
    *
    * @param movementEnabled true to enable movement, false otherwise

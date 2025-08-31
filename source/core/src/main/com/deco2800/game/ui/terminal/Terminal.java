@@ -15,7 +15,7 @@ import java.util.Map;
  * State tracker for a debug terminal. Any commands to be actioned through the terminal input should
  * be added to the map of commands.
  */
-public class Terminal extends Component {
+public  class Terminal extends Component {
   private static final Logger logger = LoggerFactory.getLogger(Terminal.class);
   private final Map<String, Command> commands;
   private String enteredMessage = "";
@@ -132,4 +132,9 @@ public class Terminal extends Component {
   public void setEnteredMessage(String text) {
     enteredMessage = text;
   }
+
+    @Override
+    public void update(float deltaTime) {
+
+    }
 }

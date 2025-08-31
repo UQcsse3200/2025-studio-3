@@ -21,8 +21,13 @@ public class PhysicsComponent extends Component {
   private static final float GROUND_FRICTION = 5f;
   private final PhysicsEngine physics;
   private final Body body;
+    @Override
+    public void update(float deltaTime) {
+        // Physics handled by Box2D; nothing to update manually
+    }
 
-  /** Create a physics component with default settings. */
+
+    /** Create a physics component with default settings. */
   public PhysicsComponent() {
     this(ServiceLocator.getPhysicsService().getPhysics());
   }
@@ -55,7 +60,15 @@ public class PhysicsComponent extends Component {
     return this;
   }
 
-  /**
+    /**
+     * Sets the Vertical Velocity for Projectile or other entities
+     */
+    public PhysicsComponent setLinearVelocity(Vector2 velocity) {
+        body.setLinearVelocity(velocity);
+        return this;
+    }
+
+    /**
    * Get the physics body.
    *
    * @return physics body if entity has been created, null otherwise.

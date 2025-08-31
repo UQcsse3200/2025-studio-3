@@ -1,6 +1,8 @@
 package com.deco2800.game.entities.factories;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.deco2800.game.components.Component;
 import com.deco2800.game.entities.Entity;
 import com.deco2800.game.physics.PhysicsLayer;
 import com.deco2800.game.physics.PhysicsUtils;
@@ -33,7 +35,39 @@ public class ObstacleFactory {
     return tree;
   }
 
-  /**
+    /**
+     * creates a projectile entity
+     * defines it vertical and linear speed, physics type, size and scale and collision mechanism
+     * @return entity
+     */
+    public static Entity createProjectile() {
+        Entity Projectile =
+                new Entity()
+                        .addComponent(new TextureRenderComponent("images/tree.png"))
+                        .addComponent(new PhysicsComponent())
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE));
+
+        Projectile.getComponent(PhysicsComponent.class).setBodyType(BodyType.KinematicBody);
+        Projectile.getComponent(TextureRenderComponent.class).scaleEntity();
+        Projectile.scaleHeight(3.0f);
+        Projectile.scaleWidth(0.3f);
+        PhysicsUtils.setScaledCollider(Projectile, 0.2f, 0.8f);
+        Vector2 velocity = new Vector2(0, 15f);  // adjust speed as needed
+        Projectile.getComponent(PhysicsComponent.class).setLinearVelocity(velocity);
+        Projectile.addComponent(new Component() {
+            @Override
+            public void update(float deltaTime) {
+                float y = Projectile.getComponent(PhysicsComponent.class).getBody().getPosition().y;
+                if (y> 1000) {  // assuming 1000 is top of your screen/world
+                    Projectile.dispose();
+                }
+            }
+        });
+        return Projectile;
+    }
+
+
+    /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
    * @param height Wall height in world units
