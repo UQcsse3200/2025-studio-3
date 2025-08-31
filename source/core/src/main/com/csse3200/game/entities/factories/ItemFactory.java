@@ -1,6 +1,6 @@
 package com.csse3200.game.entities.factories;
 
-import com.csse3200.game.components.items.BombComponent;
+import com.csse3200.game.components.items.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.ItemConfigs;
 import com.csse3200.game.entities.configs.ItemEntityConfig;
@@ -37,11 +37,28 @@ public class ItemFactory {
   }
 
   /**
+   * Creates a coffee entity.
+   *
+   * @return entity
+   */
+  public static Entity createCoffee() {
+    Entity coffee = createBaseItem();
+    ItemEntityConfig config = configs.coffee;
+
+    coffee
+            .addComponent(new TextureRenderComponent("images/coffee.png"))
+            .addComponent(new CoffeeComponent());
+
+    return coffee;
+  }
+
+  /**
    * Creates a generic item to be used as a base entity by more specific item creation methods.
    *
    * @return entity
    */
   private static Entity createBaseItem() {
+    // components may need to be changed (may not want collision)
     Entity item =
         new Entity()
             .addComponent(new PhysicsComponent())

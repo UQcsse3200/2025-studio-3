@@ -5,4 +5,5 @@ package com.csse3200.game.entities.configs;
  */
 public class ItemConfigs {
     public ItemEntityConfig bomb = new ItemEntityConfig();
+    public ItemEntityConfig coffee = new ItemEntityConfig();
 }

@@ -7,18 +7,16 @@ public class BombComponent extends Component {
 
     @Override
     public void create() {
+        // control how long the bomb takes to blow up
         float fuseTime = 2f;
+        // creates a background task that triggers the event "boom"
         Timer.schedule(new Timer.Task() {
             @Override
             public void run() {
-                boom();
+                entity.getEvents().trigger("boom");
+                entity.dispose(); // will need a blowing up animation later
             }
         }, fuseTime);
-    }
-
-    private void boom() {
-        entity.getEvents().trigger("boom");
-        entity.dispose();
     }
 
 }
