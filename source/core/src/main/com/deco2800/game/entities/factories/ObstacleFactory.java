@@ -55,7 +55,7 @@ public class ObstacleFactory {
         Vector2 velocity = new Vector2(0, 15f);  // adjust speed as needed
         Projectile.getComponent(PhysicsComponent.class).setLinearVelocity(velocity);
         Projectile.addComponent(new Component() {
-            @Override
+
             public void update(float deltaTime) {
                 float y = Projectile.getComponent(PhysicsComponent.class).getBody().getPosition().y;
                 if (y> 1000) {  // assuming 1000 is top of your screen/world

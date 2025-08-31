@@ -9,12 +9,13 @@ import org.slf4j.LoggerFactory;
  * and disposing. Components can be attached to an entity to give it specific behaviour. It is
  * unlikely that changes will need to be made here.
  */
-public abstract class Component {
+public  class Component {
   private static final Logger logger = LoggerFactory.getLogger(Component.class);
   protected Entity entity;
   protected boolean enabled = true;
+    private float deltaTime;
 
-  /**
+    /**
    * Called when the entity is created and registered. Initial logic such as calls to GetComponent
    * should be made here, not in the constructor which is called before an entity is finished.
    */
@@ -100,5 +101,5 @@ public abstract class Component {
     return entity + "." + className;
   }
 
-    public abstract void update(float deltaTime);
+
 }
