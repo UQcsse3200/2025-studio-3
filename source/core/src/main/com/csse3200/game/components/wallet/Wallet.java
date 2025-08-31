@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
  *
  * A Wallet is created within and assigned to a Profile.
  *
- * A Wallet can be created with preset or variable coins and skillsPoints. *
+ * A Wallet can be created with preset or variable coins and skillsPoints.
  */
 public class Wallet {
     private static final Logger logger = LoggerFactory.getLogger(Wallet.class);
