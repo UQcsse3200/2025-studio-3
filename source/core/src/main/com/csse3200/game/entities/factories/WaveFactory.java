@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
@@ -7,24 +8,54 @@ import com.csse3200.game.files.FileLoader;
 
 /**
  * Factory to create a wave with predefined components.
- *
-**/
+ */
 public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
-    private WaveManager waveManager = new WaveManager();
+    private WaveManager waveManager;
     private int wave;
 
+    /**
+     * Default constructor
+     */
     public WaveFactory() {
+        this.waveManager = new WaveManager();
+        this.wave = waveManager.getCurrentWave();
+    }
+
+    /**
+     * Constructor with game entity for UI integration
+     * @param gameEntity the main game entity for triggering UI events
+     */
+    public WaveFactory(Entity gameEntity) {
+        this.waveManager = new WaveManager();
+        this.waveManager.setGameEntity(gameEntity);
         this.wave = waveManager.getCurrentWave();
     }
 
     /**
      * Changes the wave after a certain condition is met.
-     *
      */
     public void changeWave() {
         this.wave = waveManager.getCurrentWave();
+    }
+
+    /**
+     * Advances to the next wave using the WaveManager
+     */
+    public void advanceToNextWave() {
+        // Create dummy enemies array for now - this will be replaced with actual enemy creation
+        Entity[] dummyEnemies = new Entity[1];
+        waveManager.startNewWave(dummyEnemies);
+        this.wave = waveManager.getCurrentWave();
+    }
+
+    /**
+     * Gets the WaveManager instance
+     * @return the WaveManager
+     */
+    public WaveManager getWaveManager() {
+        return waveManager;
     }
 
     /**

@@ -9,12 +9,13 @@ import com.csse3200.game.ui.UIComponent;
 /**
  * A UI component for displaying the current wave number.
  * Shows the current wave and can be updated when waves change.
+ * Now integrated with the WaveManager system.
  */
 public class CurrentWaveDisplay extends UIComponent {
 	private Table table;
 	private Label waveLabel;
 	private Label waveNumberLabel;
-	private String currentWave = "Wave 1";
+	private int currentWave = 0;
 
 	@Override
 	public void create() {
@@ -23,6 +24,9 @@ public class CurrentWaveDisplay extends UIComponent {
 
 		// Listen for wave change events - expects an integer wave number
 		entity.getEvents().addListener("waveChanged", this::updateWaveDisplay);
+		
+		// Also listen for new wave start events
+		entity.getEvents().addListener("newWaveStarted", this::updateWaveDisplay);
 	}
 
 	/**
@@ -38,8 +42,8 @@ public class CurrentWaveDisplay extends UIComponent {
 		// Wave text label
 		waveLabel = new Label("Current Wave:", skin, "large");
 		
-		// Wave number label
-		waveNumberLabel = new Label(currentWave, skin, "large");
+		// Wave number label - start at 0 (no wave active)
+		waveNumberLabel = new Label("No Wave Active", skin, "large");
 
 		// Add labels to table with some spacing
 		table.add(waveLabel).padRight(10f);
@@ -55,20 +59,43 @@ public class CurrentWaveDisplay extends UIComponent {
 
 	/**
 	 * Updates the wave display on the UI.
-	 * This method is called by the event system when "waveChanged" event is triggered.
+	 * This method is called by the event system when "waveChanged" or "newWaveStarted" events are triggered.
 	 * @param waveNumber the new wave number to display
 	 */
 	public void updateWaveDisplay(int waveNumber) {
-		currentWave = "Wave " + waveNumber;
-		waveNumberLabel.setText(currentWave);
+		currentWave = waveNumber;
+		if (waveNumber > 0) {
+			waveNumberLabel.setText("Wave " + waveNumber);
+		} else {
+			waveNumberLabel.setText("No Wave Active");
+		}
 	}
 
 	/**
-	 * Gets the current wave being displayed.
+	 * Gets the current wave number being displayed.
+	 * @return current wave number
+	 */
+	public int getCurrentWaveNumber() {
+		return currentWave;
+	}
+
+	/**
+	 * Gets the current wave being displayed as a string.
 	 * @return current wave string
 	 */
 	public String getCurrentWave() {
-		return currentWave;
+		if (currentWave > 0) {
+			return "Wave " + currentWave;
+		}
+		return "No Wave Active";
+	}
+
+	/**
+	 * Manually trigger a wave change for testing purposes.
+	 * @param waveNumber the new wave number
+	 */
+	public void setWave(int waveNumber) {
+		updateWaveDisplay(waveNumber);
 	}
 
 	@Override
