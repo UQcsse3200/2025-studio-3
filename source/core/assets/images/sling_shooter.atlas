@@ -1,124 +1,54 @@
 sling_shooter.png
-size: 3600, 1036
+size: 1632, 102
 format: RGBA8888
-filter: Linear,Linear
+filter: Linear, Linear
 repeat: none
-angry_float
-  rotate: false
-  xy: 0, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 0
-angry_float
-  rotate: false
-  xy: 400, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 1
-angry_float
-  rotate: false
-  xy: 800, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 2
-angry_float
-  rotate: false
-  xy: 1200, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 3
-angry_float
-  rotate: false
-  xy: 1600, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 4
-angry_float
-  rotate: false
-  xy: 2000, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 5
-angry_float
-  rotate: false
-  xy: 2400, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 6
-angry_float
-  rotate: false
-  xy: 2800, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 7
+pma: false
 default
-  rotate: false
-  xy: 3200, 0
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 0
+  bounds: 0, 0, 68, 102
 float
-  rotate: false
-  xy: 0, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 0
+  bounds: 68, 0, 68, 102
 float
-  rotate: false
-  xy: 400, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 1
+  bounds: 136, 0, 68, 102
 float
-  rotate: false
-  xy: 800, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 2
+  bounds: 204, 0, 68, 102
 float
-  rotate: false
-  xy: 1200, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 3
+  bounds: 272, 0, 68, 102
 float
-  rotate: false
-  xy: 1600, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 4
+  bounds: 340, 0, 68, 102
 float
-  rotate: false
-  xy: 2000, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 5
+  bounds: 408, 0, 68, 102
 float
-  rotate: false
-  xy: 2400, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 6
+  bounds: 476, 0, 68, 102
 float
-  rotate: false
-  xy: 2800, 518
-  size: 400, 518
-  orig: 400, 518
-  offset: 0, 0
-  index: 7
+  bounds: 544, 0, 68, 102
+float
+  bounds: 612, 0, 68, 102
+float
+  bounds: 680, 0, 68, 102
+float
+  bounds: 748, 0, 68, 102
+float
+  bounds: 816, 0, 68, 102
+float
+  bounds: 884, 0, 68, 102
+float
+  bounds: 952, 0, 68, 102
+float
+  bounds: 1020, 0, 68, 102
+float
+  bounds: 1088, 0, 68, 102
+float
+  bounds: 1156, 0, 68, 102
+float
+  bounds: 1224, 0, 68, 102
+float
+  bounds: 1292, 0, 68, 102
+float
+  bounds: 1360, 0, 68, 102
+float
+  bounds: 1428, 0, 68, 102
+float
+  bounds: 1496, 0, 68, 102
+float
+  bounds: 1564, 0, 68, 102
