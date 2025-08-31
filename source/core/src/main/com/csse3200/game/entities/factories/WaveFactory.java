@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
 import com.csse3200.game.files.FileLoader;
@@ -12,6 +13,7 @@ public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
     private final String wave;
+    private WaveManager waveManager = new WaveManager();
 
     public WaveFactory(String wave) {
         this.wave = wave;
@@ -22,8 +24,8 @@ public class WaveFactory {
      *
      * @return wave number as string
      */
-    public String getCurrentWave() {
-        return wave;
+    public int getCurrentWave() {
+        return waveManager.getCurrentWave();
     }
 
     /**
