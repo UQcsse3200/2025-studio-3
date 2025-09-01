@@ -9,11 +9,11 @@ public class Skill {
         CRIT_CHANCE,
         ARMOUR
     }
-    private  String name;
-    private  StatType statType;
-    private int cost;
+    private final  String name;
+    private final StatType statType;
+    private final int cost;
     private boolean locked;
-    private float percentage;
+    private final float percentage;
 
     public Skill(String name, StatType statType, float percentage, int cost) {
         this.name = name;
@@ -22,6 +22,8 @@ public class Skill {
         this.cost = cost;
         this.locked = true;
     }
+
+
 
     public String getName() {
         return name;
@@ -43,5 +45,7 @@ public class Skill {
 
     public void unlock() {
         this.locked = false;
+
+
     }
 }

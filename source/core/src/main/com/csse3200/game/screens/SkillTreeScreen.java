@@ -2,11 +2,19 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
@@ -23,19 +31,23 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.skilltree.Skill;
+import com.csse3200.game.skilltree.SkillSet;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+//import com.csse3200.game.Wallet;
 
 /** The game screen containing the settings. */
 public class SkillTreeScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(SkillTreeScreen.class);
-
     private final GdxGame game;
     private final Renderer renderer;
-    private Texture background;
-    private SpriteBatch batch;
+    private final Texture background;
+    private final SpriteBatch batch;
+    private final SkillSet skillSet = new SkillSet();
+
 
     public SkillTreeScreen(GdxGame game) {
         this.game = game;
@@ -82,6 +94,10 @@ public class SkillTreeScreen extends ScreenAdapter {
         renderer.resize(width, height);
     }
 
+
+    /**
+     * load background image + exit button
+     */
     private void createUI() {
         logger.debug("Creating ui");
         Stage stage = ServiceLocator.getRenderService().getStage();
@@ -105,6 +121,141 @@ public class SkillTreeScreen extends ScreenAdapter {
                 .addComponent(new TerminalDisplay());
 
         ServiceLocator.getEntityService().register(ui);
+
+        createAllButtons();
+    }
+
+
+    private void createSkillButton(Stage stage, String skillName, String labelText,
+                                   Texture lockedTexture, Texture unlockedTexture,
+                                   float x, float y) {
+
+        Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(lockedTexture)));
+        skillButton.setSize(90, 130);
+        skillButton.setPosition(x, y);
+
+        // Add listener
+        skillButton.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float px, float py) {
+                System.out.println(skillName + " unlocked!");
+
+                Skill skill = skillSet.getSkill(skillName);
+
+                int cost = skill.getCost();
+                // int totalPoints = Wallet.getSkillsPoints();
+                // if (totalPoints >= cost) {
+                    skillSet.addSkill(skill);
+                    skill.unlock();
+
+
+                // Wallet.unlockSkill(cost);
+                // }
+                Image unlockedImage = new Image(unlockedTexture);
+                unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());
+                unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
+                stage.getActors().removeValue(skillButton, true);
+                stage.addActor(unlockedImage);
+
+                }
+    });
+
+
+
+
+        stage.addActor(skillButton);
+
+
+        stage.addActor(createLabel(stage, labelText, skillButton));
+        addSkillImage(stage);
+        stage.addActor(totalSkillPoints(stage));
+    }
+
+    private void createAllButtons() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        Texture lockedTexture = new Texture(Gdx.files.internal("images/attackSkillLocked.png"));
+        Texture unlockedTexture = new Texture(Gdx.files.internal("images/attackSkill.png"));
+
+
+        Texture lockedTextureShield = new Texture(Gdx.files.internal("images/shieldSkillLocked.png"));
+        Texture unlockedTextureShield = new Texture(Gdx.files.internal("images/shieldSkill.png"));
+
+        createSkillButton(stage, "Increase AD Basic", "Damage 10%",
+                lockedTexture, unlockedTexture, 620, 620);
+        createSkillButton(stage, "Increase AD Intermediate", "Damage 20%",
+                lockedTexture, unlockedTexture, 370, 455);
+        createSkillButton(stage, "Increase AD Advanced", "Damage 30%",
+                lockedTexture, unlockedTexture, 130, 195);
+
+
+        createSkillButton(stage, "Increase firing Basic", "Firing Speed 10%",
+                lockedTexture, unlockedTexture, 545, 420);
+        createSkillButton(stage, "Increase firing Intermediate", "Speed 20%",
+                lockedTexture, unlockedTexture, 590, 210);
+        createSkillButton(stage, "Increase firing Advanced", "Firing Speed 30%",
+                lockedTexture, unlockedTexture, 500, 180);
+
+        createSkillButton(stage, "Increase crit Basic", "Crit 10%",
+                lockedTexture, unlockedTexture, 870, 250);
+
+        createSkillButton(stage, "Increase Health Basic", "Health 10%",
+                lockedTextureShield, unlockedTextureShield, 1070, 690);
+        createSkillButton(stage, "Increase Health Intermediate", "Health 20%",
+                lockedTextureShield, unlockedTextureShield, 920, 555);
+        createSkillButton(stage, "Increase Health Advanced", "Health 30%",
+                lockedTextureShield, unlockedTextureShield, 870, 375);
+
+
+        createSkillButton(stage, "Increase armour Basic", "Amour 10%",
+                lockedTextureShield, unlockedTextureShield, 1190, 565);
+        createSkillButton(stage, "Increase armour Intermediate", "Armour 20%",
+                lockedTextureShield, unlockedTextureShield, 1085, 304);
+        createSkillButton(stage, "Increase armour Advanced", "Armour 30%",
+                lockedTextureShield, unlockedTextureShield, 1281, 305);
+
+        createSkillButton(stage, "Increase crit Basic", "crit 20%",
+                lockedTexture, unlockedTexture, 1600, 240);
+
+
+    }
+
+
+
+    private Label createLabel(Stage stage, String label, Button button) {
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // your skin file
+        Label attackLabel = new Label(label, skin);
+        // red with 50% alpha
+
+        attackLabel.setColor(Color.valueOf("4B1E0A"));
+
+        attackLabel.setPosition(
+                button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2,
+                button.getY() - 20
+        );
+        return attackLabel;
+    }
+
+
+    private void addSkillImage(Stage stage) {
+
+        Texture texture = new Texture(Gdx.files.internal("images/skillpoint.png"));
+        Image image = new Image(texture);
+
+        image.setSize(70, 105);
+        image.setPosition(100, 1000);
+        stage.addActor(image);
+    }
+
+    private Label totalSkillPoints(Stage stage) {
+        Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+
+        //int skillPoints = Wallet.getSkillPoints();
+        int skillPoints = 100; //remove
+        String skillPointsNumber = String.format("Skill Points: %d", skillPoints);
+        Label skillPointLabel = new Label(skillPointsNumber,skin);
+        skillPointLabel.setColor(Color.WHITE);
+        skillPointLabel.setPosition( 80, 990);
+        return skillPointLabel;
     }
 
 

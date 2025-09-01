@@ -36,10 +36,18 @@ public class SkillSet {
 
     public void addSkill(Skill skill) {
         unlockedSkills.add(skill);
-        // remove skill point/s
     }
 
     public List<Skill> getUnlockedSkills() {
         return unlockedSkills;
+    }
+
+    public Skill getSkill(String name) {
+        for (Skill skill : SkillSet.getSkills()) {
+            if (skill.getName().equals(name)) {
+                return skill;
+            }
+        }
+        return null;
     }
 }
