@@ -7,12 +7,11 @@
     import com.badlogic.gdx.graphics.Texture;
     import com.badlogic.gdx.graphics.g2d.SpriteBatch;
     import com.badlogic.gdx.graphics.g2d.TextureRegion;
+    import com.badlogic.gdx.scenes.scene2d.Actor;
     import com.badlogic.gdx.scenes.scene2d.InputEvent;
     import com.badlogic.gdx.scenes.scene2d.Stage;
-    import com.badlogic.gdx.scenes.scene2d.ui.Button;
-    import com.badlogic.gdx.scenes.scene2d.ui.Image;
-    import com.badlogic.gdx.scenes.scene2d.ui.Label;
-    import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+    import com.badlogic.gdx.scenes.scene2d.ui.*;
+    import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
     import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
     import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
     import com.csse3200.game.GdxGame;
@@ -114,7 +113,7 @@
             ui.addComponent(new InputDecorator(stage, 10))
                     .addComponent(new PerformanceDisplay())
                     .addComponent(new MainGameActions(this.game))
-                    .addComponent(new MainGameExitDisplay())
+                    //.addComponent(new MainGameExitDisplay())
                     .addComponent(new Terminal())
                     .addComponent(inputComponent)
                     .addComponent(new TerminalDisplay());
@@ -125,14 +124,39 @@
             stage.addActor(skillPointLabel);
 
             createAllButtons();
-        }
+            Skin skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+            TextButton backBtn = new TextButton("Back", skin);
 
+            // Add listener for the back button
+            backBtn.addListener(
+                    new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent changeEvent, Actor actor) {
+                            logger.debug("Back button clicked");
+                            game.setScreen(GdxGame.ScreenType.PROFILE);
+                        }
+                    });
+
+            // Place button in a table
+            Table table = new Table();
+            table.setFillParent(true);
+            table.top().right().pad(15f);
+            table.add(backBtn).size(150, 60);
+            stage.addActor(table);
+        }
 
         private void createSkillButton(Stage stage, String skillName, String labelText,
                                        Texture lockedTexture, Texture unlockedTexture,
                                        float x, float y) {
 
-            Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(lockedTexture)));
+            Skill skill = skillSet.getSkill(skillName);
+            boolean locked = skill.getLockStatus();
+
+            Texture texture = lockedTexture;
+            if (!locked) {
+                texture = unlockedTexture;
+            }
+            Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
             skillButton.setSize(90, 130);
             skillButton.setPosition(x, y);
 
@@ -140,8 +164,6 @@
                 @Override
                 public void clicked(InputEvent event, float px, float py) {
                     System.out.println(skillName + " unlocked!");
-
-                    Skill skill = skillSet.getSkill(skillName);
 
                     int cost = skill.getCost();
                     int totalPoints = Persistence.profile().wallet().getSkillsPoints();
@@ -174,7 +196,6 @@
             Texture lockedTexture = new Texture(Gdx.files.internal("images/attackSkillLocked.png"));
             Texture unlockedTexture = new Texture(Gdx.files.internal("images/attackSkill.png"));
 
-
             Texture lockedTextureShield = new Texture(Gdx.files.internal("images/shieldSkillLocked.png"));
             Texture unlockedTextureShield = new Texture(Gdx.files.internal("images/shieldSkill.png"));
 
@@ -184,7 +205,6 @@
                     lockedTexture, unlockedTexture, 370, 455);
             createSkillButton(stage, "Increase AD Advanced", "Damage 30%",
                     lockedTexture, unlockedTexture, 130, 195);
-
 
             createSkillButton(stage, "Increase firing Basic", "Firing Speed 10%",
                     lockedTexture, unlockedTexture, 545, 420);
