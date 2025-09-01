@@ -35,9 +35,11 @@ public class LevelGameArea extends GameArea{
 
     private final TerrainFactory terrainFactory;
 
+    // Offset values from the bottom left corner of the screen for the grid's starting point
     private final float xOffset = 2.9f;
     private final float yOffset = 1.45f;
 
+    // Space occupied by the grid within the level game screen
     private final float gridHeight = 7f;
     private final float gridWidth = 14f;
 
