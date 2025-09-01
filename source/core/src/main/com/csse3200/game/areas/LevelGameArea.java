@@ -6,6 +6,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -122,6 +123,11 @@ public class LevelGameArea extends GameArea{
             tile.setPosition(tileX, tileY);
             spawnEntity(tile);
         }
+    }
+
+    public void spawnInLane(Entity entity, int lane) {
+        Entity ghost = NPCFactory.createGhost(new Entity());
+        super.spawnEntityAtGrid(ghost, 0.8f, 0.15f, false, false);
     }
 
     private void unloadAssets() {
