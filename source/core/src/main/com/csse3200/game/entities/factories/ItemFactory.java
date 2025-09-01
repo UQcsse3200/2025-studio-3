@@ -2,9 +2,6 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.items.*;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.ItemConfigs;
-import com.csse3200.game.entities.configs.ItemEntityConfig;
-import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -17,7 +14,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  * Factory to create item entities with predefined components.
  */
 public class ItemFactory {
-  private static final ItemConfigs configs = FileLoader.readClass(ItemConfigs.class, "configs/items.json");
 
   /**
    * Creates a grenade entity. Damages enemies in a short radius.
