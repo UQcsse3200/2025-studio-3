@@ -1,5 +1,4 @@
 package com.csse3200.game.Achievements;
-import com.csse3200.game.Statistics.Statistics;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.Collection;
 import java.util.HashMap;
