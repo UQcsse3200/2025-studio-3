@@ -57,7 +57,7 @@ public class WaveManager {
 
     public void spawnEnemy(int laneNumber) {
         System.out.print("Spawned enemy in lane " + laneNumber);
-        levelGameArea.spawnInLane(NPCFactory.createGhost(new Entity()), 1);
+        levelGameArea.spawnInLane(NPCFactory.createGhost(new Entity()), laneNumber);
     }
 
 }
