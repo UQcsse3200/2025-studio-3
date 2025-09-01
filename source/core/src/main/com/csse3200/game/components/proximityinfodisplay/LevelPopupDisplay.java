@@ -83,6 +83,16 @@ public class LevelPopupDisplay extends UIComponent {
 
         // Functionality and Interaction Handling
         if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (spriteData == null) {
+                popupDisplay.setVisible(false);
+                isDisplayed = false;
+                return;
+            }
+            LevelInteractionHandler.handleInteraction(spriteData);
+
+            popupDisplay.setVisible(false);
+            isDisplayed = false;
+
             // Functionality and Interaction Handling
         }
     }
