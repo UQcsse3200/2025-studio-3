@@ -105,7 +105,7 @@ public class LevelPopupDisplay extends UIComponent {
      * Gets the level's title.
      * @return level's title
      */
-    private String setLevelTitle(MenuSpriteData spriteData){
+    public String setLevelTitle(MenuSpriteData spriteData){
         if (spriteData == null) {
             return "Title";
         }
@@ -116,7 +116,7 @@ public class LevelPopupDisplay extends UIComponent {
      *  Gets the level's title.
      * @return level's title
      */
-    private String setLevelDescription(MenuSpriteData spriteData) {
+    public String setLevelDescription(MenuSpriteData spriteData) {
         if (spriteData == null) {
             return "Description\nPress 'E' to enter level.\nPress 'Q' to close level information.";
         }
