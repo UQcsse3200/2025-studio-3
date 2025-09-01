@@ -49,7 +49,7 @@ public class LevelPopupDisplay extends UIComponent {
         // Creates popup display.
         popupDisplay = new Window (setLevelTitle(spriteData), skin);
         popupDisplay.setMovable(false);
-        popupDisplay.setSize(200, 200);
+        popupDisplay.setSize(500, 500);
         popupDisplay.setPosition(
                 (Gdx.graphics.getWidth() - popupDisplay.getWidth()) / 2f,
                 (Gdx.graphics.getHeight() - popupDisplay.getHeight()) / 2f
@@ -118,7 +118,7 @@ public class LevelPopupDisplay extends UIComponent {
      */
     private String setLevelDescription(MenuSpriteData spriteData) {
         if (spriteData == null) {
-            return "Description\nDescription";
+            return "Description\nDescription\nPress 'E' to enter level.";
         }
         return spriteData.getDescription();
     }
