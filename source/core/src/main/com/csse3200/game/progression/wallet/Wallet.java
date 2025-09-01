@@ -22,7 +22,7 @@ public class Wallet {
    */
   public Wallet() {
     this.coins = 100; // Default starting coins
-    this.skillsPoints = 0;
+    this.skillsPoints = 10; // Default starting skillsPoints
   }
 
   /**

@@ -3,6 +3,7 @@
     import com.badlogic.gdx.Gdx;
     import com.badlogic.gdx.ScreenAdapter;
     import com.badlogic.gdx.graphics.Color;
+    import com.badlogic.gdx.graphics.GL20;
     import com.badlogic.gdx.graphics.Texture;
     import com.badlogic.gdx.graphics.g2d.SpriteBatch;
     import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -18,24 +19,27 @@
     import com.csse3200.game.components.gamearea.PerformanceDisplay;
     import com.csse3200.game.components.maingame.MainGameActions;
     import com.csse3200.game.components.maingame.MainGameExitDisplay;
+    import com.csse3200.game.components.settingsmenu.SettingsMenuDisplay;
     import com.csse3200.game.entities.Entity;
     import com.csse3200.game.entities.EntityService;
     import com.csse3200.game.entities.factories.RenderFactory;
     import com.csse3200.game.input.InputComponent;
     import com.csse3200.game.input.InputDecorator;
     import com.csse3200.game.input.InputService;
+    import com.csse3200.game.persistence.Persistence;
     import com.csse3200.game.progression.wallet.Wallet;
     import com.csse3200.game.rendering.RenderService;
     import com.csse3200.game.rendering.Renderer;
     import com.csse3200.game.services.GameTime;
     import com.csse3200.game.services.ResourceService;
     import com.csse3200.game.services.ServiceLocator;
-    import com.csse3200.game.progression.skilltree.Skill;
-    import com.csse3200.game.progression.skilltree.SkillSet;
+    import com.csse3200.game.skilltree.Skill;
+    import com.csse3200.game.skilltree.SkillSet;
     import com.csse3200.game.ui.terminal.Terminal;
     import com.csse3200.game.ui.terminal.TerminalDisplay;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
+    //import com.csse3200.game.Wallet;
 
     /**
      * The screen that displays the Skill Tree and handles skill unlocking mechanics.
@@ -43,7 +47,6 @@
      * It integrates with game services, rendering, input, and entity systems.
      */
     public class SkillTreeScreen extends ScreenAdapter {
-
         private static final Logger logger = LoggerFactory.getLogger(SkillTreeScreen.class);
         private final GdxGame game;
         private final Renderer renderer;
@@ -51,7 +54,7 @@
         private final SpriteBatch batch;
         private final SkillSet skillSet = new SkillSet();
         private Label skillPointLabel;
-        private Wallet wallet;
+
 
         /**
          * Constructs a SkillTreeScreen, initializing all necessary services and rendering components.
@@ -105,6 +108,7 @@
         public void resize(int width, int height) {
             renderer.resize(width, height);
         }
+
 
         /**
          * Sets up the UI elements: background, skill points display, input handling, and skill buttons.
@@ -169,12 +173,13 @@
 
                     Skill skill = skillSet.getSkill(skillName);
                     int cost = skill.getCost();
-                    int points = wallet.getSkillsPoints();
                     // Check if player has enough skill points
-                    if (points >= cost) { // REMOVE when Wallet is integrated
+                    int points = Persistence.profile().wallet().getSkillsPoints();
+                    if (points >= cost) {
+
                         skillSet.addSkill(skill);
                         skill.unlock();
-                        wallet.unlockSkill(cost);
+                        Persistence.profile().wallet.unlockSkill(cost);
                         skillPointLabel.setText("Skill Points: " + points);
                         // Replace button with unlocked image
                         Image unlockedImage = new Image(unlockedTexture);
@@ -238,7 +243,7 @@
          * @return a new Label instance
          */
         private Label createLabel(Stage stage, String label, Button button) {
-            Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+            Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // skin file
             Label attackLabel = new Label(label, skin);
             attackLabel.setColor(Color.WHITE);
             attackLabel.setPosition(button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2,
@@ -263,8 +268,10 @@
          */
         private void totalSkillPoints(Stage stage) {
             Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
-            String skillPointsNumber = String.format("Skill Points: %d", wallet.getSkillsPoints()); // REMOVE
-            skillPointLabel = new Label(skillPointsNumber, skin);
+
+            int points = Persistence.profile().wallet().getSkillsPoints();
+            String skillPointsNumber = String.format("Skill Points: %d", points);
+            skillPointLabel = new Label(skillPointsNumber,skin);
             skillPointLabel.setColor(Color.WHITE);
             skillPointLabel.setPosition(80, 990);
         }

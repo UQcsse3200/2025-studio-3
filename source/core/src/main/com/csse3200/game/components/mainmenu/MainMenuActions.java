@@ -23,10 +23,8 @@ public class MainMenuActions extends Component {
   public void create() {
     entity.getEvents().addListener("start", this::onStart);
     entity.getEvents().addListener("load", this::onLoad);
-    entity.getEvents().addListener("skilltree", this::onSkilltree);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("statistics", this::onStatistics);
   }
 
   /**
@@ -47,11 +45,6 @@ public class MainMenuActions extends Component {
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 
-
-  private void onSkilltree() {
-        logger.info("Access skill tree");
-        game.setScreen(GdxGame.ScreenType.SKILLTREE);
-    }
   /**
    * Exits the game.
    */
@@ -66,13 +59,5 @@ public class MainMenuActions extends Component {
   private void onSettings() {
     logger.info("Launching settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
-  }
-
-  /**
-   * Swaps to the Statistics screen.
-   */
-  private void onStatistics() {
-      logger.info("Launching statistics screen");
-      game.setScreen(GdxGame.ScreenType.STATISTICS);
   }
 }

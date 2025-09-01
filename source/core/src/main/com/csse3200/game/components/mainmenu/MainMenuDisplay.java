@@ -36,10 +36,8 @@ public class MainMenuDisplay extends UIComponent {
 
     TextButton startBtn = new TextButton("Start", skin);
     TextButton loadBtn = new TextButton("Load", skin);
-    TextButton skilltreeBtn = new TextButton("Skill Tree", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
     TextButton exitBtn = new TextButton("Exit", skin);
-    TextButton statisticsBtn = new  TextButton("Statistics", skin);
 
     // Triggers an event when the button is pressed
     startBtn.addListener(
@@ -60,15 +58,6 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
-    skilltreeBtn.addListener(
-            new ChangeListener() {
-                @Override
-                public void changed(ChangeEvent changeEvent, Actor actor) {
-                    logger.debug("Skill tree button clicked");
-                    entity.getEvents().trigger("skilltree");
-                }
-            });
-
     settingsBtn.addListener(
         new ChangeListener() {
           @Override
@@ -78,24 +67,15 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
-    statisticsBtn.addListener(
-         new ChangeListener() {
-           @Override
-           public void changed(ChangeEvent changeEvent, Actor actor) {
-             logger.debug("Statistics button clicked");
-             entity.getEvents().trigger("statistics");
-           }
-         });
+    exitBtn.addListener(
+      new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent changeEvent, Actor actor) {
 
-      exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-
-            logger.debug("Exit button clicked");
-            entity.getEvents().trigger("exit");
-          }
-        });
+          logger.debug("Exit button clicked");
+          entity.getEvents().trigger("exit");
+        }
+      });
 
     table.add(title);
     table.row();
@@ -103,11 +83,7 @@ public class MainMenuDisplay extends UIComponent {
     table.row();
     table.add(loadBtn).padTop(15f);
     table.row();
-    table.add(skilltreeBtn).padTop(15f);
-    table.row();
     table.add(settingsBtn).padTop(15f);
-    table.row();
-    table.add(statisticsBtn).padTop(15f);
     table.row();
     table.add(exitBtn).padTop(15f);
 
