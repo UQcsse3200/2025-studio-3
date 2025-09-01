@@ -23,13 +23,14 @@ public class Skill {
         this.locked = true;
     }
 
-
     public String getName() {
         return name;
     }
+
     public StatType getStatType() {
         return statType;
     }
+
     public int getCost() {
         return cost;
     }
@@ -44,7 +45,5 @@ public class Skill {
 
     public void unlock() {
         this.locked = false;
-
-
     }
 }
