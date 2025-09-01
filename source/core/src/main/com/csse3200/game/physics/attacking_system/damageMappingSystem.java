@@ -1,0 +1,32 @@
+package com.csse3200.game.physics.attacking_system;
+
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.BodyUserData;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+
+public class damageMappingSystem  {
+
+    public damageMappingSystem(Entity entity) {
+        entity.getEvents().addListener("collisionStart",this::onCollisionStart);
+    }
+    private void onCollisionStart(Fixture fixtureA, Fixture fixtureB) {
+
+        Entity entityA =  ((BodyUserData)fixtureA.getBody().getUserData()).entity;
+        Entity entityB = ((BodyUserData)fixtureB.getBody().getUserData()).entity;
+        if(entityA==null || entityB==null) return;
+
+        if(entityA.getComponent(HitboxComponent.class)!=null && entityB.getComponent(ColliderComponent.class)!=null) {
+            CombatStatsComponent attackerStats = (CombatStatsComponent)entityA.getComponent(CombatStatsComponent.class);
+             CombatStatsComponent victimStats = (CombatStatsComponent)entityB.getComponent(CombatStatsComponent.class);
+
+             if(attackerStats!=null && victimStats!=null) {
+                 victimStats.hit(attackerStats);
+                 entityA.getComponent(ColliderComponent.class).dispose();
+             }
+        }
+
+    }
+}
