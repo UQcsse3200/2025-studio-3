@@ -5,24 +5,24 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.NPCFactory;
+import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.areas.RobotSpawner;
 
-public class LevelGameArea extends GameArea {
+public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
             "images/box_boy_leaf.png",
             "images/level-1-map-v1.png",
             "images/ghost_king.png",
-            "images/ghost_1.png"
+            "images/ghost_1.png",
+            "images/olive_tile.png",
+            "images/green_tile.png",
+            "images/box_boy.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -34,11 +34,9 @@ public class LevelGameArea extends GameArea {
     private static final String[] levelMusic = {backgroundMusic};
 
     private final TerrainFactory terrainFactory;
-    private RobotSpawner robotSpawner;
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
-     *
      * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
      */
     public LevelGameArea(TerrainFactory terrainFactory) {
@@ -54,9 +52,10 @@ public class LevelGameArea extends GameArea {
 
         spawnMap();
 
-        new RobotSpawner(this).spawnRobot(18.5f, 8f);
-
+        float scale = 1.4f;
+        spawnTiles(scale);
         playMusic();
+
     }
 
     private void loadAssets() {
@@ -109,6 +108,22 @@ public class LevelGameArea extends GameArea {
         music.play();
     }
 
+    private void spawnTiles(float scale) {
+        for (int i = 0; i < 50; i++) {
+            Entity tile;
+            float tileX = (float) (2.9 + scale * (i % 10));
+            float tileY = (float) (1.45 + scale * (i / 10));
+            // logic for alternating tile images
+            if ((i / 10) % 2 == 1) {
+                tile = GridFactory.createTile(i % 2, scale, tileX, tileY);
+            } else {
+                tile = GridFactory.createTile(1- (i % 2), scale, tileX, tileY);
+            }
+            tile.setPosition(tileX, tileY);
+            spawnEntity(tile);
+        }
+    }
+
     private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -124,23 +139,6 @@ public class LevelGameArea extends GameArea {
         ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
         this.unloadAssets();
     }
-
-//    private void spawnRobot(float x, float y) {
-//        Entity robot = NPCFactory.createRobot(null);
-//        spawnEntity(robot);
-//
-//        robot.getComponent(AnimationRenderComponent.class).scaleEntity();
-//        robot.setScale(robot.getScale().x * 1.5f, robot.getScale().y * 1.5f);
-//
-//        robot.setPosition(x, y);
-//    }
 }
 
-//    private void spawnRobotColumn(float startX, float startY, int count, float spacing) {
-//        for (int i = 0; i < count; i++) {
-//            float y = startY - i * spacing;
-//            spawnRobot(startX, y);
-//        }
-//    }
-//}
 
