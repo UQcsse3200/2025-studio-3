@@ -15,13 +15,27 @@ public class LevelPopupDisplayBasicTest {
     @Test
     public void defaultPopupDisplayTest() {
         LevelPopupDisplay display = new LevelPopupDisplay();
-        MenuSpriteData spriteData = null;
-        String displayTitle = display.setLevelTitle(spriteData);
-        String displayDescription = display.setLevelDescription(spriteData);
+        String displayTitle = display.setLevelTitle(null);
+        String displayDescription = display.setLevelDescription(null);
         
         assertEquals("Title", displayTitle);
         assertEquals(
                 "Description\nPress 'E' to enter level.\nPress 'Q' to close level information.",
                 displayDescription);
     }
+
+    @Test
+    public void spriteDataPopupDisplayTest() {
+        MenuSpriteData spriteData = null;
+        LevelPopupDisplay display = new LevelPopupDisplay(spriteData);
+        String displayTitle = display.setLevelTitle(spriteData);
+        String displayDescription = display.setLevelDescription(spriteData);
+
+        assertEquals("Title", displayTitle);
+        assertEquals(
+                "Description\nPress 'E' to enter level.\nPress 'Q' to close level information.",
+                displayDescription);
+    }
+
+
 }
