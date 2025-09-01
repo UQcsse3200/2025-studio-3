@@ -2,6 +2,7 @@ package com.csse3200.game.progression;
 
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.wallet.Wallet;
+import com.csse3200.game.components.statistics.Statistics;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,7 +19,7 @@ class ProfileTest {
   // defences)
   // private Skillset skillset; // The player's skills / skill tree
   // private Achievements achievements; // The player's achievements
-  // private Statistics statistics; // The player's statistics
+  private Statistics statistics; // The player's statistics
   // private Progress progress; // The player's overall progress
   // private Arsenal arsenal; // The player's unlocked defences
 
@@ -28,7 +29,7 @@ class ProfileTest {
     // inventory = new Inventory();
     // skillset = new Skillset();
     // achievements = new Achievements();
-    // statistics = new Statistics();
+    statistics = new Statistics();
     // progress = new Progress();
     // arsenal = new Arsenal();
   }
@@ -39,13 +40,13 @@ class ProfileTest {
     assertNotNull(profile.getName());
     assertNotNull(profile.wallet());
     assertEquals(100, profile.wallet().getCoins());
-    assertEquals(0, profile.wallet().getSkillsPoints());
+    assertEquals(10, profile.wallet().getSkillsPoints());
     // Insert
   }
 
   @Test
   void testProfileParameterizedConstructor() {
-    Profile profile = new Profile(name, wallet);
+    Profile profile = new Profile(name, wallet, statistics);
     assertEquals(name, profile.getName());
     assertEquals(100, profile.wallet().getCoins());
     assertEquals(5, profile.wallet().getSkillsPoints());
