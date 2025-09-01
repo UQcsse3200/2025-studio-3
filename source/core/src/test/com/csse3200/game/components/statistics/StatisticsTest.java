@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class StatisticsTest {
 
     @Test
-    void testStatisticsKills() {
+    void testDefaultStatisticsKills() {
         Statistics statistics = new Statistics();
         int kills = 0;
         assertEquals(kills, statistics.getKills());
@@ -24,7 +24,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatistics2Kills() {
+    void testVariableStatisticsKills() {
         Statistics statistics = new Statistics(1, 2, 3, 4, 5);
         int kills = 1;
         assertEquals(kills, statistics.getKills());
@@ -37,7 +37,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatisticsShots() {
+    void testDefaultStatisticsShots() {
         Statistics statistics = new Statistics();
         int shots = 0;
         assertEquals(shots, statistics.getShotsFired());
@@ -50,7 +50,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatistics2Shots() {
+    void testVariableStatisticsShots() {
         Statistics statistics = new Statistics(1, 2, 3, 4, 5);
         int shots = 2;
         assertEquals(shots, statistics.getShotsFired());
@@ -63,7 +63,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatisticsLevels() {
+    void testDefaultStatisticsLevels() {
         Statistics statistics = new Statistics();
         int levels = 0;
         assertEquals(levels, statistics.getLevelsPassed());
@@ -76,7 +76,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatistics2Levels() {
+    void testVariableStatisticsLevels() {
         Statistics statistics = new Statistics(1, 2, 3, 4, 5);
         int levels = 3;
         assertEquals(levels, statistics.getLevelsPassed());
@@ -89,7 +89,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatisticsDefences() {
+    void testDefencesStatisticsDefences() {
         Statistics statistics = new Statistics();
         int defences = 10;
         assertEquals(defences, statistics.getNumDefencesUnlocked());
@@ -105,7 +105,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatistics2Defences() {
+    void testVariableStatisticsDefences() {
         Statistics statistics = new Statistics(1, 2, 3, 4, 5);
         int defences = 4;
         assertEquals(defences, statistics.getNumDefencesUnlocked());
@@ -121,7 +121,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatisticsCoins() {
+    void testDefaultStatisticsCoins() {
         Statistics statistics = new Statistics();
         int coins = 100;
         assertEquals(coins, statistics.getTotalCoinsEarned());
@@ -137,7 +137,7 @@ public class StatisticsTest {
     }
 
     @Test
-    void testStatistics2Coins() {
+    void testVariableStatisticsCoins() {
         Statistics statistics = new Statistics(1, 2, 3, 4, 5);
         int coins = 5;
         assertEquals(coins, statistics.getTotalCoinsEarned());
