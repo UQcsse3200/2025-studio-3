@@ -39,7 +39,6 @@
     import com.csse3200.game.ui.terminal.TerminalDisplay;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
-    //import com.csse3200.game.Wallet;
 
     /**
      * The screen that displays the Skill Tree and handles skill unlocking mechanics.
