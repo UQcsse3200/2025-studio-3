@@ -33,8 +33,8 @@
     import com.csse3200.game.services.GameTime;
     import com.csse3200.game.services.ResourceService;
     import com.csse3200.game.services.ServiceLocator;
-    import com.csse3200.game.skilltree.Skill;
-    import com.csse3200.game.skilltree.SkillSet;
+    import com.csse3200.game.progression.skilltree.Skill;
+    import com.csse3200.game.progression.skilltree.SkillSet;
     import com.csse3200.game.ui.terminal.Terminal;
     import com.csse3200.game.ui.terminal.TerminalDisplay;
     import org.slf4j.Logger;
@@ -62,7 +62,6 @@
          */
         public SkillTreeScreen(GdxGame game) {
             this.game = game;
-            this.wallet = new Wallet();
             logger.debug("Initialising skill tree services");
 
             // Register required services
