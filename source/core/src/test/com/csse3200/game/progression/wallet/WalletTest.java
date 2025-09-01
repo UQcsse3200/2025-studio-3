@@ -1,11 +1,11 @@
-package com.csse3200.game.components.wallet;
+package com.csse3200.game.progression.wallet;
 
 import org.junit.jupiter.api.Test;
-
-import com.csse3200.game.progression.wallet.Wallet;
-
+import org.junit.jupiter.api.extension.ExtendWith;
+import com.csse3200.game.extensions.GameExtension;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@ExtendWith(GameExtension.class)
 class WalletTest {
 
     @Test
