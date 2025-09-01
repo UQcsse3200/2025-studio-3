@@ -47,12 +47,12 @@ public class ProfileDisplayActions extends Component {
 
   private void onSkills() {
     logger.info("Opening skills");
-    // game.setScreen(GdxGame.ScreenType.SKILLS);
+    game.setScreen(GdxGame.ScreenType.SKILLTREE);
   }
 
   private void onStats() {
     logger.info("Opening stats");
-    // game.setScreen(GdxGame.ScreenType.STATS);
+    game.setScreen(GdxGame.ScreenType.STATISTICS);
   }
 
   private void onShop() {

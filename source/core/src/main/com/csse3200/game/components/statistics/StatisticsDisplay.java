@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.progression.Profile;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +44,7 @@ public class StatisticsDisplay extends UIComponent {
     private void addActors() {
         Label title = new Label("Statistics", skin, "title");
         Table statisticsTable = makeStatisticsTable();
-        Table menuBtns = makeMenuBtns();
+        Table menuBtns = makeBackBtn();
 
         rootTable = new Table();
         rootTable.setFillParent(true);
@@ -65,8 +67,7 @@ public class StatisticsDisplay extends UIComponent {
      */
     private Table makeStatisticsTable() {
         // Get current values
-        Statistics statistics = new Statistics();
-        //Statistics statistics = Profile.getStatistics();
+        Statistics statistics = Persistence.profile().statistics();
 
         // Create components
         Label killsLabel = new Label("Total Kills:", skin);
@@ -114,30 +115,30 @@ public class StatisticsDisplay extends UIComponent {
      *
      * @return table with exit button
      */
-    private Table makeMenuBtns() {
-        TextButton exitBtn = new TextButton("Exit", skin);
+    private Table makeBackBtn() {
+        TextButton backBtn = new TextButton("Back", skin);
 
-        // Add listener for the exit button
-        exitBtn.addListener(
+        // Add listener for the back button
+        backBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Exit button clicked");
-                        exitMenu();
+                        logger.debug("Back button clicked");
+                        backMenu();
                     }
                 });
 
         // Place button in a table
         Table table = new Table();
-        table.add(exitBtn).expandX().left().pad(0f, 15f, 15f, 0f);
+        table.add(backBtn).expandX().left().pad(0f, 15f, 15f, 0f);
         return table;
     }
 
     /**
-     * Handles navigation back to the main menu.
+     * Handles navigation back to the Profile Screen.
      */
-    private void exitMenu() {
-        game.setScreen(ScreenType.MAIN_MENU);
+    private void backMenu() {
+        game.setScreen(ScreenType.PROFILE);
     }
 
     @Override

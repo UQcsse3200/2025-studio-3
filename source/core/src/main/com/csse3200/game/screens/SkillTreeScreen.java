@@ -26,6 +26,8 @@
     import com.csse3200.game.input.InputComponent;
     import com.csse3200.game.input.InputDecorator;
     import com.csse3200.game.input.InputService;
+    import com.csse3200.game.persistence.Persistence;
+    import com.csse3200.game.progression.wallet.Wallet;
     import com.csse3200.game.rendering.RenderService;
     import com.csse3200.game.rendering.Renderer;
     import com.csse3200.game.services.GameTime;
@@ -37,7 +39,6 @@
     import com.csse3200.game.ui.terminal.TerminalDisplay;
     import org.slf4j.Logger;
     import org.slf4j.LoggerFactory;
-    //import com.csse3200.game.Wallet;
 
     /** The game screen containing the settings. */
     public class SkillTreeScreen extends ScreenAdapter {
@@ -47,7 +48,7 @@
         private final Texture background;
         private final SpriteBatch batch;
         private final SkillSet skillSet = new SkillSet();
-        private int points = 100;                                    //REMOVE
+        //private int points = 100;                                    //REMOVE
         private Label skillPointLabel;
 
 
@@ -67,11 +68,10 @@
             loadAssets();
             createUI();
 
-
             batch = new SpriteBatch();
             background = new Texture(Gdx.files.internal("images/skilltree_art.png"));
-
         }
+
         private void loadAssets() {
             logger.debug("Loading assets");
             ResourceService resourceService = ServiceLocator.getResourceService();
@@ -80,7 +80,6 @@
 
         @Override
         public void render(float delta) {
-
 
             batch.begin();
             batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -94,7 +93,6 @@
         public void resize(int width, int height) {
             renderer.resize(width, height);
         }
-
 
         /**
          * load background image + exit button
@@ -146,35 +144,30 @@
                     Skill skill = skillSet.getSkill(skillName);
 
                     int cost = skill.getCost();
-                    // int totalPoints = Wallet.getSkillsPoints();
-                    // if (totalPoints >= cost) {
-                    if (points >= cost) {                     // REMOVE
+                    int totalPoints = Persistence.profile().wallet().getSkillsPoints();
+                    if (totalPoints >= cost) {
+                        //if (points >= cost) {                     // REMOVE
                         skillSet.addSkill(skill);
                         skill.unlock();
-                        points -= cost;                          // REMOVE
-                        skillPointLabel.setText("Skill Points: " + points);
+                        Persistence.profile().wallet().unlockSkill(cost);
+                        totalPoints = Persistence.profile().wallet().getSkillsPoints();
+                        //    points -= cost;                          // REMOVE
+                        skillPointLabel.setText("Skill Points: " + totalPoints);
+                        // }
+                        Image unlockedImage = new Image(unlockedTexture);
+                        unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());
+                        unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
+                        stage.getActors().removeValue(skillButton, true);
+                        stage.addActor(unlockedImage);
                     }
-                    // Wallet.unlockSkill(cost);
-                    // }
-                    Image unlockedImage = new Image(unlockedTexture);
-                    unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());
-                    unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
-                    stage.getActors().removeValue(skillButton, true);
-                    stage.addActor(unlockedImage);
-
-                    }
-        });
-
-
-
+                }
+            });
 
             stage.addActor(skillButton);
 
-
             stage.addActor(createLabel(stage, labelText, skillButton));
             addSkillImage(stage);
-
-        }
+        };
 
         private void createAllButtons() {
             Stage stage = ServiceLocator.getRenderService().getStage();
@@ -210,22 +203,18 @@
             createSkillButton(stage, "Increase Health Advanced", "Health 30%",
                     lockedTextureShield, unlockedTextureShield, 870, 375);
 
-
             createSkillButton(stage, "Increase armour Basic", "Amour 10%",
                     lockedTextureShield, unlockedTextureShield, 1190, 565);
             createSkillButton(stage, "Increase armour Intermediate", "Armour 20%",
                     lockedTextureShield, unlockedTextureShield, 1085, 304);
             createSkillButton(stage, "Increase armour Advanced", "Armour 30%",
                     lockedTextureShield, unlockedTextureShield, 1281, 305);
-
             createSkillButton(stage, "Increase crit Basic", "crit 20%",
                     lockedTexture, unlockedTexture, 1600, 240);
-
-
         }
 
         private Label createLabel(Stage stage, String label, Button button) {
-            Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // your skin file
+            Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // skin file
             Label attackLabel = new Label(label, skin);
             attackLabel.setColor(Color.WHITE);
 
@@ -235,7 +224,6 @@
             );
             return attackLabel;
         }
-
 
         private void addSkillImage(Stage stage) {
 
@@ -250,12 +238,11 @@
         private void totalSkillPoints(Stage stage) {
             Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
 
-            //int points = Wallet.getSkillPoints();
+            int points = Persistence.profile().wallet().getSkillsPoints();
             String skillPointsNumber = String.format("Skill Points: %d", points);
             skillPointLabel = new Label(skillPointsNumber,skin);
             skillPointLabel.setColor(Color.WHITE);
             skillPointLabel.setPosition( 80, 990);
-
         }
 
         @Override
