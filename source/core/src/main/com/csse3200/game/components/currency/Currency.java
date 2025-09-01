@@ -2,21 +2,21 @@ package com.csse3200.game.components.currency;
 
 public class Currency {
     private int sunlight;
-    private int maxSunshine;
+    private int maxSunlight;
 
     public Currency() {
         this.sunlight = 0;
-        this.maxSunshine = Integer.MAX_VALUE;
+        this.maxSunlight = Integer.MAX_VALUE;
     }
 
     public Currency(int initialAmount) {
         this.sunlight = initialAmount;
-        this.maxSunshine = Integer.MAX_VALUE;
+        this.maxSunlight = Integer.MAX_VALUE;
     }
 
     public Currency(int initialAmount, int maxSunshine) {
         this.sunlight = initialAmount;
-        this.maxSunshine = maxSunshine;
+        this.maxSunlight = maxSunshine;
     }
 
     public int getSunlight() {
@@ -30,8 +30,8 @@ public class Currency {
     public void addSunshine(int amount) {
         if (amount > 0) {
             long sum = (long) sunlight + amount;
-            if (sum > maxSunshine) {
-                sunlight = maxSunshine;
+            if (sum > maxSunlight) {
+                sunlight = maxSunlight;
             } else  {
                 sunlight += amount;
             }

@@ -83,8 +83,8 @@ public class MainGameScreen extends ScreenAdapter {
 
     Stage stage = ServiceLocator.getRenderService().getStage();
     Texture sunTex = ServiceLocator.getResourceService().getAsset("images/normal_sunlight.png", Texture.class);
-    spawnSun(stage, sunTex, 300, 200, 25);
-    spawnSun(stage, sunTex, 520, 340, 25);
+    spawnSun(stage, sunTex, 1000, 500, 25);
+    spawnSun(stage, sunTex, 2000, 1000, 25);
 
   }
 

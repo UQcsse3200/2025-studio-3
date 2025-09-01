@@ -23,8 +23,16 @@ public class CurrencyInteraction extends Image {
         setBounds(getX(), getY(), getWidth(), getHeight());
 
         addListener(new ClickListener() {
+            {
+                setTapSquareSize(18f);
+            }
+            @Override public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                event.stop();
+                return super.touchDown(event, x, y, pointer, button);
+            }
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                event.stop();
                 onClicked();
             }
         });
