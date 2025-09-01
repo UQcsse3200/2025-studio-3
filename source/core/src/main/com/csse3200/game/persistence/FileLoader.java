@@ -1,4 +1,4 @@
-package com.csse3200.game.files;
+package com.csse3200.game.persistence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;

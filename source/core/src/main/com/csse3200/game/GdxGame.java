@@ -3,11 +3,16 @@ package com.csse3200.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.files.UserSettings;
+import com.csse3200.game.persistence.UserSettings;
+import com.csse3200.game.screens.LoadGameScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.SkillTreeScreen;
+import com.csse3200.game.screens.StatisticsScreen;
+import com.csse3200.game.screens.ProfileScreen;
+import com.csse3200.game.screens.LoadGameScreen;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,14 +79,20 @@ public class GdxGame extends Game {
       case SETTINGS:
         return new SettingsScreen(this);
       case SKILLTREE:
-          return new SkillTreeScreen(this);
+        return new SkillTreeScreen(this);
+      case PROFILE:
+        return new ProfileScreen(this);
+      case LOAD_GAME:
+        return new LoadGameScreen(this);
+      case STATISTICS:
+         return new StatisticsScreen(this);
       default:
         return null;
     }
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE
+      MAIN_MENU, MAIN_GAME, SETTINGS, PROFILE, LOAD_GAME, STATISTICS, SKILLTREE
   }
 
   /**

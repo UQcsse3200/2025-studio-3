@@ -2,6 +2,8 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.persistence.Persistence;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ public class MainMenuActions extends Component {
     entity.getEvents().addListener("skilltree", this::onSkilltree);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
+    entity.getEvents().addListener("statistics", this::onStatistics);
   }
 
   /**
@@ -31,6 +34,7 @@ public class MainMenuActions extends Component {
    */
   private void onStart() {
     logger.info("Start game");
+    Persistence.load();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 
@@ -40,6 +44,7 @@ public class MainMenuActions extends Component {
    */
   private void onLoad() {
     logger.info("Load game");
+    game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 
 
@@ -61,5 +66,13 @@ public class MainMenuActions extends Component {
   private void onSettings() {
     logger.info("Launching settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
+  }
+
+  /**
+   * Swaps to the Statistics screen.
+   */
+  private void onStatistics() {
+      logger.info("Launching statistics screen");
+      game.setScreen(GdxGame.ScreenType.STATISTICS);
   }
 }
