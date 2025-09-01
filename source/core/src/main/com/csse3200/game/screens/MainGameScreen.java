@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {"images/heart.png", "images/normal_sunlight.png"};
+  private static final String[] mainGameTextures = {"images/normal_sunlight.png"};
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
   private final GdxGame game;
@@ -72,6 +72,10 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
+    Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+    ServiceLocator.getEntityService().register(uiHud);
+
+
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
@@ -81,8 +85,6 @@ public class MainGameScreen extends ScreenAdapter {
     Texture sunTex = ServiceLocator.getResourceService().getAsset("images/normal_sunlight.png", Texture.class);
     spawnSun(stage, sunTex, 300, 200, 25);
     spawnSun(stage, sunTex, 520, 340, 25);
-    Entity ui = new Entity().addComponent(new SunlightHudDisplay());
-    ServiceLocator.getEntityService().register(ui);
 
   }
 
