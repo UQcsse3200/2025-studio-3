@@ -6,49 +6,49 @@ repeat: none
 pma: false
 default
   bounds: 0, 0, 68, 102
-float
+attack
   bounds: 68, 0, 68, 102
-float
+attack
   bounds: 136, 0, 68, 102
-float
+attack
   bounds: 204, 0, 68, 102
-float
+attack
   bounds: 272, 0, 68, 102
-float
+attack
   bounds: 340, 0, 68, 102
-float
+attack
   bounds: 408, 0, 68, 102
-float
+attack
   bounds: 476, 0, 68, 102
-float
+attack
   bounds: 544, 0, 68, 102
-float
+attack
   bounds: 612, 0, 68, 102
-float
+attack
   bounds: 680, 0, 68, 102
-float
+attack
   bounds: 748, 0, 68, 102
-float
+attack
   bounds: 816, 0, 68, 102
-float
+attack
   bounds: 884, 0, 68, 102
-float
+attack
   bounds: 952, 0, 68, 102
-float
+attack
   bounds: 1020, 0, 68, 102
-float
+attack
   bounds: 1088, 0, 68, 102
-float
+attack
   bounds: 1156, 0, 68, 102
-float
+attack
   bounds: 1224, 0, 68, 102
-float
+attack
   bounds: 1292, 0, 68, 102
-float
+attack
   bounds: 1360, 0, 68, 102
-float
+attack
   bounds: 1428, 0, 68, 102
-float
+attack
   bounds: 1496, 0, 68, 102
-float
+attack
   bounds: 1564, 0, 68, 102

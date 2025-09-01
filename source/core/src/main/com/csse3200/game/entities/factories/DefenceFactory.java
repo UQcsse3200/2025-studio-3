@@ -8,6 +8,7 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
+import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
@@ -32,28 +33,22 @@ public class DefenceFactory {
         Entity sigma = createBaseDefender();
         BaseEntityConfig config = configs.ghost; // update to whatever the name of the sigma is
 
-        /* TODO Finn
+
         AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
-                .getAsset("images/ghost.atlas", TextureAtlas.class));
+                .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
         
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
 
         sigma
             .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
             .addComponent(animator)
-            .addComponent(new GhostAnimationController());
+            .addComponent(new DefenceAnimationController());
 
         sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-        */
 
-        sigma.addComponent(new CombatStatsComponent(config.health, config.baseAttack));
-            //.addComponent(animator)
-            //.addComponent(new SigmaAnimationController());
-
-        sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
         return sigma;
     }
     
