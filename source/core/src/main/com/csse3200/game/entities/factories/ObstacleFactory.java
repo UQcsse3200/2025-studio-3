@@ -33,6 +33,25 @@ public class ObstacleFactory {
     return tree;
   }
 
+  public static Entity createTile(int status) {
+      String image_path = "images/olive_tile.png";
+      if (status == 1) {
+          image_path = "images/green_tile.png";
+      }
+      Entity tile =
+              new Entity()
+                      .addComponent(new TextureRenderComponent(image_path))
+                      .addComponent(new PhysicsComponent())
+                      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
+
+      tile.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
+      tile.getComponent(TextureRenderComponent.class).scaleEntity();
+      tile.scaleHeight(1.25f);
+      // tile.scaleWidth(1.3f);
+      // PhysicsUtils.setScaledCollider(tile, 0.5f, 0.2f);
+      return tile;
+  }
+
   /**
    * Creates an invisible physics wall.
    * @param width Wall width in world units
