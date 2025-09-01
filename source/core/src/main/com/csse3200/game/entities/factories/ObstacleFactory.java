@@ -9,7 +9,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-
+import com.csse3200.game.physics.components.ProjectileBoundsComponent;
 
 /**
  * Factory to create obstacle entities.
@@ -46,7 +46,7 @@ public class ObstacleFactory {
                         .addComponent(new TextureRenderComponent("images/laser.png"))
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
-                                .setSensor(false))
+                                .setSensor(true))
                         .addComponent(new CombatStatsComponent(1, 0)) // damage
                         .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY));
 
@@ -62,6 +62,10 @@ public class ObstacleFactory {
         laser.scaleHeight(1.0f);  // adjust size as needed
         PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
 
+        float tileSize = 0.5f;
+        float worldWidth = 30*tileSize;
+        float worldHeight = 30*tileSize;
+        laser.addComponent(new ProjectileBoundsComponent(worldWidth, worldHeight));
         return laser;
     }
 
