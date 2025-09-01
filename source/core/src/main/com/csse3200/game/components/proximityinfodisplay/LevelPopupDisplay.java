@@ -118,7 +118,7 @@ public class LevelPopupDisplay extends UIComponent {
      */
     private String setLevelDescription(MenuSpriteData spriteData) {
         if (spriteData == null) {
-            return "Description\nDescription\nPress 'E' to enter level.";
+            return "Description\nPress 'E' to enter level.\nPress 'Q' to close level information.";
         }
         return spriteData.getDescription();
     }
