@@ -6,6 +6,8 @@ import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.entities.factories.RobotFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +82,27 @@ public abstract class GameArea implements Disposable {
     public void requestDespawn(Entity entity) {
         if (entity == null) return;
         Gdx.app.postRunnable(() -> despawnEntity(entity));
+    }
+
+//    public Entity spawnRobotAtTile(GridPoint2 tilePos, boolean centerX, boolean centerY) {
+//        BaseEntityConfig cfg = new BaseEntityConfig();
+//        cfg.health = 10;
+//        cfg.baseAttack = 2;
+//
+//        Entity robot = RobotFactory.createRobot(cfg);
+//        spawnEntityAt(robot, tilePos, centerX, centerY);
+//        return robot;
+//    }
+
+    public Entity spawnRobotAtFloat(float x, float y) {
+        BaseEntityConfig cfg = new BaseEntityConfig();
+        cfg.health = 10;
+        cfg.baseAttack = 2;
+
+        Entity robot = RobotFactory.createRobot(cfg);
+        spawnEntity(robot);
+        robot.setPosition(x, y);
+        return robot;
     }
 
 }
