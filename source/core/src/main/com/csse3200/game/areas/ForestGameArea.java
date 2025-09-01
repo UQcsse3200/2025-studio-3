@@ -38,7 +38,7 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-          "images/normal_sunlight.png"
+    "images/normal_sunlight.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
@@ -73,7 +73,6 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     spawnGhosts();
     spawnGhostKing();
-    spawnSunlight();
 
     playMusic();
   }
@@ -151,10 +150,6 @@ public class ForestGameArea extends GameArea {
     spawnEntityAt(ghostKing, randomPos, true, true);
   }
 
-  private void spawnSunlight() {
-    var sun = com.csse3200.game.entities.factories.SunlightFactory.createSunlight(new Vector2(8, 8));
-    spawnEntity(sun);
-  }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);

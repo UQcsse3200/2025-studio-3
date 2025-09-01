@@ -4,7 +4,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.graphics.Texture;
-import com.csse3200.game.components.currency.Currency;
 import com.csse3200.game.components.currency.CurrencyInteraction;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
@@ -47,7 +46,6 @@ public class MainGameScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
 
-  private Currency currency;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -66,7 +64,6 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
 
     ServiceLocator.registerCurrencyService(new CurrencyService(50,Integer.MAX_VALUE));
-    this.currency = ServiceLocator.getCurrencyService().getCurrency();
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -84,7 +81,7 @@ public class MainGameScreen extends ScreenAdapter {
     Texture sunTex = ServiceLocator.getResourceService().getAsset("images/normal_sunlight.png", Texture.class);
     spawnSun(stage, sunTex, 300, 200, 25);
     spawnSun(stage, sunTex, 520, 340, 25);
-    Entity ui = new Entity().addComponent(new SunlightHudDisplay(currency));
+    Entity ui = new Entity().addComponent(new SunlightHudDisplay());
     ServiceLocator.getEntityService().register(ui);
 
   }
@@ -162,7 +159,7 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   private void spawnSun(Stage stage, Texture sunTex, float x, float y, int value) {
-      CurrencyInteraction token = new CurrencyInteraction(sunTex, value, currency);
+      CurrencyInteraction token = new CurrencyInteraction(sunTex, value);
       token.setPosition(x, y);
       stage.addActor(token);
       token.toFront();

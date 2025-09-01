@@ -1,5 +1,6 @@
 package com.csse3200.game.components.currency;
 
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -7,11 +8,10 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 
 public class SunlightHudDisplay extends UIComponent {
-  private final Currency currency;
   private Table table;
   private Label label;
 
-  public SunlightHudDisplay(Currency currency) { this.currency = currency; }
+  public SunlightHudDisplay() {}
 
   @Override public void create() {
     super.create();
@@ -25,7 +25,7 @@ public class SunlightHudDisplay extends UIComponent {
   @Override public void update() { refresh(); }
 
   private void refresh() {
-    int amount = currency.getSunlight();   
+    int amount = ServiceLocator.getCurrencyService().get();
     label.setText("☀ " + amount);
   }
 

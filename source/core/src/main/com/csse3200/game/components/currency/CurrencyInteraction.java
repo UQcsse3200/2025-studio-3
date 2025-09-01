@@ -7,16 +7,15 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.math.Interpolation;
+import com.csse3200.game.services.ServiceLocator;
 
 
 public class CurrencyInteraction extends Image {
     private final int value;
-    private final Currency currency;
 
-    public CurrencyInteraction(Texture texture, int value, Currency currency) {
+    public CurrencyInteraction(Texture texture, int value) {
         super(texture);
         this.value = value;
-        this.currency = currency;
         setSize(128, 128);
         setOrigin(getWidth()/ 2f, getHeight()/2f);
         setColor(getColor().r, getColor().g, getColor().b, 1f);
@@ -46,11 +45,7 @@ public class CurrencyInteraction extends Image {
                         Actions.fadeOut(dur)
                 ),
                 Actions.run(() -> {
-                    if (currency != null) {
-                        currency.addSunshine(value);
-                    } else {
-                        System.err.println("[CurrencyInteraction] currency is null, skip addSunshine");
-                    }
+                    ServiceLocator.getCurrencyService().add(value);
                     remove();
                 })
         ));
