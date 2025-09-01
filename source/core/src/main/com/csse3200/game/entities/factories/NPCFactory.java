@@ -96,10 +96,12 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
+    
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
             .addTask(new ChaseTask(target, 10, 3f, 4f));
+             
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
