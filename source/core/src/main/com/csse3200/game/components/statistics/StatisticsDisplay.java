@@ -11,13 +11,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * */
+ * The StatisticsDisplay class is a UI component that renders a table of player Statistics on screen.
+ */
 public class StatisticsDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(StatisticsDisplay.class);
     private final GdxGame game;
 
+    // Root table that holds all UI elements for this screen
     private Table rootTable;
 
+    /**
+     * Creates a StatisticsDisplay for the game instance.
+     *
+     * @param game current game instance
+     */
     public StatisticsDisplay(GdxGame game) {
         super();
         this.game = game;
@@ -29,6 +36,9 @@ public class StatisticsDisplay extends UIComponent {
         addActors();
     }
 
+    /**
+     * Builds and adds the main UI actors for the Statistics screen.
+     */
     private void addActors() {
         Label title = new Label("Statistics", skin, "title");
         Table statisticsTable = makeStatisticsTable();
@@ -48,6 +58,11 @@ public class StatisticsDisplay extends UIComponent {
         stage.addActor(rootTable);
     }
 
+    /**
+     * Builds a table displaying the player's Statistics
+     *
+     * @return a table containing formatted Statistics
+     */
     private Table makeStatisticsTable() {
         // Get current values
         Statistics statistics = new Statistics();
@@ -94,9 +109,15 @@ public class StatisticsDisplay extends UIComponent {
         return table;
     }
 
+    /**
+     * Builds a table containing exit button.
+     *
+     * @return table with exit button
+     */
     private Table makeMenuBtns() {
         TextButton exitBtn = new TextButton("Exit", skin);
 
+        // Add listener for the exit button
         exitBtn.addListener(
                 new ChangeListener() {
                     @Override
@@ -106,11 +127,15 @@ public class StatisticsDisplay extends UIComponent {
                     }
                 });
 
+        // Place button in a table
         Table table = new Table();
         table.add(exitBtn).expandX().left().pad(0f, 15f, 15f, 0f);
         return table;
     }
 
+    /**
+     * Handles navigation back to the main menu.
+     */
     private void exitMenu() {
         game.setScreen(ScreenType.MAIN_MENU);
     }
@@ -125,6 +150,10 @@ public class StatisticsDisplay extends UIComponent {
 //        stage.act(ServiceLocator.getTimeSource().getDeltaTime());
 //    }
 //
+
+    /**
+     * Disposes of this UI component.
+     */
     @Override
     public void dispose() {
         rootTable.clear();

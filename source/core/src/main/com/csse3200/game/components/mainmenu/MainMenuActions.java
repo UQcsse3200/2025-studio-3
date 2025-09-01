@@ -58,6 +58,9 @@ public class MainMenuActions extends Component {
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 
+  /**
+   * Swaps to the Statistics screen.
+   */
   private void onStatistics() {
       logger.info("Launching statistics screen");
       game.setScreen(GdxGame.ScreenType.STATISTICS);
