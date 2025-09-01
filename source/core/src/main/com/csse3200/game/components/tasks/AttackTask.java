@@ -10,17 +10,19 @@ import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 
+import java.util.List;
+
 // TODO : integrate with attack system team
 public class AttackTask extends DefaultTask implements PriorityTask {
-    private final Entity target;
+    private final List<Entity> targets;
     private final float attackRange;
     private final PhysicsEngine physics;
     private final DebugRenderer debugRenderer;
     private final RaycastHit hit = new RaycastHit();
     private MovementTask movementTask; // TODO: this should be projectiles
 
-    public AttackTask(Entity target, float attackRange) {
-        this.target = target;
+    public AttackTask(List<Entity> targets, float attackRange) {
+        this.targets = targets;
         this.attackRange = attackRange;
         physics = ServiceLocator.getPhysicsService().getPhysics();
         debugRenderer = ServiceLocator.getRenderService().getDebug();
@@ -29,10 +31,13 @@ public class AttackTask extends DefaultTask implements PriorityTask {
     @Override
     public void start() {
         super.start();
-        // TODO: attach logic instantiation instead
-        movementTask = new MovementTask(target.getPosition());
-        movementTask.create(owner);
-        movementTask.start();
+        Entity target = getNearestVisibleTarget();
+        if (target != null) {
+            // TODO: attach logic instantiation instead
+            movementTask = new MovementTask(target.getPosition());
+            movementTask.create(owner);
+            movementTask.start();
+        }
 
         this.owner.getEntity().getEvents().trigger("chaseStart");
     }
@@ -40,13 +45,19 @@ public class AttackTask extends DefaultTask implements PriorityTask {
     @Override
     public void update() {
         System.out.println("AttackTask priority: " + getPriority());
+        Entity target = getNearestVisibleTarget();
+
+        if (target == null) {
+            return;
+        }
+
         movementTask.setTarget(target.getPosition());
         movementTask.update();
         if (movementTask.getStatus() != Status.ACTIVE) {
             movementTask.start();
         }
 
-        if (getDistanceToTarget() <= attackRange && isTargetVisible()) {
+        if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
             // TODO: attack
         }
     }
@@ -68,12 +79,20 @@ public class AttackTask extends DefaultTask implements PriorityTask {
     }
 
     private float getDistanceToTarget() {
+        Entity target = getNearestVisibleTarget();
+        if (target == null) {
+            return Float.MAX_VALUE;
+        }
         return owner.getEntity().getPosition().dst(target.getPosition());
     }
 
     private int getActivePriority() {
         float dst = getDistanceToTarget();
-        if (dst > attackRange || !isTargetVisible()) {
+        Entity target = getNearestVisibleTarget();
+        if (target == null) {
+            return -1;
+        }
+        if (dst > attackRange || !isTargetVisible(target)) {
             return -1; // Too far, stop attack
         }
         return 1;
@@ -81,13 +100,17 @@ public class AttackTask extends DefaultTask implements PriorityTask {
 
     private int getInactivePriority() {
         float dst = getDistanceToTarget();
-        if (dst <= attackRange && isTargetVisible()) {
+        Entity target = getNearestVisibleTarget();
+        if (target == null) {
+            return -1;
+        }
+        if (dst <= attackRange && isTargetVisible(target)) {
             return 1;
         }
         return -1;
     }
 
-    private boolean isTargetVisible() {
+    private boolean isTargetVisible(Entity target) {
         Vector2 from = owner.getEntity().getCenterPosition();
         Vector2 to = target.getCenterPosition();
 
@@ -98,5 +121,25 @@ public class AttackTask extends DefaultTask implements PriorityTask {
         }
         debugRenderer.drawLine(from, to);
         return true;
+    }
+
+    private Entity getNearestVisibleTarget() {
+        Vector2 from = owner.getEntity().getCenterPosition();
+        Entity closestTarget = null;
+        float closestDist = Float.MAX_VALUE;
+
+        for (Entity target : targets) {
+            Vector2 targetPos = target.getCenterPosition();
+            float distance = from.dst(targetPos);
+            if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in range
+                if (distance < closestDist) {
+                    closestDist = distance;
+                    closestTarget = target;
+                }
+            }
+        }
+
+
+        return closestTarget;
     }
 }
