@@ -28,9 +28,10 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.currency.Currency;
+import com.csse3200.game.components.currency.SunlightHudDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * The game screen containing the main game.
@@ -83,6 +84,9 @@ public class MainGameScreen extends ScreenAdapter {
     Texture sunTex = ServiceLocator.getResourceService().getAsset("images/normal_sunlight.png", Texture.class);
     spawnSun(stage, sunTex, 300, 200, 25);
     spawnSun(stage, sunTex, 520, 340, 25);
+    Entity ui = new Entity().addComponent(new SunlightHudDisplay(currency));
+    ServiceLocator.getEntityService().register(ui);
+
   }
 
   @Override
