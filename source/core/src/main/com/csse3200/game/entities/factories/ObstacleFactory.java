@@ -1,6 +1,5 @@
 package com.csse3200.game.entities.factories;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -11,6 +10,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.physics.attacking_system.damageMappingSystem;
 
 
 /**
@@ -45,19 +45,19 @@ public class ObstacleFactory {
     public static Entity createLaser() {
         Entity laser =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/heart.png"))
+                        .addComponent(new TextureRenderComponent("images/laser.png"))
                         .addComponent(new PhysicsComponent())
-                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
-                                .setSensor(true))
+                        //.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
+                              //  .setSensor(false))
                         .addComponent(new CombatStatsComponent(1, 0)) // damage
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY));
-
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY))
+                                .addComponent(new HitboxComponent());
         laser.getComponent(PhysicsComponent.class).setBodyType(BodyType.KinematicBody);
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(2.0f);
         laser.scaleWidth(0.2f);
         PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
-
+        new damageMappingSystem(laser);
         laser.getComponent(PhysicsComponent.class).setLinearVelocity(5f, 0f);
 
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
