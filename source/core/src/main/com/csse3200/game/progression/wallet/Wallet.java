@@ -92,10 +92,10 @@ public class Wallet {
   /**
    * Adds skills points to the wallet.
    * 
-   * @param achievementSkillPoints the amount of skills points to add
+   * @param achievementSkillsPoints the amount of skills points to add
    */
-  public void addSkillsPoints(int achievementSkillPoints) {
-    this.skillsPoints += achievementSkillPoints;
+  public void addSkillsPoints(int achievementSkillsPoints) {
+    this.skillsPoints += achievementSkillsPoints;
   }
 
 
@@ -105,7 +105,7 @@ public class Wallet {
    * @param skillCost the cost of the skill to unlock
    */
   public void unlockSkill(int skillCost) {
-    // Skills will now handle purchase functionality re checking have enough skillPoints to unlock
+    // Skills will now handle purchase functionality re checking have enough skillsPoints to unlock
     this.skillsPoints -= skillCost;
   }
 
