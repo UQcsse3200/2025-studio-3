@@ -178,7 +178,7 @@
 
                         skillSet.addSkill(skill);
                         skill.unlock();
-                        Persistence.profile().wallet.unlockSkill(cost);
+                        Persistence.profile().wallet().unlockSkill(cost);
                         skillPointLabel.setText("Skill Points: " + points);
                         // Replace button with unlocked image
                         Image unlockedImage = new Image(unlockedTexture);
