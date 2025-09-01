@@ -129,7 +129,7 @@ public class LevelGameArea extends GameArea{
         Entity ghost = NPCFactory.createGhost(new Entity());
         final float LANE_HEIGHT = 0.05f;
         float y = 0.05f + (lane * LANE_HEIGHT);
-        super.spawnEntityAtGrid(ghost, 0.8f, y, false, false);
+        super.spawnEntityAtGrid(ghost, 0.65f, y, false, false);
     }
 
     private void unloadAssets() {
