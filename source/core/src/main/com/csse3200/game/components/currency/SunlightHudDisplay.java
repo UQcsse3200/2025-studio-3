@@ -3,6 +3,7 @@ package com.csse3200.game.components.currency;
 import com.csse3200.game.ui.UIComponent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /** 左上角显示“阳光”数值，只读取 Currency，不做计算。 */
 public class SunlightHudDisplay extends UIComponent {
@@ -29,4 +30,9 @@ public class SunlightHudDisplay extends UIComponent {
   }
 
   @Override public void dispose() { table.remove(); super.dispose(); }
+
+   @Override
+  public void draw(SpriteBatch batch) {
+    // 这里什么都不用画；Stage 已经负责绘制 label/table 了
+  }
 }
