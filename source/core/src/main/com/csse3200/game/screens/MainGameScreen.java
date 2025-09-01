@@ -74,6 +74,7 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+    waveManager.setGameArea(levelGameArea);
     levelGameArea.create();
 
     snapCameraBottomLeft();

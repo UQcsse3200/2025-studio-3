@@ -18,7 +18,7 @@ import java.util.List;
  */
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
-  protected List<Entity> areaEntities;
+  protected static List<Entity> areaEntities;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();
@@ -55,6 +55,24 @@ public abstract class GameArea implements Disposable {
   protected void spawnEntityAt(
       Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
     Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
+    System.out.println(worldPos);
+    float tileSize = terrain.getTileSize();
+
+    if (centerX) {
+      worldPos.x += (tileSize / 2) - entity.getCenterPosition().x;
+    }
+    if (centerY) {
+      worldPos.y += (tileSize / 2) - entity.getCenterPosition().y;
+    }
+
+    entity.setPosition(worldPos);
+    spawnEntity(entity);
+  }
+
+  protected void spawnEntityAtGrid(
+          Entity entity, float x, float y, boolean centerX, boolean centerY) {
+    Vector2 worldPos = terrain.gridToWorldPosition(x, y);
+    System.out.println(worldPos);
     float tileSize = terrain.getTileSize();
 
     if (centerX) {

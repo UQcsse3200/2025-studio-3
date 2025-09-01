@@ -5,7 +5,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
+import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -132,6 +134,11 @@ public class LevelGameArea extends GameArea{
         super.dispose();
         ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
         this.unloadAssets();
+    }
+
+    public void spawnInLane(Entity entity, int lane) {
+        Entity ghost = NPCFactory.createGhost(new Entity());
+        super.spawnEntityAtGrid(ghost, 0.8f, 0.15f, false, false);
     }
 }
 
