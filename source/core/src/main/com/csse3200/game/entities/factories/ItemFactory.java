@@ -21,35 +21,61 @@ public class ItemFactory {
       FileLoader.readClass(ItemConfigs.class, "configs/items.json");
 
   /**
-   * Creates a bomb entity.
+   * Creates a grenade entity. Damages enemies in a short radius.
    *
    * @return entity
    */
-  public static Entity createBomb() {
-    Entity bomb = createBaseItem();
-    ItemEntityConfig config = configs.bomb;
-
-    bomb
-            .addComponent(new TextureRenderComponent("images/bomb.png"))
-            .addComponent(new BombComponent());
-
-    return bomb;
+  public static Entity createGrenade() {
+    return createBaseItem()
+            .addComponent(new TextureRenderComponent("images/item_grenade.png"))
+            .addComponent(new GrenadeComponent());
   }
 
   /**
-   * Creates a coffee entity.
+   * Creates a coffee entity. Place on a "plant" to give it a temporary attack speed bonus.
    *
    * @return entity
    */
   public static Entity createCoffee() {
-    Entity coffee = createBaseItem();
-    ItemEntityConfig config = configs.coffee;
-
-    coffee
-            .addComponent(new TextureRenderComponent("images/coffee.png"))
+    return createBaseItem()
+            .addComponent(new TextureRenderComponent("images/item_coffee.png"))
             .addComponent(new CoffeeComponent());
+  }
 
-    return coffee;
+  /**
+   * Creates a buff entity. Place on a "plant" to heal it and double it's max health.
+   *
+   * @return entity
+   */
+  public static Entity createBuff() {
+
+    return createBaseItem()
+            .addComponent(new TextureRenderComponent("images/item_buff.png"))
+            .addComponent(new BuffComponent());
+  }
+
+  /**
+   * Creates an EMP entity. Stuns enemies in a short radius.
+   *
+   * @return entity
+   */
+  public static Entity createEmp() {
+
+    return createBaseItem()
+            .addComponent(new TextureRenderComponent("images/item_emp.png"))
+            .addComponent(new EmpComponent());
+  }
+
+  /**
+   * Creates a nuke entity. Place anywhere on screen to destroy all entities, friend & foe.
+   *
+   * @return entity
+   */
+  public static Entity createNuke() {
+
+      return createBaseItem()
+            .addComponent(new TextureRenderComponent("images/item_nuke.png"))
+            .addComponent(new NukeComponent());
   }
 
   /**

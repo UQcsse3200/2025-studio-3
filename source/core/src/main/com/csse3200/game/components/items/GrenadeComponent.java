@@ -1,9 +1,8 @@
 package com.csse3200.game.components.items;
 
-
-public class CoffeeComponent extends DefaultItemComponent {
+public class GrenadeComponent extends DefaultItemComponent {
     @Override
     protected String getEventName() {
-        return "coffee";
+        return "grenade";
     }
 }
