@@ -89,9 +89,9 @@ public class StatisticsTest {
     }
 
     @Test
-    void testDefencesStatisticsDefences() {
+    void testDefaultStatisticsDefences() {
         Statistics statistics = new Statistics();
-        int defences = 10;
+        int defences = 2;
         assertEquals(defences, statistics.getNumDefencesUnlocked());
         statistics.setNumDefencesUnlocked(15);
         defences = 15;
