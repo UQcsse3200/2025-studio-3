@@ -23,7 +23,7 @@ public class Statistics {
         this.kills = 0;
         this.shotsFired = 0;
         this.levelsPassed = 0;
-        this.numDefencesUnlocked = 10; // default value
+        this.numDefencesUnlocked = 2; // default value
         this.totalCoinsEarned = 100; // all-time total of coins earned
     }
 
