@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class WalletTest {
 
     @Test
-    void testWalletCoins() {
+    void testDefaultWalletCoins() {
         Wallet wallet = new Wallet();
         int coins = 100;
         assertEquals(coins, wallet.getCoins());
@@ -25,7 +25,7 @@ class WalletTest {
     }
 
     @Test
-    void testWallet2Coins() {
+    void testVariableWalletCoins() {
         Wallet wallet = new Wallet(1, 2);
         int coins = 1;
         assertEquals(coins, wallet.getCoins());
@@ -41,34 +41,34 @@ class WalletTest {
     }
 
     @Test
-    void testWalletSkillsPoints() {
+    void testDefaultWalletSkillsPoints() {
         Wallet wallet = new Wallet();
-        int skillPoints = 0;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        int skillsPoints = 0;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.setSkillsPoints(10);
-        skillPoints = 10;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 10;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.addSkillsPoints(10);
-        skillPoints = 20;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 20;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.unlockSkill(2);
-        skillPoints = 18;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 18;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
     }
 
     @Test
-    void testWalletSkills2Points() {
+    void testVariableWalletSkillsPoints() {
         Wallet wallet = new Wallet(1, 2);
-        int skillPoints = 2;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        int skillsPoints = 2;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.setSkillsPoints(10);
-        skillPoints = 10;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 10;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.addSkillsPoints(10);
-        skillPoints = 20;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 20;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
         wallet.unlockSkill(2);
-        skillPoints = 18;
-        assertEquals(skillPoints, wallet.getSkillsPoints());
+        skillsPoints = 18;
+        assertEquals(skillsPoints, wallet.getSkillsPoints());
     }
 }
