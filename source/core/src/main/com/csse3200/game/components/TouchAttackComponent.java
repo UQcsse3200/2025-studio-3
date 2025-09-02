@@ -64,6 +64,7 @@ public class TouchAttackComponent extends Component {
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
     if (targetStats != null) {
       targetStats.hit(combatStats);
+      target.getEvents().trigger("hitMarker", target);
     }
 
     // Apply knockback
