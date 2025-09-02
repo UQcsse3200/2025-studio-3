@@ -73,7 +73,7 @@ public class MenuSpriteService {
      * @throws MenuSpriteNotFoundException when no MenuSpriteData can be found.
      */
     public MenuSpriteData getMenuSprite(GdxGame.ScreenType screenType) throws MenuSpriteNotFoundException {
-        if (menuSprites.get(screenType).size() == 1) {
+        if (menuSprites.get(screenType).size() == 1 && menuSprites.get(screenType).containsKey(null)) {
             return menuSprites.get(screenType).get(null);
         }
 
