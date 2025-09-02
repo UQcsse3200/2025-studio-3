@@ -1,5 +1,5 @@
 {
-  "Slingshot": {
+  "slingshooter": {
     "health": 1,
     "base-attack": 1,
     "type": "ranged",
@@ -7,5 +7,17 @@
     "state": "idle",
     "attack-speed": 1,
     "crit-chance": 0
+  },
+  "trebuchet": {
+
+  },
+  "mortar": {
+
+  },
+  "harpoon": {
+
+  },
+  "spearman": {
+
   }
 }

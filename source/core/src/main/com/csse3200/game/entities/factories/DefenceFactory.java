@@ -11,6 +11,7 @@ import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
@@ -27,11 +28,11 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class DefenceFactory {
     private static final NPCConfigs configs =
-        FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+        FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
     public static Entity createSigma() {
         Entity sigma = createBaseDefender();
-        BaseEntityConfig config = configs.ghost; // update to whatever the name of the sigma is
+        BaseDefenceConfig config = configs.slingshooter; // update to whatever the name of the sigma is
 
 
         AnimationRenderComponent animator =
