@@ -49,7 +49,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final Texture background;
   private final SpriteBatch batch;
-  private final SkillSet skillSet = new SkillSet();
+  private final SkillSet skillSet;
   private Label skillPointLabel;
   protected static final Skin skin =
     new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
@@ -62,6 +62,7 @@ public class SkillTreeScreen extends ScreenAdapter {
    */
   public SkillTreeScreen(GdxGame game) {
     this.game = game;
+    this.skillSet = Persistence.profile().skillset();
     logger.debug("Initialising skill tree services");
 
     // Register required services
@@ -159,7 +160,15 @@ public class SkillTreeScreen extends ScreenAdapter {
       Texture lockedTexture, Texture unlockedTexture,
       float x, float y) {
 
-    Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(lockedTexture)));
+    Skill skill = skillSet.getSkill(skillName);
+    boolean locked = skill.getLockStatus();
+
+    Texture texture = lockedTexture;
+    if (!locked) {
+        texture = unlockedTexture;
+    }
+
+    Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
     skillButton.setSize(90, 130);
     skillButton.setPosition(x, y);
 
@@ -170,13 +179,14 @@ public class SkillTreeScreen extends ScreenAdapter {
 
         Skill skill = skillSet.getSkill(skillName);
         int cost = skill.getCost();
-        // Check if player has enough skill points
+        // Check if player has enough skill points and has not already unlocked skill
         int points = Persistence.profile().wallet().getSkillsPoints();
-        if (points >= cost) {
+        if (points >= cost && locked) {
 
           skillSet.addSkill(skill);
           skill.unlock();
           Persistence.profile().wallet().unlockSkill(cost);
+          points = Persistence.profile().wallet().getSkillsPoints();
           skillPointLabel.setText("Skill Points: " + points);
           // Replace button with unlocked image
           Image unlockedImage = new Image(unlockedTexture);
