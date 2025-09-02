@@ -19,7 +19,7 @@ class EntitySpawnTest {
 
     /** Helper to create a spawner with a mocked WaveFactory returning the provided values. */
     private EntitySpawn makeSpawner(int robotWeight, int waveWeight, int minSpawn) {
-        EntitySpawn spawner = new EntitySpawn("ignored-wave", robotWeight);
+        EntitySpawn spawner = new EntitySpawn(0, robotWeight);
 
         WaveFactory factory = mock(WaveFactory.class);
         when(factory.getWaveWeight()).thenReturn(waveWeight);

@@ -50,6 +50,7 @@ public class WaveManager {
     public void endWave() {
         waveActive = false;
         System.out.println("Wave finished.");
+        initialiseNewWave();
     }
 
     public void setGameArea(LevelGameArea levelGameArea) {
