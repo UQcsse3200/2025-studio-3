@@ -2,39 +2,54 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 public class EntitySpawn {
     private final WaveFactory waveFactory;
-    private final Random random;
 
-    public EntitySpawn(String wave, Random random) {
-        this.waveFactory = new WaveFactory(wave);
-        this.random = random;
+    // For now, only one robot type exists.
+    // Set this to the weight defined for that robot.
+    private final int robotWeight;
+    private Entity[] entities = new Entity[0];
+
+    public EntitySpawn(String wave) {
+        this(wave, /* robotWeight */ 2); // TODO: replace 2 with the actual robot weight
     }
 
-    public List<Entity> spawnEnemies() {
+    public EntitySpawn(String wave, int robotWeight) {
+        this.waveFactory = new WaveFactory(wave);
+        this.robotWeight = robotWeight;
+    }
+
+    public Entity[] getEntities() {
+        return entities;
+    }
+
+    public void spawnEnemies() {
         int waveWeight = waveFactory.getWaveWeight();
-        Map<String, Integer> robotWeights = waveFactory.getEnemyWeights();
+        int minCount   = waveFactory.getMinZombiesSpawn();
 
-        List<Entity> spawned = new ArrayList<>();
-
-        int currentWeight = 0;
-        List<String> robotTypes = new ArrayList<>(robotWeights.keySet());
-
-        while (currentWeight < waveWeight) {
-            String robotType = robotTypes.get(random.nextInt(robotTypes.size()));
-            int robotWeight = robotWeights.get(robotType);
-
-            if (currentWeight + robotWeight <= waveWeight) {
-                // Entity enemy = waveFactory.createRobot(robotType);
-                // spawned.add(enemy);
-                currentWeight += robotWeight;
-            }
+        if (robotWeight <= 0 || waveWeight <= 0) {
+            entities = new Entity[0];
+            return;
         }
-        return spawned;
+
+        // If not divisible, add 1 toe the waveWeight
+        if (waveWeight % robotWeight != 0) {
+            waveWeight += 1;
+        }
+
+        // If the exact robotSpawn is still below the minimum, we can also bump robotSpawn up
+        int robotSpawn = waveWeight / robotWeight;
+        if (robotSpawn < minCount) {
+            robotSpawn = minCount;
+            waveWeight = robotSpawn * robotWeight;
+        }
+
+        // Builds the array of entities
+        Entity[] result = new Entity[robotSpawn];
+        for (int i = 0; i < robotSpawn; i++) {
+            // TODO: replace with the actual factory method from the robot team
+            result[i] = new Entity();
+        }
+        entities = result;
     }
 }
