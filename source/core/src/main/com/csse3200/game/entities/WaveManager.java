@@ -10,12 +10,13 @@ public class WaveManager {
 
     private int currentWave;
     private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
-    private Entity[] enemies = {new Entity()};
-    private int currentEnemy;
+    private Entity[] enemies = {};
+    private int currentEnemyPos;
+    private float timeSinceLastSpawn;
+    private boolean waveActive = false;
 
     private final GameTime gameTime;
-    private float timeSinceLastSpawn;
-
+    private final EntitySpawn entitySpawn;
     private LevelGameArea levelGameArea;
 
     private List<Integer> waveLaneSequence;
@@ -27,18 +28,26 @@ public class WaveManager {
         this.timeSinceLastSpawn = 0f;
         this.waveLaneSequence = new ArrayList<>();
         this.waveLanePointer = 0;
+        this.entitySpawn = new EntitySpawn(currentWave);
 
         Collections.shuffle(laneOrder);
     }
 
     public void initialiseNewWave() {
         currentWave++;
-        currentEnemy = enemies[0].getId();
+        waveActive = true;
+        currentEnemyPos = 0;
         int maxLanes = Math.min(currentWave + 1, 5);
 
         waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
         Collections.shuffle(waveLaneSequence);
         waveLanePointer = 0;
+
+    }
+
+    public void endWave() {
+        waveActive = false;
+        System.out.println("Wave finished.");
     }
 
     public void setGameArea(LevelGameArea levelGameArea) {
@@ -57,8 +66,10 @@ public class WaveManager {
         timeSinceLastSpawn += gameTime.getDeltaTime();
         float spawnInterval = 5.0f;
         if (timeSinceLastSpawn >= spawnInterval) {
-            spawnEnemy(getLane());
-            timeSinceLastSpawn -= spawnInterval;
+            if (waveActive) {
+                spawnEnemy(getLane());
+                timeSinceLastSpawn -= spawnInterval;
+            }
         }
     }
 
@@ -79,8 +90,19 @@ public class WaveManager {
         return lane;
     }
 
+    private void getEnemies() {
+        entitySpawn.spawnEnemies();
+        enemies = entitySpawn.getEntities();
+    }
+
     public void spawnEnemy(int laneNumber) {
+        if (currentEnemyPos == enemies.length) {
+            endWave();
+            return;
+        }
         System.out.print("Spawned enemy in lane " + laneNumber);
-        levelGameArea.spawnInLane(NPCFactory.createGhost(new Entity()), laneNumber);
+        levelGameArea.spawnInLane(enemies[currentEnemyPos], laneNumber);
+        currentEnemyPos++;
+
     }
 }

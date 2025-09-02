@@ -12,10 +12,10 @@ import com.csse3200.game.files.FileLoader;
 public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
-    private final String wave;
-    private WaveManager waveManager = new WaveManager();
+    private final int wave;
+    //private WaveManager waveManager = new WaveManager();
 
-    public WaveFactory(String wave) {
+    public WaveFactory(int wave) {
         this.wave = wave;
     }
 
@@ -24,9 +24,9 @@ public class WaveFactory {
      *
      * @return wave number as string
      */
-    public int getCurrentWave() {
-        return waveManager.getCurrentWave();
-    }
+    //public int getCurrentWave() {
+        //return waveManager.getCurrentWave();
+    //}
 
     /**
      * Changes the wave after a certain condition is met.
@@ -70,9 +70,9 @@ public class WaveFactory {
      */
     private BaseWaveConfig getWave() {
         return switch (this.wave) {
-            case "wave1" -> configs.wave1;
-            case "wave2" -> configs.wave2;
-            case "wave3" -> configs.wave3;
+            case 1 -> configs.wave1;
+            case 2 -> configs.wave2;
+            case 3 -> configs.wave3;
             default -> null;
         };
     }
