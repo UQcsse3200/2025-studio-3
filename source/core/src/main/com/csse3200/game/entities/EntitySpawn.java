@@ -2,6 +2,8 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
 
+import java.util.Arrays;
+
 public class EntitySpawn {
     private final WaveFactory waveFactory;
 
@@ -15,7 +17,7 @@ public class EntitySpawn {
     }
 
     public EntitySpawn(int wave, int robotWeight) {
-        this.waveFactory = new WaveFactory(wave);
+        this.waveFactory = new WaveFactory();
         this.robotWeight = robotWeight;
     }
 

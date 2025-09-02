@@ -1,6 +1,6 @@
 {
   "wave1": {
-    "waveWeight": 30,
+    "waveWeight": 10,
     "expGained": 10,
     "minZombiesSpawn": 5
   },

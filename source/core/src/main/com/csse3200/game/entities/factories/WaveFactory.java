@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
@@ -7,60 +8,47 @@ import com.csse3200.game.files.FileLoader;
 
 /**
  * Factory to create a wave with predefined components.
- *
-**/
+ */
 public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
-    private final int wave;
-    //private WaveManager waveManager = new WaveManager();
+    private WaveManager waveManager;
+    private int wave;
 
-    public WaveFactory(int wave) {
-        this.wave = wave;
+    /**
+     * Default constructor
+     */
+    public WaveFactory() {
+        this.wave = WaveManager.getCurrentWave();
     }
 
     /**
-     * Returns the current wave the players at.
-     *
-     * @return wave number as string
+     * Constructor with game entity for UI integration
+     * @param gameEntity the main game entity for triggering UI events
      */
-    //public int getCurrentWave() {
-        //return waveManager.getCurrentWave();
-    //}
-
-    /**
-     * Changes the wave after a certain condition is met.
-     *
-     */
-    public void changeWave() {
-        // Add logic to change the wave
+    public WaveFactory(Entity gameEntity) {
+        WaveManager.setGameEntity(gameEntity);
+        this.wave = WaveManager.getCurrentWave();
     }
 
     /**
-     * Returns the current wave weight.
-     *
-     * @return wave weight
+     * Advances to the next wave using the WaveManager
      */
+    public void advanceToNextWave() {
+        // Create dummy enemies array for now - this will be replaced with actual enemy creation
+        Entity[] dummyEnemies = new Entity[1];
+        this.wave = WaveManager.getCurrentWave();
+    }
     public int getWaveWeight() {
         return getWave().waveWeight;
     }
 
-    /**
-     * Returns the exp gained for the current wave.
-     *
-     * @return exp gained
-     */
-    public int getExpGained() {
-        return getWave().expGained;
-    }
-
-    /**
-     * Returns the minimum number of zombies required to spawn for the wave.
-     *
-     * @return number of zombies
-     */
     public int getMinZombiesSpawn() {
         return getWave().minZombiesSpawn;
+    }
+
+    public int getExpGained() {
+        return getWave().expGained;
     }
 
     /**
@@ -73,7 +61,7 @@ public class WaveFactory {
             case 1 -> configs.wave1;
             case 2 -> configs.wave2;
             case 3 -> configs.wave3;
-            default -> null;
+            default -> configs.wave1;
         };
     }
 }

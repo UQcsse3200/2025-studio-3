@@ -8,13 +8,14 @@ import com.csse3200.game.services.GameTime;
 
 public class WaveManager {
 
-    private int currentWave;
+    private static int currentWave;
     private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
     private Entity[] enemies = {};
     private int currentEnemyPos;
     private float timeSinceLastSpawn;
     private boolean waveActive = false;
 
+    private static Entity gameEntity;
     private final GameTime gameTime;
     private final EntitySpawn entitySpawn;
     private LevelGameArea levelGameArea;
@@ -24,7 +25,7 @@ public class WaveManager {
 
     public WaveManager() {
         this.gameTime = new GameTime();
-        this.currentWave = 0;
+        currentWave = 0;
         this.timeSinceLastSpawn = 0f;
         this.waveLaneSequence = new ArrayList<>();
         this.waveLanePointer = 0;
@@ -39,6 +40,7 @@ public class WaveManager {
         currentEnemyPos = 0;
         int maxLanes = Math.min(currentWave + 1, 5);
 
+        getEnemies();
         waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
         Collections.shuffle(waveLaneSequence);
         waveLanePointer = 0;
@@ -54,7 +56,11 @@ public class WaveManager {
         this.levelGameArea = levelGameArea;
     }
 
-    public int getCurrentWave() {
+    public static void setGameEntity(Entity gameEntity) {
+        WaveManager.gameEntity = gameEntity;
+    }
+
+    public static int getCurrentWave() {
         return currentWave;
     }
 
@@ -100,6 +106,7 @@ public class WaveManager {
             endWave();
             return;
         }
+        System.out.print(enemies.length);
         System.out.print("Spawned enemy in lane " + laneNumber);
         levelGameArea.spawnInLane(enemies[currentEnemyPos], laneNumber);
         currentEnemyPos++;
