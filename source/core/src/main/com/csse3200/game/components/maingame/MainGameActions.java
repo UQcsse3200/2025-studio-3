@@ -36,7 +36,7 @@ public class MainGameActions extends Component {
    * Swaps to the Profile screen.
    */
   private void onProfile() {
-    logger.info("Opening profile screen");
+    logger.info("Entering profile screen");
     game.setScreen(GdxGame.ScreenType.PROFILE);
   }
 }

@@ -1,8 +1,10 @@
 package com.csse3200.game.components.items;
 
-public class BuffComponent extends DefaultItemComponent {
-    @Override
-    protected String getEventName() {
-        return "buff";
+/**
+ * Represents a buff item that can be used to temporarily double damage.
+ */
+public class BuffComponent extends Item {
+    public BuffComponent() {
+      super("Buff", "Temporarily doubles damage for 30s. One time use.", "buff", 30);
     }
 }

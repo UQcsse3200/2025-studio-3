@@ -2,13 +2,13 @@ package com.csse3200.game.progression.inventory;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.csse3200.game.components.items.DefaultItemComponent;
+import com.csse3200.game.components.items.Item;
 
 /**
  * Inventory class to manage the player's items.
  */
 public class Inventory {
-  private final List<DefaultItemComponent> items;
+  private final List<Item> items;
 
   /**
    * Constructor for the Inventory class.
@@ -22,7 +22,7 @@ public class Inventory {
    * 
    * @param item The item to add.
    */
-  public void addItem(DefaultItemComponent item) {
+  public void addItem(Item item) {
     items.add(item);
   }
 
@@ -31,7 +31,7 @@ public class Inventory {
    * 
    * @param item The item to remove.
    */
-  public void removeItem(DefaultItemComponent item) {
+  public void removeItem(Item item) {
     items.remove(item);
   }
 
@@ -40,7 +40,7 @@ public class Inventory {
    * 
    * @return The list of items.
    */
-  public List<DefaultItemComponent> get() {
+  public List<Item> get() {
     return items;
   }
 
@@ -50,12 +50,12 @@ public class Inventory {
    * @param itemName The name of the item to retrieve.
    * @return The item with the specified name, or null if not found.
    */
-  public DefaultItemComponent getItem(String itemName) {
-    // for (DefaultItemComponent item : items) {
-    //   if (item.getName().equals(itemName)) {
-    //     return item;
-    //   }
-    // }
+  public Item getItem(String itemName) {
+    for (Item item : items) {
+      if (item.getName().equals(itemName)) {
+        return item;
+      }
+    }
     return null;
   }
 }

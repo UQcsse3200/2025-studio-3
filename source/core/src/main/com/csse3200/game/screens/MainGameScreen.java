@@ -16,8 +16,6 @@ import com.csse3200.game.input.InputService;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.progression.achievements.Achievement;
-import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
@@ -25,7 +23,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-import com.csse3200.game.components.achievements.AchievementPopup;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 
@@ -35,17 +32,18 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>
+ * Details on libGDX screens:
+ * https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {"images/heart.png", "images/coins.png", "images/profile.png"};
+  private static final String[] mainGameTextures = { "images/heart.png", "images/coins.png", "images/profile.png" };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
-  private AchievementPopup achievementPopup;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -132,14 +130,14 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the main game's ui including components for rendering ui elements to the screen and
+   * Creates the main game's ui including components for rendering ui elements to
+   * the screen and
    * capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
-    InputComponent inputComponent =
-        ServiceLocator.getInputService().getInputFactory().createForTerminal();
+    InputComponent inputComponent = ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
@@ -151,15 +149,5 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
-
-    achievementPopup = new AchievementPopup(stage);
-    AchievementManager achievementManager = Persistence.profile().achievements();
-    for (Achievement a : achievementManager.getAllAchievements()) {
-      a.setOnUnlock(() -> achievementPopup.show(a.getName(), a.getDescription()));
-    }
-
-
   }
-
-
 }

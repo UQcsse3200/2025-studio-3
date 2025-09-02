@@ -59,7 +59,6 @@ public class Persistence {
    */
   public static void load() {
     profile = new Profile();
-    save();
     logger.info("Created new profile");
   }
 

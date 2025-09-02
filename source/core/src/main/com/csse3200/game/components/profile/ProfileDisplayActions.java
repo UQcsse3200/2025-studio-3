@@ -37,7 +37,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onInventory() {
     logger.info("Opening inventory");
-    // game.setScreen(GdxGame.ScreenType.INVENTORY);
+    game.setScreen(GdxGame.ScreenType.INVENTORY);
   }
 
   private void onAchievements() {
@@ -57,7 +57,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onShop() {
     logger.info("Opening shop");
-    // game.setScreen(GdxGame.ScreenType.SHOP);
+    game.setScreen(GdxGame.ScreenType.SHOP);
   }
 
   private void onExit() {
