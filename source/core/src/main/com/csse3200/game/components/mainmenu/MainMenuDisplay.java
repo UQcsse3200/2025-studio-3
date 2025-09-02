@@ -44,6 +44,8 @@ public class MainMenuDisplay extends UIComponent {
                         ServiceLocator.getResourceService()
                                 .getAsset("images/bg-text.png", Texture.class));
 
+        logger.debug("show background title");
+
         TextButton startBtn = new TextButton("Start", skin);
         TextButton loadBtn = new TextButton("Load", skin);
         TextButton worldMapBtn = new TextButton("World Map", skin);
