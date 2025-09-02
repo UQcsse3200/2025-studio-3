@@ -1,8 +1,5 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.entities.configs.BaseDefenceConfig.State;
-import com.csse3200.game.entities.configs.BaseDefenceConfig.Type;
-
 public class DefenceStatsComponent extends CombatStatsComponent {
 
 
@@ -11,14 +8,14 @@ public class DefenceStatsComponent extends CombatStatsComponent {
  * which engage it combat should have an instance of this class registered. This class can be
  * extended for more specific combat needs.
  */
-  private Type type;
+  private int type;
   private int range;
-  private State state;
+  private int state;
   private int attackSpeed;
   private int critChance;
 
-  public DefenceStatsComponent(int health, int baseAttack, Type type, 
-                            int range, State state, int attackSpeed, int critChance) {
+  public DefenceStatsComponent(int health, int baseAttack, int type, 
+                            int range, int state, int attackSpeed, int critChance) {
 
     super(health, baseAttack);
     setType(type);
@@ -28,11 +25,11 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     setCritChance(critChance);
   }
 
-  public void setType(Type type) {
+  public void setType(int type) {
     this.type = type;
   }
 
-  public Type getType() {
+  public int getType() {
       return type;
   }
   
@@ -44,11 +41,11 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     return range;
   }
 
-  public void setState(State state) {
+  public void setState(int state) {
     this.state = state;
   }
 
-  public State getState() {
+  public int getState() {
     return state;
   }
 
