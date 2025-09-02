@@ -71,7 +71,7 @@ public class LevelGameArea extends GameArea{
         spawnGrid(levelOneRows, levelOneCols, scale);
         //float scale = gridHeight / levelTwoRows;
         //spawnGrid(levelTwoRows, levelTwoCols, scale);
-
+        spawnRobotAtTile(new GridPoint2(9,4), true, true);
         playMusic();
 
     }
