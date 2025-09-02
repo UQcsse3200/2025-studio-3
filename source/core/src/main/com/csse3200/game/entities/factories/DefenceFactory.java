@@ -9,6 +9,8 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
+import com.csse3200.game.components.tasks.AttackTask;
+import com.csse3200.game.components.tasks.IdleTask;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
@@ -24,6 +26,8 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.List;
 
 
 /**
@@ -42,7 +46,7 @@ public class DefenceFactory {
 
     /**
      * Creates a fully configured Sling Shooter defence entity.
-     * 
+     *
      * The entity is composed of:
      * - Base physics and collider setup
      * - Stats loaded from the config file
@@ -50,12 +54,12 @@ public class DefenceFactory {
      *
      * @return entity representing the slingshooter
      */
-    public static Entity createSlingShooter() {
-        // start with a base defender (physics + collider)
-        Entity defender = createBaseDefender();
-
+    public static Entity createSlingShooter(List<Entity> targets) {
         // load the sling shooter’s specific configuration;
         BaseDefenceConfig config = configs.slingshooter;
+
+        // start with a base defender (physics + collider)
+        Entity defender = createBaseDefender(targets, config);
 
         // animation component
         AnimationRenderComponent animator =
@@ -70,12 +74,12 @@ public class DefenceFactory {
         // attach components to the entity
         defender
             .addComponent(new DefenceStatsComponent(
-                    config.health, 
-                    config.baseAttack, 
-                    config.type, 
-                    config.range, 
+                    config.health,
+                    config.baseAttack,
+                    config.type,
+                    config.range,
                     config.state,
-                    config.attackSpeed, 
+                    config.attackSpeed,
                     config.critChance))
             .addComponent(animator)
             .addComponent(new DefenceAnimationController());
@@ -89,13 +93,18 @@ public class DefenceFactory {
 
         return defender;
     }
-    
+
     /**
      * Creates a base defender entity with default physics and collider setup.
+     * Base defender is also able to detect enemies and act accordingly - i.e. remain idle or attack
      *
      * @return entity with physics and collision components
      */
-    public static Entity createBaseDefender() {
+    public static Entity createBaseDefender(List<Entity> targets, BaseDefenceConfig config) {
+        AITaskComponent enemyDetectionTasks = new AITaskComponent()
+                .addTask(new AttackTask(targets, config.range))
+                .addTask(new IdleTask(targets, config.range));
+
         Entity npc =
             new Entity()
                 .addComponent(new PhysicsComponent())
