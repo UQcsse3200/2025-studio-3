@@ -171,14 +171,11 @@ public class ForestGameArea extends GameArea {
       spawnEntityAt(ghostKing, randomPos, true, true);
   }
 
-  public void despawnGhost(Entity ghost) {
-    despawnEntity(ghost);
+  public void despawnGhost(Entity robot) {
+        robots.remove(robot);
+      despawnEntity(robot);
   }
 
-    public void despawnRobot(Entity robot) {
-        robots.remove(robot);
-        despawnEntity(robot);
-    }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
