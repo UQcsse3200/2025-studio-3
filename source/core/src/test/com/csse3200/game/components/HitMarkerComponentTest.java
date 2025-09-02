@@ -1,39 +1,98 @@
 package com.csse3200.game.components;
 
-import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.rendering.RenderComponent;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(GameExtension.class)
+@ExtendWith(MockitoExtension.class)
 class HitMarkerComponentTest {
+    @Mock
+    Texture texture;
 
     @BeforeEach
     void beforeEach() {
-    ServiceLocator.registerPhysicsService(new PhysicsService());
-}
+        ServiceLocator.registerPhysicsService(new PhysicsService());
+        ServiceLocator.registerRenderService(new RenderService());
+    }
 
     @Test
-    void shouldFlash() {
+    void NoFlashTime() {
         Entity entity = createTarget();
-        entity.getEvents().trigger("hitMarker", entity);
         HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
+        assertEquals(0, hitMarker.flashTime);
+    }
+
+    @Test
+    void FlashTimeOnHit() {
+        Entity entity = createTarget();
+        HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
+        entity.getEvents().trigger("hitMarker", entity);
         assertTrue(hitMarker.flashTime > 0);
     }
+
+    @Test
+    void NoFlashColour() {
+        Entity entity = createTarget();
+        HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
+        assertEquals(Color.WHITE, hitMarker.render.colour);
+    }
+
+    @Test
+    void FlashColourOnHit() {
+        Entity entity = createTarget();
+        HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
+        entity.getEvents().trigger("hitMarker", entity);
+        hitMarker.update(); // Update to apply flash colour
+        assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.colour);
+    }
+
+    @Test
+    void FlashColourReset() {
+        Entity entity = createTarget();
+        HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
+        entity.getEvents().trigger("hitMarker", entity);
+        // Simulate enough time passing to exceed flash duration
+        Gdx.graphics = mock(Graphics.class);
+        when(Gdx.graphics.getDeltaTime()).thenReturn(0.2f);
+        hitMarker.update();
+        assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.colour);
+        hitMarker.update();
+        assertEquals(Color.WHITE, hitMarker.render.colour);
+    }
+
+    @Test
+    void NoFlashWithoutRenderComponent() {
+        Entity entity =
+                new Entity()
+                        .addComponent(new HitMarkerComponent());
+        entity.create();
+        // No exceptions should be thrown and entity will not flash
+        entity.getEvents().trigger("hitMarker", entity);
+    }
+
 
     Entity createTarget() {
         Entity target =
                 new Entity()
+                        .addComponent(new TextureRenderComponent(texture))
                         .addComponent(new HitMarkerComponent());
         target.create();
         return target;
