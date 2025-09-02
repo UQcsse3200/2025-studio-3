@@ -32,4 +32,8 @@ public class CurrencyService {
     public boolean spend(int amount) {
         return currency.spendSunshine(amount);
     }
+
+    public boolean canAfford(int amount) {
+        return currency.canAffordSunshine(amount);
+    }
 }
