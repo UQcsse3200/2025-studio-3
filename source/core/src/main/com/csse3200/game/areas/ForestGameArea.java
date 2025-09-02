@@ -96,6 +96,7 @@ public class ForestGameArea extends GameArea {
     Entity guy = DefenceFactory.createSlingShooter();
 
     spawnEntityAt(guy, randomPos, true, true);
+    guy.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
     guy.getEvents().trigger("attackStart");
   }
 
