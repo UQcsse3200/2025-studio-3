@@ -146,12 +146,6 @@ public class StatisticsDisplay extends UIComponent {
         // draw is handled by the stage
     }
 
-//    @Override
-//    public void update() {
-//        stage.act(ServiceLocator.getTimeSource().getDeltaTime());
-//    }
-//
-
     /**
      * Disposes of this UI component.
      */
