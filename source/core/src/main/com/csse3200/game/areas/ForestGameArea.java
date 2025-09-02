@@ -17,174 +17,187 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// ===== new import =====
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.csse3200.game.components.currency.CurrencyInteraction;
+// ======================
+
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
-  private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
-  private static final int NUM_TREES = 7;
-  private static final int NUM_GHOSTS = 2;
-  private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
-  private static final float WALL_WIDTH = 0.1f;
-  private static final String[] forestTextures = {
-    "images/box_boy_leaf.png",
-    "images/tree.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/grass_1.png",
-    "images/grass_2.png",
-    "images/grass_3.png",
-    "images/hex_grass_1.png",
-    "images/hex_grass_2.png",
-    "images/hex_grass_3.png",
-    "images/iso_grass_1.png",
-    "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/normal_sunlight.png"
-  };
-  private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
-  };
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-  private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-  private static final String[] forestMusic = {backgroundMusic};
+    private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
+    private static final int NUM_TREES = 7;
+    private static final int NUM_GHOSTS = 2;
+    private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
+    private static final float WALL_WIDTH = 0.1f;
+    private static final String[] forestTextures = {
+            "images/box_boy_leaf.png",
+            "images/tree.png",
+            "images/ghost_king.png",
+            "images/ghost_1.png",
+            "images/grass_1.png",
+            "images/grass_2.png",
+            "images/grass_3.png",
+            "images/hex_grass_1.png",
+            "images/hex_grass_2.png",
+            "images/hex_grass_3.png",
+            "images/iso_grass_1.png",
+            "images/iso_grass_2.png",
+            "images/iso_grass_3.png",
+            "images/normal_sunlight.png"
+    };
+    private static final String[] forestTextureAtlases = {
+            "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
+    };
+    private static final String[] forestSounds = {"sounds/Impact4.ogg"};
+    private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
+    private static final String[] forestMusic = {backgroundMusic};
 
-  private final TerrainFactory terrainFactory;
+    private final TerrainFactory terrainFactory;
 
-  private Entity player;
+    private Entity player;
 
-  /**
-   * Initialise this ForestGameArea to use the provided TerrainFactory.
-   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
-   * @requires terrainFactory != null
-   */
-  public ForestGameArea(TerrainFactory terrainFactory) {
-    super();
-    this.terrainFactory = terrainFactory;
-  }
-
-  /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
-  @Override
-  public void create() {
-    loadAssets();
-
-    displayUI();
-
-    spawnTerrain();
-    spawnTrees();
-    player = spawnPlayer();
-    spawnGhosts();
-    spawnGhostKing();
-
-    playMusic();
-  }
-
-  private void displayUI() {
-    Entity ui = new Entity();
-    ui.addComponent(new GameAreaDisplay("Box Forest"));
-    spawnEntity(ui);
-  }
-
-  private void spawnTerrain() {
-    // Background terrain
-    terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
-    spawnEntity(new Entity().addComponent(terrain));
-
-    // Terrain walls
-    float tileSize = terrain.getTileSize();
-    GridPoint2 tileBounds = terrain.getMapBounds(0);
-    Vector2 worldBounds = new Vector2(tileBounds.x * tileSize, tileBounds.y * tileSize);
-
-    // Left
-    spawnEntityAt(
-        ObstacleFactory.createWall(WALL_WIDTH, worldBounds.y), GridPoint2Utils.ZERO, false, false);
-    // Right
-    spawnEntityAt(
-        ObstacleFactory.createWall(WALL_WIDTH, worldBounds.y),
-        new GridPoint2(tileBounds.x, 0),
-        false,
-        false);
-    // Top
-    spawnEntityAt(
-        ObstacleFactory.createWall(worldBounds.x, WALL_WIDTH),
-        new GridPoint2(0, tileBounds.y),
-        false,
-        false);
-    // Bottom
-    spawnEntityAt(
-        ObstacleFactory.createWall(worldBounds.x, WALL_WIDTH), GridPoint2Utils.ZERO, false, false);
-  }
-
-  private void spawnTrees() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    for (int i = 0; i < NUM_TREES; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity tree = ObstacleFactory.createTree();
-      spawnEntityAt(tree, randomPos, true, false);
+    public ForestGameArea(TerrainFactory terrainFactory) {
+        super();
+        this.terrainFactory = terrainFactory;
     }
-  }
 
-  private Entity spawnPlayer() {
-    Entity newPlayer = PlayerFactory.createPlayer();
-    spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
-    return newPlayer;
-  }
+    /** Create the game area, including terrain, static entities (trees), dynamic entities (player) */
+    @Override
+    public void create() {
+        loadAssets();
 
-  private void spawnGhosts() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+        displayUI();
 
-    for (int i = 0; i < NUM_GHOSTS; i++) {
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghost = NPCFactory.createGhost(player);
-      spawnEntityAt(ghost, randomPos, true, true);
+        spawnTerrain();
+        spawnTrees();
+        player = spawnPlayer();
+        spawnGhosts();
+        spawnGhostKing();
+
+        // ===== 这里加入“循环生成阳光”的逻辑 =====
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        Texture sunTex = ServiceLocator.getResourceService()
+                .getAsset("images/normal_sunlight.png", Texture.class);
+
+        final float intervalSec = 10f;
+        stage.addAction(Actions.forever(Actions.sequence(
+                Actions.delay(intervalSec),
+                Actions.run(() -> {
+                    float padding = 64f;
+                    float w = stage.getViewport().getWorldWidth();
+                    float h = stage.getViewport().getWorldHeight();
+                    float x = MathUtils.random(padding, Math.max(padding, w - padding));
+                    float y = MathUtils.random(padding, Math.max(padding, h - padding));
+                    spawnSun(stage, sunTex, x, y, 25);
+                })
+        )));
+        // =====================================
+
+        playMusic();
     }
-  }
 
-  private void spawnGhostKing() {
-    GridPoint2 minPos = new GridPoint2(0, 0);
-    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity ghostKing = NPCFactory.createGhostKing(player);
-    spawnEntityAt(ghostKing, randomPos, true, true);
-  }
-
-
-  private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
-    music.setLooping(true);
-    music.setVolume(0.3f);
-    music.play();
-  }
-
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(forestTextures);
-    resourceService.loadTextureAtlases(forestTextureAtlases);
-    resourceService.loadSounds(forestSounds);
-    resourceService.loadMusic(forestMusic);
-
-    while (!resourceService.loadForMillis(10)) {
-      // This could be upgraded to a loading screen
-      logger.info("Loading... {}%", resourceService.getProgress());
+    private void displayUI() {
+        Entity ui = new Entity();
+        ui.addComponent(new GameAreaDisplay("Box Forest"));
+        spawnEntity(ui);
     }
-  }
 
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(forestTextures);
-    resourceService.unloadAssets(forestTextureAtlases);
-    resourceService.unloadAssets(forestSounds);
-    resourceService.unloadAssets(forestMusic);
-  }
+    private void spawnTerrain() {
+        terrain = terrainFactory.createTerrain(TerrainType.FOREST_DEMO);
+        spawnEntity(new Entity().addComponent(terrain));
 
-  @Override
-  public void dispose() {
-    super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
-    this.unloadAssets();
-  }
+        float tileSize = terrain.getTileSize();
+        GridPoint2 tileBounds = terrain.getMapBounds(0);
+        Vector2 worldBounds = new Vector2(tileBounds.x * tileSize, tileBounds.y * tileSize);
+
+        spawnEntityAt(ObstacleFactory.createWall(WALL_WIDTH, worldBounds.y), GridPoint2Utils.ZERO, false, false);
+        spawnEntityAt(ObstacleFactory.createWall(WALL_WIDTH, worldBounds.y), new GridPoint2(tileBounds.x, 0), false, false);
+        spawnEntityAt(ObstacleFactory.createWall(worldBounds.x, WALL_WIDTH), new GridPoint2(0, tileBounds.y), false, false);
+        spawnEntityAt(ObstacleFactory.createWall(worldBounds.x, WALL_WIDTH), GridPoint2Utils.ZERO, false, false);
+    }
+
+    private void spawnTrees() {
+        GridPoint2 minPos = new GridPoint2(0, 0);
+        GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+        for (int i = 0; i < NUM_TREES; i++) {
+            GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+            Entity tree = ObstacleFactory.createTree();
+            spawnEntityAt(tree, randomPos, true, false);
+        }
+    }
+
+    private Entity spawnPlayer() {
+        Entity newPlayer = PlayerFactory.createPlayer();
+        spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+        return newPlayer;
+    }
+
+    private void spawnGhosts() {
+        GridPoint2 minPos = new GridPoint2(0, 0);
+        GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+        for (int i = 0; i < NUM_GHOSTS; i++) {
+            GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+            Entity ghost = NPCFactory.createGhost(player);
+            spawnEntityAt(ghost, randomPos, true, true);
+        }
+    }
+
+    private void spawnGhostKing() {
+        GridPoint2 minPos = new GridPoint2(0, 0);
+        GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+
+        GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+        Entity ghostKing = NPCFactory.createGhostKing(player);
+        spawnEntityAt(ghostKing, randomPos, true, true);
+    }
+
+    private void playMusic() {
+        Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+        music.setLooping(true);
+        music.setVolume(0.3f);
+        music.play();
+    }
+
+    private void loadAssets() {
+        logger.debug("Loading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.loadTextures(forestTextures);
+        resourceService.loadTextureAtlases(forestTextureAtlases);
+        resourceService.loadSounds(forestSounds);
+        resourceService.loadMusic(forestMusic);
+
+        while (!resourceService.loadForMillis(10)) {
+            logger.info("Loading... {}%", resourceService.getProgress());
+        }
+    }
+
+    private void unloadAssets() {
+        logger.debug("Unloading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.unloadAssets(forestTextures);
+        resourceService.unloadAssets(forestTextureAtlases);
+        resourceService.unloadAssets(forestSounds);
+        resourceService.unloadAssets(forestMusic);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+        this.unloadAssets();
+    }
+
+    // ===== 新增：生成一颗阳光的方法（复用 CurrencyInteraction 的拾取加钱逻辑）=====
+    private void spawnSun(Stage stage, Texture sunTex, float x, float y, int value) {
+        CurrencyInteraction token = new CurrencyInteraction(sunTex, value);
+        token.setPosition(x, y);
+        stage.addActor(token);
+        token.toFront();
+    }
+    // ===========================================================================
 }
