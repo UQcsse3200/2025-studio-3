@@ -32,12 +32,16 @@ public class DefenceFactory {
 
     /**
      * Creates a base sling shooter entity
-     * Returns the entity
+     * 
+     * @return entity
      */
     public static Entity createSlingShooter() {
-        Entity sigma = createBaseDefender();
+        Entity shooter = createBaseDefender();
+
+        // get attributes from json file
         BaseDefenceConfig config = configs.slingshooter;
 
+        // animation
         AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
@@ -46,18 +50,25 @@ public class DefenceFactory {
         animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
 
-        sigma
+        // configure specific stats & animation for a slingshooter
+        shooter
             .addComponent(new DefenceStatsComponent(config.health, 
                         config.baseAttack, config.type, config.range, config.state,
                         config.attackSpeed, config.critChance))
             .addComponent(animator)
             .addComponent(new DefenceAnimationController());
 
-        sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-        return sigma;
+        shooter.getComponent(AnimationRenderComponent.class).scaleEntity();
+        return shooter;
     }
     
+    /**
+     * Returns the entity framework for a base defender
+     * 
+     * @return entity
+     */
     public static Entity createBaseDefender() {
+        // base entities have a hitbox and collision
         Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
@@ -68,6 +79,9 @@ public class DefenceFactory {
         return npc;
     }
 
+    /**
+     * Error
+     */
     private DefenceFactory() {
         throw new IllegalStateException("Instantiating static util class");
   }
