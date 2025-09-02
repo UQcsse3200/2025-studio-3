@@ -94,6 +94,46 @@ public abstract class GameArea implements Disposable {
 //        return robot;
 //    }
 
+    public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
+        // grid params copied from LevelGameArea (Level One)
+        final float xOffset = 2.9f;
+        final float yOffset = 1.45f;
+        final int rows = 5;        // levelOneRows
+        final int cols = 10;       // levelOneCols
+        final float gridHeight = 7f;
+        final float cellScale = gridHeight / rows; // same as LevelGameArea
+
+        // Bounds check on overlay coordinates
+        if (cell.x < 0 || cell.y < 0 || cell.x >= cols || cell.y >= rows) {
+            throw new IllegalArgumentException("Overlay cell out of bounds: " + cell + " within (" + rows + "x" + cols + ")");
+        }
+
+        BaseEntityConfig cfg = new BaseEntityConfig();
+        cfg.health = 10;
+        cfg.baseAttack = 2;
+
+        Entity robot = RobotFactory.createRobot(cfg);
+
+        // Register first so getCenterPosition() is valid
+        spawnEntity(robot);
+
+        float tileX = xOffset + cellScale * cell.x;
+        float tileY = yOffset + cellScale * cell.y;
+
+        float worldX = tileX;
+        float worldY = tileY;
+
+        if (centerX) {
+            worldX += (cellScale / 2f) - robot.getCenterPosition().x;
+        }
+        if (centerY) {
+            worldY += (cellScale / 2f) - robot.getCenterPosition().y;
+        }
+
+        robot.setPosition(worldX, worldY);
+        return robot;
+    }
+
     public Entity spawnRobotAtFloat(float x, float y) {
         BaseEntityConfig cfg = new BaseEntityConfig();
         cfg.health = 10;
