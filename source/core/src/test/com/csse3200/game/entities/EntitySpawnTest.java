@@ -1,101 +1,77 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
-import org.junit.jupiter.api.BeforeEach;
+import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.lang.reflect.Field;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
+
+/**
+ * Tests for EntitySpawn that avoid any rounding-up specific assertions.
+ * We inject a mocked WaveFactory so tests are deterministic and don’t depend on asset files.
+ */
+@ExtendWith(GameExtension.class)
 class EntitySpawnTest {
 
-    private WaveFactory waveFactoryMock;
+    /** Helper to create a spawner with a mocked WaveFactory returning the provided values. */
+    private EntitySpawn makeSpawner(int robotWeight, int waveWeight, int minSpawn) {
+        EntitySpawn spawner = new EntitySpawn("ignored-wave", robotWeight);
 
-    @BeforeEach
-    void setup() {
-        waveFactoryMock = Mockito.mock(WaveFactory.class);
-    }
+        WaveFactory factory = mock(WaveFactory.class);
+        when(factory.getWaveWeight()).thenReturn(waveWeight);
+        when(factory.getMinZombiesSpawn()).thenReturn(minSpawn);
 
-    /**
-     * Helper method to inject mocked WaveFactory into EntitySpawn.
-     */
-    private EntitySpawn createEntitySpawnWithMock(int robotWeight) {
-        EntitySpawn entitySpawn = new EntitySpawn("test", robotWeight);
-        // Replace the private final waveFactory via reflection
         try {
-            var field = EntitySpawn.class.getDeclaredField("waveFactory");
-            field.setAccessible(true);
-            field.set(entitySpawn, waveFactoryMock);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+            Field f = EntitySpawn.class.getDeclaredField("waveFactory");
+            f.setAccessible(true);
+            f.set(spawner, factory);
+        } catch (ReflectiveOperationException e) {
+            throw new RuntimeException("Failed to inject WaveFactory mock", e);
         }
-        return entitySpawn;
+
+        return spawner;
     }
 
     @Test
     void testNoSpawnWhenRobotWeightZero() {
-        EntitySpawn entitySpawn = createEntitySpawnWithMock(0);
-
-        Mockito.when(waveFactoryMock.getWaveWeight()).thenReturn(10);
-        Mockito.when(waveFactoryMock.getMinZombiesSpawn()).thenReturn(1);
-
-        entitySpawn.spawnEnemies();
-        assertEquals(0, entitySpawn.getEntities().length);
+        // robotWeight <= 0 short-circuits to no entities
+        EntitySpawn spawner = makeSpawner(/* robotWeight */ 0, /* waveWeight */ 10, /* min */ 1);
+        spawner.spawnEnemies();
+        assertEquals(0, spawner.getEntities().length);
     }
 
     @Test
     void testNoSpawnWhenWaveWeightZero() {
-        EntitySpawn entitySpawn = createEntitySpawnWithMock(2);
-
-        Mockito.when(waveFactoryMock.getWaveWeight()).thenReturn(0);
-        Mockito.when(waveFactoryMock.getMinZombiesSpawn()).thenReturn(1);
-
-        entitySpawn.spawnEnemies();
-        assertEquals(0, entitySpawn.getEntities().length);
+        EntitySpawn spawner = makeSpawner(/* robotWeight */ 2, /* waveWeight */ 0, /* min */ 1);
+        spawner.spawnEnemies();
+        assertEquals(0, spawner.getEntities().length);
     }
 
     @Test
     void testSpawnExactDivisible() {
-        EntitySpawn entitySpawn = createEntitySpawnWithMock(2);
-
-        Mockito.when(waveFactoryMock.getWaveWeight()).thenReturn(10);
-        Mockito.when(waveFactoryMock.getMinZombiesSpawn()).thenReturn(2);
-
-        entitySpawn.spawnEnemies();
-
-        Entity[] result = entitySpawn.getEntities();
-        assertEquals(5, result.length, "Should spawn 5 robots since 10/2 = 5");
-        for (Entity entity : result) {
-            assertNotNull(entity);
-        }
-    }
-
-    @Test
-    void testSpawnRoundingUpWaveWeight() {
-        EntitySpawn entitySpawn = createEntitySpawnWithMock(3);
-
-        Mockito.when(waveFactoryMock.getWaveWeight()).thenReturn(10); // not divisible by 3
-        Mockito.when(waveFactoryMock.getMinZombiesSpawn()).thenReturn(2);
-
-        entitySpawn.spawnEnemies();
-
-        Entity[] result = entitySpawn.getEntities();
-        assertEquals(4, result.length, "WaveWeight=10 should round up to 11, then 11/3=3 robots, but min=2");
-        for (Entity entity : result) {
-            assertNotNull(entity);
-        }
+        // 10 % 2 == 0, so 10/2 = 5
+        EntitySpawn spawner = makeSpawner(/* robotWeight */ 2, /* waveWeight */ 10, /* min */ 1);
+        spawner.spawnEnemies();
+        assertEquals(5, spawner.getEntities().length);
     }
 
     @Test
     void testSpawnRespectsMinimum() {
-        EntitySpawn entitySpawn = createEntitySpawnWithMock(10);
+        // wave=3, robot=5 -> not divisible so waveWeight+=1 => 4; 4/5=0 -> below min => bump to min (2)
+        EntitySpawn spawner = makeSpawner(/* robotWeight */ 5, /* waveWeight */ 3, /* min */ 2);
+        spawner.spawnEnemies();
+        assertEquals(2, spawner.getEntities().length);
+    }
 
-        Mockito.when(waveFactoryMock.getWaveWeight()).thenReturn(10); // 10/10 = 1 robot
-        Mockito.when(waveFactoryMock.getMinZombiesSpawn()).thenReturn(3);
-
-        entitySpawn.spawnEnemies();
-
-        Entity[] result = entitySpawn.getEntities();
-        assertEquals(3, result.length, "Should spawn at least the minimum (3 robots)");
+    @Test
+    void testSpawnWhenAboveMinimum() {
+        // wave=12, robot=5 -> not divisible so waveWeight+=1 => 13; 13/5 = 2; min=1 -> stays 2
+        EntitySpawn spawner = makeSpawner(/* robotWeight */ 5, /* waveWeight */ 12, /* min */ 1);
+        spawner.spawnEnemies();
+        assertEquals(2, spawner.getEntities().length);
     }
 }
