@@ -6,9 +6,12 @@ import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.entities.factories.RobotFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.gdx.Gdx;
 
 /**
  * Represents an area in the game, such as a level, indoor area, etc. An area has a terrain and
@@ -44,6 +47,15 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().register(entity);
   }
 
+  protected void despawnEntity(Entity entity) {
+      if(entity == null) {
+          return;
+      }
+      ServiceLocator.getEntityService().unregister(entity);
+      entity.dispose();
+      areaEntities.remove(entity);
+  }
+
   /**
    * Spawn entity on a given tile. Requires the terrain to be set first.
    *
@@ -67,4 +79,30 @@ public abstract class GameArea implements Disposable {
     entity.setPosition(worldPos);
     spawnEntity(entity);
   }
+    public void requestDespawn(Entity entity) {
+        if (entity == null) return;
+        Gdx.app.postRunnable(() -> despawnEntity(entity));
+    }
+
+//    public Entity spawnRobotAtTile(GridPoint2 tilePos, boolean centerX, boolean centerY) {
+//        BaseEntityConfig cfg = new BaseEntityConfig();
+//        cfg.health = 10;
+//        cfg.baseAttack = 2;
+//
+//        Entity robot = RobotFactory.createRobot(cfg);
+//        spawnEntityAt(robot, tilePos, centerX, centerY);
+//        return robot;
+//    }
+
+    public Entity spawnRobotAtFloat(float x, float y) {
+        BaseEntityConfig cfg = new BaseEntityConfig();
+        cfg.health = 10;
+        cfg.baseAttack = 2;
+
+        Entity robot = RobotFactory.createRobot(cfg);
+        spawnEntity(robot);
+        robot.setPosition(x, y);
+        return robot;
+    }
+
 }
