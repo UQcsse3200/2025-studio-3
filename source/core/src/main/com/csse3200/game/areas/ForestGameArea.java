@@ -77,24 +77,7 @@ public class ForestGameArea extends GameArea {
         spawnGhosts();
         spawnGhostKing();
 
-        // ===== 这里加入“循环生成阳光”的逻辑 =====
-        Stage stage = ServiceLocator.getRenderService().getStage();
-        Texture sunTex = ServiceLocator.getResourceService()
-                .getAsset("images/normal_sunlight.png", Texture.class);
-
-        final float intervalSec = 10f;
-        stage.addAction(Actions.forever(Actions.sequence(
-                Actions.delay(intervalSec),
-                Actions.run(() -> {
-                    float padding = 64f;
-                    float w = stage.getViewport().getWorldWidth();
-                    float h = stage.getViewport().getWorldHeight();
-                    float x = MathUtils.random(padding, Math.max(padding, w - padding));
-                    float y = MathUtils.random(padding, Math.max(padding, h - padding));
-                    spawnSun(stage, sunTex, x, y, 25);
-                })
-        )));
-        // =====================================
+        spawnSun();
 
         playMusic();
     }
@@ -192,12 +175,29 @@ public class ForestGameArea extends GameArea {
         this.unloadAssets();
     }
 
-    // ===== 新增：生成一颗阳光的方法（复用 CurrencyInteraction 的拾取加钱逻辑）=====
-    private void spawnSun(Stage stage, Texture sunTex, float x, float y, int value) {
+    private void spawnSingleSun(Stage stage, Texture sunTex, float x, float y, int value) {
         CurrencyInteraction token = new CurrencyInteraction(sunTex, value);
         token.setPosition(x, y);
         stage.addActor(token);
         token.toFront();
     }
-    // ===========================================================================
+
+    private void spawnSun() {
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        Texture sunTex = ServiceLocator.getResourceService()
+                .getAsset("images/normal_sunlight.png", Texture.class);
+
+        final float intervalSec = 10f;
+        stage.addAction(Actions.forever(Actions.sequence(
+                Actions.delay(intervalSec),
+                Actions.run(() -> {
+                    float padding = 64f;
+                    float w = stage.getViewport().getWorldWidth();
+                    float h = stage.getViewport().getWorldHeight();
+                    float x = MathUtils.random(padding, Math.max(padding, w - padding));
+                    float y = MathUtils.random(padding, Math.max(padding, h - padding));
+                    spawnSingleSun(stage, sunTex, x, y, 25);
+                })
+        )));
+    }
 }

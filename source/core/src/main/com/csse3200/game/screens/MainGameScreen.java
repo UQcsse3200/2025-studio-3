@@ -3,8 +3,6 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.graphics.Texture;
-import com.csse3200.game.components.currency.CurrencyInteraction;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -81,11 +79,6 @@ public class MainGameScreen extends ScreenAdapter {
         ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
         forestGameArea.create();
 
-        Stage stage = ServiceLocator.getRenderService().getStage();
-        Texture sunTex = ServiceLocator.getResourceService().getAsset("images/normal_sunlight.png", Texture.class);
-        spawnSun(stage, sunTex, 1000, 500, 25);
-        spawnSun(stage, sunTex, 2000, 1000, 25);
-
     }
 
     @Override
@@ -158,12 +151,5 @@ public class MainGameScreen extends ScreenAdapter {
                 .addComponent(new TerminalDisplay());
 
         ServiceLocator.getEntityService().register(ui);
-    }
-
-    private void spawnSun(Stage stage, Texture sunTex, float x, float y, int value) {
-        CurrencyInteraction token = new CurrencyInteraction(sunTex, value);
-        token.setPosition(x, y);
-        stage.addActor(token);
-        token.toFront();
     }
 }

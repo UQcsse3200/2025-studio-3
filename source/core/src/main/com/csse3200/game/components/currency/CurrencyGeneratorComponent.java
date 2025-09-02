@@ -9,11 +9,6 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 
-/**
- * CurrencyGeneratorComponent
- * --------------------------
- * 定时生成“阳光”实体，使用 Stage 的 Actions.forever 循环。
- */
 public class CurrencyGeneratorComponent extends Component {
     private final float intervalSec;
     private final int sunValue;
