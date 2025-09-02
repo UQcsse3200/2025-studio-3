@@ -10,9 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.Achievements.Achievement;
-import com.csse3200.game.Achievements.AchievementManager;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.progression.achievements.Achievement;
+import com.csse3200.game.progression.achievements.AchievementManager;
 
 /**
  * The game screen containing the achievements menu.
@@ -28,7 +27,6 @@ public class AchievementsScreen extends ScreenAdapter {
     private Skin skin;
     private Label.LabelStyle headerStyle;
     private Label.LabelStyle textStyle;
-    private TextButton.TextButtonStyle buttonStyle;
     private Window.WindowStyle windowStyle;
 
     public AchievementsScreen(GdxGame game) {
@@ -49,7 +47,6 @@ public class AchievementsScreen extends ScreenAdapter {
                 new Label.LabelStyle(new BitmapFont(), Color.DARK_GRAY);
 
         textStyle = skin.get(Label.LabelStyle.class); // default
-        buttonStyle = skin.get(TextButton.TextButtonStyle.class); // default
         windowStyle = skin.get(Window.WindowStyle.class); // default
 
         // === Root table ===
@@ -63,13 +60,6 @@ public class AchievementsScreen extends ScreenAdapter {
 
         rootTable.top().padTop(20);
         rootTable.add(header).center().row();
-
-        // === Achievements list ===
-        achievementManager = ServiceLocator.getAchievementManager();
-        if (achievementManager == null) {
-            achievementManager = new AchievementManager();
-            ServiceLocator.registerAchievementManager(achievementManager);
-        }
 
         Table achievementTable = new Table();
         int colCount = 0;

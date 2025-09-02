@@ -42,7 +42,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onAchievements() {
     logger.info("Opening achievements");
-    // game.setScreen(GdxGame.ScreenType.ACHIEVEMENTS);
+    game.setScreen(GdxGame.ScreenType.ACHIEVEMENTS);
   }
 
   private void onSkills() {

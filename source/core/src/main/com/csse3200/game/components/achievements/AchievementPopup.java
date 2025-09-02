@@ -1,4 +1,4 @@
-package com.csse3200.game.Achievements;
+package com.csse3200.game.components.achievements;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

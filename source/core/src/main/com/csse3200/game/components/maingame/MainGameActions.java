@@ -6,7 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * This class listens to events relevant to the Main Game Screen and does something when one of the
+ * This class listens to events relevant to the Main Game Screen and does
+ * something when one of the
  * events is triggered.
  */
 public class MainGameActions extends Component {
@@ -32,7 +33,7 @@ public class MainGameActions extends Component {
   }
 
   /**
-   * 
+   * Swaps to the Profile screen.
    */
   private void onProfile() {
     logger.info("Opening profile screen");
