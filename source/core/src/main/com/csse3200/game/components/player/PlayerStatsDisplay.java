@@ -14,8 +14,7 @@ import com.csse3200.game.ui.UIComponent;
  */
 public class PlayerStatsDisplay extends UIComponent {
   Table table;
-  private Image heartImage;
-  private Label healthLabel;
+
 
   /**
    * Creates reusable ui styles and adds actors to the stage.
@@ -25,7 +24,6 @@ public class PlayerStatsDisplay extends UIComponent {
     super.create();
     addActors();
 
-    entity.getEvents().addListener("updateHealth", this::updatePlayerHealthUI);
   }
 
   /**
@@ -38,17 +36,6 @@ public class PlayerStatsDisplay extends UIComponent {
     table.setFillParent(true);
     table.padTop(45f).padLeft(5f);
 
-    // Heart image
-    float heartSideLength = 30f;
-    heartImage = new Image(ServiceLocator.getResourceService().getAsset("images/heart.png", Texture.class));
-
-    // Health text
-    int health = entity.getComponent(CombatStatsComponent.class).getHealth();
-    CharSequence healthText = String.format("Health: %d", health);
-    healthLabel = new Label(healthText, skin, "large");
-
-    table.add(heartImage).size(heartSideLength).pad(5);
-    table.add(healthLabel);
     stage.addActor(table);
   }
 
@@ -57,19 +44,5 @@ public class PlayerStatsDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
-  /**
-   * Updates the player's health on the ui.
-   * @param health player health
-   */
-  public void updatePlayerHealthUI(int health) {
-    CharSequence text = String.format("Health: %d", health);
-    healthLabel.setText(text);
-  }
 
-  @Override
-  public void dispose() {
-    super.dispose();
-    heartImage.remove();
-    healthLabel.remove();
-  }
 }
