@@ -42,6 +42,7 @@ public class MainGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
+  private final LevelGameArea levelGameArea; //reference to game area
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -68,7 +69,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+    levelGameArea = new LevelGameArea(terrainFactory);
     levelGameArea.create();
 
     snapCameraBottomLeft();
@@ -79,6 +80,7 @@ public class MainGameScreen extends ScreenAdapter {
   public void render(float delta) {
     physicsEngine.update();
     ServiceLocator.getEntityService().update();
+    levelGameArea.checkGameOver(); // run every frame to check game state
     renderer.render();
   }
 
@@ -134,16 +136,16 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     InputComponent inputComponent =
-        ServiceLocator.getInputService().getInputFactory().createForTerminal();
+            ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new PerformanceDisplay())
-        .addComponent(new MainGameActions(this.game))
-        .addComponent(new MainGameExitDisplay())
-        .addComponent(new Terminal())
-        .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+            .addComponent(new PerformanceDisplay())
+            .addComponent(new MainGameActions(this.game))
+            .addComponent(new MainGameExitDisplay())
+            .addComponent(new Terminal())
+            .addComponent(inputComponent)
+            .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }
