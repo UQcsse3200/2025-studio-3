@@ -6,10 +6,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.npc.GhostAnimationController;
+import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.files.FileLoader;
@@ -24,50 +26,90 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
+/**
+ * Factory class for creating defence entities (e.g., sling shooters).
+ * This class should not be instantiated — all methods and configuration
+ * are static utilities.
+ */
 public class DefenceFactory {
+    /**
+     * Loads defence configuration data from JSON.
+     * The configs object is populated at class-load time.
+     * If the file is missing or deserialization fails, this will be null.
+     */
     private static final NPCConfigs configs =
-        FileLoader.readClass(NPCConfigs.class, "configs/NPCs.json");
+        FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
-    public static Entity createSigma() {
-        Entity sigma = createBaseDefender();
-        BaseEntityConfig config = configs.ghost; // update to whatever the name of the sigma is
+    /**
+     * Creates a fully configured Sling Shooter defence entity.
+     * 
+     * The entity is composed of:
+     * - Base physics and collider setup
+     * - Stats loaded from the config file
+     * - Animation rendering and animation controller
+     *
+     * @return entity representing the slingshooter
+     */
+    public static Entity createSlingShooter() {
+        // start with a base defender (physics + collider)
+        Entity defender = createBaseDefender();
 
-        /* TODO Finn
+        // load the sling shooter’s specific configuration;
+        BaseDefenceConfig config = configs.slingshooter;
+
+        // animation component
         AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset("images/ghost.atlas", TextureAtlas.class));
-        
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
+            new AnimationRenderComponent(
+                ServiceLocator.getResourceService()
+                    .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
 
-        sigma
-            .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        // define animations for idle and attack states
+        animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+
+        // attach components to the entity
+        defender
+            .addComponent(new DefenceStatsComponent(
+                    config.health, 
+                    config.baseAttack, 
+                    config.type, 
+                    config.range, 
+                    config.state,
+                    config.attackSpeed, 
+                    config.critChance))
             .addComponent(animator)
-            .addComponent(new GhostAnimationController());
+            .addComponent(new DefenceAnimationController());
 
-        sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-        */
+        // trigger the initial attack event to kick off behaviour
+        // this will be changed to idle once idle is made
+        defender.getEvents().trigger("attackStart");
 
-        sigma.addComponent(new CombatStatsComponent(config.health, config.baseAttack));
-            //.addComponent(animator)
-            //.addComponent(new SigmaAnimationController());
+        // scale the entity to match animation sprite dimensions
+        defender.getComponent(AnimationRenderComponent.class).scaleEntity();
 
-        sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-        return sigma;
+        return defender;
     }
     
+    /**
+     * Creates a base defender entity with default physics and collider setup.
+     *
+     * @return entity with physics and collision components
+     */
     public static Entity createBaseDefender() {
         Entity npc =
-        new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
+            new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
     }
 
+    /**
+     * private constructor prevents instantiation of this utility class.
+     */
     private DefenceFactory() {
         throw new IllegalStateException("Instantiating static util class");
-  }
+    }
 }
