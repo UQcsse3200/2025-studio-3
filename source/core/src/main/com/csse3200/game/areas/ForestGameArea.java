@@ -81,23 +81,23 @@ public class ForestGameArea extends GameArea {
     //spawnGhosts();
     //spawnGhostKing();
 
-    spawnGuy();
+    spawnDefences();
     spawnGhosts();
     spawnGhostKing();
     spawnRobots();
     playMusic();
   }
 
-  private void spawnGuy() {
+  private void spawnDefences() {
     GridPoint2 minPos = new GridPoint2(0, 0);
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity guy = DefenceFactory.createSlingShooter();
+    Entity slingShooter = DefenceFactory.createSlingShooter();
 
-    spawnEntityAt(guy, randomPos, true, true);
-    guy.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
-    guy.getEvents().trigger("attackStart");
+    spawnEntityAt(slingShooter, randomPos, true, true);
+    slingShooter.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
+    slingShooter.getEvents().trigger("attackStart");
   }
 
   private void displayUI() {
