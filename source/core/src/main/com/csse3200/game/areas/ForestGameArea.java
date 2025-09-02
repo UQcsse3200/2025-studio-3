@@ -38,7 +38,7 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png", "sling_shooter.png"
+    "images/iso_grass_3.png", "images/sling_shooter.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas"
@@ -87,6 +87,7 @@ public class ForestGameArea extends GameArea {
     Entity guy = DefenceFactory.createSlingShooter();
 
     spawnEntityAt(guy, randomPos, true, true);
+    guy.getEvents().trigger("attackStart");
   }
 
   private void displayUI() {
