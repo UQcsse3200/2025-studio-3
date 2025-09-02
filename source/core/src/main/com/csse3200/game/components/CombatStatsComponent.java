@@ -2,6 +2,7 @@ package com.csse3200.game.components;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Component used to store information related to combat such as health, attack, etc. Any entities
@@ -53,6 +54,14 @@ public class CombatStatsComponent extends Component {
       if (this.health == 0) {
         // Ask whoever spawned me to despawn this entity
         entity.getEvents().trigger("despawnRobot", entity);
+          int amount = 10;
+          var currency = ServiceLocator.getCurrencyService();
+          if (currency != null) {               // <— guard for tests / headless envs
+              currency.add(amount);
+              logger.info("Dropped {} coins from {}", amount, entity);
+          } else {
+              logger.debug("CurrencyService not registered; skipping coin drop");
+          }
       }
       entity.getEvents().trigger("updateHealth", this.health);
     }

@@ -7,6 +7,7 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 public class DespawnOnPlayerContactComponent extends Component {
     private final short targetLayer;
@@ -34,8 +35,7 @@ public class DespawnOnPlayerContactComponent extends Component {
         // Ask whoever spawned me to despawn this entity
         entity.getEvents().trigger("despawnRobot", entity);
         logger.info("DespawnOnPlayerContactComponent: despawning entity {}", entity);
-        logger.info("Drop coins function");
-        entity.getEvents().trigger("dropCoins", entity);
+
 
     }
 

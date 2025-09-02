@@ -85,27 +85,7 @@ class DespawnOnPlayerContactComponentTest {
         assertFalse(called[0], "Should not trigger despawn for non-target layer");
     }
 
-    @Test
-    void triggersDropCoinsWhenPlayerContactsHitbox() {
-        when(hitboxComponent.getFixture()).thenReturn(myFixture);
-        entity.addComponent(hitboxComponent);
-        entity.addComponent(component);
-        entity.create();
 
-        final boolean[] dropCoinsCalled = {false};
-        final Entity[] payload = {null};
-        entity.getEvents().addListener("dropCoins", (Entity e) -> {
-            dropCoinsCalled[0] = true;
-            payload[0] = e;
-        });
-
-        when(otherFixture.getFilterData()).thenReturn(makeFilter(PhysicsLayer.PLAYER));
-
-        entity.getEvents().trigger("collisionStart", myFixture, otherFixture);
-
-        assertTrue(dropCoinsCalled[0], "dropCoins should be triggered");
-        assertSame(entity, payload[0], "payload should be this entity");
-    }
 
 
     @Test
@@ -116,9 +96,7 @@ class DespawnOnPlayerContactComponentTest {
         entity.create();
 
         final boolean[] despawn = {false};
-        final boolean[] dropCoins = {false};
         entity.getEvents().addListener("despawnRobot", (Entity e) -> despawn[0] = true);
-        entity.getEvents().addListener("dropCoins", (Entity e) -> dropCoins[0] = true);
 
         Fixture someOtherFixture = mock(Fixture.class); // 'me' is NOT our hitbox fixture
 
@@ -126,7 +104,6 @@ class DespawnOnPlayerContactComponentTest {
         entity.getEvents().trigger("collisionStart", someOtherFixture, otherFixture);
 
         assertFalse(despawn[0]);
-        assertFalse(dropCoins[0]);
     }
 
     @Test
@@ -135,15 +112,12 @@ class DespawnOnPlayerContactComponentTest {
         entity.create();
 
         final boolean[] despawn = {false};
-        final boolean[] dropCoins = {false};
         entity.getEvents().addListener("despawnRobot", (Entity e) -> despawn[0] = true);
-        entity.getEvents().addListener("dropCoins", (Entity e) -> dropCoins[0] = true);
 
         // No need to stub otherFixture.getFilterData(); method returns early
         entity.getEvents().trigger("collisionStart", myFixture, otherFixture);
 
         assertFalse(despawn[0]);
-        assertFalse(dropCoins[0]);
     }
 
     @Test
@@ -156,9 +130,7 @@ class DespawnOnPlayerContactComponentTest {
         entity.create();
 
         final boolean[] despawn = {false};
-        final boolean[] dropCoins = {false};
         entity.getEvents().addListener("despawnRobot", (Entity e) -> despawn[0] = true);
-        entity.getEvents().addListener("dropCoins", (Entity e) -> dropCoins[0] = true);
 
         // Here it IS needed because the code reaches the layer check
         when(otherFixture.getFilterData()).thenReturn(makeFilter(PhysicsLayer.NPC));
@@ -166,7 +138,6 @@ class DespawnOnPlayerContactComponentTest {
         entity.getEvents().trigger("collisionStart", myFixture, otherFixture);
 
         assertTrue(despawn[0]);
-        assertTrue(dropCoins[0]);
     }
 
     @Test
@@ -177,15 +148,12 @@ class DespawnOnPlayerContactComponentTest {
         entity.create();
 
         final boolean[] despawn = {false};
-        final boolean[] dropCoins = {false};
         entity.getEvents().addListener("despawnRobot", (Entity e) -> despawn[0] = true);
-        entity.getEvents().addListener("dropCoins", (Entity e) -> dropCoins[0] = true);
 
         // No need to stub otherFixture.getFilterData(); method returns early
         entity.getEvents().trigger("collisionStart", myFixture, otherFixture);
 
         assertFalse(despawn[0]);
-        assertFalse(dropCoins[0]);
     }
 
 
