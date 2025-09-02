@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
@@ -158,7 +159,7 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private Table makeMenuBtns() {
-    TextButton exitBtn = new TextButton("Exit", skin);
+    TextButton exitBtn = new TextButton("Back", skin);
     TextButton applyBtn = new TextButton("Apply", skin);
 
     exitBtn.addListener(
@@ -201,7 +202,11 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private void exitMenu() {
-    game.setScreen(ScreenType.MAIN_MENU);
+    if (Persistence.profile() == null) {
+      game.setScreen(ScreenType.MAIN_MENU);
+    } else {
+      game.setScreen(ScreenType.PROFILE);
+    }
   }
 
   private Integer parseOrNull(String num) {
