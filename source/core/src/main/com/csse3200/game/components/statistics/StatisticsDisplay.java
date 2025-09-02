@@ -44,7 +44,7 @@ public class StatisticsDisplay extends UIComponent {
     private void addActors() {
         Label title = new Label("Statistics", skin, "title");
         Table statisticsTable = makeStatisticsTable();
-        Table menuBtns = makeBackBtn();
+        Table backBtn = makeBackBtn();
 
         rootTable = new Table();
         rootTable.setFillParent(true);
@@ -54,10 +54,8 @@ public class StatisticsDisplay extends UIComponent {
         rootTable.row().padTop(30f);
         rootTable.add(statisticsTable).expandX().expandY();
 
-        rootTable.row();
-        rootTable.add(menuBtns).fillX();
-
         stage.addActor(rootTable);
+        stage.addActor(backBtn);
     }
 
     /**
@@ -130,7 +128,9 @@ public class StatisticsDisplay extends UIComponent {
 
         // Place button in a table
         Table table = new Table();
-        table.add(backBtn).expandX().left().pad(0f, 15f, 15f, 0f);
+        table.setFillParent(true);
+        table.top().left().pad(15f);
+        table.add(backBtn);
         return table;
     }
 
