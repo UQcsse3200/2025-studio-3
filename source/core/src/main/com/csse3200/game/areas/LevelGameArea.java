@@ -22,11 +22,12 @@ public class LevelGameArea extends GameArea{
             "images/ghost_1.png",
             "images/olive_tile.png",
             "images/green_tile.png",
-            "images/box_boy.png"
+            "images/box_boy.png",
+            "images/robot_placeholder.png"
     };
 
     private static final String[] levelTextureAtlases = {
-            "images/ghost.atlas", "images/ghostKing.atlas"
+            "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
     };
 
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};

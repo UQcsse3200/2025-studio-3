@@ -94,6 +94,7 @@ public abstract class GameArea implements Disposable {
 //        return robot;
 //    }
 
+    // uses LevelGameArea (Level One) grid params
     public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
         // grid params copied from LevelGameArea (Level One)
         final float xOffset = 2.9f;

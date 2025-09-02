@@ -6,23 +6,24 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.graphics.Color;
 
 public class RobotFactory {
     public static Entity createRobot(BaseEntityConfig config) {
-        AnimationRenderComponent animator = new AnimationRenderComponent(
-                ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
-        animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-        //animator.setTint(new Color(0.5f, 1f, 1f, 1f)); // differentiate
+        final String atlasPath = "images/robot_placeholder.atlas";
+        var rs = ServiceLocator.getResourceService();
 
-        // Build the entity
+        AnimationRenderComponent animator = new AnimationRenderComponent(
+                rs.getAsset(atlasPath, TextureAtlas.class));
+
+        animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
+
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
@@ -31,10 +32,10 @@ public class RobotFactory {
                 .addComponent(animator);
 
         animator.scaleEntity();
-        animator.startAnimation("float"); // start the animation otherwise it won't show
+        animator.startAnimation("chill"); // start an animation
 
         // make a bit larger
-        robot.setScale(robot.getScale().x * 1.5f, robot.getScale().y * 1.5f);
+        robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
 
         return robot;
     }
