@@ -1,12 +1,12 @@
 {
   "slingshooter": {
     "health": 1,
-    "base-attack": 1,
-    "type": "ranged",
+    "baseAttack": 1,
+    "type": 1,
     "range": 4,
-    "state": "idle",
-    "attack-speed": 1,
-    "crit-chance": 0
+    "state": 1,
+    "attackSpeed": 1,
+    "critChance": 0
   },
   "trebuchet": {
 

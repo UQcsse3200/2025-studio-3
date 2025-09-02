@@ -16,11 +16,9 @@ public class BaseDefenceConfig extends BaseEntityConfig {
         ATTACKING
     };
 
-    public int health;
-    public int baseAttack;
-    public Type type;
-    public int range;
-    public State state;
-    public int attackSpeed;
-    public int critChance;
+    public Type type = Type.LONG_RANGE;
+    public int range = 1;
+    public State state = State.IDLE;
+    public int attackSpeed = 1;
+    public int critChance = 0;
 }
