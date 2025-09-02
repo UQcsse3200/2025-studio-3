@@ -53,6 +53,8 @@ public class DefenceFactory {
             .addComponent(animator)
             .addComponent(new DefenceAnimationController());
 
+        sigma.getEvents().trigger("attackStart");
+
         sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
         return sigma;
     }

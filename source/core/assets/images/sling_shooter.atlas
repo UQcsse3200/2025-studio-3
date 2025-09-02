@@ -4,6 +4,8 @@ format: RGBA8888
 filter: Linear, Linear
 repeat: none
 pma: false
+idle
+  bounds: 0, 0, 68, 102
 default
   bounds: 0, 0, 68, 102
 attack
