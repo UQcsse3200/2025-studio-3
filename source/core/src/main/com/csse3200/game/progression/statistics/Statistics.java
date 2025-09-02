@@ -1,7 +1,6 @@
 package com.csse3200.game.progression.statistics;
 
 import java.util.Map;
-
 import com.csse3200.game.persistence.Persistence;
 
 /**
@@ -21,7 +20,7 @@ public class Statistics {
   int numDefencesUnlocked;
   int totalCoinsEarned;
 
-  private final Map<String, Integer> ACHIEVEMENT_QUOTAS = Map.of(
+  private transient final Map<String, Integer> ACHIEVEMENT_QUOTAS = Map.of(
       "50_KILLS", 50,
       "50_SHOTS", 200,
       "LEVEL_1_COMPLETE", 1,

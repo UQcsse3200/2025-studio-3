@@ -7,6 +7,7 @@ import com.badlogic.gdx.Screen;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.LoadGameScreen;
 import com.csse3200.game.screens.AchievementsScreen;
+import com.csse3200.game.screens.InventoryScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.SettingsScreen;
@@ -92,14 +93,15 @@ public class GdxGame extends Game {
         return new AchievementsScreen(this);
       case SHOP:
         return new ShopScreen(this);
-      
+      case INVENTORY:
+        return new InventoryScreen(this);
       default:
         return null;
     }
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP
+    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY
   }
 
   /**

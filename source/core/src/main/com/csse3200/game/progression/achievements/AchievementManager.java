@@ -1,6 +1,7 @@
 package com.csse3200.game.progression.achievements;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -8,17 +9,30 @@ import java.util.Map;
  */
 
 public class AchievementManager {
-  private final Map<String, Achievement> achievements = Map.of(
-      "100_COINS",
-      new Achievement("100 COINS", "Earned 100 coins", 5),
-      "50_KILLS",
-      new Achievement("50_KILLS", "Earned 50 kills", 10),
-      "LEVEL_1_COMPLETE",
-      new Achievement("LEVEL_1_COMPLETE", "Completed the first level", 10),
-      "50_SHOTS",
-      new Achievement("50_SHOTS", "You fired 50 shots.", 5),
-      "5_DEFENSES",
-      new Achievement("5_DEFENSES", "Unlocked 5 defenses", 5));
+  private Map<String, Achievement> achievements = new HashMap<>();
+
+  /**
+   * Constructor for AchievementManager.
+   */
+  public AchievementManager() {
+    initializeDefaultAchievements();
+  }
+
+  /**
+   * Initializes the default achievements.
+   */
+  private void initializeDefaultAchievements() {
+    achievements.put("5_DEFENSES", new Achievement(
+        "5_DEFENSES", "Unlocked 5 defenses", 5));
+    achievements.put("100_COINS", new Achievement(
+        "100_COINS", "Earned 100 coins", 5));
+    achievements.put("LEVEL_1_COMPLETE", new Achievement(
+        "LEVEL_1_COMPLETE", "Completed the first level", 10));
+    achievements.put("50_SHOTS", new Achievement(
+        "50_SHOTS", "You fired 50 shots.", 5));
+    achievements.put("50_KILLS", new Achievement(
+        "50_KILLS", "Earned 50 kills", 10));
+  }
 
   // POTENTIAL NEW ACHIEVEMENTS
   // achievementManager.addAchievement(
@@ -72,6 +86,19 @@ public class AchievementManager {
   // achievementManager.addAchievement(
   // new Achievement("Legend", "Achieved the highest possible score", 200)
   // );
+
+  /**
+   * Sets the achievements map.
+   *
+   * @param achievements map of achievements
+   */
+  public void setAchievements(Map<String, Achievement> achievements) {
+        this.achievements = achievements != null ? 
+            new HashMap<>(achievements) : new HashMap<>();
+        if (this.achievements.isEmpty()) {
+            initializeDefaultAchievements();
+        }
+    }
 
   /**
    * unlocks the Achievement through its provided name.

@@ -30,7 +30,7 @@ import com.csse3200.game.ui.UIComponent;
 public class ShopDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ShopDisplay.class);
   private static final float Z_INDEX = 2f;
-  private static final int SLOT_SIZE = 100;
+  private static final int SLOT_SIZE = 50;
   private Window.WindowStyle windowStyle;
   private static final Random random = new Random();
   private Item[] shopItems = new Item[3];
@@ -78,19 +78,16 @@ public class ShopDisplay extends UIComponent {
   }
 
   private void createItemSlots() {
-    // Position slots in the center area, spaced horizontally
-    float centerX = stage.getWidth() / 2f;
-    float centerY = stage.getHeight() / 2f;
-    float slotSpacing = 150f; // Space between slots
+    float[] pedestalX = {
+      stage.getWidth() * 0.25f,
+      stage.getWidth() * 0.5f,
+      stage.getWidth() * 0.75f
+    };
+
+    float pedestalY = stage.getHeight() * 0.4f;
 
     for (int i = 0; i < 3; i++) {
-      // Calculate position for each slot
-      float slotX = centerX - slotSpacing + (i * slotSpacing);
-      float slotY = centerY - SLOT_SIZE / 2f;
-
-      // Create slot with the corresponding item
-
-      createItemSlot(i, slotX, slotY, shopItemImages[i]);
+      createItemSlot(i, pedestalX[i] - SLOT_SIZE/2f, pedestalY, shopItemImages[i]);
     }
   }
 

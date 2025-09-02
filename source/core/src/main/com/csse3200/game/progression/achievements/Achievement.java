@@ -14,13 +14,6 @@ public class Achievement {
   private final int skillPoint;
   private boolean unlocked = false;
 
-  // callback
-  private Runnable onUnlock;
-
-  public void setOnUnlock(Runnable onUnlock) {
-    this.onUnlock = onUnlock;
-  }
-
   /**
    * Default constructor for Achievement.
    */
@@ -83,15 +76,11 @@ public class Achievement {
   /**
    * unlocks the achievement. Pops up on current screen indicating the associated
    * achievement has been unlocked.
-   * pop up prints the achievement name and description.
    */
   public void unlock() {
     if (!unlocked) {
       unlocked = true;
       System.out.println("Achievement Unlocked: " + name + " - " + description);
-      if (onUnlock != null) {
-        onUnlock.run(); // trigger UI popup
-      }
     }
   }
 }

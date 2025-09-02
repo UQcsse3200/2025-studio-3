@@ -37,7 +37,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onInventory() {
     logger.info("Opening inventory");
-    // game.setScreen(GdxGame.ScreenType.INVENTORY);
+    game.setScreen(GdxGame.ScreenType.INVENTORY);
   }
 
   private void onAchievements() {

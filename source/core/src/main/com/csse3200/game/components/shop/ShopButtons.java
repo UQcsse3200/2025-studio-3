@@ -24,24 +24,43 @@ public class ShopButtons extends UIComponent {
   private Label goldLabel;
   private TextButton backButton;
   private Image goldIcon;
+  private boolean actorsCreated = false;
 
   @Override
   public void create() {
     super.create();
-    addActors();
+    logger.debug("ShopButtons created - stage available: {}", stage != null);
+    
     entity.getEvents().addListener("purchased", () -> {
       logger.info("Item purchased");
-      ((ShopButtons) entity.getComponent(ShopButtons.class)).updateGoldDisplay();
+      updateGoldDisplay();
     });
   }
 
+  @Override
+  public void update() {
+    super.update();
+    
+    // Create actors on first update when stage is definitely available
+    if (!actorsCreated && stage != null) {
+      addActors();
+      actorsCreated = true;
+    }
+  }
+
   private void addActors() {
+    logger.debug("Adding ShopButtons actors to stage");
     createHudElements();
   }
 
   private void createHudElements() {
+    if (stage == null) {
+      logger.warn("Stage is null, cannot create HUD elements");
+      return;
+    }
+    
     float hudMargin = 20f;
-    float elementSpacing = 10f;
+    float elementSpacing = 60f;
 
     // Position elements in top right corner
     float rightEdge = stage.getWidth() - hudMargin;
@@ -104,13 +123,6 @@ public class ShopButtons extends UIComponent {
     }
   }
 
-  /**
-   * Manual method to set gold amount (alternative to profile integration)
-   */
-  public void setGold(int amount) {
-    goldLabel.setText(String.valueOf(amount));
-  }
-
   @Override
   public void draw(SpriteBatch batch) {
   }
@@ -123,5 +135,6 @@ public class ShopButtons extends UIComponent {
   @Override
   public void dispose() {
     super.dispose();
+    actorsCreated = false;
   }
 }

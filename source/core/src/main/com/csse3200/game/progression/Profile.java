@@ -11,7 +11,8 @@ import com.csse3200.game.progression.wallet.Wallet;
  * Represents a user profile in the game. Allows customization of player
  * attributes and tracking of progress.
  *
- * Later we can add an arsenal of unlocked defences, and a way to track overall level progress.
+ * Later we can add an arsenal of unlocked defences, and a way to track overall
+ * level progress.
  */
 public class Profile {
   private String name;
@@ -37,7 +38,7 @@ public class Profile {
    * Initialise a profile with the provided values.
    */
   public Profile(
-      String name, Wallet wallet, Inventory inventory, 
+      String name, Wallet wallet, Inventory inventory,
       SkillSet skillset, AchievementManager achievements, Statistics statistics) {
     this.name = name;
     this.wallet = wallet;
@@ -66,47 +67,47 @@ public class Profile {
   }
 
   /**
-  * Get the wallet associated with the profile.
-  *
-  * @return the wallet of the profile.
-  */
+   * Get the wallet associated with the profile.
+   *
+   * @return the wallet of the profile.
+   */
   public Wallet wallet() {
     return wallet;
   }
 
   /**
-  * Get the inventory associated with the profile.
-  *
-  * @return the inventory of the profile.
-  */
+   * Get the inventory associated with the profile.
+   *
+   * @return the inventory of the profile.
+   */
   public Inventory inventory() {
     return inventory;
   }
 
   /**
-  * Get the skillset associated with the profile.
-  *
-  * @return the skillset of the profile.
-  */
+   * Get the skillset associated with the profile.
+   *
+   * @return the skillset of the profile.
+   */
   public SkillSet skillset() {
     return skillset;
   }
 
   /**
-  * Get the achievements associated with the profile.
-  *
-  * @return the achievements of the profile.
-  */
+   * Get the achievements associated with the profile.
+   *
+   * @return the achievements of the profile.
+   */
   public AchievementManager achievements() {
     return achievements;
   }
 
-   /**
+  /**
    * Get the statistics associated with the profile.
    *
    * @return the statistics of the profile.
    */
-   public Statistics statistics() {
-        return statistics;
-   }
+  public Statistics statistics() {
+    return statistics;
+  }
 }
