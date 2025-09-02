@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.achievements.Achievement;
-import com.csse3200.game.progression.achievements.AchievementManager;
 
 /**
  * The game screen containing the achievements menu.
@@ -20,8 +20,6 @@ public class AchievementsScreen extends ScreenAdapter {
     private final GdxGame game;
     private Stage stage;
     private Table rootTable;
-
-    private AchievementManager achievementManager;
 
     // Styles
     private Skin skin;
@@ -63,7 +61,7 @@ public class AchievementsScreen extends ScreenAdapter {
 
         Table achievementTable = new Table();
         int colCount = 0;
-        for (Achievement a : achievementManager.getAllAchievements()) {
+        for (Achievement a : Persistence.profile().achievements().getAllAchievements()) {
             TextButton achButton = new TextButton(a.getName(), skin);
 
             if (a.isUnlocked()) {
@@ -105,7 +103,7 @@ public class AchievementsScreen extends ScreenAdapter {
         backButton.addListener(new ClickListener() {
             @Override
             public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+                game.setScreen(GdxGame.ScreenType.PROFILE);
             }
         });
 
