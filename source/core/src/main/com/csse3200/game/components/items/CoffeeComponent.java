@@ -1,9 +1,11 @@
 package com.csse3200.game.components.items;
 
+public class CoffeeComponent extends Item {
 
-public class CoffeeComponent extends DefaultItemComponent {
-    @Override
-    protected String getEventName() {
-        return "coffee";
+    public CoffeeComponent() {
+        super.eventName = "coffee_start";
+        super.name = "Coffee";
+        super.desc = "Some serious gourmet shit. Temporarily increases attack speed for a specified unit.";
+        super.cost = 5f;
     }
 }
