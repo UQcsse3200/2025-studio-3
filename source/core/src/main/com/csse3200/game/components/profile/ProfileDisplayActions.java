@@ -57,7 +57,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onShop() {
     logger.info("Opening shop");
-    // game.setScreen(GdxGame.ScreenType.SHOP);
+    game.setScreen(GdxGame.ScreenType.SHOP);
   }
 
   private void onExit() {

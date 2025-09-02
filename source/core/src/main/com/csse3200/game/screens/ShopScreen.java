@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
-import com.csse3200.game.components.shop.ShopScreenButtonsDisplay;
+import com.csse3200.game.components.shop.ShopButtons;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -23,7 +23,7 @@ public class ShopScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] shopTextures = { "images/shopbackground.jpg", "images/heart.png", "images/box_boy.png",
-      "images/tree.png" };
+      "images/tree.png", "images/coins.png" };
 
   /**
    * Initialises the shop screen.
@@ -119,7 +119,7 @@ public class ShopScreen extends ScreenAdapter {
     Entity ui = new Entity();
     ui.addComponent(new ShopDisplay(game))
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new ShopScreenButtonsDisplay())
+        .addComponent(new ShopButtons())
         .addComponent(new ShopActions(game));
 
     ServiceLocator.getEntityService().register(ui);

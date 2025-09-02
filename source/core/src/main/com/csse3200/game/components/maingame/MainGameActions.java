@@ -21,7 +21,7 @@ public class MainGameActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("exit", this::onExit);
-    entity.getEvents().addListener("shop", this::onShop);
+    entity.getEvents().addListener("open_profile", this::onProfile);
   }
 
   /**
@@ -33,10 +33,10 @@ public class MainGameActions extends Component {
   }
 
   /**
-   * Swaps to the Shop screen.
+   * Swaps to the Profile screen.
    */
-  private void onShop() {
-    logger.info("Entering shop screen");
-    game.setScreen(GdxGame.ScreenType.SHOP);
+  private void onProfile() {
+    logger.info("Entering profile screen");
+    game.setScreen(GdxGame.ScreenType.PROFILE);
   }
 }
