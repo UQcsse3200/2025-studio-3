@@ -26,51 +26,90 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 
+/**
+ * Factory class for creating defence entities (e.g., sling shooters).
+ * This class should not be instantiated — all methods and configuration
+ * are static utilities.
+ */
 public class DefenceFactory {
+    /**
+     * Loads defence configuration data from JSON.
+     * The configs object is populated at class-load time.
+     * If the file is missing or deserialization fails, this will be null.
+     */
     private static final NPCConfigs configs =
         FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
     /**
-     * Creates a base sling shooter entity
-     * Returns the entity
+     * Creates a fully configured Sling Shooter defence entity.
+     * 
+     * The entity is composed of:
+     * - Base physics and collider setup
+     * - Stats loaded from the config file
+     * - Animation rendering and animation controller
+     *
+     * @return entity representing the slingshooter
      */
     public static Entity createSlingShooter() {
-        Entity sigma = createBaseDefender();
+        // start with a base defender (physics + collider)
+        Entity defender = createBaseDefender();
+
+        // load the sling shooter’s specific configuration;
         BaseDefenceConfig config = configs.slingshooter;
 
+        // animation component
         AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
-        
+            new AnimationRenderComponent(
+                ServiceLocator.getResourceService()
+                    .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
+
+        // define animations for idle and attack states
         animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
 
-        sigma
-            .addComponent(new DefenceStatsComponent(config.health, 
-                        config.baseAttack, config.type, config.range, config.state,
-                        config.attackSpeed, config.critChance))
+        // attach components to the entity
+        defender
+            .addComponent(new DefenceStatsComponent(
+                    config.health, 
+                    config.baseAttack, 
+                    config.type, 
+                    config.range, 
+                    config.state,
+                    config.attackSpeed, 
+                    config.critChance))
             .addComponent(animator)
             .addComponent(new DefenceAnimationController());
 
-        sigma.getEvents().trigger("attackStart");
+        // trigger the initial attack event to kick off behaviour
+        // this will be changed to idle once idle is made
+        defender.getEvents().trigger("attackStart");
 
-        sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-        return sigma;
+        // scale the entity to match animation sprite dimensions
+        defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return defender;
     }
     
+    /**
+     * Creates a base defender entity with default physics and collider setup.
+     *
+     * @return entity with physics and collision components
+     */
     public static Entity createBaseDefender() {
         Entity npc =
-        new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
+            new Entity()
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
     }
 
+    /**
+     * private constructor prevents instantiation of this utility class.
+     */
     private DefenceFactory() {
         throw new IllegalStateException("Instantiating static util class");
-  }
+    }
 }
