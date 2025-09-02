@@ -24,23 +24,10 @@ public class SkillTest {
         assertEquals(Skill.StatType.HEALTH, healthSkill.getStatType());
         assertEquals(10f, healthSkill.getPercentage(), 0.001);
         assertEquals(1, healthSkill.getCost());
-        assertTrue(healthSkill.getLockStatus()); // should be initially locked
-    }
-
-    @Test
-    public void testUnlockSkill() {
-        assertTrue(attackSkill.getLockStatus()); // initially locked
-        attackSkill.unlock();
-        assertFalse(attackSkill.getLockStatus()); // should be unlocked
-    }
-
-    @Test
-    public void testMultipleSkillsIndependentLockStatus() {
-        // Unlock one skill
-        healthSkill.unlock();
-        // Other skill should remain locked
-        assertFalse(healthSkill.getLockStatus());
-        assertTrue(attackSkill.getLockStatus());
+        assertEquals("Increase AD Basic", attackSkill.getName());
+        assertEquals(Skill.StatType.ATTACK_DAMAGE, attackSkill.getStatType());
+        assertEquals(15f, attackSkill.getPercentage(), 0.001);
+        assertEquals(2, attackSkill.getCost());
     }
 }
 

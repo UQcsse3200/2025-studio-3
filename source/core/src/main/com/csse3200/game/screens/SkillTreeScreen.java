@@ -48,8 +48,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private final SpriteBatch batch;
   private final SkillSet skillSet;
   private Label skillPointLabel;
-  protected static final Skin skin =
-    new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+  protected static final Skin skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
 
   /**
    * Constructs a SkillTreeScreen, initializing all necessary services and
@@ -102,10 +101,10 @@ public class SkillTreeScreen extends ScreenAdapter {
 
   @Override
   public void resize(int width, int height) {
-      //renderer.resize(width, height);
-      Stage stage = ServiceLocator.getRenderService().getStage();
-      stage.clear();
-      createUI();
+    // renderer.resize(width, height);
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    stage.clear();
+    createUI();
   }
 
   /**
@@ -160,12 +159,11 @@ public class SkillTreeScreen extends ScreenAdapter {
       Texture lockedTexture, Texture unlockedTexture,
       float x, float y) {
 
-    Skill skill = skillSet.getSkill(skillName);
-    boolean locked = skill.getLockStatus();
+    boolean locked = !skillSet.checkIfUnlocked(skillName);
 
     Texture texture = lockedTexture;
     if (!locked) {
-        texture = unlockedTexture;
+      texture = unlockedTexture;
     }
 
     Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
@@ -183,7 +181,6 @@ public class SkillTreeScreen extends ScreenAdapter {
         if (points >= cost && locked) {
           System.out.println(skillName + " unlocked!");
           skillSet.addSkill(skill);
-          skill.unlock();
           Persistence.profile().wallet().unlockSkill(cost);
           points = Persistence.profile().wallet().getSkillsPoints();
           skillPointLabel.setText("Skill Points: " + points);
