@@ -16,93 +16,115 @@ import org.slf4j.LoggerFactory;
  * A ui component for displaying the Main menu.
  */
 public class MainMenuDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
-  private static final float Z_INDEX = 2f;
-  private Table table;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
+    private static final float Z_INDEX = 2f;
+    private Table table;
 
-  @Override
-  public void create() {
-    super.create();
-    addActors();
-  }
+    @Override
+    public void create() {
+        super.create();
+        addActors();
+    }
 
-  private void addActors() {
-    table = new Table();
-    table.setFillParent(true);
-    Image title =
-        new Image(
-            ServiceLocator.getResourceService()
-                .getAsset("images/box_boy_title.png", Texture.class));
+    private void addActors() {
+//        Image background = new Image(
+//                ServiceLocator.getResourceService().getAsset("images/bg.png", Texture.class)
+//        );
+//        background.setFillParent(true);
+//        stage.addActor(background);
 
-    TextButton startBtn = new TextButton("Start", skin);
-    TextButton loadBtn = new TextButton("Load", skin);
-    TextButton settingsBtn = new TextButton("Settings", skin);
-    TextButton exitBtn = new TextButton("Exit", skin);
+        table = new Table();
+        table.setFillParent(true);
+//         Image title =
+//            new Image(
+//                ServiceLocator.getResourceService()
+//                    .getAsset("images/box_boy_title.png", Texture.class));
+        Image title =
+                new Image(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/bg-text.png", Texture.class));
 
-    // Triggers an event when the button is pressed
-    startBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Start button clicked");
-            entity.getEvents().trigger("start");
-          }
+        TextButton startBtn = new TextButton("Start", skin);
+        TextButton loadBtn = new TextButton("Load", skin);
+        TextButton worldMapBtn = new TextButton("World Map", skin);
+        TextButton settingsBtn = new TextButton("Settings", skin);
+        TextButton exitBtn = new TextButton("Exit", skin);
+
+        // Triggers an event when the button is pressed
+        startBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Start button clicked");
+                        entity.getEvents().trigger("start");
+                    }
+                });
+
+        loadBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Load button clicked");
+                        entity.getEvents().trigger("load");
+                    }
+                });
+
+        settingsBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Settings button clicked");
+                        entity.getEvents().trigger("settings");
+                    }
+                });
+
+        worldMapBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("World Map button clicked");
+                //entity.getEvents().trigger("world_map");
+            }
         });
 
-    loadBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Load button clicked");
-            entity.getEvents().trigger("load");
-          }
-        });
+        exitBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
 
-    settingsBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Settings button clicked");
-            entity.getEvents().trigger("settings");
-          }
-        });
+                        logger.debug("Exit button clicked");
+                        entity.getEvents().trigger("exit");
+                    }
+                });
 
-    exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+        table.add(title);
 
-            logger.debug("Exit button clicked");
-            entity.getEvents().trigger("exit");
-          }
-        });
+        table.row();
+        table.add(startBtn).padTop(30f);
+        table.row();
+        table.add(loadBtn).padTop(15f);
+        table.row();
+        table.add(settingsBtn).padTop(15f);
+        table.row();
+        table.add(worldMapBtn).padTop(15f);
+        table.row();
+        table.add(exitBtn).padTop(15f);
 
-    table.add(title);
-    table.row();
-    table.add(startBtn).padTop(30f);
-    table.row();
-    table.add(loadBtn).padTop(15f);
-    table.row();
-    table.add(settingsBtn).padTop(15f);
-    table.row();
-    table.add(exitBtn).padTop(15f);
+        stage.addActor(table);
+    }
 
-    stage.addActor(table);
-  }
+    @Override
+    public void draw(SpriteBatch batch) {
+        // draw is handled by the stage
+    }
 
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
+    @Override
+    public float getZIndex() {
+        return Z_INDEX;
+    }
 
-  @Override
-  public float getZIndex() {
-    return Z_INDEX;
-  }
-
-  @Override
-  public void dispose() {
-    table.clear();
-    super.dispose();
-  }
+    @Override
+    public void dispose() {
+        table.clear();
+        super.dispose();
+    }
 }
