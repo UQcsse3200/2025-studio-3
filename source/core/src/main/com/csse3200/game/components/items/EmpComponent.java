@@ -1,8 +1,10 @@
 package com.csse3200.game.components.items;
 
-public class EmpComponent extends DefaultItemComponent {
-    @Override
-    protected String getEventName() {
-        return "emp";
+/**
+ * Represents an EMP item that can be used to temporarily disable enemies within a 3x3 area.
+ */
+public class EmpComponent extends Item {
+    public EmpComponent() {
+      super("EMP", "Shock everything within a 3x3 square area. One time use.", "emp", 30);
     }
 }

@@ -13,6 +13,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -22,8 +23,7 @@ public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = { "images/shopbackground.jpg", "images/heart.png", "images/box_boy.png",
-      "images/tree.png", "images/coins.png" };
+  private static final String[] shopTextures = { "images/shopbackground.jpg", "images/coins.png" };
 
   /**
    * Initialises the shop screen.
@@ -98,6 +98,11 @@ public class ShopScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("Loading shop assets");
     ServiceLocator.getResourceService().loadTextures(shopTextures);
+    String[] itemTextures = new String[ItemRegistry.ITEMS.length];
+    for (int i = 0; i < ItemRegistry.ITEMS.length; i++) {
+      itemTextures[i] = ItemRegistry.ITEMS[i].assetPath();
+    }
+    ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -117,7 +122,7 @@ public class ShopScreen extends ScreenAdapter {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new ShopDisplay(game))
+    ui.addComponent(new ShopDisplay())
         .addComponent(new InputDecorator(stage, 10))
         .addComponent(new ShopButtons())
         .addComponent(new ShopActions(game));

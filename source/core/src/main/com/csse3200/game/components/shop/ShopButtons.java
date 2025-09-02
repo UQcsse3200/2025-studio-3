@@ -4,11 +4,9 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -31,6 +29,10 @@ public class ShopButtons extends UIComponent {
   public void create() {
     super.create();
     addActors();
+    entity.getEvents().addListener("purchased", () -> {
+      logger.info("Item purchased");
+      ((ShopButtons) entity.getComponent(ShopButtons.class)).updateGoldDisplay();
+    });
   }
 
   private void addActors() {
@@ -111,7 +113,6 @@ public class ShopButtons extends UIComponent {
 
   @Override
   public void draw(SpriteBatch batch) {
-    // Draw is handled by the stage
   }
 
   @Override
