@@ -108,12 +108,12 @@ public class MainMenuScreen extends ScreenAdapter {
         // Add the background image as a Stage actor
         Texture bgTex = ServiceLocator.getResourceService()
                 .getAsset("images/bg.png", Texture.class);
-        logger.debug("Main menu screen background texture asset loaded");
+        logger.debug("loads Main menu screen background texture asset");
         Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
         bg.setFillParent(true);
         bg.setScaling(Scaling.fill);
         stage.addActor(bg);
-        logger.debug("Main menu screen background added");
+        logger.debug("shows Main menu screen background");
 
         // Register the UI entity that owns the display and actions
         Entity ui = new Entity();
@@ -121,6 +121,6 @@ public class MainMenuScreen extends ScreenAdapter {
                 .addComponent(new InputDecorator(stage, 10))
                 .addComponent(new MainMenuActions(game));
         ServiceLocator.getEntityService().register(ui);
-        logger.debug("Main menu screen ui created and registered");
+        logger.debug("Main menu screen ui is created and registered");
     }
 }
