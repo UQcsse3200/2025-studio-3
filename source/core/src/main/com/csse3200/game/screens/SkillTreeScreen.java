@@ -8,10 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
@@ -105,7 +102,10 @@ public class SkillTreeScreen extends ScreenAdapter {
 
   @Override
   public void resize(int width, int height) {
-    renderer.resize(width, height);
+      //renderer.resize(width, height);
+      Stage stage = ServiceLocator.getRenderService().getStage();
+      stage.clear();
+      createUI();
   }
 
   /**
@@ -175,14 +175,13 @@ public class SkillTreeScreen extends ScreenAdapter {
     skillButton.addListener(new ClickListener() {
       @Override
       public void clicked(InputEvent event, float px, float py) {
-        System.out.println(skillName + " unlocked!");
 
         Skill skill = skillSet.getSkill(skillName);
         int cost = skill.getCost();
         // Check if player has enough skill points and has not already unlocked skill
         int points = Persistence.profile().wallet().getSkillsPoints();
         if (points >= cost && locked) {
-
+          System.out.println(skillName + " unlocked!");
           skillSet.addSkill(skill);
           skill.unlock();
           Persistence.profile().wallet().unlockSkill(cost);
@@ -277,13 +276,15 @@ public class SkillTreeScreen extends ScreenAdapter {
     Texture texture = new Texture(Gdx.files.internal("images/skillpoint.png"));
     Image image = new Image(texture);
     image.setSize(70, 105);
-    image.setPosition(100, 1000);
+    float width = stage.getViewport().getWorldWidth();
+    float height = stage.getViewport().getWorldHeight();
+    image.setPosition(0.025f * width, 0.885f * height);
     stage.addActor(image);
   }
 
   /**
    * Creates the label showing total skill points.
-   * <
+   *
    * Replace temporary points variable with Wallet integration as needed.
    * 
    * @param stage the stage to add the label to
@@ -295,7 +296,9 @@ public class SkillTreeScreen extends ScreenAdapter {
     String skillPointsNumber = String.format("Skill Points: %d", points);
     skillPointLabel = new Label(skillPointsNumber, skin);
     skillPointLabel.setColor(Color.WHITE);
-    skillPointLabel.setPosition(80, 990);
+    float width = stage.getViewport().getWorldWidth();
+    float height = stage.getViewport().getWorldHeight();
+    skillPointLabel.setPosition(0.01f * width, 0.88f * height);
   }
 
   @Override
