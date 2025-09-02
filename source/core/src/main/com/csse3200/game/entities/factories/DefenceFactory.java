@@ -6,8 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.entities.Entity;
@@ -30,10 +30,13 @@ public class DefenceFactory {
     private static final NPCConfigs configs =
         FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
-    public static Entity createSigma() {
+    /**
+     * Creates a base sling shooter entity
+     * Returns the entity
+     */
+    public static Entity createSlingShooter() {
         Entity sigma = createBaseDefender();
-        BaseDefenceConfig config = configs.slingshooter; // update to whatever the name of the sigma is
-
+        BaseDefenceConfig config = configs.slingshooter;
 
         AnimationRenderComponent animator =
         new AnimationRenderComponent(
@@ -44,12 +47,13 @@ public class DefenceFactory {
         animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
 
         sigma
-            .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+            .addComponent(new DefenceStatsComponent(config.health, 
+                        config.baseAttack, config.type, config.range, config.state,
+                        config.attackSpeed, config.critChance))
             .addComponent(animator)
             .addComponent(new DefenceAnimationController());
 
         sigma.getComponent(AnimationRenderComponent.class).scaleEntity();
-
         return sigma;
     }
     
@@ -57,6 +61,7 @@ public class DefenceFactory {
         Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
