@@ -133,6 +133,7 @@ public class ForestGameArea extends GameArea {
   private Entity spawnPlayer() {
     Entity newPlayer = PlayerFactory.createPlayer();
     spawnEntityAt(newPlayer, PLAYER_SPAWN, true, true);
+    newPlayer.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
     return newPlayer;
   }
 
