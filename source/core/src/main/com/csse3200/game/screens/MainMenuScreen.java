@@ -14,6 +14,11 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -99,10 +104,23 @@ public class MainMenuScreen extends ScreenAdapter {
     private void createUI() {
         logger.debug("Creating ui");
         Stage stage = ServiceLocator.getRenderService().getStage();
+
+        // Add the background image as a Stage actor
+        Texture bgTex = ServiceLocator.getResourceService()
+                .getAsset("images/bg.png", Texture.class);
+        logger.debug("Main menu screen background texture asset loaded");
+        Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
+        bg.setFillParent(true);
+        bg.setScaling(Scaling.fill);
+        stage.addActor(bg);
+        logger.debug("Main menu screen background added");
+
+        // Register the UI entity that owns the display and actions
         Entity ui = new Entity();
         ui.addComponent(new MainMenuDisplay())
                 .addComponent(new InputDecorator(stage, 10))
                 .addComponent(new MainMenuActions(game));
         ServiceLocator.getEntityService().register(ui);
+        logger.debug("Main menu screen ui created and registered");
     }
 }
