@@ -1,10 +1,12 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.CombatStatsComponent;
@@ -43,10 +45,10 @@ public class ObstacleFactory {
     public static Entity createLaser() {
         Entity laser =
                 new Entity()
-                        .addComponent(new TextureRenderComponent("images/laser.png"))
+                        .addComponent(new TextureRenderComponent("images/heart.png"))
                         .addComponent(new PhysicsComponent())
                         .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
-                                .setSensor(false))
+                                .setSensor(true))
                         .addComponent(new CombatStatsComponent(1, 0)) // damage
                         .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY));
 
@@ -56,7 +58,7 @@ public class ObstacleFactory {
         laser.scaleWidth(0.2f);
         PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
 
-        laser.getComponent(PhysicsComponent.class).setLinearVelocity(0f, 15f);
+        laser.getComponent(PhysicsComponent.class).setLinearVelocity(5f, 0f);
 
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(1.0f);  // adjust size as needed

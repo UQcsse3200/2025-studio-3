@@ -3,12 +3,16 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.movement.MovementController;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -16,6 +20,8 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.TimerTask;
 
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
@@ -122,6 +128,33 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnLaser(Entity entity){
+      float initdelay = 2.0f;
+
+      Timer.schedule(new Timer.Task() {
+          @Override
+          public void run() {
+              Entity laser = ObstacleFactory.createLaser();
+
+              HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
+              if(hitbox == null){
+                  hitbox = new HitboxComponent();
+                  hitbox.setSensor(true);
+                  laser.addComponent(hitbox);
+              }else{
+                  hitbox.setSensor(true);
+              }
+
+              Vector2 ePos = entity.getPosition();
+              Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
+              float offset = 1.0f;
+              Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
+              GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
+              spawnEntityAt(laser, entityPos, true, true);
+          }
+      }, initdelay);
   }
 
   private Entity spawnPlayer() {
