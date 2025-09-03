@@ -23,6 +23,7 @@ public class GridFactory {
      */
     public static Entity createTile(int imageStatus, float scale, float x, float y, AreaAPI area) {
 
+        // for alternating tile variants
         String image_path;
         if (imageStatus == 1) {
             image_path = "images/green_tile.png";

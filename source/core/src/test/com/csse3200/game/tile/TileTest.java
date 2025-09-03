@@ -13,11 +13,14 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
@@ -117,6 +120,23 @@ public class TileTest {
         assert(!tileStorageComponent.inTileHitbox(testPoint));
     }
 
+    @Test
+    public void createInvalidHitboxComponent() {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            new TileHitboxComponent(3, 3, 5, 5);
+        });
+        assertEquals("The max x and y values must be bigger than the min x and y values", ex.getMessage());
+    }
+
+    @Test
+    public void shouldBeValidTile() {
+        Entity tile = createValidTile();
+        assertNotNull(tile);
+        assert(tile.getComponent(TileStorageComponent.class) != null);
+        assert(tile.getComponent(TileHitboxComponent.class) != null);
+        assert(tile.getComponent(TileStatusComponent.class) != null);
+        assert(tile.getComponent(TileInputComponent.class) != null);
+    }
 
     private Entity createValidTile() {
         //same as GridFactory but needs to be separate otherwise error with TextureRenderComponent
