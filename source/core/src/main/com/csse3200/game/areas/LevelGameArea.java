@@ -2,7 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.areas.LevelGameGrid;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
@@ -12,6 +12,8 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
@@ -51,6 +53,7 @@ public class LevelGameArea extends GameArea{
     private final int levelTwoCols = 14;
 
     private LevelGameGrid grid;
+    private final ArrayList<Entity> robots = new ArrayList<>(); // keep track of robots
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -73,9 +76,12 @@ public class LevelGameArea extends GameArea{
         //float scale = gridHeight / levelTwoRows;
         //spawnGrid(levelTwoRows, levelTwoCols, scale);
         // TODO Spawning the robots too close together will cause them to collide. They should not do that.
-        spawnRobotAtTile(new GridPoint2(9,4), true, true);
-        spawnRobotAtTile(new GridPoint2(9,2), true, true, "fast");
-        spawnRobotAtTile(new GridPoint2(9,0), true, true, "tanky");
+        Entity robot1 = spawnRobotAtTile(new GridPoint2(9,4), true, true);
+        Entity robot2 = spawnRobotAtTile(new GridPoint2(9,2), true, true, "fast");
+        Entity robot3 = spawnRobotAtTile(new GridPoint2(9,0), true, true, "tanky");
+        robots.add(robot1);
+        robots.add(robot2);
+        robots.add(robot3);
         playMusic();
 
     }
@@ -149,6 +155,32 @@ public class LevelGameArea extends GameArea{
         this.grid = grid;
     }
 
+
+    /**
+     * Check to see if the robot has reached the end
+     * Print game over message iff robot has reached the end
+     */
+    public void checkGameOver() {
+
+        float cellWidth = gridWidth / levelOneCols;  // match the spawnGrid scale
+        float cellHeight = gridHeight / levelOneRows;
+        // calculate grid position from the world position
+        for (Entity robot : robots) {
+            Vector2 worldPos = robot.getPosition();
+            int gridX = (int) ((worldPos.x - xOffset) / cellWidth);
+            int gridY = (int) ((worldPos.y - yOffset) / cellHeight);
+            logger.info("Robot grid location: {}", gridX);
+
+            //check iff robot has reached the left boundary column (i.e the end)
+            if (gridX <= 0) {
+                logger.info("Game Over! Robot reached the end at position: {},{}", gridX, gridY);
+                System.out.println("Game Over! Robot reached the end at position");
+                return;
+            }
+        }
+
+    }
+
     private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -165,5 +197,3 @@ public class LevelGameArea extends GameArea{
         this.unloadAssets();
     }
 }
-
-
