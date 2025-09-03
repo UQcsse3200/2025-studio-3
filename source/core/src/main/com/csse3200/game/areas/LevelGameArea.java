@@ -1,6 +1,7 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
@@ -24,7 +25,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/ghost_1.png",
             "images/olive_tile.png",
             "images/green_tile.png",
-            "images/box_boy.png"
+            "images/box_boy.png",
+            "images/selected_star.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -53,7 +55,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     private LevelGameGrid grid;
     private Entity[] spawned_units;
-    private Entity unit_selected;
+    private Entity selected_unit;
+    private Entity selection_star;
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -62,8 +65,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     public LevelGameArea(TerrainFactory terrainFactory) {
         super();
         this.terrainFactory = terrainFactory;
-        unit_selected = null; // None selected at level load
+        selected_unit = null; // None selected at level load
         spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
+        selection_star = null;
     }
 
     @Override
@@ -74,11 +78,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
         spawnMap();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected.;
+        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
+        placeInventoryUnit(2, "images/ghost_king.png");
 
-        logger.info("x: {}, y: {}",
-                ServiceLocator.getRenderService().getStage().getWidth(),
-                ServiceLocator.getRenderService().getStage().getHeight());
         playMusic();
 
     }
@@ -118,7 +120,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         GridPoint2 bounds = terrain.getMapBounds(0);
         float worldWidth = bounds.x * tileWidth;
         float worldHeight = bounds.y * tileHeight;
-
         mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
 
         spawnEntity(mapEntity);
@@ -147,7 +148,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         Entity unit = new Entity()
                 .addComponent(new InventoryUnitInputComponent(this))
                 .addComponent(new TextureRenderComponent(image));
-        unit.setPosition(INV_START_X  + (pos - 1) * SCALE, INV_Y);
+        unit.setPosition(INV_START_X  + (pos - 1) * (SCALE * 1.5f), INV_Y);
         unit.scaleHeight(SCALE);
         spawnEntity(unit);
     }
@@ -160,7 +161,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         resourceService.unloadAssets(levelSounds);
         resourceService.unloadAssets(levelMusic);
     }
-
 
     @Override
     public void dispose() {
@@ -182,23 +182,36 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     @Override
     public Entity getSelectedUnit(){
-        return unit_selected;
+        return selected_unit;
     }
 
     @Override
     public void setSelectedUnit(Entity unit) {
-        unit_selected = unit;
-        if (unit == null) {
-            logger.info("Unit deselected");
-        } else {
-            logger.info("Unit selected");
+        selected_unit = unit;
+
+        // if no star, create one
+        if (selection_star == null) {
+            selection_star = new Entity();
+            selection_star.addComponent(new TextureRenderComponent("images/selected_star.png"));
+            selection_star.scaleHeight(SCALE / 2f);
+            spawnEntity(selection_star);
         }
+
+        // if no unit selected remove star
+        if (selected_unit == null) {
+            selection_star.setPosition(-100f, -100f); // offscreen
+            return; // break from method
+        }
+
+        //set star to correct position and size
+        selection_star.setPosition(unit.getCenterPosition().x, INV_SELECTED_Y);
     }
 
     @Override
     public void spawnUnit(int position){
         Entity unit = new Entity();
-        unit.addComponent(new TextureRenderComponent("images/ghost_1.png"));
+        Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
+        unit.addComponent(new TextureRenderComponent(texture));
         float tileX = X_OFFSET + SCALE * (position % LEVEL_ONE_COLS);
         float tileY = Y_OFFSET + SCALE * (float) (position / LEVEL_ONE_COLS);
         unit.setPosition(tileX, tileY);
@@ -212,6 +225,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     @Override
     public void removeUnit(int position){
         spawned_units[position].dispose();
+        spawned_units[position] = null;
+
         logger.info("Unit deleted at position {}", position);
     }
 
