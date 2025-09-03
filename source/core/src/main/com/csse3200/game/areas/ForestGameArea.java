@@ -85,7 +85,7 @@ public class ForestGameArea extends GameArea {
     spawnGhosts();
     spawnGhostKing();
     spawnRobots();
-    playMusic();
+    //playMusic();
   }
 
   private void spawnDefences() {
@@ -97,7 +97,7 @@ public class ForestGameArea extends GameArea {
 
     spawnEntityAt(slingShooter, randomPos, true, true);
     slingShooter.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
-    slingShooter.getEvents().trigger("attackStart");
+    slingShooter.getEvents().trigger("idleStart");
   }
 
   private void displayUI() {

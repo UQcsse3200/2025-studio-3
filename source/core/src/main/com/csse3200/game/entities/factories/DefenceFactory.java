@@ -87,7 +87,45 @@ public class DefenceFactory {
 
         // trigger the initial attack event to kick off behaviour
         // this will be changed to idle once idle is made
-        defender.getEvents().trigger("attackStart");
+        defender.getEvents().trigger("idleStart");
+
+        // scale the entity to match animation sprite dimensions
+        defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+        return defender;
+    }
+
+    public static Entity createForge(List<Entity> targets) {
+        // load the sling shooter’s specific configuration;
+        BaseDefenceConfig config = configs.forge;
+
+        // start with a base defender (physics + collider)
+        Entity defender = createBaseDefender(targets, config);
+
+        // animation component
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/forge.atlas", TextureAtlas.class));
+
+        // define animations for idle and attack states
+        animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+        // attach components to the entity
+        defender
+                .addComponent(new DefenceStatsComponent(
+                        config.health,
+                        config.baseAttack,
+                        config.type,
+                        config.range,
+                        config.state,
+                        config.attackSpeed,
+                        config.critChance))
+                .addComponent(animator)
+                .addComponent(new DefenceAnimationController());
+
+        // trigger the initial attack event to kick off behaviour
+        // this will be changed to idle once idle is made
+        defender.getEvents().trigger("idleStart");
 
         // scale the entity to match animation sprite dimensions
         defender.getComponent(AnimationRenderComponent.class).scaleEntity();

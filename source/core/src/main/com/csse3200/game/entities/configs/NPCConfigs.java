@@ -13,5 +13,6 @@ public class NPCConfigs {
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();
   // public BaseDefenceConfig mortar = new BaseDefenceConfig();
+  public BaseDefenceConfig forge = new BaseDefenceConfig();
   public BaseEntityConfig robot = new BaseEntityConfig();
 }
