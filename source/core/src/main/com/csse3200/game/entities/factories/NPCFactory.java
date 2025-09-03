@@ -60,7 +60,6 @@ public class NPCFactory {
         .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
         .addComponent(animator)
         .addComponent(new GhostAnimationController());
-
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
     return ghost;

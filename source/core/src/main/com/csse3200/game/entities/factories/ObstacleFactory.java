@@ -7,7 +7,6 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.ProjectileBoundsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -48,8 +47,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/laser.png"))
                         .addComponent(new PhysicsComponent())
-                        //.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
-                              //  .setSensor(false))
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
+                                .setSensor(false))
                         .addComponent(new CombatStatsComponent(1, 0)) // damage
                         .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY))
                                 .addComponent(new HitboxComponent());
@@ -57,18 +56,15 @@ public class ObstacleFactory {
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(2.0f);
         laser.scaleWidth(0.2f);
-        //PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
+        laser.setProperty("isProjectile", true);
+        laser.getEvents().addListener("destroy",laser::dispose);
+        PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
         new damageMappingSystem(laser);
-        laser.getComponent(PhysicsComponent.class).setLinearVelocity(5f, 0f);
+        laser.getComponent(PhysicsComponent.class).setLinearVelocity(0f, 15f);
 
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(1.0f);  // adjust size as needed
-        //PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
-        laser.setScale(0.2f, 1f);
-        float tileSize = 0.5f;
-        float worldWidth = 30*tileSize;
-        float worldHeight = 30*tileSize;
-        laser.addComponent(new ProjectileBoundsComponent(worldWidth, worldHeight));
+        PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
 
         return laser;
     }
