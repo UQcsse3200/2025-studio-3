@@ -14,7 +14,10 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.Gdx;
+import com.csse3200.game.ui.DraggableCharacter;
 
+import com.badlogic.gdx.Input;
 public class LevelGameArea extends GameArea implements AreaAPI {
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
@@ -75,9 +78,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
         placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected.
+        testUI_1();
+
         playMusic();
 
     }
+
+    private void testUI_1() {
+        Entity ui = new Entity();
+        DraggableCharacter dragUI = new DraggableCharacter(this);
+        dragUI.setTexture("images/ghost_1.png");
+        dragUI.setOffsets(0f, 500f);
+        dragUI.setScale(0.1f);
+        ui.addComponent(dragUI);
+        spawnEntity(ui);
+
+    }
+
+
 
     private void loadAssets() {
         logger.debug("Loading assets");
@@ -155,6 +173,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         resourceService.unloadAssets(levelSounds);
         resourceService.unloadAssets(levelMusic);
     }
+
 
     @Override
     public void dispose() {

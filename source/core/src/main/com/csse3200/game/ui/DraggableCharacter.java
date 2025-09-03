@@ -4,12 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.NonDraggableCharacter;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.areas.LevelGameArea;
+
+
 /**
  * A draggable character UI component that can be moved around the screen.
  * The character can be removed by clicking on it and pressing the 'R' key.
@@ -25,6 +30,21 @@ public class DraggableCharacter extends UIComponent {
     private float offsetY = 0f; // Default x position
     private float scale = 0.15f; // Scale factor for the image size
 
+    private final LevelGameArea area;
+    public DraggableCharacter(LevelGameArea area) {
+        this.area = area;
+    }
+
+    private static final float GRID_MIN_X = 235f;
+    private static final float GRID_MIN_Y = 145f;
+    private static final float GRID_MAX_X = 1245f;
+    private static final float GRID_MAX_Y = 650f;
+
+    private static final int GRID_COLS = 10;
+    private static final int GRID_ROWS = 5;
+
+    private static final float CELL_W = (GRID_MAX_X - GRID_MIN_X) / GRID_COLS;
+    private static final float CELL_H = (GRID_MAX_Y - GRID_MIN_Y) / GRID_ROWS;
     /**
      * Initializes the draggable character by adding the image actor to the stage
      * and setting up the drag-and-drop functionality.
@@ -44,6 +64,8 @@ public class DraggableCharacter extends UIComponent {
         image.setSize(image.getWidth() * scale, image.getHeight() * scale);
         stage.addActor(image);
     }
+
+
 
     /**
      * Sets up the drag-and-drop functionality for the character image.
@@ -70,19 +92,18 @@ public class DraggableCharacter extends UIComponent {
 
                 float stageX = event.getStageX();
                 float stageY = event.getStageY();
+                if (stageX < GRID_MIN_X || stageX >= GRID_MAX_X || stageY < GRID_MIN_Y || stageY >= GRID_MAX_Y) {
+                    return;
+                }
+                int col = (int) ((stageX - GRID_MIN_X) / CELL_W);
+                int row = (int) ((stageY - GRID_MIN_Y) / CELL_H);
 
-                // place so the image is centered at the cursor
-                float placeX = stageX - image.getWidth() / 2f;
-                float placeY = stageY - image.getHeight() / 2f;
+                if (col < 0 || col >= GRID_COLS || row < 0 || row >= GRID_ROWS) {
+                    return;
+                }
 
-                // Spawn non-draggable character at that position
-                NonDraggableCharacter dropped = new NonDraggableCharacter();
-                dropped.setTexture(texturePath);   // set the image
-                dropped.setScale(scale);           // set the scale
-                dropped.setOffsets(placeX, placeY);
-
-                Entity uiEntity = new Entity().addComponent(dropped);
-                ServiceLocator.getEntityService().register(uiEntity);
+                int tileIndex = row * GRID_COLS + col;
+                area.spawnUnit(tileIndex);
             }
         });
     }
