@@ -1,8 +1,13 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Input handler for inventory units for mouse input.
@@ -10,10 +15,16 @@ import com.csse3200.game.input.InputComponent;
  */
 public class InventoryUnitInputComponent extends InputComponent {
 
+    private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
     private final AreaAPI area;
+    private final float tileSize;
+    private final float screenHeight;
+
     public InventoryUnitInputComponent(AreaAPI area) {
         super(5);
         this.area = area;
+        tileSize = area.getTileSize();
+        screenHeight = ServiceLocator.getRenderService().getStage().getHeight();
     }
 
     /**
@@ -28,18 +39,28 @@ public class InventoryUnitInputComponent extends InputComponent {
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
 
-        // Need to check if click is within bounds of the tile and then do the below
+        Vector2 position = entity.getPosition();
+        logger.info("Entity position is ({}, {})", position.x, position.y);
+        logger.info("Click position is ({}, {})", screenX, screenY);
 
-        switch (button) {
-            case Input.Buttons.LEFT:
-                area.setSelectedUnit(entity);
-                return true;
-            case Input.Buttons.RIGHT:
-                area.setSelectedUnit(null);
-                return true;
-            default:
-                return false;
+        if (screenX >= position.x
+                && screenX <= position.x + tileSize
+                && screenY <= screenHeight - position.y
+                && screenY >= screenHeight - (position.y + tileSize)) {
+
+            return switch (button) {
+                case Input.Buttons.LEFT -> {
+                    area.setSelectedUnit(entity);
+                    yield true;
+                }
+                case Input.Buttons.RIGHT -> {
+                    area.setSelectedUnit(null);
+                    yield true;
+                }
+                default -> false;
+            };
         }
+        return false;
     }
 
 }

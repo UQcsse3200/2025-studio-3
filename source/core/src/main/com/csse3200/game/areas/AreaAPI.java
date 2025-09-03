@@ -8,4 +8,5 @@ public interface AreaAPI {
     public void setSelectedUnit(Entity unit);
     public void spawnUnit(int position);
     public void removeUnit(int position);
+    public float getTileSize();
 }

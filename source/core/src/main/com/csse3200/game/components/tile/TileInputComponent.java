@@ -1,8 +1,10 @@
 package com.csse3200.game.components.tile;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,31 +31,41 @@ public class TileInputComponent extends InputComponent {
      */
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        logger.info("Click handler started");
+
         TileStatusComponent tileStatus = entity.getComponent(TileStatusComponent.class);
         Entity selected_unit = tileStatus.getArea().getSelectedUnit();
+        float tileSize = tileStatus.getArea().getTileSize();
+        float screenHeight = ServiceLocator.getRenderService().getStage().getHeight();
 
-        // Need to check if click is within bounds of the tile and then do the below
+        Vector2 position = entity.getPosition();
+        logger.info("Entity position is ({}, {})", position.x, position.y);
+        logger.info("Click position is ({}, {})", screenX, screenY);
 
-        switch (button) {
-            case Input.Buttons.LEFT:
-                logger.info("left Click processed");
-                if (!tileStatus.hasUnit() && selected_unit != null) {
-                    logger.info("Attempting to place unit");
-                    tileStatus.addUnit();
+        if (screenX >= position.x
+                && screenX <= position.x + tileSize
+                && screenY <= screenHeight - position.y
+                && screenY >= screenHeight - (position.y + tileSize)) {
+
+            switch (button) {
+                case Input.Buttons.LEFT -> {
+                    if (!tileStatus.hasUnit() && selected_unit != null) {
+                        tileStatus.addUnit();
+                    }
+                    return true;
                 }
-                return true;
-
-            case Input.Buttons.RIGHT:
-                logger.info("right Click processed");
-                if (tileStatus.hasUnit()) {
-                    logger.info("Attempting to remove unit");
-                    tileStatus.removeUnit();
+                case Input.Buttons.RIGHT -> {
+                    logger.info("right Click processed");
+                    if (tileStatus.hasUnit()) {
+                        tileStatus.removeUnit();
+                    }
+                    return true;
                 }
-                return true;
-            default:
-                return false;
+                default -> {
+                    return false;
+                }
+            }
         }
+        return false;
     }
 
 }
