@@ -32,6 +32,8 @@ public class GridFactory {
         }
 
         // need to figure out how to get min and max x and y values of the tile
+
+        // creates the new tile entity
         Entity tile =
                 new Entity()
                         .addComponent(new TextureRenderComponent(image_path))
@@ -40,7 +42,7 @@ public class GridFactory {
                         .addComponent(new TileInputComponent())
                         .addComponent(new TileStatusComponent(area));
 
-
+        // scales the tile to fit in the map
         tile.getComponent(TextureRenderComponent.class).scaleEntity();
         tile.scaleHeight(scale);
         return tile;

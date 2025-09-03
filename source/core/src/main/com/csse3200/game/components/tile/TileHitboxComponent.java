@@ -64,6 +64,11 @@ public class TileHitboxComponent extends Component {
         this.minPosY = minPosY;
     }
 
+    /**
+     * Checks if the provided position is in the hitbox of the tile
+     * @param pos a GridPoint2 that contains the x and y of the point being checked
+     * @return a boolean depending on if the given point in the hitbox(true) or not(false)
+     */
     public boolean inTileHitbox(GridPoint2 pos) {
         return pos.x >= minPosX && pos.x <= maxPosX && pos.y >= minPosY && pos.y <= maxPosY;
     }

@@ -140,11 +140,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
 
     /**
-     * Creates the Grid to overlay on the map for unit placement.
-     * Tiles are stored in an {@link LevelGameGrid}
+     * Spawns the grid of tiles for the game
      *
-     * @param rows the number of rows in the grid
-     * @param cols the number of columns in the grid
+     * @param rows an int that is the number of rows wanted for the grid
+     * @param cols an int that is the number of columns wanted for the grid
      */
     private void spawnGrid(int rows, int cols) {
         grid = new LevelGameGrid(rows, cols);
@@ -215,6 +214,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     /**
      * Getter for grid
+     *
      * @return grid
      */
     @Override
@@ -224,6 +224,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     /**
      * Getter for selected_unit
+     *
      * @return selected_unit
      */
     @Override
