@@ -52,6 +52,7 @@ public class DefenceFactory {
      * - Stats loaded from the config file
      * - Animation rendering and animation controller
      *
+     * @param targets the list of the entities that the slingshooter will attack
      * @return entity representing the slingshooter
      */
     public static Entity createSlingShooter(List<Entity> targets) {
