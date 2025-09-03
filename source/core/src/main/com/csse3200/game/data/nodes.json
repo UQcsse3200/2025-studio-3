@@ -1,0 +1,26 @@
+[
+  {
+    "id": "node1",
+    "label": "Start",
+    "px": 142,
+    "py": 269,
+    "locked": false,
+    "lockReason": null
+  },
+  {
+    "id": "node2",
+    "label": "Checkpoint 1",
+    "px": 320,
+    "py": 185,
+    "locked": true,
+    "lockReason": "Complete Start"
+  },
+  {
+    "id": "node3",
+    "label": "Checkpoint 2",
+    "px": 418,
+    "py": 262,
+    "locked": true,
+    "lockReason": "Complete Checkpoint 1"
+  }
+]
