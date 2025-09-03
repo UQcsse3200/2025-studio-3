@@ -83,8 +83,6 @@ public class DraggableCharacter extends UIComponent {
 
                 Entity uiEntity = new Entity().addComponent(dropped);
                 ServiceLocator.getEntityService().register(uiEntity);
-
-                //image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
             }
         });
     }
