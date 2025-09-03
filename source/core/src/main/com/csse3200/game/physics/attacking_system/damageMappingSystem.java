@@ -12,7 +12,7 @@ public class damageMappingSystem  {
     public damageMappingSystem(Entity entity) {
         entity.getEvents().addListener("collisionStart",this::onCollisionStart);
     }
-    private void onCollisionStart(Fixture fixtureA, Fixture fixtureB) {
+    public void onCollisionStart(Fixture fixtureA, Fixture fixtureB) {
 
         Entity entityA =  ((BodyUserData)fixtureA.getBody().getUserData()).entity;
         Entity entityB = ((BodyUserData)fixtureB.getBody().getUserData()).entity;

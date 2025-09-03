@@ -294,4 +294,7 @@ private Map<String,Object> property = new HashMap<>();
   public String toString() {
     return String.format("Entity{id=%d}", id);
   }
+
+    public void setPropery(String isProjectile, boolean b) {
+    }
 }
