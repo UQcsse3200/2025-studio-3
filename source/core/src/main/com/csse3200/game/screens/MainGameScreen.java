@@ -4,11 +4,12 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
@@ -24,8 +25,11 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+
 
 /**
  * The game screen containing the main game.
@@ -35,14 +39,16 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {"images/heart.png"};
-  private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
+  private static final Vector2 CAMERA_POSITION = new Vector2(1f, 1f);
 
   private final GdxGame game;
   private final Renderer renderer;
   private final PhysicsEngine physicsEngine;
+  private final WaveManager waveManager;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
+    this.waveManager = new WaveManager();
 
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
@@ -61,13 +67,19 @@ public class MainGameScreen extends ScreenAdapter {
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
+    waveManager.initialiseNewWave();
+
     loadAssets();
     createUI();
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
-    forestGameArea.create();
+    LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+    waveManager.setGameArea(levelGameArea);
+    levelGameArea.create();
+
+    snapCameraBottomLeft();
+
   }
 
   @Override
@@ -75,11 +87,13 @@ public class MainGameScreen extends ScreenAdapter {
     physicsEngine.update();
     ServiceLocator.getEntityService().update();
     renderer.render();
+    waveManager.update();
   }
 
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
+    snapCameraBottomLeft();
     logger.trace("Resized renderer: ({} x {})", width, height);
   }
 
@@ -137,8 +151,22 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new MainGameExitDisplay())
         .addComponent(new Terminal())
         .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+        .addComponent(new TerminalDisplay())
+        .addComponent(new CurrentWaveDisplay());
+
+    // Connect the UI entity to the WaveManager for event triggering
+    WaveManager.setGameEntity(ui);
 
     ServiceLocator.getEntityService().register(ui);
   }
+
+  private void snapCameraBottomLeft() {
+    var cam = renderer.getCamera();
+
+    float viewportWidth = cam.getCamera().viewportWidth;
+    float viewportHeight = cam.getCamera().viewportHeight;
+
+    cam.getEntity().setPosition(viewportWidth / 2f, viewportHeight / 2f);
+  }
+
 }
