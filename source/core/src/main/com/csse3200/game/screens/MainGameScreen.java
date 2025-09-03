@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.inventory.InventoryDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -34,8 +35,15 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {"images/heart.png"};
+  private static final String[] mainGameTextures = {"images/heart.png",
+      "images/inventory.png"};
+//      "images/inventory_slot1.png",
+//      "images/inventory_slot2.png",
+//      "images/inventory_slot3.png",
+//      "images/inventory_slot4.png",
+//      "images/inventory_slot5.png"
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
+
 
   private final GdxGame game;
   private final Renderer renderer;
@@ -137,7 +145,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new MainGameExitDisplay())
         .addComponent(new Terminal())
         .addComponent(inputComponent)
-        .addComponent(new TerminalDisplay());
+        .addComponent(new TerminalDisplay())
+        .addComponent(new InventoryDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }
