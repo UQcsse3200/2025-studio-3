@@ -75,7 +75,9 @@ public class LevelGameArea extends GameArea{
         spawnGrid(levelOneRows, levelOneCols, scale);
         //float scale = gridHeight / levelTwoRows;
         //spawnGrid(levelTwoRows, levelTwoCols, scale);
-        spawnRobotAtTile(new GridPoint2(9,4), true, true);
+        //spawnRobotAtTile(new GridPoint2(9,4), true, true);
+        Entity robot = spawnRobotAtTile(new GridPoint2(9,4), true, true);
+        robots.add(robot);
         playMusic();
 
     }
@@ -163,10 +165,11 @@ public class LevelGameArea extends GameArea{
             Vector2 worldPos = robot.getPosition();
             int gridX = (int) ((worldPos.x - xOffset) / cellWidth);
             int gridY = (int) ((worldPos.y - yOffset) / cellHeight);
+            logger.info("Robot grid location: {}", gridX);
 
             //check iff robot has reached the left boundary column (i.e the end)
             if (gridX <= 0) {
-                // logger.info("Game Over! Robot reached the end at position: {},{}", gridX, gridY);
+                logger.info("Game Over! Robot reached the end at position: {},{}", gridX, gridY);
                 System.out.println("Game Over! Robot reached the end at position");
                 return;
             }
