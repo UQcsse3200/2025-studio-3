@@ -2,14 +2,14 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.entities.configs.FastRobotConfig;
+import com.csse3200.game.entities.configs.StandardRobotConfig;
+import com.csse3200.game.entities.configs.TankyRobotConfig;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;

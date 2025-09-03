@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -17,14 +18,11 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
   private static final Logger logger = LoggerFactory.getLogger(ForestGameArea.class);
   private static final int NUM_TREES = 7;
-  private static final int NUM_ROBOTS = 7;
-  private static final int NUM_GHOSTS = 0;
+  private static final int NUM_GHOSTS = 2;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String[] forestTextures = {
@@ -40,11 +38,11 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
-    "images/robot_placeholder.png"
+    "images/iso_grass_3.png"
+
   };
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -53,7 +51,6 @@ public class ForestGameArea extends GameArea {
   private final TerrainFactory terrainFactory;
 
   private Entity player;
-  private final ArrayList<Entity> robots = new ArrayList<>();
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -77,8 +74,6 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     spawnGhosts();
     spawnGhostKing();
-    spawnRobots();
-
 
     playMusic();
   }
@@ -143,42 +138,18 @@ public class ForestGameArea extends GameArea {
     for (int i = 0; i < NUM_GHOSTS; i++) {
       GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
       Entity ghost = NPCFactory.createGhost(player);
-
-      ghost.getEvents().addListener("despawnGhost", (Entity e) -> requestDespawn(e));
       spawnEntityAt(ghost, randomPos, true, true);
     }
   }
 
-  private void spawnRobots() {
-      GridPoint2 minPos = new GridPoint2(0, 0);
-      GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
-
-      for (int i = 0; i < NUM_ROBOTS; i++) {
-          GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-          Entity robot = NPCFactory.createRobot(player);
-          spawnEntityAt(robot, randomPos, true, true);
-          robot.getEvents().addListener("despawnRobot", (Entity e) -> requestDespawn(e));
-          robots.add(robot);
-      }
-  }
-
   private void spawnGhostKing() {
-      GridPoint2 minPos = new GridPoint2(0, 0);
-      GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghostKing = NPCFactory.createGhostKing(player);
-      spawnEntityAt(ghostKing, randomPos, true, true);
+    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    Entity ghostKing = NPCFactory.createGhostKing(player);
+    spawnEntityAt(ghostKing, randomPos, true, true);
   }
-
-  public void despawnGhost(Entity ghost) {
-    despawnEntity(ghost);
-  }
-
-    public void despawnRobot(Entity robot) {
-        robots.remove(robot);
-        despawnEntity(robot);
-    }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);

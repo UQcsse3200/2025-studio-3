@@ -1,4 +1,4 @@
-package com.csse3200.game.files;
+package com.csse3200.game.persistence;
 
 public class TestStats {
   public int stat1 = 1;
