@@ -23,6 +23,7 @@ public class MainMenuActions extends Component {
         entity.getEvents().addListener("load", this::onLoad);
         entity.getEvents().addListener("exit", this::onExit);
         entity.getEvents().addListener("settings", this::onSettings);
+        entity.getEvents().addListener("worldMap", this::onWorldMap);
     }
 
     /**
@@ -32,6 +33,13 @@ public class MainMenuActions extends Component {
         logger.info("Start game");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
     }
+
+
+    private void onWorldMap() {
+        logger.info("Launching world map screen");
+        game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+    }
+
 
     /**
      * Intended for loading a saved game state.

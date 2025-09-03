@@ -84,7 +84,7 @@ public class MainMenuDisplay extends UIComponent {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
                 logger.debug("World Map button clicked");
-                //entity.getEvents().trigger("world_map");
+                entity.getEvents().trigger("worldMap");
             }
         });
 
