@@ -19,7 +19,6 @@ import java.util.List;
  * This task runs when there is a visible target within the entities range of attack
  */
 public class AttackTask extends TargetDetectionTasks {
-    private MovementTask movementTask; // TODO: this should be projectiles
 
     /**
      * Creates an attack task
@@ -40,9 +39,6 @@ public class AttackTask extends TargetDetectionTasks {
         Entity target = getNearestVisibleTarget();
         if (target != null) {
             // TODO: attach logic instantiation instead
-            movementTask = new MovementTask(target.getPosition());
-            movementTask.create(owner);
-            movementTask.start();
         }
 
         this.owner.getEntity().getEvents().trigger("chaseStart");
@@ -50,7 +46,6 @@ public class AttackTask extends TargetDetectionTasks {
 
     /**
      * Updates the task each game frame
-     * // TODO finish this doc with attack logic
      */
     @Override
     public void update() {
@@ -59,12 +54,6 @@ public class AttackTask extends TargetDetectionTasks {
 
         if (target == null) {
             return;
-        }
-
-        movementTask.setTarget(target.getPosition());
-        movementTask.update();
-        if (movementTask.getStatus() != Status.ACTIVE) {
-            movementTask.start();
         }
 
         if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
@@ -78,7 +67,6 @@ public class AttackTask extends TargetDetectionTasks {
     @Override
     public void stop() {
         super.stop();
-        movementTask.stop();
     }
 
     /**
