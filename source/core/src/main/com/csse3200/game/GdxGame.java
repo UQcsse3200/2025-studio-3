@@ -30,7 +30,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
 
     // Run registration for menu map sprites
-    loadMenus();
+    // loadMenus();
 
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
