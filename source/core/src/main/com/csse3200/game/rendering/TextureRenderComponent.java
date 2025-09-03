@@ -7,6 +7,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 /** Render a static texture. */
 public class TextureRenderComponent extends RenderComponent {
+
   private final Texture texture;
 
   /**
@@ -32,5 +33,9 @@ public class TextureRenderComponent extends RenderComponent {
     Vector2 position = entity.getPosition();
     Vector2 scale = entity.getScale();
     batch.draw(texture, position.x, position.y, scale.x, scale.y);
+  }
+
+  public Texture getTexture() {
+    return texture;
   }
 }
