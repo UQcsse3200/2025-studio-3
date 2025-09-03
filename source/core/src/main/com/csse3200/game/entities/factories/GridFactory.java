@@ -23,6 +23,7 @@ public class GridFactory {
      */
     public static Entity createTile(int imageStatus, float scale, float x, float y, AreaAPI area) {
 
+        // for alternating tile variants
         String image_path;
         if (imageStatus == 1) {
             image_path = "images/green_tile.png";
@@ -31,6 +32,8 @@ public class GridFactory {
         }
 
         // need to figure out how to get min and max x and y values of the tile
+
+        // creates the new tile entity
         Entity tile =
                 new Entity()
                         .addComponent(new TextureRenderComponent(image_path))
@@ -39,7 +42,7 @@ public class GridFactory {
                         .addComponent(new TileInputComponent())
                         .addComponent(new TileStatusComponent(area));
 
-
+        // scales the tile to fit in the map
         tile.getComponent(TextureRenderComponent.class).scaleEntity();
         tile.scaleHeight(scale);
         return tile;
