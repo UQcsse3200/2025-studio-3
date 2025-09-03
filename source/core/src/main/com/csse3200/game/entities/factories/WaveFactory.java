@@ -12,7 +12,6 @@ import com.csse3200.game.files.FileLoader;
 public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
-    private WaveManager waveManager;
     private int wave;
 
     /**
@@ -31,14 +30,6 @@ public class WaveFactory {
         this.wave = WaveManager.getCurrentWave();
     }
 
-    /**
-     * Advances to the next wave using the WaveManager
-     */
-    public void advanceToNextWave() {
-        // Create dummy enemies array for now - this will be replaced with actual enemy creation
-        Entity[] dummyEnemies = new Entity[1];
-        this.wave = WaveManager.getCurrentWave();
-    }
     public int getWaveWeight() {
         return getWave().waveWeight;
     }

@@ -2,9 +2,7 @@ package com.csse3200.game.entities;
 
 import java.util.*;
 
-import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
-import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.services.GameTime;
 
 public class WaveManager {
@@ -46,6 +44,10 @@ public class WaveManager {
         Collections.shuffle(waveLaneSequence);
         waveLanePointer = 0;
 
+        if (gameEntity != null && gameEntity.getEvents() != null) {
+            gameEntity.getEvents().trigger("newWaveStarted", currentWave);
+            gameEntity.getEvents().trigger("waveChanged", currentWave);
+        }
     }
 
     public void endWave() {
@@ -86,12 +88,10 @@ public class WaveManager {
      * @return The next lane number to spawn an enemy in.
      */
     public int getLane() {
-        //If all the lanes in the sequence have been used up
         if (waveLanePointer >= waveLaneSequence.size()) {
             Collections.shuffle(waveLaneSequence);
             waveLanePointer = 0;
         }
-        //Get the next wave from the sequence
         int lane = waveLaneSequence.get(waveLanePointer);
         waveLanePointer++;
         return lane;
@@ -107,8 +107,7 @@ public class WaveManager {
             endWave();
             return;
         }
-        levelGameArea.spawnRobotAtTile(new GridPoint2(9, laneNumber), true, true);
+        levelGameArea.spawnInLane(enemies[currentEnemyPos], laneNumber);
         currentEnemyPos++;
-
     }
 }
