@@ -115,7 +115,7 @@ public abstract class GameArea implements Disposable {
         }
 
 
-        Entity robot = RobotFactory.createStandardRobot();
+        Entity robot = RobotFactory.createRobotType(robotType);
 
         // Register first so getCenterPosition() is valid
         spawnEntity(robot);
@@ -144,7 +144,7 @@ public abstract class GameArea implements Disposable {
 
     public Entity spawnRobotAtFloat(float x, float y, String robotType) {
 
-        Entity robot = RobotFactory.createStandardRobot();
+        Entity robot = RobotFactory.createRobotType(robotType);
         spawnEntity(robot);
         robot.setPosition(x, y);
         return robot;

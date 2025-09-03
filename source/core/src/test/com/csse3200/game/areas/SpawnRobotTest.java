@@ -48,7 +48,7 @@ class SpawnRobotTest {
         try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
                      mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             GridPoint2 cell = new GridPoint2(3, 1); // col=3,row=1
@@ -69,7 +69,7 @@ class SpawnRobotTest {
         try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
                      mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             GridPoint2 cell = new GridPoint2(7, 3);
@@ -89,7 +89,7 @@ class SpawnRobotTest {
         try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
                      mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             float x = 12.34f, y = 5.67f;
@@ -104,7 +104,7 @@ class SpawnRobotTest {
     void centerX_only_alignsX_center_keepsY_bottomLeft() {
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             GridPoint2 cell = new GridPoint2(4, 2);
@@ -125,7 +125,7 @@ class SpawnRobotTest {
     void centerY_only_alignsY_center_keepsX_bottomLeft() {
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             GridPoint2 cell = new GridPoint2(2, 3);
@@ -149,7 +149,7 @@ class SpawnRobotTest {
 
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
 
             Entity robot = area.spawnOnCell(new GridPoint2(0, 0), false, false);
@@ -161,7 +161,7 @@ class SpawnRobotTest {
     @Test
     void corners_mapCorrectly() {
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenAnswer(inv -> new Entity());
 
             // (0,0)
@@ -179,7 +179,7 @@ class SpawnRobotTest {
     @Test
     void multipleRobots_independentPositions() {
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenAnswer(inv -> new Entity());
 
             Entity r1 = area.spawnOnCell(new GridPoint2(1, 1), true, true);
@@ -198,7 +198,7 @@ class SpawnRobotTest {
         area.terrain = null; // explicit
         try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
             Entity dummy = new Entity();
-            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createStandardRobot())
+            mocked.when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
                     .thenReturn(dummy);
             assertDoesNotThrow(() -> area.spawnOnCell(new GridPoint2(2, 2), false, false));
         }
