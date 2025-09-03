@@ -41,6 +41,7 @@ public class CurrencyInteraction extends Image {
     private void onClicked() {
         System.out.println("Sun clicked!");
         setTouchable(Touchable.disabled);
+        clearActions();
         float padding = 16f;
         float targetX = padding;
         float targetY = getStage().getHeight() - padding - getHeight();

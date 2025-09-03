@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
@@ -18,11 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // ===== new import =====
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.csse3200.game.components.currency.CurrencyInteraction;
+
 // ======================
 
 /** Forest area for the demo game with trees, a player, and some enemies. */
@@ -56,6 +53,7 @@ public class ForestGameArea extends GameArea {
     private static final String[] forestMusic = {backgroundMusic};
 
     private final TerrainFactory terrainFactory;
+    private CurrencyGeneratorComponent currencyGenerator;
 
     private Entity player;
 
@@ -175,29 +173,16 @@ public class ForestGameArea extends GameArea {
         this.unloadAssets();
     }
 
-    private void spawnSingleSun(Stage stage, Texture sunTex, float x, float y, int value) {
-        CurrencyInteraction token = new CurrencyInteraction(sunTex, value);
-        token.setPosition(x, y);
-        stage.addActor(token);
-        token.toFront();
-    }
-
     private void spawnSun() {
-        Stage stage = ServiceLocator.getRenderService().getStage();
-        Texture sunTex = ServiceLocator.getResourceService()
-                .getAsset("images/normal_sunlight.png", Texture.class);
+        Entity sunSpawner = new Entity();
 
-        final float intervalSec = 10f;
-        stage.addAction(Actions.forever(Actions.sequence(
-                Actions.delay(intervalSec),
-                Actions.run(() -> {
-                    float padding = 64f;
-                    float w = stage.getViewport().getWorldWidth();
-                    float h = stage.getViewport().getWorldHeight();
-                    float x = MathUtils.random(padding, Math.max(padding, w - padding));
-                    float y = MathUtils.random(padding, Math.max(padding, h - padding));
-                    spawnSingleSun(stage, sunTex, x, y, 25);
-                })
-        )));
+        currencyGenerator = new CurrencyGeneratorComponent(
+                5f,
+                25,
+                "images/normal_sunlight.png"
+        );
+
+        sunSpawner.addComponent(currencyGenerator);
+        spawnEntity(sunSpawner);
     }
 }

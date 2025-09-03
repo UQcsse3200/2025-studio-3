@@ -14,8 +14,16 @@ public class CurrencyGeneratorComponent extends Component {
     private final int sunValue;
     private final String sunTexturePath;
 
+    /** FALL_FRAC_PER_SEC: Fraction of screen height per second used as falling speed.
+     *      e.g. 0.25 -> sun falls 25% of the screen height each second
+     *  ROT_SPEED_DPS: Rotating speed in degrees per second.
+     */
+    private float FALL_FRAC_PER_SEC = 0.1f;
+    private float ROT_SPEED_DPS = 100f;
+    private float SUN_SIZE_PX = 128f;
+
     public CurrencyGeneratorComponent() {
-        this(5f, 25, "images/normal_sunlight.png");
+        this(8f, 25, "images/normal_sunlight.png");
     }
 
     public CurrencyGeneratorComponent(float intervalSec, int sunValue, String sunTexturePath) {
@@ -31,12 +39,12 @@ public class CurrencyGeneratorComponent extends Component {
         if (stage != null) {
             stage.addAction(Actions.forever(Actions.sequence(
                     Actions.delay(intervalSec),
-                    Actions.run(() -> spawnOneSun())
+                    Actions.run(this::spawnOneSunRandom)
             )));
         }
     }
 
-    private void spawnOneSun() {
+    public void spawnSunAt(float targetX, float targetY) {
         ResourceService rs = ServiceLocator.getResourceService();
         Stage stage = ServiceLocator.getRenderService().getStage();
         if (rs == null || stage == null) return;
@@ -45,22 +53,57 @@ public class CurrencyGeneratorComponent extends Component {
         if (tex == null) return;
 
         CurrencyInteraction sun = new CurrencyInteraction(tex, sunValue);
+        sun.setSize(SUN_SIZE_PX, SUN_SIZE_PX);
+        sun.setOrigin(SUN_SIZE_PX / 2f, SUN_SIZE_PX / 2f);
+
+        float worldH = stage.getViewport().getWorldHeight();
+        float startX = targetX;
+        float startY = worldH + SUN_SIZE_PX;
+        sun.setPosition(startX, startY);
+        stage.addActor(sun);
+
+        // speed (px/s) derived from world height fraction
+        float fallSpeedPps = Math.max(1f, worldH * FALL_FRAC_PER_SEC);
+        float distance = Math.max(0f, startY - targetY);
+        float duration = distance / fallSpeedPps;
+
+        // rotation
+        float oneTurn = (ROT_SPEED_DPS <= 0f) ? 0f : (360f / ROT_SPEED_DPS);
+
+        if (duration > 0f) {
+            sun.addAction(Actions.parallel(
+                    Actions.moveTo(targetX, targetY, duration, Interpolation.sine),
+                    Actions.forever(Actions.rotateBy(360f, Math.max(0.01f, oneTurn)))
+            ));
+        } else {
+            sun.setPosition(targetX, targetY);
+        }
+    }
+
+    private void spawnOneSunRandom() {
+        ResourceService rs = ServiceLocator.getResourceService();
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        if (rs == null || stage == null) return;
 
         float padding = 32f;
         float w = stage.getViewport().getWorldWidth();
         float h = stage.getViewport().getWorldHeight();
-        float x = MathUtils.random(padding, Math.max(padding, w - sun.getWidth() - padding));
-        float y = MathUtils.random(padding, Math.max(padding, h - sun.getHeight() - padding));
-        sun.setPosition(x, y);
 
-        float dur = 0.25f;
-        sun.getColor().a = 0f;
-        sun.setScale(0.7f);
-        sun.addAction(Actions.parallel(
-                Actions.fadeIn(dur),
-                Actions.scaleTo(1f, 1f, dur, Interpolation.pow2)
-        ));
+        float targetX = MathUtils.random(padding, Math.max(padding, w - SUN_SIZE_PX - padding));
+        float targetY = MathUtils.random(padding, Math.max(padding, h - SUN_SIZE_PX - padding));
+        spawnSunAt(targetX, targetY);
+    }
 
-        stage.addActor(sun);
+    public CurrencyGeneratorComponent setFallFracPerSec(float frac) {
+        this.FALL_FRAC_PER_SEC = Math.max(0.01f, frac);
+        return this;
+    }
+    public CurrencyGeneratorComponent setRotatingSpeedDps(float dps) {
+        this.ROT_SPEED_DPS = Math.max(0f, dps);
+        return this;
+    }
+    public CurrencyGeneratorComponent setSunSizePx(float px) {
+        this.SUN_SIZE_PX = Math.max(8f, px);
+        return this;
     }
 }
