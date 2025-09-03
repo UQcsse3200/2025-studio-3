@@ -68,14 +68,14 @@ public class MainMenuDisplay extends UIComponent {
         });
 
     exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+      new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent changeEvent, Actor actor) {
 
-            logger.debug("Exit button clicked");
-            entity.getEvents().trigger("exit");
-          }
-        });
+          logger.debug("Exit button clicked");
+          entity.getEvents().trigger("exit");
+        }
+      });
 
     table.add(title);
     table.row();
