@@ -67,6 +67,10 @@ public class WorldMapScreen implements Screen {
         batch.setProjectionMatrix(camera.combined);
         shapeRenderer.setProjectionMatrix(camera.combined);
 
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += playerSpeed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= playerSpeed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= playerSpeed * delta;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += playerSpeed * delta;
 
         batch.begin();
         batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
