@@ -18,15 +18,20 @@ public class damageMappingSystem  {
         Entity entityB = ((BodyUserData)fixtureB.getBody().getUserData()).entity;
         if(entityA==null || entityB==null) return;
 
-        if(entityA.getComponent(HitboxComponent.class)!=null && entityB.getComponent(ColliderComponent.class)!=null) {
+        Boolean isProjectile = (Boolean) entityA.getProperty("isProjectile");
+        if (isProjectile==null||!isProjectile) return;
             CombatStatsComponent attackerStats = (CombatStatsComponent)entityA.getComponent(CombatStatsComponent.class);
              CombatStatsComponent victimStats = (CombatStatsComponent)entityB.getComponent(CombatStatsComponent.class);
 
              if(attackerStats!=null && victimStats!=null) {
                  victimStats.hit(attackerStats);
-                 entityA.getComponent(ColliderComponent.class).dispose();
+                if (isProjectile==true){
+                    entityA.getEvents().trigger("destroy");
+                }
              }
-        }
+
+
+
 
     }
 }

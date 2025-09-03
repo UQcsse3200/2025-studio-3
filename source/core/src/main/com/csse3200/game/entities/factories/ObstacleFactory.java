@@ -47,8 +47,8 @@ public class ObstacleFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent("images/laser.png"))
                         .addComponent(new PhysicsComponent())
-                        //.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
-                              //  .setSensor(false))
+                        .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE)
+                                .setSensor(false))
                         .addComponent(new CombatStatsComponent(1, 0)) // damage
                         .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY))
                                 .addComponent(new HitboxComponent());
@@ -56,6 +56,8 @@ public class ObstacleFactory {
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(2.0f);
         laser.scaleWidth(0.2f);
+        laser.setProperty("isProjectile", true);
+        laser.getEvents().addListener("destroy",laser::dispose);
         PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
         new damageMappingSystem(laser);
         laser.getComponent(PhysicsComponent.class).setLinearVelocity(0f, 15f);

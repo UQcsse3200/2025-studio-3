@@ -10,6 +10,9 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Core entity class. Entities exist in the game and are updated each frame. All entities have a
  * position and scale, but have no default behaviour. Components should be added to an entity to
@@ -139,7 +142,14 @@ public class Entity {
     this.scale.y = this.scale.y / this.scale.x * x;
     this.scale.x = x;
   }
-
+private Map<String,Object> property = new HashMap<>();
+  public Entity setProperty(String name, Object value) {
+    property.put(name, value);
+    return this;
+  }
+  public Object getProperty(String name) {
+    return  property.get(name);
+  }
   /**
    * Set the entity's height and scale the width to maintain aspect ratio.
    *
