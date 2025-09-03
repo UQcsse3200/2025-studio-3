@@ -55,6 +55,6 @@ public class TileHitboxComponent extends Component {
     }
 
     public boolean inTileHitbox(GridPoint2 pos) {
-        return pos.x > minPosX && pos.x < maxPosX && pos.y > minPosY && pos.y < maxPosY;
+        return pos.x >= minPosX && pos.x <= maxPosX && pos.y >= minPosY && pos.y <= maxPosY;
     }
 }
