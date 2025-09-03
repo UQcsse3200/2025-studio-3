@@ -54,7 +54,7 @@ public class WaveFactoryTest {
         waveManager.initialiseNewWave();
         waveManager.initialiseNewWave();
         int wave2MinZombies = 10;
-        assertEquals(wave2MinZombies, waveFactory.getWaveWeight());
+        assertEquals(wave2MinZombies, waveFactory.getMinZombiesSpawn());
     }
 
     @Test

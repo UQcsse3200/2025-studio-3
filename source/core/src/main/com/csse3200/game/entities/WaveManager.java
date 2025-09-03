@@ -2,6 +2,7 @@ package com.csse3200.game.entities;
 
 import java.util.*;
 
+import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.services.GameTime;
 
@@ -107,7 +108,8 @@ public class WaveManager {
             endWave();
             return;
         }
-        levelGameArea.spawnInLane(enemies[currentEnemyPos], laneNumber);
+        levelGameArea.spawnRobotAtTile(new GridPoint2(9, laneNumber), true, true);
         currentEnemyPos++;
+
     }
 }

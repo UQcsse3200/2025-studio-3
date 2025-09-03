@@ -80,21 +80,6 @@ public abstract class GameArea implements Disposable {
     spawnEntity(entity);
   }
 
-  protected void spawnEntityAtGrid(
-          Entity entity, float x, float y, boolean centerX, boolean centerY) {
-    Vector2 worldPos = terrain.gridToWorldPosition(x, y);
-    float tileSize = terrain.getTileSize();
-
-    if (centerX) {
-      worldPos.x += (tileSize / 2) - entity.getCenterPosition().x;
-    }
-    if (centerY) {
-      worldPos.y += (tileSize / 2) - entity.getCenterPosition().y;
-    }
-
-    entity.setPosition(worldPos);
-    spawnEntity(entity);
-  }
     public void requestDespawn(Entity entity) {
         if (entity == null) return;
         Gdx.app.postRunnable(() -> despawnEntity(entity));
