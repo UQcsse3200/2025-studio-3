@@ -65,7 +65,7 @@ public class ItemFactory {
 
   /**
    * Creates a nuke entity. Place anywhere on screen to destroy all entities,
-   * friend & foe.
+   * friend and foe.
    *
    * @return entity
    */
