@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.components.player.PlayerActions;
 import com.csse3200.game.data.MenuSpriteData;
@@ -21,6 +22,8 @@ public class LevelPopupDisplay extends UIComponent {
     /*popup window's visibility*/
     private boolean isDisplayed = false;
     private MenuSpriteData spriteData;
+    protected static final Skin skin =
+            new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui2.json"));
 
     /**
      * Default constructor for when no arguments are passed.
