@@ -12,13 +12,11 @@ import com.csse3200.game.files.FileLoader;
 public class WaveFactory {
     private static final WaveConfigs configs =
             FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
-    private int wave;
 
     /**
      * Default constructor
      */
     public WaveFactory() {
-        this.wave = WaveManager.getCurrentWave();
     }
 
     /**
@@ -27,7 +25,6 @@ public class WaveFactory {
      */
     public WaveFactory(Entity gameEntity) {
         WaveManager.setGameEntity(gameEntity);
-        this.wave = WaveManager.getCurrentWave();
     }
 
     public int getWaveWeight() {
@@ -43,12 +40,12 @@ public class WaveFactory {
     }
 
     /**
-     * Helper function to allocate the wave string number to the wave number in the config file
+     * Helper function to allocate the wave number to the correct index in the config file
      *
      * @return base wave config with the corresponding wave number
      */
     private BaseWaveConfig getWave() {
-        return switch (this.wave) {
+        return switch (WaveManager.getCurrentWave()) {
             case 1 -> configs.wave1;
             case 2 -> configs.wave2;
             case 3 -> configs.wave3;
