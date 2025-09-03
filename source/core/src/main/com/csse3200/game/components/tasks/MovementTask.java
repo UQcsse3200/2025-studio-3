@@ -17,7 +17,7 @@ public class MovementTask extends DefaultTask {
 
   private final GameTime gameTime;
   private Vector2 target;
-  private float stopDistance;
+  private float stopDistance = 0.01f;
   private float speed = 1f;
   private long lastTimeMoved;
   private Vector2 lastPos;
@@ -32,6 +32,11 @@ public class MovementTask extends DefaultTask {
     this(target);
     this.speed = speed;
   }
+
+    public MovementTask(Vector2 target, float speed, float stopDistance) {
+        this(target, speed);
+        this.stopDistance = stopDistance;
+    }
 
   @Override
   public void start() {

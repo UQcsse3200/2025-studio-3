@@ -158,6 +158,8 @@ class MoveLeftTaskTest {
     }
 
 
+    //TODO add a task testing the speed
+
 }
 
 

@@ -45,10 +45,14 @@ class MovementTaskTest {
     assertEquals(Status.ACTIVE, task.getStatus());
   }
 
-  //TODO change this to be about speed
+  //TODO add a task testing the speed
+
+
+
+
   @Test
   void shouldStopWhenClose() {
-    MovementTask task = new MovementTask(new Vector2(10f, 10f), 2f);
+    MovementTask task = new MovementTask(new Vector2(10f, 10f), 2f, 2f);
     Entity entity = new Entity().addComponent(new PhysicsComponent());
     PhysicsMovementComponent movementComponent = new PhysicsMovementComponent();
     entity.addComponent(movementComponent);
