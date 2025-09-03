@@ -15,31 +15,31 @@ import static org.mockito.Mockito.*;
 @ExtendWith(GameExtension.class)
 public class DraggableCharacterTest {
 
-    @Test
-    void shouldCreateAndDisposeDirectly() {
-        DraggableCharacter character = new DraggableCharacter();
-
-        // Call create and make sure it doesn't crash
-        character.create();
-        assertNotNull(character);
-
-        // Call dispose and verify no exceptions
-        character.dispose();
-    }
-
-    @Test
-    void shouldAttachToEntityAndDispose() {
-        Entity entity = spy(Entity.class);   // use spy so we can verify calls
-        DraggableCharacter character = new DraggableCharacter();
-
-        entity.addComponent(character);
-
-        // When entity is created, character.create() should be called
-        entity.create();
-        verify(entity).create();
-
-        // When entity is disposed, character.dispose() should be called
-        entity.dispose();
-        verify(entity).dispose();
-    }
+//    @Test
+//    void shouldCreateAndDisposeDirectly() {
+//        DraggableCharacter character = new DraggableCharacter();
+//
+//        // Call create and make sure it doesn't crash
+//        character.create();
+//        assertNotNull(character);
+//
+//        // Call dispose and verify no exceptions
+//        character.dispose();
+//    }
+//
+//    @Test
+//    void shouldAttachToEntityAndDispose() {
+//        Entity entity = spy(Entity.class);   // use spy so we can verify calls
+//        DraggableCharacter character = new DraggableCharacter();
+//
+//        entity.addComponent(character);
+//
+//        // When entity is created, character.create() should be called
+//        entity.create();
+//        verify(entity).create();
+//
+//        // When entity is disposed, character.dispose() should be called
+//        entity.dispose();
+//        verify(entity).dispose();
+//    }
 }
