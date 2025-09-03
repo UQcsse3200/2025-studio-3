@@ -1,5 +1,6 @@
 package com.csse3200.game.components.tile;
 
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
@@ -12,9 +13,11 @@ import org.slf4j.LoggerFactory;
 public class TileStorageComponent extends Component {
     private static final Logger logger = LoggerFactory.getLogger(TileStorageComponent.class);
     private Entity TileUnit;
+    private final LevelGameArea area;
 
-    public TileStorageComponent() {
+    public TileStorageComponent(LevelGameArea area) {
         this.TileUnit = null;
+        this.area = area;
     }
 
     /**
@@ -29,12 +32,13 @@ public class TileStorageComponent extends Component {
      * Adds a unit to the tile
      * @param unit the unit to be added
      */
-    public void addTileUnit(Entity unit) {
+    public void addTileUnit(Entity unit, int tileIndex) {
         if (TileUnit == null) {
             this.TileUnit = unit;
-            logger.debug("Unit {} has been added to this tile", unit);
+            area.spawnUnit(tileIndex);
+            logger.info("Unit {} has been added to this tile", unit);
         } else {
-            logger.debug("Tile has unit already.");
+            logger.info("Tile has unit already.");
         }
     }
 

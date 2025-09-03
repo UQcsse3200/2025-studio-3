@@ -99,7 +99,7 @@ public class TerrainFactory {
     TiledMap tiledMap = new TiledMap();
     TerrainTile mapTile = new TerrainTile(levelMap);
 
-    TiledMapTileLayer layer = new TiledMapTileLayer(1, 1, (int) worldWidth, (int) worldHeight);
+    TiledMapTileLayer layer = new TiledMapTileLayer(20, 20, (int) worldWidth, (int) worldHeight);
     Cell cell = new Cell();
     cell.setTile(mapTile);
     layer.setCell(0, 0, cell);

@@ -14,6 +14,7 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.ui.DraggableCharacter;
 
 public class LevelGameArea extends GameArea implements AreaAPI {
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
@@ -38,15 +39,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private final TerrainFactory terrainFactory;
 
     // Offset values from the bottom left corner of the screen for the grid's starting point
-    private static final float X_OFFSET = 200f;
-    private static final float Y_OFFSET = 100f;
+    private static final float X_OFFSET = 2.9f;
+    private static final float Y_OFFSET = 1.45f;
 
     // Space occupied by the grid within the level game screen
-    private static final float GRID_HEIGHT = 500f;
-    private static final float GRID_WIDTH = 1000f;
+    private static final float GRID_HEIGHT = 7f;
+    private static final float GRID_WIDTH = 14f;
     private static final int LEVEL_ONE_ROWS = 5;
     private static final int LEVEL_ONE_COLS = 10;
-    private static final float SCALE = GRID_HEIGHT / LEVEL_ONE_ROWS;
+    private static final float SCALE = 1.4f;
     private static final float INV_START_X = X_OFFSET;
     private static final float INV_Y = Y_OFFSET + 5.5f * SCALE;
     private static final float INV_SELECTED_Y = Y_OFFSET + 5.5f * SCALE;
@@ -74,14 +75,25 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
         spawnMap();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected.;
+        // placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected.
+        testUI_1();
 
-        logger.info("x: {}, y: {}",
-                ServiceLocator.getRenderService().getStage().getWidth(),
-                ServiceLocator.getRenderService().getStage().getHeight());
-        playMusic();
+        // playMusic();
 
     }
+
+    private void testUI_1() {
+        Entity ui = new Entity();
+        DraggableCharacter dragUI = new DraggableCharacter(this);
+        dragUI.setTexture("images/ghost_1.png");
+        dragUI.setOffsets(100f, 500f);
+        dragUI.setScale(0.1f);
+        ui.addComponent(dragUI);
+        spawnEntity(ui);
+
+    }
+
+
 
     private void loadAssets() {
         logger.debug("Loading assets");
@@ -129,7 +141,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         for (int i = 0; i < rows * cols; i++) {
             Entity tile;
             float tileX = X_OFFSET + SCALE * (i % cols);
-            float tileY = Y_OFFSET + SCALE * (float) (i / cols);
+            float tileY = Y_OFFSET + SCALE * (i / cols);
             // logic for alternating tile images
             if ((i / cols) % 2 == 1) {
                 tile = GridFactory.createTile(i % 2, SCALE, tileX, tileY, this);
@@ -148,7 +160,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
                 .addComponent(new InventoryUnitInputComponent(this))
                 .addComponent(new TextureRenderComponent(image));
         unit.setPosition(INV_START_X  + (pos - 1) * SCALE, INV_Y);
-        unit.scaleHeight(SCALE);
         spawnEntity(unit);
     }
 
@@ -204,7 +215,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         unit.setPosition(tileX, tileY);
         spawned_units[position] = unit;
         unit.getComponent(TextureRenderComponent.class).scaleEntity();
-        unit.scaleHeight(SCALE);
         spawnEntity(unit);
         logger.info("Unit spawned at position {}", position);
     }
@@ -217,7 +227,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     @Override
     public float getTileSize() {
-        return SCALE;
+        return 0;
     }
 }
 

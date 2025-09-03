@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -21,7 +22,7 @@ public class GridFactory {
      * @param y the y value for the new tile
      * @return the newly created tile
      */
-    public static Entity createTile(int imageStatus, float scale, float x, float y, AreaAPI area) {
+    public static Entity createTile(int imageStatus, float scale, float x, float y, LevelGameArea area) {
 
         String image_path;
         if (imageStatus == 1) {
@@ -35,7 +36,7 @@ public class GridFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent(image_path))
                         .addComponent(new TileHitboxComponent(x, y, x, y))
-                        .addComponent(new TileStorageComponent())
+                        .addComponent(new TileStorageComponent(area))
                         .addComponent(new TileInputComponent())
                         .addComponent(new TileStatusComponent(area));
 

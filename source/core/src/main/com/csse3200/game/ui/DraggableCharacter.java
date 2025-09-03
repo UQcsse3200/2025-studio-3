@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
+import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.NonDraggableCharacter;
 import com.csse3200.game.entities.Entity;
@@ -90,8 +91,9 @@ public class DraggableCharacter extends UIComponent {
             public void dragStop(InputEvent event, float x, float y, int pointer,
                                  DragAndDrop.Payload payload, DragAndDrop.Target target) {
 
-                float stageX = event.getStageX();
-                float stageY = event.getStageY();
+                float stageX = event.getStageX() * 0.5f;
+                float stageY = event.getStageY() * 0.5f;
+                //System.out.println(stageX + " " + x + " " + stageY + " " + y);
                 if (stageX < GRID_MIN_X || stageX >= GRID_MAX_X || stageY < GRID_MIN_Y || stageY >= GRID_MAX_Y) {
                     return;
                 }
@@ -103,7 +105,10 @@ public class DraggableCharacter extends UIComponent {
                 }
 
                 int tileIndex = row * GRID_COLS + col;
-                area.spawnUnit(tileIndex);
+                // area.spawnUnit(tileIndex);
+                System.out.println(row + " " + col);
+                Entity tile = area.getGrid().getTile(row, col);
+                tile.getComponent(TileStorageComponent.class).addTileUnit(new Entity(), tileIndex);
             }
         });
     }
