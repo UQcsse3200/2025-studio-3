@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.csse3200.game.services.ServiceLocator;
-
+import com.csse3200.game.ui.NonDraggableCharacter;
+import com.csse3200.game.entities.Entity;
 /**
  * A draggable character UI component that can be moved around the screen.
  * The character can be removed by clicking on it and pressing the 'R' key.
@@ -67,7 +68,23 @@ public class DraggableCharacter extends UIComponent {
             public void dragStop(InputEvent event, float x, float y, int pointer,
                                  DragAndDrop.Payload payload, DragAndDrop.Target target) {
 
-                image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
+                float stageX = event.getStageX();
+                float stageY = event.getStageY();
+
+                // place so the image is centered at the cursor
+                float placeX = stageX - image.getWidth() / 2f;
+                float placeY = stageY - image.getHeight() / 2f;
+
+                // Spawn non-draggable character at that position
+                NonDraggableCharacter dropped = new NonDraggableCharacter();
+                dropped.setTexture(texturePath);   // set the image
+                dropped.setScale(scale);           // set the scale
+                dropped.setOffsets(placeX, placeY);
+
+                Entity uiEntity = new Entity().addComponent(dropped);
+                ServiceLocator.getEntityService().register(uiEntity);
+
+                //image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
             }
         });
     }
