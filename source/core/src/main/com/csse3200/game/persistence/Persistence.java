@@ -16,7 +16,7 @@ import com.csse3200.game.progression.Profile;
 /**
  * Class for loading and saving the user profile / savefile.
  * 
- * Save files should be in the format <profilename>$<unixtime>.json.
+ * Save files should be in the format {@code <profilename>$<unixtime>.json}.
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
