@@ -2,6 +2,7 @@ package com.csse3200.game.entities;
 
 import java.util.*;
 
+import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.services.GameTime;
@@ -49,7 +50,6 @@ public class WaveManager {
 
     public void endWave() {
         waveActive = false;
-        System.out.println("Wave finished.");
         initialiseNewWave();
     }
 
@@ -107,9 +107,7 @@ public class WaveManager {
             endWave();
             return;
         }
-        System.out.print(enemies.length);
-        System.out.print("Spawned enemy in lane " + laneNumber);
-        levelGameArea.spawnInLane(enemies[currentEnemyPos], laneNumber);
+        levelGameArea.spawnRobotAtTile(new GridPoint2(9, laneNumber), true, true);
         currentEnemyPos++;
 
     }

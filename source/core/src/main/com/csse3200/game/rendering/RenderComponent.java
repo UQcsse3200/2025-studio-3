@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.components.Component;
@@ -11,6 +12,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public abstract class RenderComponent extends Component implements Renderable, Disposable {
   private static final int DEFAULT_LAYER = 1;
+  public Color colour = new Color(1, 1, 1, 1);
 
   @Override
   public void create() {

@@ -2,6 +2,7 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
@@ -13,7 +14,6 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 public class LevelGameArea extends GameArea{
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
@@ -23,11 +23,12 @@ public class LevelGameArea extends GameArea{
             "images/ghost_1.png",
             "images/olive_tile.png",
             "images/green_tile.png",
-            "images/box_boy.png"
+            "images/box_boy.png",
+            "images/robot_placeholder.png"
     };
 
     private static final String[] levelTextureAtlases = {
-            "images/ghost.atlas", "images/ghostKing.atlas"
+            "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
     };
 
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -35,6 +36,22 @@ public class LevelGameArea extends GameArea{
     private static final String[] levelMusic = {backgroundMusic};
 
     private final TerrainFactory terrainFactory;
+
+    // Offset values from the bottom left corner of the screen for the grid's starting point
+    private final float xOffset = 2.9f;
+    private final float yOffset = 1.45f;
+
+    // Space occupied by the grid within the level game screen
+    private final float gridHeight = 7f;
+    private final float gridWidth = 14f;
+
+    private final int levelOneRows = 5;
+    private final int levelOneCols = 10;
+
+    private final int levelTwoRows = 7;
+    private final int levelTwoCols = 14;
+
+    private LevelGameGrid grid;
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -52,9 +69,11 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
-
-        float scale = 1.4f;
-        spawnTiles(scale);
+        float scale = gridHeight / levelOneRows;
+        spawnGrid(levelOneRows, levelOneCols, scale);
+        //float scale = gridHeight / levelTwoRows;
+        //spawnGrid(levelTwoRows, levelTwoCols, scale);
+        //spawnRobotAtTile(new GridPoint2(9,4), true, true);
         playMusic();
 
     }
@@ -109,27 +128,23 @@ public class LevelGameArea extends GameArea{
         music.play();
     }
 
-    private void spawnTiles(float scale) {
-        for (int i = 0; i < 50; i++) {
+    private void spawnGrid(int rows, int cols, float scale) {
+        LevelGameGrid grid = new LevelGameGrid(rows, cols);
+        for (int i = 0; i < rows * cols; i++) {
             Entity tile;
-            float tileX = (float) (2.9 + scale * (i % 10));
-            float tileY = (float) (1.45 + scale * (i / 10));
+            float tileX = xOffset + scale * (i % cols);
+            float tileY = yOffset + scale * (float)(i / cols);
             // logic for alternating tile images
-            if ((i / 10) % 2 == 1) {
+            if ((i / cols) % 2 == 1) {
                 tile = GridFactory.createTile(i % 2, scale, tileX, tileY);
             } else {
-                tile = GridFactory.createTile(1- (i % 2), scale, tileX, tileY);
+                tile = GridFactory.createTile(1 - (i % 2), scale, tileX, tileY);
             }
             tile.setPosition(tileX, tileY);
+            grid.addTile(i, tile);
             spawnEntity(tile);
         }
-    }
-
-    public void spawnInLane(Entity entity, int lane) {
-        Entity ghost = NPCFactory.createGhost(new Entity());
-        final float LANE_HEIGHT = 0.05f;
-        float y = 0.05f + (lane * LANE_HEIGHT);
-        super.spawnEntityAtGrid(ghost, 0.65f, y, false, false);
+        this.grid = grid;
     }
 
     private void unloadAssets() {

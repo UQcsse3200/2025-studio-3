@@ -6,9 +6,12 @@ import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.entities.factories.RobotFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.badlogic.gdx.Gdx;
 
 /**
  * Represents an area in the game, such as a level, indoor area, etc. An area has a terrain and
@@ -44,6 +47,15 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().register(entity);
   }
 
+  protected void despawnEntity(Entity entity) {
+      if(entity == null) {
+          return;
+      }
+      ServiceLocator.getEntityService().unregister(entity);
+      entity.dispose();
+      areaEntities.remove(entity);
+  }
+
   /**
    * Spawn entity on a given tile. Requires the terrain to be set first.
    *
@@ -55,7 +67,6 @@ public abstract class GameArea implements Disposable {
   protected void spawnEntityAt(
       Entity entity, GridPoint2 tilePos, boolean centerX, boolean centerY) {
     Vector2 worldPos = terrain.tileToWorldPosition(tilePos);
-    System.out.println(worldPos);
     float tileSize = terrain.getTileSize();
 
     if (centerX) {
@@ -72,7 +83,6 @@ public abstract class GameArea implements Disposable {
   protected void spawnEntityAtGrid(
           Entity entity, float x, float y, boolean centerX, boolean centerY) {
     Vector2 worldPos = terrain.gridToWorldPosition(x, y);
-    System.out.println(worldPos);
     float tileSize = terrain.getTileSize();
 
     if (centerX) {
@@ -85,4 +95,71 @@ public abstract class GameArea implements Disposable {
     entity.setPosition(worldPos);
     spawnEntity(entity);
   }
+    public void requestDespawn(Entity entity) {
+        if (entity == null) return;
+        Gdx.app.postRunnable(() -> despawnEntity(entity));
+    }
+
+//    public Entity spawnRobotAtTile(GridPoint2 tilePos, boolean centerX, boolean centerY) {
+//        BaseEntityConfig cfg = new BaseEntityConfig();
+//        cfg.health = 10;
+//        cfg.baseAttack = 2;
+//
+//        Entity robot = RobotFactory.createRobot(cfg);
+//        spawnEntityAt(robot, tilePos, centerX, centerY);
+//        return robot;
+//    }
+
+    // uses LevelGameArea (Level One) grid params
+    public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
+        // grid params copied from LevelGameArea (Level One)
+        final float xOffset = 2.9f;
+        final float yOffset = 1.45f;
+        final int rows = 5;        // levelOneRows
+        final int cols = 10;       // levelOneCols
+        final float gridHeight = 7f;
+        final float cellScale = gridHeight / rows; // same as LevelGameArea
+
+        // Bounds check on overlay coordinates
+        if (cell.x < 0 || cell.y < 0 || cell.x >= cols || cell.y >= rows) {
+            throw new IllegalArgumentException("Overlay cell out of bounds: " + cell + " within (" + rows + "x" + cols + ")");
+        }
+
+        BaseEntityConfig cfg = new BaseEntityConfig();
+        cfg.health = 10;
+        cfg.baseAttack = 2;
+
+        Entity robot = RobotFactory.createRobot(cfg);
+
+        // Register first so getCenterPosition() is valid
+        spawnEntity(robot);
+
+        float tileX = xOffset + cellScale * cell.x;
+        float tileY = yOffset + cellScale * cell.y;
+
+        float worldX = tileX;
+        float worldY = tileY;
+
+        if (centerX) {
+            worldX += (cellScale / 2f) - robot.getCenterPosition().x;
+        }
+        if (centerY) {
+            worldY += (cellScale / 2f) - robot.getCenterPosition().y;
+        }
+
+        robot.setPosition(worldX, worldY);
+        return robot;
+    }
+
+    public Entity spawnRobotAtFloat(float x, float y) {
+        BaseEntityConfig cfg = new BaseEntityConfig();
+        cfg.health = 10;
+        cfg.baseAttack = 2;
+
+        Entity robot = RobotFactory.createRobot(cfg);
+        spawnEntity(robot);
+        robot.setPosition(x, y);
+        return robot;
+    }
+
 }
