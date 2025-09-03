@@ -2,7 +2,12 @@ package com.csse3200.game.physics.components;
 
 import com.csse3200.game.components.Component;
 import com.badlogic.gdx.math.Vector2;
-
+/**
+ *This component ensures that the projectile entity is disposed off when the laser leaves
+ * the boundaries of the game window/map.
+ * The worldWidth and worldHeight variables are required to establish the game boundaries.
+ * update() checks the current position of the entity(i.e. laser) and disposes it if out of bounds.
+ */
 public class ProjectileBoundsComponent extends Component{
     private final float worldWidth;
     private final float worldHeight;
