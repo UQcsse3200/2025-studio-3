@@ -58,10 +58,9 @@ public class ObstacleFactory {
         laser.scaleWidth(0.2f);
         laser.setProperty("isProjectile", true);
         laser.getEvents().addListener("destroy",laser::dispose);
-        PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
+       PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
         new damageMappingSystem(laser);
         laser.getComponent(PhysicsComponent.class).setLinearVelocity(0f, 15f);
-
         laser.getComponent(TextureRenderComponent.class).scaleEntity();
         laser.scaleHeight(1.0f);  // adjust size as needed
         PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
