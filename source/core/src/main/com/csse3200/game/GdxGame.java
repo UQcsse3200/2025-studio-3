@@ -44,6 +44,7 @@ public class GdxGame extends Game {
    */
   private void loadMenus() {
     for (ScreenType screenType : ScreenType.values()) {
+        if (screenType == ScreenType.MAIN_GAME) continue;
       Screen screen = newScreen(screenType);
       if (screen != null) {
         if (MenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
