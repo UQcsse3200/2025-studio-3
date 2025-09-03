@@ -13,6 +13,7 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -23,9 +24,10 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.CurrencyService;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-import com.csse3200.game.components.maingame.MainGameExitDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
+import com.csse3200.game.components.hud.HudDisplay;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,11 +35,13 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>
+ * Details on libGDX screens:
+ * https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-    private static final String[] mainGameTextures = {"images/normal_sunlight.png"};
+    private static final String[] mainGameTextures = { "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png" };
     private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
     private final GdxGame game;
@@ -48,7 +52,9 @@ public class MainGameScreen extends ScreenAdapter {
     public MainGameScreen(GdxGame game) {
         this.game = game;
 
-        logger.debug("Initialising main game screen services");
+        if (Persistence.profile() == null) {
+      throw new IllegalStateException("No profile loaded, cannot start game");
+    }logger.debug("Initialising main game screen services");
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
@@ -132,7 +138,7 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     /**
-     * Creates the main game's ui including components for rendering ui elements to the screen and
+     * Creates the main game's ui including components for rendering ui elements to* the screen and
      * capturing and handling ui input.
      */
     private void createUI() {
@@ -145,7 +151,7 @@ public class MainGameScreen extends ScreenAdapter {
         ui.addComponent(new InputDecorator(stage, 10))
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
-                .addComponent(new MainGameExitDisplay())
+                .addComponent(new HudDisplay())
                 .addComponent(new Terminal())
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay());

@@ -1,10 +1,11 @@
-package com.csse3200.game.components.maingame;
+package com.csse3200.game.components.skilltree;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +13,15 @@ import org.slf4j.LoggerFactory;
 /**
  * Displays a button to exit the Main Game screen to the Main Menu screen.
  */
-public class MainGameExitDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(MainGameExitDisplay.class);
+public class SkilltreeButton extends UIComponent {
+  private static final Logger logger = LoggerFactory.getLogger(SkilltreeButton.class);
   private static final float Z_INDEX = 2f;
   private Table table;
+  private GdxGame game;
+
+  public SkilltreeButton(GdxGame game) {
+    this.game = game;
+  }
 
   @Override
   public void create() {
@@ -28,26 +34,25 @@ public class MainGameExitDisplay extends UIComponent {
     table.top().right();
     table.setFillParent(true);
 
-    TextButton mainMenuBtn = new TextButton("Exit", skin);
+    TextButton backButton = new TextButton("Back", skin);
 
     // Triggers an event when the button is pressed.
-    mainMenuBtn.addListener(
+    backButton.addListener(
       new ChangeListener() {
         @Override
         public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("Exit button clicked");
-          entity.getEvents().trigger("exit");
+          logger.debug("Back button clicked");
+          game.setScreen(GdxGame.ScreenType.PROFILE);
         }
       });
 
-    table.add(mainMenuBtn).padTop(10f).padRight(10f);
+    table.add(backButton).padTop(10f).padRight(10f);
 
     stage.addActor(table);
   }
 
   @Override
   public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override
