@@ -16,6 +16,10 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Creates a level in the game, creates the map, a tiled grid for the playing area and a
+ * player unit inventory allowing the player to add units to the grid.
+ */
 public class LevelGameArea extends GameArea implements AreaAPI {
     private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
     private static final String[] levelTextures = {
@@ -36,7 +40,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};
     private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
     private static final String[] levelMusic = {backgroundMusic};
-
     private final TerrainFactory terrainFactory;
 
     // Offset values from the bottom left corner of the screen for the grid's starting point
@@ -54,7 +57,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private static final float INV_SELECTED_Y = Y_OFFSET + 5.5f * SCALE;
 
     private LevelGameGrid grid;
-    private Entity[] spawned_units;
+    private final Entity[] spawned_units;
     private Entity selected_unit;
     private Entity selection_star;
 
@@ -70,10 +73,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         selection_star = null;
     }
 
+    /**
+     * Creates the game area by calling helper methods as required.
+     */
     @Override
     public void create() {
         loadAssets();
-
         displayUI();
 
         spawnMap();
@@ -82,9 +87,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         placeInventoryUnit(2, "images/ghost_king.png");
 
         playMusic();
-
     }
 
+    /**
+     * Uses the {@link ResourceService} to load the assets for the level.
+     */
     private void loadAssets() {
         logger.debug("Loading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -99,12 +106,19 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         }
     }
 
+    /**
+     * Spawns the level UI
+     */
     private void displayUI() {
         Entity ui = new Entity();
+        // add components here for additional UI Elements
         ui.addComponent(new GameAreaDisplay("Level One"));
         spawnEntity(ui);
     }
 
+    /**
+     * Creates the map in the {@link TerrainFactory} and spawns it in the correct position.
+     */
     private void spawnMap() {
         logger.debug("Spawning level one map");
 
@@ -125,10 +139,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnEntity(mapEntity);
     }
 
+    /**
+     * Creates the Grid to overlay on the map for unit placement.
+     * Tiles are stored in an {@link LevelGameGrid}
+     *
+     * @param rows the number of rows in the grid
+     * @param cols the number of columns in the grid
+     */
     private void spawnGrid(int rows, int cols) {
         grid = new LevelGameGrid(rows, cols);
         for (int i = 0; i < rows * cols; i++) {
             Entity tile;
+            // Calc tile position
             float tileX = X_OFFSET + SCALE * (i % cols);
             float tileY = Y_OFFSET + SCALE * (float) (i / cols);
             // logic for alternating tile images
@@ -144,6 +166,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         }
     }
 
+    /**
+     * Creates and Spawns the Units in the inventory
+     *
+     * @param pos the position of the unit in the inventory, pos >= 1
+     * @param image the file path of the unit image
+     */
     private void placeInventoryUnit(int pos, String image) {
         Entity unit = new Entity()
                 .addComponent(new InventoryUnitInputComponent(this))
@@ -153,6 +181,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnEntity(unit);
     }
 
+    /**
+     * Unloads the level assets form the {@link ResourceService}
+     */
     private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -162,6 +193,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         resourceService.unloadAssets(levelMusic);
     }
 
+    /**
+     * Extends the super method to stop music and unload assets.
+     */
     @Override
     public void dispose() {
         super.dispose();
@@ -169,22 +203,39 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         this.unloadAssets();
     }
 
+    /**
+     * Starts the music
+     */
     private void playMusic() {
         Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
         music.setLooping(true);
         music.setVolume(0.3f);
         music.play();
     }
+
+    /**
+     * Getter for grid
+     * @return grid
+     */
     @Override
     public LevelGameGrid getGrid() {
         return grid;
     }
 
+    /**
+     * Getter for selected_unit
+     * @return selected_unit
+     */
     @Override
     public Entity getSelectedUnit(){
         return selected_unit;
     }
 
+    /**
+     * Setter for selected_unit
+     *
+     * @param unit Entity in the inventory
+     */
     @Override
     public void setSelectedUnit(Entity unit) {
         selected_unit = unit;
@@ -207,21 +258,40 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         selection_star.setPosition(unit.getCenterPosition().x, INV_SELECTED_Y);
     }
 
+    /**
+     * Adds a unit to the grid
+     *
+     * @param position the grid tile for spawning
+     */
     @Override
     public void spawnUnit(int position){
         Entity unit = new Entity();
+
+        // Match the texture of the inventory unit - placeholder
         Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
         unit.addComponent(new TextureRenderComponent(texture));
+
+        // Get and set position coords
         float tileX = X_OFFSET + SCALE * (position % LEVEL_ONE_COLS);
         float tileY = Y_OFFSET + SCALE * (float) (position / LEVEL_ONE_COLS);
         unit.setPosition(tileX, tileY);
+
+        // Add to list of all spawned units
         spawned_units[position] = unit;
+
+        // set scale to render as desired
         unit.getComponent(TextureRenderComponent.class).scaleEntity();
         unit.scaleHeight(SCALE);
+
         spawnEntity(unit);
         logger.info("Unit spawned at position {}", position);
     }
 
+    /**
+     * Remove a unit form a tile
+     *
+     * @param position of the tile
+     */
     @Override
     public void removeUnit(int position){
         spawned_units[position].dispose();
@@ -230,6 +300,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         logger.info("Unit deleted at position {}", position);
     }
 
+    /**
+     * Getter for tile size in world units
+     *
+     * @return SCALE the size of the tiles
+     */
     @Override
     public float getTileSize() {
         return SCALE;

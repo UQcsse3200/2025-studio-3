@@ -3,7 +3,6 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
-import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -43,6 +42,7 @@ public class InventoryUnitInputComponent extends InputComponent {
         logger.info("Entity position is ({}, {})", position.x, position.y);
         logger.info("Click position is ({}, {})", screenX, screenY);
 
+        // Is click on entity
         if (screenX >= position.x
                 && screenX <= position.x + tileSize
                 && screenY <= screenHeight - position.y

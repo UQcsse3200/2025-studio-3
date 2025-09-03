@@ -41,6 +41,7 @@ public class TileInputComponent extends InputComponent {
         logger.info("Entity position is ({}, {})", position.x, position.y);
         logger.info("Click position is ({}, {})", screenX, screenY);
 
+        // Is click on entity?
         if (screenX >= position.x
                 && screenX <= position.x + tileSize
                 && screenY <= screenHeight - position.y
@@ -54,7 +55,6 @@ public class TileInputComponent extends InputComponent {
                     return true;
                 }
                 case Input.Buttons.RIGHT -> {
-                    logger.info("right Click processed");
                     if (tileStatus.hasUnit()) {
                         tileStatus.removeUnit();
                     }
