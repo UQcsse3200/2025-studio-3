@@ -41,6 +41,7 @@ public class LoadMenuActions extends Component {
   private void handleLoadGame(Savefile savefile) {
     logger.info("Loading game: " + savefile.getName());
     Persistence.load(savefile);
+    game.loadMenus();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

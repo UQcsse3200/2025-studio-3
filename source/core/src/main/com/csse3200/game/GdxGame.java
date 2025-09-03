@@ -29,8 +29,7 @@ public class GdxGame extends Game {
     // Create MenuSpriteService
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
 
-    // Run registration for menu map sprites
-    // loadMenus();
+    loadMenus();
 
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
@@ -41,15 +40,19 @@ public class GdxGame extends Game {
   /**
    * Runs the appropriate register function to register screen sprites.
    */
-  private void loadMenus() {
-    for (ScreenType screenType : ScreenType.values()) {
-      Screen screen = newScreen(screenType);
+  public void loadMenus() {
+    for (RegisteredScreens screenType : RegisteredScreens.values()) {
+      if (!contains(ScreenType.values(), screenType.name())) {
+        return;
+      }
+      ScreenType type = ScreenType.valueOf(screenType.name());
+      Screen screen = newScreen(type);
       if (screen != null) {
         if (MenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          MenuSpriteData menuSpriteData = new MenuSpriteData(screenType);
+          MenuSpriteData menuSpriteData = new MenuSpriteData(type);
           ((MenuSpriteScreen) screen).register(menuSpriteData);
         } else if (DynamicMenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          ((DynamicMenuSpriteScreen<?>) screen).register(screenType);
+          ((DynamicMenuSpriteScreen<?>) screen).register(type);
         }
       }
     }
@@ -115,6 +118,9 @@ public class GdxGame extends Game {
     }
   }
 
+  public enum RegisteredScreens  {
+  }
+
   public enum ScreenType {
     MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY
   }
@@ -124,5 +130,17 @@ public class GdxGame extends Game {
    */
   public void exit() {
     app.exit();
+  }
+  
+  /**
+   * Helper method to check if an enum value exists in another enum type
+   */
+  private boolean contains(ScreenType[] values, String name) {
+    for (ScreenType type : values) {
+      if (type.name().equals(name)) {
+        return true;
+      }
+    }
+    return false;
   }
 }
