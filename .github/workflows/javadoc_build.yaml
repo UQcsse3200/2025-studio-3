@@ -1,4 +1,4 @@
-name: Build Javadoc (Doesn't publish this)
+name: Javadoc Test Build
 
 # Run this only on PRs into main so team's know that Javadoc publish won't fail
 # Don't want to waste gh runner minutes either.
