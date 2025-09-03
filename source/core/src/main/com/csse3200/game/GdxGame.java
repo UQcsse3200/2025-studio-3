@@ -3,19 +3,11 @@ package com.csse3200.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-
 import com.csse3200.game.persistence.UserSettings;
-import com.csse3200.game.screens.LoadGameScreen;
-import com.csse3200.game.screens.AchievementsScreen;
-import com.csse3200.game.screens.InventoryScreen;
-import com.csse3200.game.screens.MainGameScreen;
-import com.csse3200.game.screens.MainMenuScreen;
-import com.csse3200.game.screens.SettingsScreen;
-import com.csse3200.game.screens.SkillTreeScreen;
-import com.csse3200.game.screens.StatisticsScreen;
-import com.csse3200.game.screens.ProfileScreen;
-import com.csse3200.game.screens.ShopScreen;
-
+import com.csse3200.game.data.MenuSpriteData;
+import com.csse3200.game.screens.*;
+import com.csse3200.game.services.MenuSpriteService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,10 +26,33 @@ public class GdxGame extends Game {
     logger.info("Creating game");
     loadSettings();
 
+    // Create MenuSpriteService
+    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
+
+    // Run registration for menu map sprites
+    loadMenus();
+
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
 
     setScreen(ScreenType.MAIN_MENU);
+  }
+
+  /**
+   * Runs the appropriate register function to register screen sprites.
+   */
+  private void loadMenus() {
+    for (ScreenType screenType : ScreenType.values()) {
+      Screen screen = newScreen(screenType);
+      if (screen != null) {
+        if (MenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
+          MenuSpriteData menuSpriteData = new MenuSpriteData(screenType);
+          ((MenuSpriteScreen) screen).register(menuSpriteData);
+        } else if (DynamicMenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
+          ((DynamicMenuSpriteScreen<?>) screen).register(screenType);
+        }
+      }
+    }
   }
 
   /**
