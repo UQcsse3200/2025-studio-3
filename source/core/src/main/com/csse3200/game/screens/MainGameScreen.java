@@ -3,37 +3,28 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-
 import com.csse3200.game.components.maingame.MainGameActions;
-import com.csse3200.game.components.maingame.MainGameExitDisplay;
-import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.currency.SunlightHudDisplay;
-
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
-
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
-
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-
-import com.csse3200.game.services.CurrencyService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.hud.HudDisplay;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,13 +32,13 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>
+ * Details on libGDX screens:
+ * https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-
-    // Use the currency asset so the HUD renders correctly
-    private static final String[] mainGameTextures = {"images/normal_sunlight.png"};
+    private static final String[] mainGameTextures = { "images/heart.png", "images/coins.png", "images/profile.png" };
     private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
     private final GdxGame game;
@@ -56,6 +47,10 @@ public class MainGameScreen extends ScreenAdapter {
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
+
+        if (Persistence.profile() == null) {
+            throw new IllegalStateException("No profile loaded, cannot start game");
+        }
 
         logger.debug("Initialising main game screen services");
         ServiceLocator.registerTimeSource(new GameTime());
@@ -70,10 +65,6 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
 
-        // Start player with 50, no explicit max (Integer.MAX_VALUE)
-        ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
-
-        // Renderer and camera
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
         renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -81,14 +72,11 @@ public class MainGameScreen extends ScreenAdapter {
         loadAssets();
         createUI();
 
-        // Currency HUD overlay
-        Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
-        ServiceLocator.getEntityService().register(uiHud);
-
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
         ForestGameArea forestGameArea = new ForestGameArea(terrainFactory);
         forestGameArea.create();
+
     }
 
     @Override
@@ -124,6 +112,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().dispose();
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getResourceService().dispose();
+
         ServiceLocator.clear();
     }
 
@@ -141,20 +130,20 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     /**
-     * Creates the main game's UI including components for rendering UI elements to the screen and
-     * capturing and handling UI input.
+     * Creates the main game's ui including components for rendering ui elements to
+     * the screen and
+     * capturing and handling ui input.
      */
     private void createUI() {
         logger.debug("Creating ui");
         Stage stage = ServiceLocator.getRenderService().getStage();
-        InputComponent inputComponent =
-                ServiceLocator.getInputService().getInputFactory().createForTerminal();
+        InputComponent inputComponent = ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
         Entity ui = new Entity();
         ui.addComponent(new InputDecorator(stage, 10))
                 .addComponent(new PerformanceDisplay())
                 .addComponent(new MainGameActions(this.game))
-                .addComponent(new MainGameExitDisplay())
+                .addComponent(new HudDisplay())
                 .addComponent(new Terminal())
                 .addComponent(inputComponent)
                 .addComponent(new TerminalDisplay());

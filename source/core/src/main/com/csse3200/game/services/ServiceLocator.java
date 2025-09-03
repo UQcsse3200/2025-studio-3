@@ -25,7 +25,6 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
 
-
   public static EntityService getEntityService() {
     return entityService;
   }
@@ -100,4 +99,5 @@ public class ServiceLocator {
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
+
 }
