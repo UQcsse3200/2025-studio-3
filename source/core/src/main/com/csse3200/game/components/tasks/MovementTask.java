@@ -18,6 +18,7 @@ public class MovementTask extends DefaultTask {
   private final GameTime gameTime;
   private Vector2 target;
   private float stopDistance = 0.01f;
+  private float speed = 1f;
   private long lastTimeMoved;
   private Vector2 lastPos;
   private PhysicsMovementComponent movementComponent;
@@ -27,10 +28,15 @@ public class MovementTask extends DefaultTask {
     this.gameTime = ServiceLocator.getTimeSource();
   }
 
-  public MovementTask(Vector2 target, float stopDistance) {
+  public MovementTask(Vector2 target, float speed) {
     this(target);
-    this.stopDistance = stopDistance;
+    this.speed = speed;
   }
+
+    public MovementTask(Vector2 target, float speed, float stopDistance) {
+        this(target, speed);
+        this.stopDistance = stopDistance;
+    }
 
   @Override
   public void start() {
@@ -38,6 +44,7 @@ public class MovementTask extends DefaultTask {
     this.movementComponent = owner.getEntity().getComponent(PhysicsMovementComponent.class);
     movementComponent.setTarget(target);
     movementComponent.setMoving(true);
+    movementComponent.setSpeed(speed);
     logger.debug("Starting movement towards {}", target);
     lastTimeMoved = gameTime.getTime();
     lastPos = owner.getEntity().getPosition();
@@ -57,6 +64,16 @@ public class MovementTask extends DefaultTask {
   public void setTarget(Vector2 target) {
     this.target = target;
     movementComponent.setTarget(target);
+  }
+
+    /**
+     * Sets the speed to the given speed.
+     * If this is not set, the default speed will be 1.
+     * @param speed the speed for the entity to move at.
+     */
+  public void setSpeed(float speed) {
+    this.speed = speed;
+    movementComponent.setSpeed(speed);
   }
 
   @Override

@@ -75,9 +75,13 @@ public class LevelGameArea extends GameArea{
         spawnGrid(levelOneRows, levelOneCols, scale);
         //float scale = gridHeight / levelTwoRows;
         //spawnGrid(levelTwoRows, levelTwoCols, scale);
-        //spawnRobotAtTile(new GridPoint2(9,4), true, true);
-        Entity robot = spawnRobotAtTile(new GridPoint2(9,4), true, true);
-        robots.add(robot);
+        // TODO Spawning the robots too close together will cause them to collide. They should not do that.
+        Entity robot1 = spawnRobotAtTile(new GridPoint2(9,4), true, true);
+        Entity robot2 = spawnRobotAtTile(new GridPoint2(9,2), true, true, "fast");
+        Entity robot3 = spawnRobotAtTile(new GridPoint2(9,0), true, true, "tanky");
+        robots.add(robot1);
+        robots.add(robot2);
+        robots.add(robot3);
         playMusic();
 
     }
