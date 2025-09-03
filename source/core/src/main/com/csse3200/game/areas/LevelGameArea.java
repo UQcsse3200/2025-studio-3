@@ -67,6 +67,7 @@ public class LevelGameArea extends GameArea{
         displayUI();
 
         spawnMap();
+
         float scale = gridHeight / levelOneRows;
         spawnGrid(levelOneRows, levelOneCols, scale);
         //float scale = gridHeight / levelTwoRows;
@@ -125,6 +126,7 @@ public class LevelGameArea extends GameArea{
         music.setVolume(0.3f);
         music.play();
     }
+
 
     private void spawnGrid(int rows, int cols, float scale) {
         LevelGameGrid grid = new LevelGameGrid(rows, cols);
