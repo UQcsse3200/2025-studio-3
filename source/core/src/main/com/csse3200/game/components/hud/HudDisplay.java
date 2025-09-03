@@ -114,6 +114,12 @@ public class HudDisplay extends UIComponent {
     }
 
     @Override
+    public void update() {
+        super.update();
+        updateGoldDisplay();
+    }
+
+    @Override
     public void draw(SpriteBatch batch) {
         // Draw is handled by the stage
     }
