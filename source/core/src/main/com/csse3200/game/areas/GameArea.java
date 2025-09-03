@@ -109,11 +109,8 @@ public abstract class GameArea implements Disposable {
             throw new IllegalArgumentException("Overlay cell out of bounds: " + cell + " within (" + rows + "x" + cols + ")");
         }
 
-        BaseEntityConfig cfg = new BaseEntityConfig();
-        cfg.health = 10;
-        cfg.baseAttack = 2;
 
-        Entity robot = RobotFactory.createRobot(cfg);
+        Entity robot = RobotFactory.createStandardRobot();
 
         // Register first so getCenterPosition() is valid
         spawnEntity(robot);
@@ -136,11 +133,8 @@ public abstract class GameArea implements Disposable {
     }
 
     public Entity spawnRobotAtFloat(float x, float y) {
-        BaseEntityConfig cfg = new BaseEntityConfig();
-        cfg.health = 10;
-        cfg.baseAttack = 2;
 
-        Entity robot = RobotFactory.createRobot(cfg);
+        Entity robot = RobotFactory.createStandardRobot();
         spawnEntity(robot);
         robot.setPosition(x, y);
         return robot;

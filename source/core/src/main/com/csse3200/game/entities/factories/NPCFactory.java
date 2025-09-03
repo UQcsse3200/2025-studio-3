@@ -66,7 +66,7 @@ public class NPCFactory {
 
   public static Entity createRobot(Entity target) {
       Entity robot = createBaseNPC(target);
-      BaseEntityConfig config = configs.robot;
+      BaseEntityConfig config = configs.standardRobot;
 
       AnimationRenderComponent animator =
               new AnimationRenderComponent(

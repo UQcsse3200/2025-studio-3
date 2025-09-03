@@ -6,7 +6,9 @@ import com.badlogic.gdx.utils.compression.lzma.Base;
  * Defines all NPC configs to be loaded by the NPC Factory.
  */
 public class NPCConfigs {
+  public BaseEntityConfig fastRobot = new FastRobotConfig();
+  public BaseEntityConfig standardRobot = new StandardRobotConfig();
+  public BaseEntityConfig tankyRobot = new TankyRobotConfig();
   public BaseEntityConfig ghost = new BaseEntityConfig();
-  public GhostKingConfig ghostKing = new GhostKingConfig();
-  public BaseEntityConfig robot = new BaseEntityConfig();
+  public GhostKingConfig ghostKing = new GhostKingConfig(); // TODO remove the ghosts
 }
