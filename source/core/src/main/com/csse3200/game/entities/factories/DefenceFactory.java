@@ -109,7 +109,8 @@ public class DefenceFactory {
             new Entity()
                 .addComponent(new PhysicsComponent())
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(enemyDetectionTasks);
 
         PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
         return npc;
