@@ -131,30 +131,42 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnLaser(Entity entity){
-      float initdelay = 2.0f;
+      autofire(entity,() -> {
+          Entity laser = ObstacleFactory.createLaser();
 
-      Timer.schedule(new Timer.Task() {
-          @Override
-          public void run() {
-              Entity laser = ObstacleFactory.createLaser();
-
-              HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
-              if(hitbox == null){
-                  hitbox = new HitboxComponent();
-                  hitbox.setSensor(true);
-                  laser.addComponent(hitbox);
-              }else{
-                  hitbox.setSensor(true);
-              }
-
-              Vector2 ePos = entity.getPosition();
-              Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
-              float offset = 1.0f;
-              Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
-              GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
-              spawnEntityAt(laser, entityPos, true, true);
+          HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
+          if(hitbox == null){
+              hitbox = new HitboxComponent();
+              hitbox.setSensor(true);
+              laser.addComponent(hitbox);
+          }else{
+              hitbox.setSensor(true);
           }
-      }, initdelay);
+
+          Vector2 ePos = entity.getPosition();
+          Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
+          float offset = 1.0f;
+          Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
+          GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
+          spawnEntityAt(laser, entityPos, true, true);
+      });
+  }
+
+    /**
+     * autofire -> Sets an automatic fire rate for projectiles
+     * @param entity Entity from which projectiles will spawn
+     * @param SpawnAction The instructions to deploy the said parameter
+     */
+  private void autofire(Entity entity, Runnable SpawnAction){
+      final float initdelay = 2.0f;
+      final float firerate = 0.5f;
+
+      Timer.schedule(new Timer.Task(){
+          @Override
+          public void run(){
+              SpawnAction.run();
+          }
+      },initdelay, firerate);
   }
 
   private Entity spawnPlayer() {
