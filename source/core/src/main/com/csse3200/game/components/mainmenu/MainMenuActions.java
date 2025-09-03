@@ -2,16 +2,18 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.persistence.Persistence;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MainMenuActions extends Component {
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
-    private GdxGame game;
+  private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
+  private GdxGame game;
 
-    public MainMenuActions(GdxGame game) {
-        this.game = game;
-    }
+  public MainMenuActions(GdxGame game) {
+    this.game = game;
+  }
 
     @Override
     public void create() {
@@ -22,27 +24,42 @@ public class MainMenuActions extends Component {
         entity.getEvents().addListener("worldMap", this::onWorldMap);
     }
 
-    private void onStart() {
-        logger.info("Start game");
-        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
-    }
+  /**
+   * Swaps to the Main Game screen.
+   */
+  private void onStart() {
+    logger.info("Start game");
+    Persistence.load();
+    game.loadMenus();
+    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+  }
 
+  /**
+   * Intended for loading a saved game state.
+   * Load functionality is not actually implemented.
+   */
+  private void onLoad() {
+    logger.info("Load game");
+    game.setScreen(GdxGame.ScreenType.LOAD_GAME);
+  }
     private void onWorldMap() {
         logger.info("Launching world map screen");
         game.setScreen(GdxGame.ScreenType.WORLD_MAP);
     }
 
-    private void onLoad() {
-        logger.info("Load game (not yet implemented)");
-    }
+  /**
+   * Exits the game.
+   */
+  private void onExit() {
+    logger.info("Exit game");
+    game.exit();
+  }
 
-    private void onExit() {
-        logger.info("Exit game");
-        game.exit();
-    }
-
-    private void onSettings() {
-        logger.info("Launching settings screen");
-        game.setScreen(GdxGame.ScreenType.SETTINGS);
-    }
+  /**
+   * Swaps to the Settings screen.
+   */
+  private void onSettings() {
+    logger.info("Launching settings screen");
+    game.setScreen(GdxGame.ScreenType.SETTINGS);
+  }
 }

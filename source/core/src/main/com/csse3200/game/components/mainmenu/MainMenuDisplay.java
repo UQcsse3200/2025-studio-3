@@ -16,35 +16,23 @@ import org.slf4j.LoggerFactory;
  * A ui component for displaying the Main menu.
  */
 public class MainMenuDisplay extends UIComponent {
-    private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
-    private static final float Z_INDEX = 2f;
-    private Table table;
+  private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
+  private static final float Z_INDEX = 2f;
+  private Table table;
 
-    @Override
-    public void create() {
-        super.create();
-        addActors();
-    }
+  @Override
+  public void create() {
+    super.create();
+    addActors();
+  }
 
-    private void addActors() {
-//        Image background = new Image(
-//                ServiceLocator.getResourceService().getAsset("images/bg.png", Texture.class)
-//        );
-//        background.setFillParent(true);
-//        stage.addActor(background);
-
-        table = new Table();
-        table.setFillParent(true);
-//         Image title =
-//            new Image(
-//                ServiceLocator.getResourceService()
-//                    .getAsset("images/box_boy_title.png", Texture.class));
-        Image title =
-                new Image(
-                        ServiceLocator.getResourceService()
-                                .getAsset("images/bg-text.png", Texture.class));
-
-        logger.debug("show background title");
+  private void addActors() {
+    table = new Table();
+    table.setFillParent(true);
+    Image title =
+        new Image(
+            ServiceLocator.getResourceService()
+                .getAsset("images/box_boy_title.png", Texture.class));
 
         TextButton startBtn = new TextButton("Start", skin);
         TextButton loadBtn = new TextButton("Load", skin);
@@ -52,33 +40,33 @@ public class MainMenuDisplay extends UIComponent {
         TextButton settingsBtn = new TextButton("Settings", skin);
         TextButton exitBtn = new TextButton("Exit", skin);
 
-        // Triggers an event when the button is pressed
-        startBtn.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Start button clicked");
-                        entity.getEvents().trigger("start");
-                    }
-                });
+    // Triggers an event when the button is pressed
+    startBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Start button clicked");
+            entity.getEvents().trigger("start");
+          }
+        });
 
-        loadBtn.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Load button clicked");
-                        entity.getEvents().trigger("load");
-                    }
-                });
+    loadBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Load button clicked");
+            entity.getEvents().trigger("load");
+          }
+        });
 
-        settingsBtn.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Settings button clicked");
-                        entity.getEvents().trigger("settings");
-                    }
-                });
+    settingsBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Settings button clicked");
+            entity.getEvents().trigger("settings");
+          }
+        });
 
         worldMapBtn.addListener(new ChangeListener() {
             @Override
@@ -93,10 +81,10 @@ public class MainMenuDisplay extends UIComponent {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
 
-                        logger.debug("Exit button clicked");
-                        entity.getEvents().trigger("exit");
-                    }
-                });
+            logger.debug("Exit button clicked");
+            entity.getEvents().trigger("exit");
+          }
+        });
 
         table.add(title);
 
