@@ -94,8 +94,13 @@ public abstract class GameArea implements Disposable {
 //        return robot;
 //    }
 
-    // uses LevelGameArea (Level One) grid params
+    // If no robot type given, spawns a standard robot
     public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
+      return spawnRobotAtTile(cell, centerX, centerY, "standard");
+    }
+
+    // uses LevelGameArea (Level One) grid params
+    public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY, String robotType) {
         // grid params copied from LevelGameArea (Level One)
         final float xOffset = 2.9f;
         final float yOffset = 1.45f;
@@ -132,7 +137,12 @@ public abstract class GameArea implements Disposable {
         return robot;
     }
 
+    // Spawns a standard robot if no type is specified
     public Entity spawnRobotAtFloat(float x, float y) {
+      return spawnRobotAtFloat(x, y, "standard");
+    }
+
+    public Entity spawnRobotAtFloat(float x, float y, String robotType) {
 
         Entity robot = RobotFactory.createStandardRobot();
         spawnEntity(robot);

@@ -54,7 +54,7 @@ public class NPCFactory {
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
 
     ghost
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
         .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
@@ -76,7 +76,7 @@ public class NPCFactory {
 
 
       robot
-              .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+              .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
               .addComponent(animator)
               .addComponent(new HitMarkerComponent())
               .addComponent(new RobotAnimationController());
@@ -104,7 +104,7 @@ public class NPCFactory {
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
 
     ghostKing
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
             .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
