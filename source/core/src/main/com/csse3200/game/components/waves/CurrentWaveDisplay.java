@@ -6,6 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
+import static com.csse3200.game.entities.WaveManager.getCurrentWave;
+
 /**
  * A UI component for displaying the current wave number.
  * Shows the current wave and can be updated when waves change.
@@ -27,6 +29,9 @@ public class CurrentWaveDisplay extends UIComponent {
 		
 		// Also listen for new wave start events
 		entity.getEvents().addListener("newWaveStarted", this::updateWaveDisplay);
+		
+		// Initialize with current wave from WaveManager (starts at 0, shows "No Wave Active")
+		updateWaveDisplay(getCurrentWave());
 	}
 
 	/**
@@ -80,10 +85,11 @@ public class CurrentWaveDisplay extends UIComponent {
 	}
 
 	/**
-	 * Gets the current wave being displayed as a string.
-	 * @return current wave string
+	 * Gets the current wave being displayed as a formatted string.
+	 * Returns "Wave X" for active waves or "No Wave Active" for wave 0.
+	 * @return formatted wave string for display
 	 */
-	public String getCurrentWave() {
+	public String getCurrentWaveString() {
 		if (currentWave > 0) {
 			return "Wave " + currentWave;
 		}

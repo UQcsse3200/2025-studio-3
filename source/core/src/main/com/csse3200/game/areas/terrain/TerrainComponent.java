@@ -54,6 +54,10 @@ public class TerrainComponent extends RenderComponent {
     }
   }
 
+  public Vector2 gridToWorldPosition(float x, float y) {
+    return new Vector2(x * tileSize, y * tileSize);
+  }
+
   public float getTileSize() {
     return tileSize;
   }
