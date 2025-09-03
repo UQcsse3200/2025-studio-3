@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class MoveLeftTaskTest {
     private Entity entity; // entity to test
-    private WanderTask wanderTask; // AI behaviour to test
+    private MoveLeftTask moveLeftTask; // AI behaviour to test
 
 
     @BeforeEach
@@ -48,8 +48,8 @@ class MoveLeftTaskTest {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent());
 
-        wanderTask = new WanderTask(new Vector2(2f, 2f), 1f);
-        wanderTask.create(new TaskRunner() {
+        moveLeftTask = new MoveLeftTask(1f);
+        moveLeftTask.create(new TaskRunner() {
             @Override
             public Entity getEntity() {
                 return entity;
@@ -65,8 +65,8 @@ class MoveLeftTaskTest {
         Vector2 initialPosition = new Vector2(5f, 5f);
         entity.setPosition(initialPosition);
         // set AI to begin its behaviour
-        wanderTask.start();
-        wanderTask.update();
+        moveLeftTask.start();
+        moveLeftTask.update();
 
         // verify iff entity has move left from its starting position
         Vector2 target = entity.getComponent(PhysicsMovementComponent.class).getTarget();
@@ -79,7 +79,7 @@ class MoveLeftTaskTest {
     // test to check priority of the task
     @Test
     void testPriority() {
-        assertEquals(1, wanderTask.getPriority(), "WanderTask priority is 1");
+        assertEquals(1, moveLeftTask.getPriority(), "WanderTask priority is 1");
 
     }
 
@@ -131,7 +131,7 @@ class MoveLeftTaskTest {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent());
         //create new task for this testing entity
-        WanderTask wanderTask = new WanderTask(new Vector2(2f, 2f), 1f);
+        MoveLeftTask wanderTask = new MoveLeftTask(1f);
         wanderTask.create(new TaskRunner() {
 
             @Override

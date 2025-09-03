@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -30,7 +30,7 @@ public class RobotFactory {
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
-                        .addTask(new WanderTask(new Vector2(2f, 2f), 2f));
+                        .addTask(new MoveLeftTask(5f));
 
         Entity robot = new Entity()
                 .addComponent(new PhysicsComponent())

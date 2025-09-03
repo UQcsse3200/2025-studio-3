@@ -45,6 +45,7 @@ class MovementTaskTest {
     assertEquals(Status.ACTIVE, task.getStatus());
   }
 
+  //TODO change this to be about speed
   @Test
   void shouldStopWhenClose() {
     MovementTask task = new MovementTask(new Vector2(10f, 10f), 2f);
