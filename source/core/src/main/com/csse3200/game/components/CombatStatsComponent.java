@@ -48,7 +48,12 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
+//    logger.info(String.valueOf(this.health));
     if (entity != null) {
+      if (this.health == 0) {
+        // Ask whoever spawned me to despawn this entity
+        entity.getEvents().trigger("despawnRobot", entity);
+      }
       entity.getEvents().trigger("updateHealth", this.health);
     }
   }
@@ -86,6 +91,11 @@ public class CombatStatsComponent extends Component {
 
   public void hit(CombatStatsComponent attacker) {
     int newHealth = getHealth() - attacker.getBaseAttack();
+
     setHealth(newHealth);
+
+    if (isDead() || getHealth() < 0) {
+      entity.getEvents().trigger("entityDeath");
+    }
   }
 }

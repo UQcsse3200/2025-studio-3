@@ -2,9 +2,10 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.components.tile.TileHitboxComponent;
-import com.csse3200.game.components.tile.TileInputComponent;
-import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.components.tile.TileStatusComponent;
+import com.csse3200.game.components.tile.TileStorageComponent;
+import com.csse3200.game.components.tile.TileInputComponent;
+
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 

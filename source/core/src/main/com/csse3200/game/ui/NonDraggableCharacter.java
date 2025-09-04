@@ -57,7 +57,6 @@ public class NonDraggableCharacter extends UIComponent {
         image.setPosition(offsetX, offsetY);
     }
 
-
     /**
      * Gets the current texture path of the character.
      * @return The texture path as a String.
@@ -89,7 +88,6 @@ public class NonDraggableCharacter extends UIComponent {
     public float getScale() {
         return this.scale;
     }
-
 
     /**
      * A function that checks if the 'R' key is pressed while the mouse is over the character image.

@@ -32,8 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 
-
-
 /**
  * The game screen containing the main game.
  *
@@ -42,9 +40,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  * https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
+
     private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
     private static final String[] mainGameTextures = { "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png" };
     private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
+    //private static final Vector2 CAMERA_POSITION = new Vector2(1f, 1f);
 
     private final GdxGame game;
     private final Renderer renderer;
@@ -90,6 +90,7 @@ public class MainGameScreen extends ScreenAdapter {
     levelGameArea.create();
 
     snapCameraBottomLeft();
+
   }
 
     @Override
@@ -102,7 +103,8 @@ public class MainGameScreen extends ScreenAdapter {
     @Override
     public void resize(int width, int height) {
         renderer.resize(width, height);
-        snapCameraBottomLeft();logger.trace("Resized renderer: ({} x {})", width, height);
+        snapCameraBottomLeft();
+        logger.trace("Resized renderer: ({} x {})", width, height);
     }
 
     @Override
