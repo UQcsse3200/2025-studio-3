@@ -3,6 +3,7 @@ package com.csse3200.game.components.settingsmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -72,25 +73,31 @@ public class SettingsMenuDisplay extends UIComponent {
     // Create components
     Label fpsLabel = new Label("FPS Cap:", skin);
     fpsText = new TextField(Integer.toString(settings.fps), skin);
+    whiten(fpsLabel);
 
     Label fullScreenLabel = new Label("Fullscreen:", skin);
     fullScreenCheck = new CheckBox("", skin);
     fullScreenCheck.setChecked(settings.fullscreen);
+    whiten(fullScreenLabel);
 
-    Label vsyncLabel = new Label("VSync:", skin);
+      Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
     vsyncCheck.setChecked(settings.vsync);
+    whiten(vsyncLabel);
 
     Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+    whiten(uiScaleLabel);
 
     Label displayModeLabel = new Label("Resolution:", skin);
     displayModeSelect = new SelectBox<>(skin);
     Monitor selectedMonitor = Gdx.graphics.getMonitor();
     displayModeSelect.setItems(getDisplayModes(selectedMonitor));
     displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
+      whiten(displayModeLabel);
+
 
     // Position Components on table
     Table table = new Table();
@@ -232,4 +239,14 @@ public class SettingsMenuDisplay extends UIComponent {
     rootTable.clear();
     super.dispose();
   }
+
+    /**
+     * Sets the provided label's font color to white by cloning their style
+     */
+    private static void whiten(Label label) {
+        Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+        st.fontColor = Color.WHITE;
+        label.setStyle(st);
+        logger.debug("Labels are white");
+    }
 }
