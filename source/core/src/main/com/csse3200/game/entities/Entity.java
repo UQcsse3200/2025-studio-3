@@ -301,6 +301,4 @@ public class Entity {
     return String.format("Entity{id=%d}", id);
   }
 
-    public void setPropery(String isProjectile, boolean b) {
-    }
 }
