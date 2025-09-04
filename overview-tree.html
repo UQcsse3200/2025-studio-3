@@ -76,6 +76,7 @@ loadScripts(document, 'script');</script>
 <li><a href="com/csse3200/game/components/statistics/package-tree.html">com.csse3200.game.components.statistics</a>, </li>
 <li><a href="com/csse3200/game/components/tasks/package-tree.html">com.csse3200.game.components.tasks</a>, </li>
 <li><a href="com/csse3200/game/components/tile/package-tree.html">com.csse3200.game.components.tile</a>, </li>
+<li><a href="com/csse3200/game/components/waves/package-tree.html">com.csse3200.game.components.waves</a>, </li>
 <li><a href="com/csse3200/game/concurrency/package-tree.html">com.csse3200.game.concurrency</a>, </li>
 <li><a href="com/csse3200/game/data/package-tree.html">com.csse3200.game.data</a>, </li>
 <li><a href="com/csse3200/game/entities/package-tree.html">com.csse3200.game.entities</a>, </li>
@@ -137,6 +138,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/TankyRobotConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">TankyRobotConfig</a></li>
 </ul>
 </li>
+<li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseWaveConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseWaveConfig</a></li>
 <li class="circle">com.csse3200.game.physics.<a href="com/csse3200/game/physics/BodyUserData.html" class="type-name-link" title="class in com.csse3200.game.physics">BodyUserData</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/Component.html" class="type-name-link" title="class in com.csse3200.game.components">Component</a>
 <ul>
@@ -193,6 +195,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/TextureRenderComponent.html" class="type-name-link" title="class in com.csse3200.game.rendering">TextureRenderComponent</a></li>
 <li class="circle">com.csse3200.game.ui.<a href="com/csse3200/game/ui/UIComponent.html" class="type-name-link" title="class in com.csse3200.game.ui">UIComponent</a> (implements com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a>)
 <ul>
+<li class="circle">com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></li>
 <li class="circle">com.csse3200.game.ui.<a href="com/csse3200/game/ui/DraggableCharacter.html" class="type-name-link" title="class in com.csse3200.game.ui">DraggableCharacter</a></li>
 <li class="circle">com.csse3200.game.components.gamearea.<a href="com/csse3200/game/components/gamearea/GameAreaDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.gamearea">GameAreaDisplay</a></li>
 <li class="circle">com.csse3200.game.components.hud.<a href="com/csse3200/game/components/hud/HudDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.hud">HudDisplay</a></li>
@@ -249,6 +252,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/DefenceFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">DefenceFactory</a></li>
 <li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" class="type-name-link" title="class in com.csse3200.game.entities">Entity</a></li>
 <li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/EntityService.html" class="type-name-link" title="class in com.csse3200.game.entities">EntityService</a></li>
+<li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/EntitySpawn.html" class="type-name-link" title="class in com.csse3200.game.entities">EntitySpawn</a></li>
 <li class="circle">com.csse3200.game.events.<a href="com/csse3200/game/events/EventHandler.html" class="type-name-link" title="class in com.csse3200.game.events">EventHandler</a></li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/FileLoader.html" class="type-name-link" title="class in com.csse3200.game.persistence">FileLoader</a></li>
 <li class="circle">com.badlogic.gdx.Game (implements com.badlogic.gdx.ApplicationListener)
@@ -340,6 +344,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></li>
 <li class="circle">com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" class="type-name-link" title="class in com.csse3200.game.utils.math">Vector2Utils</a></li>
 <li class="circle">com.csse3200.game.progression.wallet.<a href="com/csse3200/game/progression/wallet/Wallet.html" class="type-name-link" title="class in com.csse3200.game.progression.wallet">Wallet</a></li>
+<li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/WaveConfigs.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">WaveConfigs</a></li>
+<li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/WaveFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">WaveFactory</a></li>
+<li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" class="type-name-link" title="class in com.csse3200.game.entities">WaveManager</a></li>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/WorldMapScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">WorldMapScreen</a> (implements com.badlogic.gdx.Screen)</li>
 </ul>
 </li>
