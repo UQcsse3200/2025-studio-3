@@ -4,11 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
@@ -16,20 +15,22 @@ import com.badlogic.gdx.files.FileHandle;
 import com.csse3200.game.GdxGame;
 
 public class WorldMapScreen implements Screen {
-
     private final GdxGame game;
-
-    private com.badlogic.gdx.graphics.Texture worldMap;
     private SpriteBatch batch;
     private OrthographicCamera camera;
-    private BitmapFont font;
-    private ShapeRenderer shapeRenderer;
+
+    private Texture worldMap;
+    private Texture nodeCompleted, nodeUnlocked;
+    private Texture lockedLevel1, lockedLevel2;
+    private Texture playerTex, backButton;
 
     private Node[] nodes;
     private Vector2 playerPos;
     private float playerSpeed = 200f;
-
     private Node nearbyNode = null;
+
+    private Rectangle backBtnBounds;
+    private BitmapFont font;
 
     public WorldMapScreen(GdxGame game) {
         this.game = game;
@@ -37,98 +38,102 @@ public class WorldMapScreen implements Screen {
 
     @Override
     public void show() {
-        worldMap = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("images/world_map.png"));
-
         batch = new SpriteBatch();
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false);
 
-        font = new BitmapFont();
-        shapeRenderer = new ShapeRenderer();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
+        worldMap = new Texture(Gdx.files.internal("images/world_map.png"));
+        nodeCompleted = new Texture(Gdx.files.internal("images/node_completed.png"));
+        nodeUnlocked = new Texture(Gdx.files.internal("images/node_unlocked.png"));
+        lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
+        lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
+        playerTex = new Texture(Gdx.files.internal("images/character.png"));
+        backButton = new Texture(Gdx.files.internal("images/back_button.png"));
 
         FileHandle file = Gdx.files.internal("data/nodes.json");
         Json json = new Json();
         nodes = json.fromJson(Node[].class, file);
 
+        playerPos = new Vector2(
+                nodes[0].px * Gdx.graphics.getWidth(),
+                nodes[0].py * Gdx.graphics.getHeight()
+        );
 
-        playerPos = new Vector2(142, 269);
+        backBtnBounds = new Rectangle(20, Gdx.graphics.getHeight() - 140, 120, 120);
 
+        font = new BitmapFont();
+        font.setColor(Color.WHITE);
+        font.getData().setScale(2f);
     }
 
     @Override
     public void render(float delta) {
-
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         camera.update();
         batch.setProjectionMatrix(camera.combined);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += playerSpeed * delta;
 
         batch.begin();
+
         batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
+        batch.draw(backButton, backBtnBounds.x, backBtnBounds.y, backBtnBounds.width, backBtnBounds.height);
 
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         for (Node node : nodes) {
-            if (node.locked) {
-                shapeRenderer.setColor(Color.RED);
+            Texture nodeTex;
+            if (node.completed) {
+                nodeTex = nodeCompleted;
+            } else if (node.unlocked) {
+                nodeTex = nodeUnlocked;
+            } else if (node.level == 2) {
+                nodeTex = lockedLevel1;
             } else {
-                shapeRenderer.setColor(Color.GREEN);
+                nodeTex = lockedLevel2;
             }
-            shapeRenderer.circle(node.px, node.py, 16);
-        }
 
+            float x = node.px * Gdx.graphics.getWidth();
+            float y = node.py * Gdx.graphics.getHeight();
+            batch.draw(nodeTex, x, y, 80, 80);
 
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.rect(playerPos.x, playerPos.y, 32, 32);
-        shapeRenderer.end();
-
-
-        nearbyNode = null;
-        for (Node node : nodes) {
-            Rectangle nodeRect = new Rectangle(node.px - 16, node.py - 16, 32, 32);
-            Rectangle playerRect = new Rectangle(playerPos.x, playerPos.y, 32, 32);
-            if (playerRect.overlaps(nodeRect)) {
+            if (playerPos.dst(x, y) < 60) {
                 nearbyNode = node;
-                break;
+                String prompt = (nearbyNode.level == 1) ? "Press E to Start" : "Press E to Checkpoint";
+                font.draw(batch, prompt, x, y + 100);
             }
         }
 
+        batch.draw(playerTex, playerPos.x, playerPos.y, 96, 96);
 
-        batch.begin();
-        if (nearbyNode != null) {
-            font.draw(batch, "Press E to " + nearbyNode.label,
-                    nearbyNode.px, nearbyNode.py + 50);
-        }
         batch.end();
 
-
-        if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            if (nearbyNode.locked) {
-                System.out.println("Level is locked: " + nearbyNode.lockReason);
-            } else {
-                System.out.println("Loading level: " + nearbyNode.label);
-            }
-        }
-
-
-        if (Gdx.input.justTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.graphics.getHeight() - Gdx.input.getY();
-            System.out.println("Clicked at: (" + x + ", " + y + ")");
-        }
+        handleInput(delta);
     }
 
+    private void handleInput(float delta) {
+        float moveAmount = playerSpeed * delta;
 
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += moveAmount;
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= moveAmount;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= moveAmount;
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
+
+        if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+            float mx = Gdx.input.getX();
+            float my = Gdx.graphics.getHeight() - Gdx.input.getY();
+
+            if (backBtnBounds.contains(mx, my)) {
+                game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+            }
+        }
+
+        if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            if (nearbyNode.level == 1) {
+                System.out.println("🚀 Starting Level 1!");
+                game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+            } else {
+                System.out.println("✅ Checkpoint reached at Level " + nearbyNode.level);
+                nearbyNode.unlocked = true;
+            }
+        }
+    }
 
     @Override
     public void resize(int width, int height) {
@@ -141,10 +146,14 @@ public class WorldMapScreen implements Screen {
 
     @Override
     public void dispose() {
-        worldMap.dispose();
         batch.dispose();
+        worldMap.dispose();
+        nodeCompleted.dispose();
+        nodeUnlocked.dispose();
+        lockedLevel1.dispose();
+        lockedLevel2.dispose();
+        playerTex.dispose();
+        backButton.dispose();
         font.dispose();
-        shapeRenderer.dispose();
     }
 }
-
