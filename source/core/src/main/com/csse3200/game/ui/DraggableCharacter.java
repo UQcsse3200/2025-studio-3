@@ -126,6 +126,38 @@ public class DraggableCharacter extends UIComponent {
         image.setPosition(offsetX, offsetY);
     }
 
+    /**
+     * Gets the current texture path of the character.
+     * @return The texture path as a String.
+     */
+    public String getTexturePath() {
+        return this.texturePath;
+    }
+
+    /**
+     * Gets the current X offset of the character image.
+     * @return The X offset as a float.
+     */
+    public float getOffsetX() {
+        return this.offsetX;
+    }
+
+    /**
+     * Gets the current Y offset of the character image.
+     * @return The Y offset as a float.
+     */
+    public float getOffsetY() {
+        return this.offsetY;
+    }
+
+    /**
+     * Gets the current scale of the character image.
+     * @return The scale as a float.
+     */
+    public float getScale() {
+        return this.scale;
+    }
+
 
 
     /**
