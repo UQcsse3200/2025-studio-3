@@ -105,11 +105,11 @@ public class ForestGameArea extends GameArea {
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity slingShooter = DefenceFactory.createSlingShooter();
+    Entity slingShooter = DefenceFactory.createSlingShooter(robots);
 
     spawnEntityAt(slingShooter, randomPos, true, true);
     slingShooter.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
-    slingShooter.getEvents().trigger("attackStart");
+    slingShooter.getEvents().trigger("idleStart");
   }
 
   private void displayUI() {
@@ -267,7 +267,7 @@ public class ForestGameArea extends GameArea {
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
-    }
+      }
   }
 
   private void unloadAssets() {

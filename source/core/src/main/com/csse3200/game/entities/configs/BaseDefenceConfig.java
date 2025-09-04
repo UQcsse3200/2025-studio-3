@@ -2,7 +2,7 @@ package com.csse3200.game.entities.configs;
 
 
 /**
- * Defines the properties stored in sigma config files to be loaded by the NPC Factory.
+ * Defines the properties stored in defences.json to be loaded by the NPC Factory.
  */
 public class BaseDefenceConfig extends BaseEntityConfig {
     /* 
