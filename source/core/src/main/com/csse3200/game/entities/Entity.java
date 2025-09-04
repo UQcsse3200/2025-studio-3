@@ -10,6 +10,9 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Core entity class. Entities exist in the game and are updated each frame. All entities have a
  * position and scale, but have no default behaviour. Components should be added to an entity to
@@ -38,6 +41,8 @@ public class Entity {
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
 
+  private final int coins = 5; // number of coins to add when enemy is killed
+
   public Entity() {
     id = nextId;
     nextId++;
@@ -46,7 +51,11 @@ public class Entity {
     eventHandler = new EventHandler();
   }
 
-  /**
+    public int getCoins() {
+        return coins;
+    }
+
+    /**
    * Enable or disable an entity. Disabled entities do not run update() or earlyUpdate() on their
    * components, but can still be disposed.
    *
@@ -140,6 +149,19 @@ public class Entity {
     this.scale.x = x;
   }
 
+    /**
+     * this sets the property like isProjectile and returns the value when asked for.
+     * @param name is the name of property like isProjectile
+     * @param value is the value of property like true
+     */
+    private Map<String,Object> property = new HashMap<>();
+  public Entity setProperty(String name, Object value) {
+    property.put(name, value);
+    return this;
+  }
+  public Object getProperty(String name) {
+    return  property.get(name);
+  }
   /**
    * Set the entity's height and scale the width to maintain aspect ratio.
    *
@@ -284,4 +306,5 @@ public class Entity {
   public String toString() {
     return String.format("Entity{id=%d}", id);
   }
+
 }

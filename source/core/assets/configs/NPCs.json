@@ -1,16 +1,32 @@
 {
-  "ghost": {
+  "fastRobot": {
     "health": 40,
-    "baseAttack": 10
+    "baseAttack": 10,
+    "speed": 5
+  },
+  "standardRobot": {
+    "health": 60,
+    "baseAttack": 10,
+    "speed": 2
+  },
+  "tankyRobot": {
+    "health": 100,
+    "baseAttack": 20,
+    "speed": 1
+  },
+  "ghost": {
+    "health": 1,
+    "baseAttack": 20,
+    "speed": 1
   },
   "robot": {
     "health": 40,
     "baseAttack": 10
   },
   "ghostKing": {
-    "health": 100,
-    "baseAttack": 25,
-    "spookyFactor": 7
+    "health": 1,
+    "baseAttack": 20,
+    "speed": 1
   }
 }
 

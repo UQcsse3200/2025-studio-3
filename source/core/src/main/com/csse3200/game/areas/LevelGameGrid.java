@@ -11,6 +11,7 @@ public class LevelGameGrid {
     private final int cols;
     private final int num_tiles;
 
+
     /**
      * Class constructor for LevelGameGrid.
      * @param rows number of rows in the level game grid.
