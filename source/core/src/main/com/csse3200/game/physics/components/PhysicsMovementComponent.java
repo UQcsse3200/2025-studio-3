@@ -89,8 +89,9 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     body.applyLinearImpulse(impulse, body.getWorldCenter(), true);
   }
 
-  private Vector2 getDirection() {
+  public Vector2 getDirection() {
     // Move towards targetPosition based on our current position
+    if (targetPosition == null) return new Vector2(1,0);
     return targetPosition.cpy().sub(entity.getPosition()).nor();
   }
 }

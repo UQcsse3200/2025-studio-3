@@ -89,6 +89,12 @@ public class TerrainFactory {
     }
   }
 
+  /**
+   * Creates the map for a game level
+   *
+   * @param levelMap the map to create
+   * @return the Terrain Component
+   */
   private TerrainComponent createLevelMap(TextureRegion levelMap) {
     // Scale based on height so image fills viewport vertically
     float worldHeight = camera.viewportHeight;

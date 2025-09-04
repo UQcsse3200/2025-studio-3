@@ -34,10 +34,11 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/box_boy_title.png", Texture.class));
 
-    TextButton startBtn = new TextButton("Start", skin);
-    TextButton loadBtn = new TextButton("Load", skin);
-    TextButton settingsBtn = new TextButton("Settings", skin);
-    TextButton exitBtn = new TextButton("Exit", skin);
+        TextButton startBtn = new TextButton("Start", skin);
+        TextButton loadBtn = new TextButton("Load", skin);
+        TextButton worldMapBtn = new TextButton("World Map", skin);
+        TextButton settingsBtn = new TextButton("Settings", skin);
+        TextButton exitBtn = new TextButton("Exit", skin);
 
     // Triggers an event when the button is pressed
     startBtn.addListener(
@@ -67,42 +68,53 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
-    exitBtn.addListener(
-      new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
+        worldMapBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("World Map button clicked");
+                entity.getEvents().trigger("worldMap");
+            }
+        });
 
-          logger.debug("Exit button clicked");
-          entity.getEvents().trigger("exit");
-        }
-      });
+        exitBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
 
-    table.add(title);
-    table.row();
-    table.add(startBtn).padTop(30f);
-    table.row();
-    table.add(loadBtn).padTop(15f);
-    table.row();
-    table.add(settingsBtn).padTop(15f);
-    table.row();
-    table.add(exitBtn).padTop(15f);
+            logger.debug("Exit button clicked");
+            entity.getEvents().trigger("exit");
+          }
+        });
 
-    stage.addActor(table);
-  }
+        table.add(title);
 
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
+        table.row();
+        table.add(startBtn).padTop(30f);
+        table.row();
+        table.add(loadBtn).padTop(15f);
+        table.row();
+        table.add(settingsBtn).padTop(15f);
+        table.row();
+        table.add(worldMapBtn).padTop(15f);
+        table.row();
+        table.add(exitBtn).padTop(15f);
 
-  @Override
-  public float getZIndex() {
-    return Z_INDEX;
-  }
+        stage.addActor(table);
+    }
 
-  @Override
-  public void dispose() {
-    table.clear();
-    super.dispose();
-  }
+    @Override
+    public void draw(SpriteBatch batch) {
+        // draw is handled by the stage
+    }
+
+    @Override
+    public float getZIndex() {
+        return Z_INDEX;
+    }
+
+    @Override
+    public void dispose() {
+        table.clear();
+        super.dispose();
+    }
 }

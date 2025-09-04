@@ -3,6 +3,8 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.movement.MovementController;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.entities.Entity;
@@ -10,6 +12,8 @@ import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -17,6 +21,8 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
 
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
@@ -38,11 +44,11 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png"
-
+    "images/iso_grass_3.png",
+    "images/sling_shooter.png"
   };
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas"
+    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas"
   };
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
@@ -123,6 +129,45 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnLaser(Entity entity){
+      autofire(entity,() -> {
+          Entity laser = ObstacleFactory.createLaser();
+
+          HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
+          if(hitbox == null){
+              hitbox = new HitboxComponent();
+              hitbox.setSensor(true);
+              laser.addComponent(hitbox);
+          }else{
+              hitbox.setSensor(true);
+          }
+
+          Vector2 ePos = entity.getPosition();
+          Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
+          float offset = 1.0f;
+          Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
+          GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
+          spawnEntityAt(laser, entityPos, true, true);
+      });
+  }
+
+    /**
+     * autofire -> Sets an automatic fire rate for projectiles
+     * @param entity Entity from which projectiles will spawn
+     * @param SpawnAction The instructions to deploy the said parameter
+     */
+  private void autofire(Entity entity, Runnable SpawnAction){
+      final float initdelay = 2.0f;
+      final float firerate = 0.5f;
+
+      Timer.schedule(new Timer.Task(){
+          @Override
+          public void run(){
+              SpawnAction.run();
+          }
+      },initdelay, firerate);
   }
 
   private Entity spawnPlayer() {

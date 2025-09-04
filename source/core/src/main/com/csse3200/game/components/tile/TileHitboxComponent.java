@@ -15,7 +15,17 @@ public class TileHitboxComponent extends Component {
     private float minPosX;
     private float minPosY;
 
+    /**
+     * Constructor for the TileHitboxComponent
+     * @param maxPosX The highest x value of the tile
+     * @param maxPosY The highest y value of the tile
+     * @param minPosX The lowest x value of the tile
+     * @param minPosY The lowest y value of the tile
+     */
     public TileHitboxComponent(float maxPosX, float maxPosY, float minPosX, float minPosY) {
+        if (maxPosX <= minPosX || maxPosY <= minPosY) {
+            throw new IllegalArgumentException("The max x and y values must be bigger than the min x and y values");
+        }
         this.maxPosX = maxPosX;
         this.maxPosY = maxPosY;
         this.minPosX = minPosX;
@@ -54,7 +64,12 @@ public class TileHitboxComponent extends Component {
         this.minPosY = minPosY;
     }
 
+    /**
+     * Checks if the provided position is in the hitbox of the tile
+     * @param pos a GridPoint2 that contains the x and y of the point being checked
+     * @return a boolean depending on if the given point in the hitbox(true) or not(false)
+     */
     public boolean inTileHitbox(GridPoint2 pos) {
-        return pos.x > minPosX && pos.x < maxPosX && pos.y > minPosY && pos.y < maxPosY;
+        return pos.x >= minPosX && pos.x <= maxPosX && pos.y >= minPosY && pos.y <= maxPosY;
     }
 }
