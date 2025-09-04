@@ -23,6 +23,8 @@ public class ServiceLocator {
   private static GameTime timeSource;
   private static InputService inputService;
   private static ResourceService resourceService;
+  private static CurrencyService currencyService;
+
   private static MenuSpriteService menuSpriteService;
 
   public static EntityService getEntityService() {
@@ -48,6 +50,8 @@ public class ServiceLocator {
   public static ResourceService getResourceService() {
     return resourceService;
   }
+
+  public static CurrencyService getCurrencyService() { return currencyService; }
 
   public static MenuSpriteService getMenuSpriteService() {
     return menuSpriteService;
@@ -83,6 +87,11 @@ public class ServiceLocator {
     resourceService = source;
   }
 
+  public static void registerCurrencyService(CurrencyService source) {
+      logger.debug("Registering currency service {}", source);
+      currencyService = source;
+  }
+
   public static void registerMenuSpriteService(MenuSpriteService source) {
     logger.debug("Registering menu sprite service {}", source);
     menuSpriteService = source;
@@ -95,9 +104,11 @@ public class ServiceLocator {
     timeSource = null;
     inputService = null;
     resourceService = null;
+    currencyService = null;
   }
 
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
+
 }

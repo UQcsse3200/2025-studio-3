@@ -3,13 +3,18 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.movement.MovementController;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
@@ -46,14 +51,18 @@ public class ForestGameArea extends GameArea {
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas",
     "images/iso_grass_3.png",
-    "images/robot_placeholder.png"
+    "images/robot_placeholder.png",
+    "images/iso_grass_3.png",
+          "images/normal_sunlight.png",
+          "images/sling_shooter.png"
   };
 
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] forestMusic = {backgroundMusic};
 
-  private final TerrainFactory terrainFactory;
+    private final TerrainFactory terrainFactory;
+    private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
   private final ArrayList<Entity> robots = new ArrayList<>();
@@ -84,7 +93,10 @@ public class ForestGameArea extends GameArea {
     spawnDefences();
     spawnGhosts();
     spawnGhostKing();
+
     spawnRobots();
+    spawnSun();
+
     playMusic();
   }
 
@@ -145,6 +157,45 @@ public class ForestGameArea extends GameArea {
       Entity tree = ObstacleFactory.createTree();
       spawnEntityAt(tree, randomPos, true, false);
     }
+  }
+
+  private void spawnLaser(Entity entity){
+      autofire(entity,() -> {
+          Entity laser = ObstacleFactory.createLaser();
+
+          HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
+          if(hitbox == null){
+              hitbox = new HitboxComponent();
+              hitbox.setSensor(true);
+              laser.addComponent(hitbox);
+          }else{
+              hitbox.setSensor(true);
+          }
+
+          Vector2 ePos = entity.getPosition();
+          Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
+          float offset = 1.0f;
+          Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
+          GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
+          spawnEntityAt(laser, entityPos, true, true);
+      });
+  }
+
+    /**
+     * autofire -> Sets an automatic fire rate for projectiles
+     * @param entity Entity from which projectiles will spawn
+     * @param SpawnAction The instructions to deploy the said parameter
+     */
+  private void autofire(Entity entity, Runnable SpawnAction){
+      final float initdelay = 2.0f;
+      final float firerate = 0.5f;
+
+      Timer.schedule(new Timer.Task(){
+          @Override
+          public void run(){
+              SpawnAction.run();
+          }
+      },initdelay, firerate);
   }
 
   private Entity spawnPlayer() {
@@ -227,6 +278,19 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
   }
+
+    private void spawnSun() {
+        Entity sunSpawner = new Entity();
+
+        currencyGenerator = new CurrencyGeneratorComponent(
+                5f,
+                25,
+                "images/normal_sunlight.png"
+        );
+
+        sunSpawner.addComponent(currencyGenerator);
+        spawnEntity(sunSpawner);
+    }
 
   @Override
   public void dispose() {

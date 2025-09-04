@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
+
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
@@ -9,7 +10,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  * This factory creates the grid and the tiles in the grid.
  */
 public class GridFactory {
-
 
     /**
      * Creates a tile entity

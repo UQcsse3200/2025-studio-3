@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * renderables each frame.
  */
 public class Renderer implements Disposable {
-  private static final float GAME_SCREEN_WIDTH = 20f;
+  public static final float GAME_SCREEN_WIDTH = 1280f;
   private static final Logger logger = LoggerFactory.getLogger(Renderer.class);
 
   private CameraComponent camera;
@@ -95,6 +95,8 @@ public class Renderer implements Disposable {
     Matrix4 projMatrix = camera.getProjectionMatrix();
     batch.setProjectionMatrix(projMatrix);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    batch.setColor(1f,1f,1f,1f);
 
     batch.begin();
     renderService.render(batch);
