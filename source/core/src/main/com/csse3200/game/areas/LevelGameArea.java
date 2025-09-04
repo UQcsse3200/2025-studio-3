@@ -42,7 +42,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     };
 
     private static final String[] levelTextureAtlases = {
-            "images/ghost.atlas", "images/ghostKing.atlas"
+            "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
     };
 
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};
