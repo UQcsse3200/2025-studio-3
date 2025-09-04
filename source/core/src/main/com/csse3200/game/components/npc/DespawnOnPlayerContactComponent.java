@@ -2,12 +2,18 @@ package com.csse3200.game.components.npc;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.csse3200.game.services.ServiceLocator;
 
 public class DespawnOnPlayerContactComponent extends Component {
     private final short targetLayer;
     private HitboxComponent hitbox;
+    private final Logger logger = LoggerFactory.getLogger(DespawnOnPlayerContactComponent.class);
+
 
     public DespawnOnPlayerContactComponent(short targetLayer) {
         this.targetLayer = targetLayer; // e.g., PhysicsLayer.PLAYER
@@ -28,5 +34,10 @@ public class DespawnOnPlayerContactComponent extends Component {
 
         // Ask whoever spawned me to despawn this entity
         entity.getEvents().trigger("despawnRobot", entity);
+        logger.info("DespawnOnPlayerContactComponent: despawning entity {}", entity);
+
+
     }
+
+
 }
