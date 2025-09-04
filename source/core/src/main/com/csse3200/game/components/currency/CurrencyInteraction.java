@@ -8,14 +8,20 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.math.Interpolation;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CurrencyInteraction extends Image {
+    private static final Logger logger = LoggerFactory.getLogger(CurrencyInteraction.class);
+
     private final int value;
 
     public CurrencyInteraction(Texture texture, int value) {
         super(texture);
         this.value = value;
+        logger.debug("CurrencyInteraction created");
+
         setSize(128, 128);
         setOrigin(getWidth()/ 2f, getHeight()/2f);
         setColor(getColor().r, getColor().g, getColor().b, 1f);
@@ -39,8 +45,9 @@ public class CurrencyInteraction extends Image {
     }
 
     private void onClicked() {
-        System.out.println("Sun clicked!");
+        logger.debug("CurrencyInteraction onClicked");
         setTouchable(Touchable.disabled);
+        clearActions();
         float padding = 16f;
         float targetX = padding;
         float targetY = getStage().getHeight() - padding - getHeight();
@@ -54,8 +61,14 @@ public class CurrencyInteraction extends Image {
                 ),
                 Actions.run(() -> {
                     ServiceLocator.getCurrencyService().add(value);
-                    remove();
+                    dispose();
                 })
         ));
+    }
+
+    public void dispose() {
+        clearActions();
+        clearListeners();
+        remove();
     }
 }

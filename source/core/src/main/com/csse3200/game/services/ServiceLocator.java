@@ -52,9 +52,9 @@ public class ServiceLocator {
 
   public static CurrencyService getCurrencyService() { return currencyService; }
 
-    public static MenuSpriteService getMenuSpriteService() {
-        return menuSpriteService;
-    }
+  public static MenuSpriteService getMenuSpriteService() {
+    return menuSpriteService;
+  }
 
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
@@ -89,6 +89,11 @@ public class ServiceLocator {
   public static void registerCurrencyService(CurrencyService source) {
       logger.debug("Registering currency service {}", source);
       currencyService = source;
+  }
+
+  public static void registerMenuSpriteService(MenuSpriteService source) {
+    logger.debug("Registering menu sprite service {}", source);
+    menuSpriteService = source;
   }
 
   public static void clear() {

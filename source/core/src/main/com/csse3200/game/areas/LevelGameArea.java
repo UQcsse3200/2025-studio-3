@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
@@ -37,6 +38,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/box_boy.png",
             "images/robot_placeholder.png",
             "images/selected_star.png"
+            "images/selected_star.png",
+            "images/normal_sunlight.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -48,6 +51,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private static final String[] levelMusic = {backgroundMusic};
 
     private final TerrainFactory terrainFactory;
+    private CurrencyGeneratorComponent currencyGenerator;
 
     // Offset values
     private final float xOffset;
@@ -101,6 +105,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
 
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
+
+        spawnSun();
 
         playMusic();
     }
@@ -342,6 +348,19 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawned_units[position] = null;
 
         logger.info("Unit deleted at position {}", position);
+    }
+
+    private void spawnSun() {
+        Entity sunSpawner = new Entity();
+
+        currencyGenerator = new CurrencyGeneratorComponent(
+                5f,
+                25,
+                "images/normal_sunlight.png"
+        );
+
+        sunSpawner.addComponent(currencyGenerator);
+        spawnEntity(sunSpawner);
     }
 
     /**
