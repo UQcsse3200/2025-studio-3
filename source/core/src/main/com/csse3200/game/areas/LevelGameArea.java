@@ -1,17 +1,14 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
-import com.badlogic.gdx.graphics.Texture;
-
-import com.csse3200.game.components.InventoryUnitInputComponent;
-import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
-import com.csse3200.game.components.tile.TileStatusComponent;
-
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -19,7 +16,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a
@@ -37,8 +33,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/olive_tile.png",
             "images/green_tile.png",
             "images/box_boy.png",
-            "images/selected_star.png",
-            "images/normal_sunlight.png"
+            "images/selected_star.png"
     };
 
     private static final String[] levelTextureAtlases = {
@@ -48,28 +43,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};
     private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
     private static final String[] levelMusic = {backgroundMusic};
-
     private final TerrainFactory terrainFactory;
-    private CurrencyGeneratorComponent currencyGenerator;
 
-    // Offset values from the bottom left corner of the screen for the grid's starting point
-    private float xOffset = 2.9f; //this meant to be final??
-    private float yOffset = 1.45f;
-
+    // Offset values
+    private final float xOffset;
+    private final float yOffset;
     private final float tileSize ;
     private final float invStartX;
     private final float invY;
     private final float invSelectedY;
-
-    // Space occupied by the grid within the level game screen
-    private final float gridHeight = 7f;
-    private final float gridWidth = 14f;
-
-    private final int levelOneRows = 5;
-    private final int levelOneCols = 10;
-
-    private final int levelTwoRows = 7;
-    private final int levelTwoCols = 14;
 
     private LevelGameGrid grid;
     private final Entity[] spawned_units;
@@ -82,8 +64,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
      */
     public LevelGameArea(TerrainFactory terrainFactory) {
         super();
-        this.terrainFactory = terrainFactory;
-// Calculate scaling
+
+        // Calculate scaling
         float stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
         float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
         float stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
@@ -97,30 +79,27 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
         invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
 
+        this.terrainFactory = terrainFactory;
         selected_unit = null; // None selected at level load
         spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
         selection_star = null;
     }
 
+    /**
+     * Creates the game area by calling helper methods as required.
+     */
     @Override
     public void create() {
         loadAssets();
-
         displayUI();
 
         spawnMap();
-        float scale = gridHeight / levelOneRows;
-        spawnGrid(levelOneRows, levelOneCols, scale);
-        //float scale = gridHeight / levelTwoRows;
-        //spawnGrid(levelTwoRows, levelTwoCols, scale);
-//        spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-//        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
-//        placeInventoryUnit(2, "images/ghost_king.png");
-        spawnSun();
 
+        spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
+        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
+        placeInventoryUnit(2, "images/ghost_king.png");
 
         playMusic();
-
     }
 
     /**
@@ -150,7 +129,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnEntity(ui);
     }
 
-
     /**
      * Creates the map in the {@link TerrainFactory} and spawns it in the correct position.
      */
@@ -169,7 +147,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         GridPoint2 bounds = terrain.getMapBounds(0);
         float worldWidth = bounds.x * tileWidth;
         float worldHeight = bounds.y * tileHeight;
-
         mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
 
         spawnEntity(mapEntity);
@@ -181,24 +158,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
      * @param rows an int that is the number of rows wanted for the grid
      * @param cols an int that is the number of columns wanted for the grid
      */
-    private void spawnGrid(int rows, int cols, float scale) {
-        LevelGameGrid grid = new LevelGameGrid(rows, cols);
+    private void spawnGrid(int rows, int cols) {
+        grid = new LevelGameGrid(rows, cols);
         for (int i = 0; i < rows * cols; i++) {
             Entity tile;
             // Calc tile position
-            float tileX = xOffset + scale * (i % cols);
-            float tileY = yOffset + scale * (float)(i / cols);
+            float tileX = xOffset + tileSize * (i % cols);
+            float tileY = yOffset + tileSize * (float) (i / cols);
             // logic for alternating tile images
             if ((i / cols) % 2 == 1) {
-                tile = GridFactory.createTile(i % 2, scale, tileX, tileY, this);
+                tile = GridFactory.createTile(i % 2, tileSize, tileX, tileY, this);
             } else {
-                tile = GridFactory.createTile(1 - (i % 2), scale, tileX, tileY, this);
+                tile = GridFactory.createTile(1 - (i % 2), tileSize, tileX, tileY, this);
             }
             tile.setPosition(tileX, tileY);
+            tile.getComponent(TileStatusComponent.class).set_position(i);
             grid.addTile(i, tile);
             spawnEntity(tile);
         }
-        this.grid = grid;
     }
 
     /**
@@ -337,19 +314,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         logger.info("Unit deleted at position {}", position);
     }
 
-    private void spawnSun() {
-        Entity sunSpawner = new Entity();
-
-        currencyGenerator = new CurrencyGeneratorComponent(
-                5f,
-                25,
-                "images/normal_sunlight.png"
-        );
-
-        sunSpawner.addComponent(currencyGenerator);
-        spawnEntity(sunSpawner);
-    }
-
     /**
      * Getter for tile size in world units
      *
@@ -360,5 +324,4 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         return tileSize;
     }
 }
-
 
