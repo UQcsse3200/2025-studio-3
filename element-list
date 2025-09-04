@@ -33,6 +33,7 @@ com.csse3200.game.exceptions
 com.csse3200.game.input
 com.csse3200.game.persistence
 com.csse3200.game.physics
+com.csse3200.game.physics.attacking_system
 com.csse3200.game.physics.components
 com.csse3200.game.physics.raycast
 com.csse3200.game.progression
