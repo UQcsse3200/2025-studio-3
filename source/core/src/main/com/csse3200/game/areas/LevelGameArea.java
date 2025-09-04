@@ -35,7 +35,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/olive_tile.png",
             "images/green_tile.png",
             "images/box_boy.png",
-            "images/robot_placeholder.png"
+            "images/robot_placeholder.png",
             "images/selected_star.png"
     };
 
@@ -101,15 +101,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
 
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        //float scale = gridHeight / levelTwoRows;
-        //spawnGrid(levelTwoRows, levelTwoCols, scale);
-        // TODO Spawning the robots too close together will cause them to collide. They should not do that.
-        Entity robot1 = spawnRobotAtTile(new GridPoint2(9,4), true, true);
-        Entity robot2 = spawnRobotAtTile(new GridPoint2(9,2), true, true, "fast");
-        Entity robot3 = spawnRobotAtTile(new GridPoint2(9,0), true, true, "tanky");
-        robots.add(robot1);
-        robots.add(robot2);
-        robots.add(robot3);
+
         playMusic();
     }
 
@@ -198,13 +190,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
      */
     public void checkGameOver() {
 
-        float cellWidth = gridWidth / levelOneCols;  // match the spawnGrid scale
-        float cellHeight = gridHeight / levelOneRows;
+
         // calculate grid position from the world position
         for (Entity robot : robots) {
             Vector2 worldPos = robot.getPosition();
-            int gridX = (int) ((worldPos.x - xOffset) / cellWidth);
-            int gridY = (int) ((worldPos.y - yOffset) / cellHeight);
+            int gridX = (int) ((worldPos.x - xOffset) / tileSize);
+            int gridY = (int) ((worldPos.y - yOffset) / tileSize);
             logger.info("Robot grid location: {}", gridX);
 
             //check iff robot has reached the left boundary column (i.e the end)

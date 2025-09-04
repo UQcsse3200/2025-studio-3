@@ -21,7 +21,7 @@ public class GridFactory {
      * @param y the y value for the new tile
      * @return the newly created tile
      */
-    public static Entity createTile(int imageStatus, float scale, float x, float y) {
+    public static Entity createTile(int imageStatus, float scale, float x, float y, AreaAPI area) {
         // for alternating tile variants
         String image_path;
         if (imageStatus == 1) {
