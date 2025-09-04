@@ -190,9 +190,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             float tileY = yOffset + scale * (float)(i / cols);
             // logic for alternating tile images
             if ((i / cols) % 2 == 1) {
-                tile = GridFactory.createTile(i % 2, scale, tileX, tileY);
+                tile = GridFactory.createTile(i % 2, scale, tileX, tileY, this);
             } else {
-                tile = GridFactory.createTile(1 - (i % 2), scale, tileX, tileY);
+                tile = GridFactory.createTile(1 - (i % 2), scale, tileX, tileY, this);
             }
             tile.setPosition(tileX, tileY);
             grid.addTile(i, tile);
