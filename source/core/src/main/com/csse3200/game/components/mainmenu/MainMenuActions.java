@@ -7,10 +7,6 @@ import com.csse3200.game.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * This class listens to events relevant to the Main Menu Screen and does something when one of the
- * events is triggered.
- */
 public class MainMenuActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
   private GdxGame game;
@@ -19,13 +15,14 @@ public class MainMenuActions extends Component {
     this.game = game;
   }
 
-  @Override
-  public void create() {
-    entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("load", this::onLoad);
-    entity.getEvents().addListener("exit", this::onExit);
-    entity.getEvents().addListener("settings", this::onSettings);
-  }
+    @Override
+    public void create() {
+        entity.getEvents().addListener("start", this::onStart);
+        entity.getEvents().addListener("load", this::onLoad);
+        entity.getEvents().addListener("exit", this::onExit);
+        entity.getEvents().addListener("settings", this::onSettings);
+        entity.getEvents().addListener("worldMap", this::onWorldMap);
+    }
 
   /**
    * Swaps to the Main Game screen.
@@ -45,6 +42,10 @@ public class MainMenuActions extends Component {
     logger.info("Load game");
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
+    private void onWorldMap() {
+        logger.info("Launching world map screen");
+        game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+    }
 
   /**
    * Exits the game.
