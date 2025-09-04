@@ -14,6 +14,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private final float invStartX;
     private final float invY;
     private final float invSelectedY;
-
+    private CurrencyGeneratorComponent currencyGenerator;
     private LevelGameGrid grid;
     private final Entity[] spawned_units;
     private Entity selected_unit;
@@ -94,7 +95,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         displayUI();
 
         spawnMap();
-
+        spawnSun();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
         placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
         placeInventoryUnit(2, "images/ghost_king.png");
@@ -151,6 +152,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
         spawnEntity(mapEntity);
     }
+
+    private void spawnSun() {
+        Entity sunSpawner = new Entity();
+        currencyGenerator = new CurrencyGeneratorComponent(5f, 25,"images/normal_sunlight.png");
+        sunSpawner.addComponent(currencyGenerator);
+        spawnEntity(sunSpawner);
+    }
+
 
     /**
      * Spawns the grid of tiles for the game
