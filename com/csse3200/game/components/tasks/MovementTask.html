@@ -131,8 +131,12 @@ loadScripts(document, 'script');</script>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.math.Vector2)" class="member-name-link">MovementTask</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;target)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.math.Vector2,float)" class="member-name-link">MovementTask</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;target,
- float&nbsp;stopDistance)</code></div>
+ float&nbsp;speed)</code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.math.Vector2,float,float)" class="member-name-link">MovementTask</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;target,
+ float&nbsp;speed,
+ float&nbsp;stopDistance)</code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -148,21 +152,26 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTarget(com.badlogic.gdx.math.Vector2)" class="member-name-link">setTarget</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSpeed(float)" class="member-name-link">setSpeed</a><wbr>(float&nbsp;speed)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the speed to the given speed.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTarget(com.badlogic.gdx.math.Vector2)" class="member-name-link">setTarget</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;target)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Start running this task.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stop()" class="member-name-link">stop</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stop()" class="member-name-link">stop</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Stop the task immediately.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Run one frame of the task.</div>
 </div>
 </div>
@@ -195,6 +204,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.badlogic.gdx.math.Vector2,float)">
 <h3>MovementTask</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MovementTask</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;target,
+ float&nbsp;speed)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.badlogic.gdx.math.Vector2,float,float)">
+<h3>MovementTask</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MovementTask</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;target,
+ float&nbsp;speed,
  float&nbsp;stopDistance)</span></div>
 </section>
 </li>
@@ -238,6 +255,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setTarget(com.badlogic.gdx.math.Vector2)">
 <h3>setTarget</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTarget</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;target)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="setSpeed(float)">
+<h3>setSpeed</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSpeed</span><wbr><span class="parameters">(float&nbsp;speed)</span></div>
+<div class="block">Sets the speed to the given speed.
+ If this is not set, the default speed will be 1.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>speed</code> - the speed for the entity to move at.</dd>
+</dl>
 </section>
 </li>
 <li>

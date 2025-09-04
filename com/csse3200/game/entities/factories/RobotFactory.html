@@ -91,6 +91,14 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">RobotFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Factory to create non-playable character (NPC) entities with predefined components.
+
+ <p>Each NPC entity type should have a creation method that returns a corresponding entity.
+ Predefined entity properties can be loaded from configs stored as json files which are defined in
+ "NPCConfigs".
+
+ <p>If needed, this factory can be separated into more specific factories for entities with
+ similar characteristics.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -119,8 +127,22 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobot(com.csse3200.game.entities.configs.BaseEntityConfig)" class="member-name-link">createRobot</a><wbr>(<a href="../configs/BaseEntityConfig.html" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a>&nbsp;config)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFastRobot()" class="member-name-link">createFastRobot</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotType(java.lang.String)" class="member-name-link">createRobotType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A basic function to create a specific type of robot depending on the input
+ TODO make this use constants of some kind.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createStandardRobot()" class="member-name-link">createStandardRobot</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a standard robot</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTankyRobot()" class="member-name-link">createTankyRobot</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -153,9 +175,41 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createRobot(com.csse3200.game.entities.configs.BaseEntityConfig)">
-<h3>createRobot</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRobot</span><wbr><span class="parameters">(<a href="../configs/BaseEntityConfig.html" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a>&nbsp;config)</span></div>
+<section class="detail" id="createRobotType(java.lang.String)">
+<h3>createRobotType</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRobotType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</span></div>
+<div class="block">A basic function to create a specific type of robot depending on the input
+ TODO make this use constants of some kind. Or EntityConfig classes
+ If an invalid type is given, a standard robot is created</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>robotType</code> - The type of robot to create</dd>
+<dt>Returns:</dt>
+<dd>The created robot</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createStandardRobot()">
+<h3>createStandardRobot</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createStandardRobot</span>()</div>
+<div class="block">Creates a standard robot</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the created robot entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createFastRobot()">
+<h3>createFastRobot</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createFastRobot</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="createTankyRobot()">
+<h3>createTankyRobot</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createTankyRobot</span>()</div>
 </section>
 </li>
 </ul>
