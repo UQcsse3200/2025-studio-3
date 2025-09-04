@@ -34,9 +34,6 @@ public class CurrencyService {
         currency.addSunshine(amount);
     }
 
-    public boolean spend(int amount) {
-        return currency.spendSunshine(amount);
-    }
     /** spend if affordable @return true */
     public boolean spend(int amount) {
         return currency.spendSunshine(amount);

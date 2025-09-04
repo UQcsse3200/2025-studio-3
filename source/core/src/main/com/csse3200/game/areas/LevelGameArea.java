@@ -37,7 +37,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/green_tile.png",
             "images/box_boy.png",
             "images/robot_placeholder.png",
-            "images/selected_star.png"
+            "images/selected_star.png",
             "images/selected_star.png",
             "images/normal_sunlight.png"
     };

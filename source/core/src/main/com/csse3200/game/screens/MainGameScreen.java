@@ -28,6 +28,7 @@ import com.csse3200.game.components.maingame.MainGameExitDisplay; //this file se
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
+import com.csse3200.game.persistence.Persistence;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,8 @@ public class MainGameScreen extends ScreenAdapter {
 
         if (Persistence.profile() == null) {
       throw new IllegalStateException("No profile loaded, cannot start game");
-    }logger.debug("Initialising main game screen services");
+    }
+        logger.debug("Initialising main game screen services");
         ServiceLocator.registerTimeSource(new GameTime());
 
         PhysicsService physicsService = new PhysicsService();
