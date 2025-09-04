@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  * renderables each frame.
  */
 public class Renderer implements Disposable {
-  private static final float GAME_SCREEN_WIDTH = 1280f;
+  public static final float GAME_SCREEN_WIDTH = 1280f;
   private static final Logger logger = LoggerFactory.getLogger(Renderer.class);
 
   private CameraComponent camera;

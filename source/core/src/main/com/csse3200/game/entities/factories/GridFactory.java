@@ -37,7 +37,7 @@ public class GridFactory {
         Entity tile =
                 new Entity()
                         .addComponent(new TextureRenderComponent(image_path))
-                        .addComponent(new TileHitboxComponent(x, y, x, y))
+                        .addComponent(new TileHitboxComponent(x + 1, y + 1, x, y))
                         .addComponent(new TileStorageComponent())
                         .addComponent(new TileInputComponent())
                         .addComponent(new TileStatusComponent(area));
