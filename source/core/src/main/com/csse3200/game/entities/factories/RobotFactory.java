@@ -161,8 +161,13 @@ public class RobotFactory {
                 .addComponent(new PhysicsMovementComponent())
                 .addComponent(new ColliderComponent())
                 .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
                 .addComponent(aiComponent);
 
 
+        // The original NPCFactory had:
+        // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
+        // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+        // I don't think we need that but I'm putting it here for reference
     }
 }

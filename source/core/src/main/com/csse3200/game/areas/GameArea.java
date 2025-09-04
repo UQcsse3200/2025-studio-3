@@ -21,7 +21,7 @@ import com.badlogic.gdx.Gdx;
  */
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
-  protected static List<Entity> areaEntities;
+  protected List<Entity> areaEntities;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();

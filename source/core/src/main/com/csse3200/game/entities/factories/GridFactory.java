@@ -14,7 +14,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
  */
 public class GridFactory {
 
-
     /**
      * Creates a tile entity
      * @param imageStatus used to determine what image to use for the tile
