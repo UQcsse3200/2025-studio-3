@@ -42,13 +42,13 @@ public class CurrentWaveDisplay extends UIComponent {
 		table = new Table();
 		table.top().right();
 		table.setFillParent(true);
-		table.padTop(45f).padRight(5f);
+		table.padTop(65f).padRight(5f);
 
 		// Wave text label
-		waveLabel = new Label("Current Wave:", skin, "large");
+		waveLabel = new Label("Current Wave:", skin, "small");
 		
 		// Wave number label - start at 0 (no wave active)
-		waveNumberLabel = new Label("No Wave Active", skin, "large");
+		waveNumberLabel = new Label("No Wave Active", skin, "small");
 
 		// Add labels to table with some spacing
 		table.add(waveLabel).padRight(10f);
