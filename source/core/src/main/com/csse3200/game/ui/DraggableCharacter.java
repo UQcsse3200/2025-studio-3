@@ -4,14 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.NonDraggableCharacter;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.areas.LevelGameArea;
 
 
@@ -45,6 +41,7 @@ public class DraggableCharacter extends UIComponent {
 
     private static final float CELL_W = (GRID_MAX_X - GRID_MIN_X) / GRID_COLS;
     private static final float CELL_H = (GRID_MAX_Y - GRID_MIN_Y) / GRID_ROWS;
+
     /**
      * Initializes the draggable character by adding the image actor to the stage
      * and setting up the drag-and-drop functionality.
@@ -88,6 +85,7 @@ public class DraggableCharacter extends UIComponent {
             public void dragStop(InputEvent event, float x, float y, int pointer,
                                  DragAndDrop.Payload payload, DragAndDrop.Target target) {
 
+                image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
                 float stageX = event.getStageX();
                 float stageY = event.getStageY();
                 if (stageX < GRID_MIN_X || stageX >= GRID_MAX_X || stageY < GRID_MIN_Y || stageY >= GRID_MAX_Y) {
@@ -102,7 +100,6 @@ public class DraggableCharacter extends UIComponent {
 
                 int tileIndex = row * GRID_COLS + col;
                 area.spawnUnit(tileIndex);
-                image.setPosition(x - image.getWidth() / 2f, y - image.getHeight() / 2f);
             }
         });
     }
@@ -156,7 +153,6 @@ public class DraggableCharacter extends UIComponent {
     public float getScale() {
         return this.scale;
     }
-
 
 
     /**

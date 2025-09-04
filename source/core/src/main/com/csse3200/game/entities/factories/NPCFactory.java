@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -7,7 +8,10 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.ChaseTask;
+//import com.csse3200.game.components.tasks.WanderTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
@@ -22,6 +26,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.physics.PhysicsLayer;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -51,10 +56,9 @@ public class NPCFactory {
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset("images/sling_shooter.atlas", TextureAtlas.class));
 
-
+    animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("float", 0.05f, Animation.PlayMode.LOOP);
-    //animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-    //animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+
 
     ghost
         .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
@@ -122,11 +126,11 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
+
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new MoveLeftTask(2f));
-            //.addTask(new ChaseTask(target, 10, 3f, 4f));
-            //.addTask(new MarchLeftTask());
+            .addTask(new MoveLeftTask(2f))
+            .addTask(new ChaseTask(target, 10, 3f, 4f));
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())

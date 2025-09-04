@@ -43,13 +43,15 @@ public class PlayerFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PLAYER))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1.5f))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1.5f))
+
             .addComponent(new PlayerActions())
             .addComponent(new CombatStatsComponent(stats.getHealth(), stats.getAttack()))
             .addComponent(new InventoryComponent(stats.gold))
             .addComponent(inputComponent)
             .addComponent(new PlayerStatsDisplay()).addComponent(new HitMarkerComponent());
-        new damageMappingSystem(player);
+            new damageMappingSystem(player);
+
     PhysicsUtils.setScaledCollider(player, 0.6f, 0.3f);
     player.getComponent(ColliderComponent.class).setDensity(1.5f);
     player.getComponent(TextureRenderComponent.class).scaleEntity();
