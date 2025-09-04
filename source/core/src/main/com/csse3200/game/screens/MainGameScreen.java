@@ -73,7 +73,7 @@ public class MainGameScreen extends ScreenAdapter {
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
-    waveManager.initialiseNewWave();
+    //waveManager.initialiseNewWave();
 
     loadAssets();
     createUI();

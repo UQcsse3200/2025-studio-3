@@ -4,7 +4,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
-import com.csse3200.game.files.FileLoader;
+import com.csse3200.game.persistence.FileLoader;
 
 /**
  * Factory to create a wave with predefined components.

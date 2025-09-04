@@ -90,7 +90,6 @@ public class ForestGameArea extends GameArea {
     //spawnGhostKing();
 
     spawnDefences();
-    spawnGhosts();
     spawnGhostKing();
 
     spawnRobots();
