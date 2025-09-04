@@ -5,6 +5,7 @@ com.csse3200.game.areas
 com.csse3200.game.areas.terrain
 com.csse3200.game.components
 com.csse3200.game.components.achievements
+com.csse3200.game.components.currency
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.hud
 com.csse3200.game.components.inventory
