@@ -78,7 +78,7 @@ public class RobotFactory {
         animator.scaleEntity();
         animator.startAnimation("chill"); // start an animation
         // make a bit larger
-        robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
+        robot.setScale(robot.getScale().x * 400f, robot.getScale().y * 400f);
 
         return robot;
     }
@@ -107,7 +107,7 @@ public class RobotFactory {
         animator.scaleEntity();
         animator.startAnimation("angry"); // angry to differentiate it from the standard robot
         // make a bit larger
-        robot.setScale(robot.getScale().x * 3f, robot.getScale().y * 3f);
+        robot.setScale(robot.getScale().x * 300f, robot.getScale().y * 300f);
 
         return robot;
     }
@@ -135,7 +135,7 @@ public class RobotFactory {
         animator.scaleEntity();
         animator.startAnimation("angry"); // angry to differentiate it from the standard robot
         // make a bit larger
-        robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
+        robot.setScale(robot.getScale().x * 400f, robot.getScale().y * 400f);
 
         return robot;
     }
