@@ -7,8 +7,8 @@ import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.movement.MovementController;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
@@ -45,7 +45,8 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     "images/iso_grass_3.png",
-    "images/sling_shooter.png"
+          "images/normal_sunlight.png",
+          "images/sling_shooter.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas"
@@ -54,7 +55,8 @@ public class ForestGameArea extends GameArea {
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] forestMusic = {backgroundMusic};
 
-  private final TerrainFactory terrainFactory;
+    private final TerrainFactory terrainFactory;
+    private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
 
@@ -80,6 +82,8 @@ public class ForestGameArea extends GameArea {
     player = spawnPlayer();
     spawnGhosts();
     spawnGhostKing();
+
+    spawnSun();
 
     playMusic();
   }
@@ -225,6 +229,19 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestSounds);
     resourceService.unloadAssets(forestMusic);
   }
+
+    private void spawnSun() {
+        Entity sunSpawner = new Entity();
+
+        currencyGenerator = new CurrencyGeneratorComponent(
+                5f,
+                25,
+                "images/normal_sunlight.png"
+        );
+
+        sunSpawner.addComponent(currencyGenerator);
+        spawnEntity(sunSpawner);
+    }
 
   @Override
   public void dispose() {
