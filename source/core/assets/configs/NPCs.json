@@ -19,10 +19,6 @@
     "baseAttack": 20,
     "speed": 1
   },
-  "robot": {
-    "health": 40,
-    "baseAttack": 10
-  },
   "ghostKing": {
     "health": 1,
     "baseAttack": 20,
