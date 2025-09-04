@@ -7,6 +7,10 @@ import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 
+/**
+ * the damage mapping system handles damage interactions between entities.
+ * It listens to collisionStart event and applies the damage logic.
+ */
 public class damageMappingSystem  {
 
     public damageMappingSystem(Entity entity) {

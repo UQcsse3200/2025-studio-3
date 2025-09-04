@@ -142,7 +142,13 @@ public class Entity {
     this.scale.y = this.scale.y / this.scale.x * x;
     this.scale.x = x;
   }
-private Map<String,Object> property = new HashMap<>();
+
+    /**
+     * this sets the property like isProjectile and returns the value when asked for.
+     * @param name is the name of property like isProjectile
+     * @param value is the value of property like true
+     */
+    private Map<String,Object> property = new HashMap<>();
   public Entity setProperty(String name, Object value) {
     property.put(name, value);
     return this;
