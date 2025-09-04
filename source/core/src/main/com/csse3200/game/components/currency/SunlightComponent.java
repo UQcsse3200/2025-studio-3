@@ -2,6 +2,7 @@ package com.csse3200.game.components.currency;
 
 import com.csse3200.game.components.Component;
 
+
 /**
  * Component holding the currency value granted by a single sunlight pickup.
  * Attach to an entity/actor representing a sun if you need ECS-side access.
@@ -14,6 +15,7 @@ public class SunlightComponent extends Component {
     public int getValue() {
         return value;
     }
+
 
     /** @param v new value; @return this for chaining */
     public SunlightComponent setValue(int v) {

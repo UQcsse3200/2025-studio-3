@@ -11,7 +11,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
-import com.csse3200.game.components.tasks.WanderTask;
+//import com.csse3200.game.components.WanderTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
@@ -75,8 +75,8 @@ public class DefenceFactory {
         // attach components to the entity
         defender
             .addComponent(new DefenceStatsComponent(
-                    config.health,
-                    config.baseAttack,
+                    config.getHealth(),
+                    config.getAttack(),
                     config.type,
                     config.range,
                     config.state,
@@ -113,8 +113,8 @@ public class DefenceFactory {
         // attach components to the entity
         defender
                 .addComponent(new DefenceStatsComponent(
-                        config.health,
-                        config.baseAttack,
+                        config.getHealth(),
+                        config.getAttack(),
                         config.type,
                         config.range,
                         config.state,

@@ -25,8 +25,6 @@ public class GdxGame extends Game {
         logger.info("Creating game");
         loadMenus();
 
-    // Create MenuSpriteService
-    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
 
     loadMenus();
 

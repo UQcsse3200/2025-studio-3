@@ -11,7 +11,8 @@ import com.csse3200.game.components.npc.GhostAnimationController;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
+//import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.GhostKingConfig;
@@ -60,7 +61,7 @@ public class NPCFactory {
 
 
     ghost
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
         .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
@@ -71,7 +72,7 @@ public class NPCFactory {
 
   public static Entity createRobot(Entity target) {
       Entity robot = createBaseNPC(target);
-      BaseEntityConfig config = configs.robot;
+      BaseEntityConfig config = configs.standardRobot;
 
       AnimationRenderComponent animator =
               new AnimationRenderComponent(
@@ -81,7 +82,7 @@ public class NPCFactory {
 
 
       robot
-              .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+              .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
               .addComponent(animator)
               .addComponent(new HitMarkerComponent())
               .addComponent(new RobotAnimationController());
@@ -110,7 +111,7 @@ public class NPCFactory {
 
 
     ghostKing
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
             .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
@@ -125,12 +126,11 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
-    
+
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
+            .addTask(new MoveLeftTask(2f))
             .addTask(new ChaseTask(target, 10, 3f, 4f));
-
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())

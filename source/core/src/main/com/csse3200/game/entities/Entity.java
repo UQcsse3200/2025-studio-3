@@ -41,6 +41,8 @@ public class Entity {
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
 
+  private final int coins = 5; // number of coins to add when enemy is killed
+
   public Entity() {
     id = nextId;
     nextId++;
@@ -49,7 +51,11 @@ public class Entity {
     eventHandler = new EventHandler();
   }
 
-  /**
+    public int getCoins() {
+        return coins;
+    }
+
+    /**
    * Enable or disable an entity. Disabled entities do not run update() or earlyUpdate() on their
    * components, but can still be disposed.
    *

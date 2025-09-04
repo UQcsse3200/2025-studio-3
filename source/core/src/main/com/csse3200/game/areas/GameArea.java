@@ -94,12 +94,57 @@ public abstract class GameArea implements Disposable {
 //        return robot;
 //    }
 
-    public Entity spawnRobotAtFloat(float x, float y) {
-        BaseEntityConfig cfg = new BaseEntityConfig();
-        cfg.health = 10;
-        cfg.baseAttack = 2;
+    // If no robot type given, spawns a standard robot
+    public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
+      return spawnRobotAtTile(cell, centerX, centerY, "standard");
+    }
 
-        Entity robot = RobotFactory.createRobot(cfg);
+    // uses LevelGameArea (Level One) grid params
+    public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY, String robotType) {
+        // grid params copied from LevelGameArea (Level One)
+        final float xOffset = 2.9f;
+        final float yOffset = 1.45f;
+        final int rows = 5;        // levelOneRows
+        final int cols = 10;       // levelOneCols
+        final float gridHeight = 7f;
+        final float cellScale = gridHeight / rows; // same as LevelGameArea
+
+        // Bounds check on overlay coordinates
+        if (cell.x < 0 || cell.y < 0 || cell.x >= cols || cell.y >= rows) {
+            throw new IllegalArgumentException("Overlay cell out of bounds: " + cell + " within (" + rows + "x" + cols + ")");
+        }
+
+
+        Entity robot = RobotFactory.createRobotType(robotType);
+
+        // Register first so getCenterPosition() is valid
+        spawnEntity(robot);
+
+        float tileX = xOffset + cellScale * cell.x;
+        float tileY = yOffset + cellScale * cell.y;
+
+        float worldX = tileX;
+        float worldY = tileY;
+
+        if (centerX) {
+            worldX += (cellScale / 2f) - robot.getCenterPosition().x;
+        }
+        if (centerY) {
+            worldY += (cellScale / 2f) - robot.getCenterPosition().y;
+        }
+
+        robot.setPosition(worldX, worldY);
+        return robot;
+    }
+
+    // Spawns a standard robot if no type is specified
+    public Entity spawnRobotAtFloat(float x, float y) {
+      return spawnRobotAtFloat(x, y, "standard");
+    }
+
+    public Entity spawnRobotAtFloat(float x, float y, String robotType) {
+
+        Entity robot = RobotFactory.createRobotType(robotType);
         spawnEntity(robot);
         robot.setPosition(x, y);
         return robot;

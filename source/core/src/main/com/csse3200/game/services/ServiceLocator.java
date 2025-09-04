@@ -24,7 +24,6 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
-
   private static MenuSpriteService menuSpriteService;
 
   public static EntityService getEntityService() {
