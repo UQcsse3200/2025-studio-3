@@ -9,6 +9,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
@@ -30,9 +31,11 @@ import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 import com.csse3200.game.persistence.Persistence;
 
+import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+
 
 /**
  * The game screen containing the main game.
@@ -40,72 +43,65 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
+  private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
+  private static final String[] mainGameTextures = {"images/heart.png"};
+  private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
-    private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-    private static final String[] mainGameTextures = { "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png" };
-    private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
-    //private static final Vector2 CAMERA_POSITION = new Vector2(1f, 1f);
+  private final GdxGame game;
+  private final Renderer renderer;
+  private final PhysicsEngine physicsEngine;
+  private final WaveManager waveManager;
 
-    private final GdxGame game;
-    private final Renderer renderer;
-    private final PhysicsEngine physicsEngine;
+  public MainGameScreen(GdxGame game) {
+    this.game = game;
+    this.waveManager = new WaveManager();
 
+    logger.debug("Initialising main game screen services");
+    ServiceLocator.registerTimeSource(new GameTime());
 
-    public MainGameScreen(GdxGame game) {
-        this.game = game;
+    PhysicsService physicsService = new PhysicsService();
+    ServiceLocator.registerPhysicsService(physicsService);
+    physicsEngine = physicsService.getPhysics();
 
-        if (Persistence.profile() == null) {
-      throw new IllegalStateException("No profile loaded, cannot start game");
-    }
-        logger.debug("Initialising main game screen services");
-        ServiceLocator.registerTimeSource(new GameTime());
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
 
-        PhysicsService physicsService = new PhysicsService();
-        ServiceLocator.registerPhysicsService(physicsService);
-        physicsEngine = physicsService.getPhysics();
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
 
-        ServiceLocator.registerInputService(new InputService());
-        ServiceLocator.registerResourceService(new ResourceService());
+    renderer = RenderFactory.createRenderer();
+    renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+    renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
-        ServiceLocator.registerEntityService(new EntityService());
-        ServiceLocator.registerRenderService(new RenderService());
+    //waveManager.initialiseNewWave();
 
-        ServiceLocator.registerCurrencyService(new CurrencyService(50,Integer.MAX_VALUE));
+    loadAssets();
+    createUI();
 
-        renderer = RenderFactory.createRenderer();
-        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
-        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
-
-        loadAssets();
-        createUI();
-
-        Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
-        ServiceLocator.getEntityService().register(uiHud);
-
-
-        logger.debug("Initialising main game screen entities");
-        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-
+    logger.debug("Initialising main game screen entities");
+    TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+    waveManager.setGameArea(levelGameArea);
     levelGameArea.create();
 
     snapCameraBottomLeft();
 
   }
 
-    @Override
-    public void render(float delta) {
-        physicsEngine.update();
-        ServiceLocator.getEntityService().update();
-        renderer.render();
-    }
+  @Override
+  public void render(float delta) {
+    physicsEngine.update();
+    ServiceLocator.getEntityService().update();
+    renderer.render();
+    waveManager.update();
+  }
 
-    @Override
-    public void resize(int width, int height) {
-        renderer.resize(width, height);
-        snapCameraBottomLeft();
-        logger.trace("Resized renderer: ({} x {})", width, height);
-    }
+  @Override
+  public void resize(int width, int height) {
+    renderer.resize(width, height);
+    snapCameraBottomLeft();
+    logger.trace("Resized renderer: ({} x {})", width, height);
+  }
 
     @Override
     public void pause() {
@@ -154,17 +150,21 @@ public class MainGameScreen extends ScreenAdapter {
         InputComponent inputComponent =
                 ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
-        Entity ui = new Entity();
-        ui.addComponent(new InputDecorator(stage, 10))
-                .addComponent(new PerformanceDisplay())
-                .addComponent(new MainGameActions(this.game))
-                .addComponent(new HudDisplay())
-                .addComponent(new Terminal())
-                .addComponent(inputComponent)
-                .addComponent(new TerminalDisplay());
+    Entity ui = new Entity();
+    ui.addComponent(new InputDecorator(stage, 10))
+        .addComponent(new PerformanceDisplay())
+        .addComponent(new MainGameActions(this.game))
+        .addComponent(new MainGameExitDisplay())
+        .addComponent(new Terminal())
+        .addComponent(inputComponent)
+        .addComponent(new TerminalDisplay())
+        .addComponent(new CurrentWaveDisplay());
 
-        ServiceLocator.getEntityService().register(ui);
-    }
+    // Connect the UI entity to the WaveManager for event triggering
+    WaveManager.setGameEntity(ui);
+
+    ServiceLocator.getEntityService().register(ui);
+  }
 
   private void snapCameraBottomLeft() {
     var cam = renderer.getCamera();
@@ -174,4 +174,5 @@ public class MainGameScreen extends ScreenAdapter {
 
     cam.getEntity().setPosition(viewportWidth / 2f, viewportHeight / 2f);
   }
+
 }

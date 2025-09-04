@@ -7,4 +7,6 @@ public class BaseEntityConfig {
     public int getHealth() {return 1;}
     public int getAttack() {return 1;}
     public float getMovementSpeed() {return 1;}
+    public int health = 40;
+    public int baseAttack = 0;
 }
