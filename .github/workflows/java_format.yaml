@@ -1,0 +1,22 @@
+name: Java Format
+
+on: [push, pull_request] # Will trigger whenever a push or PR is made to a branch
+
+jobs:
+  format_check_java:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up OpenJDK21
+        uses: actions/setup-java@v1
+        with:
+          java-version: '21'
+
+      - name: Run Format Checker
+        run: |
+          cd $GRADLE_DIR
+          chmod +x ./gradlew
+          ./gradlew formatCheck
+        env:
+          GRADLE_DIR: 'source'
+        continue-on-error: false # change this to true if you want the pipeline to not fail with formatting issues
