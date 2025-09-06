@@ -1,6 +1,6 @@
 name: Java Format
 
-on: [push, pull_request] # Will trigger whenever a push or PR is made to a branch
+on: [pull_request] # Will trigger whenever a push or PR is made to a branch
 
 jobs:
   format_check_java:
