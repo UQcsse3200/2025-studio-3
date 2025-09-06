@@ -92,6 +92,8 @@ public void setScreen(ScreenType screenType) {
         return new MainMenuScreen(this);
       case MAIN_GAME:
         return new MainGameScreen(this);
+        case MINI_GAMES:
+            return new LaneRunnerScreen(this);
       case SETTINGS:
         return new SettingsScreen(this);
       case SKILLTREE:
@@ -119,7 +121,7 @@ public void setScreen(ScreenType screenType) {
   }
 
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY, WORLD_MAP
+    MAIN_MENU,MINI_GAMES, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY, WORLD_MAP
   }
 
   /**
