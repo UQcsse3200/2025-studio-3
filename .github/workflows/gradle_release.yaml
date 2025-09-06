@@ -2,9 +2,10 @@ name: Build and Release
 
 on:
   push:
-    # Sequence of patterns matched against refs/heads
     branches:
-      # Push events on main branch
+      - main
+  pull_request:
+    branches:
       - main
 
 jobs:
