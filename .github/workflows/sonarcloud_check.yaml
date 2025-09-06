@@ -1,10 +1,8 @@
-name: Build and Release
+name: SonarCloud Check
 
 on:
-  push:
-    # Sequence of patterns matched against refs/heads
+  pull_request:
     branches:
-      # Push events on main branch
       - main
 
 jobs:
@@ -36,26 +34,8 @@ jobs:
         run: |
           cd $GRADLE_DIR
           chmod +x ./gradlew
-          ./gradlew --stacktrace build sonarqube --info
-          ls -al
+          ./gradlew sonarqube --info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
-
-      - name: Automatic Release # note the path for the files on this one
-        uses: marvinpinto/action-automatic-releases@v1.2.1
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          automatic_release_tag: "latest"
-          prerelease: false
-          title: "Latest Build of Game"
-          files: |
-            ./source/desktop/build/libs/*.jar
-
-#      - name: Analyse
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
-#        run: ./gradlew sonarqube --info
