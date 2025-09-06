@@ -34,8 +34,7 @@ jobs:
         run: |
           cd $GRADLE_DIR
           chmod +x ./gradlew
-          ./gradlew --stacktrace build sonarqube --info
-          ls -al
+          ./gradlew build sonarqube --info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -50,10 +49,3 @@ jobs:
           title: "Latest Build of Game"
           files: |
             ./source/desktop/build/libs/*.jar
-
-#      - name: Analyse
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#          GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
-#        run: ./gradlew sonarqube --info
