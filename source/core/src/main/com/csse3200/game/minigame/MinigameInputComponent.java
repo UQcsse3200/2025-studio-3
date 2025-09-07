@@ -1,4 +1,4 @@
-package com.csse3200.minigame;
+package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Input;
 import com.csse3200.game.input.InputComponent;
