@@ -5,8 +5,11 @@ on: [push, pull_request] # Will trigger whenever a push is made to the branch, r
 jobs:
   run_unit_tests:
     runs-on: ubuntu-latest # Running on this OS, if we need it changed lmk
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2 # Checkout repo to remote machine
+
       - name: Set up OpenJDK21
         uses: actions/setup-java@v1
         with:
@@ -27,9 +30,20 @@ jobs:
         run: |
           cd $GRADLE_DIR
           chmod +x ./gradlew
-          ./gradlew test
+          ./gradlew test jacocoTestReport
         env:
           GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
+
+      - name: Upload Coverage to PR
+        if: ${{ github.event_name == 'pull_request' }} # only run this on PR
+        id: jacoco
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          paths: |
+            ${{ github.workspace }}/source/**/build/reports/jacoco/test/jacocoTestReport.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 0
+          min-coverage-changed-files: 0
 
       - name: Test Success
         uses: rjstone/discord-webhook-notify@v1
