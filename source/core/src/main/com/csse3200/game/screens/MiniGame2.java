@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 
 public abstract class MiniGame2 implements Screen {
     private SpriteBatch batch;
@@ -24,17 +26,20 @@ public abstract class MiniGame2 implements Screen {
     public void show() {
         batch = new SpriteBatch();
 
-        paddletexture = new Texture("paddle.png");
-        balltexture = new Texture("ball.png");
+        paddletexture = new Texture("images/paddle.png");
+        balltexture = new Texture("images/ball.png");
 
         paddle = new Entity();
-        paddle.addComponent(new ColliderComponent());
+        paddle.addComponent(new TextureRenderComponent(paddletexture));
+        paddle.addComponent(new PhysicsComponent());
+        paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         ball = new Entity();
+        ball.addComponent(new TextureRenderComponent(balltexture));
+        paddle.addComponent(new PhysicsComponent());
+        paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        ball.addComponent(new ColliderComponent());
-
     }
 }
 
