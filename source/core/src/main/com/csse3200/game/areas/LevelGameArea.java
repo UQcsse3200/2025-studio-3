@@ -302,6 +302,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
         unit.setPosition(tileX, tileY);
 
+        Entity selectedTile = grid.getTileFromXY(tileX, tileY);
+        if (selectedTile != null) {
+            selectedTile.getComponent(TileStorageComponent.class).setTileUnit(unit);
+        }
+
         // Add to list of all spawned units
         spawned_units[position] = unit;
 

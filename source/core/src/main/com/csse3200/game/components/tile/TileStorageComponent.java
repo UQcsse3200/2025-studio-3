@@ -14,11 +14,13 @@ public class TileStorageComponent extends Component {
     private boolean containsUnit;
     private int position;
     private final AreaAPI area;
+    private Entity tileUnit;
 
     public TileStorageComponent(AreaAPI area) {
         this.area = area;
         this.containsUnit = false;
         this.position = 0;
+        this.tileUnit = null;
     }
 
     /**
@@ -27,8 +29,17 @@ public class TileStorageComponent extends Component {
     public void addTileUnit() {
         if (!containsUnit) {
             this.containsUnit = true;
+            this.tileUnit = null;
             area.spawnUnit(position);
         }
+    }
+
+    public void setTileUnit(Entity unit) {
+        this.tileUnit = unit;
+    }
+
+    public Entity getTileUnit() {
+        return this.tileUnit;
     }
 
     /**
