@@ -13,6 +13,10 @@ public class PhysicsLayer {
   public static final short ALL = ~0;
   //Enemy Collison box
     public static final short ENEMY = (1 << 2);
+    //Paddle collider
+    public static final short PADDLE = (1<<0);
+    //Ball collider
+    public static final short BALL = (1<<1);
 
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;
