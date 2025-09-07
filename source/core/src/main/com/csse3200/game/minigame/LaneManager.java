@@ -15,7 +15,7 @@ public class LaneManager {
 
        float leftMargin = (screenWidtth-totalLaneWidth)/2;
        for(int i=0;i<numLanes;i++){
-          LaneCenter[i] =  leftMargin + LaneWidth/2 *i * LaneWidth;
+          LaneCenter[i] =  leftMargin + (LaneWidth/2) *(i * LaneWidth);
        }
    }
    public float getLaneCenter(int laneIndex){
