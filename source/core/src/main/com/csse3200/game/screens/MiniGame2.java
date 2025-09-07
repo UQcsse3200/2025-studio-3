@@ -1,6 +1,7 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
@@ -37,6 +38,17 @@ public abstract class MiniGame2 implements Screen {
         paddle.getComponent(TextureRenderComponent.class).scaleEntity();
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
+
+        float paddlespeed = 75f;
+        PhysicsComponent paddleComponent = paddle.getComponent(PhysicsComponent.class);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            paddleComponent.getBody().setLinearVelocity(-paddlespeed, 0);
+        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            paddleComponent.getBody().setLinearVelocity(paddlespeed, 0);
+        }else{
+            paddleComponent.getBody().setLinearVelocity(0, 0);
+        }
 
         ServiceLocator.getEntityService().register(paddle);
 
