@@ -3,11 +3,10 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
-import com.csse3200.game.components.tile.TileStatusComponent;
+import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.rendering.Renderer;
@@ -185,7 +184,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
                 tile = GridFactory.createTile(1 - (i % 2), tileSize, tileX, tileY, this);
             }
             tile.setPosition(tileX, tileY);
-            tile.getComponent(TileStatusComponent.class).set_position(i);
+            tile.getComponent(TileStorageComponent.class).setPosition(i);
             grid.addTile(i, tile);
             spawnEntity(tile);
         }

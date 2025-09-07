@@ -2,7 +2,6 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.components.tile.TileHitboxComponent;
-import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
 
@@ -40,9 +39,8 @@ public class GridFactory {
                 new Entity()
                         .addComponent(new TextureRenderComponent(image_path))
                         .addComponent(new TileHitboxComponent(x + 1, y + 1, x, y))
-                        .addComponent(new TileStorageComponent())
-                        .addComponent(new TileInputComponent())
-                        .addComponent(new TileStatusComponent(area));
+                        .addComponent(new TileStorageComponent(area))
+                        .addComponent(new TileInputComponent());
 
         // scales the tile to fit in the map
         tile.getComponent(TextureRenderComponent.class).scaleEntity();
