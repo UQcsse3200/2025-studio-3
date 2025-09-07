@@ -52,7 +52,7 @@ public class TileInputComponent extends InputComponent {
             switch (button) {
                 case Input.Buttons.LEFT -> {
                     if (!tileStatus.hasUnit() && selected_unit != null) {
-                        tileStatus.addTileUnit();
+                        tileStatus.triggerSpawnUnit();
                     }
                     return true;
                 }
