@@ -35,6 +35,7 @@ public class MainMenuDisplay extends UIComponent {
                 .getAsset("images/box_boy_title.png", Texture.class));
 
         TextButton startBtn = new TextButton("Start", skin);
+        TextButton miniGameBtn = new TextButton("MiniGames", skin);
         TextButton loadBtn = new TextButton("Load", skin);
         TextButton worldMapBtn = new TextButton("World Map", skin);
         TextButton settingsBtn = new TextButton("Settings", skin);
@@ -49,7 +50,14 @@ public class MainMenuDisplay extends UIComponent {
             entity.getEvents().trigger("start");
           }
         });
-
+    miniGameBtn.addListener(
+            new ChangeListener() {
+                @Override
+                public void changed(ChangeEvent changeEvent, Actor actor) {
+                    logger.debug("MiniGame button clicked");
+                    entity.getEvents().trigger("minigame");
+                }
+            });
     loadBtn.addListener(
         new ChangeListener() {
           @Override
@@ -90,6 +98,8 @@ public class MainMenuDisplay extends UIComponent {
 
         table.row();
         table.add(startBtn).padTop(30f);
+      table.row();
+      table.add(miniGameBtn).padTop(30f);
         table.row();
         table.add(loadBtn).padTop(15f);
         table.row();
