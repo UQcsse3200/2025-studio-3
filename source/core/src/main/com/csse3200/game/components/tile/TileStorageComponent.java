@@ -29,7 +29,6 @@ public class TileStorageComponent extends Component {
     public void triggerSpawnUnit() {
         if (!containsUnit) {
             this.containsUnit = true;
-            this.tileUnit = null;
             area.spawnUnit(position);
         }
     }
