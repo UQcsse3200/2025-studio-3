@@ -34,11 +34,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/olive_tile.png",
             "images/green_tile.png",
             "images/box_boy.png",
-            "images/selected_star.png"
+            "images/selected_star.png",
+            "images/slot_icon.png"
     };
 
     private static final String[] levelTextureAtlases = {
-            "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
+            "images/ghost.atlas",
+            "images/ghostKing.atlas",
+            "images/robot_placeholder.atlas",
+            "images/slot_frame.atlas",
+            "images/slot_reels.atlas"
     };
 
     private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -127,6 +132,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         Entity ui = new Entity();
         // add components here for additional UI Elements
         ui.addComponent(new GameAreaDisplay("Level One"));
+        ui.addComponent(new com.csse3200.game.components.slot.SlotMachineDisplay());
         spawnEntity(ui);
     }
 

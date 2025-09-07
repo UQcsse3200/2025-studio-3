@@ -1,0 +1,7 @@
+slot_frame.png
+size:1024,512
+repeat:none
+slot_frame_down
+bounds:364,2,360,360
+slot_frame_up
+bounds:2,2,360,360
