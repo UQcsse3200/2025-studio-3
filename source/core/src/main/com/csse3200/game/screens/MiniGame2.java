@@ -11,6 +11,7 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public abstract class MiniGame2 implements Screen {
     private SpriteBatch batch;
@@ -31,18 +32,30 @@ public abstract class MiniGame2 implements Screen {
         balltexture = new Texture("images/ball.png");
 
         paddle = new Entity();
-        paddle.addComponent(new TextureRenderComponent(balltexture));
-        paddle.getComponent(TextureRenderComponent.class).scaleEntity();
         paddle.addComponent(new PhysicsComponent());
+        paddle.addComponent(new TextureRenderComponent(paddletexture));
+        paddle.getComponent(TextureRenderComponent.class).scaleEntity();
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
+        ServiceLocator.getEntityService().register(paddle);
+
         ball = new Entity();
+        ball.addComponent(new PhysicsComponent());
         ball.addComponent(new TextureRenderComponent(balltexture));
         ball.getComponent(TextureRenderComponent.class).scaleEntity();
-        ball.addComponent(new PhysicsComponent());
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
+        ball.getComponent(PhysicsComponent.class).setLinearVelocity(50f,50f);
+
+        ServiceLocator.getEntityService().register(ball);
+    }
+
+    @Override
+    public void dispose() {
+        paddletexture.dispose();
+        balltexture.dispose();
+        batch.dispose();
     }
 }
 
