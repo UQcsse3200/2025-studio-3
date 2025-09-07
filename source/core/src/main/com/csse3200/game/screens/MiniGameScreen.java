@@ -1,6 +1,5 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,7 +22,7 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class LaneRunnerScreen extends ScreenAdapter {
+public class MiniGameScreen extends ScreenAdapter {
 
         private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.MainMenuScreen.class);
         private final GdxGame game;
@@ -32,7 +31,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
                 "images/world_map.png",
         };
 
-        public LaneRunnerScreen(GdxGame game) {
+        public MiniGameScreen(GdxGame game) {
             this.game = game;
 
             logger.debug("Initialising mini game screen services");
@@ -86,7 +85,12 @@ public class LaneRunnerScreen extends ScreenAdapter {
         stage.addActor(bg);
         logger.debug("shows mini game screen background");
 
-
+        Entity ui = new Entity();
+        ui.addComponent(new MainMenuDisplay())
+                .addComponent(new InputDecorator(stage, 10))
+                .addComponent(new MainMenuActions(game));
+        ServiceLocator.getEntityService().register(ui);
+        logger.debug("mini game screen ui is created and registered");
     }
 
 }

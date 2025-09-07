@@ -93,7 +93,7 @@ public void setScreen(ScreenType screenType) {
       case MAIN_GAME:
         return new MainGameScreen(this);
         case MINI_GAMES:
-            return new LaneRunnerScreen(this);
+            return new MiniGameScreen(this);
       case SETTINGS:
         return new SettingsScreen(this);
       case SKILLTREE:
