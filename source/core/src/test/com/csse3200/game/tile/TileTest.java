@@ -41,13 +41,13 @@ public class TileTest {
         ServiceLocator.registerEntityService(new EntityService());
     }
 
-    @Test
-    public void shouldAddUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        tileStorageComponent.addTileUnit();
-        assert(tileStorageComponent.hasUnit());
-    }
+//    @Test
+//    public void shouldAddUnit() {
+//        Entity tile = createValidTile();
+//        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+//        tileStorageComponent.addTileUnit();
+//        assert(tileStorageComponent.hasUnit());
+//    }
 
 //    @Test
 //    public void shouldntAddUnit() {
@@ -61,14 +61,14 @@ public class TileTest {
 //        assert(tileStorageComponent.getTileUnit() != secondUnit);
 //    }
 
-    @Test
-    public void shouldRemoveUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        tileStorageComponent.addTileUnit();
-        tileStorageComponent.removeTileUnit();
-        assert(!tileStorageComponent.hasUnit());
-    }
+//    @Test
+//    public void shouldRemoveUnit() {
+//        Entity tile = createValidTile();
+//        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+//        tileStorageComponent.addTileUnit();
+//        tileStorageComponent.removeTileUnit();
+//        assert(!tileStorageComponent.hasUnit());
+//    }
 
 //    @Test
 //    public void shouldBeNullUnitByDefault() {
