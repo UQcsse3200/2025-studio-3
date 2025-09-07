@@ -23,7 +23,7 @@ public class MiniGameActions extends Component {
     }
 
     /**
-     * Swaps to the Main Game screen.
+     * Swaps to the Lane Runner Game screen.
      */
     private void onLaneRunner() {
         logger.info("Lane Runner Mini game");

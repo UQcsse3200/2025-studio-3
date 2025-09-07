@@ -113,7 +113,7 @@ public void setScreen(ScreenType screenType) {
         case WORLD_MAP:
             return new WorldMapScreen(this);
         case LANE_RUNNER:
-            return new WorldMapScreen(this);
+            return new LaneRunnerScreen(this);
       default:
         return null;
     }
