@@ -30,15 +30,17 @@ public abstract class MiniGame2 implements Screen {
         balltexture = new Texture("images/ball.png");
 
         paddle = new Entity();
-        paddle.addComponent(new TextureRenderComponent(paddletexture));
+        paddle.addComponent(new TextureRenderComponent(balltexture));
+        paddle.getComponent(TextureRenderComponent.class).scaleEntity();
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         ball = new Entity();
         ball.addComponent(new TextureRenderComponent(balltexture));
-        paddle.addComponent(new PhysicsComponent());
-        paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
+        ball.getComponent(TextureRenderComponent.class).scaleEntity();
+        ball.addComponent(new PhysicsComponent());
+        ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
     }
 }
