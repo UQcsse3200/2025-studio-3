@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -39,17 +40,6 @@ public abstract class MiniGame2 implements Screen {
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
-        float paddlespeed = 75f;
-        PhysicsComponent paddleComponent = paddle.getComponent(PhysicsComponent.class);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            paddleComponent.getBody().setLinearVelocity(-paddlespeed, 0);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            paddleComponent.getBody().setLinearVelocity(paddlespeed, 0);
-        }else{
-            paddleComponent.getBody().setLinearVelocity(0, 0);
-        }
-
         ServiceLocator.getEntityService().register(paddle);
 
         ball = new Entity();
@@ -58,9 +48,27 @@ public abstract class MiniGame2 implements Screen {
         ball.getComponent(TextureRenderComponent.class).scaleEntity();
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        ball.getComponent(PhysicsComponent.class).setLinearVelocity(50f,50f);
+        ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(50f,50f);
 
         ServiceLocator.getEntityService().register(ball);
+    }
+    @Override
+    public void render(float delta) {
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        float paddleSpeed = 75f;
+        PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
+
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            paddlePhysics.getBody().setLinearVelocity(-paddleSpeed, 0);
+        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
+        }else{
+            paddlePhysics.getBody().setLinearVelocity(0, 0);
+        }
+
+        ServiceLocator.getEntityService().update();
     }
 
     @Override
