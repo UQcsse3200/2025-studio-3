@@ -7,6 +7,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.MoveLeftTask;
+import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.FastRobotConfig;
@@ -156,7 +157,9 @@ public class RobotFactory {
 
         AITaskComponent aiComponent =
                 new AITaskComponent()
-                        .addTask(new MoveLeftTask(config.getMovementSpeed()));
+                        .addTask(new MoveLeftTask(config.getMovementSpeed()))
+                        .addTask(new RobotAttackTask(1.5f, PhysicsLayer.DEFENSE));
+
 
         return new Entity()
                 .addComponent(new PhysicsComponent())
