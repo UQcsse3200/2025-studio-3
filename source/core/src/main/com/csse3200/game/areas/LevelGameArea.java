@@ -9,6 +9,8 @@ import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -97,6 +99,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
         spawnSun();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
+        spawnUnit(2, 2);
+//        spawnRobotAtFloat(1, 1);
+//        spawnRobotAtTile(new GridPoint2(2, 2), true, true);
         placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
         placeInventoryUnit(2, "images/ghost_king.png");
 
@@ -308,6 +313,23 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
         spawnEntity(unit);
         logger.info("Unit spawned at position {}", position);
+    }
+
+    public void spawnUnit(int x, int y){
+        Entity unit = RobotFactory.createRobotType("fast");
+
+        // Get and set position coords
+        float tileX = xOffset + tileSize * (x % LEVEL_ONE_COLS);
+        float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+        unit.setPosition(tileX, tileY);
+
+        // Add to list of all spawned units
+//        spawned_units[position] = unit;
+
+        // set scale to render as desired
+        unit.scaleHeight(tileSize);
+        spawnEntity(unit);
+        logger.info("Unit spawned at position {} {}", x, y);
     }
 
     /**

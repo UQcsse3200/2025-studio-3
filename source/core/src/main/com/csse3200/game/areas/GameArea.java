@@ -77,6 +77,7 @@ public abstract class GameArea implements Disposable {
     }
 
     entity.setPosition(worldPos);
+//    entity.scaleHeight(2f*tileSize);
     spawnEntity(entity);
   }
     public void requestDespawn(Entity entity) {
@@ -118,7 +119,7 @@ public abstract class GameArea implements Disposable {
         Entity robot = RobotFactory.createRobotType(robotType);
 
         // Register first so getCenterPosition() is valid
-        spawnEntity(robot);
+//        spawnEntity(robot);
 
         float tileX = xOffset + cellScale * cell.x;
         float tileY = yOffset + cellScale * cell.y;
@@ -134,6 +135,7 @@ public abstract class GameArea implements Disposable {
         }
 
         robot.setPosition(worldX, worldY);
+        spawnEntity(robot);
         return robot;
     }
 
@@ -145,8 +147,8 @@ public abstract class GameArea implements Disposable {
     public Entity spawnRobotAtFloat(float x, float y, String robotType) {
 
         Entity robot = RobotFactory.createRobotType(robotType);
-        spawnEntity(robot);
         robot.setPosition(x, y);
+        spawnEntity(robot);
         return robot;
     }
 
