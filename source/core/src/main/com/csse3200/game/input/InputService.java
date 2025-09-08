@@ -4,12 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.math.Vector2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Provides a global access point for handling user input and creating input handlers. All active
@@ -68,8 +68,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed.
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed.
    *
    * @return whether the input was processed
    * @see InputProcessor#keyDown(int)
@@ -87,8 +87,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#keyTyped(char)
@@ -106,8 +106,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#keyUp(int)
@@ -125,8 +125,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#mouseMoved(int, int)
@@ -144,8 +144,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#scrolled(float, float)
@@ -163,8 +163,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#touchDown(int, int, int, int)
@@ -182,8 +182,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#touchDragged(int, int, int)
@@ -201,8 +201,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see InputProcessor#touchUp(int, int, int, int)
@@ -220,8 +220,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#fling(float, float, int)
@@ -239,8 +239,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#longPress(float, float)
@@ -258,8 +258,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#pan(float, float, float, float)
@@ -277,8 +277,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#panStop(float, float, int, int)
@@ -296,8 +296,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#pinch(Vector2, Vector2, Vector2, Vector2)
@@ -316,8 +316,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @see GestureDetector.GestureListener#pinchStop()
    */
@@ -333,8 +333,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#tap(float, float, int, int)
@@ -352,8 +352,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#touchDown(float, float, int, int)
@@ -371,8 +371,8 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   }
 
   /**
-   * Iterates over registered input handlers in descending priority and stops as soon as the input is
-   * processed
+   * Iterates over registered input handlers in descending priority and stops as soon as the input
+   * is processed
    *
    * @return whether the input was processed
    * @see GestureDetector.GestureListener#zoom(float, float)

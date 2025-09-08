@@ -97,7 +97,9 @@ public class DebugRenderer {
     requestCount++;
   }
 
-  /** @param active true to enable debug drawing, false to disable */
+  /**
+   * @param active true to enable debug drawing, false to disable
+   */
   public void setActive(boolean active) {
     logger.info("Set debug to: {}", active);
     this.active = active;

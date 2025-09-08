@@ -8,11 +8,10 @@ import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 
 /**
- * Represents a user profile in the game. Allows customization of player
- * attributes and tracking of progress.
+ * Represents a user profile in the game. Allows customization of player attributes and tracking of
+ * progress.
  *
- * Later we can add an arsenal of unlocked defences, and a way to track overall
- * level progress.
+ * <p>Later we can add an arsenal of unlocked defences, and a way to track overall level progress.
  */
 public class Profile {
   private String name;
@@ -22,9 +21,7 @@ public class Profile {
   private AchievementManager achievements; // The player's achievements
   private Statistics statistics; // The player's statistics
 
-  /**
-   * Creates a new profile with default values.
-   */
+  /** Creates a new profile with default values. */
   public Profile() {
     this.name = Savefile.createName();
     this.wallet = new Wallet();
@@ -34,12 +31,14 @@ public class Profile {
     this.statistics = new Statistics();
   }
 
-  /**
-   * Initialise a profile with the provided values.
-   */
+  /** Initialise a profile with the provided values. */
   public Profile(
-      String name, Wallet wallet, Inventory inventory,
-      SkillSet skillset, AchievementManager achievements, Statistics statistics) {
+      String name,
+      Wallet wallet,
+      Inventory inventory,
+      SkillSet skillset,
+      AchievementManager achievements,
+      Statistics statistics) {
     this.name = name;
     this.wallet = wallet;
     this.inventory = inventory;
@@ -50,7 +49,7 @@ public class Profile {
 
   /**
    * Get the name of the profile.
-   * 
+   *
    * @return the name of the profile.
    */
   public String getName() {
@@ -59,7 +58,7 @@ public class Profile {
 
   /**
    * Change the name of the profile.
-   * 
+   *
    * @param name the new name of the profile.
    */
   public void setName(String name) {

@@ -6,8 +6,8 @@ import com.badlogic.gdx.physics.box2d.RayCastCallback;
 import com.badlogic.gdx.utils.Array;
 
 /**
- * Cast a ray against all colliders that match the layer mask. All hits will be stored, with an empty
- * array if no hits occurred.
+ * Cast a ray against all colliders that match the layer mask. All hits will be stored, with an
+ * empty array if no hits occurred.
  */
 public class AllHitCallback implements RayCastCallback {
   private final Array<RaycastHit> raycastHits;

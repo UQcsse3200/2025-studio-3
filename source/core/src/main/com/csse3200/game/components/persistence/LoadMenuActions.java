@@ -1,16 +1,13 @@
 package com.csse3200.game.components.persistence;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Handles actions in the load menu.
- */
+/** Handles actions in the load menu. */
 public class LoadMenuActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(LoadMenuActions.class);
   private GdxGame game;
@@ -25,16 +22,13 @@ public class LoadMenuActions extends Component {
     entity.getEvents().addListener("loadGame", this::handleLoadGame);
   }
 
-  /**
-   * Handle going back to the main menu.
-   */
+  /** Handle going back to the main menu. */
   private void handleBack() {
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
   /**
-   * Handle loading a game from a savefile. Loads the profile
-   * and moves to the main game screen.
+   * Handle loading a game from a savefile. Loads the profile and moves to the main game screen.
    *
    * @param savefile the savefile to load
    */

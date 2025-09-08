@@ -1,22 +1,20 @@
 package com.csse3200.game.persistence;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.csse3200.game.progression.Profile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.csse3200.game.progression.Profile;
-
 /**
  * Class for loading and saving the user profile / savefile.
- * 
- * Save files should be in the format {@code <profilename>$<unixtime>.json}.
+ *
+ * <p>Save files should be in the format {@code <profilename>$<unixtime>.json}.
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
@@ -44,8 +42,7 @@ public class Persistence {
    */
   public static void load(Savefile save) {
     String path = getPath(save);
-    Profile savedProfile = FileLoader.readClass(
-        Profile.class, path, FileLoader.Location.EXTERNAL);
+    Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (savedProfile != null) {
       profile = savedProfile;
     } else {
@@ -54,28 +51,22 @@ public class Persistence {
     }
   }
 
-  /**
-   * Creates a new user profile, for use when a new game is started.
-   */
+  /** Creates a new user profile, for use when a new game is started. */
   public static void load() {
     profile = new Profile();
     logger.info("Created new profile");
   }
 
-  /**
-   * Ensures that the save directory exists.
-   */
+  /** Ensures that the save directory exists. */
   private static void ensureDirectoryExists() {
     FileHandle dir = Gdx.files.external(ROOT_DIR);
     if (!dir.exists()) {
-        dir.mkdirs();
-        logger.info("Created save directory: " + ROOT_DIR);
+      dir.mkdirs();
+      logger.info("Created save directory: " + ROOT_DIR);
     }
-}
-  
-  /**
-   * Fetch the latest three profile names from the file system.
-   */
+  }
+
+  /** Fetch the latest three profile names from the file system. */
   public static List<Savefile> fetch() {
     List<Savefile> saves = new ArrayList<>();
 
@@ -112,9 +103,7 @@ public class Persistence {
     return saves;
   }
 
-  /**
-   * Save the current user profile to the savefile.
-   */
+  /** Save the current user profile to the savefile. */
   public static void save() {
     List<Savefile> saves = fetch();
     for (Savefile save : saves) {
@@ -122,13 +111,12 @@ public class Persistence {
         delete(save);
       }
     }
-    String path = ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + ".json";
+    String path =
+        ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + ".json";
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
   }
 
-  /**
-   * Deletes a savefile from the filesystem.
-   */
+  /** Deletes a savefile from the filesystem. */
   private static void delete(Savefile save) {
     String path = getPath(save);
     FileHandle file = Gdx.files.external(path);
@@ -146,7 +134,7 @@ public class Persistence {
 
   /**
    * Get the current user profile.
-   * 
+   *
    * @return the current user profile.
    */
   public static Profile profile() {

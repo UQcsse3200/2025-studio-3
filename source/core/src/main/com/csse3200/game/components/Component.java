@@ -56,6 +56,7 @@ public class Component {
 
   /**
    * Get the entity to which this component belongs.
+   *
    * @return entity
    */
   public Entity getEntity() {

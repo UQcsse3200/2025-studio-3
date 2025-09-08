@@ -1,10 +1,9 @@
 package com.csse3200.game.ai.tasks;
 
 import com.csse3200.game.components.Component;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Task-based AI component. Given a list of tasks with priorities, the AI component will run the

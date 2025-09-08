@@ -1,17 +1,17 @@
 package com.csse3200.game.progression.statistics;
 
-import java.util.Map;
 import com.csse3200.game.persistence.Persistence;
+import java.util.Map;
 
 /**
- * The Statistics class tracks and stores global player/user statistics across
- * the game. It records cumulative data such as total kills, total shots,
- * player level, number of plants unlocked, and all-time total coins earned.
+ * The Statistics class tracks and stores global player/user statistics across the game. It records
+ * cumulative data such as total kills, total shots, player level, number of plants unlocked, and
+ * all-time total coins earned.
  *
- * Statistics are initialised within and linked to a particular Profile.
- * Statistics are relevant to unlocking Achievements.
+ * <p>Statistics are initialised within and linked to a particular Profile. Statistics are relevant
+ * to unlocking Achievements.
  *
- * Statistics can be initialised with default or variable starting statistics.
+ * <p>Statistics can be initialised with default or variable starting statistics.
  */
 public class Statistics {
   int kills;
@@ -20,16 +20,15 @@ public class Statistics {
   int numDefencesUnlocked;
   int totalCoinsEarned;
 
-  private transient final Map<String, Integer> ACHIEVEMENT_QUOTAS = Map.of(
-      "50_KILLS", 50,
-      "50_SHOTS", 200,
-      "LEVEL_1_COMPLETE", 1,
-      "5_DEFENSES", 5,
-      "100_COINS", 100);
+  private final transient Map<String, Integer> ACHIEVEMENT_QUOTAS =
+      Map.of(
+          "50_KILLS", 50,
+          "50_SHOTS", 200,
+          "LEVEL_1_COMPLETE", 1,
+          "5_DEFENSES", 5,
+          "100_COINS", 100);
 
-  /**
-   * Default constructor for Statistics.
-   */
+  /** Default constructor for Statistics. */
   public Statistics() {
     this.kills = 0;
     this.shotsFired = 0;
@@ -41,13 +40,14 @@ public class Statistics {
   /**
    * Creates a Statistics instance with specified starting statistics.
    *
-   * @param kills               the initial number of kills
-   * @param shotsFired          the initial number of shots fired
-   * @param levelsPassed        the initial number of levels passed
+   * @param kills the initial number of kills
+   * @param shotsFired the initial number of shots fired
+   * @param levelsPassed the initial number of levels passed
    * @param numDefencesUnlocked the initial number of defences unlocked
-   * @param totalCoinsEarned    the initial number of coins earned
+   * @param totalCoinsEarned the initial number of coins earned
    */
-  public Statistics(int kills, int shotsFired, int levelsPassed, int numDefencesUnlocked, int totalCoinsEarned) {
+  public Statistics(
+      int kills, int shotsFired, int levelsPassed, int numDefencesUnlocked, int totalCoinsEarned) {
     this.kills = kills;
     this.shotsFired = shotsFired;
     this.levelsPassed = levelsPassed;
@@ -155,9 +155,7 @@ public class Statistics {
     }
   }
 
-  /**
-   * Increases kills by 1.
-   */
+  /** Increases kills by 1. */
   public void increaseKills() {
     this.kills++;
     if (this.kills >= ACHIEVEMENT_QUOTAS.get("50_KILLS")) {
@@ -165,9 +163,7 @@ public class Statistics {
     }
   }
 
-  /**
-   * Increases kills by 1.
-   */
+  /** Increases kills by 1. */
   public void increaseShotsFired() {
     this.shotsFired++;
     if (!Persistence.profile().achievements().isUnlocked("50_SHOTS")
@@ -176,9 +172,7 @@ public class Statistics {
     }
   }
 
-  /**
-   * Increases levels passed by 1.
-   */
+  /** Increases levels passed by 1. */
   public void increaseLevelsPassed() {
     this.levelsPassed++;
     if (!Persistence.profile().achievements().isUnlocked("LEVEL_1_COMPLETE")
@@ -187,9 +181,7 @@ public class Statistics {
     }
   }
 
-  /**
-   * Increases number of defences unlocked by 1.
-   */
+  /** Increases number of defences unlocked by 1. */
   public void increaseNumDefencesUnlocked() {
     this.numDefencesUnlocked++;
     if (!Persistence.profile().achievements().isUnlocked("5_DEFENSES")
@@ -211,9 +203,7 @@ public class Statistics {
     }
   }
 
-  /**
-   * Increases all-time total coins earned by 1.
-   */
+  /** Increases all-time total coins earned by 1. */
   public void increaseTotalCoinsEarned() {
     this.totalCoinsEarned++;
     if (!Persistence.profile().achievements().isUnlocked("100_COINS")

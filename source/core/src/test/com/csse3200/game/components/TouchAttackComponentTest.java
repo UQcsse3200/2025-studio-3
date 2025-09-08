@@ -1,5 +1,7 @@
 package com.csse3200.game.components;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -12,16 +14,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import com.csse3200.game.services.ServiceLocator;
-
 @ExtendWith(GameExtension.class)
 class TouchAttackComponentTest {
   @BeforeEach
   void beforeEach() {
     ServiceLocator.registerPhysicsService(new PhysicsService());
     ServiceLocator.registerCurrencyService(new CurrencyService(0, Integer.MAX_VALUE));
-
   }
 
   @Test

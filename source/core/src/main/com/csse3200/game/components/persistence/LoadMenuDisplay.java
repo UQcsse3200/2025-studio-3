@@ -9,13 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.ui.UIComponent;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.List;
 
-/**
- * A UI component for displaying the load menu with current saves.
- */
+/** A UI component for displaying the load menu with current saves. */
 public class LoadMenuDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(LoadMenuDisplay.class);
   private static final float Z_INDEX = 2f;
@@ -40,13 +38,14 @@ public class LoadMenuDisplay extends UIComponent {
 
     // Back button positioned at top-left
     TextButton backBtn = new TextButton("Back", skin);
-    backBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Back button clicked");
-        entity.getEvents().trigger("back");
-      }
-    });
+    backBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Back button clicked");
+            entity.getEvents().trigger("back");
+          }
+        });
 
     // Title
     Label titleLabel = new Label("LOAD GAME", skin, "large");
@@ -61,13 +60,15 @@ public class LoadMenuDisplay extends UIComponent {
         saveSlotButtons[i] = new TextButton(buttonText, skin);
 
         final int slotIndex = i;
-        saveSlotButtons[i].addListener(new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).getName());
-            entity.getEvents().trigger("loadGame", saveFiles.get(slotIndex));
-          }
-        });
+        saveSlotButtons[i].addListener(
+            new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug(
+                    "Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).getName());
+                entity.getEvents().trigger("loadGame", saveFiles.get(slotIndex));
+              }
+            });
       } else {
         // Empty save slot
         saveSlotButtons[i] = new TextButton("Empty", skin);
@@ -91,10 +92,7 @@ public class LoadMenuDisplay extends UIComponent {
 
     // Add save slots with consistent sizing and spacing
     for (int i = 0; i < saveSlotButtons.length; i++) {
-      contentTable.add(saveSlotButtons[i])
-          .width(400f)
-          .height(80f)
-          .padBottom(20f);
+      contentTable.add(saveSlotButtons[i]).width(400f).height(80f).padBottom(20f);
       contentTable.row();
     }
 
@@ -104,8 +102,7 @@ public class LoadMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-  }
+  public void draw(SpriteBatch batch) {}
 
   @Override
   public float getZIndex() {

@@ -1,14 +1,12 @@
 package com.csse3200.game.components.profile;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Handles actions for the profile menu display.
- */
+/** Handles actions for the profile menu display. */
 public class ProfileDisplayActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(ProfileDisplayActions.class);
   private GdxGame game;
@@ -74,5 +72,4 @@ public class ProfileDisplayActions extends Component {
     logger.info("Opening settings");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
-
 }

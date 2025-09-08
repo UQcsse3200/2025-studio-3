@@ -16,9 +16,7 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The game screen containing the load menu.
- */
+/** The game screen containing the load menu. */
 public class LoadGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(LoadGameScreen.class);
   private final GdxGame game;
@@ -26,6 +24,7 @@ public class LoadGameScreen extends ScreenAdapter {
 
   /**
    * Constructor for the load game screen.
+   *
    * @param game
    */
   public LoadGameScreen(GdxGame game) {
@@ -51,12 +50,10 @@ public class LoadGameScreen extends ScreenAdapter {
   }
 
   @Override
-  public void pause() {
-  }
+  public void pause() {}
 
   @Override
-  public void resume() {
-  }
+  public void resume() {}
 
   @Override
   public void dispose() {

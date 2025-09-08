@@ -1,22 +1,18 @@
 package com.csse3200.game.progression.achievements;
 
 /**
- * The Achievement class is responsible for unlocking achievements. It stores
- * the names, description and skillpoint of each individual achievement.
- * Achievements are tied to a particular profile/load file. Achievements are
- * unlocked based on the specified unlocking citeria(s). Achievements are 
+ * The Achievement class is responsible for unlocking achievements. It stores the names, description
+ * and skillpoint of each individual achievement. Achievements are tied to a particular profile/load
+ * file. Achievements are unlocked based on the specified unlocking citeria(s). Achievements are
  * initialised to be locked.
  */
-
 public class Achievement {
   private final String name;
   private final String description;
   private final int skillPoint;
   private boolean unlocked = false;
 
-  /**
-   * Default constructor for Achievement.
-   */
+  /** Default constructor for Achievement. */
   public Achievement() {
     this.name = "";
     this.description = "";
@@ -27,9 +23,9 @@ public class Achievement {
   /**
    * Creates a Achievement instance with specified starting achievement details.
    *
-   * @param name        achievement name
+   * @param name achievement name
    * @param description achievement description
-   * @param skillPoint  achievement skillpoint
+   * @param skillPoint achievement skillpoint
    */
   public Achievement(String name, String description, int skillPoint) {
     this.name = name;
@@ -74,8 +70,8 @@ public class Achievement {
   }
 
   /**
-   * unlocks the achievement. Pops up on current screen indicating the associated
-   * achievement has been unlocked.
+   * unlocks the achievement. Pops up on current screen indicating the associated achievement has
+   * been unlocked.
    */
   public void unlock() {
     if (!unlocked) {

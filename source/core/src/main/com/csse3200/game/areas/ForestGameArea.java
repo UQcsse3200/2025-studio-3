@@ -4,10 +4,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
-import com.csse3200.game.ai.movement.MovementController;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.NPCFactory;
@@ -15,15 +15,13 @@ import com.csse3200.game.entities.factories.ObstacleFactory;
 import com.csse3200.game.entities.factories.PlayerFactory;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
-import com.csse3200.game.utils.math.GridPoint2Utils;
-import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.utils.math.GridPoint2Utils;
+import com.csse3200.game.utils.math.RandomUtils;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
 
 /** Forest area for the demo game with trees, a player, and some enemies. */
 public class ForestGameArea extends GameArea {
@@ -46,29 +44,34 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png", "images/sling_shooter.png"
+    "images/iso_grass_3.png",
+    "images/sling_shooter.png"
   };
   private static final String[] forestTextureAtlases = {
-    "images/terrain_iso_grass.atlas", "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas",
+    "images/terrain_iso_grass.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/sling_shooter.atlas",
     "images/iso_grass_3.png",
     "images/robot_placeholder.png",
     "images/iso_grass_3.png",
-          "images/normal_sunlight.png",
-          "images/sling_shooter.png"
+    "images/normal_sunlight.png",
+    "images/sling_shooter.png"
   };
 
   private static final String[] forestSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] forestMusic = {backgroundMusic};
 
-    private final TerrainFactory terrainFactory;
-    private CurrencyGeneratorComponent currencyGenerator;
+  private final TerrainFactory terrainFactory;
+  private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
   private final ArrayList<Entity> robots = new ArrayList<>();
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
+   *
    * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
    * @requires terrainFactory != null
    */
@@ -87,8 +90,8 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    //spawnGhosts();
-    //spawnGhostKing();
+    // spawnGhosts();
+    // spawnGhostKing();
 
     spawnDefences();
     spawnGhosts();
@@ -159,43 +162,50 @@ public class ForestGameArea extends GameArea {
     }
   }
 
-  private void spawnLaser(Entity entity){
-      autofire(entity,() -> {
+  private void spawnLaser(Entity entity) {
+    autofire(
+        entity,
+        () -> {
           Entity laser = ObstacleFactory.createLaser();
 
           HitboxComponent hitbox = laser.getComponent(HitboxComponent.class);
-          if(hitbox == null){
-              hitbox = new HitboxComponent();
-              hitbox.setSensor(true);
-              laser.addComponent(hitbox);
-          }else{
-              hitbox.setSensor(true);
+          if (hitbox == null) {
+            hitbox = new HitboxComponent();
+            hitbox.setSensor(true);
+            laser.addComponent(hitbox);
+          } else {
+            hitbox.setSensor(true);
           }
 
           Vector2 ePos = entity.getPosition();
-          Vector2 dirn = entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
+          Vector2 dirn =
+              entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
           float offset = 1.0f;
           Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
           GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
           spawnEntityAt(laser, entityPos, true, true);
-      });
+        });
   }
 
-    /**
-     * autofire -> Sets an automatic fire rate for projectiles
-     * @param entity Entity from which projectiles will spawn
-     * @param SpawnAction The instructions to deploy the said parameter
-     */
-  private void autofire(Entity entity, Runnable SpawnAction){
-      final float initdelay = 2.0f;
-      final float firerate = 0.5f;
+  /**
+   * autofire -> Sets an automatic fire rate for projectiles
+   *
+   * @param entity Entity from which projectiles will spawn
+   * @param SpawnAction The instructions to deploy the said parameter
+   */
+  private void autofire(Entity entity, Runnable SpawnAction) {
+    final float initdelay = 2.0f;
+    final float firerate = 0.5f;
 
-      Timer.schedule(new Timer.Task(){
+    Timer.schedule(
+        new Timer.Task() {
           @Override
-          public void run(){
-              SpawnAction.run();
+          public void run() {
+            SpawnAction.run();
           }
-      },initdelay, firerate);
+        },
+        initdelay,
+        firerate);
   }
 
   private Entity spawnPlayer() {
@@ -219,35 +229,35 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnRobots() {
-      GridPoint2 minPos = new GridPoint2(0, 0);
-      GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-      for (int i = 0; i < NUM_ROBOTS; i++) {
-          GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-          Entity robot = NPCFactory.createRobot(player);
-          spawnEntityAt(robot, randomPos, true, true);
-          robot.getEvents().addListener("despawnRobot", (Entity e) -> requestDespawn(e));
-          robots.add(robot);
-      }
+    for (int i = 0; i < NUM_ROBOTS; i++) {
+      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+      Entity robot = NPCFactory.createRobot(player);
+      spawnEntityAt(robot, randomPos, true, true);
+      robot.getEvents().addListener("despawnRobot", (Entity e) -> requestDespawn(e));
+      robots.add(robot);
+    }
   }
 
   private void spawnGhostKing() {
-      GridPoint2 minPos = new GridPoint2(0, 0);
-      GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
+    GridPoint2 minPos = new GridPoint2(0, 0);
+    GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
-      GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-      Entity ghostKing = NPCFactory.createGhostKing(player);
-      spawnEntityAt(ghostKing, randomPos, true, true);
+    GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
+    Entity ghostKing = NPCFactory.createGhostKing(player);
+    spawnEntityAt(ghostKing, randomPos, true, true);
   }
 
   public void despawnGhost(Entity ghost) {
     despawnEntity(ghost);
   }
 
-    public void despawnRobot(Entity robot) {
-        robots.remove(robot);
-        despawnEntity(robot);
-    }
+  public void despawnRobot(Entity robot) {
+    robots.remove(robot);
+    despawnEntity(robot);
+  }
 
   private void playMusic() {
     Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
@@ -267,7 +277,7 @@ public class ForestGameArea extends GameArea {
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
       logger.info("Loading... {}%", resourceService.getProgress());
-      }
+    }
   }
 
   private void unloadAssets() {
@@ -279,18 +289,14 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestMusic);
   }
 
-    private void spawnSun() {
-        Entity sunSpawner = new Entity();
+  private void spawnSun() {
+    Entity sunSpawner = new Entity();
 
-        currencyGenerator = new CurrencyGeneratorComponent(
-                5f,
-                25,
-                "images/normal_sunlight.png"
-        );
+    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
 
-        sunSpawner.addComponent(currencyGenerator);
-        spawnEntity(sunSpawner);
-    }
+    sunSpawner.addComponent(currencyGenerator);
+    spawnEntity(sunSpawner);
+  }
 
   @Override
   public void dispose() {

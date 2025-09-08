@@ -14,9 +14,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A UI component for displaying the Profile page with navigation buttons.
- */
+/** A UI component for displaying the Profile page with navigation buttons. */
 public class ProfileDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ProfileDisplay.class);
   private static final float Z_INDEX = 2f;
@@ -75,15 +73,12 @@ public class ProfileDisplay extends UIComponent {
     Label titleLabel = new Label("Profile", skin, "title");
     titleLabel.setAlignment(Align.center);
 
-    mainTable.add(titleLabel)
-        .padBottom(stage.getHeight() * 0.1f)
-        .expandX()
-        .row();
+    mainTable.add(titleLabel).padBottom(stage.getHeight() * 0.1f).expandX().row();
   }
 
   private void createProfileButtons() {
-    String[] buttonLabels = { "Inventory", "Achievements", "Skills", "Stats", "Shop" };
-    String[] buttonEvents = { "inventory", "achievements", "skills", "stats", "shop" };
+    String[] buttonLabels = {"Inventory", "Achievements", "Skills", "Stats", "Shop"};
+    String[] buttonEvents = {"inventory", "achievements", "skills", "stats", "shop"};
 
     Table buttonTable = new Table();
     buttonTable.defaults().spaceBottom(stage.getHeight() * BUTTON_SPACING_RATIO);
@@ -98,24 +93,24 @@ public class ProfileDisplay extends UIComponent {
 
       // Add click listener
       final String eventName = buttonEvents[i];
-      button.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("{} button clicked", eventName);
-          entity.getEvents().trigger("profile_" + eventName);
-        }
-      });
+      button.addListener(
+          new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+              logger.debug("{} button clicked", eventName);
+              entity.getEvents().trigger("profile_" + eventName);
+            }
+          });
 
       // Add button to table with spacing
-      buttonTable.add(button)
+      buttonTable
+          .add(button)
           .width(buttonWidth)
           .height(buttonHeight)
           .padRight(i < buttonLabels.length - 1 ? stage.getWidth() * BUTTON_SPACING_RATIO : 0);
     }
 
-    mainTable.add(buttonTable)
-        .center()
-        .row();
+    mainTable.add(buttonTable).center().row();
   }
 
   private void createCornerButtons() {
@@ -130,63 +125,68 @@ public class ProfileDisplay extends UIComponent {
 
     // Back button (top left)
     TextButton backBtn = new TextButton("Back", skin);
-    backBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Back button clicked");
-        entity.getEvents().trigger("profile_back");
-      }
-    });
+    backBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Back button clicked");
+            entity.getEvents().trigger("profile_back");
+          }
+        });
 
     // Exit button (top right)
     TextButton exitBtn = new TextButton("Exit", skin);
-    exitBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Exit button clicked");
-        entity.getEvents().trigger("profile_exit");
-      }
-    });
+    exitBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Exit button clicked");
+            entity.getEvents().trigger("profile_exit");
+          }
+        });
 
     // Save button (bottom left)
     TextButton saveBtn = new TextButton("Save", skin);
-    saveBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Save button clicked");
-        entity.getEvents().trigger("profile_save");
-      }
-    });
+    saveBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Save button clicked");
+            entity.getEvents().trigger("profile_save");
+          }
+        });
 
     // Settings button (bottom right)
     TextButton settingsBtn = new TextButton("Settings", skin);
-    settingsBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Settings button clicked");
-        entity.getEvents().trigger("profile_settings");
-      }
-    });
+    settingsBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Settings button clicked");
+            entity.getEvents().trigger("profile_settings");
+          }
+        });
 
     // Position buttons in corners using the table
-    cornerTable.add(backBtn).width(buttonWidth).height(buttonHeight)
-        .pad(padding).top().left();
+    cornerTable.add(backBtn).width(buttonWidth).height(buttonHeight).pad(padding).top().left();
     cornerTable.add().expandX();
-    cornerTable.add(exitBtn).width(buttonWidth).height(buttonHeight)
-        .pad(padding).top().right();
+    cornerTable.add(exitBtn).width(buttonWidth).height(buttonHeight).pad(padding).top().right();
     cornerTable.row();
     cornerTable.add().expandY();
     cornerTable.row();
-    cornerTable.add(saveBtn).width(buttonWidth).height(buttonHeight)
-        .pad(padding).bottom().left();
+    cornerTable.add(saveBtn).width(buttonWidth).height(buttonHeight).pad(padding).bottom().left();
     cornerTable.add().expandX();
-    cornerTable.add(settingsBtn).width(buttonWidth).height(buttonHeight)
-        .pad(padding).bottom().right();
+    cornerTable
+        .add(settingsBtn)
+        .width(buttonWidth)
+        .height(buttonHeight)
+        .pad(padding)
+        .bottom()
+        .right();
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-  }
+  public void draw(SpriteBatch batch) {}
 
   @Override
   public float getZIndex() {
@@ -204,9 +204,7 @@ public class ProfileDisplay extends UIComponent {
     super.dispose();
   }
 
-  /**
-   * Call this method when the screen is resized to update UI elements
-   */
+  /** Call this method when the screen is resized to update UI elements */
   public void resize(int width, int height) {
     if (mainTable != null) {
       mainTable.clear();

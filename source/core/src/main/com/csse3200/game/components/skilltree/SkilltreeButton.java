@@ -10,9 +10,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Displays a button to exit the Main Game screen to the Main Menu screen.
- */
+/** Displays a button to exit the Main Game screen to the Main Menu screen. */
 public class SkilltreeButton extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButton.class);
   private static final float Z_INDEX = 2f;
@@ -38,13 +36,13 @@ public class SkilltreeButton extends UIComponent {
 
     // Triggers an event when the button is pressed.
     backButton.addListener(
-      new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("Back button clicked");
-          game.setScreen(GdxGame.ScreenType.PROFILE);
-        }
-      });
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Back button clicked");
+            game.setScreen(GdxGame.ScreenType.PROFILE);
+          }
+        });
 
     table.add(backButton).padTop(10f).padRight(10f);
 
@@ -52,8 +50,7 @@ public class SkilltreeButton extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-  }
+  public void draw(SpriteBatch batch) {}
 
   @Override
   public float getZIndex() {

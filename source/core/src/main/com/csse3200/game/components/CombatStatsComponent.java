@@ -1,9 +1,9 @@
 package com.csse3200.game.components;
 
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Component used to store information related to combat such as health, attack, etc. Any entities
@@ -50,34 +50,38 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-//    logger.info(String.valueOf(this.health));
+    //    logger.info(String.valueOf(this.health));
 
     if (entity != null) {
-        if (this.health == 0) {
-            // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
-            int extraCoins = 3; // TODO: replace with your real drop logic
+      if (this.health == 0) {
+        // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
+        int extraCoins = 3; // TODO: replace with your real drop logic
 
-            // 2) Progression stats (HudDisplay / coins.png reads this)
-            if (Persistence.profile() != null) {
-                int before = Persistence.profile().wallet().getCoins();
-                Persistence.profile().statistics().increaseKills();
-                Persistence.profile().wallet().addCoins(extraCoins);
-                Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
-                logger.info("[Death] wallet: {} + {} -> {}", before, extraCoins,
-                        Persistence.profile().wallet().getCoins());
-            } else {
-                logger.warn("[Death] Persistence.profile() is null; cannot update progression wallet/stats");
-            }
-
-            // 3) Gameplay currency service (SunlightHudDisplay reads this)
-            if (ServiceLocator.getCurrencyService() != null) {
-                ServiceLocator.getCurrencyService().add(extraCoins);
-                logger.info("[Death] CurrencyService +{}", extraCoins);
-            }
-
-            // 4) Now despawn
-            entity.getEvents().trigger("despawnRobot", entity);
+        // 2) Progression stats (HudDisplay / coins.png reads this)
+        if (Persistence.profile() != null) {
+          int before = Persistence.profile().wallet().getCoins();
+          Persistence.profile().statistics().increaseKills();
+          Persistence.profile().wallet().addCoins(extraCoins);
+          Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
+          logger.info(
+              "[Death] wallet: {} + {} -> {}",
+              before,
+              extraCoins,
+              Persistence.profile().wallet().getCoins());
+        } else {
+          logger.warn(
+              "[Death] Persistence.profile() is null; cannot update progression wallet/stats");
         }
+
+        // 3) Gameplay currency service (SunlightHudDisplay reads this)
+        if (ServiceLocator.getCurrencyService() != null) {
+          ServiceLocator.getCurrencyService().add(extraCoins);
+          logger.info("[Death] CurrencyService +{}", extraCoins);
+        }
+
+        // 4) Now despawn
+        entity.getEvents().trigger("despawnRobot", entity);
+      }
       entity.getEvents().trigger("updateHealth", this.health);
     }
   }

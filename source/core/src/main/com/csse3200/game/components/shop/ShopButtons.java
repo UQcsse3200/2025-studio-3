@@ -13,9 +13,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A UI component for displaying the HUD with profile button and gold display.
- */
+/** A UI component for displaying the HUD with profile button and gold display. */
 public class ShopButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ShopButtons.class);
   private static final float Z_INDEX = 2f;
@@ -30,17 +28,21 @@ public class ShopButtons extends UIComponent {
   public void create() {
     super.create();
     logger.debug("ShopButtons created - stage available: {}", stage != null);
-    
-    entity.getEvents().addListener("purchased", () -> {
-      logger.info("Item purchased");
-      updateGoldDisplay();
-    });
+
+    entity
+        .getEvents()
+        .addListener(
+            "purchased",
+            () -> {
+              logger.info("Item purchased");
+              updateGoldDisplay();
+            });
   }
 
   @Override
   public void update() {
     super.update();
-    
+
     // Create actors on first update when stage is definitely available
     if (!actorsCreated && stage != null) {
       addActors();
@@ -58,7 +60,7 @@ public class ShopButtons extends UIComponent {
       logger.warn("Stage is null, cannot create HUD elements");
       return;
     }
-    
+
     float hudMargin = 20f;
     float elementSpacing = 60f;
 
@@ -80,21 +82,22 @@ public class ShopButtons extends UIComponent {
     backButton.setSize(BACK_BUTTON_SIZE * 2, BACK_BUTTON_SIZE);
 
     // Add click listener
-    backButton.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Back button clicked");
-        entity.getEvents().trigger("back");
-      }
-    });
+    backButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Back button clicked");
+            entity.getEvents().trigger("back");
+          }
+        });
 
     stage.addActor(backButton);
   }
 
   private void createGoldDisplay(float x, float y) {
     // Create gold icon
-    Texture goldTexture = ServiceLocator.getResourceService()
-        .getAsset("images/coins.png", Texture.class);
+    Texture goldTexture =
+        ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class);
 
     goldIcon = new Image(goldTexture);
     goldIcon.setPosition(x, y);
@@ -109,9 +112,7 @@ public class ShopButtons extends UIComponent {
     updateGoldDisplay();
   }
 
-  /**
-   * Updates the gold display with current wallet amount
-   */
+  /** Updates the gold display with current wallet amount */
   public void updateGoldDisplay() {
     try {
       // Get coins from profile wallet
@@ -124,8 +125,7 @@ public class ShopButtons extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-  }
+  public void draw(SpriteBatch batch) {}
 
   @Override
   public float getZIndex() {

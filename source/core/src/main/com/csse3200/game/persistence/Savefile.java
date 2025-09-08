@@ -32,9 +32,7 @@ public class Savefile {
     return new Savefile(name, date);
   }
 
-  /**
-   * Converts the Savefile object to a string representation.
-   */
+  /** Converts the Savefile object to a string representation. */
   public String toString() {
     return name + "$" + date;
   }
@@ -77,8 +75,7 @@ public class Savefile {
    * @return the date of the savefile.
    */
   public String getDisplayDate() {
-    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        .format(new java.util.Date(date));
+    return new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new java.util.Date(date));
   }
 
   /**

@@ -5,8 +5,8 @@ import com.badlogic.gdx.InputProcessor;
 import com.csse3200.game.input.InputComponent;
 
 /**
- * Input handler for the debug terminal for keyboard and touch (mouse) input.
- * This input handler only uses keyboard input.
+ * Input handler for the debug terminal for keyboard and touch (mouse) input. This input handler
+ * only uses keyboard input.
  *
  * <p>The debug terminal can be opened and closed by pressing 'F1' and a message can be entered via
  * the keyboard.
@@ -23,7 +23,6 @@ public class KeyboardTerminalInputComponent extends InputComponent {
     this();
     this.terminal = terminal;
   }
-
 
   @Override
   public void create() {
@@ -74,7 +73,7 @@ public class KeyboardTerminalInputComponent extends InputComponent {
       }
       terminal.setEnteredMessage("");
       return true;
-    } else if(Character.isLetterOrDigit(character) || character == ' ') {
+    } else if (Character.isLetterOrDigit(character) || character == ' ') {
       // append character to message
       terminal.appendToMessage(character);
       return true;
@@ -83,9 +82,9 @@ public class KeyboardTerminalInputComponent extends InputComponent {
   }
 
   /**
-   * Handles input if the terminal is open. This is because keyUp events are
-   * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
-   * trigger any other input handlers.
+   * Handles input if the terminal is open. This is because keyUp events are triggered alongside
+   * keyTyped events. If the user is typing in the terminal, the input shouldn't trigger any other
+   * input handlers.
    *
    * @return whether the input was processed
    * @see InputProcessor#keyUp(int)

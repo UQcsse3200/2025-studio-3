@@ -1,10 +1,11 @@
 package com.csse3200.game.persistence;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.csse3200.game.extensions.GameExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class SavefileTest {
@@ -56,6 +57,6 @@ class SavefileTest {
   void testGetDisplayDate() {
     String result = savefile.getDisplayDate();
     System.out.println(result);
-    assertNotNull(result); 
+    assertNotNull(result);
   }
 }
