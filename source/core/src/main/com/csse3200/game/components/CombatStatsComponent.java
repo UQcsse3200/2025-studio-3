@@ -50,7 +50,7 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-//    logger.info(String.valueOf(this.health));
+    logger.info(String.valueOf(this.health));
 
     if (entity != null) {
         if (this.health == 0) {

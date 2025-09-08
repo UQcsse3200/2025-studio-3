@@ -3,13 +3,21 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -99,7 +107,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
         spawnSun();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        spawnUnit(2, 2);
+        spawnUnit(3, 1);
 //        spawnRobotAtFloat(1, 1);
 //        spawnRobotAtTile(new GridPoint2(2, 2), true, true);
         placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
@@ -294,10 +302,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     @Override
     public void spawnUnit(int position){
         Entity unit = new Entity();
-
         // Match the texture of the inventory unit - placeholder
         Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
-        unit.addComponent(new TextureRenderComponent(texture));
+        unit.addComponent(new TextureRenderComponent(texture))
+//                .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 1.5f))
+                .addComponent(new PhysicsComponent())
+                .addComponent(new ColliderComponent())
+                .addComponent(new HitMarkerComponent())
+                .addComponent(new CombatStatsComponent(50, 1))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.DEFENSE));
+
+        // Make it so entity cant be moved.
+        unit.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
 
         // Get and set position coords
         float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
@@ -312,14 +328,17 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         unit.scaleHeight(tileSize);
 
         spawnEntity(unit);
+        unit.getEvents().addListener("entityDeath", () -> requestDespawn(unit));
         logger.info("Unit spawned at position {}", position);
     }
+
 
     public void spawnUnit(int x, int y){
         Entity unit = RobotFactory.createRobotType("fast");
 
         // Get and set position coords
-        float tileX = xOffset + tileSize * (x % LEVEL_ONE_COLS);
+        // So it can spawn off-screen
+        float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
         float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
         unit.setPosition(tileX, tileY);
 

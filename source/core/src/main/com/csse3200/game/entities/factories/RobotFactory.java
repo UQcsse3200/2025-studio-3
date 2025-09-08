@@ -4,6 +4,8 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
@@ -160,8 +162,10 @@ public class RobotFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent())
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
                 .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+                .addComponent(new TouchAttackComponent(PhysicsLayer.DEFENSE, 0f))
+                .addComponent(new HitMarkerComponent())
                 .addComponent(aiComponent);
 
 
