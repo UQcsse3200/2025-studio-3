@@ -9,7 +9,7 @@ import java.util.Map;
  */
 
 public class AchievementManager {
-  private Map<String, Achievement> achievements = new HashMap<>();
+  private static Map<String, Achievement> achievements = new HashMap<>();
 
   /**
    * Constructor for AchievementManager.
@@ -23,69 +23,16 @@ public class AchievementManager {
    */
   private void initializeDefaultAchievements() {
     achievements.put("5_DEFENSES", new Achievement(
-        "5_DEFENSES", "Unlocked 5 defenses", 5));
+        "5_DEFENSES", "Unlocked 5 defenses", 5, 4, Achievement.Tier.T1));
     achievements.put("100_COINS", new Achievement(
-        "100_COINS", "Earned 100 coins", 5));
+        "100_COINS", "Earned 100 coins", 5, 5, Achievement.Tier.T1));
     achievements.put("LEVEL_1_COMPLETE", new Achievement(
-        "LEVEL_1_COMPLETE", "Completed the first level", 10));
+        "LEVEL_1_COMPLETE", "Completed the first level", 10, 10, Achievement.Tier.T1));
     achievements.put("50_SHOTS", new Achievement(
-        "50_SHOTS", "You fired 50 shots.", 5));
+        "50_SHOTS", "You fired 50 shots.", 5, 5, Achievement.Tier.T1));
     achievements.put("50_KILLS", new Achievement(
-        "50_KILLS", "Earned 50 kills", 10));
+        "50_KILLS", "Earned 50 kills", 10, 10, Achievement.Tier.T1));
   }
-
-  // POTENTIAL NEW ACHIEVEMENTS
-  // achievementManager.addAchievement(
-  // new Achievement("First move", "Made your first move", 25)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("5Secin", "Loaded into the game for 5 seconds", 30)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Explorer", "Opened the achievements menu", 10)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Persistent", "Played the game 5 times", 50)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Completionist", "Unlocked all achievements", 100)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Sharpshooter", "Hit 10 perfect moves in a row", 40)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Speedrunner", "Finished a level in under 30 seconds", 75)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Collector", "Collected 100 items total", 20)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Unstoppable", "Survived for 10 minutes without failing", 60)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Night Owl", "Played the game after midnight", 15)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Early Bird", "Played the game before 7am", 15)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Casual Gamer", "Played for 1 hour total", 25)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Marathoner", "Played for 10 hours total", 100)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Risk Taker", "Triggered a near-fail but survived", 35)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Tactician", "Used 5 different strategies in one game", 45)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("The Comeback", "Recovered from near defeat to win", 80)
-  // );
-  // achievementManager.addAchievement(
-  // new Achievement("Legend", "Achieved the highest possible score", 200)
-  // );
 
   /**
    * Sets the achievements map.
@@ -105,7 +52,7 @@ public class AchievementManager {
    *
    * @param name achievement name
    */
-  public void unlock(String name) {
+  public static void unlock(String name) {
     Achievement a = achievements.get(name);
     if (a != null && !a.isUnlocked()) {
       a.unlock();
@@ -129,4 +76,47 @@ public class AchievementManager {
   public Collection<Achievement> getAllAchievements() {
     return achievements.values();
   }
+
+  //achievements 2
+  /** Increment progress on an achievement by name. Automatically unlocks if goal reached. */
+  public static void addProgress(String name, int amount) {
+    Achievement a = achievements.get(name);
+    if (a != null) {
+      a.addProgress(amount);
+    }
+  }
+
+  /** Get an achievement by name for direct access (e.g., tiers, skill points, progress). */
+  public static Achievement getAchievement(String name) {
+    return achievements.get(name);
+  }
+
+  //probably not needed
+  /** Add a new achievement to the manager. */
+  public void addAchievement(Achievement achievement) {
+    if (achievement != null && achievement.getName() != null) {
+      achievements.put(achievement.getName(), achievement);
+    }
+  }
+
 }
+
+/*
+to use in another class for testing:
+// Increment progress
+        AchievementManager.addProgress("5_DEFENSES", 1);
+
+// Direct access for more control
+        Achievement a = AchievementManager.getAchievement("5_DEFENSES");
+        if (a != null) {
+            System.out.println(a.getProgressString()); // "1/5"
+            System.out.println(a.getTier());            // Tier.T1
+        }
+
+// Unlock directly
+        AchievementManager.unlock("LEVEL_1_COMPLETE");
+ */
+
+
+
+

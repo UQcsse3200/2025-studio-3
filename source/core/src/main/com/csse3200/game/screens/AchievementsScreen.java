@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.achievements.Achievement;
+import com.csse3200.game.progression.achievements.AchievementManager;
 
 /**
  * The game screen containing the achievements menu.
@@ -29,6 +30,23 @@ public class AchievementsScreen extends ScreenAdapter {
 
     public AchievementsScreen(GdxGame game) {
         this.game = game;
+
+        /*
+        // Increment progress
+        AchievementManager.addProgress("5_DEFENSES", 1);
+
+// Direct access for more control
+        Achievement a = AchievementManager.getAchievement("5_DEFENSES");
+        if (a != null) {
+            System.out.println(a.getProgressString()); // "1/5"
+            System.out.println(a.getTier());            // Tier.T1
+        }
+
+// Unlock directly
+        AchievementManager.unlock("LEVEL_1_COMPLETE");
+
+         */
+
     }
 
     @Override

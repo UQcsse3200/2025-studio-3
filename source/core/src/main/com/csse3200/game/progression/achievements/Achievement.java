@@ -8,12 +8,20 @@ package com.csse3200.game.progression.achievements;
  * initialised to be locked.
  */
 
-//hi
+
 public class Achievement {
   private final String name;
   private final String description;
   private final int skillPoint;
   private boolean unlocked = false;
+
+  //progression tracking
+  private int currentProgress;
+  private int goal;
+
+  // Tier system
+  public enum Tier { T1, T2, T3 }
+  private Tier tier;
 
   /**
    * Default constructor for Achievement.
@@ -22,7 +30,9 @@ public class Achievement {
     this.name = "";
     this.description = "";
     this.skillPoint = 0;
-    this.unlocked = false;
+    //all achievements are T1 by default
+    this.tier = Tier.T1;
+    //this.unlocked = false;
   }
 
   /**
@@ -32,10 +42,13 @@ public class Achievement {
    * @param description achievement description
    * @param skillPoint  achievement skillpoint
    */
-  public Achievement(String name, String description, int skillPoint) {
+  public Achievement(String name, String description, int skillPoint, int goal, Tier tier) {
     this.name = name;
     this.description = description;
     this.skillPoint = skillPoint;
+    this.goal = goal;
+    this.tier = tier;
+    this.currentProgress = 0;
   }
 
   /**
@@ -74,6 +87,51 @@ public class Achievement {
     return unlocked;
   }
 
+  /**
+   * Gets the achievement's current progress.
+   *
+   * @return the achievement's current progress.
+   */
+  public int getCurrentProgress() {
+    return currentProgress;
+  }
+
+  /**
+   * Gets the achievement's goal.
+   *
+   * @return the achievement's goal
+   */
+  public int getGoal() {
+    return goal;
+  }
+
+  /**
+   * Gets the achievement's tier.
+   *
+   * @return the achievement's tier
+   */
+  public Tier getTier() {
+    return tier;
+  }
+
+  /**
+   * Increment progress by a certain amount.
+   */
+  public void addProgress(int amount) {
+    if (!unlocked) {
+      currentProgress += amount;
+      if (currentProgress >= goal) {
+        unlock();
+      }
+    }
+  }
+
+  /**
+   * Displays progress in "x/y" form.
+   */
+  public String getProgressString() {
+    return currentProgress + "/" + goal;
+  }
   /**
    * unlocks the achievement. Pops up on current screen indicating the associated
    * achievement has been unlocked.
