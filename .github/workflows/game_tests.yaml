@@ -27,7 +27,7 @@ jobs:
         run: |
           cd $GRADLE_DIR
           chmod +x ./gradlew
-          ./gradlew --stacktrace test
+          ./gradlew test
         env:
           GRADLE_DIR: 'source' # Modify this to wherever './gradlew' is
 
