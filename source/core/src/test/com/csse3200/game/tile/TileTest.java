@@ -3,6 +3,7 @@ package com.csse3200.game.tile;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
@@ -20,6 +21,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.awt.geom.Area;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -28,6 +31,7 @@ import static org.mockito.Mockito.*;
 public class TileTest {
     @Mock Texture texture;
     LevelGameArea levelGameArea;
+    AreaAPI area;
 
     @BeforeEach
     void beforeEach() {
@@ -38,6 +42,7 @@ public class TileTest {
                     @Override
                     public void create() {}
                 };
+        area = (AreaAPI) levelGameArea;
 
         ServiceLocator.registerEntityService(new EntityService());
     }
@@ -144,7 +149,7 @@ public class TileTest {
                 .addComponent(new TextureRenderComponent(texture))
                 .addComponent(new TileHitboxComponent(5, 5, 0, 0))
                 .addComponent(new TileStorageComponent())
-                .addComponent(new TileInputComponent())
+                .addComponent(new TileInputComponent(area))
                 .addComponent(new TileStatusComponent(levelGameArea));
     }
 }

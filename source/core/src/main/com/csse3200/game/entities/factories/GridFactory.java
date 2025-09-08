@@ -40,7 +40,7 @@ public class GridFactory {
                         .addComponent(new TextureRenderComponent(image_path))
                         .addComponent(new TileHitboxComponent(x + 1, y + 1, x, y))
                         .addComponent(new TileStorageComponent())
-                        .addComponent(new TileInputComponent())
+                        .addComponent(new TileInputComponent(area))
                         .addComponent(new TileStatusComponent(area));
 
         // scales the tile to fit in the map

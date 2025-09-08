@@ -47,13 +47,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private final TerrainFactory terrainFactory;
 
     // Offset values
-    private final float xOffset;
-    private final float yOffset;
-    private final float tileSize ;
-    private final float invStartX;
-    private final float invY;
-    private final float invSelectedY;
-    private CurrencyGeneratorComponent currencyGenerator;
+    private float xOffset;
+    private float yOffset;
+    private float tileSize ;
+    private float invStartX;
+    private float invY;
+    private float invSelectedY;
+    private float stageHeight;
+    private float stageToWorldRatio;
     private LevelGameGrid grid;
     private final Entity[] spawned_units;
     private Entity selected_unit;
@@ -65,12 +66,22 @@ public class LevelGameArea extends GameArea implements AreaAPI {
      */
     public LevelGameArea(TerrainFactory terrainFactory) {
         super();
+        setScaling();
 
-        // Calculate scaling
-        float stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
+        this.terrainFactory = terrainFactory;
+        selected_unit = null; // None selected at level load
+        spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
+        selection_star = null;
+    }
+
+    /**
+     * Uses stage height and width (screen resolution from {@link com.csse3200.game.rendering.RenderService})
+     * to set variables relating to tile, grid and character sizing and placement.
+     */
+    public void setScaling() {
+        stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
         float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
-        float stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
-
+        stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
 
         float gridHeight = (stageHeight * stageToWorldRatio) / 8f * LEVEL_ONE_ROWS;
         tileSize = gridHeight / LEVEL_ONE_ROWS;
@@ -79,11 +90,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         invStartX = xOffset;
         invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
         invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
-
-        this.terrainFactory = terrainFactory;
-        selected_unit = null; // None selected at level load
-        spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
-        selection_star = null;
     }
 
     /**
@@ -97,8 +103,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
         spawnSun();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
-        placeInventoryUnit(2, "images/ghost_king.png");
+        spawnInventory();
 
         playMusic();
     }
@@ -153,9 +158,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnEntity(mapEntity);
     }
 
+    /**
+     * Determines inventory units to spawn for the level and calls method to place them.
+     */
+    private void spawnInventory() {
+        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
+        placeInventoryUnit(2, "images/ghost_king.png");
+    }
+
+
     private void spawnSun() {
         Entity sunSpawner = new Entity();
-        currencyGenerator = new CurrencyGeneratorComponent(5f, 25,"images/normal_sunlight.png");
+        CurrencyGeneratorComponent currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
         sunSpawner.addComponent(currencyGenerator);
         spawnEntity(sunSpawner);
     }
@@ -326,11 +340,38 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     /**
      * Getter for tile size in world units
      *
-     * @return SCALE the size of the tiles
+     * @return tileSize the size of the tiles
      */
     @Override
     public float getTileSize() {
         return tileSize;
     }
-}
 
+    /**
+     * Converts stage (mouse/screen) coordinates into world (entity placement) coordinates
+     *
+     * @param pos a and y coordinates in the stage
+     * @return GridPoint 2 containing x and y coordinates in the world
+     */
+    @Override
+    public GridPoint2 stageToWorld(GridPoint2 pos) {
+
+        float x = pos.x * stageToWorldRatio;
+        float y = (stageHeight - pos.y) * stageToWorldRatio;
+
+        return new GridPoint2((int) x, (int) y);
+    }
+
+    /**
+     * Converts world (entity placement) coordinates into stage (mouse/screen) coordinates
+     *
+     * @param pos a and y coordinates in the world
+     * @return GridPoint 2 containing x and y coordinates in the stage
+     */
+    @Override
+    public GridPoint2 worldToStage(GridPoint2 pos) {
+        float x = pos.x / stageToWorldRatio;
+        float y = stageHeight - (pos.y / stageToWorldRatio);
+        return new GridPoint2((int) x, (int) y);
+    }
+}
