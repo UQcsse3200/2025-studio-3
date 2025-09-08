@@ -35,7 +35,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "images/green_tile.png",
             "images/box_boy.png",
             "images/selected_star.png",
-            "images/slot_icon.png"
+            "images/slot_icon.png",
+            "images/slot_reels_background.png"
     };
 
     private static final String[] levelTextureAtlases = {

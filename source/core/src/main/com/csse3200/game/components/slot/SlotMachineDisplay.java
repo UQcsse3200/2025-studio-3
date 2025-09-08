@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -52,7 +54,7 @@ public class SlotMachineDisplay extends UIComponent {
     private static final float REEL_GAP_RATIO = 0.03f;
     private final List<Group> reelColumns = new ArrayList<>();
     // Target symbol indices (per column) where reels should stop. (now for test)
-    private final int[] targetIndices = new int[]{0, 6, 3};
+    private int[] targetIndices;
     /**
      * Per-column symbol metrics and runtime state used for smooth stopping.
      */
@@ -67,6 +69,8 @@ public class SlotMachineDisplay extends UIComponent {
     private ImageButton slotIconBtn;
     private Group frameGroup;
     private Image frameImage;
+    private Image reelsBgImage;
+    private Image dimmer;
     private TextureRegionDrawable frameUpDrawable;
     private TextureRegionDrawable frameDownDrawable;
     // reels
@@ -74,6 +78,7 @@ public class SlotMachineDisplay extends UIComponent {
     private Group reelsContent;
     private TextureAtlas reelsAtlas;
     private List<TextureAtlas.AtlasRegion> symbolRegions;
+    private int stoppedCount = 0;
     /**
      * Base reel scroll speed in pixels per second.
      */
@@ -112,14 +117,17 @@ public class SlotMachineDisplay extends UIComponent {
         slotIconBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                boolean show = !frameGroup.isVisible();
-                frameGroup.setVisible(show);
-                if (!show) {
-                    stopReelsImmediate();
+                boolean willShow = !frameGroup.isVisible();
+                if (willShow) {
+                    showSlotPopup();
+                } else {
+                    if (spinning) {
+                        return;
+                    }
+                    hideSlotPopup();
                 }
             }
         });
-
         stage.addActor(slotIconBtn);
     }
 
@@ -134,12 +142,35 @@ public class SlotMachineDisplay extends UIComponent {
         frameGroup.setTransform(false);
         frameGroup.setVisible(false);
 
+        dimmer = new Image(skin.getDrawable("black"));
+        dimmer.setSize(stage.getWidth(), stage.getHeight());
+        dimmer.setPosition(0f, 0f);
+        dimmer.getColor().a = 0.6f;
+        dimmer.setTouchable(Touchable.enabled);
+        dimmer.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                event.stop();
+                if (spinning) {
+                    return;
+                }
+                hideSlotPopup();
+            }
+        });
+        frameGroup.addActor(dimmer);
+
         TextureAtlas atlas = ServiceLocator.getResourceService()
                 .getAsset("images/slot_frame.atlas", TextureAtlas.class);
         TextureRegion upRegion = atlas.findRegion("slot_frame_up");
         TextureRegion downRegion = atlas.findRegion("slot_frame_down");
         frameUpDrawable = new TextureRegionDrawable(upRegion);
         frameDownDrawable = new TextureRegionDrawable(downRegion);
+
+        Texture reelsBgTex = ServiceLocator.getResourceService()
+                .getAsset("images/slot_reels_background.png", Texture.class);
+        reelsBgImage = new Image(reelsBgTex);
+        reelsBgImage.setTouchable(Touchable.disabled);
+        frameGroup.addActor(reelsBgImage);
 
         reelsContent = new Group();
         reelsPane = new ScrollPane(reelsContent);
@@ -153,6 +184,7 @@ public class SlotMachineDisplay extends UIComponent {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 logger.info("Slot frame clicked");
+                targetIndices = new int[]{3, 3, 3};     // Logic
                 frameImage.clearActions();
                 frameImage.setDrawable(frameDownDrawable);
                 frameImage.addAction(Actions.sequence(
@@ -177,7 +209,7 @@ public class SlotMachineDisplay extends UIComponent {
         for (TextureAtlas.AtlasRegion r : reelsAtlas.getRegions()) {
             symbolRegions.add(r);
         }
-        symbolRegions.sort((a, b) -> a.name.compareTo(b.name));
+        symbolRegions.sort(Comparator.comparing(a -> a.name));
         if (symbolRegions.isEmpty()) {
             logger.warn("No symbol regions found.");
         }
@@ -203,7 +235,7 @@ public class SlotMachineDisplay extends UIComponent {
         final int baseCount = symbolRegions.size();
         symbolCounts.add(baseCount);
 
-        TextureRegion first = symbolRegions.get(0);
+        TextureRegion first = symbolRegions.getFirst();
         float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
         float wStd = first.getRegionWidth() * scale;
         float hStd = first.getRegionHeight() * scale;
@@ -284,11 +316,21 @@ public class SlotMachineDisplay extends UIComponent {
             frameGroup.setPosition(0f, 0f);
         }
 
+        if (dimmer != null) {
+            dimmer.setSize(stage.getWidth(), stage.getHeight());
+            dimmer.setPosition(0f, 0f);
+        }
+
         if (frameImage != null) {
             frameImage.setSize(frameSizePx, frameSizePx);
             float gx = (frameGroup.getWidth() - frameSizePx) / 2f;
             float gy = (frameGroup.getHeight() - frameSizePx) / 2f;
             frameImage.setPosition(gx, gy);
+
+            if (reelsBgImage != null) {
+                reelsBgImage.setSize(frameSizePx, frameSizePx);
+                reelsBgImage.setPosition(gx, gy);
+            }
 
             float areaW = frameSizePx * REELS_AREA_W_RATIO;
             float areaH = frameSizePx * REELS_AREA_H_RATIO;
@@ -297,6 +339,7 @@ public class SlotMachineDisplay extends UIComponent {
 
             constructReels(areaX, areaY, areaW, areaH);
         }
+
 
         if (slotIconBtn != null) {
             slotIconBtn.setSize(iconSizePx, iconSizePx);
@@ -310,6 +353,8 @@ public class SlotMachineDisplay extends UIComponent {
      * Starts looped scrolling for all reels and schedules staggered smooth stop landing on target.
      */
     private void startSpinThenStopAtTargets() {
+        stoppedCount = 0;
+
         if (reelColumns.isEmpty() || symbolHeights.size() < REEL_COUNT) return;
 
         if (spinning) {
@@ -346,18 +391,13 @@ public class SlotMachineDisplay extends UIComponent {
                     Actions.run(() -> smoothStopColumnAtTarget(colIndex))
             ));
         }
-
-        frameGroup.addAction(Actions.sequence(
-                Actions.delay(3.5f),
-                Actions.run(() -> spinning = false)
-        ));
     }
 
     /**
      * Smoothly stops a given column at its target index, avoiding large bounce-back
      * by optionally advancing to the next equivalent lap when over half a symbol height.
      *
-     * @param colIdx reel column index 列索引
+     * @param colIdx reel column index
      */
     private void smoothStopColumnAtTarget(int colIdx) {
         if (colIdx < 0 || colIdx >= reelColumns.size()) return;
@@ -402,18 +442,55 @@ public class SlotMachineDisplay extends UIComponent {
         float tSuggested = distance / (base * 0.9f);
         float t = Math.max(0.40f, Math.min(1.10f, tSuggested));
 
-        col.addAction(new HermiteStopYAction(t, currentY, mappedY, v0));
-        col.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.run(() -> currentScrollSpeeds.set(colIdx, 0f)));
+        col.addAction(Actions.sequence(
+                new HermiteStopYAction(t, currentY, mappedY, v0),
+                Actions.run(() -> {
+                    currentScrollSpeeds.set(colIdx, 0f);
+                    notifyReelStopped();
+                })
+        ));
     }
 
     /**
-     * Immediately stops all reels and resets positions when the frame is hidden.
+     * Show the slot with a mask.
      */
-    private void stopReelsImmediate() {
-        spinning = false;
+    private void showSlotPopup() {
+        frameGroup.setVisible(true);
+        frameGroup.setTouchable(Touchable.enabled);
+        if (dimmer != null) {
+            dimmer.setVisible(true);
+            dimmer.getColor().a = 0.6f;
+        }
+    }
+
+    /**
+     * Close the slot.
+     */
+    private void hideSlotPopup() {
+        if (spinning) {
+            return;
+        }
+        frameGroup.setVisible(false);
+        frameGroup.setTouchable(Touchable.enabled);
+        if (dimmer != null) {
+            dimmer.setVisible(false);
+        }
         for (Group col : reelColumns) {
             col.clearActions();
             col.setY(0f);
+        }
+    }
+
+    /**
+     * Count the reels has stopped.
+     * While all reels has stopped, resolve outcome.
+     */
+    private void notifyReelStopped() {
+        stoppedCount++;
+        if (stoppedCount >= REEL_COUNT) {
+            spinning = false;
+            logger.info("Reel stopped. Resolve outcome.");
+            // Logic
         }
     }
 
