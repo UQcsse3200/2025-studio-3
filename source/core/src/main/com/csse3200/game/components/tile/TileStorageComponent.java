@@ -39,7 +39,7 @@ public class TileStorageComponent extends Component {
      * @param unit the unit being added to the tile
      */
     public void setTileUnit(Entity unit) {
-        if (!containsUnit) {
+        if (this.tileUnit == null && containsUnit) {
             this.tileUnit = unit;
         }
     }
@@ -57,8 +57,10 @@ public class TileStorageComponent extends Component {
      * Removes the unit from the tile
      */
     public void removeTileUnit() {
-        this.containsUnit = false;
-        area.removeUnit(position);
+        if (containsUnit) {
+            this.containsUnit = false;
+            area.removeUnit(position);
+        }
     }
 
     /**

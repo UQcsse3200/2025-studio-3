@@ -247,6 +247,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         return grid;
     }
 
+    public void setGrid(LevelGameGrid newGrid) {
+        this.grid = newGrid;
+    }
+
     /**
      * Getter for selected_unit
      *
