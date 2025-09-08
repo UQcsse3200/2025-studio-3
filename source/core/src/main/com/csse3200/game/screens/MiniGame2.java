@@ -37,7 +37,8 @@ public abstract class MiniGame2 implements Screen {
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new TextureRenderComponent(paddletexture));
         paddle.getComponent(TextureRenderComponent.class).scaleEntity();
-        ColliderComponent collider_paddle = paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
+        paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
+        ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
         collider_paddle.setRestitution(1f);
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
@@ -47,7 +48,8 @@ public abstract class MiniGame2 implements Screen {
         ball.addComponent(new PhysicsComponent());
         ball.addComponent(new TextureRenderComponent(balltexture));
         ball.getComponent(TextureRenderComponent.class).scaleEntity();
-        ColliderComponent collider_ball = ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
+        ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
+        ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
         collider_ball.setRestitution(1f);
         collider_ball.setFriction(0f);
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
