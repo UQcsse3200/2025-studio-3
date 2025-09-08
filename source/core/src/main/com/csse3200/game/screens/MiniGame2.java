@@ -37,7 +37,8 @@ public abstract class MiniGame2 implements Screen {
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new TextureRenderComponent(paddletexture));
         paddle.getComponent(TextureRenderComponent.class).scaleEntity();
-        paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
+        ColliderComponent collider_paddle = paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
+        collider_paddle.setRestitution(1f);
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         ServiceLocator.getEntityService().register(paddle);
@@ -46,9 +47,13 @@ public abstract class MiniGame2 implements Screen {
         ball.addComponent(new PhysicsComponent());
         ball.addComponent(new TextureRenderComponent(balltexture));
         ball.getComponent(TextureRenderComponent.class).scaleEntity();
-        ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
+        ColliderComponent collider_ball = ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
+        collider_ball.setRestitution(1f);
+        collider_ball.setFriction(0f);
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
         ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(50f,50f);
+        ball.getComponent(PhysicsComponent.class).getBody().setLinearDamping(0f);
+        ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
         ServiceLocator.getEntityService().register(ball);
     }
