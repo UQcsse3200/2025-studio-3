@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
@@ -284,31 +285,31 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void spawnUnit(int position) {
-    Supplier<Entity> entitySupplier = selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
-    Entity unit = entitySupplier.get();
-
-    if (unit == null) {
-        logger.error("Entity fetched was NULL");
-        return;
-    }
-
-    // Match the texture of the inventory unit - placeholder
-    Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
-    unit.addComponent(new TextureRenderComponent(texture));
-
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
     float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
-    unit.setPosition(tileX, tileY);
+    Vector2 entityPos = new Vector2(tileX, tileY);
+
+    Supplier<Entity> entitySupplier = selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
+    Entity newEntity = entitySupplier.get();
+
+    if (newEntity == null) {
+        logger.error("Entity fetched was NULL");
+        return;
+    }
+    newEntity.setPosition(entityPos);
+
+    //Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
+    //newEntity.addComponent(new TextureRenderComponent(texture));
 
     // Add to list of all spawned units
-    spawned_units[position] = unit;
+    spawned_units[position] = newEntity;
 
     // set scale to render as desired
-    unit.getComponent(TextureRenderComponent.class).scaleEntity();
-    unit.scaleHeight(tileSize);
+    //newEntity.getComponent(TextureRenderComponent.class).scaleEntity();
+    //newEntity.scaleHeight(tileSize);
 
-    spawnEntity(unit);
+    spawnEntity(newEntity);
     logger.info("Unit spawned at position {}", position);
   }
 
