@@ -35,7 +35,7 @@ public class TileInputComponent extends InputComponent {
     Vector2 position = entity.getPosition();
 
     TileStorageComponent tileStatus = entity.getComponent(TileStorageComponent.class);
-    Entity selected_unit = area.getSelectedUnit();
+    Entity selectedUnit = area.getSelectedUnit();
 
     float tileSize = area.getTileSize();
     GridPoint2 clickInWorld = area.stageToWorld(new GridPoint2(screenX, screenY));
@@ -48,7 +48,7 @@ public class TileInputComponent extends InputComponent {
       logger.info("Tile Clicked");
       return switch (button) {
         case Input.Buttons.LEFT -> {
-          if (!tileStatus.hasUnit() && selected_unit != null) {
+          if (!tileStatus.hasUnit() && selectedUnit != null) {
             tileStatus.triggerSpawnUnit();
           }
           yield true;

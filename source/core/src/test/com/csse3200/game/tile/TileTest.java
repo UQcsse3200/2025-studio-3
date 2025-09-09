@@ -24,14 +24,14 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class TileTest {
+class TileTest {
   @Mock Texture texture;
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
   Entity selected;
 
   @BeforeEach
-  public void beforeEach() {
+  void beforeEach() {
     // textures for tests
     Texture ghost1 = mock(Texture.class, "ghost_1");
     Texture ghost2 = mock(Texture.class, "ghost_2");
@@ -64,7 +64,9 @@ public class TileTest {
     levelGameArea =
         new LevelGameArea(factory) {
           @Override
-          public void create() {}
+          public void create() {
+            // default implementation ignored
+          }
         };
 
     // creates entity for selected unit
@@ -79,7 +81,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldAddUnit() {
+  void shouldAddUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
@@ -92,7 +94,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldntAddUnit() {
+  void shouldntAddUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
@@ -111,7 +113,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldRemoveUnit() {
+  void shouldRemoveUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
@@ -120,14 +122,14 @@ public class TileTest {
   }
 
   @Test
-  public void shouldBeNullUnitByDefault() {
+  void shouldBeNullUnitByDefault() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     assertNull(tileStorageComponent.getTileUnit());
   }
 
   @Test
-  public void removeNullUnit() {
+  void removeNullUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.removeTileUnit();
@@ -135,7 +137,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldBeInHitboxOne() {
+  void shouldBeInHitboxOne() {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(1, 1);
@@ -143,7 +145,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldBeInHitboxTwo() {
+  void shouldBeInHitboxTwo() {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(0, 0);
@@ -151,7 +153,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldntBeInHitboxOne() {
+  void shouldntBeInHitboxOne() {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(8, 8);
@@ -167,7 +169,7 @@ public class TileTest {
   }
 
   @Test
-  public void createInvalidHitboxComponent() {
+  void createInvalidHitboxComponent() {
     IllegalArgumentException ex =
         assertThrows(
             IllegalArgumentException.class,
@@ -179,7 +181,7 @@ public class TileTest {
   }
 
   @Test
-  public void shouldBeValidTile() {
+  void shouldBeValidTile() {
     Entity tile = createValidTile();
     assertNotNull(tile);
     assertNotNull(tile.getComponent(TileStorageComponent.class));

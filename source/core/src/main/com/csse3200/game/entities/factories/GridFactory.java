@@ -22,11 +22,11 @@ public class GridFactory {
   public static Entity createTile(int imageStatus, float scale, float x, float y, AreaAPI area) {
 
     // for alternating tile variants
-    String image_path;
+    String imagePath;
     if (imageStatus == 1) {
-      image_path = "images/green_tile.png";
+      imagePath = "images/green_tile.png";
     } else {
-      image_path = "images/olive_tile.png";
+      imagePath = "images/olive_tile.png";
     }
 
     // need to figure out how to get min and max x and y values of the tile
@@ -34,7 +34,7 @@ public class GridFactory {
     // creates the new tile entity
     Entity tile =
         new Entity()
-            .addComponent(new TextureRenderComponent(image_path))
+            .addComponent(new TextureRenderComponent(imagePath))
             .addComponent(new TileHitboxComponent(x + scale, y + scale, x, y))
             .addComponent(new TileStorageComponent(area))
             .addComponent(new TileInputComponent(area));

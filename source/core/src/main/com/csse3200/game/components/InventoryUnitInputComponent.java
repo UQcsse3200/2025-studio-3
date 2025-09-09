@@ -13,12 +13,10 @@ public class InventoryUnitInputComponent extends InputComponent {
 
   private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
   private final AreaAPI area;
-  private final float tileSize;
 
   public InventoryUnitInputComponent(AreaAPI area) {
     super(5);
     this.area = area;
-    tileSize = area.getTileSize();
   }
 
   /**
