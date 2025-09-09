@@ -80,7 +80,7 @@ public class SettingsMenuDisplay extends UIComponent {
     fullScreenCheck.setChecked(settings.fullscreen);
     whiten(fullScreenLabel);
 
-      Label vsyncLabel = new Label("VSync:", skin);
+    Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
     vsyncCheck.setChecked(settings.vsync);
     whiten(vsyncLabel);
@@ -96,8 +96,7 @@ public class SettingsMenuDisplay extends UIComponent {
     Monitor selectedMonitor = Gdx.graphics.getMonitor();
     displayModeSelect.setItems(getDisplayModes(selectedMonitor));
     displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
-      whiten(displayModeLabel);
-
+    whiten(displayModeLabel);
 
     // Position Components on table
     Table table = new Table();
@@ -240,13 +239,11 @@ public class SettingsMenuDisplay extends UIComponent {
     super.dispose();
   }
 
-    /**
-     * Sets the provided label's font color to white by cloning their style
-     */
-    private static void whiten(Label label) {
-        Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-        st.fontColor = Color.WHITE;
-        label.setStyle(st);
-        logger.debug("Labels are white");
-    }
+  /** Sets the provided label's font color to white by cloning their style */
+  private static void whiten(Label label) {
+    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+    st.fontColor = Color.WHITE;
+    label.setStyle(st);
+    logger.debug("Labels are white");
+  }
 }

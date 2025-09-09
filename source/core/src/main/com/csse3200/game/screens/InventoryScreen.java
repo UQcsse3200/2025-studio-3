@@ -21,9 +21,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The InventoryScreen is a game screen containing the player's inventory.
  *
- * It sets up the rendering, input and services for the UI to function and
- * manages an InventoryDisplay component that
- * displays the actual inventory items.
+ * <p>It sets up the rendering, input and services for the UI to function and manages an
+ * InventoryDisplay component that displays the actual inventory items.
  */
 public class InventoryScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(InventoryScreen.class);
@@ -31,9 +30,8 @@ public class InventoryScreen extends ScreenAdapter {
   private final Renderer renderer;
 
   /**
-   * Creates a new InventoryScreen and registers the services required, creates
-   * the renderer, and initialises the
-   * Inventory UI.
+   * Creates a new InventoryScreen and registers the services required, creates the renderer, and
+   * initialises the Inventory UI.
    *
    * @param gdxGame current game instance
    */
@@ -62,9 +60,7 @@ public class InventoryScreen extends ScreenAdapter {
     renderer.render();
   }
 
-  /**
-   * Loads the shop screen's assets.
-   */
+  /** Loads the shop screen's assets. */
   private void loadAssets() {
     logger.debug("Loading inventory assets");
     String[] itemTextures = new String[ItemRegistry.ITEMS.length];
@@ -78,7 +74,7 @@ public class InventoryScreen extends ScreenAdapter {
   /**
    * Adjusts the screen when window is resized.
    *
-   * @param width  new screen width
+   * @param width new screen width
    * @param height new screen height
    */
   @Override
@@ -86,9 +82,7 @@ public class InventoryScreen extends ScreenAdapter {
     renderer.resize(width, height);
   }
 
-  /**
-   * Disposes of this screen's resources.
-   */
+  /** Disposes of this screen's resources. */
   @Override
   public void dispose() {
     renderer.dispose();
@@ -98,8 +92,7 @@ public class InventoryScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the InventoryScreen's UI including components for rendering UI
-   * elements to the screen
+   * Creates the InventoryScreen's UI including components for rendering UI elements to the screen
    * and capturing and handling UI input.
    */
   private void createUI() {

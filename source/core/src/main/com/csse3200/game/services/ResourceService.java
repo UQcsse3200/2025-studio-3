@@ -24,6 +24,7 @@ public class ResourceService implements Disposable {
 
   /**
    * Initialise this ResourceService to use the provided AssetManager.
+   *
    * @param assetManager AssetManager to use in this service.
    * @requires assetManager != null
    */
@@ -33,9 +34,10 @@ public class ResourceService implements Disposable {
 
   /**
    * Load an asset from a file.
+   *
    * @param filename Asset path
-   * @param type     Class to load into
-   * @param <T>      Type of class to load into
+   * @param type Class to load into
+   * @param <T> Type of class to load into
    * @return Instance of class loaded from path
    * @see AssetManager#get(String, Class)
    */
@@ -45,6 +47,7 @@ public class ResourceService implements Disposable {
 
   /**
    * Check if an asset has been loaded already
+   *
    * @param resourceName path of the asset
    * @param type Class type of the asset
    * @param <T> Type of the asset
@@ -109,8 +112,8 @@ public class ResourceService implements Disposable {
    * Loads a single asset into the asset manager.
    *
    * @param assetName asset name
-   * @param type      asset type
-   * @param <T>       type
+   * @param type asset type
+   * @param <T> type
    */
   private <T> void loadAsset(String assetName, Class<T> type) {
     logger.debug("Loading {}: {}", type.getSimpleName(), assetName);
@@ -125,8 +128,8 @@ public class ResourceService implements Disposable {
    * Loads multiple assets into the asset manager.
    *
    * @param assetNames list of asset names
-   * @param type       asset type
-   * @param <T>        type
+   * @param type asset type
+   * @param <T> type
    */
   private <T> void loadAssets(String[] assetNames, Class<T> type) {
     for (String resource : assetNames) {
