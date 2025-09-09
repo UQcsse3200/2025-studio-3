@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -80,7 +81,7 @@ public abstract class MiniGame2 implements Screen {
 
         bbwall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
 
-        bbwall.getComponent(ColliderComponent.class).setAsBox(width/2, height/2);
+        bbwall.getComponent(ColliderComponent.class).setAsBox(new Vector2(width/2f,height/2f));
         bbwall.getComponent(PhysicsComponent.class).getBody().setTransform(x,y,0);
 
         ServiceLocator.getEntityService().register(bbwall);
