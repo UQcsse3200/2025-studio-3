@@ -7,7 +7,7 @@ public class NPCConfigs {
   public static final BaseEntityConfig tankyRobot = new TankyRobotConfig();
   public static final BaseEntityConfig ghost = new BaseEntityConfig();
   public static final GhostKingConfig ghostKing = new GhostKingConfig();
-  public static final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
+  public final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();
