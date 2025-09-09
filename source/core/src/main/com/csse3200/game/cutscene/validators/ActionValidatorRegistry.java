@@ -28,6 +28,7 @@ public class ActionValidatorRegistry {
         actionValidators.put("character.exit", new CharacterExitValidator());
         actionValidators.put("dialogue.show", new DialogueShowValidator());
         actionValidators.put("dialogue.chorus", new DialogueChorusValidator());
+        actionValidators.put("dialogue.hide", new DialogueHideValidator());
         actionValidators.put("goto", new GotoValidator());
         actionValidators.put("parallel", new ParallelValidator());
         actionValidators.put("choice", new ChoiceValidator());
