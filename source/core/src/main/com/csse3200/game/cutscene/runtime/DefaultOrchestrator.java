@@ -2,7 +2,11 @@ package com.csse3200.game.cutscene.runtime;
 
 import com.csse3200.game.cutscene.models.object.Beat;
 import com.csse3200.game.cutscene.models.object.Cutscene;
+import com.csse3200.game.cutscene.models.object.actiondata.BackgroundSetData;
+import com.csse3200.game.cutscene.models.object.actiondata.DialogueHideData;
 import com.csse3200.game.cutscene.models.object.actiondata.DialogueShowData;
+import com.csse3200.game.cutscene.runtime.states.BackgroundSetAction;
+import com.csse3200.game.cutscene.runtime.states.DialogueHideAction;
 import com.csse3200.game.cutscene.runtime.states.DialogueShowAction;
 import com.csse3200.game.cutscene.runtime.states.DialogueState;
 import com.csse3200.game.services.GameTime;
@@ -20,7 +24,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
     private boolean running;
     private boolean paused;
 
+    private List<ActionState> queue;
     private List<ActionState> active;
+    private boolean parallel;
     private boolean beatStarted;
 
     // Fixed states
@@ -40,7 +46,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
         this.running = true;
         this.paused = false;
 
+        this.queue = new ArrayList<>();
         this.active = new ArrayList<>();
+        this.parallel = false;
         this.beatStarted = false;
 
         this.dialogueState = state.getDialogueState();
@@ -64,13 +72,22 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
         if (!beatStarted) {
             beatIdx.getActions().forEach(action -> {
                 // make switch to create states for each action
-                active.add(switch(action) {
-                    case DialogueShowData d -> new DialogueShowAction(state.getDialogueState(), d);
+                ActionState actionState = switch(action) {
+                    case BackgroundSetData d -> new BackgroundSetAction(state.getBackgroundState(), d);
+                    case DialogueShowData d  -> new DialogueShowAction(state.getDialogueState(), d);
+                    case DialogueHideData d  -> new DialogueHideAction(state.getDialogueState(), d);
                     default -> null;
-                });
+                };
+                if (actionState != null) {
+                    queue.add(actionState);
+                }
             });
 
-            active.add(ActionStates.advance(beatIdx.getAdvance()));
+            queue.add(ActionStates.advance(beatIdx.getAdvance()));
+
+            if (parallel) {
+                active.addAll(queue);
+            }
 
             beatStarted = true;
         }
@@ -79,12 +96,26 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
             actionState.tick(dtMs);
         });
 
-        active.removeIf(ActionState::done);
+        if (parallel) {
+            active.removeIf(ActionState::done);
+        } else {
+            if (!active.isEmpty() && active.getFirst().done()) {
+                active.removeFirst();
+                if (!queue.isEmpty()) {
+                    active.add(queue.getFirst());
+                    queue.removeFirst();
+                }
+            } else if (active.isEmpty() && !queue.isEmpty()) {
+                active.add(queue.getFirst());
+                queue.removeFirst();
+            }
+        }
 
         // if there are no more blocking actions move on to next beat
-        boolean blocking = active.stream().anyMatch(ActionState::blocking);
+        boolean blocking = active.stream().anyMatch(ActionState::blocking) || queue.stream().anyMatch(ActionState::blocking);
         if (!blocking) {
             active.clear();
+            queue.clear();
             beatStarted = false;
 
             if (!beats.hasNext()) {
@@ -100,11 +131,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
      */
     @Override
     public void advance() {
-        active.forEach(actionState -> {
-            if (actionState instanceof SupportsAdvance) {
-                ((SupportsAdvance) actionState).advance();
-            }
-        });
+        if (active.size() == 1 && active.getFirst() instanceof SupportsAdvance) {
+            ((SupportsAdvance) active.getFirst()).advance();
+        }
     }
 
     /**

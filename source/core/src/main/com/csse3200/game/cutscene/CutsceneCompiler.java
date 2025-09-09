@@ -172,6 +172,12 @@ public class CutsceneCompiler {
                     actions.add(new DialogueShowData(character, text, await));
                     break;
                 }
+                case "dialogue.hide": {
+                    boolean await = (boolean) action.fields.get("await");
+
+                    actions.add(new DialogueHideData(await));
+                    break;
+                }
                 case "goto": {
                     String cutsceneId = (String) action.fields.get("cutsceneId");
 

@@ -4,11 +4,11 @@ package com.csse3200.game.cutscene.runtime.states;
  * State responsible for all rendering of the dialogue box
  */
 public class DialogueState {
-    boolean visible;
-    String speaker = "";
-    String text = "";
-    int textProgress;
-    boolean canAdvance;
+    private boolean visible;
+    private String speaker = "";
+    private String text = "";
+    private int textProgress;
+    private boolean canAdvance;
 
     /**
      * Set the speaker and text parameters
@@ -53,5 +53,25 @@ public class DialogueState {
 
     public boolean isCanAdvance() {
         return canAdvance;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void setSpeaker(String speaker) {
+        this.speaker = speaker;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setTextProgress(int textProgress) {
+        this.textProgress = textProgress;
+    }
+
+    public void setCanAdvance(boolean canAdvance) {
+        this.canAdvance = canAdvance;
     }
 }

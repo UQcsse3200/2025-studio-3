@@ -12,6 +12,8 @@ public class DialogueShowAction implements ActionState {
     private int nextCharMsCountdown;
     private boolean done;
 
+    // TODO: Add appearing logic
+
     public DialogueShowAction(DialogueState dialogueState, DialogueShowData dialogueShowData) {
         this.dialogueState = dialogueState;
         this.speaker = dialogueShowData.character().getName();
@@ -31,6 +33,10 @@ public class DialogueShowAction implements ActionState {
      */
     @Override
     public void tick(int dtMs) {
+        if (!dialogueState.isVisible()) {
+            this.dialogueState.setVisible(true);
+        }
+
         if (nextCharMsCountdown > 0) {
             nextCharMsCountdown -= dtMs;
         } else if (text.length() >= charsShown) {
