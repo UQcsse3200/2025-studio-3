@@ -161,7 +161,7 @@ class TileTest {
   }
 
   @Test
-  public void shouldntBeInHitboxTwo() {
+  void shouldntBeInHitboxTwo() {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(0, 6);
