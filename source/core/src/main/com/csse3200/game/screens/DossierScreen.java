@@ -3,13 +3,12 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.inventory.InventoryDisplay;
+import com.csse3200.game.components.dossier.DossierDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
@@ -63,7 +62,7 @@ public class DossierScreen extends ScreenAdapter {
         Stage stage = ServiceLocator.getRenderService().getStage();
         Entity ui = new Entity();
         // Change this later
-        ui.addComponent(new InventoryDisplay(game)).addComponent(new InputDecorator(stage, 10));
+        ui.addComponent(new DossierDisplay(game)).addComponent(new InputDecorator(stage, 10));
         ServiceLocator.getEntityService().register(ui);
     }
 
