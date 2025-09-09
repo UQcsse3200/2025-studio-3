@@ -89,6 +89,7 @@ public class SettingsMenuDisplay extends UIComponent {
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
     whiten(uiScaleLabel);
+    whiten(uiScaleValue);
 
     Label displayModeLabel = new Label("Resolution:", skin);
     displayModeSelect = new SelectBox<>(skin);
