@@ -99,9 +99,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         spawnMap();
         spawnSun();
         spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        spawnUnit(2, 2);
-//        spawnRobotAtFloat(1, 1);
-//        spawnRobotAtTile(new GridPoint2(2, 2), true, true);
+        spawnRobot(7, 2, "tanky");
+        spawnRobot(10, 1, "standard");
+        spawnRobot(10, 4, "fast");
         placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
         placeInventoryUnit(2, "images/ghost_king.png");
 
@@ -315,11 +315,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         logger.info("Unit spawned at position {}", position);
     }
 
-    public void spawnUnit(int x, int y){
-        Entity unit = RobotFactory.createRobotType("fast");
+    public void spawnRobot(int x, int y, String robotType){
+        Entity unit = RobotFactory.createRobotType(robotType);
 
         // Get and set position coords
-        float tileX = xOffset + tileSize * (x % LEVEL_ONE_COLS);
+        float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
         float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
         unit.setPosition(tileX, tileY);
 

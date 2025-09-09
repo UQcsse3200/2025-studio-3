@@ -160,7 +160,7 @@ public class RobotFactory {
                 .addComponent(new PhysicsComponent())
                 .addComponent(new PhysicsMovementComponent())
                 .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
                 .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
                 .addComponent(aiComponent);
 
