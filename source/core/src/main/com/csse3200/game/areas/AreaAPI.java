@@ -59,11 +59,11 @@ public interface AreaAPI {
    */
   GridPoint2 stageToWorld(GridPoint2 pos);
 
-    /**
-     * Converts world to stage coords
-     *
-     * @param pos the world coords as GridPoint2
-     * @return the stage coords as GridPoint2
-     */
+  /**
+   * Converts world to stage coords
+   *
+   * @param pos the world coords as GridPoint2
+   * @return the stage coords as GridPoint2
+   */
   GridPoint2 worldToStage(GridPoint2 pos);
 }
