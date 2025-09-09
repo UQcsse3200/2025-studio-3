@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,6 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
@@ -42,9 +45,9 @@ public class SlotMachineDisplay extends UIComponent {
   private static final float FRAME_SIZE_RATIO = 0.80f;
 
   /** Normalized layout ratios inside the frame for the reels area. */
-  private static final float REELS_AREA_W_RATIO = 0.68f;
+  private static final float REELS_AREA_W_RATIO = 0.70f;
 
-  private static final float REELS_AREA_H_RATIO = 0.40f;
+  private static final float REELS_AREA_H_RATIO = 0.42f;
   private static final float REELS_AREA_Y_OFFSET = 0.00f;
   private static final int REEL_COUNT = 3;
   private static final float REEL_GAP_RATIO = 0.03f;
@@ -146,14 +149,22 @@ public class SlotMachineDisplay extends UIComponent {
         ServiceLocator.getResourceService().getAsset("images/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
+
+    for (Texture tex : atlas.getTextures()) {
+      tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    }
+
     frameUpDrawable = new TextureRegionDrawable(upRegion);
     frameDownDrawable = new TextureRegionDrawable(downRegion);
 
     Texture reelsBgTex =
         ServiceLocator.getResourceService()
             .getAsset("images/slot_reels_background.png", Texture.class);
+    reelsBgTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     reelsBgImage = new Image(reelsBgTex);
     reelsBgImage.setTouchable(Touchable.disabled);
+    reelsBgImage.setScaling(Scaling.fit);
+    reelsBgImage.setAlign(Align.center);
     frameGroup.addActor(reelsBgImage);
 
     reelsContent = new Group();
@@ -163,7 +174,9 @@ public class SlotMachineDisplay extends UIComponent {
     reelsPane.setOverscroll(false, false);
     frameGroup.addActor(reelsPane);
 
-    frameImage = new Image(frameUpDrawable);
+    frameImage = new HitTestImage(frameUpDrawable, Scaling.fit, Align.center);
+    frameImage.setScaling(Scaling.fit);
+    frameImage.setAlign(Align.center);
     frameImage.addListener(
         new ClickListener() {
           @Override
@@ -481,6 +494,56 @@ public class SlotMachineDisplay extends UIComponent {
     super.dispose();
     if (slotIconBtn != null) slotIconBtn.remove();
     if (frameGroup != null) frameGroup.remove();
+  }
+
+  /** */
+  private static class HitTestImage extends Image {
+    private final Scaling scaling;
+    private final int align;
+
+    HitTestImage(TextureRegionDrawable drawable, Scaling scaling, int align) {
+      super(drawable);
+      this.scaling = scaling != null ? scaling : Scaling.stretch;
+      this.align = align;
+      setScaling(this.scaling);
+      setAlign(this.align);
+      setTouchable(Touchable.enabled);
+    }
+
+    @Override
+    public Actor hit(float x, float y, boolean touchable) {
+      if (touchable && getTouchable() != Touchable.enabled) return null;
+      if (getDrawable() == null) return null;
+
+      float actorW = getWidth(), actorH = getHeight();
+      float srcW = getDrawable().getMinWidth();
+      float srcH = getDrawable().getMinHeight();
+
+      Vector2 size = scaling.apply(srcW, srcH, actorW, actorH);
+      float drawW = size.x, drawH = size.y;
+      float drawX, drawY;
+
+      if ((align & Align.left) != 0) {
+        drawX = 0f;
+      } else if ((align & Align.right) != 0) {
+        drawX = actorW - drawW;
+      } else {
+        drawX = (actorW - drawW) * 0.5f;
+      }
+
+      if ((align & Align.bottom) != 0) {
+        drawY = 0f;
+      } else if ((align & Align.top) != 0) {
+        drawY = actorH - drawH;
+      } else {
+        drawY = (actorH - drawH) * 0.5f;
+      }
+
+      if (x >= drawX && x <= drawX + drawW && y >= drawY && y <= drawY + drawH) {
+        return this;
+      }
+      return null;
+    }
   }
 
   /** Continuous scrolling action with constant speed and modular wrap. */
