@@ -11,6 +11,6 @@ public class TankyRobotConfig extends BaseEntityConfig {
   }
 
   public float getMovementSpeed() {
-    return 1;
+    return 10;
   }
 }

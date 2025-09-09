@@ -11,6 +11,6 @@ public class StandardRobotConfig extends BaseEntityConfig {
   }
 
   public float getMovementSpeed() {
-    return 2;
+    return 20;
   }
 }

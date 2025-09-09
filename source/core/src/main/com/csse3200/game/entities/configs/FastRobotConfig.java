@@ -11,6 +11,6 @@ public class FastRobotConfig extends BaseEntityConfig {
   }
 
   public float getMovementSpeed() {
-    return 5;
+    return 50;
   }
 }
