@@ -49,7 +49,9 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     return movementEnabled;
   }
 
-  /** @return Target position in the world */
+  /**
+   * @return Target position in the world
+   */
   @Override
   public Vector2 getTarget() {
     return targetPosition;
@@ -67,15 +69,15 @@ public class PhysicsMovementComponent extends Component implements MovementContr
     this.targetPosition = target;
   }
 
-    /**
-     * Sets the speed that the entity will move towards the target at.
-     *
-     * @param speed The speed to move towards the target at
-     */
-    public void setSpeed(float speed) {
-        logger.trace("Setting speed to {}", speed);
-        this.speed = new Vector2(speed, speed);
-    }
+  /**
+   * Sets the speed that the entity will move towards the target at.
+   *
+   * @param speed The speed to move towards the target at
+   */
+  public void setSpeed(float speed) {
+    logger.trace("Setting speed to {}", speed);
+    this.speed = new Vector2(speed, speed);
+  }
 
   private void updateDirection(Body body) {
     Vector2 desiredVelocity = getDirection().scl(speed);
@@ -91,7 +93,7 @@ public class PhysicsMovementComponent extends Component implements MovementContr
 
   public Vector2 getDirection() {
     // Move towards targetPosition based on our current position
-    if (targetPosition == null) return new Vector2(1,0);
+    if (targetPosition == null) return new Vector2(1, 0);
     return targetPosition.cpy().sub(entity.getPosition()).nor();
   }
 }

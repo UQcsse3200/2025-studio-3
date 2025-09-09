@@ -13,6 +13,12 @@ public class ComponentType {
 
   private final int id;
 
+  /**
+   * Gets or creates a ComponentType for the specified component class.
+   *
+   * @param type the component class
+   * @return the ComponentType for the class
+   */
   public static ComponentType getFrom(Class<? extends Component> type) {
     ComponentType componentType = componentTypes.get(type);
     if (componentType == null) {
@@ -22,6 +28,11 @@ public class ComponentType {
     return componentType;
   }
 
+  /**
+   * Gets the unique ID of this component type.
+   *
+   * @return the component type ID
+   */
   public int getId() {
     return id;
   }

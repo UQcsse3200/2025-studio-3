@@ -1,16 +1,15 @@
 package com.csse3200.game.ui.terminal;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.ui.terminal.commands.Command;
+import java.util.ArrayList;
+import java.util.HashMap;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class TerminalTest {
@@ -64,7 +63,7 @@ class TerminalTest {
   void shouldProcessMessageNoArgs() {
     Terminal terminal = new Terminal();
 
-    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class)ArrayList.class;
+    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
     ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
 
     terminal.addCommand("test1", command);
@@ -80,7 +79,7 @@ class TerminalTest {
   void shouldProcessMessageMultipleArgs() {
     Terminal terminal = new Terminal();
 
-    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class)ArrayList.class;
+    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
     ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
 
     terminal.addCommand("test1", command);

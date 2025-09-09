@@ -6,8 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.Shape;
-import com.csse3200.game.utils.math.Vector2Utils;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.utils.math.Vector2Utils;
 import net.dermetfan.utils.Pair;
 
 public class PhysicsTestUtils {
@@ -22,11 +22,12 @@ public class PhysicsTestUtils {
   public static Vector2 getRectanglePosition(ColliderComponent collider) {
     Shape shape = collider.getFixture().getShape();
     assertTrue(shape instanceof PolygonShape);
-    return getRectanglePosition((PolygonShape)shape);
+    return getRectanglePosition((PolygonShape) shape);
   }
 
   /**
    * Returns the bottom left corner of the shape's bounding box
+   *
    * @param shape Shape with fixture
    * @return Bottom left corner position
    */
@@ -37,6 +38,7 @@ public class PhysicsTestUtils {
 
   /**
    * Given an entity, test that it's collider contains a PolygonShape of the given size
+   *
    * @param collider Collider with a fixture
    * @param scale Required bounding box of the PolygonShape
    */

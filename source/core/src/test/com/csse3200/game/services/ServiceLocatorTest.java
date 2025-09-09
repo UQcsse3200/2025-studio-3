@@ -1,15 +1,16 @@
 package com.csse3200.game.services;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.mockito.Mockito.mock;
 
 @ExtendWith(GameExtension.class)
 class ServiceLocatorTest {
@@ -25,16 +26,19 @@ class ServiceLocatorTest {
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerPhysicsService(physicsService);
     ServiceLocator.registerTimeSource(gameTime);
+    ServiceLocator.registerMenuSpriteService(menuSpriteService);
 
     assertEquals(ServiceLocator.getEntityService(), entityService);
     assertEquals(ServiceLocator.getRenderService(), renderService);
     assertEquals(ServiceLocator.getPhysicsService(), physicsService);
     assertEquals(ServiceLocator.getTimeSource(), gameTime);
+    assertEquals(ServiceLocator.getMenuSpriteService(), menuSpriteService);
 
     ServiceLocator.clear();
     assertNull(ServiceLocator.getEntityService());
     assertNull(ServiceLocator.getRenderService());
     assertNull(ServiceLocator.getPhysicsService());
     assertNull(ServiceLocator.getTimeSource());
+    assertNotNull(ServiceLocator.getMenuSpriteService());
   }
 }

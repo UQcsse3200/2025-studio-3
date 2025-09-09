@@ -29,6 +29,7 @@ public class Renderer implements Disposable {
 
   /**
    * Create a new renderer with default settings
+   *
    * @param camera camera to render to
    */
   public Renderer(CameraComponent camera) {
@@ -96,7 +97,7 @@ public class Renderer implements Disposable {
     batch.setProjectionMatrix(projMatrix);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-    batch.setColor(1f,1f,1f,1f);
+    batch.setColor(1f, 1f, 1f, 1f);
 
     batch.begin();
     renderService.render(batch);
@@ -119,7 +120,9 @@ public class Renderer implements Disposable {
     logger.debug("Resizing to ({}x{})", width, height);
   }
 
-  /** @return The debug renderer attached to this renderer */
+  /**
+   * @return The debug renderer attached to this renderer
+   */
   public DebugRenderer getDebug() {
     return debugRenderer;
   }

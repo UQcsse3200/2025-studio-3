@@ -1,11 +1,5 @@
 package com.csse3200.game.components.shop;
 
-import org.slf4j.LoggerFactory;
-
-import java.util.Random;
-
-import org.slf4j.Logger;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,10 +17,11 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.Random;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * The shop display component.
- */
+/** The shop display component. */
 public class ShopDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ShopDisplay.class);
   private static final float Z_INDEX = 2f;
@@ -43,22 +38,19 @@ public class ShopDisplay extends UIComponent {
     this.windowStyle = skin.get(Window.WindowStyle.class);
   }
 
-  /**
-   * Creates the shop display.
-   */
+  /** Creates the shop display. */
   @Override
   public void create() {
     super.create();
     addActors();
   }
 
-  /**
-   * Adds actors to the stage.
-   */
+  /** Adds actors to the stage. */
   private void addActors() {
-    Image backgroundImage = new Image(
-        ServiceLocator.getResourceService()
-            .getAsset("images/shopbackground.jpg", Texture.class));
+    Image backgroundImage =
+        new Image(
+            ServiceLocator.getResourceService()
+                .getAsset("images/shopbackground.jpg", Texture.class));
 
     backgroundImage.setFillParent(true);
     stage.addActor(backgroundImage);
@@ -72,29 +64,27 @@ public class ShopDisplay extends UIComponent {
     ItemRegistry.ItemEntry itemTwo = ItemRegistry.ITEMS[random.nextInt(ItemRegistry.ITEMS.length)];
     shopItemImages[1] = itemTwo.assetPath();
     shopItems[1] = itemTwo.item();
-    ItemRegistry.ItemEntry itemThree = ItemRegistry.ITEMS[random.nextInt(ItemRegistry.ITEMS.length)];
+    ItemRegistry.ItemEntry itemThree =
+        ItemRegistry.ITEMS[random.nextInt(ItemRegistry.ITEMS.length)];
     shopItemImages[2] = itemThree.assetPath();
     shopItems[2] = itemThree.item();
   }
 
   private void createItemSlots() {
     float[] pedestalX = {
-      stage.getWidth() * 0.25f,
-      stage.getWidth() * 0.5f,
-      stage.getWidth() * 0.75f
+      stage.getWidth() * 0.25f, stage.getWidth() * 0.5f, stage.getWidth() * 0.75f
     };
 
     float pedestalY = stage.getHeight() * 0.4f;
 
     for (int i = 0; i < 3; i++) {
-      createItemSlot(i, pedestalX[i] - SLOT_SIZE/2f, pedestalY, shopItemImages[i]);
+      createItemSlot(i, pedestalX[i] - SLOT_SIZE / 2f, pedestalY, shopItemImages[i]);
     }
   }
 
   private void createItemSlot(int slotIndex, float x, float y, String itemTexture) {
     // Load the item texture
-    Texture itemTex = ServiceLocator.getResourceService()
-        .getAsset(itemTexture, Texture.class);
+    Texture itemTex = ServiceLocator.getResourceService().getAsset(itemTexture, Texture.class);
 
     // Create ImageButton with the item texture
     ImageButton slot = new ImageButton(new TextureRegionDrawable(itemTex));
@@ -104,13 +94,14 @@ public class ShopDisplay extends UIComponent {
     slot.setSize(SLOT_SIZE, SLOT_SIZE);
 
     // Add click listener
-    slot.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Item slot {} clicked ({})", slotIndex, itemTexture);
-        onItemSlotClicked(slotIndex, itemTexture);
-      }
-    });
+    slot.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Item slot {} clicked ({})", slotIndex, itemTexture);
+            onItemSlotClicked(slotIndex, itemTexture);
+          }
+        });
 
     // Store reference and add to stage
     itemSlots[slotIndex] = slot;
@@ -153,24 +144,26 @@ public class ShopDisplay extends UIComponent {
 
     // Purchase button
     TextButton purchaseButton = new TextButton("Purchase", skin);
-    purchaseButton.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Purchase button clicked for item: {}", a.getName());
-        onPurchaseClicked(a);
-        popup.remove();
-      }
-    });
+    purchaseButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Purchase button clicked for item: {}", a.getName());
+            onPurchaseClicked(a);
+            popup.remove();
+          }
+        });
 
     // Close button
     TextButton closeButton = new TextButton("Close", skin);
-    closeButton.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Close button clicked");
-        popup.remove();
-      }
-    });
+    closeButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Close button clicked");
+            popup.remove();
+          }
+        });
 
     buttonTable.add(purchaseButton).padRight(10f);
     buttonTable.add(closeButton);
@@ -178,8 +171,7 @@ public class ShopDisplay extends UIComponent {
     popup.add(contentTable);
     popup.pack();
     popup.setPosition(
-        (stage.getWidth() - popup.getWidth()) / 2f,
-        (stage.getHeight() - popup.getHeight()) / 2f);
+        (stage.getWidth() - popup.getWidth()) / 2f, (stage.getHeight() - popup.getHeight()) / 2f);
     stage.addActor(popup);
   }
 
@@ -195,16 +187,11 @@ public class ShopDisplay extends UIComponent {
 
   @Override
   public void draw(SpriteBatch batch) {
+    // Do nothing, handled by the stage
   }
 
   @Override
   public float getZIndex() {
     return Z_INDEX;
   }
-
-  @Override
-  public void dispose() {
-    super.dispose();
-  }
-
 }

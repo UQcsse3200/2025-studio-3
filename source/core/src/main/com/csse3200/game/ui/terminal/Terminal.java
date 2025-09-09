@@ -3,13 +3,12 @@ package com.csse3200.game.ui.terminal;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.ui.terminal.commands.Command;
 import com.csse3200.game.ui.terminal.commands.DebugCommand;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * State tracker for a debug terminal. Any commands to be actioned through the terminal input should
@@ -31,19 +30,21 @@ public class Terminal extends Component {
     addCommand("debug", new DebugCommand());
   }
 
-  /** @return message entered by user */
+  /**
+   * @return message entered by user
+   */
   public String getEnteredMessage() {
     return enteredMessage;
   }
 
-  /** @return console is open */
+  /**
+   * @return console is open
+   */
   public boolean isOpen() {
     return isOpen;
   }
 
-  /**
-   * Toggles between the terminal being open and closed.
-   */
+  /** Toggles between the terminal being open and closed. */
   public void toggleIsOpen() {
     if (isOpen) {
       this.setClosed();
@@ -52,17 +53,13 @@ public class Terminal extends Component {
     }
   }
 
-  /**
-   * Opens the terminal.
-   */
+  /** Opens the terminal. */
   public void setOpen() {
     logger.debug("Opening terminal");
     isOpen = true;
   }
 
-  /**
-   * Closes the terminal and clears the stored message.
-   */
+  /** Closes the terminal and clears the stored message. */
   public void setClosed() {
     logger.debug("Closing terminal");
     isOpen = false;
@@ -86,6 +83,7 @@ public class Terminal extends Component {
   /**
    * Processes the completed message entered by the user. If the message corresponds to a valid
    * command, the command will be actioned.
+   *
    * @return true if command handled, false otherwise
    */
   public boolean processMessage() {
@@ -127,6 +125,7 @@ public class Terminal extends Component {
 
   /**
    * Sets the text shown on the terminal
+   *
    * @param text Text to show
    */
   public void setEnteredMessage(String text) {

@@ -1,12 +1,11 @@
 package com.csse3200.game.utils;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.csse3200.game.extensions.GameExtension;
+import java.util.function.Function;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(GameExtension.class)
 class StringDecoratorTest {

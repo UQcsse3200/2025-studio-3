@@ -10,9 +10,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
-/**
- * Factory to create item entities with predefined components.
- */
+/** Factory to create item entities with predefined components. */
 public class ItemFactory {
 
   /**
@@ -27,8 +25,7 @@ public class ItemFactory {
   }
 
   /**
-   * Creates a coffee entity. Place on a "plant" to give it a temporary attack
-   * speed bonus.
+   * Creates a coffee entity. Place on a "plant" to give it a temporary attack speed bonus.
    *
    * @return entity
    */
@@ -39,8 +36,7 @@ public class ItemFactory {
   }
 
   /**
-   * Creates a buff entity. Place on a "plant" to heal it and double it's max
-   * health.
+   * Creates a buff entity. Place on a "plant" to heal it and double it's max health.
    *
    * @return entity
    */
@@ -64,8 +60,7 @@ public class ItemFactory {
   }
 
   /**
-   * Creates a nuke entity. Place anywhere on screen to destroy all entities,
-   * friend and foe.
+   * Creates a nuke entity. Place anywhere on screen to destroy all entities, friend and foe.
    *
    * @return entity
    */
@@ -77,18 +72,18 @@ public class ItemFactory {
   }
 
   /**
-   * Creates a generic item to be used as a base entity by more specific item
-   * creation methods.
+   * Creates a generic item to be used as a base entity by more specific item creation methods.
    *
    * @return entity
    */
   private static Entity createBaseItem() {
     // components may need to be changed (may not want collision)
-    Entity item = new Entity()
-        .addComponent(new PhysicsComponent())
-        .addComponent(new PhysicsMovementComponent())
-        .addComponent(new ColliderComponent())
-        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
+    Entity item =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsMovementComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ALL));
 
     PhysicsUtils.setScaledCollider(item, 0.9f, 0.4f);
     return item;

@@ -4,7 +4,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
-import com.csse3200.game.utils.math.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +36,7 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     super.start();
     startPos = owner.getEntity().getPosition();
 
-      //Tells the enemy robot to move left at a set speed.
+    // Tells the enemy robot to move left at a set speed.
     movementTask = new MovementTask(new Vector2(0, startPos.y), moveSpeed);
     movementTask.create(owner);
 
@@ -51,7 +50,6 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
   public void update() {
     // do nothing
   }
-
 
   // This was used to switch between moving and waiting when this was wanderTask.
   // We might use this to implement attacking.
