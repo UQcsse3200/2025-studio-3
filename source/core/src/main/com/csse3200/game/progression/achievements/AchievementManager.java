@@ -4,34 +4,23 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * The AchievementManager class is responsible for storing all achievements.
- */
-
+/** The AchievementManager class is responsible for storing all achievements. */
 public class AchievementManager {
   private Map<String, Achievement> achievements = new HashMap<>();
 
-  /**
-   * Constructor for AchievementManager.
-   */
+  /** Constructor for AchievementManager. */
   public AchievementManager() {
     initializeDefaultAchievements();
   }
 
-  /**
-   * Initializes the default achievements.
-   */
+  /** Initializes the default achievements. */
   private void initializeDefaultAchievements() {
-    achievements.put("5_DEFENSES", new Achievement(
-        "5_DEFENSES", "Unlocked 5 defenses", 5));
-    achievements.put("100_COINS", new Achievement(
-        "100_COINS", "Earned 100 coins", 5));
-    achievements.put("LEVEL_1_COMPLETE", new Achievement(
-        "LEVEL_1_COMPLETE", "Completed the first level", 10));
-    achievements.put("50_SHOTS", new Achievement(
-        "50_SHOTS", "You fired 50 shots.", 5));
-    achievements.put("50_KILLS", new Achievement(
-        "50_KILLS", "Earned 50 kills", 10));
+    achievements.put("5_DEFENSES", new Achievement("5_DEFENSES", "Unlocked 5 defenses", 5));
+    achievements.put("100_COINS", new Achievement("100_COINS", "Earned 100 coins", 5));
+    achievements.put(
+        "LEVEL_1_COMPLETE", new Achievement("LEVEL_1_COMPLETE", "Completed the first level", 10));
+    achievements.put("50_SHOTS", new Achievement("50_SHOTS", "You fired 50 shots.", 5));
+    achievements.put("50_KILLS", new Achievement("50_KILLS", "Earned 50 kills", 10));
   }
 
   // POTENTIAL NEW ACHIEVEMENTS
@@ -93,12 +82,11 @@ public class AchievementManager {
    * @param achievements map of achievements
    */
   public void setAchievements(Map<String, Achievement> achievements) {
-        this.achievements = achievements != null ? 
-            new HashMap<>(achievements) : new HashMap<>();
-        if (this.achievements.isEmpty()) {
-            initializeDefaultAchievements();
-        }
+    this.achievements = achievements != null ? new HashMap<>(achievements) : new HashMap<>();
+    if (this.achievements.isEmpty()) {
+      initializeDefaultAchievements();
     }
+  }
 
   /**
    * unlocks the Achievement through its provided name.
@@ -113,10 +101,10 @@ public class AchievementManager {
   }
 
   /**
-   * Checks if an achievement is locked/unlocked. Returns true if unlocked, false
-   * otherwise.
+   * Checks if an achievement is locked/unlocked. Returns true if unlocked, false otherwise.
    *
    * @param name achievement name
+   * @return true if the achievement is unlocked, false otherwise
    */
   public boolean isUnlocked(String name) {
     Achievement a = achievements.get(name);
@@ -125,6 +113,8 @@ public class AchievementManager {
 
   /**
    * Returns all achievements.
+   *
+   * @return collection of all achievements
    */
   public Collection<Achievement> getAllAchievements() {
     return achievements.values();

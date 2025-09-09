@@ -6,9 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
-/**
- * Displays performance stats about the game for debugging purposes.
- */
+/** Displays performance stats about the game for debugging purposes. */
 public class PerformanceDisplay extends UIComponent {
   private static final float Z_INDEX = 5f;
   private Label profileLabel;

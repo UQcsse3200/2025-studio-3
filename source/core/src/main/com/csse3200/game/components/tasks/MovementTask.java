@@ -33,10 +33,10 @@ public class MovementTask extends DefaultTask {
     this.speed = speed;
   }
 
-    public MovementTask(Vector2 target, float speed, float stopDistance) {
-        this(target, speed);
-        this.stopDistance = stopDistance;
-    }
+  public MovementTask(Vector2 target, float speed, float stopDistance) {
+    this(target, speed);
+    this.stopDistance = stopDistance;
+  }
 
   @Override
   public void start() {
@@ -66,11 +66,11 @@ public class MovementTask extends DefaultTask {
     movementComponent.setTarget(target);
   }
 
-    /**
-     * Sets the speed to the given speed.
-     * If this is not set, the default speed will be 1.
-     * @param speed the speed for the entity to move at.
-     */
+  /**
+   * Sets the speed to the given speed. If this is not set, the default speed will be 1.
+   *
+   * @param speed the speed for the entity to move at.
+   */
   public void setSpeed(float speed) {
     this.speed = speed;
     movementComponent.setSpeed(speed);

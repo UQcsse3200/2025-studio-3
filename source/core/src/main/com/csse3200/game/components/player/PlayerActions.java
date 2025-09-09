@@ -52,20 +52,17 @@ public class PlayerActions extends Component {
     moving = true;
   }
 
-  /**
-   * Stops the player from walking.
-   */
+  /** Stops the player from walking. */
   void stopWalking() {
     this.walkDirection = Vector2.Zero.cpy();
     updateSpeed();
     moving = false;
   }
 
-  /**
-   * Makes the player attack.
-   */
+  /** Makes the player attack. */
   void attack() {
-    Sound attackSound = ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
+    Sound attackSound =
+        ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
     attackSound.play();
   }
 }

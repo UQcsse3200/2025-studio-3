@@ -1,27 +1,27 @@
 package com.csse3200.game.persistence;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.csse3200.game.progression.Profile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.csse3200.game.progression.Profile;
-
 /**
  * Class for loading and saving the user profile / savefile.
- * 
- * Save files should be in the format {@code <profilename>$<unixtime>.json}.
+ *
+ * <p>Save files should be in the format {@code <profilename>$<unixtime>.json}.
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
   private static Profile profile;
   private static final String ROOT_DIR = "The Day We Fought Back" + File.separator + "saves";
+  private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})\\.json$";
+  private static final String FILE_EXTENSION = ".json";
 
   private Persistence() {
     throw new IllegalStateException("Instantiating static util class");
@@ -34,7 +34,7 @@ public class Persistence {
    * @return the file path as a string
    */
   private static String getPath(Savefile save) {
-    return ROOT_DIR + File.separator + save.toString() + ".json";
+    return ROOT_DIR + File.separator + save.toString() + FILE_EXTENSION;
   }
 
   /**
@@ -44,8 +44,7 @@ public class Persistence {
    */
   public static void load(Savefile save) {
     String path = getPath(save);
-    Profile savedProfile = FileLoader.readClass(
-        Profile.class, path, FileLoader.Location.EXTERNAL);
+    Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (savedProfile != null) {
       profile = savedProfile;
     } else {
@@ -54,36 +53,30 @@ public class Persistence {
     }
   }
 
-  /**
-   * Creates a new user profile, for use when a new game is started.
-   */
+  /** Creates a new user profile, for use when a new game is started. */
   public static void load() {
     profile = new Profile();
     logger.info("Created new profile");
   }
 
-  /**
-   * Ensures that the save directory exists.
-   */
+  /** Ensures that the save directory exists. */
   private static void ensureDirectoryExists() {
     FileHandle dir = Gdx.files.external(ROOT_DIR);
     if (!dir.exists()) {
-        dir.mkdirs();
-        logger.info("Created save directory: " + ROOT_DIR);
+      dir.mkdirs();
+      logger.info("Created save directory: {}", ROOT_DIR);
     }
-}
-  
-  /**
-   * Fetch the latest three profile names from the file system.
-   */
+  }
+
+  /** Fetch the latest three profile names from the file system. */
   public static List<Savefile> fetch() {
     List<Savefile> saves = new ArrayList<>();
 
     // Search the saves directory for savefiles
-    Pattern filePattern = Pattern.compile("^(.+?)\\$(\\d{10,13})\\.json$");
+    Pattern filePattern = Pattern.compile(SAVE_FILE_PATTERN);
     ensureDirectoryExists();
     FileHandle rootDir = Gdx.files.external(ROOT_DIR);
-    FileHandle[] files = rootDir.list(".json");
+    FileHandle[] files = rootDir.list(FILE_EXTENSION);
     if (files.length == 0) {
       return saves;
     }
@@ -99,7 +92,7 @@ public class Persistence {
           long timestamp = Long.parseLong(timestampStr);
           saves.add(new Savefile(profileName, timestamp));
         } catch (NumberFormatException e) {
-          continue;
+          logger.error("Failed to parse timestamp: {}", timestampStr);
         }
       }
     }
@@ -112,9 +105,7 @@ public class Persistence {
     return saves;
   }
 
-  /**
-   * Save the current user profile to the savefile.
-   */
+  /** Save the current user profile to the savefile. */
   public static void save() {
     List<Savefile> saves = fetch();
     for (Savefile save : saves) {
@@ -122,31 +113,35 @@ public class Persistence {
         delete(save);
       }
     }
-    String path = ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + ".json";
+    String path =
+        ROOT_DIR
+            + File.separator
+            + profile.getName()
+            + "$"
+            + System.currentTimeMillis()
+            + FILE_EXTENSION;
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
   }
 
-  /**
-   * Deletes a savefile from the filesystem.
-   */
+  /** Deletes a savefile from the filesystem. */
   private static void delete(Savefile save) {
     String path = getPath(save);
     FileHandle file = Gdx.files.external(path);
     if (file.exists()) {
       boolean success = file.delete();
       if (success) {
-        logger.info("Deleted savefile: " + path);
+        logger.info("Deleted savefile: {}", path);
       } else {
-        logger.error("Failed to delete savefile: " + path);
+        logger.error("Failed to delete savefile: {}", path);
       }
     } else {
-      logger.warn("Savefile does not exist: " + path);
+      logger.warn("Savefile does not exist: {}", path);
     }
   }
 
   /**
    * Get the current user profile.
-   * 
+   *
    * @return the current user profile.
    */
   public static Profile profile() {
