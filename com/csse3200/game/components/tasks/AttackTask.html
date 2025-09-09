@@ -99,8 +99,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AttackTask</span>
 <span class="extends-implements">extends <a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></span></div>
-<div class="block">Allows an entity to attack the closest target entity from a list of potential targets.
- This task runs when there is a visible target within the entities range of attack</div>
+<div class="block">Allows an entity to attack the closest target entity from a list of potential targets. This task
+ runs when there is a visible target within the entities range of attack</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -275,9 +275,11 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getActivePriority(float,com.csse3200.game.entities.Entity)">getActivePriority</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dst</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
 <dt>Returns:</dt>
-<dd><code>1</code> if a target is visible and within attack range,
-         otherwise <code>-1</code></dd>
+<dd><code>1</code> if a target is visible and within attack range, otherwise <code>-1</code></dd>
 </dl>
 </section>
 </li>
@@ -290,9 +292,11 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getInactivePriority(float,com.csse3200.game.entities.Entity)">getInactivePriority</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dst</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
 <dt>Returns:</dt>
-<dd><code>1</code> if the target is visible and within attack range,
-         otherwise <code>-1</code></dd>
+<dd><code>1</code> if the target is visible and within attack range, otherwise <code>-1</code></dd>
 </dl>
 </section>
 </li>

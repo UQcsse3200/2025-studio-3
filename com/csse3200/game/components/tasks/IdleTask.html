@@ -101,10 +101,10 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></span></div>
 <div class="block">Keeps an entity idle until a target entity is detected within the attack range.
 
- A list of available target entities is monitored to determine whether the current entity should remain idle
- or prepare for an attack, based on the target's distance and visibility. The closest visible target is found and
- if the target is outside the entity's range of attack, entity remains idle. Otherwise, this task becomes inactive and
- another task (attack task) takes over.</div>
+ <p>A list of available target entities is monitored to determine whether the current entity
+ should remain idle or prepare for an attack, based on the target's distance and visibility. The
+ closest visible target is found and if the target is outside the entity's range of attack, entity
+ remains idle. Otherwise, this task becomes inactive and another task (attack task) takes over.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -224,9 +224,12 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getActivePriority(float,com.csse3200.game.entities.Entity)">getActivePriority</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dst</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
 <dt>Returns:</dt>
-<dd><code>-1</code> if an enemy is within attack range (deactivate),
-          otherwise <code>1</code> (stay idle)</dd>
+<dd><code>-1</code> if an enemy is within attack range (deactivate), otherwise <code>1</code> (stay
+     idle)</dd>
 </dl>
 </section>
 </li>
@@ -239,9 +242,11 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getInactivePriority(float,com.csse3200.game.entities.Entity)">getInactivePriority</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>dst</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
 <dt>Returns:</dt>
-<dd><code>-1</code> if an enemy is within attack range
-          otherwise <code>1</code> (start task)</dd>
+<dd><code>-1</code> if an enemy is within attack range otherwise <code>1</code> (start task)</dd>
 </dl>
 </section>
 </li>

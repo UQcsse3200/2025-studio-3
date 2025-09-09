@@ -91,6 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AchievementPopup</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Component for displaying achievement unlock notifications. Shows popup messages with sound
+ effects when achievements are unlocked.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -103,7 +105,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">AchievementPopup</a><wbr>(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new achievement popup component.</div>
+</div>
 </div>
 </section>
 </li>
@@ -120,11 +124,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Disposes of resources used by this popup component.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#show(java.lang.String,java.lang.String)" class="member-name-link">show</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Shows an achievement unlock popup with the given name and description.</div>
+</div>
 </div>
 </div>
 </div>
@@ -146,6 +154,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.badlogic.gdx.scenes.scene2d.Stage)">
 <h3>AchievementPopup</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AchievementPopup</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</span></div>
+<div class="block">Creates a new achievement popup component.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>stage</code> - the stage to display popups on</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -161,12 +174,19 @@ loadScripts(document, 'script');</script>
 <h3>show</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">show</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</span></div>
+<div class="block">Shows an achievement unlock popup with the given name and description.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>name</code> - the name of the achievement</dd>
+<dd><code>description</code> - the description of the achievement</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
+<div class="block">Disposes of resources used by this popup component.</div>
 </section>
 </li>
 </ul>

@@ -91,7 +91,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">AreaAPI</span></div>
-<div class="block">Interface to inject LevelGameArea into components to safely have access to Entities and Components</div>
+<div class="block">Interface to inject LevelGameArea into components to safely have access to Entities and
+ Components</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -108,22 +109,34 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Gets the game grid for this area.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getSelectedUnit()" class="member-name-link">getSelectedUnit</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Gets the currently selected unit.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getTileSize()" class="member-name-link">getTileSize</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Gets the size of tiles in this area.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Removes a unit from the specified position.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setSelectedUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setSelectedUnit</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Sets the currently selected unit.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Spawns a unit at the specified position.</div>
+</div>
 </div>
 </div>
 </div>
@@ -142,36 +155,66 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getGrid()">
 <h3>getGrid</h3>
 <div class="member-signature"><span class="return-type"><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></span>&nbsp;<span class="element-name">getGrid</span>()</div>
+<div class="block">Gets the game grid for this area.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the level game grid</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getSelectedUnit()">
 <h3>getSelectedUnit</h3>
 <div class="member-signature"><span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getSelectedUnit</span>()</div>
+<div class="block">Gets the currently selected unit.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the selected entity, or null if none selected</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setSelectedUnit(com.csse3200.game.entities.Entity)">
 <h3>setSelectedUnit</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">setSelectedUnit</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Sets the currently selected unit.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>unit</code> - the entity to select</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="spawnUnit(int)">
 <h3>spawnUnit</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">spawnUnit</span><wbr><span class="parameters">(int&nbsp;position)</span></div>
+<div class="block">Spawns a unit at the specified position.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>position</code> - the position to spawn the unit at</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="removeUnit(int)">
 <h3>removeUnit</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">removeUnit</span><wbr><span class="parameters">(int&nbsp;position)</span></div>
+<div class="block">Removes a unit from the specified position.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>position</code> - the position to remove the unit from</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getTileSize()">
 <h3>getTileSize</h3>
 <div class="member-signature"><span class="return-type">float</span>&nbsp;<span class="element-name">getTileSize</span>()</div>
+<div class="block">Gets the size of tiles in this area.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the tile size</dd>
+</dl>
 </section>
 </li>
 </ul>

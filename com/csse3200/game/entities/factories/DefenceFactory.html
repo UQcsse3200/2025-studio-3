@@ -91,9 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DefenceFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Factory class for creating defence entities (e.g., sling shooters).
- This class should not be instantiated — all methods and configuration
- are static utilities.</div>
+<div class="block">Factory class for creating defence entities (e.g., sling shooters). This class should not be
+ instantiated — all methods and configuration are static utilities.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -145,10 +144,8 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createSlingShooter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;&nbsp;targets)</span></div>
 <div class="block">Creates a fully configured Sling Shooter defence entity.
 
- The entity is composed of:
- - Base physics and collider setup
- - Stats loaded from the config file
- - Animation rendering and animation controller</div>
+ <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
+ file - Animation rendering and animation controller</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>targets</code> - the list of the entities that the slingshooter will attack</dd>
@@ -168,8 +165,8 @@ loadScripts(document, 'script');</script>
 <h3>createBaseDefender</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBaseDefender</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;&nbsp;targets,
  <a href="../configs/BaseDefenceConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenceConfig</a>&nbsp;config)</span></div>
-<div class="block">Creates a base defender entity with default physics and collider setup.
- Base defender is also able to detect enemies and act accordingly - i.e. remain idle or attack</div>
+<div class="block">Creates a base defender entity with default physics and collider setup. Base defender is also
+ able to detect enemies and act accordingly - i.e. remain idle or attack</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>entity with physics and collision components</dd>

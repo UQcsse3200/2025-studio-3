@@ -172,7 +172,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getActivePriority(float,com.csse3200.game.entities.Entity)" class="member-name-link">getActivePriority</a><wbr>(float&nbsp;distance,
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Gets the priority when the task is active.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDistanceToTarget()" class="member-name-link">getDistanceToTarget</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -181,7 +183,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getInactivePriority(float,com.csse3200.game.entities.Entity)" class="member-name-link">getInactivePriority</a><wbr>(float&nbsp;distance,
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Gets the priority when the task is inactive.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNearestVisibleTarget()" class="member-name-link">getNearestVisibleTarget</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -191,15 +195,15 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPriority()" class="member-name-link">getPriority</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Determines the tasks priority
+
  
-     When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
-     When inactive: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
- </div>
+   When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isTargetVisible(com.csse3200.game.entities.Entity)" class="member-name-link">isTargetVisible</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of sight</div>
+<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of
+ sight</div>
 </div>
 </div>
 </div>
@@ -293,6 +297,14 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h3>getActivePriority</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getActivePriority</span><wbr><span class="parameters">(float&nbsp;distance,
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
+<div class="block">Gets the priority when the task is active.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>distance</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
+<dt>Returns:</dt>
+<dd>the priority value</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -300,6 +312,14 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h3>getInactivePriority</h3>
 <div class="member-signature"><span class="modifiers">protected abstract</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getInactivePriority</span><wbr><span class="parameters">(float&nbsp;distance,
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
+<div class="block">Gets the priority when the task is inactive.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>distance</code> - the distance to the target</dd>
+<dd><code>target</code> - the target entity</dd>
+<dt>Returns:</dt>
+<dd>the priority value</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -307,9 +327,10 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h3>getPriority</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPriority</span>()</div>
 <div class="block">Determines the tasks priority
+
  <ul>
-     <li>When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</li>
-     <li>When inactive: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</li>
+   <li>When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
+   <li>When inactive: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
  </ul></div>
 <dl class="notes">
 <dt>Specified by:</dt>
@@ -323,7 +344,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="isTargetVisible(com.csse3200.game.entities.Entity)">
 <h3>isTargetVisible</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTargetVisible</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
-<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of sight</div>
+<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of
+ sight</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>target</code> - the target to check</dd>

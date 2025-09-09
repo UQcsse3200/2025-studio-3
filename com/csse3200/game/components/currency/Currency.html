@@ -91,6 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Currency</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Represents a currency system with sunlight as the primary currency.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -103,12 +104,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">Currency</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new currency with zero sunlight and no maximum limit.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int)" class="member-name-link">Currency</a><wbr>(int&nbsp;initialAmount)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a new currency with the specified initial amount.</div>
+</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int)" class="member-name-link">Currency</a><wbr>(int&nbsp;initialAmount,
  int&nbsp;maxSunshine)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new currency with the specified initial amount and maximum limit.</div>
+</div>
 </div>
 </section>
 </li>
@@ -125,19 +132,29 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addSunshine(int)" class="member-name-link">addSunshine</a><wbr>(int&nbsp;amount)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adds sunlight to the current amount.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canAffordSunshine(int)" class="member-name-link">canAffordSunshine</a><wbr>(int&nbsp;amount)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the current sunlight amount can afford the specified cost.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSunlight()" class="member-name-link">getSunlight</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the current sunlight amount.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSunlight(int)" class="member-name-link">setSunlight</a><wbr>(int&nbsp;amount)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the sunlight amount.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spendSunshine(int)" class="member-name-link">spendSunshine</a><wbr>(int&nbsp;amount)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Attempts to spend the specified amount of sunlight.</div>
+</div>
 </div>
 </div>
 </div>
@@ -159,12 +176,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>Currency</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Currency</span>()</div>
+<div class="block">Creates a new currency with zero sunlight and no maximum limit.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>Currency</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Currency</span><wbr><span class="parameters">(int&nbsp;initialAmount)</span></div>
+<div class="block">Creates a new currency with the specified initial amount.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>initialAmount</code> - the initial sunlight amount</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -172,6 +195,12 @@ loadScripts(document, 'script');</script>
 <h3>Currency</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Currency</span><wbr><span class="parameters">(int&nbsp;initialAmount,
  int&nbsp;maxSunshine)</span></div>
+<div class="block">Creates a new currency with the specified initial amount and maximum limit.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>initialAmount</code> - the initial sunlight amount</dd>
+<dd><code>maxSunshine</code> - the maximum sunlight limit</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -186,30 +215,59 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getSunlight()">
 <h3>getSunlight</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getSunlight</span>()</div>
+<div class="block">Gets the current sunlight amount.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the current sunlight amount</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setSunlight(int)">
 <h3>setSunlight</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSunlight</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
+<div class="block">Sets the sunlight amount.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>amount</code> - the new sunlight amount</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="addSunshine(int)">
 <h3>addSunshine</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addSunshine</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
+<div class="block">Adds sunlight to the current amount.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>amount</code> - the amount of sunlight to add</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="canAffordSunshine(int)">
 <h3>canAffordSunshine</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canAffordSunshine</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
+<div class="block">Checks if the current sunlight amount can afford the specified cost.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>amount</code> - the cost to check</dd>
+<dt>Returns:</dt>
+<dd>true if affordable, false otherwise</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="spendSunshine(int)">
 <h3>spendSunshine</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">spendSunshine</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
+<div class="block">Attempts to spend the specified amount of sunlight.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>amount</code> - the amount to spend</dd>
+<dt>Returns:</dt>
+<dd>true if successful, false if insufficient funds</dd>
+</dl>
 </section>
 </li>
 </ul>

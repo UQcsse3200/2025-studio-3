@@ -101,9 +101,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CurrentWaveDisplay</span>
 <span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
-<div class="block">A UI component for displaying the current wave number.
- Shows the current wave and can be updated when waves change.
- Now integrated with the WaveManager system.</div>
+<div class="block">A UI component for displaying the current wave number. Shows the current wave and can be updated
+ when waves change. Now integrated with the WaveManager system.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -131,7 +130,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">CurrentWaveDisplay</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new current wave display component.</div>
+</div>
 </div>
 </section>
 </li>
@@ -217,6 +218,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>CurrentWaveDisplay</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CurrentWaveDisplay</span>()</div>
+<div class="block">Creates a new current wave display component.</div>
 </section>
 </li>
 </ul>
@@ -258,8 +260,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="updateWaveDisplay(int)">
 <h3>updateWaveDisplay</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateWaveDisplay</span><wbr><span class="parameters">(int&nbsp;waveNumber)</span></div>
-<div class="block">Updates the wave display on the UI.
- This method is called by the event system when "waveChanged" or "newWaveStarted" events are triggered.</div>
+<div class="block">Updates the wave display on the UI. This method is called by the event system when
+ "waveChanged" or "newWaveStarted" events are triggered.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>waveNumber</code> - the new wave number to display</dd>
@@ -281,8 +283,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCurrentWaveString()">
 <h3>getCurrentWaveString</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCurrentWaveString</span>()</div>
-<div class="block">Gets the current wave being displayed as a formatted string.
- Returns "Wave X" for active waves or "No Wave Active" for wave 0.</div>
+<div class="block">Gets the current wave being displayed as a formatted string. Returns "Wave X" for active waves
+ or "No Wave Active" for wave 0.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>formatted wave string for display</dd>

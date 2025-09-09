@@ -96,8 +96,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AllHitCallback</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
-<div class="block">Cast a ray against all colliders that match the layer mask. All hits will be stored, with an empty
- array if no hits occurred.</div>
+<div class="block">Cast a ray against all colliders that match the layer mask. All hits will be stored, with an
+ empty array if no hits occurred.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,7 +112,9 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>short</code></div>
 <div class="col-second even-row-color"><code><a href="#layerMask" class="member-name-link">layerMask</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Layer mask for filtering which colliders to hit</div>
+</div>
 </div>
 </section>
 </li>
@@ -125,7 +127,9 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">AllHitCallback</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new AllHitCallback with default settings.</div>
+</div>
 </div>
 </section>
 </li>
@@ -142,7 +146,9 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHitsAndClear()" class="member-name-link">getHitsAndClear</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets all raycast hits and clears the internal hit list.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportRayFixture(com.badlogic.gdx.physics.box2d.Fixture,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,float)" class="member-name-link">reportRayFixture</a><wbr>(com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixture,
  com.badlogic.gdx.math.Vector2&nbsp;point,
@@ -170,6 +176,7 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <section class="detail" id="layerMask">
 <h3>layerMask</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">short</span>&nbsp;<span class="element-name">layerMask</span></div>
+<div class="block">Layer mask for filtering which colliders to hit</div>
 </section>
 </li>
 </ul>
@@ -184,6 +191,7 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <section class="detail" id="&lt;init&gt;()">
 <h3>AllHitCallback</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">AllHitCallback</span>()</div>
+<div class="block">Creates a new AllHitCallback with default settings.</div>
 </section>
 </li>
 </ul>
@@ -198,6 +206,11 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <section class="detail" id="getHitsAndClear()">
 <h3>getHitsAndClear</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a>[]</span>&nbsp;<span class="element-name">getHitsAndClear</span>()</div>
+<div class="block">Gets all raycast hits and clears the internal hit list.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>array of all raycast hits</dd>
+</dl>
 </section>
 </li>
 <li>

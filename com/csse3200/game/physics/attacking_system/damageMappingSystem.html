@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">damageMappingSystem</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">the damage mapping system handles damage interactions between entities.
- It listens to collisionStart event and applies the damage logic.</div>
+<div class="block">the damage mapping system handles damage interactions between entities. It listens to
+ collisionStart event and applies the damage logic.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,7 +105,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.Entity)" class="member-name-link">damageMappingSystem</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new damage mapping system for the specified entity.</div>
+</div>
 </div>
 </section>
 </li>
@@ -123,7 +125,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onCollisionStart(com.badlogic.gdx.physics.box2d.Fixture,com.badlogic.gdx.physics.box2d.Fixture)" class="member-name-link">onCollisionStart</a><wbr>(com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixtureA,
  com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixtureB)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Handles collision start events and applies damage logic.</div>
+</div>
 </div>
 </div>
 </div>
@@ -145,6 +149,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.Entity)">
 <h3>damageMappingSystem</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">damageMappingSystem</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</span></div>
+<div class="block">Creates a new damage mapping system for the specified entity.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>entity</code> - the entity to attach the damage system to</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -160,6 +169,12 @@ loadScripts(document, 'script');</script>
 <h3>onCollisionStart</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onCollisionStart</span><wbr><span class="parameters">(com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixtureA,
  com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixtureB)</span></div>
+<div class="block">Handles collision start events and applies damage logic.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>fixtureA</code> - the first fixture in the collision</dd>
+<dd><code>fixtureB</code> - the second fixture in the collision</dd>
+</dl>
 </section>
 </li>
 </ul>

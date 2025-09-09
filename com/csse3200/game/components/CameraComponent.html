@@ -93,6 +93,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CameraComponent</span>
 <span class="extends-implements">extends <a href="Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
+<div class="block">Component that manages camera positioning and rendering for an entity.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,9 +115,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">CameraComponent</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a camera component with a default orthographic camera.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.graphics.Camera)" class="member-name-link">CameraComponent</a><wbr>(com.badlogic.gdx.graphics.Camera&nbsp;camera)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a camera component with the specified camera.</div>
+</div>
 </div>
 </section>
 </li>
@@ -133,15 +138,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.graphics.Camera</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCamera()" class="member-name-link">getCamera</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the camera instance.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Matrix4</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProjectionMatrix()" class="member-name-link">getProjectionMatrix</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the projection matrix of the camera.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int,float)" class="member-name-link">resize</a><wbr>(int&nbsp;screenWidth,
  int&nbsp;screenHeight,
  float&nbsp;gameWidth)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Resizes the camera viewport based on screen dimensions.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -171,12 +182,18 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>CameraComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CameraComponent</span>()</div>
+<div class="block">Creates a camera component with a default orthographic camera.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="&lt;init&gt;(com.badlogic.gdx.graphics.Camera)">
 <h3>CameraComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CameraComponent</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.Camera&nbsp;camera)</span></div>
+<div class="block">Creates a camera component with the specified camera.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>camera</code> - the camera to use</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -204,12 +221,22 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getProjectionMatrix()">
 <h3>getProjectionMatrix</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Matrix4</span>&nbsp;<span class="element-name">getProjectionMatrix</span>()</div>
+<div class="block">Gets the projection matrix of the camera.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the combined projection matrix</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getCamera()">
 <h3>getCamera</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.graphics.Camera</span>&nbsp;<span class="element-name">getCamera</span>()</div>
+<div class="block">Gets the camera instance.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the camera</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -218,6 +245,13 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span><wbr><span class="parameters">(int&nbsp;screenWidth,
  int&nbsp;screenHeight,
  float&nbsp;gameWidth)</span></div>
+<div class="block">Resizes the camera viewport based on screen dimensions.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>screenWidth</code> - the screen width</dd>
+<dd><code>screenHeight</code> - the screen height</dd>
+<dd><code>gameWidth</code> - the desired game width</dd>
+</dl>
 </section>
 </li>
 </ul>

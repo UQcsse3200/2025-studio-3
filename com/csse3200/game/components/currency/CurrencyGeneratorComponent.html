@@ -93,9 +93,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CurrencyGeneratorComponent</span>
 <span class="extends-implements">extends <a href="../Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
-<div class="block">Periodically spawns "sunlight" currency at random positions on the screen. The spawn
- interval, sun value, texture path and motion parameters are configurable. Actions registered
- on the Stage are removed in <a href="#dispose()"><code>dispose()</code></a> to avoid leaks.</div>
+<div class="block">Periodically spawns "sunlight" currency at random positions on the screen. The spawn interval,
+ sun value, texture path and motion parameters are configurable. Actions registered on the Stage
+ are removed in <a href="#dispose()"><code>dispose()</code></a> to avoid leaks.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -117,11 +117,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">CurrencyGeneratorComponent</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new currency generator component with default settings.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(float,int,java.lang.String)" class="member-name-link">CurrencyGeneratorComponent</a><wbr>(float&nbsp;intervalSec,
  int&nbsp;sunValue,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sunTexturePath)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a new currency generator component with the specified parameters.</div>
+</div>
 </div>
 </section>
 </li>
@@ -149,23 +153,23 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFallFracPerSec(float)" class="member-name-link">setFallFracPerSec</a><wbr>(float&nbsp;frac)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Configure falling speed</div>
+<div class="block">Sets the fall fraction per second for spawned suns.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRotatingSpeedDps(float)" class="member-name-link">setRotatingSpeedDps</a><wbr>(float&nbsp;dps)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Configure rotation speed in degrees per second.</div>
+<div class="block">Sets the rotating speed in degrees per second for spawned suns.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSunSizePx(float)" class="member-name-link">setSunSizePx</a><wbr>(float&nbsp;px)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Configure sun visual size in pixels.</div>
+<div class="block">Sets the size of spawned suns in pixels.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnSunAt(float,float)" class="member-name-link">spawnSunAt</a><wbr>(float&nbsp;targetX,
  float&nbsp;targetY)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Spawn a sun that falls from the top to (targetX, targetY) while rotating.</div>
+<div class="block">Spawns a sun at the specified coordinates.</div>
 </div>
 </div>
 </div>
@@ -191,6 +195,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>CurrencyGeneratorComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CurrencyGeneratorComponent</span>()</div>
+<div class="block">Creates a new currency generator component with default settings.</div>
 </section>
 </li>
 <li>
@@ -199,6 +204,7 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CurrencyGeneratorComponent</span><wbr><span class="parameters">(float&nbsp;intervalSec,
  int&nbsp;sunValue,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sunTexturePath)</span></div>
+<div class="block">Creates a new currency generator component with the specified parameters.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>intervalSec</code> - seconds between spawns</dd>
@@ -233,28 +239,51 @@ loadScripts(document, 'script');</script>
 <h3>spawnSunAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnSunAt</span><wbr><span class="parameters">(float&nbsp;targetX,
  float&nbsp;targetY)</span></div>
-<div class="block">Spawn a sun that falls from the top to (targetX, targetY) while rotating.</div>
+<div class="block">Spawns a sun at the specified coordinates.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>targetX</code> - the x coordinate to spawn at</dd>
+<dd><code>targetY</code> - the y coordinate to spawn at</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setFallFracPerSec(float)">
 <h3>setFallFracPerSec</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></span>&nbsp;<span class="element-name">setFallFracPerSec</span><wbr><span class="parameters">(float&nbsp;frac)</span></div>
-<div class="block">Configure falling speed</div>
+<div class="block">Sets the fall fraction per second for spawned suns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>frac</code> - the fall fraction per second</dd>
+<dt>Returns:</dt>
+<dd>this component for method chaining</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setRotatingSpeedDps(float)">
 <h3>setRotatingSpeedDps</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></span>&nbsp;<span class="element-name">setRotatingSpeedDps</span><wbr><span class="parameters">(float&nbsp;dps)</span></div>
-<div class="block">Configure rotation speed in degrees per second.</div>
+<div class="block">Sets the rotating speed in degrees per second for spawned suns.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>dps</code> - the degrees per second</dd>
+<dt>Returns:</dt>
+<dd>this component for method chaining</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setSunSizePx(float)">
 <h3>setSunSizePx</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></span>&nbsp;<span class="element-name">setSunSizePx</span><wbr><span class="parameters">(float&nbsp;px)</span></div>
-<div class="block">Configure sun visual size in pixels.</div>
+<div class="block">Sets the size of spawned suns in pixels.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>px</code> - the size in pixels</dd>
+<dt>Returns:</dt>
+<dd>this component for method chaining</dd>
+</dl>
 </section>
 </li>
 <li>
