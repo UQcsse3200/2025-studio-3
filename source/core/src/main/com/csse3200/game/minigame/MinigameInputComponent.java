@@ -6,6 +6,7 @@ import com.csse3200.game.input.InputComponent;
 public class MinigameInputComponent extends InputComponent {
 private final PlayerLaneManager playerLaneManager;
 public MinigameInputComponent(PlayerLaneManager playerLaneManager) {
+
     this.playerLaneManager = playerLaneManager;
 }
 @Override

@@ -1,6 +1,9 @@
 package com.csse3200.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -8,9 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.minigame.LaneManager;
+import com.csse3200.game.minigame.LaneRunnerPlayerFactory;
+import com.csse3200.game.minigame.MinigameInputComponent;
+import com.csse3200.game.minigame.PlayerLaneManager;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -23,8 +31,13 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.MainMenuScreen.class);
     private final GdxGame game;
     private final Renderer renderer;
+    private LaneManager laneManager;
+    private PlayerLaneManager playerLaneManager;
+    private Entity player;
     private static final String[] laneRunnerTextures = {
             "images/bg.png",
+            "images/box_boy.png",
+            "images/grass_1.png",
     };
 
     public LaneRunnerScreen(GdxGame game) {
@@ -40,33 +53,15 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
         loadAssets();
         createUI();
+        //createPlayer();
     }
-    public void render(float delta) {
-        ServiceLocator.getEntityService().update();
-        renderer.render();
-    }
+
     private void loadAssets() {
         logger.debug("Loading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.loadTextures(laneRunnerTextures);
         ServiceLocator.getResourceService().loadAll();
     }
-    private void unloadAssets() {
-        logger.debug("Unloading assets");
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.unloadAssets(laneRunnerTextures);
-    }
-    public void dispose() {
-        logger.debug("Disposing lane runner mini game screen");
-
-        renderer.dispose();
-        unloadAssets();
-        ServiceLocator.getRenderService().dispose();
-        ServiceLocator.getEntityService().dispose();
-
-        ServiceLocator.clear();
-    }
-
     private void createUI() {
         logger.debug("Creating ui");
         Stage stage = ServiceLocator.getRenderService().getStage();
@@ -80,6 +75,43 @@ public class LaneRunnerScreen extends ScreenAdapter {
         bg.setScaling(Scaling.fill);
         stage.addActor(bg);
         logger.debug("shows lane runner mini game screen background");
+        //Lanes
+        /*Texture laneTex = ServiceLocator.getResourceService().getAsset("images/grass_1.png", Texture.class);
+        laneManager.createLaneEntities(ServiceLocator.getEntityService(), laneTex);*/
+        Camera camera =ServiceLocator.getRenderService().getStage().getCamera();
+        float screenWidth = camera.viewportWidth;
+        laneManager=new LaneManager(screenWidth);
+        Texture laneTex=ServiceLocator.getResourceService().getAsset("images/grass_1.png", Texture.class);
+        laneManager.createLaneVisuals(stage,laneTex);
     }
+    /*private void createPlayer() {
+        logger.debug("Creating player");
+        //Stage stage=ServiceLocator.getRenderService().getStage();
+        player= LaneRunnerPlayerFactory.createPlayer();
+        playerLaneManager=new PlayerLaneManager(player,laneManager);
+        player.addComponent(new MinigameInputComponent(playerLaneManager));
+
+        ServiceLocator.getEntityService().register(player);
+    }*/
+    public void render(float delta) {
+        ServiceLocator.getEntityService().update();
+        renderer.render();
+    }
+   private void unloadAssets() {
+        logger.debug("Unloading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.unloadAssets(laneRunnerTextures);
+    }
+    public void dispose() {
+        logger.debug("Disposing lane runner mini game screen");
+
+        renderer.dispose();
+       unloadAssets();
+        ServiceLocator.getRenderService().dispose();
+        ServiceLocator.getEntityService().dispose();
+
+        ServiceLocator.clear();
+    }
+
 
 }

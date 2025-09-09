@@ -11,7 +11,7 @@ public class PlayerLaneManager {
     public PlayerLaneManager(Entity player, LaneManager laneManager) {
         this.player = player;
         this.laneManager = laneManager;
-        this.currentLane = 1;
+        this.currentLane = laneManager.getNumLanes()/2;
         movePlayertoLane(currentLane);
     }
     public void movePlayertoLane(int LaneIndex) {
@@ -21,7 +21,7 @@ public class PlayerLaneManager {
         this.currentLane = LaneIndex;
 
         float x = laneManager.getLaneCenter(LaneIndex);
-        float y= player.getPosition().y;
+        float y= LaneConfig.PLAYER_Y;
         player.setPosition(x, y);
     }
     public int getCurrentLane() {
