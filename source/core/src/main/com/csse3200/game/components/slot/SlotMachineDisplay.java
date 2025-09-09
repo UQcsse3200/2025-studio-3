@@ -359,12 +359,12 @@ public class SlotMachineDisplay extends UIComponent {
      * Starts looped scrolling for all reels and schedules staggered smooth stop landing on target.
      */
     private void startSpinThenStopAtTargets() {
-        stoppedCount = 0;
-
         if (spinning) {
             logger.info("Already spinning.");
             return;
         }
+
+        stoppedCount = 0;
         spinning = true;
 
         for (int i = 0; i < reelColumns.size(); i++) {
