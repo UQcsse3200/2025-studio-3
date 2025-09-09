@@ -3,11 +3,17 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.entities.factories.DefenceFactory;
+import com.csse3200.game.entities.factories.NPCFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.entities.Entity;
+
+import java.util.ArrayList;
+import java.util.function.Supplier;
 
 /** Input handler for inventory units for mouse input. This input handler uses touch input. */
 public class InventoryUnitInputComponent extends InputComponent {
@@ -15,11 +21,40 @@ public class InventoryUnitInputComponent extends InputComponent {
   private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
   private final AreaAPI area;
   private final float tileSize;
+  private Supplier<Entity> supplier;
 
-  public InventoryUnitInputComponent(AreaAPI area) {
+  public InventoryUnitInputComponent(AreaAPI area, int pos) {
     super(5);
     this.area = area;
     tileSize = area.getTileSize();
+    setEntitySupplier(pos);
+  }
+
+    /**
+     * Getter for the supplier, used when we need an instance of the inventory unit
+     * @return the supplier for that entity
+     */
+  public Supplier<Entity> getEntitySupplier() {
+      return this.supplier;
+  }
+
+    /**
+     * Set the supplier to give back a different entity depending on its position
+     * in the inventory. So far we have (subject to change)
+     * GHOST = 1
+     * GHOSTKING = 2
+     * SLINGSHOOTER = 3
+     * @param pos the position corresponding an entity in the inventory
+     */
+  public void setEntitySupplier(int pos) {
+      switch (pos) {
+          case 3:   // SLINGSHOOTER
+              supplier = () -> DefenceFactory.createSlingShooter(new ArrayList<>());
+              break;
+          default:
+              supplier = () -> null;
+              break;
+      }
   }
 
   /**

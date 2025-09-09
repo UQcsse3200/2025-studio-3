@@ -5,13 +5,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.IDComponent;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -19,6 +17,8 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Supplier;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
@@ -104,9 +104,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
 
     // start at one for 0 to represent none selected
-    placeInventoryUnit(1, "images/ghost_1.png", "ghost");
-    placeInventoryUnit(2, "images/ghost_king.png", "ghostking");
-    placeInventoryUnit(3, "images/sling_shooter_1.png", "slingshooter");
+    placeInventoryUnit(1, "images/ghost_1.png");
+    placeInventoryUnit(2, "images/ghost_king.png");
+    placeInventoryUnit(3, "images/sling_shooter_1.png");
 
     playMusic();
   }
@@ -194,12 +194,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * @param pos the position of the unit in the inventory, pos >= 1
    * @param image the file path of the unit image
    */
-  private void placeInventoryUnit(int pos, String image, String name) {
+  private void placeInventoryUnit(int pos, String image) {
     Entity unit =
         new Entity()
-            .addComponent(new InventoryUnitInputComponent(this))
-            .addComponent(new TextureRenderComponent(image))
-            .addComponent(new IDComponent(name));
+            .addComponent(new InventoryUnitInputComponent(this, pos))
+            .addComponent(new TextureRenderComponent(image));
     unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
@@ -285,12 +284,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void spawnUnit(int position) {
-    String name = selected_unit.getComponent(IDComponent.class).getId();
-    Entity unit = DefenceFactory.getEntity(name);
+    Supplier<Entity> entitySupplier = selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
+    Entity unit = entitySupplier.get();
 
     if (unit == null) {
-      logger.error("Entity fetched was NULL");
-      return;
+        logger.error("Entity fetched was NULL");
+        return;
     }
 
     // Match the texture of the inventory unit - placeholder

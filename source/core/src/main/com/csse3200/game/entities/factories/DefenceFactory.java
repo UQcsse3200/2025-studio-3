@@ -34,16 +34,6 @@ public class DefenceFactory {
   private static final NPCConfigs configs =
       FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
-  public static Entity getEntity(String name) {
-    Entity e = null;
-    switch (name) {
-      case "slingshooter":
-        e = createSlingShooter(new ArrayList<>());
-        break;
-    }
-    return e;
-  }
-
   /**
    * Creates a fully configured Sling Shooter defence entity.
    *
