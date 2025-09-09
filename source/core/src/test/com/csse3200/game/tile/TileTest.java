@@ -83,14 +83,12 @@ public class TileTest {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
-    assert (tileStorageComponent.hasUnit());
+    assertTrue(tileStorageComponent.hasUnit());
     // because the selected unit is duplicated when placed on tile, so cant test that the both
     // entities are the same
-    assert (tileStorageComponent
-            .getTileUnit()
-            .getComponent(TextureRenderComponent.class)
-            .getTexture()
-        == selected.getComponent(TextureRenderComponent.class).getTexture());
+    assertSame(
+            selected.getComponent(TextureRenderComponent.class).getTexture(),
+            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
   }
 
   @Test
@@ -104,16 +102,12 @@ public class TileTest {
     tileStorageComponent.triggerSpawnUnit();
     // checks if the tile unit has not been replaced with new unit if there was already a unit
     // placed
-    assert (tileStorageComponent
-            .getTileUnit()
-            .getComponent(TextureRenderComponent.class)
-            .getTexture()
-        == selected.getComponent(TextureRenderComponent.class).getTexture());
-    assert (tileStorageComponent
-            .getTileUnit()
-            .getComponent(TextureRenderComponent.class)
-            .getTexture()
-        != newSelected.getComponent(TextureRenderComponent.class).getTexture());
+    assertSame(
+            selected.getComponent(TextureRenderComponent.class).getTexture(),
+            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
+    assertNotSame(
+            newSelected.getComponent(TextureRenderComponent.class).getTexture(),
+            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
   }
 
   @Test
@@ -122,14 +116,14 @@ public class TileTest {
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
     tileStorageComponent.removeTileUnit();
-    assert (!tileStorageComponent.hasUnit());
+    assertFalse(tileStorageComponent.hasUnit());
   }
 
   @Test
   public void shouldBeNullUnitByDefault() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    assert (tileStorageComponent.getTileUnit() == null);
+    assertNull(tileStorageComponent.getTileUnit());
   }
 
   @Test
@@ -137,7 +131,7 @@ public class TileTest {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.removeTileUnit();
-    assert (tileStorageComponent.getTileUnit() == null);
+    assertNull(tileStorageComponent.getTileUnit());
   }
 
   @Test
@@ -145,7 +139,7 @@ public class TileTest {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(1, 1);
-    assert (tileStorageComponent.inTileHitbox(testPoint));
+    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
   }
 
   @Test
@@ -153,7 +147,7 @@ public class TileTest {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(0, 0);
-    assert (tileStorageComponent.inTileHitbox(testPoint));
+    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
   }
 
   @Test
@@ -161,7 +155,7 @@ public class TileTest {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(8, 8);
-    assert (!tileStorageComponent.inTileHitbox(testPoint));
+    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
   }
 
   @Test
@@ -169,7 +163,7 @@ public class TileTest {
     Entity tile = createValidTile();
     TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
     GridPoint2 testPoint = new GridPoint2(0, 6);
-    assert (!tileStorageComponent.inTileHitbox(testPoint));
+    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
   }
 
   @Test
@@ -188,9 +182,9 @@ public class TileTest {
   public void shouldBeValidTile() {
     Entity tile = createValidTile();
     assertNotNull(tile);
-    assert (tile.getComponent(TileStorageComponent.class) != null);
-    assert (tile.getComponent(TileHitboxComponent.class) != null);
-    assert (tile.getComponent(TileInputComponent.class) != null);
+    assertNotNull(tile.getComponent(TileStorageComponent.class));
+    assertNotNull(tile.getComponent(TileHitboxComponent.class));
+    assertNotNull(tile.getComponent(TileInputComponent.class));
   }
 
   private Entity createValidTile() {
