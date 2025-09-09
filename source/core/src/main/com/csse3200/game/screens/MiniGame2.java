@@ -58,16 +58,27 @@ public abstract class MiniGame2 implements Screen {
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
         ServiceLocator.getEntityService().register(ball);
+
+        float thickness = 10f;
+
+        createbbwall(thickness/2f, ScreenHeight/2f, thickness, ScreenWidth);
+        createbbwall(ScreenWidth-thickness/2f, ScreenHeight/2f, thickness, ScreenWidth);
+        createbbwall(ScreenWidth/2f, ScreenHeight - thickness/2f,ScreenWidth, thickness);
     }
 
-    /*private void createbbwall(float x, float y, float width, float height) {
+    private void createbbwall(float x, float y, float width, float height) {
         Entity bbwall = new Entity();
         bbwall.addComponent(new PhysicsComponent());.
         ColliderComponent collider = new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE);
         bbwall.addComponent(collider);
 
-        bbwall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.);
-    }*/
+        bbwall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
+
+        bbwall.getComponent(ColliderComponent.class).setAsBox(width/2, height/2);
+        bbwall.getComponent(PhysicsComponent.class).getBody().setTransform(x,y,0);
+
+        ServiceLocator.getEntityService().register(bbwall);
+    }
 
     @Override
     public void render(float delta) {
