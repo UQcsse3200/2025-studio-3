@@ -10,11 +10,13 @@ import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +67,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private Entity selected_unit;
   private Entity selection_star;
 
+  // May have to use a List<Entity> instead if we need to know what entities are at what position
+  // But for now it doesn't matter
+  private int inventoryUnitCount;
+
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
    *
@@ -90,6 +96,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     selected_unit = null; // None selected at level load
     spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
     selection_star = null;
+    inventoryUnitCount = 0;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -103,9 +110,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
 
     // start at one for 0 to represent none selected
-    placeInventoryUnit(1, "images/ghost_1.png");
-    placeInventoryUnit(2, "images/ghost_king.png");
-    placeInventoryUnit(3, "images/sling_shooter_1.png");
+    placeInventoryUnit(() -> null, "images/ghost_1.png");
+    placeInventoryUnit(() -> null, "images/ghost_king.png");
+    placeInventoryUnit(
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()), "images/sling_shooter_1.png");
 
     playMusic();
   }
@@ -193,10 +201,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * @param pos the position of the unit in the inventory, pos >= 1
    * @param image the file path of the unit image
    */
-  private void placeInventoryUnit(int pos, String image) {
+  private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
+    int pos = ++inventoryUnitCount;
     Entity unit =
         new Entity()
-            .addComponent(new InventoryUnitInputComponent(this, pos))
+            .addComponent(new InventoryUnitInputComponent(this, supplier))
             .addComponent(new TextureRenderComponent(image));
     unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
     unit.scaleHeight(tileSize);
@@ -291,7 +300,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Supplier<Entity> entitySupplier =
         selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
     Entity newEntity = entitySupplier.get();
-
     if (newEntity == null) {
       logger.error("Entity fetched was NULL");
       return;
@@ -300,7 +308,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     // Add to list of all spawned units
     spawned_units[position] = newEntity;
-
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
 

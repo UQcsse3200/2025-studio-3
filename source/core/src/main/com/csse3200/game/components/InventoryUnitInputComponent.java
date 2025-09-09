@@ -4,11 +4,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,11 +19,11 @@ public class InventoryUnitInputComponent extends InputComponent {
   private final float tileSize;
   private Supplier<Entity> supplier;
 
-  public InventoryUnitInputComponent(AreaAPI area, int pos) {
+  public InventoryUnitInputComponent(AreaAPI area, Supplier<Entity> supplier) {
     super(5);
     this.area = area;
     tileSize = area.getTileSize();
-    setEntitySupplier(pos);
+    this.supplier = supplier;
   }
 
   /**
@@ -35,23 +33,6 @@ public class InventoryUnitInputComponent extends InputComponent {
    */
   public Supplier<Entity> getEntitySupplier() {
     return this.supplier;
-  }
-
-  /**
-   * Set the supplier to give back a different entity depending on its position in the inventory. So
-   * far we have (subject to change) GHOST = 1 GHOSTKING = 2 SLINGSHOOTER = 3
-   *
-   * @param pos the position corresponding an entity in the inventory
-   */
-  public void setEntitySupplier(int pos) {
-    switch (pos) {
-      case 3: // SLINGSHOOTER
-        supplier = () -> DefenceFactory.createSlingShooter(new ArrayList<>());
-        break;
-      default:
-        supplier = () -> null;
-        break;
-    }
   }
 
   /**

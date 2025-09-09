@@ -10,6 +10,12 @@ public class BaseEntityConfig {
     // Default constructor with default field values
   }
 
+  int health;
+
+  int baseAttack;
+
+  int speed;
+
   /**
    * Gets the health value for this entity.
    *

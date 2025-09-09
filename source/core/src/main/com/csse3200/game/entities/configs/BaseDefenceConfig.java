@@ -7,10 +7,6 @@ public class BaseDefenceConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  public int health;
-
-  public int baseAttack;
-
   /** Defence type identifier */
   public int type;
 
