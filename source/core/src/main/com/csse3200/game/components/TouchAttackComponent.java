@@ -25,6 +25,7 @@ public class TouchAttackComponent extends Component {
 
   /**
    * Create a component which attacks entities on collision, without knockback.
+   *
    * @param targetLayer The physics layer of the target's collider.
    */
   public TouchAttackComponent(short targetLayer) {
@@ -33,6 +34,7 @@ public class TouchAttackComponent extends Component {
 
   /**
    * Create a component which attacks entities on collision, with knockback.
+   *
    * @param targetLayer The physics layer of the target's collider.
    * @param knockback The magnitude of the knockback applied to the entity.
    */

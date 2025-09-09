@@ -8,22 +8,21 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
  * of the events is triggered.
  */
 public class DefenceAnimationController extends Component {
-    AnimationRenderComponent animator;
+  AnimationRenderComponent animator;
 
-    @Override
-    public void create() {
-        super.create();
-        animator = this.entity.getComponent(AnimationRenderComponent.class);
-        entity.getEvents().addListener("idleStart", this::animateIdle);
-        entity.getEvents().addListener("attackStart", this::animateAttack);
-    }
+  @Override
+  public void create() {
+    super.create();
+    animator = this.entity.getComponent(AnimationRenderComponent.class);
+    entity.getEvents().addListener("idleStart", this::animateIdle);
+    entity.getEvents().addListener("attackStart", this::animateAttack);
+  }
 
-    void animateIdle() {
-        animator.startAnimation("idle");
-    }
+  void animateIdle() {
+    animator.startAnimation("idle");
+  }
 
-    void animateAttack() {
-        animator.startAnimation("attack");
-    }
+  void animateAttack() {
+    animator.startAnimation("attack");
+  }
 }
-

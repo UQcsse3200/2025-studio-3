@@ -1,10 +1,9 @@
 package com.csse3200.game.ai.tasks;
 
 import com.csse3200.game.components.Component;
+import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
 
 /**
  * Task-based AI component. Given a list of tasks with priorities, the AI component will run the
@@ -19,6 +18,11 @@ public class AITaskComponent extends Component implements TaskRunner {
 
   private final List<PriorityTask> priorityTasks = new ArrayList<>(2);
   private PriorityTask currentTask;
+
+  /** Creates a new AI task component with an empty task list. */
+  public AITaskComponent() {
+    // Default constructor
+  }
 
   /**
    * Add a priority task to the list of tasks. This task will be run only when it has the highest

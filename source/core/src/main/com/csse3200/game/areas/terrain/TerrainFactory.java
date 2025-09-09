@@ -13,9 +13,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainComponent.TerrainOrientation;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.utils.math.RandomUtils;
 
 /** Factory for creating game terrains. */
 public class TerrainFactory {
@@ -81,14 +81,13 @@ public class TerrainFactory {
             new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
         return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
       case LEVEL_ONE_MAP:
-      TextureRegion levelMap =
+        TextureRegion levelMap =
             new TextureRegion(resourceService.getAsset("images/level-1-map-v1.png", Texture.class));
         return createLevelMap(levelMap);
       default:
         return null;
     }
   }
-
 
   /**
    * Creates the map for a game level
@@ -117,7 +116,6 @@ public class TerrainFactory {
 
     return new TerrainComponent(camera, tiledMap, renderer, orientation, worldWidth);
   }
-
 
   private TerrainComponent createForestDemoTerrain(
       float tileWorldSize, TextureRegion grass, TextureRegion grassTuft, TextureRegion rocks) {

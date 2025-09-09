@@ -5,7 +5,7 @@ import com.csse3200.game.ui.terminal.TouchTerminalInputComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TouchInputFactory extends InputFactory{
+public class TouchInputFactory extends InputFactory {
   private static final Logger logger = LoggerFactory.getLogger(TouchInputFactory.class);
 
   /**

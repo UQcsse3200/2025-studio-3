@@ -5,9 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.ui.UIComponent;
 
-/**
- * Displays the name of the current game area.
- */
+/** Displays the name of the current game area. */
 public class GameAreaDisplay extends UIComponent {
   private String gameAreaName = "";
   private Label title;
@@ -28,7 +26,7 @@ public class GameAreaDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch)  {
+  public void draw(SpriteBatch batch) {
     int screenHeight = Gdx.graphics.getHeight();
     float offsetX = 10f;
     float offsetY = 30f;
