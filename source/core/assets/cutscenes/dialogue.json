@@ -1,0 +1,63 @@
+{
+    "schemaVersion": 1,
+    "characters": [
+        {
+            "id": "alice",
+            "name": "Alice",
+            "poses": {
+                "normal": "alice_normal.png"
+            }
+        },
+        {
+            "id": "rob",
+            "name": "Rob",
+            "poses": {
+                "normal": "rob_normal.png"
+            }
+        }
+    ],
+    "backgrounds": [
+        {
+            "id": "park",
+            "image": "park.png"
+        }
+    ],
+    "cutscene": {
+        "id": "simple_dialogue_test",
+        "beats": [
+            {
+                "id": "b0",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "dialogue.show", "characterId": "alice", "text": "What a beautiful day in the park, isn't it, {player_name}?", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b0",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "dialogue.show", "characterId": "rob", "text": "It is truly a beautiful day alice", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b0",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "dialogue.show", "characterId": "alice", "text": "I know, the sun is shining so beautifully, beaming down on my skin like something. Idk I didn't do well in english", "await": true
+                    }
+                ]
+            }
+        ]
+    }
+}

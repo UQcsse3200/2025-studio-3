@@ -2,7 +2,6 @@ package com.csse3200.game.cutscene.runtime.states;
 
 import com.csse3200.game.cutscene.models.object.actiondata.DialogueShowData;
 import com.csse3200.game.cutscene.runtime.ActionState;
-import com.csse3200.game.cutscene.runtime.states.DialogueState;
 
 public class DialogueShowAction implements ActionState {
     private final DialogueState dialogueState;
@@ -34,13 +33,13 @@ public class DialogueShowAction implements ActionState {
     public void tick(int dtMs) {
         if (nextCharMsCountdown > 0) {
             nextCharMsCountdown -= dtMs;
-        } else if (text.length() > charsShown) {
+        } else if (text.length() >= charsShown) {
             dialogueState.set(speaker, text.substring(0, charsShown));
-            nextCharMsCountdown = switch(text.charAt(charsShown + 1)) {
+            nextCharMsCountdown = switch(text.charAt(Math.max(charsShown - 1, 0))) {
                 case ',' -> 300;
                 case '.' -> 1000;
                 case '-' -> 500;
-                default -> 50;
+                default -> 20;
             };
             charsShown++;
         } else {

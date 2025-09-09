@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.mainmenu.MainMenuActions;
 import com.csse3200.game.components.mainmenu.MainMenuDisplay;
+import com.csse3200.game.cutscene.*;
+import com.csse3200.game.cutscene.models.object.Cutscene;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -46,8 +48,17 @@ public class MainMenuScreen extends ScreenAdapter {
 
     renderer = RenderFactory.createRenderer();
 
+      CutsceneLoader cutsceneLoader = new CutsceneLoader();
+      CutsceneValidator cutsceneValidator = new CutsceneValidator();
+      CutsceneCompiler cutsceneCompiler = new CutsceneCompiler();
+      CutscenePipeline cutscenePipeline = new CutscenePipeline(cutsceneLoader, cutsceneValidator, cutsceneCompiler);
+
+      Cutscene cutscene = cutscenePipeline.fromFile("dialogue");
+
     loadAssets();
     createUI();
+
+      CutsceneUI.play(cutscene);
   }
 
   @Override

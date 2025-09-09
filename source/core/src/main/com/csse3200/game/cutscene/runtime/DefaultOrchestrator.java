@@ -1,14 +1,12 @@
 package com.csse3200.game.cutscene.runtime;
 
-import com.csse3200.game.cutscene.models.object.Advance;
-import com.csse3200.game.cutscene.models.object.AdvanceMode;
 import com.csse3200.game.cutscene.models.object.Beat;
 import com.csse3200.game.cutscene.models.object.Cutscene;
-import com.csse3200.game.cutscene.models.object.actiondata.ActionData;
-import com.csse3200.game.cutscene.models.object.actiondata.AudioPlayData;
 import com.csse3200.game.cutscene.models.object.actiondata.DialogueShowData;
 import com.csse3200.game.cutscene.runtime.states.DialogueShowAction;
 import com.csse3200.game.cutscene.runtime.states.DialogueState;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +43,11 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
         this.active = new ArrayList<>();
         this.beatStarted = false;
 
-        this.dialogueState = new DialogueState();
+        this.dialogueState = state.getDialogueState();
+
+        if (ServiceLocator.getTimeSource() == null) {
+            ServiceLocator.registerTimeSource(new GameTime());
+        }
     }
 
     /**
@@ -62,10 +64,10 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
         if (!beatStarted) {
             beatIdx.getActions().forEach(action -> {
                 // make switch to create states for each action
-                switch(action) {
-                    case DialogueShowData d -> new DialogueShowAction(dialogueState, d);
-                    default -> System.out.println("Unhandled " + action.getClass());
-                }
+                active.add(switch(action) {
+                    case DialogueShowData d -> new DialogueShowAction(state.getDialogueState(), d);
+                    default -> null;
+                });
             });
 
             active.add(ActionStates.advance(beatIdx.getAdvance()));

@@ -34,4 +34,24 @@ public class DialogueState {
     public char getCurrentCharacter() {
         return text.charAt(textProgress);
     }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public String getSpeaker() {
+        return speaker;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public int getTextProgress() {
+        return textProgress;
+    }
+
+    public boolean isCanAdvance() {
+        return canAdvance;
+    }
 }
