@@ -271,6 +271,7 @@ public class V1SchemaValidator implements SchemaValidator {
      *     <li>{@link AdvanceDTO#mode} must not be any value than above</li>
      *     <li>{@link BeatDTO#actions} must not be null or empty</li>
      *     <li>Each action in {@link BeatDTO#actions} must pass its own validator</li>
+     *     <li>The {@link BeatDTO#id} is unique</li>
      * </ul>
      *
      * @param beat          The {@link BeatDTO} to be validated
@@ -317,6 +318,11 @@ public class V1SchemaValidator implements SchemaValidator {
             for (ActionDTO action : beat.actions) {
                 beatErrors.addAll(actionValidatorRegistry.validate(action, beat.id, validationCtx));
             }
+        }
+
+        if (beatIds.contains(beat.id)) {
+            beatErrors.add(new AuthoringError("BEAT_ID_EXISTS", "doc.cutscene.beats." + beat.id,
+                    "The beat id " + beat.id + " already exists"));
         }
 
         return beatErrors;
