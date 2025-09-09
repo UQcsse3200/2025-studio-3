@@ -4,11 +4,11 @@ import com.badlogic.gdx.InputProcessor;
 import com.csse3200.game.input.InputComponent;
 
 /**
- * Input handler for the debug terminal for keyboard and touch (mouse) input.
- * This input handler uses keyboard and touch input.
+ * Input handler for the debug terminal for keyboard and touch (mouse) input. This input handler
+ * uses keyboard and touch input.
  *
- * <p>The debug terminal can be opened and closed by scrolling vertically and a message can be entered via
- * the keyboard.
+ * <p>The debug terminal can be opened and closed by scrolling vertically and a message can be
+ * entered via the keyboard.
  */
 public class TouchTerminalInputComponent extends InputComponent {
   private Terminal terminal;
@@ -22,7 +22,6 @@ public class TouchTerminalInputComponent extends InputComponent {
     this.terminal = terminal;
   }
 
-
   @Override
   public void create() {
     super.create();
@@ -30,9 +29,9 @@ public class TouchTerminalInputComponent extends InputComponent {
   }
 
   /**
-   * Handles input if the terminal is open. This is because keyDown events are
-   * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
-   * trigger any other input handlers.
+   * Handles input if the terminal is open. This is because keyDown events are triggered alongside
+   * keyTyped events. If the user is typing in the terminal, the input shouldn't trigger any other
+   * input handlers.
    *
    * @return whether the input was processed
    * @see InputProcessor#keyDown(int)
@@ -64,7 +63,7 @@ public class TouchTerminalInputComponent extends InputComponent {
       }
       terminal.setEnteredMessage("");
       return true;
-    } else if(Character.isLetterOrDigit(character) || character == ' ') {
+    } else if (Character.isLetterOrDigit(character) || character == ' ') {
       // append character to message
       terminal.appendToMessage(character);
       return true;
@@ -73,9 +72,9 @@ public class TouchTerminalInputComponent extends InputComponent {
   }
 
   /**
-   * Handles input if the terminal is open. This is because keyUp events are
-   * triggered alongside keyTyped events. If the user is typing in the terminal, the input shouldn't
-   * trigger any other input handlers.
+   * Handles input if the terminal is open. This is because keyUp events are triggered alongside
+   * keyTyped events. If the user is typing in the terminal, the input shouldn't trigger any other
+   * input handlers.
    *
    * @return whether the input was processed
    * @see InputProcessor#keyUp(int)
