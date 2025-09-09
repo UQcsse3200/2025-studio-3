@@ -77,7 +77,7 @@ public class ShopButtons extends UIComponent {
   private void createBackButton(float x, float y) {
     TextButton backButton = new TextButton("Back", skin);
     backButton.setPosition(x, y);
-    backButton.setSize((float)BACK_BUTTON_SIZE * 2, BACK_BUTTON_SIZE);
+    backButton.setSize((float) BACK_BUTTON_SIZE * 2, BACK_BUTTON_SIZE);
 
     // Add click listener
     backButton.addListener(

@@ -1,5 +1,7 @@
 package com.csse3200.game.services;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.exceptions.MenuSpriteNotFoundException;
@@ -12,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class MenuSpriteServiceTest {

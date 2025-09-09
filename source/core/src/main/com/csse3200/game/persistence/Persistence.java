@@ -114,7 +114,12 @@ public class Persistence {
       }
     }
     String path =
-        ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + FILE_EXTENSION;
+        ROOT_DIR
+            + File.separator
+            + profile.getName()
+            + "$"
+            + System.currentTimeMillis()
+            + FILE_EXTENSION;
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
   }
 

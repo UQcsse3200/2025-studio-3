@@ -79,7 +79,7 @@ public class Achievement {
    */
   public void unlock() {
     if (!unlocked) {
-      unlocked = true;  
+      unlocked = true;
       logger.info("Achievement Unlocked: {} - {}", name, description);
     }
   }

@@ -10,7 +10,7 @@ public class LevelInteractionHandler {
   private static final Logger logger = LoggerFactory.getLogger(LevelInteractionHandler.class);
 
   public static void handleInteraction(MenuSpriteData spriteData) {
-    
+
     if (spriteData.getLocked()) {
       logger.info("{} is locked!", spriteData.getName());
     } else {

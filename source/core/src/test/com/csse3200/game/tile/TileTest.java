@@ -20,8 +20,8 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -39,7 +39,7 @@ class TileTest {
     renderService.setStage(stage);
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerEntityService(new EntityService());
-    
+
     TerrainFactory factory = mock(TerrainFactory.class);
 
     levelGameArea =
@@ -142,7 +142,7 @@ class TileTest {
   }
 
   @Test
-    void shouldBeValidTile() {
+  void shouldBeValidTile() {
     Entity tile = createValidTile();
     assertNotNull(tile);
     assertNotNull(tile.getComponent(TileStorageComponent.class));

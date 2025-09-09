@@ -61,7 +61,6 @@ public final class MenuSpriteDataBuilder {
       locked = false;
     }
 
-    return new MenuSpriteData(
-        screenClass, id, x, y, name, description, spriteResourcePath, locked);
+    return new MenuSpriteData(screenClass, id, x, y, name, description, spriteResourcePath, locked);
   }
 }

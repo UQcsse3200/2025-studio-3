@@ -62,8 +62,6 @@ public class ForestGameArea extends GameArea {
     "images/sling_shooter.png"
   };
 
-
-
   private final TerrainFactory terrainFactory;
   private CurrencyGeneratorComponent currencyGenerator;
 
