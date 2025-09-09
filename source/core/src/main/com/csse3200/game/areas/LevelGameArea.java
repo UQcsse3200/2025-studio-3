@@ -20,8 +20,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  * inventory allowing the player to add units to the grid.
@@ -44,7 +42,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/ghost.atlas", "images/ghostKing.atlas", "images/sling_shooter.atlas", "images/robot_placeholder.atlas"
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/sling_shooter.atlas",
+    "images/robot_placeholder.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -101,7 +102,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    placeInventoryUnit(1, "images/ghost_1.png", "ghost"); // start at one for 0 to represent none selected
+
+    // start at one for 0 to represent none selected
+    placeInventoryUnit(1, "images/ghost_1.png", "ghost");
     placeInventoryUnit(2, "images/ghost_king.png", "ghostking");
     placeInventoryUnit(3, "images/sling_shooter_1.png", "slingshooter");
 
@@ -286,8 +289,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Entity unit = DefenceFactory.getEntity(name);
 
     if (unit == null) {
-        logger.error("Entity fetched was NULL");
-        return;
+      logger.error("Entity fetched was NULL");
+      return;
     }
 
     // Match the texture of the inventory unit - placeholder

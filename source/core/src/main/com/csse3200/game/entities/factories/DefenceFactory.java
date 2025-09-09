@@ -19,7 +19,6 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +35,13 @@ public class DefenceFactory {
       FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
 
   public static Entity getEntity(String name) {
-      Entity e = null;
-      switch (name) {
-          case "slingshooter":
-              e = createSlingShooter(new ArrayList<>());
-              break;
-      }
-      return e;
+    Entity e = null;
+    switch (name) {
+      case "slingshooter":
+        e = createSlingShooter(new ArrayList<>());
+        break;
+    }
+    return e;
   }
 
   /**
