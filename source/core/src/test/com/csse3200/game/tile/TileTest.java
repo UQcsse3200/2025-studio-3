@@ -4,7 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.tile.TileHitboxComponent;
@@ -31,6 +34,12 @@ class TileTest {
 
   @BeforeEach
   void beforeEach() {
+    RenderService renderService = new RenderService();
+    Stage stage = new Stage(new ScreenViewport(), mock(SpriteBatch.class));
+    renderService.setStage(stage);
+    ServiceLocator.registerRenderService(renderService);
+    ServiceLocator.registerEntityService(new EntityService());
+    
     TerrainFactory factory = mock(TerrainFactory.class);
 
     levelGameArea =
@@ -40,9 +49,6 @@ class TileTest {
             // empty
           }
         };
-
-    ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerEntityService(new EntityService());
   }
 
   @Test
