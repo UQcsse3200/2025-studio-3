@@ -1,11 +1,11 @@
 package com.csse3200.game.components.tile;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
-import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +14,11 @@ public class TileInputComponent extends InputComponent {
 
   private static final Logger logger = LoggerFactory.getLogger(TileInputComponent.class);
 
-  public TileInputComponent() {
+  private final AreaAPI area;
+
+  public TileInputComponent(AreaAPI area) {
     super(5);
+    this.area = area;
   }
 
   /**
@@ -32,38 +35,32 @@ public class TileInputComponent extends InputComponent {
     Vector2 position = entity.getPosition();
 
     TileStorageComponent tileStatus = entity.getComponent(TileStorageComponent.class);
-    Entity selected_unit = tileStatus.getArea().getSelectedUnit();
+    Entity selected_unit = area.getSelectedUnit();
 
-    float tileSize = tileStatus.getArea().getTileSize();
-    // need to convert grid to click coords
-    float stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
-    float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
-    float stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
+    float tileSize = area.getTileSize();
+    GridPoint2 clickInWorld = area.stageToWorld(new GridPoint2(screenX, screenY));
 
     // Is click on entity?
-    if (screenX * stageToWorldRatio >= position.x
-        && screenX * stageToWorldRatio <= position.x + tileSize
-        && screenY * stageToWorldRatio <= (stageHeight * stageToWorldRatio) - position.y
-        && screenY * stageToWorldRatio
-            >= (stageHeight * stageToWorldRatio) - (position.y + tileSize)) {
+    if (clickInWorld.x >= position.x
+        && clickInWorld.x <= position.x + tileSize
+        && clickInWorld.y >= position.y
+        && clickInWorld.y <= position.y + tileSize) {
       logger.info("Tile Clicked");
-      switch (button) {
+      return switch (button) {
         case Input.Buttons.LEFT -> {
           if (!tileStatus.hasUnit() && selected_unit != null) {
             tileStatus.triggerSpawnUnit();
           }
-          return true;
+          yield true;
         }
         case Input.Buttons.RIGHT -> {
           if (tileStatus.hasUnit()) {
             tileStatus.removeTileUnit();
           }
-          return true;
+          yield true;
         }
-        default -> {
-          return false;
-        }
-      }
+        default -> false;
+      };
     }
     return false;
   }

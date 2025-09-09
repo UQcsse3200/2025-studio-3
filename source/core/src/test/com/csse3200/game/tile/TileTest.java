@@ -31,7 +31,7 @@ public class TileTest {
   Entity selected;
 
   @BeforeEach
-  void beforeEach() {
+  public void beforeEach() {
     // textures for tests
     Texture ghost1 = mock(Texture.class, "ghost_1");
     Texture ghost2 = mock(Texture.class, "ghost_2");
@@ -59,7 +59,6 @@ public class TileTest {
         .when(resourceService.getAsset(eq("images/selected_star.png"), eq(Texture.class)))
         .thenReturn(star);
     ServiceLocator.registerResourceService(resourceService);
-
     TerrainFactory factory = mock(TerrainFactory.class);
 
     levelGameArea =
@@ -201,7 +200,7 @@ public class TileTest {
             .addComponent(new TextureRenderComponent(texture))
             .addComponent(new TileHitboxComponent(5, 5, 0, 0))
             .addComponent(new TileStorageComponent(levelGameArea))
-            .addComponent(new TileInputComponent());
+            .addComponent(new TileInputComponent(levelGameArea));
     tile.getComponent(TileStorageComponent.class).setPosition(0);
     return tile;
   }
