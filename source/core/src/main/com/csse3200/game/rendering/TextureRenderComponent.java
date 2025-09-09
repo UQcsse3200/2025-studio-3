@@ -8,6 +8,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 /** Render a static texture. */
 public class TextureRenderComponent extends RenderComponent {
+
   private final Texture texture;
   // global
   /**
@@ -35,5 +36,9 @@ public class TextureRenderComponent extends RenderComponent {
     batch.setColor(colour);
     batch.draw(texture, position.x, position.y, scale.x, scale.y);
     batch.setColor(Color.WHITE);
+  }
+
+  public Texture getTexture() {
+    return texture;
   }
 }

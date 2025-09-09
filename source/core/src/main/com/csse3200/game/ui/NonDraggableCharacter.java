@@ -58,6 +58,38 @@ public class NonDraggableCharacter extends UIComponent {
     }
 
     /**
+     * Gets the current texture path of the character.
+     * @return The texture path as a String.
+     */
+    public String getTexturePath() {
+        return this.texturePath;
+    }
+
+    /**
+     * Gets the current X offset of the character image.
+     * @return The X offset as a float.
+     */
+    public float getOffsetX() {
+        return this.offsetX;
+    }
+
+    /**
+     * Gets the current Y offset of the character image.
+     * @return The Y offset as a float.
+     */
+    public float getOffsetY() {
+        return this.offsetY;
+    }
+
+    /**
+     * Gets the current scale of the character image.
+     * @return The scale as a float.
+     */
+    public float getScale() {
+        return this.scale;
+    }
+
+    /**
      * A function that checks if the 'R' key is pressed while the mouse is over the character image.
      * If so, it removes the image from the stage and disposes of the entity.
      */
