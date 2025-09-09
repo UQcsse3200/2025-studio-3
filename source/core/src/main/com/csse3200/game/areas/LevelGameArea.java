@@ -11,6 +11,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -105,6 +106,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
+    spawnRobot(7, 2, "tanky");
+    spawnRobot(10, 1, "standard");
+    spawnRobot(10, 4, "fast");
     spawnInventory();
 
     playMusic();
@@ -247,6 +251,22 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
+  }
+
+  public void spawnRobot(int x, int y, String robotType) {
+    Entity unit = RobotFactory.createRobotType(robotType);
+
+    // Get and set position coords
+    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
+    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+    unit.setPosition(tileX, tileY);
+
+    // Add to list of all spawned units
+
+    // set scale to render as desired
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+    logger.info("Unit spawned at position {} {}", x, y);
   }
 
   /**
