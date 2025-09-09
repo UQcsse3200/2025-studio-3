@@ -58,8 +58,8 @@ public class SlotMachineDisplay extends UIComponent {
     /**
      * Per-column symbol metrics and runtime state used for smooth stopping.
      */
-    private final List<Float> symbolHeights = new ArrayList<>();
-    private final List<Integer> symbolCounts = new ArrayList<>();
+    private float symbolHeights;
+    private int symbolCounts;
     private final List<Float> currentScrollSpeeds = new ArrayList<>();
     // Runtime-computed sizes
     private float iconSizePx;
@@ -76,18 +76,12 @@ public class SlotMachineDisplay extends UIComponent {
     // reels
     private ScrollPane reelsPane;
     private Group reelsContent;
-    private TextureAtlas reelsAtlas;
     private List<TextureAtlas.AtlasRegion> symbolRegions;
     private int stoppedCount = 0;
     /**
      * Base reel scroll speed in pixels per second.
      */
     private float reelScrollSpeedPxPerSec;
-    /**
-     * Viewport height for centering math; updated on layout.
-     */
-    private float lastAreaH = 0f;
-
     /**
      * Whether a spin sequence is currently active.
      */
@@ -203,7 +197,7 @@ public class SlotMachineDisplay extends UIComponent {
      * Loads the reels atlas and collects symbol regions.
      */
     private void loadReelsAtlasAndRegions() {
-        reelsAtlas = ServiceLocator.getResourceService()
+        TextureAtlas reelsAtlas = ServiceLocator.getResourceService()
                 .getAsset("images/slot_reels.atlas", TextureAtlas.class);
         symbolRegions = new ArrayList<>();
         for (TextureAtlas.AtlasRegion r : reelsAtlas.getRegions()) {
@@ -232,14 +226,13 @@ public class SlotMachineDisplay extends UIComponent {
             return reel;
         }
 
-        final int baseCount = symbolRegions.size();
-        symbolCounts.add(baseCount);
+        symbolCounts = symbolRegions.size();
 
         TextureRegion first = symbolRegions.getFirst();
         float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
         float wStd = first.getRegionWidth() * scale;
         float hStd = first.getRegionHeight() * scale;
-        symbolHeights.add(hStd);
+        symbolHeights = hStd;
 
         for (int k = 0; k < 2; k++) {
             for (TextureRegion r : symbolRegions) {
@@ -260,11 +253,8 @@ public class SlotMachineDisplay extends UIComponent {
      * Rebuilds all reels and resets per-column states.
      */
     private void constructReels(float areaX, float areaY, float areaW, float areaH) {
-        lastAreaH = areaH;
         reelsContent.clearChildren();
         reelColumns.clear();
-        symbolHeights.clear();
-        symbolCounts.clear();
 
         if (symbolRegions == null || symbolRegions.isEmpty()) {
             return;
@@ -305,6 +295,22 @@ public class SlotMachineDisplay extends UIComponent {
         frameSizePx = base * FRAME_SIZE_RATIO;
 
         reelScrollSpeedPxPerSec = frameSizePx * 1.2f;
+    }
+
+    /**
+     * Randomize reel positions when opening slot machine
+     */
+    private void randomizeReelPositions() {
+        if (reelColumns.isEmpty() || symbolCounts <= 0) return;
+
+        float h = symbolHeights;
+        float centerOffset = (reelsPane.getHeight() - h) / 2f;
+
+        for (Group col : reelColumns) {
+            int randIndex = (int)(Math.random() * symbolCounts);
+            float targetY = -(randIndex * h) + centerOffset;
+            col.setY(targetY);
+        }
     }
 
     /**
@@ -355,8 +361,6 @@ public class SlotMachineDisplay extends UIComponent {
     private void startSpinThenStopAtTargets() {
         stoppedCount = 0;
 
-        if (reelColumns.isEmpty() || symbolHeights.size() < REEL_COUNT) return;
-
         if (spinning) {
             logger.info("Already spinning.");
             return;
@@ -368,7 +372,7 @@ public class SlotMachineDisplay extends UIComponent {
             Group col = reelColumns.get(i);
             col.clearActions();
 
-            float oneCycle = symbolHeights.get(i) * symbolCounts.get(i);
+            float oneCycle = symbolHeights * symbolCounts;
             float speed = reelScrollSpeedPxPerSec * (0.9f + 0.1f * i);
 
             ScrollAction loop = new ScrollAction(
@@ -405,14 +409,14 @@ public class SlotMachineDisplay extends UIComponent {
         Group col = reelColumns.get(colIdx);
         col.clearActions();
 
-        float h = symbolHeights.get(colIdx);
-        int baseCount = symbolCounts.get(colIdx);
+        float h = symbolHeights;
+        int baseCount = symbolCounts;
         float oneCycle = h * baseCount;
 
         int rawIndex = targetIndices[colIdx];
         int target = ((rawIndex % baseCount) + baseCount) % baseCount;
 
-        float centerOffset = (lastAreaH - h) / 2f;
+        float centerOffset = (reelsPane != null ? (reelsPane.getHeight() - h) / 2f : 0f);
         float idealY = -(target * h) + centerOffset;
 
         float currentY = col.getY();
@@ -461,6 +465,7 @@ public class SlotMachineDisplay extends UIComponent {
             dimmer.setVisible(true);
             dimmer.getColor().a = 0.6f;
         }
+        randomizeReelPositions();
     }
 
     /**
@@ -471,7 +476,6 @@ public class SlotMachineDisplay extends UIComponent {
             return;
         }
         frameGroup.setVisible(false);
-        frameGroup.setTouchable(Touchable.enabled);
         if (dimmer != null) {
             dimmer.setVisible(false);
         }
