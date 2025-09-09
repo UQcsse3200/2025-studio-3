@@ -33,6 +33,8 @@ public abstract class MiniGame2 implements Screen {
         paddletexture = new Texture("images/paddle.png");
         balltexture = new Texture("images/ball.png");
 
+        //Paddle component
+
         paddle = new Entity();
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new TextureRenderComponent(paddletexture));
@@ -43,6 +45,8 @@ public abstract class MiniGame2 implements Screen {
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         ServiceLocator.getEntityService().register(paddle);
+
+        //Ball component
 
         ball = new Entity();
         ball.addComponent(new PhysicsComponent());
@@ -59,6 +63,8 @@ public abstract class MiniGame2 implements Screen {
 
         ServiceLocator.getEntityService().register(ball);
 
+        //wall component
+
         float thickness = 10f;
 
         createbbwall(thickness/2f, ScreenHeight/2f, thickness, ScreenWidth);
@@ -68,7 +74,7 @@ public abstract class MiniGame2 implements Screen {
 
     private void createbbwall(float x, float y, float width, float height) {
         Entity bbwall = new Entity();
-        bbwall.addComponent(new PhysicsComponent());.
+        bbwall.addComponent(new PhysicsComponent());
         ColliderComponent collider = new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE);
         bbwall.addComponent(collider);
 
