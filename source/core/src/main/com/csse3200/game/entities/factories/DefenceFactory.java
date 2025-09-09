@@ -74,6 +74,10 @@ public class DefenceFactory {
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
+    // Scale to tilesize
+
+    animator.scaleEntity();
+
     // trigger the initial attack event to kick off behaviour
     // this will be changed to idle once idle is made
     defender.getEvents().trigger("idleStart");

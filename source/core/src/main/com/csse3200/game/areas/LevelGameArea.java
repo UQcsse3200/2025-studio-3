@@ -307,9 +307,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     // set scale to render as desired
     //newEntity.getComponent(TextureRenderComponent.class).scaleEntity();
-    //newEntity.scaleHeight(tileSize);
+    newEntity.scaleHeight(tileSize);
 
     spawnEntity(newEntity);
+    newEntity.getEvents().trigger("idleStart");
     logger.info("Unit spawned at position {}", position);
   }
 
