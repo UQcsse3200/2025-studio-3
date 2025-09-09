@@ -31,7 +31,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
         this.targetLayer = targetLayer;
         physics = ServiceLocator.getPhysicsService().getPhysics();
         debugRenderer = ServiceLocator.getRenderService().getDebug();
-        status = Status.ACTIVE;
     }
 
     /**
@@ -108,11 +107,11 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
 
             Vector2 targetPos = target.getCenterPosition();
             float distance = from.dst(targetPos);
-            if (abs(from.y - targetPos.y) > 10f) {
+            if (abs(targetPos.y - from.y) > 10f) {
                 continue;
             }
 //            logger.info("Checking target at distance: " + distance);
-            if (distance <= 200f) { // if target visible and in range
+            if (distance <= 150f) { // if target visible and in range
 //                logger.info("Target detected within range: " + target);
                 return target;
             }

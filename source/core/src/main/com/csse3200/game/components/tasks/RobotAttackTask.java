@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class RobotAttackTask extends RobotTargetDetectionTasks {
     private static final Logger logger = LoggerFactory.getLogger(RobotAttackTask.class);
-    private static final float TIME_BETWEEN_ATTACKS = 8f; // seconds
+    private static final float TIME_BETWEEN_ATTACKS = 4f; // seconds
     private float timeLeft = 0f;
     /**
      * Creates an attack task
