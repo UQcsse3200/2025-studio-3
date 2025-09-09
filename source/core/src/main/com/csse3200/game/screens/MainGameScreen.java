@@ -40,6 +40,7 @@ import org.slf4j.LoggerFactory;
  * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
+
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {
     "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png"
@@ -57,6 +58,75 @@ public class MainGameScreen extends ScreenAdapter {
 
     if (Persistence.profile() == null) {
       throw new IllegalStateException("No profile loaded, cannot start game");
+
+    private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
+    private static final String[] mainGameTextures = { "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png" };
+    private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
+
+    private final GdxGame game;
+    private final Renderer renderer;
+    private final PhysicsEngine physicsEngine;
+    private final WaveManager waveManager;
+    private LevelGameArea levelGameArea;
+
+    public MainGameScreen(GdxGame game) {
+        this.game = game;
+        this.waveManager = new WaveManager();
+
+        if (Persistence.profile() == null) {
+            throw new IllegalStateException("No profile loaded, cannot start game");
+        }
+
+        logger.debug("Initialising main game screen services");
+        ServiceLocator.registerTimeSource(new GameTime());
+
+        PhysicsService physicsService = new PhysicsService();
+        ServiceLocator.registerPhysicsService(physicsService);
+        physicsEngine = physicsService.getPhysics();
+
+        ServiceLocator.registerInputService(new InputService());
+        ServiceLocator.registerResourceService(new ResourceService());
+
+        ServiceLocator.registerEntityService(new EntityService());
+        ServiceLocator.registerRenderService(new RenderService());
+
+        ServiceLocator.registerCurrencyService(new CurrencyService(50,Integer.MAX_VALUE));
+
+        renderer = RenderFactory.createRenderer();
+        renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+        renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+
+        loadAssets();
+        createUI();
+
+        Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+        ServiceLocator.getEntityService().register(uiHud);
+
+        logger.debug("Initialising main game screen entities");
+        TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
+        levelGameArea = new LevelGameArea(terrainFactory);
+        waveManager.setGameArea(levelGameArea);
+        levelGameArea.create();
+
+        snapCameraBottomLeft();
+        waveManager.initialiseNewWave();
+    }
+
+    @Override
+    public void render(float delta) {
+        physicsEngine.update();
+        ServiceLocator.getEntityService().update();
+        renderer.render();
+        waveManager.update();
+        levelGameArea.checkGameOver(); // check game-over state
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        renderer.resize(width, height);
+        snapCameraBottomLeft();
+        logger.trace("Resized renderer: ({} x {})", width, height);
+
     }
 
     logger.debug("Initialising main game screen services");
