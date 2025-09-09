@@ -360,7 +360,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     return new GridPoint2((int) x, (int) y);
   }
 
-  /** */
+  /**
+   * Method to reset game entity size/position on window resize.
+   */
   public void resize() {
     setScaling();
   }
