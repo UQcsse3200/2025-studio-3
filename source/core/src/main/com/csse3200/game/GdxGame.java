@@ -104,6 +104,8 @@ public class GdxGame extends Game {
         return new InventoryScreen(this);
       case WORLD_MAP:
         return new WorldMapScreen(this);
+      case DOSSIER:
+        return new DossierScreen(this);
       default:
         return null;
     }
@@ -122,7 +124,8 @@ public class GdxGame extends Game {
     ACHIEVEMENTS,
     SHOP,
     INVENTORY,
-    WORLD_MAP
+    WORLD_MAP,
+    DOSSIER
   }
 
   /** Helper method to check if an enum value exists in another enum type */

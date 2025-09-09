@@ -26,6 +26,7 @@ public class ProfileDisplayActions extends Component {
     entity.getEvents().addListener("profile_save", this::onSave);
     entity.getEvents().addListener("profile_settings", this::onSettings);
     entity.getEvents().addListener("profile_shop", this::onShop);
+    entity.getEvents().addListener("profile_dossier", this::onDossier);
   }
 
   private void onBack() {
@@ -71,5 +72,10 @@ public class ProfileDisplayActions extends Component {
   private void onSettings() {
     logger.info("Opening settings");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
+  }
+
+  private void onDossier() {
+    logger.info("Opening dossier");
+    game.setScreen(GdxGame.ScreenType.DOSSIER);
   }
 }

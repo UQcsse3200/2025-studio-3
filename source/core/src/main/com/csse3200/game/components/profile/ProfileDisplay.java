@@ -77,8 +77,8 @@ public class ProfileDisplay extends UIComponent {
   }
 
   private void createProfileButtons() {
-    String[] buttonLabels = {"Inventory", "Achievements", "Skills", "Stats", "Shop"};
-    String[] buttonEvents = {"inventory", "achievements", "skills", "stats", "shop"};
+    String[] buttonLabels = {"Inventory", "Achievements", "Skills", "Stats", "Shop", "Dossier"};
+    String[] buttonEvents = {"inventory", "achievements", "skills", "stats", "shop", "dossier"};
 
     Table buttonTable = new Table();
     buttonTable.defaults().spaceBottom(stage.getHeight() * BUTTON_SPACING_RATIO);
