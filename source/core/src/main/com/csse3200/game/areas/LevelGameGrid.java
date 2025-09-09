@@ -1,10 +1,12 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.entities.Entity;
 
 /** Class that stores an array of tile entities. */
 public class LevelGameGrid {
-  private Entity[] grid_data;
+  public Entity[] grid_data;
   private final int rows;
   private final int cols;
   private final int num_tiles;
@@ -53,5 +55,17 @@ public class LevelGameGrid {
    */
   public void setTile(int row, int col, Entity tile) {
     grid_data[col * cols + row] = tile;
+  }
+
+  public Entity getTileFromXY(float x, float y) {
+    for (Entity tile : grid_data) {
+      boolean status =
+          tile.getComponent(TileHitboxComponent.class)
+              .inTileHitbox(new GridPoint2((int) x, (int) y));
+      if (status) {
+        return tile;
+      }
+    }
+    return null;
   }
 }

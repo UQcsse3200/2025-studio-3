@@ -34,7 +34,7 @@ public class TileInputComponent extends InputComponent {
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     Vector2 position = entity.getPosition();
 
-    TileStatusComponent tileStatus = entity.getComponent(TileStatusComponent.class);
+    TileStorageComponent tileStatus = entity.getComponent(TileStorageComponent.class);
     Entity selected_unit = area.getSelectedUnit();
 
     float tileSize = area.getTileSize();
@@ -49,13 +49,13 @@ public class TileInputComponent extends InputComponent {
       return switch (button) {
         case Input.Buttons.LEFT -> {
           if (!tileStatus.hasUnit() && selected_unit != null) {
-            tileStatus.addUnit();
+            tileStatus.triggerSpawnUnit();
           }
           yield true;
         }
         case Input.Buttons.RIGHT -> {
           if (tileStatus.hasUnit()) {
-            tileStatus.removeUnit();
+            tileStatus.removeTileUnit();
           }
           yield true;
         }

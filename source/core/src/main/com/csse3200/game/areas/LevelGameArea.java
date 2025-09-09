@@ -8,7 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.components.tile.TileStatusComponent;
+import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.rendering.Renderer;
@@ -44,6 +44,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelMusic = {backgroundMusic};
+
   private final TerrainFactory terrainFactory;
 
   // Offset values
@@ -98,6 +99,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   @Override
   public void create() {
     loadAssets();
+
     displayUI();
 
     spawnMap();
@@ -186,7 +188,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         tile = GridFactory.createTile(1 - (i % 2), tileSize, tileX, tileY, this);
       }
       tile.setPosition(tileX, tileY);
-      tile.getComponent(TileStatusComponent.class).set_position(i);
+      tile.getComponent(TileStorageComponent.class).setPosition(i);
       grid.addTile(i, tile);
       spawnEntity(tile);
     }
@@ -239,9 +241,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    *
    * @return grid
    */
-  @Override
   public LevelGameGrid getGrid() {
     return grid;
+  }
+
+  public void setGrid(LevelGameGrid newGrid) {
+    this.grid = newGrid;
   }
 
   /**
@@ -298,6 +303,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
     float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
     unit.setPosition(tileX, tileY);
+
+    Entity selectedTile = grid.getTileFromXY(tileX, tileY);
+    if (selectedTile != null) {
+      selectedTile.getComponent(TileStorageComponent.class).setTileUnit(unit);
+    }
 
     // Add to list of all spawned units
     spawned_units[position] = unit;
@@ -360,7 +370,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     return new GridPoint2((int) x, (int) y);
   }
 
-  /** */
+  /** Method to reset game entity size/position on window resize. */
   public void resize() {
     setScaling();
   }
