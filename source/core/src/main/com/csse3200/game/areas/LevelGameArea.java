@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
@@ -19,6 +20,8 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a
@@ -60,6 +63,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     private final Entity[] spawned_units;
     private Entity selected_unit;
     private Entity selection_star;
+    private final ArrayList<Entity> robots = new ArrayList<>();
+    private boolean isGameOver = false;
 
     /**
      * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -191,6 +196,33 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             spawnEntity(tile);
         }
     }
+
+    /**
+     * Checks the game over condition when a robot reaches the end of the grid
+     */
+    public void checkGameOver() {
+        // check if the game is already over
+        if (isGameOver) {
+            return; // game is already over don't check again
+        }
+        // calculate robot's position
+        for (Entity robot : robots) {
+            Vector2 worldPos = robot.getPosition();
+            int gridX = (int) ((worldPos.x - xOffset) / tileSize);
+
+            // check if robot has reached the end
+            if (gridX <= 0) {
+                isGameOver = true;
+                // TODO: add UI component here
+                // placeholder for now
+                System.out.println("GAME OVER - Robot reached the left edge at grid x: " + gridX);
+            }
+
+        }
+    }
+
+
+
 
     /**
      * Creates and Spawns the Units in the inventory
@@ -325,6 +357,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
         // Add to list of all spawned units
 //        spawned_units[position] = unit;
+        robots.add(unit); // add robot to list
 
         // set scale to render as desired
         unit.scaleHeight(tileSize);
@@ -355,4 +388,3 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         return tileSize;
     }
 }
-

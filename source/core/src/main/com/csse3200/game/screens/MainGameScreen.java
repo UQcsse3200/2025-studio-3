@@ -56,6 +56,7 @@ public class MainGameScreen extends ScreenAdapter {
     private final Renderer renderer;
     private final PhysicsEngine physicsEngine;
     private final WaveManager waveManager;
+    private LevelGameArea levelGameArea;
 
     public MainGameScreen(GdxGame game) {
         this.game = game;
@@ -92,7 +93,7 @@ public class MainGameScreen extends ScreenAdapter {
 
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+        levelGameArea = new LevelGameArea(terrainFactory);
         waveManager.setGameArea(levelGameArea);
         levelGameArea.create();
 
@@ -106,6 +107,7 @@ public class MainGameScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().update();
         renderer.render();
         waveManager.update();
+        levelGameArea.checkGameOver();
     }
 
     @Override
