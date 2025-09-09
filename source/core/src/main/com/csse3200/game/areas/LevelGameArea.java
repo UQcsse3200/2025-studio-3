@@ -299,18 +299,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
     newEntity.setPosition(entityPos);
 
-    //Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
-    //newEntity.addComponent(new TextureRenderComponent(texture));
-
     // Add to list of all spawned units
     spawned_units[position] = newEntity;
 
     // set scale to render as desired
-    //newEntity.getComponent(TextureRenderComponent.class).scaleEntity();
     newEntity.scaleHeight(tileSize);
 
     spawnEntity(newEntity);
-    newEntity.getEvents().trigger("idleStart");
+    newEntity.getEvents().trigger("attackStart");
     logger.info("Unit spawned at position {}", position);
   }
 

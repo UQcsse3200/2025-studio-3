@@ -75,7 +75,6 @@ public class DefenceFactory {
         .addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
-
     animator.scaleEntity();
 
     // trigger the initial attack event to kick off behaviour
