@@ -238,7 +238,12 @@ public class V1SchemaValidator implements SchemaValidator {
             if (beat.id == null) cutsceneErrors.add(new AuthoringError(
                     "BEAT_ID_NULL", "doc.cutscene.beats", "Beats must have a valid id"));
             else {
-                beatIds.add(beat.id);
+                if (beatIds.contains(beat.id)) {
+                    cutsceneErrors.add(new AuthoringError("BEAT_ID_EXISTS", "doc.cutscene.beats." + beat.id,
+                            "The beat id " + beat.id + " already exists"));
+                } else {
+                    beatIds.add(beat.id);
+                }
             }
         }
 
@@ -318,11 +323,6 @@ public class V1SchemaValidator implements SchemaValidator {
             for (ActionDTO action : beat.actions) {
                 beatErrors.addAll(actionValidatorRegistry.validate(action, beat.id, validationCtx));
             }
-        }
-
-        if (beatIds.contains(beat.id)) {
-            beatErrors.add(new AuthoringError("BEAT_ID_EXISTS", "doc.cutscene.beats." + beat.id,
-                    "The beat id " + beat.id + " already exists"));
         }
 
         return beatErrors;
