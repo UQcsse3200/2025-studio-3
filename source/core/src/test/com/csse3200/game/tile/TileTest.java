@@ -87,8 +87,8 @@ public class TileTest {
     // because the selected unit is duplicated when placed on tile, so cant test that the both
     // entities are the same
     assertSame(
-            selected.getComponent(TextureRenderComponent.class).getTexture(),
-            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
+        selected.getComponent(TextureRenderComponent.class).getTexture(),
+        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
   }
 
   @Test
@@ -103,11 +103,11 @@ public class TileTest {
     // checks if the tile unit has not been replaced with new unit if there was already a unit
     // placed
     assertSame(
-            selected.getComponent(TextureRenderComponent.class).getTexture(),
-            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
+        selected.getComponent(TextureRenderComponent.class).getTexture(),
+        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
     assertNotSame(
-            newSelected.getComponent(TextureRenderComponent.class).getTexture(),
-            tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
+        newSelected.getComponent(TextureRenderComponent.class).getTexture(),
+        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
   }
 
   @Test
