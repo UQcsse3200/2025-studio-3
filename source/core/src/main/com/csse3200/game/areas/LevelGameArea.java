@@ -205,7 +205,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         if (isGameOver) {
             return; // game is already over don't check again
         }
-        // calculate robot's position
+        // calculate the robot's position
         for (Entity robot : robots) {
             Vector2 worldPos = robot.getPosition();
             int gridX = (int) ((worldPos.x - xOffset) / tileSize);
