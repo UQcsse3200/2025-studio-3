@@ -144,9 +144,9 @@ public abstract class GameArea implements Disposable {
 
   public Entity spawnRobotAtFloat(float x, float y, String robotType) {
 
-        Entity robot = RobotFactory.createRobotType(robotType);
-        robot.setPosition(x, y);
-        spawnEntity(robot);
+    Entity robot = RobotFactory.createRobotType(robotType);
+    robot.setPosition(x, y);
+    spawnEntity(robot);
     return robot;
   }
 }

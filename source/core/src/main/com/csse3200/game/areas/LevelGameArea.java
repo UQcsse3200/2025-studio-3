@@ -6,17 +6,16 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
+import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,14 +93,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     loadAssets();
     displayUI();
 
-        spawnMap();
-        spawnSun();
-        spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-        spawnRobot(7, 2, "tanky");
-        spawnRobot(10, 1, "standard");
-        spawnRobot(10, 4, "fast");
-        placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
-        placeInventoryUnit(2, "images/ghost_king.png");
+    spawnMap();
+    spawnSun();
+    spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
+    spawnRobot(7, 2, "tanky");
+    spawnRobot(10, 1, "standard");
+    spawnRobot(10, 4, "fast");
+    placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
+    placeInventoryUnit(2, "images/ghost_king.png");
 
     playMusic();
   }
@@ -301,43 +300,43 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     logger.info("Unit spawned at position {}", position);
   }
 
-  public void spawnRobot(int x, int y, String robotType){
-        Entity unit = RobotFactory.createRobotType(robotType);
+  public void spawnRobot(int x, int y, String robotType) {
+    Entity unit = RobotFactory.createRobotType(robotType);
 
-        // Get and set position coords
-        float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
-        float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
-        unit.setPosition(tileX, tileY);
+    // Get and set position coords
+    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
+    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+    unit.setPosition(tileX, tileY);
 
-        // Add to list of all spawned units
-//        spawned_units[position] = unit;
+    // Add to list of all spawned units
+    //        spawned_units[position] = unit;
 
-        // set scale to render as desired
-        unit.scaleHeight(tileSize);
-        spawnEntity(unit);
-        logger.info("Unit spawned at position {} {}", x, y);
-    }
+    // set scale to render as desired
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+    logger.info("Unit spawned at position {} {}", x, y);
+  }
 
-    /**
-     * Remove a unit form a tile
-     *
-     * @param position of the tile
-     */
-    @Override
-    public void removeUnit(int position){
-        spawned_units[position].dispose();
-        spawned_units[position] = null;
+  /**
+   * Remove a unit form a tile
+   *
+   * @param position of the tile
+   */
+  @Override
+  public void removeUnit(int position) {
+    spawned_units[position].dispose();
+    spawned_units[position] = null;
 
     logger.info("Unit deleted at position {}", position);
   }
 
-    /**
-     * Getter for tile size in world units
-     *
-     * @return SCALE the size of the tiles
-     */
-    @Override
-    public float getTileSize() {
-        return tileSize;
-    }
+  /**
+   * Getter for tile size in world units
+   *
+   * @return SCALE the size of the tiles
+   */
+  @Override
+  public float getTileSize() {
+    return tileSize;
+  }
 }
