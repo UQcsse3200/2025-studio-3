@@ -13,12 +13,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldMapScreen implements Screen {
   private final GdxGame game;
   private SpriteBatch batch;
   private OrthographicCamera camera;
-
+  private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
   private Texture worldMap;
   private Texture nodeCompleted, nodeUnlocked;
   private Texture lockedLevel1, lockedLevel2;
@@ -125,10 +127,10 @@ public class WorldMapScreen implements Screen {
 
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       if (nearbyNode.level == 1) {
-        System.out.println("🚀 Starting Level 1!");
+        logger.info("🚀 Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
       } else {
-        System.out.println("✅ Checkpoint reached at Level " + nearbyNode.level);
+        logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
         nearbyNode.unlocked = true;
       }
     }
@@ -140,13 +142,19 @@ public class WorldMapScreen implements Screen {
   }
 
   @Override
-  public void pause() {}
+  public void pause() {
+    // Do nothing
+  }
 
   @Override
-  public void resume() {}
+  public void resume() {
+    // Do nothing
+  }
 
   @Override
-  public void hide() {}
+  public void hide() {
+    // Do nothing
+  }
 
   @Override
   public void dispose() {

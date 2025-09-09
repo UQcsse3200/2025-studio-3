@@ -3,6 +3,9 @@ package com.csse3200.game.components.tasks;
 import com.csse3200.game.entities.Entity;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 // TODO : integrate with attack system team
 
 /**
@@ -10,6 +13,7 @@ import java.util.List;
  * runs when there is a visible target within the entities range of attack
  */
 public class AttackTask extends TargetDetectionTasks {
+  private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   /**
    * Creates an attack task
@@ -39,7 +43,7 @@ public class AttackTask extends TargetDetectionTasks {
   /** Updates the task each game frame */
   @Override
   public void update() {
-    System.out.println("AttackTask priority: " + getPriority());
+    logger.info("AttackTask priority: {}", getPriority());
     Entity target = getNearestVisibleTarget();
 
     if (target == null) {

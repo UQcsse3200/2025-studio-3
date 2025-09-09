@@ -1,7 +1,6 @@
 package com.csse3200.game.ui.terminal;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.ui.NonDraggableCharacter;
@@ -9,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class NonDraggableCharacterTest {
+class NonDraggableCharacterTest {
 
   @Test
   void testSetTexturePath() {

@@ -32,7 +32,11 @@ public class Savefile {
     return new Savefile(name, date);
   }
 
-  /** Converts the Savefile object to a string representation. */
+  /**
+   * Converts the Savefile object to a string representation.
+   *
+   * @return the string representation of the savefile.
+   */
   public String toString() {
     return name + "$" + date;
   }

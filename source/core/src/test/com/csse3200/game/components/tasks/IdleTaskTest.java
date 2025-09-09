@@ -15,7 +15,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class IdleTaskTest {
+class IdleTaskTest {
   private Entity target;
   private List<Entity> targets;
 
@@ -36,7 +36,7 @@ public class IdleTaskTest {
 
   // test defender is idle when target out of range -> priority should be 1
   @Test
-  public void idleWhenOutOfRange() {
+  void idleWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f; // out of range
     IdleTask idleTask = new IdleTask(targets, attackRange);
@@ -49,7 +49,7 @@ public class IdleTaskTest {
   }
 
   @Test
-  public void notIdleWhenInRange() {
+  void notIdleWhenInRange() {
     float attackRange = 5f;
     float targetDistance = 3f;
     IdleTask idleTask = new IdleTask(targets, attackRange);

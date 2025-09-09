@@ -8,7 +8,7 @@ public class MenuSpriteDataEditor {
   private Integer y;
   private String name;
   private String description;
-  private String sprite_resource_path;
+  private String spriteResourcePath;
   private Boolean locked;
 
   public MenuSpriteDataEditor(MenuSpriteData menuSpriteData) {
@@ -31,8 +31,8 @@ public class MenuSpriteDataEditor {
     return this;
   }
 
-  public MenuSpriteDataEditor sprite(String sprite_resource_path) {
-    this.sprite_resource_path = sprite_resource_path;
+  public MenuSpriteDataEditor sprite(String spriteResourcePath) {
+    this.spriteResourcePath = spriteResourcePath;
     return this;
   }
 
@@ -56,8 +56,8 @@ public class MenuSpriteDataEditor {
       menuSpriteData.setDescription(description);
     }
 
-    if (sprite_resource_path != null) {
-      menuSpriteData.setSpriteResourcePath(sprite_resource_path);
+    if (spriteResourcePath != null) {
+      menuSpriteData.setSpriteResourcePath(spriteResourcePath);
     }
 
     if (locked != null) {

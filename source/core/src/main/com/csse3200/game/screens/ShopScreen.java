@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ShopScreen extends ScreenAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
+  private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] shopTextures = {"images/shopbackground.jpg", "images/coins.png"};
@@ -61,11 +61,15 @@ public class ShopScreen extends ScreenAdapter {
 
   /** Pauses the shop screen. Overridden to do nothing. */
   @Override
-  public void pause() {}
+  public void pause() {
+    // Do nothing
+  }
 
   /** Resumes the shop screen. Overridden to do nothing. */
   @Override
-  public void resume() {}
+  public void resume() {
+    // Do nothing
+  }
 
   /** Disposes of the shop screen's resources. */
   @Override

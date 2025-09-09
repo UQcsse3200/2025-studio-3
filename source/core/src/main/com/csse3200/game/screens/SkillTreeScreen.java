@@ -99,7 +99,6 @@ public class SkillTreeScreen extends ScreenAdapter {
 
   @Override
   public void resize(int width, int height) {
-    // renderer.resize(width, height);
     Stage stage = ServiceLocator.getRenderService().getStage();
     stage.clear();
     createUI();
@@ -183,7 +182,7 @@ public class SkillTreeScreen extends ScreenAdapter {
             // Check if player has enough skill points and has not already unlocked skill
             int points = Persistence.profile().wallet().getSkillsPoints();
             if (points >= cost && locked) {
-              System.out.println(skillName + " unlocked!");
+              logger.info("{} unlocked!", skillName);
               skillSet.addSkill(skill);
               Persistence.profile().wallet().unlockSkill(cost);
               points = Persistence.profile().wallet().getSkillsPoints();
@@ -199,7 +198,7 @@ public class SkillTreeScreen extends ScreenAdapter {
         });
 
     stage.addActor(skillButton);
-    stage.addActor(createLabel(stage, labelText, skillButton));
+    stage.addActor(createLabel(labelText, skillButton));
     addSkillImage(stage);
   }
 
@@ -347,9 +346,9 @@ public class SkillTreeScreen extends ScreenAdapter {
    * @param button the button to position the label beneath
    * @return a new Label instance
    */
-  private Label createLabel(Stage stage, String label, Button button) {
-    Skin skin = new Skin(Gdx.files.internal("uiskin.json")); // skin file
-    Label attackLabel = new Label(label, skin);
+  private Label createLabel(String label, Button button) {
+    Skin skin2 = new Skin(Gdx.files.internal("uiskin.json")); // skin file
+    Label attackLabel = new Label(label, skin2);
     attackLabel.setColor(Color.WHITE);
     attackLabel.setPosition(
         button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
@@ -375,11 +374,11 @@ public class SkillTreeScreen extends ScreenAdapter {
    * @param stage the stage to add the label to
    */
   private void totalSkillPoints(Stage stage) {
-    Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+    Skin skin2 = new Skin(Gdx.files.internal("uiskin.json"));
 
     int points = Persistence.profile().wallet().getSkillsPoints();
     String skillPointsNumber = String.format("Skill Points: %d", points);
-    skillPointLabel = new Label(skillPointsNumber, skin);
+    skillPointLabel = new Label(skillPointsNumber, skin2);
     skillPointLabel.setColor(Color.WHITE);
     float width = stage.getViewport().getWorldWidth();
     float height = stage.getViewport().getWorldHeight();

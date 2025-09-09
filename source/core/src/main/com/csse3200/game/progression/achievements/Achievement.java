@@ -1,5 +1,8 @@
 package com.csse3200.game.progression.achievements;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The Achievement class is responsible for unlocking achievements. It stores the names, description
  * and skillpoint of each individual achievement. Achievements are tied to a particular profile/load
@@ -11,6 +14,7 @@ public class Achievement {
   private final String description;
   private final int skillPoint;
   private boolean unlocked = false;
+  private static final Logger logger = LoggerFactory.getLogger(Achievement.class);
 
   /** Default constructor for Achievement. */
   public Achievement() {
@@ -75,8 +79,8 @@ public class Achievement {
    */
   public void unlock() {
     if (!unlocked) {
-      unlocked = true;
-      System.out.println("Achievement Unlocked: " + name + " - " + description);
+      unlocked = true;  
+      logger.info("Achievement Unlocked: {} - {}", name, description);
     }
   }
 }

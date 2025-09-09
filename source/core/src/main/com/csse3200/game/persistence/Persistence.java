@@ -20,6 +20,8 @@ public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
   private static Profile profile;
   private static final String ROOT_DIR = "The Day We Fought Back" + File.separator + "saves";
+  private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})\\.json$";
+  private static final String FILE_EXTENSION = ".json";
 
   private Persistence() {
     throw new IllegalStateException("Instantiating static util class");
@@ -32,7 +34,7 @@ public class Persistence {
    * @return the file path as a string
    */
   private static String getPath(Savefile save) {
-    return ROOT_DIR + File.separator + save.toString() + ".json";
+    return ROOT_DIR + File.separator + save.toString() + FILE_EXTENSION;
   }
 
   /**
@@ -62,7 +64,7 @@ public class Persistence {
     FileHandle dir = Gdx.files.external(ROOT_DIR);
     if (!dir.exists()) {
       dir.mkdirs();
-      logger.info("Created save directory: " + ROOT_DIR);
+      logger.info("Created save directory: {}", ROOT_DIR);
     }
   }
 
@@ -71,10 +73,10 @@ public class Persistence {
     List<Savefile> saves = new ArrayList<>();
 
     // Search the saves directory for savefiles
-    Pattern filePattern = Pattern.compile("^(.+?)\\$(\\d{10,13})\\.json$");
+    Pattern filePattern = Pattern.compile(SAVE_FILE_PATTERN);
     ensureDirectoryExists();
     FileHandle rootDir = Gdx.files.external(ROOT_DIR);
-    FileHandle[] files = rootDir.list(".json");
+    FileHandle[] files = rootDir.list(FILE_EXTENSION);
     if (files.length == 0) {
       return saves;
     }
@@ -90,7 +92,7 @@ public class Persistence {
           long timestamp = Long.parseLong(timestampStr);
           saves.add(new Savefile(profileName, timestamp));
         } catch (NumberFormatException e) {
-          continue;
+          logger.error("Failed to parse timestamp: {}", timestampStr);
         }
       }
     }
@@ -112,7 +114,7 @@ public class Persistence {
       }
     }
     String path =
-        ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + ".json";
+        ROOT_DIR + File.separator + profile.getName() + "$" + System.currentTimeMillis() + FILE_EXTENSION;
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
   }
 
@@ -123,12 +125,12 @@ public class Persistence {
     if (file.exists()) {
       boolean success = file.delete();
       if (success) {
-        logger.info("Deleted savefile: " + path);
+        logger.info("Deleted savefile: {}", path);
       } else {
-        logger.error("Failed to delete savefile: " + path);
+        logger.error("Failed to delete savefile: {}", path);
       }
     } else {
-      logger.warn("Savefile does not exist: " + path);
+      logger.warn("Savefile does not exist: {}", path);
     }
   }
 

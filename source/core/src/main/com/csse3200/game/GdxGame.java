@@ -21,7 +21,7 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("Creating game");
-    loadMenus();
+    loadSettings();
 
     loadMenus();
 

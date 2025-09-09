@@ -17,7 +17,7 @@ public abstract class Item extends Component {
    * @param eventName The event name associated with the item.
    * @param cost The cost of the item.
    */
-  public Item(String name, String description, String eventName, int cost) {
+  protected Item(String name, String description, String eventName, int cost) {
     this.name = name;
     this.description = description;
     this.eventName = eventName;

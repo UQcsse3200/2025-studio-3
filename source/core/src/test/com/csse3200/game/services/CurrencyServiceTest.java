@@ -6,7 +6,7 @@ import com.csse3200.game.components.currency.Currency;
 import org.junit.jupiter.api.Test;
 
 /** Unit tests for CurrencyService facade. Covers: get/set/add/spend behavior and edge cases. */
-public class CurrencyServiceTest {
+class CurrencyServiceTest {
 
   @Test
   void constructor_get_shouldExposeInitial() {

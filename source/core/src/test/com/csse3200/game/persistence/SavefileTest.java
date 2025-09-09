@@ -56,7 +56,6 @@ class SavefileTest {
   @Test
   void testGetDisplayDate() {
     String result = savefile.getDisplayDate();
-    System.out.println(result);
     assertNotNull(result);
   }
 }

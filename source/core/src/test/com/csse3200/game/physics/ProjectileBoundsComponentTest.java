@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ProjectileBoundsComponentTest {
-  private static final float width = 15f;
-  private static final float height = 15f;
+  private static final float WIDTH = 15f;
+  private static final float HEIGHT = 15f;
   private boolean disposed;
   private Entity laser;
 
@@ -38,7 +38,7 @@ class ProjectileBoundsComponentTest {
           }
         };
 
-    ProjectileBoundsComponent bounds = new ProjectileBoundsComponent(width, height);
+    ProjectileBoundsComponent bounds = new ProjectileBoundsComponent(WIDTH, HEIGHT);
     laser.addComponent(bounds);
     laser.create();
   }
@@ -59,7 +59,7 @@ class ProjectileBoundsComponentTest {
 
   @Test
   void projectileOutOfBoundsDisposed() {
-    laser.setPosition(width + 1, height + 1);
+    laser.setPosition(WIDTH + 1, HEIGHT + 1);
     laser.update();
     assertTrue(disposed, " Projectile out of bounds disposed");
   }

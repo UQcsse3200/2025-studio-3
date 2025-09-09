@@ -50,10 +50,14 @@ public class LoadGameScreen extends ScreenAdapter {
   }
 
   @Override
-  public void pause() {}
+  public void pause() {
+    // Do nothing
+  }
 
   @Override
-  public void resume() {}
+  public void resume() {
+    // Do nothing
+  }
 
   @Override
   public void dispose() {

@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class LevelPopupDisplayBasicTest {
+class LevelPopupDisplayBasicTest {
 
   @Test
-  public void defaultPopupDisplayTest() {
+  void defaultPopupDisplayTest() {
     LevelPopupDisplay display = new LevelPopupDisplay();
     String displayTitle = display.setLevelTitle(null);
     String displayDescription = display.setLevelDescription(null);
@@ -24,7 +24,7 @@ public class LevelPopupDisplayBasicTest {
   }
 
   @Test
-  public void spriteDataPopupDisplayTest() {
+  void spriteDataPopupDisplayTest() {
     MenuSpriteData spriteData = null;
     LevelPopupDisplay display = new LevelPopupDisplay(spriteData);
     String displayTitle = display.setLevelTitle(spriteData);

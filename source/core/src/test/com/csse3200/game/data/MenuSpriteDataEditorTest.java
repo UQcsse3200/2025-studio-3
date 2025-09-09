@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 @ExtendWith(GameExtension.class)
-public class MenuSpriteDataEditorTest {
+class MenuSpriteDataEditorTest {
 
   @Test
   void testEditor() {
@@ -23,11 +23,11 @@ public class MenuSpriteDataEditorTest {
         .locked(true)
         .apply();
 
-    assertEquals(msd.getX(), 5);
-    assertEquals(msd.getY(), 20);
-    assertEquals(msd.getName(), "Name");
-    assertEquals(msd.getDescription(), "Description");
-    assertEquals(msd.getSpriteResourcePath(), "spritePath");
+    assertEquals(5, msd.getX());
+    assertEquals(20, msd.getY());
+    assertEquals("Name", msd.getName());
+    assertEquals("Description", msd.getDescription());
+    assertEquals("spritePath", msd.getSpriteResourcePath());
     assertTrue(msd.getLocked());
     assertNull(msd.getId());
   }

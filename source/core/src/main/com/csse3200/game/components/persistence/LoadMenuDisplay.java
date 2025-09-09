@@ -102,7 +102,9 @@ public class LoadMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    // Do nothing, handled by the stage
+  }
 
   @Override
   public float getZIndex() {

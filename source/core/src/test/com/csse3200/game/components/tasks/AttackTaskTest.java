@@ -16,7 +16,7 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AttackTaskTest {
+class AttackTaskTest {
   private Entity target;
   private List<Entity> targets;
 
@@ -36,7 +36,7 @@ public class AttackTaskTest {
   }
 
   @Test
-  public void attackWhenInRange() {
+  void attackWhenInRange() {
     // AI was used to help create this method
     float attackRange = 5f;
 
@@ -67,7 +67,7 @@ public class AttackTaskTest {
   }
 
   @Test
-  public void noAttackWhenOutOfRange() {
+  void noAttackWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f;
     AttackTask attackTask = new AttackTask(targets, attackRange);

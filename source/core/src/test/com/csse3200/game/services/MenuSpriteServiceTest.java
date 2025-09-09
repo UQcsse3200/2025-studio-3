@@ -1,7 +1,5 @@
 package com.csse3200.game.services;
 
-import static org.junit.Assert.*;
-
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.exceptions.MenuSpriteNotFoundException;
@@ -10,14 +8,14 @@ import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
-import org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
-public class MenuSpriteServiceTest {
+class MenuSpriteServiceTest {
 
   @Mock GdxGame gdxGame;
 
@@ -27,7 +25,7 @@ public class MenuSpriteServiceTest {
   }
 
   @Test
-  public void menuSpriteFunctions() {
+  void menuSpriteFunctions() {
     MenuSpriteService menuSpriteService = new MenuSpriteService();
 
     MenuSpriteData msd1 = new MenuSpriteData(GdxGame.ScreenType.MAIN_MENU);
@@ -56,7 +54,7 @@ public class MenuSpriteServiceTest {
     msdList.add(msd1);
     msdList.add(msd2);
 
-    assertEquals(menuSpriteService.getMenuSprites().size(), 2);
+    assertEquals(2, menuSpriteService.getMenuSprites().size());
     assertTrue(msdList.containsAll(menuSpriteService.getMenuSprites()));
 
     // test static sprite get by screen class

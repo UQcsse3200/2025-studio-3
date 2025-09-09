@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class DraggableCharacterTest {
+class DraggableCharacterTest {
 
   LevelGameArea mockArea = mock(LevelGameArea.class);
 

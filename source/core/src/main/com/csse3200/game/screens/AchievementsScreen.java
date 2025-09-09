@@ -18,7 +18,6 @@ import com.csse3200.game.progression.achievements.Achievement;
 public class AchievementsScreen extends ScreenAdapter {
   private final GdxGame game;
   private Stage stage;
-  private Table rootTable;
 
   // Styles
   private Skin skin;
@@ -48,7 +47,7 @@ public class AchievementsScreen extends ScreenAdapter {
     windowStyle = skin.get(Window.WindowStyle.class); // default
 
     // === Root table ===
-    rootTable = new Table();
+    Table rootTable = new Table();
     rootTable.setFillParent(true);
     stage.addActor(rootTable);
 

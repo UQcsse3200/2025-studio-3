@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class MenuSpriteDataTest {
+class MenuSpriteDataTest {
 
   @Test
   void testSettersAndGetters() {
@@ -21,11 +21,11 @@ public class MenuSpriteDataTest {
     msd.setSpriteResourcePath("spritePath");
     msd.setLocked(true);
 
-    assertEquals(msd.getX(), 5);
-    assertEquals(msd.getY(), 20);
-    assertEquals(msd.getName(), "Name");
-    assertEquals(msd.getDescription(), "Description");
-    assertEquals(msd.getSpriteResourcePath(), "spritePath");
+    assertEquals(5, msd.getX());
+    assertEquals(20, msd.getY());
+    assertEquals("Name", msd.getName());
+    assertEquals("Description", msd.getDescription());
+    assertEquals("spritePath", msd.getSpriteResourcePath());
     assertTrue(msd.getLocked());
     assertNull(msd.getId());
   }

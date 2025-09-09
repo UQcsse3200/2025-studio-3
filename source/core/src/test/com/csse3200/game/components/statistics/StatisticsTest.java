@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 
 @ExtendWith(GameExtension.class)
-public class StatisticsTest {
+class StatisticsTest {
   private Profile profile;
 
   @BeforeEach

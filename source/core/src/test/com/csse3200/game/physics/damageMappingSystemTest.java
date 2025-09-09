@@ -12,7 +12,7 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class damageMappingSystemTest {
+class DamageMappingSystemTest {
   private Entity attacker;
   private Entity defender;
   private CombatStatsComponent attackerStats;

@@ -186,7 +186,9 @@ public class ProfileDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    // Do nothing, handled by the stage
+  }
 
   @Override
   public float getZIndex() {
@@ -205,7 +207,7 @@ public class ProfileDisplay extends UIComponent {
   }
 
   /** Call this method when the screen is resized to update UI elements */
-  public void resize(int width, int height) {
+  public void resize() {
     if (mainTable != null) {
       mainTable.clear();
     }

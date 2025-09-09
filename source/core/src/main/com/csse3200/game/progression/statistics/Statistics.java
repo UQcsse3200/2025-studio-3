@@ -19,14 +19,20 @@ public class Statistics {
   int levelsPassed;
   int numDefencesUnlocked;
   int totalCoinsEarned;
+  private static final String KILLS_ACHIEVEMENT = "50_KILLS";
+  private static final String SHOTS_FIRED_ACHIEVEMENT = "50_SHOTS";
+  private static final String LEVELS_PASSED_ACHIEVEMENT = "LEVEL_1_COMPLETE";
+  private static final String NUM_DEFENCES_UNLOCKED_ACHIEVEMENT = "5_DEFENSES";
+  private static final String TOTAL_COINS_EARNED_ACHIEVEMENT = "100_COINS";
 
-  private final transient Map<String, Integer> ACHIEVEMENT_QUOTAS =
+  // TODO: Remove once achievement progression is implemented
+  private static final Map<String, Integer> ACHIEVEMENT_QUOTAS =
       Map.of(
-          "50_KILLS", 50,
-          "50_SHOTS", 200,
-          "LEVEL_1_COMPLETE", 1,
-          "5_DEFENSES", 5,
-          "100_COINS", 100);
+          KILLS_ACHIEVEMENT, 50,
+          SHOTS_FIRED_ACHIEVEMENT, 200,
+          LEVELS_PASSED_ACHIEVEMENT, 1,
+          NUM_DEFENCES_UNLOCKED_ACHIEVEMENT, 5,
+          TOTAL_COINS_EARNED_ACHIEVEMENT, 100);
 
   /** Default constructor for Statistics. */
   public Statistics() {
@@ -158,35 +164,35 @@ public class Statistics {
   /** Increases kills by 1. */
   public void increaseKills() {
     this.kills++;
-    if (this.kills >= ACHIEVEMENT_QUOTAS.get("50_KILLS")) {
-      Persistence.profile().achievements().unlock("50_KILLS");
+    if (this.kills >= ACHIEVEMENT_QUOTAS.get(KILLS_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(KILLS_ACHIEVEMENT);
     }
   }
 
   /** Increases kills by 1. */
   public void increaseShotsFired() {
     this.shotsFired++;
-    if (!Persistence.profile().achievements().isUnlocked("50_SHOTS")
-        && this.shotsFired >= ACHIEVEMENT_QUOTAS.get("50_SHOTS")) {
-      Persistence.profile().achievements().unlock("50_SHOTS");
+    if (!Persistence.profile().achievements().isUnlocked(SHOTS_FIRED_ACHIEVEMENT)
+        && this.shotsFired >= ACHIEVEMENT_QUOTAS.get(SHOTS_FIRED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(SHOTS_FIRED_ACHIEVEMENT);
     }
   }
 
   /** Increases levels passed by 1. */
   public void increaseLevelsPassed() {
     this.levelsPassed++;
-    if (!Persistence.profile().achievements().isUnlocked("LEVEL_1_COMPLETE")
-        && this.levelsPassed >= ACHIEVEMENT_QUOTAS.get("LEVEL_1_COMPLETE")) {
-      Persistence.profile().achievements().unlock("LEVEL_1_COMPLETE");
+    if (!Persistence.profile().achievements().isUnlocked(LEVELS_PASSED_ACHIEVEMENT)
+        && this.levelsPassed >= ACHIEVEMENT_QUOTAS.get(LEVELS_PASSED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(LEVELS_PASSED_ACHIEVEMENT);
     }
   }
 
   /** Increases number of defences unlocked by 1. */
   public void increaseNumDefencesUnlocked() {
     this.numDefencesUnlocked++;
-    if (!Persistence.profile().achievements().isUnlocked("5_DEFENSES")
-        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get("5_DEFENSES")) {
-      Persistence.profile().achievements().unlock("5_DEFENSES");
+    if (!Persistence.profile().achievements().isUnlocked(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)
+        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT);
     }
   }
 
@@ -197,18 +203,18 @@ public class Statistics {
    */
   public void increaseNumDefencesUnlockedBySpecific(int extraDefences) {
     this.numDefencesUnlocked += extraDefences;
-    if (!Persistence.profile().achievements().isUnlocked("5_DEFENSES")
-        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get("5_DEFENSES")) {
-      Persistence.profile().achievements().unlock("5_DEFENSES");
+    if (!Persistence.profile().achievements().isUnlocked(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)
+        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT);
     }
   }
 
   /** Increases all-time total coins earned by 1. */
   public void increaseTotalCoinsEarned() {
     this.totalCoinsEarned++;
-    if (!Persistence.profile().achievements().isUnlocked("100_COINS")
-        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get("100_COINS")) {
-      Persistence.profile().achievements().unlock("100_COINS");
+    if (!Persistence.profile().achievements().isUnlocked(TOTAL_COINS_EARNED_ACHIEVEMENT)
+        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get(TOTAL_COINS_EARNED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(TOTAL_COINS_EARNED_ACHIEVEMENT);
     }
   }
 
@@ -219,9 +225,9 @@ public class Statistics {
    */
   public void increaseTotalCoinsEarnedBySpecific(int extraCoinsEarned) {
     this.totalCoinsEarned += extraCoinsEarned;
-    if (!Persistence.profile().achievements().isUnlocked("100_COINS")
-        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get("100_COINS")) {
-      Persistence.profile().achievements().unlock("100_COINS");
+    if (!Persistence.profile().achievements().isUnlocked(TOTAL_COINS_EARNED_ACHIEVEMENT)
+        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get(TOTAL_COINS_EARNED_ACHIEVEMENT)) {
+      Persistence.profile().achievements().unlock(TOTAL_COINS_EARNED_ACHIEVEMENT);
     }
   }
 }

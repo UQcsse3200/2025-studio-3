@@ -10,16 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 @ExtendWith(GameExtension.class)
-public class MenuSpriteDataBuilderTest {
+class MenuSpriteDataBuilderTest {
 
-  enum anEnum {
+  enum TestEnum {
     ITEM1
   }
 
   @Test
   void testBuilder() {
     MenuSpriteData msd =
-        MenuSpriteData.builder(Mockito.mock(SettingsScreen.class), anEnum.ITEM1)
+        MenuSpriteData.builder(Mockito.mock(SettingsScreen.class), TestEnum.ITEM1)
             .position(5, 20)
             .name("Name")
             .description("Description")
@@ -27,13 +27,13 @@ public class MenuSpriteDataBuilderTest {
             .locked(true)
             .build();
 
-    assertEquals(msd.getX(), 5);
-    assertEquals(msd.getY(), 20);
-    assertEquals(msd.getName(), "Name");
-    assertEquals(msd.getDescription(), "Description");
-    assertEquals(msd.getSpriteResourcePath(), "spritePath");
+    assertEquals(5, msd.getX());
+    assertEquals(20, msd.getY());
+    assertEquals("Name", msd.getName());
+    assertEquals("Description", msd.getDescription());
+    assertEquals("spritePath", msd.getSpriteResourcePath());
     assertTrue(msd.getLocked());
-    assertEquals(msd.getId(), anEnum.ITEM1);
-    assertEquals(msd.getId().getClass(), anEnum.class);
+    assertEquals(TestEnum.ITEM1, msd.getId());
+    assertEquals(TestEnum.class, msd.getId().getClass());
   }
 }

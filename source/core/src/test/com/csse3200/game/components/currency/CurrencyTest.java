@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
  * Unit tests for Currency data model. Covers: constructor state, clamping on set/add,
  * affordability, spend success/failure, no-op for invalid inputs.
  */
-public class CurrencyTest {
+class CurrencyTest {
 
   @Test
   void constructor_shouldSetInitialAndMax() {

@@ -20,8 +20,6 @@ public class ShopButtons extends UIComponent {
   private static final int ICON_SIZE = 40;
   private static final int BACK_BUTTON_SIZE = 50;
   private Label goldLabel;
-  private TextButton backButton;
-  private Image goldIcon;
   private boolean actorsCreated = false;
 
   @Override
@@ -77,9 +75,9 @@ public class ShopButtons extends UIComponent {
   }
 
   private void createBackButton(float x, float y) {
-    backButton = new TextButton("Back", skin);
+    TextButton backButton = new TextButton("Back", skin);
     backButton.setPosition(x, y);
-    backButton.setSize(BACK_BUTTON_SIZE * 2, BACK_BUTTON_SIZE);
+    backButton.setSize((float)BACK_BUTTON_SIZE * 2, BACK_BUTTON_SIZE);
 
     // Add click listener
     backButton.addListener(
@@ -99,7 +97,7 @@ public class ShopButtons extends UIComponent {
     Texture goldTexture =
         ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class);
 
-    goldIcon = new Image(goldTexture);
+    Image goldIcon = new Image(goldTexture);
     goldIcon.setPosition(x, y);
     goldIcon.setSize(ICON_SIZE, ICON_SIZE);
     stage.addActor(goldIcon);
@@ -125,7 +123,9 @@ public class ShopButtons extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    // Do nothing, handled by the stage
+  }
 
   @Override
   public float getZIndex() {

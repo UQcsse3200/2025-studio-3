@@ -12,7 +12,7 @@ public final class MenuSpriteDataBuilder {
   private Integer y;
   private String name;
   private String description;
-  private String sprite_resource_path;
+  private String spriteResourcePath;
   private Boolean locked;
 
   public MenuSpriteDataBuilder(Screen screen, Enum<?> id) {
@@ -36,8 +36,8 @@ public final class MenuSpriteDataBuilder {
     return this;
   }
 
-  public MenuSpriteDataBuilder sprite(String sprite_resource_path) {
-    this.sprite_resource_path = sprite_resource_path;
+  public MenuSpriteDataBuilder sprite(String spriteResourcePath) {
+    this.spriteResourcePath = spriteResourcePath;
     return this;
   }
 
@@ -54,7 +54,7 @@ public final class MenuSpriteDataBuilder {
     if (y == null) {
       y = 0;
     }
-    if (sprite_resource_path == null) {
+    if (spriteResourcePath == null) {
       // get default path
     }
     if (locked == null) {
@@ -62,6 +62,6 @@ public final class MenuSpriteDataBuilder {
     }
 
     return new MenuSpriteData(
-        screenClass, id, x, y, name, description, sprite_resource_path, locked);
+        screenClass, id, x, y, name, description, spriteResourcePath, locked);
   }
 }

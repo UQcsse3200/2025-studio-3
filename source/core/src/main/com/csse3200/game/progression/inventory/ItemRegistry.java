@@ -11,7 +11,7 @@ import com.csse3200.game.components.items.NukeComponent;
 public class ItemRegistry {
   public record ItemEntry(String key, Item item, String assetPath) {}
 
-  public static final ItemEntry[] ITEMS = {
+  public static final ItemEntry[] ITEMS = { 
     new ItemEntry("nuke", new NukeComponent(), "images/item_nuke.png"),
     new ItemEntry("grenade", new GrenadeComponent(), "images/item_grenade.png"),
     new ItemEntry("coffee", new CoffeeComponent(), "images/item_coffee.png"),

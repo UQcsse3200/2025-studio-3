@@ -1,27 +1,28 @@
 package com.csse3200.game.progression.skillTree;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+
 @ExtendWith(GameExtension.class)
-public class SkillSetTest {
+class SkillSetTest {
 
   private SkillSet skillSet;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     skillSet = new SkillSet();
   }
 
   @Test
-  public void testGetSkills() {
+  void testGetSkills() {
     List<Skill> skills = SkillSet.getSkills();
     // There should be 15 predefined skills (5 stats × 3 levels)
     assertEquals(15, skills.size());
@@ -32,7 +33,7 @@ public class SkillSetTest {
   }
 
   @Test
-  public void testAddSkill() {
+  void testAddSkill() {
     Skill healthSkill = skillSet.getSkill("Increase Health Basic");
     assertNotNull(healthSkill);
 
@@ -48,7 +49,7 @@ public class SkillSetTest {
   }
 
   @Test
-  public void testGetSkill() {
+  void testGetSkill() {
     Skill skill = skillSet.getSkill("Increase AD Intermediate");
     assertNotNull(skill);
     assertEquals("Increase AD Intermediate", skill.getName());
@@ -58,13 +59,13 @@ public class SkillSetTest {
   }
 
   @Test
-  public void testGetSkill_returnsNull() {
+  void testGetSkill_returnsNull() {
     Skill skill = skillSet.getSkill("Nonexistent Skill");
     assertNull(skill);
   }
 
   @Test
-  public void testUnlockedSkills() {
+  void testUnlockedSkills() {
     SkillSet otherSet = new SkillSet();
     Skill skill = skillSet.getSkill("Increase Health Basic");
 

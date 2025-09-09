@@ -31,6 +31,10 @@ public class ForestGameArea extends GameArea {
   private static final int NUM_GHOSTS = 0;
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
+  private static final String GRASS_TEXTURE = "images/iso_grass_3.png";
+  private static final String[] FOREST_SOUNDS = {"sounds/Impact4.ogg"};
+  private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
+  private static final String[] FOREST_MUSIC = {BACKGROUND_MUSIC};
   private static final String[] forestTextures = {
     "images/box_boy_leaf.png",
     "images/tree.png",
@@ -44,7 +48,7 @@ public class ForestGameArea extends GameArea {
     "images/hex_grass_3.png",
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
-    "images/iso_grass_3.png",
+    GRASS_TEXTURE,
     "images/sling_shooter.png"
   };
   private static final String[] forestTextureAtlases = {
@@ -52,16 +56,13 @@ public class ForestGameArea extends GameArea {
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
-    "images/iso_grass_3.png",
+    GRASS_TEXTURE,
     "images/robot_placeholder.png",
-    "images/iso_grass_3.png",
     "images/normal_sunlight.png",
     "images/sling_shooter.png"
   };
 
-  private static final String[] forestSounds = {"sounds/Impact4.ogg"};
-  private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-  private static final String[] forestMusic = {backgroundMusic};
+
 
   private final TerrainFactory terrainFactory;
   private CurrencyGeneratorComponent currencyGenerator;
@@ -90,8 +91,6 @@ public class ForestGameArea extends GameArea {
     spawnTerrain();
     spawnTrees();
     player = spawnPlayer();
-    // spawnGhosts();
-    // spawnGhostKing();
 
     spawnDefences();
     spawnGhosts();
@@ -162,7 +161,7 @@ public class ForestGameArea extends GameArea {
     }
   }
 
-  private void spawnLaser(Entity entity) {
+  public void spawnLaser(Entity entity) {
     autofire(
         entity,
         () -> {
@@ -181,8 +180,8 @@ public class ForestGameArea extends GameArea {
           Vector2 dirn =
               entity.getComponent(PhysicsMovementComponent.class).getDirection().cpy().nor();
           float offset = 1.0f;
-          Vector2 SpawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
-          GridPoint2 entityPos = new GridPoint2(Math.round(SpawnPos.x), Math.round(SpawnPos.y));
+          Vector2 spawnPos = ePos.cpy().add(dirn.cpy().scl(offset));
+          GridPoint2 entityPos = new GridPoint2(Math.round(spawnPos.x), Math.round(spawnPos.y));
           spawnEntityAt(laser, entityPos, true, true);
         });
   }
@@ -260,7 +259,7 @@ public class ForestGameArea extends GameArea {
   }
 
   private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+    Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
     music.setLooping(true);
     music.setVolume(0.3f);
     music.play();
@@ -271,8 +270,8 @@ public class ForestGameArea extends GameArea {
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(forestTextures);
     resourceService.loadTextureAtlases(forestTextureAtlases);
-    resourceService.loadSounds(forestSounds);
-    resourceService.loadMusic(forestMusic);
+    resourceService.loadSounds(FOREST_SOUNDS);
+    resourceService.loadMusic(FOREST_MUSIC);
 
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
@@ -285,8 +284,8 @@ public class ForestGameArea extends GameArea {
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.unloadAssets(forestTextures);
     resourceService.unloadAssets(forestTextureAtlases);
-    resourceService.unloadAssets(forestSounds);
-    resourceService.unloadAssets(forestMusic);
+    resourceService.unloadAssets(FOREST_SOUNDS);
+    resourceService.unloadAssets(FOREST_MUSIC);
   }
 
   private void spawnSun() {
@@ -301,7 +300,7 @@ public class ForestGameArea extends GameArea {
   @Override
   public void dispose() {
     super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+    ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class).stop();
     this.unloadAssets();
   }
 }
