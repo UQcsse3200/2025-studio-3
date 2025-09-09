@@ -216,7 +216,7 @@ public class ColliderComponent extends Component {
 
   private Shape makeBoundingBox() {
     PolygonShape bbox = new PolygonShape();
-    Vector2 center = entity.getScale().scl(0.5f);
+    Vector2 center = entity.getScale().scl(0.4f);
     bbox.setAsBox(center.x, center.y, center, 0f);
     return bbox;
   }

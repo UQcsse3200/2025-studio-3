@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static java.lang.Math.abs;
+
 public abstract class RobotTargetDetectionTasks extends DefaultTask implements PriorityTask {
     private static final Logger logger = LoggerFactory.getLogger(RobotTargetDetectionTasks.class);
     protected final float attackRange;
@@ -106,6 +108,9 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
 
             Vector2 targetPos = target.getCenterPosition();
             float distance = from.dst(targetPos);
+            if (abs(from.y - targetPos.y) > 10f) {
+                continue;
+            }
 //            logger.info("Checking target at distance: " + distance);
             if (distance <= 200f) { // if target visible and in range
 //                logger.info("Target detected within range: " + target);
