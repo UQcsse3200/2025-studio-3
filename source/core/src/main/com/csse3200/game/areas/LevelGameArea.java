@@ -1,7 +1,6 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -16,10 +15,9 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.function.Supplier;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
@@ -290,12 +288,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
     Vector2 entityPos = new Vector2(tileX, tileY);
 
-    Supplier<Entity> entitySupplier = selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
+    Supplier<Entity> entitySupplier =
+        selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
     Entity newEntity = entitySupplier.get();
 
     if (newEntity == null) {
-        logger.error("Entity fetched was NULL");
-        return;
+      logger.error("Entity fetched was NULL");
+      return;
     }
     newEntity.setPosition(entityPos);
 
