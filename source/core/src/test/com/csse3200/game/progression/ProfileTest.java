@@ -1,18 +1,17 @@
 package com.csse3200.game.progression;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.BeforeEach;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(GameExtension.class)
 class ProfileTest {
@@ -40,7 +39,6 @@ class ProfileTest {
     assertNotNull(profile.wallet());
     assertEquals(100, profile.wallet().getCoins());
     assertEquals(10, profile.wallet().getSkillsPoints());
-    
   }
 
   @Test
@@ -60,5 +58,4 @@ class ProfileTest {
     assertEquals(newName, profile.getName());
     // Insert
   }
-
 }

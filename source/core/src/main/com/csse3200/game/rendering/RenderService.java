@@ -16,9 +16,7 @@ public class RenderService implements Disposable {
   private Stage stage;
   private DebugRenderer debugRenderer;
 
-  /**
-   * Map from layer to list of renderables, allows us to render each layer in the correct order
-   */
+  /** Map from layer to list of renderables, allows us to render each layer in the correct order */
   private final SortedIntMap<Array<Renderable>> renderables =
       new SortedIntMap<>(INITIAL_LAYER_CAPACITY);
 

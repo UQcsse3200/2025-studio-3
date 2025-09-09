@@ -20,6 +20,7 @@ public class ColliderComponent extends Component {
   private final FixtureDef fixtureDef;
   private Fixture fixture;
 
+  /** Creates a new collider component with default fixture settings. */
   public ColliderComponent() {
     fixtureDef = new FixtureDef();
   }
@@ -174,13 +175,16 @@ public class ColliderComponent extends Component {
     return this;
   }
 
-  /** @return Physics fixture of this collider. Null before created() */
+  /**
+   * @return Physics fixture of this collider. Null before created()
+   */
   public Fixture getFixture() {
     return fixture;
   }
 
   /**
    * Set the collider layer, used in collision logic
+   *
    * @param layerMask Bitmask of {@link PhysicsLayer} this collider belongs to
    * @return self
    */

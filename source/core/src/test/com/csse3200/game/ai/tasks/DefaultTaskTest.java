@@ -1,6 +1,5 @@
 package com.csse3200.game.ai.tasks;
 
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.spy;
 

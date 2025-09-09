@@ -1,12 +1,10 @@
 package com.csse3200.game.components;
 
-
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
- * 
- * This component stores additional combat-related stats beyond health
- * and base attack, such as range, attack speed, and critical hit chance.
- * 
+ *
+ * <p>This component stores additional combat-related stats beyond health and base attack, such as
+ * range, attack speed, and critical hit chance.
  */
 public class DefenceStatsComponent extends CombatStatsComponent {
 
@@ -28,16 +26,16 @@ public class DefenceStatsComponent extends CombatStatsComponent {
   /**
    * Creates a new DefenceStatsComponent with the given stats.
    *
-   * @param health       the maximum health of the defender
-   * @param baseAttack   the base attack damage
-   * @param type         the type identifier of this defender
-   * @param range        the maximum attack range
-   * @param state        the current combat/behavioural state
-   * @param attackSpeed  the speed of attacks
-   * @param critChance   the critical hit chance
+   * @param health the maximum health of the defender
+   * @param baseAttack the base attack damage
+   * @param type the type identifier of this defender
+   * @param range the maximum attack range
+   * @param state the current combat/behavioural state
+   * @param attackSpeed the speed of attacks
+   * @param critChance the critical hit chance
    */
-  public DefenceStatsComponent(int health, int baseAttack, int type,
-      int range, int state, int attackSpeed, int critChance) {
+  public DefenceStatsComponent(
+      int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
     super(health, baseAttack);
 
@@ -54,7 +52,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.type = type;
   }
 
-  /** @return the defender type identifier */
+  /**
+   * @return the defender type identifier
+   */
   public int getType() {
     return type;
   }
@@ -64,7 +64,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.range = range;
   }
 
-  /** @return the defender's maximum attack range */
+  /**
+   * @return the defender's maximum attack range
+   */
   public int getRange() {
     return range;
   }
@@ -74,7 +76,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.state = state;
   }
 
-  /** @return the defender's current state */
+  /**
+   * @return the defender's current state
+   */
   public int getState() {
     return state;
   }
@@ -84,7 +88,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.attackSpeed = attackSpeed;
   }
 
-  /** @return the defender's attack speed */
+  /**
+   * @return the defender's attack speed
+   */
   public int getAttackSpeed() {
     return attackSpeed;
   }
@@ -94,7 +100,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.critChance = critChance;
   }
 
-  /** @return the defender's critical hit chance (percentage) */
+  /**
+   * @return the defender's critical hit chance (percentage)
+   */
   public int getCritChance() {
     return critChance;
   }

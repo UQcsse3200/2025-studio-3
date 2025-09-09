@@ -1,5 +1,8 @@
 package com.csse3200.game.events;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
 import com.csse3200.game.events.listeners.EventListener0;
 import com.csse3200.game.events.listeners.EventListener1;
 import com.csse3200.game.events.listeners.EventListener2;
@@ -8,9 +11,6 @@ import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class EventHandlerTest {
@@ -63,7 +63,7 @@ class EventHandlerTest {
 
   @Test
   void shouldTriggerOneArg() {
-    EventListener1<String> listener = (EventListener1<String>)mock(EventListener1.class);
+    EventListener1<String> listener = (EventListener1<String>) mock(EventListener1.class);
     handler.addListener("event", listener);
     handler.trigger("event", "argument");
     verify(listener).handle("argument");
@@ -71,7 +71,8 @@ class EventHandlerTest {
 
   @Test
   void shouldTriggerTwoArg() {
-    EventListener2<Integer, Boolean> listener = (EventListener2<Integer, Boolean>)mock(EventListener2.class);
+    EventListener2<Integer, Boolean> listener =
+        (EventListener2<Integer, Boolean>) mock(EventListener2.class);
     handler.addListener("event", listener);
     handler.trigger("event", 5, true);
     verify(listener).handle(5, true);
@@ -79,7 +80,8 @@ class EventHandlerTest {
 
   @Test
   void shouldTriggerThreeArg() {
-    EventListener3<Integer, Float, Long> listener = (EventListener3<Integer, Float, Long>)mock(EventListener3.class);
+    EventListener3<Integer, Float, Long> listener =
+        (EventListener3<Integer, Float, Long>) mock(EventListener3.class);
     handler.addListener("event", listener);
     handler.trigger("event", 1, 2f, 3L);
     verify(listener).handle(1, 2f, 3L);
@@ -88,8 +90,10 @@ class EventHandlerTest {
   @Test
   void shouldFailIncorrectArgs() {
     handler.addListener("stringEvent", (String s) -> {});
-    assertThrows(ClassCastException.class, () -> {
-      handler.trigger("stringEvent", true);
-    });
+    assertThrows(
+        ClassCastException.class,
+        () -> {
+          handler.trigger("stringEvent", true);
+        });
   }
 }

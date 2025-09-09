@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  * Provides a global access point for entities to register themselves. This allows for iterating
  * over entities to perform updates each loop. All game entities should be registered here.
  *
- * Avoid adding additional state here! Global access is often the easy but incorrect answer to
+ * <p>Avoid adding additional state here! Global access is often the easy but incorrect answer to
  * sharing data.
  */
 public class EntityService {
@@ -19,6 +19,7 @@ public class EntityService {
 
   /**
    * Register a new entity with the entity service. The entity will be created and start updating.
+   *
    * @param entity new entity.
    */
   public void register(Entity entity) {
@@ -29,6 +30,7 @@ public class EntityService {
 
   /**
    * Unregister an entity with the entity service. The entity will be removed and stop updating.
+   *
    * @param entity entity to be removed.
    */
   public void unregister(Entity entity) {
@@ -36,9 +38,7 @@ public class EntityService {
     entities.removeValue(entity, true);
   }
 
-  /**
-   * Update all registered entities. Should only be called from the main game loop.
-   */
+  /** Update all registered entities. Should only be called from the main game loop. */
   public void update() {
     for (Entity entity : entities) {
       entity.earlyUpdate();
@@ -46,9 +46,7 @@ public class EntityService {
     }
   }
 
-  /**
-   * Dispose all entities.
-   */
+  /** Dispose all entities. */
   public void dispose() {
     for (Entity entity : entities) {
       entity.dispose();

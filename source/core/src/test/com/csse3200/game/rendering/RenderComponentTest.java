@@ -17,8 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
 class RenderComponentTest {
-  @Mock
-  RenderService service;
+  @Mock RenderService service;
 
   @Test
   void shouldRegisterSelf() {

@@ -4,23 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The SkillSet class manages all available skills in the game and tracks which
- * skills have been unlocked by a player.
- * Contains a static list of all predefined skills
- * Tracks unlocked skills for a player which get activated from the Skilltree
- * Screen
+ * The SkillSet class manages all available skills in the game and tracks which skills have been
+ * unlocked by a player. Contains a static list of all predefined skills Tracks unlocked skills for
+ * a player which get activated from the Skilltree Screen
  */
-
 public class SkillSet {
 
-  /**
-   * Static list of all available skills in the game.
-   */
-  private static transient final List<Skill> Skills = new ArrayList<>();
+  /** Static list of all available skills in the game. */
+  private static final transient List<Skill> Skills = new ArrayList<>();
 
-  /**
-   * List of skills that have been unlocked for the player.
-   */
+  /** List of skills that have been unlocked for the player. */
   private List<Skill> unlockedSkills = new ArrayList<>();
 
   // Static initializer block to populate the predefined skills.
@@ -52,7 +45,7 @@ public class SkillSet {
 
   /**
    * Returns the list of all predefined skills in the game.
-   * 
+   *
    * @return a static list of Skills
    */
   public static List<Skill> getSkills() {
@@ -61,7 +54,7 @@ public class SkillSet {
 
   /**
    * Adds a skill to this instance's unlocked skills list.
-   * 
+   *
    * @param skill to be added to list
    */
   public void addSkill(Skill skill) {
@@ -79,10 +72,11 @@ public class SkillSet {
 
   /**
    * Checks if a skill with the given name has been unlocked.
+   *
    * @param name the name of the skill to check
    * @return true if the skill is unlocked, false otherwise
    */
-  public boolean checkIfUnlocked(String name){
+  public boolean checkIfUnlocked(String name) {
     for (Skill skill : unlockedSkills) {
       if (skill.getName().equals(name)) {
         return true;

@@ -13,14 +13,13 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
- * The InventoryDisplay class is a UI component that renders a grid of player
- * inventory items on screen.
+ * The InventoryDisplay class is a UI component that renders a grid of player inventory items on
+ * screen.
  */
 public class InventoryDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(InventoryDisplay.class);
@@ -47,9 +46,7 @@ public class InventoryDisplay extends UIComponent {
     addActors();
   }
 
-  /**
-   * Builds and adds the main UI actors for the Inventory screen.
-   */
+  /** Builds and adds the main UI actors for the Inventory screen. */
   private void addActors() {
     Label title = new Label("Inventory", skin, "title");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
@@ -123,8 +120,7 @@ public class InventoryDisplay extends UIComponent {
 
     if (assetPath != null) {
       // Load and display item texture
-      Texture itemTexture = ServiceLocator.getResourceService()
-          .getAsset(assetPath, Texture.class);
+      Texture itemTexture = ServiceLocator.getResourceService().getAsset(assetPath, Texture.class);
 
       Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
       itemImage.setSize(ITEM_SIZE, ITEM_SIZE);
@@ -185,9 +181,7 @@ public class InventoryDisplay extends UIComponent {
     return table;
   }
 
-  /**
-   * Handles navigation back to the Profile Screen.
-   */
+  /** Handles navigation back to the Profile Screen. */
   private void backMenu() {
     game.setScreen(ScreenType.PROFILE);
   }
@@ -197,9 +191,7 @@ public class InventoryDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
-  /**
-   * Disposes of this UI component.
-   */
+  /** Disposes of this UI component. */
   @Override
   public void dispose() {
     rootTable.clear();
