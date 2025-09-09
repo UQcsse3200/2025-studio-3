@@ -59,6 +59,16 @@ public abstract class MiniGame2 implements Screen {
 
         ServiceLocator.getEntityService().register(ball);
     }
+
+    /*private void createbbwall(float x, float y, float width, float height) {
+        Entity bbwall = new Entity();
+        bbwall.addComponent(new PhysicsComponent());.
+        ColliderComponent collider = new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE);
+        bbwall.addComponent(collider);
+
+        bbwall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.);
+    }*/
+
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
