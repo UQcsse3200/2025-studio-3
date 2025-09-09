@@ -9,6 +9,11 @@ import org.slf4j.LoggerFactory;
 public class DebugCommand implements Command {
   private static final Logger logger = LoggerFactory.getLogger(DebugCommand.class);
 
+  /** Creates a new debug command. */
+  public DebugCommand() {
+    // Default constructor
+  }
+
   /**
    * Toggles debug mode on or off if the corresponding argument is received.
    *

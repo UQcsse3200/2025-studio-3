@@ -46,11 +46,14 @@ public class CurrencyGeneratorComponent extends Component {
 
   private transient Action generatorAction;
 
+  /** Creates a new currency generator component with default settings. */
   public CurrencyGeneratorComponent() {
     this(8f, 25, "images/normal_sunlight.png");
   }
 
   /**
+   * Creates a new currency generator component with the specified parameters.
+   *
    * @param intervalSec seconds between spawns
    * @param sunValue currency granted per sun
    * @param sunTexturePath texture path for the sun image
@@ -81,6 +84,12 @@ public class CurrencyGeneratorComponent extends Component {
   }
 
   /** Spawn a sun that falls from the top to (targetX, targetY) while rotating. */
+  /**
+   * Spawns a sun at the specified coordinates.
+   *
+   * @param targetX the x coordinate to spawn at
+   * @param targetY the y coordinate to spawn at
+   */
   public void spawnSunAt(float targetX, float targetY) {
     ResourceService rs = ServiceLocator.getResourceService();
     Stage stage =
@@ -173,18 +182,36 @@ public class CurrencyGeneratorComponent extends Component {
   }
 
   /** Configure falling speed */
+  /**
+   * Sets the fall fraction per second for spawned suns.
+   *
+   * @param frac the fall fraction per second
+   * @return this component for method chaining
+   */
   public CurrencyGeneratorComponent setFallFracPerSec(float frac) {
     this.FALL_FRAC_PER_SEC = Math.max(0.01f, frac);
     return this;
   }
 
   /** Configure rotation speed in degrees per second. */
+  /**
+   * Sets the rotating speed in degrees per second for spawned suns.
+   *
+   * @param dps the degrees per second
+   * @return this component for method chaining
+   */
   public CurrencyGeneratorComponent setRotatingSpeedDps(float dps) {
     this.ROT_SPEED_DPS = Math.max(0f, dps);
     return this;
   }
 
   /** Configure sun visual size in pixels. */
+  /**
+   * Sets the size of spawned suns in pixels.
+   *
+   * @param px the size in pixels
+   * @return this component for method chaining
+   */
   public CurrencyGeneratorComponent setSunSizePx(float px) {
     this.SUN_SIZE_PX = Math.max(8f, px);
     return this;

@@ -20,6 +20,7 @@ public class ColliderComponent extends Component {
   private final FixtureDef fixtureDef;
   private Fixture fixture;
 
+  /** Creates a new collider component with default fixture settings. */
   public ColliderComponent() {
     fixtureDef = new FixtureDef();
   }

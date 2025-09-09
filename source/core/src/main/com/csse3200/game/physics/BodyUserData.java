@@ -10,4 +10,9 @@ public class BodyUserData {
 
   /** The entity to which this body is attached */
   public Entity entity;
+
+  /** Creates a new BodyUserData instance. */
+  public BodyUserData() {
+    // Default constructor
+  }
 }

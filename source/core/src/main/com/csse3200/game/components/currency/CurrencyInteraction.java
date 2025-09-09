@@ -11,11 +11,18 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** Interactive currency item that can be clicked to collect sunlight. */
 public class CurrencyInteraction extends Image {
   private static final Logger logger = LoggerFactory.getLogger(CurrencyInteraction.class);
 
   private final int value;
 
+  /**
+   * Creates a new currency interaction with the specified texture and value.
+   *
+   * @param texture the texture to display
+   * @param value the currency value when collected
+   */
   public CurrencyInteraction(Texture texture, int value) {
     super(texture);
     this.value = value;
@@ -69,6 +76,7 @@ public class CurrencyInteraction extends Image {
                 })));
   }
 
+  /** Disposes of resources used by this currency interaction. */
   public void dispose() {
     clearActions();
     clearListeners();

@@ -7,10 +7,19 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 
+/**
+ * Component for displaying achievement unlock notifications. Shows popup messages with sound
+ * effects when achievements are unlocked.
+ */
 public class AchievementPopup {
   private final Stage stage;
   private final Sound unlockSound;
 
+  /**
+   * Creates a new achievement popup component.
+   *
+   * @param stage the stage to display popups on
+   */
   public AchievementPopup(Stage stage) {
     this.stage = stage;
 
@@ -18,6 +27,12 @@ public class AchievementPopup {
     unlockSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Impact4.ogg"));
   }
 
+  /**
+   * Shows an achievement unlock popup with the given name and description.
+   *
+   * @param name the name of the achievement
+   * @param description the description of the achievement
+   */
   public void show(String name, String description) {
     // Play the sound
     unlockSound.play(1.0f); // volume = 1.0f (max)
@@ -38,6 +53,7 @@ public class AchievementPopup {
         Actions.sequence(Actions.delay(3f), Actions.fadeOut(1f), Actions.removeActor()));
   }
 
+  /** Disposes of resources used by this popup component. */
   public void dispose() {
     unlockSound.dispose();
   }

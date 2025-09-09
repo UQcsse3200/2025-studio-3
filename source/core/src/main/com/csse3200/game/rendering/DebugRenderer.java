@@ -98,6 +98,8 @@ public class DebugRenderer {
   }
 
   /**
+   * Sets the active state of debug rendering.
+   *
    * @param active true to enable debug drawing, false to disable
    */
   public void setActive(boolean active) {

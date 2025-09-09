@@ -104,13 +104,18 @@ public class AchievementManager {
    * Checks if an achievement is locked/unlocked. Returns true if unlocked, false otherwise.
    *
    * @param name achievement name
+   * @return true if the achievement is unlocked, false otherwise
    */
   public boolean isUnlocked(String name) {
     Achievement a = achievements.get(name);
     return a != null && a.isUnlocked();
   }
 
-  /** Returns all achievements. */
+  /**
+   * Returns all achievements.
+   *
+   * @return collection of all achievements
+   */
   public Collection<Achievement> getAllAchievements() {
     return achievements.values();
   }

@@ -12,6 +12,12 @@ import com.csse3200.game.ui.UIComponent;
  * when waves change. Now integrated with the WaveManager system.
  */
 public class CurrentWaveDisplay extends UIComponent {
+
+  /** Creates a new current wave display component. */
+  public CurrentWaveDisplay() {
+    // Default constructor
+  }
+
   private Table table;
   private Label waveLabel;
   private Label waveNumberLabel;

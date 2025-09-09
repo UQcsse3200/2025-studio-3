@@ -11,10 +11,21 @@ import com.csse3200.game.physics.BodyUserData;
  */
 public class damageMappingSystem {
 
+  /**
+   * Creates a new damage mapping system for the specified entity.
+   *
+   * @param entity the entity to attach the damage system to
+   */
   public damageMappingSystem(Entity entity) {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
   }
 
+  /**
+   * Handles collision start events and applies damage logic.
+   *
+   * @param fixtureA the first fixture in the collision
+   * @param fixtureB the second fixture in the collision
+   */
   public void onCollisionStart(Fixture fixtureA, Fixture fixtureB) {
 
     Entity entityA = ((BodyUserData) fixtureA.getBody().getUserData()).entity;

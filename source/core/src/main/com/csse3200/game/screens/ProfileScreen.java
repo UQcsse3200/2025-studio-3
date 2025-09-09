@@ -18,7 +18,10 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** */
+/**
+ * Screen for displaying and managing user profile information. Handles profile display UI and user
+ * interactions.
+ */
 public class ProfileScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ProfileScreen.class);
   private final Renderer renderer;

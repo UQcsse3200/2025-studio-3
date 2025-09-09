@@ -19,6 +19,11 @@ public class AITaskComponent extends Component implements TaskRunner {
   private final List<PriorityTask> priorityTasks = new ArrayList<>(2);
   private PriorityTask currentTask;
 
+  /** Creates a new AI task component with an empty task list. */
+  public AITaskComponent() {
+    // Default constructor
+  }
+
   /**
    * Add a priority task to the list of tasks. This task will be run only when it has the highest
    * priority, and can be stopped to run a higher priority task.

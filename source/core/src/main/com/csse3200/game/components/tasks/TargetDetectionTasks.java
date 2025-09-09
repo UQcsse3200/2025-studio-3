@@ -38,8 +38,22 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     return owner.getEntity().getPosition().dst(target.getPosition());
   }
 
+  /**
+   * Gets the priority when the task is active.
+   *
+   * @param distance the distance to the target
+   * @param target the target entity
+   * @return the priority value
+   */
   protected abstract int getActivePriority(float distance, Entity target);
 
+  /**
+   * Gets the priority when the task is inactive.
+   *
+   * @param distance the distance to the target
+   * @param target the target entity
+   * @return the priority value
+   */
   protected abstract int getInactivePriority(float distance, Entity target);
 
   /**

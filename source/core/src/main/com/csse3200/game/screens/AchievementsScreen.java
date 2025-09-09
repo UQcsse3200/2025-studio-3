@@ -25,6 +25,11 @@ public class AchievementsScreen extends ScreenAdapter {
   private Label.LabelStyle textStyle;
   private Window.WindowStyle windowStyle;
 
+  /**
+   * Creates a new achievements screen.
+   *
+   * @param game the main game instance
+   */
   public AchievementsScreen(GdxGame game) {
     this.game = game;
   }

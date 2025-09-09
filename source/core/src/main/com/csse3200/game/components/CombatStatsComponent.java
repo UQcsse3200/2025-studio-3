@@ -16,6 +16,12 @@ public class CombatStatsComponent extends Component {
   private int health;
   private int baseAttack;
 
+  /**
+   * Creates a new combat stats component with the specified health and attack values.
+   *
+   * @param health the initial health value
+   * @param baseAttack the base attack value
+   */
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
     setBaseAttack(baseAttack);
