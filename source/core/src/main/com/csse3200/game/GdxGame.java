@@ -113,7 +113,9 @@ public void setScreen(ScreenType screenType) {
         case WORLD_MAP:
             return new WorldMapScreen(this);
         case LANE_RUNNER:
-            return new WorldMapScreen(this);
+            return new LaneRunnerScreen(this);
+        case BRICK_BREAKER:
+            return new BrickBreakerScreen(this);
       default:
         return null;
     }
@@ -123,7 +125,7 @@ public void setScreen(ScreenType screenType) {
   }
 
   public enum ScreenType {
-    MAIN_MENU,MINI_GAMES,LANE_RUNNER, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY, WORLD_MAP
+    MAIN_MENU,MINI_GAMES,LANE_RUNNER, BRICK_BREAKER,MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY, WORLD_MAP
   }
 
   /**

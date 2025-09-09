@@ -25,6 +25,7 @@ public class BrickBreakerScreen extends ScreenAdapter {
     private final Renderer renderer;
     private static final String[] BrickBreakerTextures = {
             "images/world_map.png",
+            "images/bg.png",
     };
 
     public BrickBreakerScreen(GdxGame game) {
@@ -73,7 +74,7 @@ public class BrickBreakerScreen extends ScreenAdapter {
 
         // Add the background image as a Stage actor
         Texture bgTex = ServiceLocator.getResourceService()
-                .getAsset("images/world_map.png", Texture.class);
+                .getAsset("images/bg.png", Texture.class);
         logger.debug("loads brick breaker mini game screen background texture asset");
         Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
         bg.setFillParent(true);
