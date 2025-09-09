@@ -341,7 +341,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public GridPoint2 stageToWorld(GridPoint2 pos) {
-
     float x = pos.x * stageToWorldRatio;
     float y = (stageHeight - pos.y) * stageToWorldRatio;
 
@@ -359,5 +358,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     float x = pos.x / stageToWorldRatio;
     float y = stageHeight - (pos.y / stageToWorldRatio);
     return new GridPoint2((int) x, (int) y);
+  }
+
+  /** */
+  public void resize() {
+    setScaling();
   }
 }
