@@ -80,26 +80,26 @@ class TileTest {
   }
 
   @Test
+  void shouldntAddUnit() {
+      Entity tile = grid.getTile(0, 0);
+      TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+      tileStorageComponent.triggerSpawnUnit();
+
+      int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
+      tileStorageComponent.triggerSpawnUnit();
+      int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
+
+      // checks if the tile unit has not been replaced with new unit if there was already a unit
+      // placed
+      assert (beforeSecondTriggerId == afterSecondTriggerId);
+  }
+
+  @Test
   void shouldAddUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
     assertTrue(tileStorageComponent.hasUnit());
-  }
-
-  @Test
-  void shouldntAddUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
-
-    int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
-    tileStorageComponent.triggerSpawnUnit();
-    int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
-
-    // checks if the tile unit has not been replaced with new unit if there was already a unit
-    // placed
-    assertSame(beforeSecondTriggerId, afterSecondTriggerId);
   }
 
   @Test
