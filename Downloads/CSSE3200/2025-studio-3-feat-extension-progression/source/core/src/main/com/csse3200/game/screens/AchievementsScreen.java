@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.achievements.AchievementPopup;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.achievements.Achievement;
@@ -33,15 +34,16 @@ public class AchievementsScreen extends ScreenAdapter {
   public AchievementsScreen(GdxGame game) {
     this.game = game;
 
-    /*
+
     //todo for testing achievement persistence (must import profile and persistence classes)
     Profile profile = Persistence.profile();
-    profile.achievements().unlock("LEVEL_1_COMPLETE");
-    profile.achievements().addProgress("50_SHOTS", 1);
+    AchievementManager manager = profile.achievements();
+    AchievementPopup popup = game.getAchievementPopup();
 
-     */
-
-
+// Unlock via profile’s manager
+    manager.setPopup(popup); // inject popup reference
+    manager.unlock("LEVEL_1_COMPLETE");
+    manager.addProgress("5_DEFENSES", 1);
 
 
   }
@@ -202,6 +204,10 @@ public class AchievementsScreen extends ScreenAdapter {
 
     stage.act(delta);
     stage.draw();
+
+    // ✅ Draw popup stage last, so it overlays
+    game.getAchievementPopup().getStage().act(delta);
+    game.getAchievementPopup().getStage().draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
       game.setScreen(GdxGame.ScreenType.MAIN_MENU);

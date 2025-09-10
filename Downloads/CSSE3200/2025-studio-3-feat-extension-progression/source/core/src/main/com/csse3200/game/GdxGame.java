@@ -5,8 +5,12 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.csse3200.game.components.achievements.AchievementPopup;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.persistence.UserSettings;
+import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
@@ -17,6 +21,10 @@ import org.slf4j.LoggerFactory;
 
 public class GdxGame extends Game {
   private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+
+  // Add these fields for achievement popup
+  private AchievementManager achievementManager;
+  private AchievementPopup achievementPopup;
 
   @Override
   public void create() {
@@ -30,7 +38,21 @@ public class GdxGame extends Game {
     // Sets background to light yellow
     Gdx.gl.glClearColor(248f / 255f, 249f / 255f, 178f / 255f, 1);
 
+    // Create a popup stage and link manager + popup globally
+    Stage popupStage = new Stage(new ScreenViewport());
+    achievementPopup = new AchievementPopup(popupStage);
+    achievementManager = new AchievementManager(achievementPopup);
+
     setScreen(ScreenType.MAIN_MENU);
+  }
+
+  // Getters so all screens can access them
+  public AchievementManager getAchievementManager() {
+    return achievementManager;
+  }
+
+  public AchievementPopup getAchievementPopup() {
+    return achievementPopup;
   }
 
   /** Runs the appropriate register function to register screen sprites. */

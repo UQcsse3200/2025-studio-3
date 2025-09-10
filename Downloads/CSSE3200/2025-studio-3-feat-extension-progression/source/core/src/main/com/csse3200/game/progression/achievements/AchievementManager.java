@@ -1,24 +1,37 @@
 package com.csse3200.game.progression.achievements;
 
+import com.csse3200.game.components.achievements.AchievementPopup;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The AchievementManager class is responsible for storing all achievements.
+ * The AchievementManager class is responsible for storing and managing all achievements.
  */
 public class AchievementManager {
-  private Map<String, Achievement> achievements = new HashMap<>();
+  private final Map<String, Achievement> achievements = new HashMap<>();
+  private transient AchievementPopup popup; // runtime-only, do not serialize
 
   /**
-   * Constructor for AchievementManager.
+   * Default constructor (no popup).
+   * Achievements will still unlock, but no popup will be shown.
    */
   public AchievementManager() {
+    this(null);
+  }
+
+  /**
+   * Constructor with popup integration.
+   *
+   * @param popup AchievementPopup instance to show notifications (can be null).
+   */
+  public AchievementManager(AchievementPopup popup) {
+    this.popup = popup;
     if (achievements.isEmpty()) {
       initializeDefaultAchievements();
     }
   }
-
 
   /**
    * Initializes the default achievements.
@@ -26,7 +39,7 @@ public class AchievementManager {
    */
   private void initializeDefaultAchievements() {
     addIfMissing(new Achievement(
-            "5_DEFENSES", "Unlocked 5 defenses", 5, 4, Achievement.Tier.T1));
+            "5_DEFENSES", "Unlocked 5 defenses", 5, 5, Achievement.Tier.T1));
     addIfMissing(new Achievement(
             "100_COINS", "Earned 100 coins", 5, 5, Achievement.Tier.T2));
     addIfMissing(new Achievement(
@@ -44,6 +57,11 @@ public class AchievementManager {
     }
   }
 
+  /** Setter for achievement popup */
+  public void setPopup(AchievementPopup popup) {
+    this.popup = popup;
+  }
+
   /**
    * Unlocks the Achievement through its provided name.
    *
@@ -53,6 +71,9 @@ public class AchievementManager {
     Achievement a = achievements.get(name);
     if (a != null && !a.isUnlocked()) {
       a.unlock();
+      if (popup != null) {
+        popup.show(a.getName(), a.getDescription());
+      }
     }
   }
 
@@ -77,7 +98,13 @@ public class AchievementManager {
   public void addProgress(String name, int amount) {
     Achievement a = achievements.get(name);
     if (a != null) {
+      //save previous state
+      boolean wasUnlocked = a.isUnlocked();
       a.addProgress(amount);
+      //Only show popup if it just became unlocked
+      if (!wasUnlocked && a.isUnlocked() && popup != null) {
+        popup.show(a.getName(), a.getDescription());
+      }
     }
   }
 
