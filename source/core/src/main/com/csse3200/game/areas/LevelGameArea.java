@@ -173,11 +173,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
   private void spawnInventory() {
-    // start at one for 0 to represent none selected
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
-    placeInventoryUnit(() -> DefenceFactory.createSlingShooter(new ArrayList<>()),
-            "images/sling_shooter_1.png");
+    placeInventoryUnit(
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
+        "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
@@ -214,11 +214,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
   }
 
-    /**
-     * Places a unit with its supplier in the inventory
-     * @param supplier function returning a copy of that unit
-     * @param image sprite image for how it will be displayed in the inventory
-     */
+  /**
+   * Places a unit with its supplier in the inventory
+   *
+   * @param supplier function returning a copy of that unit
+   * @param image sprite image for how it will be displayed in the inventory
+   */
   private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
     int pos = ++inventoryUnitCount;
     Entity unit =
@@ -354,6 +355,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     newEntity.scaleHeight(tileSize);
 
     spawnEntity(newEntity);
+    // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("attackStart");
     logger.info("Unit spawned at position {}", position);
   }
