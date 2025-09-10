@@ -8,7 +8,7 @@ public class EntitySpawn {
   // For now, only one robot type exists.
   // Set this to the weight defined for that robot.
   private final int robotWeight;
-  private Entity[] entities = new Entity[0];
+  private int spawnCount = 0;
 
   public EntitySpawn(int wave) {
     this(wave, /* robotWeight */ 2); // TODO: replace 2 with the actual robot weight
@@ -19,8 +19,9 @@ public class EntitySpawn {
     this.robotWeight = robotWeight;
   }
 
-  public Entity[] getEntities() {
-    return entities;
+  /** Returns the number of enemies to spawn this wave. */
+  public int getSpawnCount() {
+    return spawnCount;
   }
 
   public void spawnEnemies() {
@@ -28,7 +29,7 @@ public class EntitySpawn {
     int minCount = waveFactory.getMinZombiesSpawn();
 
     if (robotWeight <= 0 || waveWeight <= 0) {
-      entities = new Entity[0];
+      spawnCount = 0;
       return;
     }
 
@@ -43,13 +44,20 @@ public class EntitySpawn {
       robotSpawn = minCount;
       waveWeight = robotSpawn * robotWeight;
     }
+    spawnCount = robotSpawn;
+  }
 
-    // Builds the array of entities
-    Entity[] result = new Entity[robotSpawn];
-    for (int i = 0; i < robotSpawn; i++) {
-      // TODO: replace with the actual factory method from the robot team
-      result[i] = new Entity();
+  /** Returns the robot type string for a given spawn index in this wave. */
+  public String getRobotTypeForIndex(int index) {
+    int r = Math.floorMod(index, 6);
+    switch (r) {
+      case 1:
+      case 4:
+        return "fast";
+      case 5:
+        return "tanky";
+      default:
+        return "standard";
     }
-    entities = result;
   }
 }
