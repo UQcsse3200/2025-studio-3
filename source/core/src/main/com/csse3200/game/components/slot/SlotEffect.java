@@ -41,7 +41,7 @@ public final class SlotEffect {
      */
     public static void executeByEffect(SlotEngine.Effect effect, LevelGameArea area) {
         logger.info("[SlotEffect] effect={} on {}", effect, area.getClass().getSimpleName());
-        if (effect == null || area == null) {
+        if (effect == null) {
             logger.warn("executeByEffect skipped: effect={} area={}", effect, area);
             return;
         }

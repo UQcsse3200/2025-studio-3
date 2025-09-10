@@ -217,6 +217,7 @@ public class SlotEngine {
 
   private final SlotConfig config;
   private final Random random;
+  private final WeightedPicker<Effect> eventPicker;
 
   /** Construct with default config and RNG. */
   public SlotEngine() {
@@ -227,6 +228,7 @@ public class SlotEngine {
   public SlotEngine(SlotConfig config, Random random) {
     this.config = config;
     this.random = random;
+    this.eventPicker = new WeightedPicker<>(config.getWeights());
   }
 
     private LevelGameArea levelGameArea;
