@@ -23,15 +23,24 @@ public class DossierDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
     private final GdxGame game;
     private Table rootTable;
-    private String a;
     // Where true is robots, false is humans
     private boolean type;
+
+    private String entityInfo;
+    private String entityName;
+    private String entityImagePath;
+
+    private Label entityInfoLabel;
+    private Label entityNameLabel;
+    private Image entityImage;
 
     public DossierDisplay(GdxGame game) {
         super();
         this.game = game;
         type = true;
-        a = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie.";
+        entityInfo = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie.";
+        entityImagePath = "images/coins.png";
+        entityName = "Name: Robot 1";
     }
 
     @Override
@@ -69,8 +78,6 @@ public class DossierDisplay extends UIComponent {
         });
     }
 
-
-
     private Table makeSwapBtn() {
         TextButton robotsBtn = new TextButton("Robots", skin);
         changeTypeListener(robotsBtn, true);
@@ -88,15 +95,16 @@ public class DossierDisplay extends UIComponent {
     }
 
     private Table makeDossierTable() {
-        Label nameLabel = new Label("Name: Robot 1", skin);
-        Image robotImage = new Image(ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class));
-        Label description = new Label(a, skin);
-        description.setWrap(true);
+        entityNameLabel = new Label(entityName, skin);
+        entityInfoLabel = new Label(entityInfo, skin);
+        entityImage = new Image(ServiceLocator.getResourceService().getAsset(entityImagePath, Texture.class));
+        entityInfoLabel.setWrap(true);
         TextButton button1 = new TextButton("Robot1", skin);
         button1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("hey guys");
+//                entityInfo = dossierManager.getInfo(new Entity());
+                entityInfoLabel.setText("erm changed info");
             }
         });
         TextButton button2 = new TextButton("Robot2", skin);
@@ -108,13 +116,13 @@ public class DossierDisplay extends UIComponent {
         table.defaults().pad(10);
 
         // First Row (name)
-        table.add(nameLabel).colspan(2).left().padBottom(10);
+        table.add(entityNameLabel).colspan(2).left().padBottom(10);
         table.row();
 
         // Second Row (image and description)
-        robotImage.setScaling(Scaling.fit); // keeps proportions
-        table.add(robotImage).size(250, 250).center().padRight(10);
-        table.add(description).width(700);
+        entityImage.setScaling(Scaling.fit); // keeps proportions
+        table.add(entityImage).size(250, 250).center().padRight(10);
+        table.add(entityInfoLabel).width(700);
         table.row();
 
         // Third Row (Buttons to switch between entities)
@@ -135,8 +143,6 @@ public class DossierDisplay extends UIComponent {
         table.debug();
         return table;
     }
-
-
 
     private Table makeBackBtn() {
         TextButton backBtn = new TextButton("Back", skin);
@@ -173,6 +179,7 @@ public class DossierDisplay extends UIComponent {
     @Override
     public void dispose() {
         rootTable.clear();
+        stage.dispose();
         super.dispose();
     }
 }
