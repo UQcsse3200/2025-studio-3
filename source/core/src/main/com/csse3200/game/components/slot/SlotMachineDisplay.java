@@ -480,19 +480,16 @@ public class SlotMachineDisplay extends UIComponent {
     stoppedCount++;
     if (stoppedCount >= REEL_COUNT) {
       spinning = false;
-      logger.info("Reel stopped. Resolve outcome.");
-      if (pendingResult != null && pendingResult.isEffectTriggered()) {
-        pendingResult
-            .getEffect()
-            .ifPresent(
-                eff -> {
-                  int effectId = pendingResult.getEffect().get().getId();
-                  String effectName = pendingResult.getEffect().get().getDisplayName();
-                  String trigger = pendingResult.getTriggerType();
-                  logger.info("Trigger={} effect={}({})", trigger, effectName, effectId);
-                });
-      } else {
-        logger.info("No effect triggered.");
+      logger.info("All reels stopped.");
+      if (pendingResult != null) {
+        if (pendingResult.isEffectTriggered()) {
+          logger.info(
+              "Effect already executed in engine: {} ({})",
+              pendingResult.getEffect().map(SlotEngine.Effect::getDisplayName).orElse("NONE"),
+              pendingResult.getEffect().map(SlotEngine.Effect::getId).orElse(-1));
+        } else {
+          logger.info("No effect triggered.");
+        }
       }
       pendingResult = null;
     }
