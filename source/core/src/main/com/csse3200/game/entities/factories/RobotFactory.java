@@ -43,6 +43,8 @@ public class RobotFactory {
       return createFastRobot();
     } else if (robotType.equalsIgnoreCase("tanky")) {
       return createTankyRobot();
+    } else if (robotType.equalsIgnoreCase("bungee")) {
+        return createBungeeRobot();
     } else {
       return createStandardRobot();
     }
@@ -139,6 +141,34 @@ public class RobotFactory {
     robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
 
     return robot;
+  }
+
+  public static Entity createBungeeRobot() {
+      // Ideally this would use NPCConfigs.java but I can't figure out how.
+      BaseEntityConfig config = new TankyRobotConfig();
+
+      // This creates pretty much everything except the animation
+      Entity robot = createBaseRobot(config);
+
+      // Animation
+      final String atlasPath = "images/robot_placeholder.atlas";
+      var rs = ServiceLocator.getResourceService();
+
+      AnimationRenderComponent animator =
+              new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+
+      animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
+
+      robot.addComponent(animator);
+
+      animator.scaleEntity();
+      animator.startAnimation("angry"); // angry to differentiate it from the standard robot
+      // make a bit larger
+      robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
+
+      return robot;
   }
 
   /**

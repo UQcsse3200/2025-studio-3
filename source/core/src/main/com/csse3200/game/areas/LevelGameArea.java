@@ -18,6 +18,9 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
@@ -268,6 +271,51 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(unit);
     logger.info("Unit spawned at position {} {}", x, y);
   }
+
+/**
+ * Spawns a robot directly on top of an existing defence (placed unit) on the grid.
+ * If no defence exists, does nothing and logs a warning.
+ */
+public void spawnRobotOnDefence(String robotType) {
+    if (grid == null) {
+        logger.warn("Grid not initialised; cannot spawn robot on defence.");
+        return;
+    }
+
+    List<Entity> defenceTiles = new ArrayList<>();
+
+    // iterate over row/col, not a single index
+    for (int row = 0; row < LEVEL_ONE_ROWS; row++) {
+        for (int col = 0; col < LEVEL_ONE_COLS; col++) {
+            Entity tile = grid.getTile(row, col);
+            if (tile == null) continue;
+
+            TileStorageComponent storage = tile.getComponent(TileStorageComponent.class);
+            if (storage != null && storage.getTileUnit() != null) {
+                defenceTiles.add(tile);
+            }
+        }
+    }
+
+    if (defenceTiles.isEmpty()) {
+        logger.info("No defence tiles found to spawn {} robot on.", robotType);
+        return;
+    }
+
+    // Pick one defence tile at random
+    Entity targetTile = defenceTiles.get(new Random().nextInt(defenceTiles.size()));
+
+    // Create robot and put it at the tile’s position
+    Entity robot = RobotFactory.createRobotType(robotType);
+    float tileX = targetTile.getPosition().x;
+    float tileY = targetTile.getPosition().y;
+
+    robot.setPosition(tileX, tileY);
+    robot.scaleHeight(tileSize);
+
+    spawnEntity(robot);
+    logger.info("Spawned {} robot on defence at ({}, {})", robotType, tileX, tileY);
+}
 
   /**
    * Getter for selected_unit
