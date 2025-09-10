@@ -1,6 +1,7 @@
 {
   "standardRobot": {
-    "name": "Standard Robot",
-    "description": "The most basic enemy type."
+    "config": "StandardRobotConfig",
+    "description": "The most basic enemy type.",
+    "name": "Standard Robot"
   }
 }

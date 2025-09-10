@@ -26,7 +26,9 @@ public class DossierDisplay extends UIComponent {
     private String a;
     // Where true is robots, false is humans
     private boolean type;
+    private String[] entities;
     private DossierManager dossierManager;
+
 
     public DossierDisplay(GdxGame game) {
         super();
@@ -34,6 +36,7 @@ public class DossierDisplay extends UIComponent {
         type = true;
         this.dossierManager = new DossierManager();
         a = dossierManager.getInfo("");
+        entities = new String[]{"Standard Robot"};
     }
 
     @Override
@@ -90,8 +93,8 @@ public class DossierDisplay extends UIComponent {
     }
 
     private Table makeDossierTable() {
-        Label nameLabel = new Label("Name: Robot 1", skin);
-        Image robotImage = new Image(ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class));
+        Label nameLabel = new Label("Name: " + dossierManager.getName(entities[0]), skin);
+        Image robotImage = dossierManager.getSprite();
         Label description = new Label(a, skin);
         description.setWrap(true);
         TextButton button1 = new TextButton("Robot1", skin);
