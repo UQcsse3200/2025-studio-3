@@ -220,7 +220,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * @param supplier function returning a copy of that unit
    * @param image sprite image for how it will be displayed in the inventory
    */
-  private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
+  public void placeInventoryUnit(Supplier<Entity> supplier, String image) {
     int pos = ++inventoryUnitCount;
     Entity unit =
         new Entity()
