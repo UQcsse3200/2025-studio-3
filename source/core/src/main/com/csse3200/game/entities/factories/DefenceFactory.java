@@ -17,6 +17,7 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
@@ -79,6 +80,9 @@ public class DefenceFactory {
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
 
+    System.out.println("[DEBUG] Targets list size: " + targets.size());
+    targets.forEach(e -> System.out.println("Target: " + e));
+
     return defender;
   }
 
@@ -129,15 +133,16 @@ public class DefenceFactory {
   public static Entity createBaseDefender(List<Entity> targets, BaseDefenceConfig config) {
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(targets, config.range))
-            .addTask(new IdleTask(targets, config.range));
+            .addTask(new AttackTask(targets, 100))
+            .addTask(new IdleTask(targets, 100));
 
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(enemyDetectionTasks);
+            .addComponent(enemyDetectionTasks)
+                .addComponent(new PhysicsMovementComponent());
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;

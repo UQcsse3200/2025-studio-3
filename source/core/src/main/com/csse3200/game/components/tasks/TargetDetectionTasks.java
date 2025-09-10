@@ -89,7 +89,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     Vector2 to = target.getCenterPosition();
 
     // If there is an obstacle in the path to the player, not visible.
-    if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
+    if (physics.raycast(from, to, PhysicsLayer.NPC, hit)) {
       debugRenderer.drawLine(from, hit.point);
       return false;
     }
@@ -110,6 +110,8 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     for (Entity target : targets) {
       Vector2 targetPos = target.getCenterPosition();
       float distance = from.dst(targetPos);
+      boolean visible = isTargetVisible(target);
+      System.out.println("Target at " + targetPos + " distance: " + distance + " visible: " + visible);
       if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in range
         if (distance < closestDist) {
           closestDist = distance;
