@@ -18,6 +18,7 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
   private int inventoryUnitCount;
+
+  private List<Entity> enemies = new ArrayList<>();
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -176,7 +179,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
     placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
+        () -> DefenceFactory.createSlingShooter(enemies),
         "images/sling_shooter_front.png");
   }
 
@@ -283,6 +286,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
+    enemies.add(unit);
     logger.info("Unit spawned at position {} {}", x, y);
   }
 
@@ -356,7 +360,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
-    newEntity.getEvents().trigger("attackStart");
+    newEntity.getEvents().trigger("idleStart");
     logger.info("Unit spawned at position {}", position);
   }
 

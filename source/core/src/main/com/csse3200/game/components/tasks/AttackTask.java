@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
+  private final float attackRange;
+  private MovementTask movementTask;
 
   /**
    * Creates an attack task
@@ -22,6 +24,7 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(List<Entity> targets, float attackRange) {
     super(targets, attackRange);
+    this.attackRange = attackRange;
   }
 
   /**
@@ -34,19 +37,29 @@ public class AttackTask extends TargetDetectionTasks {
     Entity target = getNearestVisibleTarget();
     if (target != null) {
       // TODO: attach logic instantiation instead
+      movementTask = new MovementTask(target.getPosition());
+      movementTask.create(owner);
+      movementTask.start();
     }
 
-    this.owner.getEntity().getEvents().trigger("chaseStart");
+    this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
   /** Updates the task each game frame */
   @Override
   public void update() {
     logger.info("AttackTask priority: {}", getPriority());
+    System.out.println("AttackTask priotity" + getPriority());
     Entity target = getNearestVisibleTarget();
 
     if (target == null) {
       return;
+    }
+
+    movementTask.setTarget(target.getPosition());
+    movementTask.update();
+    if (movementTask.getStatus() != Status.ACTIVE) {
+      movementTask.start();
     }
 
     if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
@@ -58,6 +71,7 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void stop() {
     super.stop();
+    movementTask.stop();
   }
 
   /**
