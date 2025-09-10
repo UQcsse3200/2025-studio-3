@@ -1,15 +1,16 @@
-package com.csse3200.game.cutscene.runtime.states;
+package com.csse3200.game.cutscene.runtime.action;
 
 import com.csse3200.game.cutscene.models.object.actiondata.BackgroundSetData;
 import com.csse3200.game.cutscene.runtime.ActionState;
 import com.csse3200.game.cutscene.runtime.components.CutsceneHudComponent;
+import com.csse3200.game.cutscene.runtime.states.BackgroundState;
 
 public class BackgroundSetAction implements ActionState {
-    BackgroundState backgroundState;
-    int fadeLeftMs;
-    int totalFadeDurationMs;
-    boolean await;
-    boolean done;
+    private BackgroundState backgroundState;
+    private int fadeLeftMs;
+    private int totalFadeDurationMs;
+    private final boolean await;
+    private boolean done;
 
     public BackgroundSetAction(BackgroundState backgroundState, BackgroundSetData backgroundSetData) {
         this.backgroundState = backgroundState;

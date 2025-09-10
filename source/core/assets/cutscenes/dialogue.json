@@ -5,14 +5,14 @@
             "id": "alice",
             "name": "Alice",
             "poses": {
-                "normal": "alice_normal.png"
+                "normal": "cutscenes/data/characters/rob/alice_normal.png"
             }
         },
         {
             "id": "rob",
             "name": "Rob",
             "poses": {
-                "normal": "rob_normal.png"
+                "normal": "cutscenes/data/characters/rob/rob_normal.png"
             }
         }
     ],
@@ -38,7 +38,42 @@
                         "type": "background.set", "backgroundId": "park", "transition": "fade", "duration": 2000, "await": true
                     },
                     {
+                        "type": "character.enter", "characterId": "alice", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
                         "type": "dialogue.show", "characterId": "alice", "text": "What a beautiful day in the park, isn't it, {player_name}?", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "question",
+                "advance": {
+                    "mode": "auto"
+                },
+                "actions": [
+                    {
+                        "type": "choice",
+                        "prompt": "Hmmm?",
+                        "choices": [
+                            {
+                                "type": "goto",
+                                "line": "Hide dialogue",
+                                "cutsceneId": "current",
+                                "entryBeatId": "b1"
+                            },
+                            {
+                                "type": "goto",
+                                "line": "Go to rob",
+                                "cutsceneId": "current",
+                                "entryBeatId": "b2"
+                            },
+                            {
+                                "type": "goto",
+                                "line": "Go to alice",
+                                "cutsceneId": "current",
+                                "entryBeatId": "b3"
+                            }
+                        ]
                     }
                 ]
             },
@@ -48,6 +83,9 @@
                     "mode": "input"
                 },
                 "actions": [
+                    {
+                        "type": "character.exit", "characterId": "alice", "transition": "slide", "duration": 400, "await": true
+                    },
                     {
                         "type": "dialogue.hide", "await": true
                     }
@@ -60,6 +98,9 @@
                 },
                 "actions": [
                     {
+                        "type": "character.enter", "characterId": "rob", "pose": "normal", "position": "right", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
                         "type": "dialogue.show", "characterId": "rob", "text": "It is truly a beautiful day alice", "await": true
                     }
                 ]
@@ -70,6 +111,12 @@
                     "mode": "input"
                 },
                 "actions": [
+                    {
+                        "type": "character.exit", "characterId": "rob", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
+                        "type": "character.enter", "characterId": "alice", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true
+                    },
                     {
                         "type": "dialogue.show", "characterId": "alice", "text": "I know, the sun is shining so beautifully, beaming down on my skin like something. Idk I didn't do well in english", "await": true
                     }

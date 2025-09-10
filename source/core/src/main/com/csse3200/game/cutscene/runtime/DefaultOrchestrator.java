@@ -2,13 +2,9 @@ package com.csse3200.game.cutscene.runtime;
 
 import com.csse3200.game.cutscene.models.object.Beat;
 import com.csse3200.game.cutscene.models.object.Cutscene;
-import com.csse3200.game.cutscene.models.object.actiondata.BackgroundSetData;
-import com.csse3200.game.cutscene.models.object.actiondata.DialogueHideData;
-import com.csse3200.game.cutscene.models.object.actiondata.DialogueShowData;
-import com.csse3200.game.cutscene.runtime.states.BackgroundSetAction;
-import com.csse3200.game.cutscene.runtime.states.DialogueHideAction;
-import com.csse3200.game.cutscene.runtime.states.DialogueShowAction;
-import com.csse3200.game.cutscene.runtime.states.DialogueState;
+import com.csse3200.game.cutscene.models.object.actiondata.*;
+import com.csse3200.game.cutscene.runtime.action.*;
+import com.csse3200.game.cutscene.runtime.states.*;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -30,7 +26,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
     private boolean beatStarted;
 
     // Fixed states
-    private DialogueState dialogueState;
+//    private DialogueState dialogueState;
+//    private List<CharacterState> characterStates;
 
     /**
      * Loads a cutscene from a {@link Cutscene} object
@@ -50,8 +47,6 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
         this.active = new ArrayList<>();
         this.parallel = false;
         this.beatStarted = false;
-
-        this.dialogueState = state.getDialogueState();
 
         if (ServiceLocator.getTimeSource() == null) {
             ServiceLocator.registerTimeSource(new GameTime());
@@ -73,9 +68,21 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
             beatIdx.getActions().forEach(action -> {
                 // make switch to create states for each action
                 ActionState actionState = switch(action) {
-                    case BackgroundSetData d -> new BackgroundSetAction(state.getBackgroundState(), d);
-                    case DialogueShowData d  -> new DialogueShowAction(state.getDialogueState(), d);
-                    case DialogueHideData d  -> new DialogueHideAction(state.getDialogueState(), d);
+                    case BackgroundSetData d  -> new BackgroundSetAction(state.getBackgroundState(), d);
+                    case CharacterEnterData d -> {
+                        if (!state.getCharacterStates().containsKey(d.character())) {
+                            state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
+                        }
+                        yield new CharacterEnterAction(state.getCharacterStates().get(d.character()), d);
+                    }
+                    case CharacterExitData d -> {
+                        if (!state.getCharacterStates().containsKey(d.character())) {
+                            state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
+                        }
+                        yield new CharacterExitAction(state.getCharacterStates().get(d.character()), d);
+                    }
+                    case DialogueShowData d   -> new DialogueShowAction(state.getDialogueState(), d);
+                    case DialogueHideData d   -> new DialogueHideAction(state.getDialogueState(), d);
                     default -> null;
                 };
                 if (actionState != null) {

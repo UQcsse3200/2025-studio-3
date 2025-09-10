@@ -3,25 +3,39 @@ package com.csse3200.game.cutscene.runtime.components;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
 import com.csse3200.game.ui.UIComponent;
 
+import java.util.Map;
+
 public class CutsceneHudComponent extends UIComponent {
     private final CutsceneOrchestrator orchestrator;
+
+    private Stack layers;
+
     private Table root;
     private Image backgroundImage;
     private Image oldBackgroundImage;
+
+    private Table characterSprites;
+    private PaneGroup leftPane;
+    private PaneGroup rightPane;
+
+    private Table choicesTable;
+    private Table choicesLeft;
+    private Table choicesCenter;
+    private Table choicesRight;
 
     private Table dialogueBox;
     private Label characterName;
@@ -58,6 +72,10 @@ public class CutsceneHudComponent extends UIComponent {
     public void create() {
         super.create();
 
+        layers = new Stack();
+        layers.setFillParent(true);
+        stage.addActor(layers);
+
         backgroundImage = new Image(colorTexture(Color.LIGHT_GRAY));
         backgroundImage.setScaling(Scaling.fill);
         backgroundImage.setAlign(Align.center);
@@ -68,16 +86,64 @@ public class CutsceneHudComponent extends UIComponent {
         oldBackgroundImage.setAlign(Align.center);
         oldBackgroundImage.setFillParent(true);
 
-        stage.addActor(oldBackgroundImage);
-        stage.addActor(backgroundImage);
+        layers.addActor(oldBackgroundImage);
+        layers.addActor(backgroundImage);
 
+
+        // Setup character sprites
+        characterSprites = new Table();
+        leftPane = new PaneGroup();
+        Image leftImage = new Image();
+        leftImage.setFillParent(true);
+        leftImage.setScaling(Scaling.fit);
+        leftImage.setAlign(Align.bottom);
+        leftPane.addActor(leftImage);
+
+        rightPane = new PaneGroup();
+        Image rightImage = new Image();
+        rightImage.setFillParent(true);
+        rightImage.setScaling(Scaling.fit);
+        rightImage.setAlign(Align.bottom);
+        rightPane.addActor(rightImage);
+
+        characterSprites.defaults().expandY().fillY();
+        characterSprites.add(leftPane).width(Value.percentWidth(0.3f, characterSprites)).expandY().fillY();
+        characterSprites.add().width(Value.percentWidth(0.4f, characterSprites)).expandY().fillY();
+        characterSprites.add(rightPane).width(Value.percentWidth(0.3f, characterSprites)).expandY().fillY();
+
+        characterSprites.top().padTop(Value.percentHeight(0.1f, characterSprites));
+
+        layers.add(characterSprites);
+
+
+        // Setup dialogue
         root = new Table();
         root.setFillParent(true);
         root.setTouchable(Touchable.enabled);
         root.toFront();
         root.setDebug(true); // TODO: Change in PROD
 
-        stage.addActor(root);
+        layers.addActor(root);
+
+
+        // Setup choices
+        choicesTable = new Table();
+        choicesTable.setDebug(true);
+        choicesTable.defaults().pad(8f);
+
+        choicesLeft = new Table();
+        choicesLeft.defaults().growX().pad(6f);
+        choicesCenter = new Table();
+        choicesCenter.defaults().growX().pad(6f);
+        choicesRight = new Table();
+        choicesRight.defaults().growX().pad(6f);
+
+        choicesTable.add(choicesLeft).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
+        choicesTable.add(choicesCenter).width(Value.percentWidth(0.34f, choicesTable)).expandY().fillY();
+        choicesTable.add(choicesRight).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
+
+//        root.add(choicesTable).growX().fillX().row();
+
 
         // Make dialogue panel
         dialogueBox = new Table();
@@ -85,11 +151,11 @@ public class CutsceneHudComponent extends UIComponent {
 
         dialogueBox.setBackground(colorTexture(Color.CORAL));
 
-        characterName = new Label("Placeholder Name", skin);
+        characterName = new Label("", skin);
         characterName.setFontScale(1.5f);
         characterName.setAlignment(Align.topLeft);
 
-        text = new Label("Here is some really super duper long placeholder dialogue text that will need to be rendered, it's so long that it'll need to wrap", skin);
+        text = new Label("", skin);
         text.setWrap(true);
         text.setAlignment(Align.topLeft);
 
@@ -97,7 +163,7 @@ public class CutsceneHudComponent extends UIComponent {
         dialogueBox.add(text).top().left().expand().fillX().padTop(0f);
 
         root.bottom().pad(20f);
-        root.add(dialogueBox).growX().minHeight(Value.percentHeight(0.3f, root));
+        root.add(dialogueBox).growX().fillX().minHeight(Value.percentHeight(0.3f, root));
     }
 
     /**
@@ -125,5 +191,27 @@ public class CutsceneHudComponent extends UIComponent {
         dialogueBox.setVisible(orchestratorState.getDialogueState().isVisible());
         characterName.setText(orchestratorState.getDialogueState().getSpeaker());
         text.setText(orchestratorState.getDialogueState().getText());
+
+
+        orchestratorState.getCharacterStatesList().forEach(characterState -> {
+            if (characterState.isOnScreen()) {
+                Image spriteImage = null;
+                if (characterState.getPosition() == Position.LEFT) {
+                    spriteImage = (Image) leftPane.getChild(0);
+                    characterState.getTexture().getSprite().setFlip(false, false);
+                    leftPane.setOffsetX(spriteImage, characterState.getxOffset());
+                    leftPane.relayout();
+                } else if (characterState.getPosition() == Position.RIGHT) {
+                    spriteImage = (Image) rightPane.getChild(0);
+                    characterState.getTexture().getSprite().setFlip(true, false);
+                    rightPane.setOffsetX(spriteImage, -characterState.getxOffset());
+                    rightPane.relayout();
+                }
+
+                if (spriteImage != null) {
+                    spriteImage.setDrawable(characterState.getTexture());
+                }
+            }
+        });
     }
 }

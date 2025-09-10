@@ -1,7 +1,8 @@
-package com.csse3200.game.cutscene.runtime.states;
+package com.csse3200.game.cutscene.runtime.action;
 
 import com.csse3200.game.cutscene.models.object.actiondata.DialogueHideData;
 import com.csse3200.game.cutscene.runtime.ActionState;
+import com.csse3200.game.cutscene.runtime.states.DialogueState;
 
 public class DialogueHideAction implements ActionState {
     private final DialogueState dialogueState;
@@ -23,7 +24,7 @@ public class DialogueHideAction implements ActionState {
      */
     @Override
     public void tick(int dtMs) {
-
+        // Has no animation yet
     }
 
     /**

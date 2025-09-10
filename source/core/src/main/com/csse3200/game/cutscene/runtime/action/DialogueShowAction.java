@@ -1,7 +1,8 @@
-package com.csse3200.game.cutscene.runtime.states;
+package com.csse3200.game.cutscene.runtime.action;
 
 import com.csse3200.game.cutscene.models.object.actiondata.DialogueShowData;
 import com.csse3200.game.cutscene.runtime.ActionState;
+import com.csse3200.game.cutscene.runtime.states.DialogueState;
 
 public class DialogueShowAction implements ActionState {
     private final DialogueState dialogueState;
