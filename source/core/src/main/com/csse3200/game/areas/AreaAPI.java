@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.entities.Entity;
 
 /**
@@ -7,6 +8,7 @@ import com.csse3200.game.entities.Entity;
  * Components
  */
 public interface AreaAPI {
+
   /**
    * Gets the game grid for this area.
    *
@@ -48,4 +50,20 @@ public interface AreaAPI {
    * @return the tile size
    */
   public float getTileSize();
+
+  /**
+   * Converts stage to world coords
+   *
+   * @param pos the stage coords as GridPoint2
+   * @return the world coords as GridPoint2
+   */
+  GridPoint2 stageToWorld(GridPoint2 pos);
+
+  /**
+   * Converts world to stage coords
+   *
+   * @param pos the world coords as GridPoint2
+   * @return the stage coords as GridPoint2
+   */
+  GridPoint2 worldToStage(GridPoint2 pos);
 }
