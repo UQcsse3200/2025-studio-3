@@ -3,11 +3,13 @@ package com.csse3200.game.components.dossier;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.services.ServiceLocator;
@@ -15,14 +17,21 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+
 public class DossierDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
     private final GdxGame game;
     private Table rootTable;
+    private String a;
+    // Where true is robots, false is humans
+    private boolean type;
 
     public DossierDisplay(GdxGame game) {
         super();
         this.game = game;
+        type = true;
+        a = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie.";
     }
 
     @Override
@@ -40,40 +49,75 @@ public class DossierDisplay extends UIComponent {
 
         rootTable.add(title).expandX().top().padTop(20f);
 
-        rootTable.row().padTop(30f);
+        rootTable.row().padTop(5f);
+        rootTable.add(makeSwapBtn()).expandX().expandY();
+
+        rootTable.row().padTop(20f);
         rootTable.add(makeDossierTable()).expandX().expandY();
 
         stage.addActor(rootTable);
         stage.addActor(backBtn);
     }
 
+    private void changeTypeListener(TextButton button, boolean value) {
+        button.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                type = value;
+                System.out.println(type);
+            }
+        });
+    }
+
+
+
+    private Table makeSwapBtn() {
+        TextButton robotsBtn = new TextButton("Robots", skin);
+        changeTypeListener(robotsBtn, true);
+        TextButton humansBtn = new TextButton("Humans", skin);
+        changeTypeListener(humansBtn, false);
+
+        Table table = new Table();
+        table.defaults().pad(10);
+
+        table.add(humansBtn).colspan(2).left();
+        table.add(robotsBtn).colspan(2).left();
+        table.row();
+
+        return table;
+    }
+
     private Table makeDossierTable() {
         Label nameLabel = new Label("Name: Robot 1", skin);
         Image robotImage = new Image(ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class));
-        Label description = new Label("Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum. Aenean imperdie.", skin);
+        Label description = new Label(a, skin);
         description.setWrap(true);
-        TextButton button1 = new TextButton("Action 1", skin);
-        TextButton button2 = new TextButton("Action 2", skin);
-        TextButton button3 = new TextButton("Action 3", skin);
-        TextButton button4 = new TextButton("Action 4", skin);
-        TextButton button5 = new TextButton("Action 5", skin);
-
-
+        TextButton button1 = new TextButton("Robot1", skin);
+        button1.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                System.out.println("hey guys");
+            }
+        });
+        TextButton button2 = new TextButton("Robot2", skin);
+        TextButton button3 = new TextButton("Robot3", skin);
+        TextButton button4 = new TextButton("Robot4", skin);
+        TextButton button5 = new TextButton("Robot5", skin);
 
         Table table = new Table();
-        table.defaults().pad(10);  // keep your cell formatting
+        table.defaults().pad(10);
 
-        // First row: image name (centered)
+        // First Row (name)
         table.add(nameLabel).colspan(2).left().padBottom(10);
         table.row();
 
-        // Second row: image (left) + description (right)
+        // Second Row (image and description)
         robotImage.setScaling(Scaling.fit); // keeps proportions
-        table.add(robotImage).size(250, 250).left().padRight(10);
+        table.add(robotImage).size(250, 250).center().padRight(10);
         table.add(description).width(700);
         table.row();
 
-        // --- Third row: buttons with padding from description ---
+        // Third Row (Buttons to switch between entities)
         Table buttonRow = new Table();
         buttonRow.defaults().expandX().fillX().pad(5);
 
@@ -83,10 +127,9 @@ public class DossierDisplay extends UIComponent {
         buttonRow.add(button4);
         buttonRow.add(button5);
 
-        table.row(); // move to next row in main table
-        table.add(buttonRow).colspan(2); // buttons row spans across image+description
+        table.row();
+        table.add(buttonRow).colspan(2);
 
-        // pack the table to calculate its preferred size
         table.pack();
 
         table.debug();
