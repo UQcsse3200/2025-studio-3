@@ -14,7 +14,6 @@ import com.csse3200.game.components.tile.TileInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -23,8 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.util.ArrayList;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -51,7 +48,8 @@ class TileTest {
     ServiceLocator.registerResourceService(resourceService);
 
     // creates mock input service
-    com.csse3200.game.input.InputService inputService = mock(com.csse3200.game.input.InputService.class);
+    com.csse3200.game.input.InputService inputService =
+        mock(com.csse3200.game.input.InputService.class);
     lenient().doNothing().when(inputService).register(any());
     lenient().doNothing().when(inputService).unregister(any());
     ServiceLocator.registerInputService(inputService);
@@ -72,9 +70,12 @@ class TileTest {
     grid.addTile(0, tile);
     levelGameArea.setGrid(grid);
 
-    Entity selected = new Entity()
+    Entity selected =
+        new Entity()
             .addComponent(new TextureRenderComponent(mock(Texture.class)))
-            .addComponent(new InventoryUnitInputComponent(levelGameArea, Entity::new)); // or whatever ctor you use
+            .addComponent(
+                new InventoryUnitInputComponent(
+                    levelGameArea, Entity::new)); // or whatever ctor you use
     levelGameArea.setSelectedUnit(selected); // setter or reflection
   }
 
@@ -98,9 +99,7 @@ class TileTest {
 
     // checks if the tile unit has not been replaced with new unit if there was already a unit
     // placed
-    assertSame(
-        beforeSecondTriggerId,
-        afterSecondTriggerId);
+    assertSame(beforeSecondTriggerId, afterSecondTriggerId);
   }
 
   @Test
