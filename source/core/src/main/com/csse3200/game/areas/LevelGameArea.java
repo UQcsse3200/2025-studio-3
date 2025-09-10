@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
@@ -114,7 +115,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 4, "fast");
     spawnInventory();
 
-    playMusic();
+      playMusic();
   }
 
   /** Uses the {@link ResourceService} to load the assets for the level. */
@@ -282,39 +283,72 @@ public void spawnRobotOnDefence(String robotType) {
         return;
     }
 
-    List<Entity> defenceTiles = new ArrayList<>();
+    // Track the rightmost defence for each lane (row)
+    class Target {
+        final int row, col;
+        final float x, y;   // world pos of the defence tile's bottom-left
+        final Entity tile;  // the tile entity if found, null otherwise
+        Target(int row, int col, float x, float y, Entity tile) {
+            this.row = row; this.col = col; this.x = x; this.y = y; this.tile = tile;
+        }
+    }
+    Target[] bestPerRow = new Target[LEVEL_ONE_ROWS];
 
-    // iterate over row/col, not a single index
-    for (int row = 0; row < LEVEL_ONE_ROWS; row++) {
-        for (int col = 0; col < LEVEL_ONE_COLS; col++) {
-            Entity tile = grid.getTile(row, col);
-            if (tile == null) continue;
+    final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
+    for (int i = 0; i < total; i++) {
+        int row = i / LEVEL_ONE_COLS;
+        int col = i % LEVEL_ONE_COLS;
 
+        float tileX = xOffset + tileSize * col;
+        float tileY = yOffset + tileSize * row;
+
+        // centre point
+        Entity tile = grid.getTileFromXY(tileX + tileSize * 0.5f, tileY + tileSize * 0.5f);
+
+        boolean hasDefence = false;
+        if (tile != null) {
             TileStorageComponent storage = tile.getComponent(TileStorageComponent.class);
-            if (storage != null && storage.getTileUnit() != null) {
-                defenceTiles.add(tile);
+            hasDefence = (storage != null && storage.getTileUnit() != null);
+        }
+        if (!hasDefence && i < spawned_units.length) {
+            hasDefence = (spawned_units[i] != null);
+        }
+
+        if (hasDefence) {
+            Target t = bestPerRow[row];
+            if (t == null || col > t.col) {
+                bestPerRow[row] = new Target(row, col, tileX, tileY, tile);
             }
         }
     }
 
-    if (defenceTiles.isEmpty()) {
+    // Choose the defence furthest to the right among rows that have one
+    Target chosen = null;
+    for (Target t : bestPerRow) {
+        if (t == null) continue;
+        if (chosen == null || t.col > chosen.col) {
+            chosen = t;
+        }
+    }
+
+    if (chosen == null) {
         logger.info("No defence tiles found to spawn {} robot on.", robotType);
         return;
     }
 
-    // Pick one defence tile at random
-    Entity targetTile = defenceTiles.get(new Random().nextInt(defenceTiles.size()));
+    int newCol = Math.min(chosen.col, LEVEL_ONE_COLS - 1);
+    int newRow = Math.min(chosen.row, LEVEL_ONE_ROWS - 1);
 
-    // Create robot and put it at the tile’s position
+    // World coords for that cell
+    float rx = xOffset + tileSize * newCol;
+    float ry = yOffset + tileSize * newRow;
+
     Entity robot = RobotFactory.createRobotType(robotType);
-    float tileX = targetTile.getPosition().x;
-    float tileY = targetTile.getPosition().y;
-
-    robot.setPosition(tileX, tileY);
+    robot.setPosition(rx, ry);
     robot.scaleHeight(tileSize);
-
     spawnEntity(robot);
-    logger.info("Spawned {} robot on defence at ({}, {})", robotType, tileX, tileY);
+    logger.info("Spawned {} robot near rightmost defence at row={}, col={} -> pos ({}, {})",
+            robotType, chosen.row, chosen.col, rx, ry);
 }
 
   /**
