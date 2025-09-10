@@ -8,7 +8,7 @@ public class BaseDefenceConfig extends BaseEntityConfig {
   }
 
   /** Defence type identifier */
-  public int type;
+  public int rangeType;
 
   /** Attack range of the defence */
   public int range;
@@ -21,4 +21,49 @@ public class BaseDefenceConfig extends BaseEntityConfig {
 
   /** Critical hit chance percentage */
   public int critChance;
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRangeType() {
+    return rangeType;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRange() {
+    return range;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackState() {
+    return state;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackSpeed() {
+    return attackSpeed;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getCritChance() {
+    return critChance;
+  }
 }
