@@ -7,9 +7,7 @@ import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.rendering.Renderable;
 import com.csse3200.game.services.ServiceLocator;
 
-/**
- * A generic component for rendering onto the ui.
- */
+/** A generic component for rendering onto the ui. */
 public abstract class UIComponent extends RenderComponent implements Renderable {
   private static final int UI_LAYER = 2;
   protected static final Skin skin =

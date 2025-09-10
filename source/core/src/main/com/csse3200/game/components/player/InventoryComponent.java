@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 /**
  * A component intended to be used by the player to track their inventory.
  *
- * Currently only stores the gold amount but can be extended for more advanced functionality such as storing items.
- * Can also be used as a more generic component for other entities.
+ * <p>Currently only stores the gold amount but can be extended for more advanced functionality such
+ * as storing items. Can also be used as a more generic component for other entities.
  */
 public class InventoryComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(InventoryComponent.class);
@@ -29,6 +29,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Returns if the player has a certain amount of gold.
+   *
    * @param gold required amount of gold
    * @return player has greater than or equal to the required amount of gold
    */
@@ -48,6 +49,7 @@ public class InventoryComponent extends Component {
 
   /**
    * Adds to the player's gold. The amount added can be negative.
+   *
    * @param gold gold to add
    */
   public void addGold(int gold) {

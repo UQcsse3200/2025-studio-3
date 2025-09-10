@@ -2,7 +2,6 @@ package com.csse3200.game.utils;
 
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntArray;
-
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;

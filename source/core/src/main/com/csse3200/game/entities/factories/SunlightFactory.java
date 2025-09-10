@@ -6,15 +6,16 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 public final class SunlightFactory {
-    private static final String SUN_TEXTURE = "images/normal_sunlight.png";
+  private static final String SUN_TEXTURE = "images/normal_sunlight.png";
 
-    private SunlightFactory() {}
+  private SunlightFactory() {}
 
-    public static Entity createSunlight(Vector2 worldPos) {
-        Entity e = new Entity()
-                .addComponent(new SunlightComponent())
-                .addComponent(new TextureRenderComponent(SUN_TEXTURE));
-        e.setPosition(worldPos);
-        return e;
-    }
+  public static Entity createSunlight(Vector2 worldPos) {
+    Entity e =
+        new Entity()
+            .addComponent(new SunlightComponent())
+            .addComponent(new TextureRenderComponent(SUN_TEXTURE));
+    e.setPosition(worldPos);
+    return e;
+  }
 }

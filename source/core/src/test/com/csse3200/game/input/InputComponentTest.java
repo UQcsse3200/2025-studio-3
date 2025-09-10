@@ -1,17 +1,14 @@
 package com.csse3200.game.input;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(GameExtension.class)
 class InputComponentTest {
@@ -40,7 +37,7 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleKeyDown(){
+  void shouldHandleKeyDown() {
     InputComponent inputComponent = spy(InputComponent.class);
     assertFalse(inputComponent.keyDown(1));
   }
@@ -53,66 +50,66 @@ class InputComponentTest {
 
   @Test
   void shouldHandleKeyUp() {
-  InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.keyUp(1));
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.keyUp(1));
   }
 
   @Test
   void shouldHandleMouseMoved() {
-  InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.mouseMoved( 5, 6));
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.mouseMoved(5, 6));
   }
 
   @Test
   void shouldHandleScrolled() {
-  InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.scrolled( 5f, 6f));
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.scrolled(5f, 6f));
   }
 
   @Test
   void shouldHandleTouchDown() {
-  InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.touchDown( 5, 6, 7, 8));
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.touchDown(5, 6, 7, 8));
   }
 
   @Test
   void shouldHandleTouchDragged() {
-  InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.touchDragged(5, 6, 7));
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.touchDragged(5, 6, 7));
   }
 
   @Test
   void shouldHandleTouchUp() {
- InputComponent inputComponent = spy(InputComponent.class);
-  assertFalse(inputComponent.touchUp( 5, 6, 7, 8));
-  }
-
-  @Test
-  void shouldHandleFling(){
     InputComponent inputComponent = spy(InputComponent.class);
-    assertFalse(inputComponent.fling( 5f, 6f, 7));
+    assertFalse(inputComponent.touchUp(5, 6, 7, 8));
   }
 
   @Test
-  void shouldHandleLongPress(){
+  void shouldHandleFling() {
+    InputComponent inputComponent = spy(InputComponent.class);
+    assertFalse(inputComponent.fling(5f, 6f, 7));
+  }
+
+  @Test
+  void shouldHandleLongPress() {
     InputComponent inputComponent = spy(InputComponent.class);
     assertFalse(inputComponent.longPress(5f, 6f));
   }
 
   @Test
-  void shouldHandlePan(){
+  void shouldHandlePan() {
     InputComponent inputComponent = spy(InputComponent.class);
-    assertFalse(inputComponent.pan( 5f, 6f, 7f, 8f));
+    assertFalse(inputComponent.pan(5f, 6f, 7f, 8f));
   }
 
   @Test
-  void shouldHandlePanStop(){
+  void shouldHandlePanStop() {
     InputComponent inputComponent = spy(InputComponent.class);
-    assertFalse(inputComponent.panStop( 5f, 6f, 7, 8));
+    assertFalse(inputComponent.panStop(5f, 6f, 7, 8));
   }
 
   @Test
-  void shouldHandlePinch(){
+  void shouldHandlePinch() {
     InputComponent inputComponent = spy(InputComponent.class);
     assertFalse(inputComponent.pinch(Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero));
   }
@@ -124,13 +121,13 @@ class InputComponentTest {
   }
 
   @Test
-  void shouldHandleTouchDownGesture(){
+  void shouldHandleTouchDownGesture() {
     InputComponent inputComponent = spy(InputComponent.class);
     assertFalse(inputComponent.touchDown(5f, 6f, 7, 8));
   }
 
   @Test
-  void shouldHandleZoom(){
+  void shouldHandleZoom() {
     InputComponent inputComponent = spy(InputComponent.class);
     assertFalse(inputComponent.zoom(5f, 6f));
   }

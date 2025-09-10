@@ -1,33 +1,23 @@
 package com.csse3200.game.components.player;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
-/**
- * A ui component for displaying player stats, e.g. health.
- */
+/** A ui component for displaying player stats, e.g. health. */
 public class PlayerStatsDisplay extends UIComponent {
   Table table;
 
-
-  /**
-   * Creates reusable ui styles and adds actors to the stage.
-   */
+  /** Creates reusable ui styles and adds actors to the stage. */
   @Override
   public void create() {
     super.create();
     addActors();
-
   }
 
   /**
    * Creates actors and positions them on the stage using a table.
+   *
    * @see Table for positioning options
    */
   private void addActors() {
@@ -40,9 +30,7 @@ public class PlayerStatsDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch)  {
+  public void draw(SpriteBatch batch) {
     // draw is handled by the stage
   }
-
-
 }
