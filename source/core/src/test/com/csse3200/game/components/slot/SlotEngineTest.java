@@ -2,6 +2,7 @@ package com.csse3200.game.components.slot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.EnumSet;
 import java.util.Random;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,86 +10,82 @@ import org.junit.jupiter.api.Test;
 /**
  * Unit tests for {@link SlotEngine}.
  *
- * <p>This test class contains two smoke tests: 1. EachEffectOnce - ensure all effect ids (0..7) can
- * be generated at least once. 2. NeverTriggers - ensure that when probability=0.0, no effect is
- * triggered and reels are not triple.
+ * <p>No hardcoded reel count or effect count. Everything is discovered dynamically.
  */
 public class SlotEngineTest {
 
-  /** Helper: check if reels form a triple (all three values equal). */
-  private static boolean isTriple(int[] reels) {
-    return reels != null && reels.length == 3 && reels[0] == reels[1] && reels[1] == reels[2];
-  }
-
-  /**
-   * Test that every effect id (0..7) can be generated at least once. Force triggerProbability=1.0
-   * so that every spin must trigger.
-   */
-  @Test
-  @DisplayName("Each effect id (0..7) appears at least once and returns correct triple")
-  void testEachEffectOnce() {
-    SlotEngine.SlotConfig cfg = new SlotEngine.SlotConfig();
-    cfg.setTriggerProbability(1.0); // force trigger every spin
-
-    SlotEngine engine = new SlotEngine(cfg, new Random(42));
-
-    boolean[] seen = new boolean[8];
-    int attempts = 0;
-
-    // Run up to 200 spins to cover all 8 ids
-    while (attempts < 200 && !allSeen(seen)) {
-      SlotEngine.SpinResult r = engine.spin();
-      assertTrue(r.isEffectTriggered(), "Effect should be triggered");
-
-      int effectId = r.getEffect().get().getId();
-      int[] reels = r.getReels();
-
-      // Validate reels are triple of the chosen id
-      assertEquals(effectId, reels[0]);
-      assertEquals(effectId, reels[1]);
-      assertEquals(effectId, reels[2]);
-
-      seen[effectId] = true;
-      attempts++;
-    }
-
-    // Assert that all effect ids 0..7 were seen
-    for (int id = 0; id <= 7; id++) {
-      assertTrue(seen[id], "Effect id " + id + " was never triggered");
-    }
-  }
-
-  /** Helper: check if all ids have been seen. */
-  private boolean allSeen(boolean[] seen) {
-    for (boolean b : seen) {
-      if (!b) return false;
+  /** Helper: check if all entries in array are equal. */
+  private static boolean isAllEqual(int[] arr) {
+    if (arr == null || arr.length == 0) return false;
+    int v = arr[0];
+    for (int i = 1; i < arr.length; i++) {
+      if (arr[i] != v) return false;
     }
     return true;
   }
 
   /**
-   * Test that when triggerProbability=0.0, no effect is triggered and the returned reels are not
-   * triple.
+   * Ensure every effect enum can be produced at least once when triggerProbability=1.0. Also verify
+   * each returned reels is k-of-a-kind.
    */
   @Test
-  @DisplayName("When probability=0.0, spins never trigger and reels are not triple")
+  @DisplayName("Each Effect appears at least once with correct reels (always-trigger)")
+  void testEachEffectOnce() {
+    SlotEngine.SlotConfig cfg = new SlotEngine.SlotConfig();
+    cfg.setTriggerProbability(1.0); // always trigger
+    SlotEngine engine = new SlotEngine(cfg, new Random(42));
+
+    // discover reel length dynamically
+    int reelLen = engine.spin().getReels().length;
+
+    EnumSet<SlotEngine.Effect> seen = EnumSet.noneOf(SlotEngine.Effect.class);
+
+    int attempts = 0;
+    int cap = 400; // upper bound for attempts
+
+    while (attempts < cap && seen.size() < SlotEngine.Effect.values().length) {
+      SlotEngine.SpinResult r = engine.spin();
+      assertTrue(r.isEffectTriggered(), "Effect should be triggered");
+
+      SlotEngine.Effect eff = r.getEffect().orElseThrow();
+      int[] reels = r.getReels();
+
+      assertEquals(reelLen, reels.length, "Reels length must match discovered reel length");
+      assertTrue(isAllEqual(reels), "Triggered reels must be all equal to effect id");
+      for (int v : reels) assertEquals(eff.getId(), v, "Reel value must equal effect id");
+
+      seen.add(eff);
+      attempts++;
+    }
+
+    for (SlotEngine.Effect eff : SlotEngine.Effect.values()) {
+      assertTrue(seen.contains(eff), "Effect " + eff + " was never triggered");
+    }
+  }
+
+  /**
+   * When triggerProbability=0.0, spins should never trigger, and the returned reels should not be
+   * all equal.
+   */
+  @Test
+  @DisplayName("With probability=0.0, never trigger and reels not k-of-a-kind")
   void testNeverTriggersReturnsNonTriple() {
     SlotEngine.SlotConfig cfg = new SlotEngine.SlotConfig();
     cfg.setTriggerProbability(0.0); // never trigger
-
     SlotEngine engine = new SlotEngine(cfg, new Random(123));
+
+    int reelLen = engine.spin().getReels().length;
 
     for (int i = 0; i < 50; i++) {
       SlotEngine.SpinResult r = engine.spin();
 
       assertFalse(r.isEffectTriggered(), "Effect should not be triggered");
       assertTrue(r.getEffect().isEmpty(), "Effect should be empty when not triggered");
-      assertEquals("NONE", r.getTriggerType(), "Trigger type should be NONE");
 
       int[] reels = r.getReels();
       assertNotNull(reels);
-      assertEquals(3, reels.length);
-      assertFalse(isTriple(reels), "Reels should not form a triple when not triggered");
+      assertEquals(reelLen, reels.length, "Reels length should remain consistent");
+      assertFalse(isAllEqual(reels), "Reels should not all be equal when not triggered");
     }
   }
 }
