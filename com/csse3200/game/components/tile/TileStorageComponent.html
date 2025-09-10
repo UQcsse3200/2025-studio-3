@@ -115,7 +115,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">TileStorageComponent</a>()</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.AreaAPI)" class="member-name-link">TileStorageComponent</a><wbr>(<a href="../../areas/AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a>&nbsp;area)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -131,20 +131,43 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addTileUnit(com.csse3200.game.entities.Entity)" class="member-name-link">addTileUnit</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Adds a unit to the tile</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileUnit()" class="member-name-link">getTileUnit</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../areas/AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getArea()" class="member-name-link">getArea</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPosition()" class="member-name-link">getPosition</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the unit that is currently on the tile</div>
+<div class="block">Gets the position of the tile</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileUnit()" class="member-name-link">getTileUnit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the unit that a tile stores</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hasUnit()" class="member-name-link">hasUnit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if a unit is being stored by this tile</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeTileUnit()" class="member-name-link">removeTileUnit</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes the unit from the tile</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPosition(int)" class="member-name-link">setPosition</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the position of the tile</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTileUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setTileUnit</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the unit of a tile</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#triggerSpawnUnit()" class="member-name-link">triggerSpawnUnit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Triggers the spawning process for a unit</div>
 </div>
 </div>
 </div>
@@ -167,9 +190,9 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;()">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.areas.AreaAPI)">
 <h3>TileStorageComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TileStorageComponent</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">TileStorageComponent</span><wbr><span class="parameters">(<a href="../../areas/AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a>&nbsp;area)</span></div>
 </section>
 </li>
 </ul>
@@ -181,24 +204,31 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getTileUnit()">
-<h3>getTileUnit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getTileUnit</span>()</div>
-<div class="block">Gets the unit that is currently on the tile</div>
+<section class="detail" id="triggerSpawnUnit()">
+<h3>triggerSpawnUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">triggerSpawnUnit</span>()</div>
+<div class="block">Triggers the spawning process for a unit</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setTileUnit(com.csse3200.game.entities.Entity)">
+<h3>setTileUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTileUnit</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Sets the unit of a tile</div>
 <dl class="notes">
-<dt>Returns:</dt>
-<dd>The unit currently on the tile or null if not unit is stored</dd>
+<dt>Parameters:</dt>
+<dd><code>unit</code> - the unit being added to the tile</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="addTileUnit(com.csse3200.game.entities.Entity)">
-<h3>addTileUnit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addTileUnit</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
-<div class="block">Adds a unit to the tile</div>
+<section class="detail" id="getTileUnit()">
+<h3>getTileUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getTileUnit</span>()</div>
+<div class="block">Gets the unit that a tile stores</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>unit</code> - the unit to be added</dd>
+<dt>Returns:</dt>
+<dd>the unit of a tile</dd>
 </dl>
 </section>
 </li>
@@ -207,6 +237,45 @@ loadScripts(document, 'script');</script>
 <h3>removeTileUnit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeTileUnit</span>()</div>
 <div class="block">Removes the unit from the tile</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hasUnit()">
+<h3>hasUnit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hasUnit</span>()</div>
+<div class="block">Checks if a unit is being stored by this tile</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a boolean value for if the tile has a unit</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPosition()">
+<h3>getPosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPosition</span>()</div>
+<div class="block">Gets the position of the tile</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the tile's position</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPosition(int)">
+<h3>setPosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPosition</span><wbr><span class="parameters">(int&nbsp;position)</span></div>
+<div class="block">Sets the position of the tile</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>position</code> - the position for the tile to be set at</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getArea()">
+<h3>getArea</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../areas/AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></span>&nbsp;<span class="element-name">getArea</span>()</div>
 </section>
 </li>
 </ul>
