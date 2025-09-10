@@ -1,5 +1,8 @@
 package com.csse3200.game.components.slot;
 
+import com.csse3200.game.areas.ForestGameArea;
+import com.csse3200.game.areas.LevelGameArea;
+
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -221,7 +224,21 @@ public class SlotEngine {
     this.eventPicker = new WeightedPicker<>(config.getWeights());
   }
 
-  /**
+    private LevelGameArea levelGameArea;
+
+    public SlotEngine(LevelGameArea area)
+    {
+        this.config = new SlotConfig();
+        this.random = new Random();
+        this.eventPicker = new WeightedPicker<>(config.getWeights());
+        this.levelGameArea = area;
+    }
+
+    public void setLevelGameArea(LevelGameArea area)
+    {
+        this.levelGameArea = area;
+    }
+    /**
    * Perform one spin: - If triggered: return triple reels and call effect. - If not triggered:
    * return non-triple reels with NONE.
    *
@@ -247,7 +264,12 @@ public class SlotEngine {
           // TODO: teammate implements GainCoins effect
           break;
         case 2:
-          // TODO: teammate implements SummonEnemy effect
+            if (levelGameArea != null) {
+                SlotEffect.executeByEffect(SlotEngine.Effect.SUMMON_ENEMY, levelGameArea);
+            } else {
+                LOG.warning("SlotEngine: LevelGameArea not set; SUMMON_ENEMY skipped"
+                );
+            }// SummonEnemy effect
           break;
         case 3:
           // TODO: teammate implements DoubleFurnace effect
@@ -262,7 +284,11 @@ public class SlotEngine {
           // TODO: teammate implements FrogEvent (QTE)
           break;
         case 7:
-          // TODO: teammate implements DestroyEnemy effect
+            if (levelGameArea != null) {
+                SlotEffect.executeByEffect(SlotEngine.Effect.DESTROY_ENEMY, levelGameArea);
+            } else {
+                LOG.warning("SlotEngine: LevelGameArea not set; DESTROY_ENEMY skipped");
+            }// DestroyEnemy effect
           break;
         default:
           throw new IllegalStateException("Unknown effect id: " + eff.getId());

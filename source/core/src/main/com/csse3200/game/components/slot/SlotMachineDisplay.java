@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
@@ -33,9 +34,17 @@ import org.slf4j.LoggerFactory;
  * land on predefined target indices.
  */
 public class SlotMachineDisplay extends UIComponent {
+    private final SlotEngine slotEngine;
+    public SlotMachineDisplay(LevelGameArea area)
+    {
+        this.slotEngine = new SlotEngine(area);
+    }
+    public SlotMachineDisplay()
+    {
+        this.slotEngine = new SlotEngine();
+    }
   private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
   // --- Logic bridge: Slot logic engine ---
-  private final SlotEngine slotEngine = new SlotEngine();
   private SlotEngine.SpinResult pendingResult = null;
 
   /** Render order for this UI. */
