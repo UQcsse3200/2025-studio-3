@@ -21,6 +21,9 @@ public class DossierScreen extends ScreenAdapter {
     private static final Logger logger = LoggerFactory.getLogger(InventoryScreen.class);
     private final GdxGame game;
     private final Renderer renderer;
+    private static final String[] dossierTextures = {
+            "images/coins.png"
+    };
 
     public DossierScreen(GdxGame gdxGame) {
         this.game = gdxGame;
@@ -32,6 +35,7 @@ public class DossierScreen extends ScreenAdapter {
         ServiceLocator.registerTimeSource(new GameTime());
         renderer = RenderFactory.createRenderer();
         renderer.getCamera().getEntity().setPosition(5f, 5f);
+        loadAssets();
         createUI();
     }
 
@@ -66,10 +70,23 @@ public class DossierScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().register(ui);
     }
 
+    private void loadAssets() {
+        logger.debug("Loading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.loadTextures(dossierTextures);
+        ServiceLocator.getResourceService().loadAll();
+    }
+    private void unloadAssets() {
+        logger.debug("Unloading assets");
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.unloadAssets(dossierTextures);
+    }
+
     /** Disposes of this screen's resources. */
     @Override
     public void dispose() {
         renderer.dispose();
+        unloadAssets();
         ServiceLocator.getRenderService().dispose();
         ServiceLocator.getEntityService().dispose();
         ServiceLocator.clear();
