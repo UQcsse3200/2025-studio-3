@@ -102,7 +102,7 @@ public class DefenceFactory {
             new DefenceStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.type,
+                config.rangeType,
                 config.range,
                 config.state,
                 config.attackSpeed,
