@@ -59,9 +59,9 @@ public class SlotMachineDisplay extends UIComponent {
   private int[] targetIndices;
 
   /** Per-column symbol metrics and runtime state used for smooth stopping. */
-  private float symbolHeights;
+  private float symbolHeight;
 
-  private int symbolCounts;
+  private int symbolCount;
   private final List<Float> currentScrollSpeeds = new ArrayList<>();
   // Runtime-computed sizes
   private float iconSizePx;
@@ -85,21 +85,21 @@ public class SlotMachineDisplay extends UIComponent {
   private float reelScrollSpeedPxPerSec;
 
   /** Whether a spin sequence is currently active. */
-  private boolean spinning = false;
+  private boolean isSpinning = false;
 
   /** Initializes UI hierarchy, loads resources, computes sizes, and applies layout. */
   @Override
   public void create() {
     super.create();
-    createPopupFrame();
-    createSlotIconButton();
-    loadReelsAtlasAndRegions();
-    computeResponsiveSizes();
+    initPopup();
+    initLauncher();
+    loadSymbols();
+    computeSizes();
     applyLayout();
   }
 
   /** The bottom-right launcher icon and toggling behavior. */
-  private void createSlotIconButton() {
+  private void initLauncher() {
     Texture iconTex =
         ServiceLocator.getResourceService().getAsset("images/slot_icon.png", Texture.class);
 
@@ -112,7 +112,7 @@ public class SlotMachineDisplay extends UIComponent {
             if (willShow) {
               showSlotPopup();
             } else {
-              if (spinning) {
+              if (isSpinning) {
                 return;
               }
               hideSlotPopup();
@@ -123,7 +123,7 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Popup frame + frame press animation + START on click */
-  private void createPopupFrame() {
+  private void initPopup() {
     frameGroup = new Group();
     frameGroup.setSize(stage.getWidth(), stage.getHeight());
     frameGroup.setPosition(0f, 0f);
@@ -140,7 +140,7 @@ public class SlotMachineDisplay extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             event.stop();
-            if (spinning) {
+            if (isSpinning) {
               return;
             }
             hideSlotPopup();
@@ -186,14 +186,14 @@ public class SlotMachineDisplay extends UIComponent {
           public void clicked(InputEvent event, float x, float y) {
             logger.info("Slot frame clicked");
             pendingResult = slotEngine.spin();
-            targetIndices = pendingResult.getReels(); // Logic
+            targetIndices = pendingResult.getReels();
             frameImage.clearActions();
             frameImage.setDrawable(frameDownDrawable);
             frameImage.addAction(
                 Actions.sequence(
                     Actions.delay(0.15f),
                     Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
-            startSpinThenStopAtTargets();
+            spinToTargets();
           }
         });
 
@@ -202,7 +202,7 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Loads the reels atlas and collects symbol regions. */
-  private void loadReelsAtlasAndRegions() {
+  private void loadSymbols() {
     TextureAtlas reelsAtlas =
         ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
     symbolRegions = new ArrayList<>();
@@ -232,13 +232,13 @@ public class SlotMachineDisplay extends UIComponent {
       return reel;
     }
 
-    symbolCounts = symbolRegions.size();
+    symbolCount = symbolRegions.size();
 
     TextureRegion first = symbolRegions.getFirst();
     float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
     float wStd = first.getRegionWidth() * scale;
     float hStd = first.getRegionHeight() * scale;
-    symbolHeights = hStd;
+    symbolHeight = hStd;
 
     for (int k = 0; k < 2; k++) {
       for (TextureRegion r : symbolRegions) {
@@ -256,7 +256,7 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Rebuilds all reels and resets per-column states. */
-  private void constructReels(float areaX, float areaY, float areaW, float areaH) {
+  private void buildReels(float areaX, float areaY, float areaW, float areaH) {
     reelsContent.clearChildren();
     reelColumns.clear();
 
@@ -285,7 +285,7 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Compute pixel sizes based on the current stage dimensions. */
-  private void computeResponsiveSizes() {
+  private void computeSizes() {
     float w = stage.getWidth();
     float h = stage.getHeight();
     float base = Math.min(w, h);
@@ -298,14 +298,14 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Randomize reel positions when opening slot machine */
-  private void randomizeReelPositions() {
-    if (reelColumns.isEmpty() || symbolCounts <= 0) return;
+  private void randomizeReels() {
+    if (reelColumns.isEmpty() || symbolCount <= 0) return;
 
-    float h = symbolHeights;
+    float h = symbolHeight;
     float centerOffset = (reelsPane.getHeight() - h) / 2f;
 
     for (Group col : reelColumns) {
-      int randIndex = (int) (Math.random() * symbolCounts);
+      int randIndex = (int) (Math.random() * symbolCount);
       float targetY = -(randIndex * h) + centerOffset;
       col.setY(targetY);
     }
@@ -339,7 +339,7 @@ public class SlotMachineDisplay extends UIComponent {
       float areaX = gx + (frameSizePx - areaW) / 2f;
       float areaY = gy + (frameSizePx - areaH) / 2f + frameSizePx * REELS_AREA_Y_OFFSET;
 
-      constructReels(areaX, areaY, areaW, areaH);
+      buildReels(areaX, areaY, areaW, areaH);
     }
 
     if (slotIconBtn != null) {
@@ -353,21 +353,21 @@ public class SlotMachineDisplay extends UIComponent {
   /**
    * Starts looped scrolling for all reels and schedules staggered smooth stop landing on target.
    */
-  private void startSpinThenStopAtTargets() {
-    if (spinning) {
+  private void spinToTargets() {
+    if (isSpinning) {
       logger.info("Already spinning.");
       return;
     }
 
     stoppedCount = 0;
-    spinning = true;
+    isSpinning = true;
 
     for (int i = 0; i < reelColumns.size(); i++) {
       final int colIndex = i;
       Group col = reelColumns.get(i);
       col.clearActions();
 
-      float oneCycle = symbolHeights * symbolCounts;
+      float oneCycle = symbolHeight * symbolCount;
       float speed = reelScrollSpeedPxPerSec * (0.9f + 0.1f * i);
 
       ScrollAction loop =
@@ -382,8 +382,7 @@ public class SlotMachineDisplay extends UIComponent {
 
       Group col = reelColumns.get(i);
       col.addAction(
-          Actions.sequence(
-              Actions.delay(delay), Actions.run(() -> smoothStopColumnAtTarget(colIndex))));
+          Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
     }
   }
 
@@ -393,14 +392,14 @@ public class SlotMachineDisplay extends UIComponent {
    *
    * @param colIdx reel column index
    */
-  private void smoothStopColumnAtTarget(int colIdx) {
+  private void stopColumnAt(int colIdx) {
     if (colIdx < 0 || colIdx >= reelColumns.size()) return;
 
     Group col = reelColumns.get(colIdx);
     col.clearActions();
 
-    float h = symbolHeights;
-    int baseCount = symbolCounts;
+    float h = symbolHeight;
+    int baseCount = symbolCount;
     float oneCycle = h * baseCount;
 
     int rawIndex = targetIndices[colIdx];
@@ -457,12 +456,12 @@ public class SlotMachineDisplay extends UIComponent {
       dimmer.setVisible(true);
       dimmer.getColor().a = 0.6f;
     }
-    randomizeReelPositions();
+    randomizeReels();
   }
 
   /** Close the slot. */
   private void hideSlotPopup() {
-    if (spinning) {
+    if (isSpinning) {
       return;
     }
     frameGroup.setVisible(false);
@@ -479,7 +478,7 @@ public class SlotMachineDisplay extends UIComponent {
   private void notifyReelStopped() {
     stoppedCount++;
     if (stoppedCount >= REEL_COUNT) {
-      spinning = false;
+      isSpinning = false;
       logger.info("All reels stopped.");
       if (pendingResult != null) {
         if (pendingResult.isEffectTriggered()) {

@@ -33,12 +33,12 @@ public class SlotEngine {
   public enum Effect {
     GAIN_METALS(0, "GainMetals", 8),
     GAIN_COINS(1, "GainCoins", 8),
-    SUMMON_ENEMY(2, "SummonEnemy", 8),
-    DOUBLE_FURNACE(3, "DoubleFurnace", 8),
-    LOSE_METALS(4, "LoseMetals", 8),
-    FREEZE_ENEMY(5, "FreezeEnemy", 8),
-    FROG_EVENT(6, "FrogEvent", 8),
-    DESTROY_ENEMY(7, "DestroyEnemy", 5);
+    SUMMON_ENEMY(2, "SummonEnemy", 3),
+    DOUBLE_FURNACE(3, "DoubleFurnace", 5),
+    LOSE_METALS(4, "LoseMetals", 4),
+    FREEZE_ENEMY(5, "FreezeEnemy", 5),
+    FOG_EVENT(6, "FogEvent", 3),
+    DESTROY_ENEMY(7, "DestroyEnemy", 4);
 
     private final int id;
     private final String displayName;
@@ -184,7 +184,7 @@ public class SlotEngine {
           throw new IllegalArgumentException("weight must be >= 0 for " + e.getKey());
         }
       }
-        weights.putAll(newWeights);
+      weights.putAll(newWeights);
     }
   }
 
@@ -247,35 +247,34 @@ public class SlotEngine {
       logResult(res);
 
       // Step4: Call corresponding effect function
-      switch (eff.getId()) {
-        case 0:
+      switch (eff) {
+        case GAIN_METALS:
           // TODO: teammate implements GainMetals effect
           break;
-        case 1:
+        case GAIN_COINS:
           // TODO: teammate implements GainCoins effect
           break;
-        case 2:
+        case SUMMON_ENEMY:
           // TODO: teammate implements SummonEnemy effect
           break;
-        case 3:
+        case DOUBLE_FURNACE:
           // TODO: teammate implements DoubleFurnace effect
           break;
-        case 4:
+        case LOSE_METALS:
           // TODO: teammate implements LoseMetals effect
           break;
-        case 5:
+        case FREEZE_ENEMY:
           // TODO: teammate implements FreezeEnemy effect
           break;
-        case 6:
-          // TODO: teammate implements FrogEvent (QTE)
+        case FOG_EVENT:
+          // TODO: teammate implements FogEvent
           break;
-        case 7:
+        case DESTROY_ENEMY:
           // TODO: teammate implements DestroyEnemy effect
           break;
         default:
           throw new IllegalStateException("Unknown effect id: " + eff.getId());
       }
-
       return res;
     }
 
