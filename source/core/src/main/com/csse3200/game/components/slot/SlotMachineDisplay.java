@@ -34,6 +34,9 @@ import org.slf4j.LoggerFactory;
  */
 public class SlotMachineDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
+  // --- Logic bridge: Slot logic engine ---
+  private final SlotEngine slotEngine = new SlotEngine();
+  private SlotEngine.SpinResult pendingResult = null;
 
   /** Render order for this UI. */
   private static final float Z_INDEX = 3f;
@@ -182,7 +185,8 @@ public class SlotMachineDisplay extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("Slot frame clicked");
-            targetIndices = new int[] {3, 3, 3}; // Logic
+            pendingResult = slotEngine.spin();
+            targetIndices = pendingResult.getReels(); // Logic
             frameImage.clearActions();
             frameImage.setDrawable(frameDownDrawable);
             frameImage.addAction(
@@ -477,7 +481,20 @@ public class SlotMachineDisplay extends UIComponent {
     if (stoppedCount >= REEL_COUNT) {
       spinning = false;
       logger.info("Reel stopped. Resolve outcome.");
-      // Logic
+      if (pendingResult != null && pendingResult.isEffectTriggered()) {
+        pendingResult
+            .getEffect()
+            .ifPresent(
+                eff -> {
+                  int effectId = pendingResult.getEffect().get().getId();
+                  String effectName = pendingResult.getEffect().get().getDisplayName();
+                  String trigger = pendingResult.getTriggerType();
+                  logger.info("Trigger={} effect={}({})", trigger, effectName, effectId);
+                });
+      } else {
+        logger.info("No effect triggered.");
+      }
+      pendingResult = null;
     }
   }
 
