@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
  *
  * <p>No hardcoded reel count or effect count. Everything is discovered dynamically.
  */
-public class SlotEngineTest {
+class SlotEngineTest {
 
   /** Helper: check if all entries in array are equal. */
   private static boolean isAllEqual(int[] arr) {

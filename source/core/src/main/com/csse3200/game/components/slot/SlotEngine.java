@@ -225,7 +225,6 @@ public class SlotEngine {
 
   private final SlotConfig config;
   private final Random random;
-  private final WeightedPicker<Effect> eventPicker;
 
   /** Construct with default config and RNG. */
   public SlotEngine() {
@@ -236,7 +235,6 @@ public class SlotEngine {
   public SlotEngine(SlotConfig config, Random random) {
     this.config = config;
     this.random = random;
-    this.eventPicker = new WeightedPicker<>(config.getWeights());
   }
 
   private LevelGameArea levelGameArea;
@@ -244,7 +242,6 @@ public class SlotEngine {
   public SlotEngine(LevelGameArea area) {
     this.config = new SlotConfig();
     this.random = new Random();
-    this.eventPicker = new WeightedPicker<>(config.getWeights());
     this.levelGameArea = area;
   }
 
@@ -337,7 +334,7 @@ public class SlotEngine {
     if (levelGameArea != null) {
       SlotEffect.executeByEffect(eff, levelGameArea);
     } else {
-      LOG.warning("LevelGameArea not set; effect skipped: " + eff);
+      LOG.log(Level.WARNING, "LevelGameArea not set; effect skipped: {0}", eff);
     }
   }
 }
