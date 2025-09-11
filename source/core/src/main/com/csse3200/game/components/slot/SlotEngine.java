@@ -42,14 +42,14 @@ public class SlotEngine {
     DESTROY_ENEMY(7, "DestroyEnemy", 4);
 
     //    Test:
-//        GAIN_METALS(0, "GainMetals", 0),
-//        GAIN_COINS(1, "GainCoins", 0),
-//        SUMMON_ENEMY(2, "SummonEnemy", 1),
-//        DOUBLE_FURNACE(3, "DoubleFurnace", 0),
-//        LOSE_METALS(4, "LoseMetals", 0),
-//        FREEZE_ENEMY(5, "FreezeEnemy", 0),
-//        FOG_EVENT(6, "FogEvent", 0),
-//        DESTROY_ENEMY(7, "DestroyEnemy", 1);
+    //        GAIN_METALS(0, "GainMetals", 0),
+    //        GAIN_COINS(1, "GainCoins", 0),
+    //        SUMMON_ENEMY(2, "SummonEnemy", 1),
+    //        DOUBLE_FURNACE(3, "DoubleFurnace", 0),
+    //        LOSE_METALS(4, "LoseMetals", 0),
+    //        FREEZE_ENEMY(5, "FreezeEnemy", 0),
+    //        FOG_EVENT(6, "FogEvent", 0),
+    //        DESTROY_ENEMY(7, "DestroyEnemy", 1);
 
     private final int id;
     private final String displayName;
@@ -271,52 +271,6 @@ public class SlotEngine {
 
       SpinResult res = new SpinResult(reels, eff);
       logResult(res);
-
-      // Step4: Call corresponding effect function
-      switch (eff) {
-        case GAIN_METALS:
-          if (levelGameArea != null) {
-            SlotEffect.executeByEffect(Effect.GAIN_METALS, levelGameArea);
-          } else {
-            LOG.warning("SlotEngine: LevelGameArea not set; GAIN_METALS skipped");
-          }
-          break;
-        case GAIN_COINS:
-          if (levelGameArea != null) {
-            SlotEffect.executeByEffect(Effect.GAIN_COINS, levelGameArea);
-          } else {
-            LOG.warning("SlotEngine: LevelGameArea not set; GAIN_COINS skipped");
-          }
-          break;
-        case SUMMON_ENEMY:
-          if (levelGameArea != null) {
-            SlotEffect.executeByEffect(SlotEngine.Effect.SUMMON_ENEMY, levelGameArea);
-          } else {
-            LOG.warning("SlotEngine: LevelGameArea not set; SUMMON_ENEMY skipped");
-          } // SummonEnemy effect
-          break;
-        case DOUBLE_FURNACE:
-          // TODO: teammate implements DoubleFurnace effect
-          break;
-        case LOSE_METALS:
-          // TODO: teammate implements LoseMetals effect
-          break;
-        case FREEZE_ENEMY:
-          // TODO: teammate implements FreezeEnemy effect
-          break;
-        case FOG_EVENT:
-          // TODO: teammate implements FogEvent
-          break;
-        case DESTROY_ENEMY:
-          if (levelGameArea != null) {
-            SlotEffect.executeByEffect(SlotEngine.Effect.DESTROY_ENEMY, levelGameArea);
-          } else {
-            LOG.warning("SlotEngine: LevelGameArea not set; DESTROY_ENEMY skipped");
-          } // DestroyEnemy effect
-          break;
-        default:
-          throw new IllegalStateException("Unknown effect id: " + eff.getId());
-      }
       return res;
     }
 
@@ -371,6 +325,19 @@ public class SlotEngine {
                   eff.getId(),
                   Arrays.toString(res.getReels()),
                   config.getTriggerProbability()));
+    }
+  }
+
+  public void applyEffect(SpinResult res) {
+    if (res == null || !res.isEffectTriggered()) return;
+
+    Effect eff = res.getEffect().orElse(null);
+    if (eff == null) return;
+
+    if (levelGameArea != null) {
+      SlotEffect.executeByEffect(eff, levelGameArea);
+    } else {
+      LOG.warning("LevelGameArea not set; effect skipped: " + eff);
     }
   }
 }

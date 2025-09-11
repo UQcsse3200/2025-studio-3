@@ -492,15 +492,12 @@ public class SlotMachineDisplay extends UIComponent {
       logger.info("All reels stopped.");
       if (pendingResult != null) {
         if (pendingResult.isEffectTriggered()) {
-          logger.info(
-              "Effect already executed in engine: {} ({})",
-              pendingResult.getEffect().map(SlotEngine.Effect::getDisplayName).orElse("NONE"),
-              pendingResult.getEffect().map(SlotEngine.Effect::getId).orElse(-1));
+          slotEngine.applyEffect(pendingResult);
         } else {
           logger.info("No effect triggered.");
         }
+        pendingResult = null;
       }
-      pendingResult = null;
     }
   }
 
