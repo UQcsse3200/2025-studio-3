@@ -22,12 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
-@MockitoSettings(strictness = Strictness.LENIENT)
 class LevelGameAreaTest {
   @Mock TerrainFactory terrainFactory;
   @Mock RenderService renderService;
@@ -54,15 +51,16 @@ class LevelGameAreaTest {
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
 
-    when(renderService.getStage()).thenReturn(stage);
+    lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
-    when(stage.getWidth()).thenReturn(1920f).thenReturn(1200f);
-    when(stage.getHeight()).thenReturn(1080f).thenReturn(800f);
+    lenient().when(stage.getWidth()).thenReturn(1920f);
+    lenient().when(stage.getHeight()).thenReturn(1080f);
 
-    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
-    when(resourceService.getProgress()).thenReturn(1);
-    when(resourceService.getAsset(eq("sounds/BGM_03_mp3.mp3"), eq(Music.class))).thenReturn(music);
-    when(resourceService.getAsset(anyString(), eq(com.badlogic.gdx.graphics.Texture.class)))
+    lenient()
+        .when(resourceService.getAsset(eq("sounds/BGM_03_mp3.mp3"), eq(Music.class)))
+        .thenReturn(music);
+    lenient()
+        .when(resourceService.getAsset(anyString(), eq(com.badlogic.gdx.graphics.Texture.class)))
         .thenReturn(mock(com.badlogic.gdx.graphics.Texture.class));
   }
 
@@ -194,6 +192,9 @@ class LevelGameAreaTest {
     when(terrain.getTileSize()).thenReturn(64f);
     when(terrain.getMapBounds(eq(0))).thenReturn(new GridPoint2(12, 6));
     when(terrainFactory.createTerrain(any())).thenReturn(terrain);
+    // 2 values to ensure coverage within loading loop
+    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
+    when(resourceService.getProgress()).thenReturn(1);
 
     area.create();
 
@@ -232,11 +233,13 @@ class LevelGameAreaTest {
     LevelGameArea area = spy(new LevelGameArea(terrainFactory));
     float tileBefore = area.getTileSize();
 
+    // change the 'window' size
+    when(stage.getWidth()).thenReturn(1200f);
+    when(stage.getHeight()).thenReturn(800f);
+
     area.resize();
+
     verify(area, times(1)).setScaling();
-
-    float tileAfter = area.getTileSize();
-
-    assertNotEquals(tileBefore, tileAfter, "resize() should recompute tileSize");
+    assertNotEquals(tileBefore, area.getTileSize(), "resize() should recompute tileSize");
   }
 }
