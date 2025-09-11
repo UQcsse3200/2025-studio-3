@@ -93,51 +93,50 @@ public final class SlotEffect {
    * EntityService's registered entities.
    */
   private static void destroyAllEnemies() {
-    try {
-      EntityService es = ServiceLocator.getEntityService();
-      if (es == null) {
-        logger.warn("[SlotEffect] DESTROY_ENEMY: EntityService unavailable.");
-        return;
-      }
-
-      // Access the internal LibGDX Array<Entity> from EntityService
-      Field fEntities = EntityService.class.getDeclaredField("entities");
-      fEntities.setAccessible(true);
-      Object gdxArray = fEntities.get(es);
-      if (gdxArray == null) {
-        logger.info("[SlotEffect] DESTROY_ENEMY: no entities registered.");
-        return;
-      }
-
-      // LibGDX Array has fields: int size, Object[] items
-      Class<?> arrCls = gdxArray.getClass();
-      Field fSize = arrCls.getDeclaredField("size");
-      Field fItems = arrCls.getDeclaredField("items");
-      fSize.setAccessible(true);
-      fItems.setAccessible(true);
-
-      int size = (int) fSize.get(gdxArray);
-      Object[] items = (Object[]) fItems.get(gdxArray);
-
-      int removed = 0;
-      for (int i = 0; i < size; i++) {
-        Object o = items[i];
-        if (!(o instanceof Entity e)) continue;
-
-        HitboxComponent hb = e.getComponent(HitboxComponent.class);
-        if (hb != null && hb.getLayer() == PhysicsLayer.ENEMY) {
-          try {
-            es.unregister(e);
-            e.dispose();
-            removed++;
-          } catch (Exception ex) {
-            logger.error("[SlotEffect] Failed to remove enemy: {}", ex.getMessage(), ex);
+      try {
+          EntityService es = ServiceLocator.getEntityService();
+          if (es == null) {
+              logger.warn("[SlotEffect] DESTROY_ENEMY: EntityService unavailable.");
+              return;
           }
-        }
+
+          Field fEntities = EntityService.class.getDeclaredField("entities");
+          fEntities.setAccessible(true);
+          Object gdxArray = fEntities.get(es);
+          if (gdxArray == null) {
+              logger.info("[SlotEffect] DESTROY_ENEMY: no entities registered.");
+              return;
+          }
+
+          Class<?> arrCls = gdxArray.getClass();
+          Field fSize = arrCls.getDeclaredField("size");
+          Field fItems = arrCls.getDeclaredField("items");
+          fSize.setAccessible(true);
+          fItems.setAccessible(true);
+
+          int size = (int) fSize.get(gdxArray);
+          Object[] items = (Object[]) fItems.get(gdxArray);
+
+          int removed = 0;
+          for (int i = size - 1; i >= 0; i--) {
+              Object o = items[i];
+              if (!(o instanceof Entity e)) continue;
+
+              HitboxComponent hb = e.getComponent(HitboxComponent.class);
+              if (hb != null && hb.getLayer() == PhysicsLayer.ENEMY) {
+                  try {
+                      es.unregister(e);
+                      e.dispose();
+                      removed++;
+                  } catch (Exception ex) {
+                      logger.error("[SlotEffect] Failed to remove enemy: {}", ex.getMessage(), ex);
+                  }
+              }
+          }
+          logger.info("[SlotEffect] DESTROY_ENEMY: removed {} enemies.", removed);
+      } catch (Throwable t) {
+          logger.error("[SlotEffect] DESTROY_ENEMY failed: {}", t.getMessage(), t);
       }
-      logger.info("[SlotEffect] DESTROY_ENEMY: removed {} enemies.", removed);
-    } catch (Throwable t) {
-      logger.error("[SlotEffect] DESTROY_ENEMY failed: {}", t.getMessage(), t);
-    }
   }
+
 }

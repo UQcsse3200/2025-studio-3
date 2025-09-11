@@ -42,14 +42,14 @@ public class SlotEngine {
     DESTROY_ENEMY(7, "DestroyEnemy", 4);
 
     //    Test:
-    //    GAIN_METALS(0, "GainMetals", 0),
-    //    GAIN_COINS(1, "GainCoins", 0),
-    //    SUMMON_ENEMY(2, "SummonEnemy", 1),
-    //    DOUBLE_FURNACE(3, "DoubleFurnace", 0),
-    //    LOSE_METALS(4, "LoseMetals", 0),
-    //    FREEZE_ENEMY(5, "FreezeEnemy", 0),
-    //    FOG_EVENT(6, "FogEvent", 0),
-    //    DESTROY_ENEMY(7, "DestroyEnemy", 1);
+//        GAIN_METALS(0, "GainMetals", 0),
+//        GAIN_COINS(1, "GainCoins", 0),
+//        SUMMON_ENEMY(2, "SummonEnemy", 1),
+//        DOUBLE_FURNACE(3, "DoubleFurnace", 0),
+//        LOSE_METALS(4, "LoseMetals", 0),
+//        FREEZE_ENEMY(5, "FreezeEnemy", 0),
+//        FOG_EVENT(6, "FogEvent", 0),
+//        DESTROY_ENEMY(7, "DestroyEnemy", 1);
 
     private final int id;
     private final String displayName;
