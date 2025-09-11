@@ -109,7 +109,9 @@ public class GdxGame extends Game {
     }
   }
 
-  public enum RegisteredScreens {}
+  public enum RegisteredScreens {
+    SHOP
+  }
 
   public enum ScreenType {
     MAIN_MENU,
