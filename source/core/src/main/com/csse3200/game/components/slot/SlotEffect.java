@@ -1,11 +1,15 @@
 package com.csse3200.game.components.slot;
 
+import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.lang.reflect.Field;
 import org.slf4j.Logger;
@@ -46,6 +50,7 @@ public final class SlotEffect {
       case GAIN_COINS -> gainCoins();
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
+      case FREEZE_ENEMY -> freezeAllEnemies(10f);
       default -> logger.info("Effect {} ignored for LevelGameArea.", effect);
     }
   }
@@ -136,6 +141,64 @@ public final class SlotEffect {
       logger.info("[SlotEffect] DESTROY_ENEMY: removed {} enemies.", removed);
     } catch (Throwable t) {
       logger.error("[SlotEffect] DESTROY_ENEMY failed: {}", t.getMessage(), t);
+    }
+  }
+
+  @SuppressWarnings("unchecked")
+  private static void freezeAllEnemies(float durationSec) {
+    try {
+      EntityService es = ServiceLocator.getEntityService();
+      if (es == null) {
+        logger.warn("[SlotEffect] FREEZE_ENEMY skipped: no EntityService");
+        return;
+      }
+
+      java.lang.reflect.Field fEntities = EntityService.class.getDeclaredField("entities");
+      fEntities.setAccessible(true);
+      com.badlogic.gdx.utils.Array<Entity> entities =
+          (com.badlogic.gdx.utils.Array<Entity>) fEntities.get(es);
+
+      int applied = 0;
+      for (Entity e : entities) {
+        var hb = e.getComponent(HitboxComponent.class);
+        if (hb == null || !PhysicsLayer.contains(hb.getLayer(), PhysicsLayer.ENEMY)) continue;
+
+        final PhysicsMovementComponent pm = e.getComponent(PhysicsMovementComponent.class);
+        if (pm != null) pm.setMoving(false);
+
+        final PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
+        final BodyType prevType =
+            (pc != null && pc.getBody() != null) ? pc.getBody().getType() : null;
+        if (pc != null && pc.getBody() != null) {
+          pc.setLinearVelocity(0f, 0f);
+          pc.getBody().setAngularVelocity(0f);
+          pc.setBodyType(BodyType.StaticBody);
+        }
+
+        Timer.schedule(
+            new Timer.Task() {
+              @Override
+              public void run() {
+                try {
+                  if (pm != null) pm.setMoving(true);
+                  if (pc != null && pc.getBody() != null && prevType != null) {
+                    pc.setBodyType(prevType);
+                    pc.setLinearVelocity(0f, 0f);
+                    pc.getBody().setAngularVelocity(0f);
+                  }
+                } catch (Exception ex) {
+                  logger.error(
+                      "[SlotEffect] FREEZE_ENEMY unfreeze failed: {}", ex.getMessage(), ex);
+                }
+              }
+            },
+            durationSec);
+
+        applied++;
+      }
+      logger.info("[SlotEffect] FREEZE_ENEMY: applied to {} enemies for {}s", applied, durationSec);
+    } catch (Throwable t) {
+      logger.error("[SlotEffect] FREEZE_ENEMY failed: {}", t.getMessage(), t);
     }
   }
 }
