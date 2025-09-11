@@ -43,10 +43,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     return owner.getEntity().getPosition().dst(target.getPosition());
   }
 
-  protected abstract int getActivePriority(float distance, Entity target);
-
-  protected abstract int getInactivePriority(float distance, Entity target);
-
   /**
    * Determines the tasks priority
    *
@@ -113,7 +109,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
       if (abs(targetPos.y - from.y) > 10f) {
         continue;
       }
-      // logger.info("Checking target at distance: " + distance);
       if (distance <= 90f) { // if target visible and in range
         //logger.info("Target detected within range: " + target);
         return target;

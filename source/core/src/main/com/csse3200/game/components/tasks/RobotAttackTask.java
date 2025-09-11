@@ -31,16 +31,12 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
    * Starts the attack task. The closest visible target within the entity's attack range is found
    * and ATTACK LOGIC BEGINS.
    */
-  //    @Override
-  //    public int getPriority() {
-  //        return 10; // Low priority task
-  //    }
 
   @Override
   public void start() {
     super.start();
     Entity target = getNearestVisibleTarget();
-    System.out.println("Starting attack on target: " + target);
+
     if (target == null) {
       return;
     }
@@ -48,12 +44,13 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
-  /** Updates the task each game frame */
+  /**
+   * Updates the task each game frame
+   */
   @Override
   public void update() {
-    //        logger.info("AttackTask priority: " + getPriority());
     Entity target = getNearestVisibleTarget();
-    //        logger.info("Current target: " + target);
+
     if (target == null) {
       stop();
       return;
@@ -62,46 +59,17 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
       timeLeft -= Gdx.graphics.getDeltaTime();
       return;
     }
-    logger.info("Attacking target: " + target);
+    //    logger.info("Attacking target: " + target);
     Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
   }
 
-  /** Stops the attack */
+  /**
+   * Stops the attack
+   */
   @Override
   public void stop() {
     super.stop();
-  }
-
-  /**
-   * Determines the tasks priority when the task is running.
-   *
-   * @return {@code 1} if a target is visible and within attack range, otherwise {@code -1}
-   */
-  protected int getActivePriority(float dst, Entity target) {
-    logger.info("Active priority check: dst = " + dst + ", target = " + target);
-    if (target == null) {
-      return -1; // stop task if no target
-    }
-    if (dst > 150f) {
-      return -1; // stop task when target not visible or out of range
-    }
-    return 10;
-  }
-
-  /**
-   * Computes the priority when the task is inactive.
-   *
-   * @return {@code 1} if the target is visible and within attack range, otherwise {@code -1}
-   */
-  protected int getInactivePriority(float dst, Entity target) {
-    if (target == null) {
-      return -1;
-    }
-    if (dst <= attackRange) {
-      return 10; // start task if target is visible and in range
-    }
-    return -1;
   }
 }
