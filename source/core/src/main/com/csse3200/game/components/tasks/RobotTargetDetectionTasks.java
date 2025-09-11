@@ -59,7 +59,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     if (target == null) {
       return -1;
     }
-//    logger.info("Active target in range, priority 10");
+    //    logger.info("Active target in range, priority 10");
     return 10;
   }
 
@@ -110,7 +110,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
         continue;
       }
       if (distance <= 90f) { // if target visible and in range
-        //logger.info("Target detected within range: " + target);
+        // logger.info("Target detected within range: " + target);
         return target;
       }
     }

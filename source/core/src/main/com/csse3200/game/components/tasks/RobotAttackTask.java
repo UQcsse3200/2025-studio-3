@@ -31,7 +31,6 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
    * Starts the attack task. The closest visible target within the entity's attack range is found
    * and ATTACK LOGIC BEGINS.
    */
-
   @Override
   public void start() {
     super.start();
@@ -44,9 +43,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
-  /**
-   * Updates the task each game frame
-   */
+  /** Updates the task each game frame */
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
@@ -65,9 +62,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
   }
 
-  /**
-   * Stops the attack
-   */
+  /** Stops the attack */
   @Override
   public void stop() {
     super.stop();
