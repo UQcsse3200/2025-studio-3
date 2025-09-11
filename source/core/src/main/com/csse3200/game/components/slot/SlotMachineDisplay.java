@@ -34,15 +34,16 @@ import org.slf4j.LoggerFactory;
  * land on predefined target indices.
  */
 public class SlotMachineDisplay extends UIComponent {
-    private final SlotEngine slotEngine;
-    public SlotMachineDisplay(LevelGameArea area)
-    {
-        this.slotEngine = new SlotEngine(area);
-    }
-    public SlotMachineDisplay()
-    {
-        this.slotEngine = new SlotEngine();
-    }
+  private final SlotEngine slotEngine;
+
+  public SlotMachineDisplay(LevelGameArea area) {
+    this.slotEngine = new SlotEngine(area);
+  }
+
+  public SlotMachineDisplay() {
+    this.slotEngine = new SlotEngine();
+  }
+
   private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
   // --- Logic bridge: Slot logic engine ---
   private SlotEngine.SpinResult pendingResult = null;

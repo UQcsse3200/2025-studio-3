@@ -110,7 +110,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     displayUI();
 
     spawnMap();
-    spawnSun();
+    //    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");

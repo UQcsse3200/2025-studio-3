@@ -1,8 +1,6 @@
 package com.csse3200.game.components.slot;
 
-import com.csse3200.game.areas.ForestGameArea;
 import com.csse3200.game.areas.LevelGameArea;
-
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +40,16 @@ public class SlotEngine {
     FREEZE_ENEMY(5, "FreezeEnemy", 5),
     FOG_EVENT(6, "FogEvent", 3),
     DESTROY_ENEMY(7, "DestroyEnemy", 4);
+
+    //    Test:
+    //    GAIN_METALS(0, "GainMetals", 0),
+    //    GAIN_COINS(1, "GainCoins", 0),
+    //    SUMMON_ENEMY(2, "SummonEnemy", 1),
+    //    DOUBLE_FURNACE(3, "DoubleFurnace", 0),
+    //    LOSE_METALS(4, "LoseMetals", 0),
+    //    FREEZE_ENEMY(5, "FreezeEnemy", 0),
+    //    FOG_EVENT(6, "FogEvent", 0),
+    //    DESTROY_ENEMY(7, "DestroyEnemy", 1);
 
     private final int id;
     private final String displayName;
@@ -231,21 +239,20 @@ public class SlotEngine {
     this.eventPicker = new WeightedPicker<>(config.getWeights());
   }
 
-    private LevelGameArea levelGameArea;
+  private LevelGameArea levelGameArea;
 
-    public SlotEngine(LevelGameArea area)
-    {
-        this.config = new SlotConfig();
-        this.random = new Random();
-        this.eventPicker = new WeightedPicker<>(config.getWeights());
-        this.levelGameArea = area;
-    }
+  public SlotEngine(LevelGameArea area) {
+    this.config = new SlotConfig();
+    this.random = new Random();
+    this.eventPicker = new WeightedPicker<>(config.getWeights());
+    this.levelGameArea = area;
+  }
 
-    public void setLevelGameArea(LevelGameArea area)
-    {
-        this.levelGameArea = area;
-    }
-    /**
+  public void setLevelGameArea(LevelGameArea area) {
+    this.levelGameArea = area;
+  }
+
+  /**
    * Perform one spin: - If triggered: return triple reels and call effect. - If not triggered:
    * return non-triple reels with NONE.
    *
@@ -268,18 +275,25 @@ public class SlotEngine {
       // Step4: Call corresponding effect function
       switch (eff) {
         case GAIN_METALS:
-          // TODO: teammate implements GainMetals effect
+          if (levelGameArea != null) {
+            SlotEffect.executeByEffect(Effect.GAIN_METALS, levelGameArea);
+          } else {
+            LOG.warning("SlotEngine: LevelGameArea not set; GAIN_METALS skipped");
+          }
           break;
         case GAIN_COINS:
-          // TODO: teammate implements GainCoins effect
+          if (levelGameArea != null) {
+            SlotEffect.executeByEffect(Effect.GAIN_COINS, levelGameArea);
+          } else {
+            LOG.warning("SlotEngine: LevelGameArea not set; GAIN_COINS skipped");
+          }
           break;
         case SUMMON_ENEMY:
-            if (levelGameArea != null) {
-                SlotEffect.executeByEffect(SlotEngine.Effect.SUMMON_ENEMY, levelGameArea);
-            } else {
-                LOG.warning("SlotEngine: LevelGameArea not set; SUMMON_ENEMY skipped"
-                );
-            }// SummonEnemy effect
+          if (levelGameArea != null) {
+            SlotEffect.executeByEffect(SlotEngine.Effect.SUMMON_ENEMY, levelGameArea);
+          } else {
+            LOG.warning("SlotEngine: LevelGameArea not set; SUMMON_ENEMY skipped");
+          } // SummonEnemy effect
           break;
         case DOUBLE_FURNACE:
           // TODO: teammate implements DoubleFurnace effect
@@ -294,11 +308,11 @@ public class SlotEngine {
           // TODO: teammate implements FogEvent
           break;
         case DESTROY_ENEMY:
-            if (levelGameArea != null) {
-                SlotEffect.executeByEffect(SlotEngine.Effect.DESTROY_ENEMY, levelGameArea);
-            } else {
-                LOG.warning("SlotEngine: LevelGameArea not set; DESTROY_ENEMY skipped");
-            }// DestroyEnemy effect
+          if (levelGameArea != null) {
+            SlotEffect.executeByEffect(SlotEngine.Effect.DESTROY_ENEMY, levelGameArea);
+          } else {
+            LOG.warning("SlotEngine: LevelGameArea not set; DESTROY_ENEMY skipped");
+          } // DestroyEnemy effect
           break;
         default:
           throw new IllegalStateException("Unknown effect id: " + eff.getId());
