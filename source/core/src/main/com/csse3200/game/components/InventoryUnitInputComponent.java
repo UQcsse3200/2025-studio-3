@@ -4,7 +4,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.areas.LevelGameArea; //  New: To be compatible with the old constructor
+import com.csse3200.game.entities.Entity; //  New: To be compatible with the old constructor
 import com.csse3200.game.input.InputComponent;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,9 +17,15 @@ public class InventoryUnitInputComponent extends InputComponent {
   private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
   private final AreaAPI area;
 
+  //  The original constructor remains unchanged
   public InventoryUnitInputComponent(AreaAPI area) {
     super(5);
     this.area = area;
+  }
+
+  /*New: Constructor compatible with old tests*/
+  public InventoryUnitInputComponent(LevelGameArea levelArea, Supplier<Entity> entityFactory) {
+    this((AreaAPI) levelArea);
   }
 
   /**
