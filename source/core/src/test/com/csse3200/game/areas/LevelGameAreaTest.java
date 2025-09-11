@@ -96,7 +96,7 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // simple inventory entity
-    Entity unit = new Entity().addComponent(new TextureRenderComponent("images/ghost_1png"));
+    Entity unit = new Entity().addComponent(new TextureRenderComponent("images/ghost_1.png"));
     unit.setPosition(100f, 50f);
 
     area.setSelectedUnit(unit);
