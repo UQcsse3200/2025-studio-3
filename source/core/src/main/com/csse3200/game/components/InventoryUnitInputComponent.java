@@ -15,7 +15,7 @@ public class InventoryUnitInputComponent extends InputComponent {
 
   private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
   private final AreaAPI area;
-  private Supplier<Entity> supplier;
+  private final Supplier<Entity> supplier;
 
   public InventoryUnitInputComponent(AreaAPI area, Supplier<Entity> supplier) {
     super(5);
