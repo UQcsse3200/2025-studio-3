@@ -15,6 +15,7 @@ import com.csse3200.game.entities.configs.FastRobotConfig;
 import com.csse3200.game.entities.configs.StandardRobotConfig;
 import com.csse3200.game.entities.configs.TankyRobotConfig;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -173,8 +174,8 @@ public class RobotFactory {
         .addComponent(new RobotAnimationController())
         .addComponent(aiComponent);
 
-    // The original NPCFactory had:
-    // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
+//    // The original NPCFactory had:
+//    PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
     // I don't think we need that but I'm putting it here for reference
   }

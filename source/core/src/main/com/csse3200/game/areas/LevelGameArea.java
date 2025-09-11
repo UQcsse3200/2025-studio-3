@@ -350,8 +350,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       return;
     }
     newEntity.setPosition(entityPos);
-    newEntity.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
-    newEntity.addComponent(new HitMarkerComponent());
 
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
     if (selectedTile != null) {
