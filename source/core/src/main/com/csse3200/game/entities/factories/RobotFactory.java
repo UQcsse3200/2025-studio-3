@@ -6,10 +6,7 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.FastRobotConfig;
-import com.csse3200.game.entities.configs.StandardRobotConfig;
-import com.csse3200.game.entities.configs.TankyRobotConfig;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -55,7 +52,7 @@ public class RobotFactory {
    */
   public static Entity createStandardRobot() {
     // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new StandardRobotConfig();
+    BaseEnemyConfig config = new StandardRobotConfig();
 
     // This creates pretty much everything except the animation
     Entity robot = createBaseRobot(config);
@@ -87,7 +84,7 @@ public class RobotFactory {
 
   public static Entity createFastRobot() {
     // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new FastRobotConfig();
+    BaseEnemyConfig config = new FastRobotConfig();
 
     // This creates pretty much everything except the animation
     Entity robot = createBaseRobot(config);
@@ -115,7 +112,7 @@ public class RobotFactory {
 
   public static Entity createTankyRobot() {
     // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new TankyRobotConfig();
+    BaseEnemyConfig config = new TankyRobotConfig();
 
     // This creates pretty much everything except the animation
     Entity robot = createBaseRobot(config);
@@ -149,7 +146,7 @@ public class RobotFactory {
    * @param config A config file that contains the robot's stats.
    * @return A robot entity. Note that it does not have an animator component.
    */
-  private static Entity createBaseRobot(BaseEntityConfig config) {
+  private static Entity createBaseRobot(BaseEnemyConfig config) {
 
     AITaskComponent aiComponent =
         new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
