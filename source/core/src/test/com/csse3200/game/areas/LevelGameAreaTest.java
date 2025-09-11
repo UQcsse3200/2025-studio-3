@@ -56,17 +56,14 @@ class LevelGameAreaTest {
 
     when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
-    when(stage.getWidth()).thenReturn(1920f)
-            .thenReturn(1200f);
-    when(stage.getHeight()).thenReturn(1080f)
-            .thenReturn(800f);
+    when(stage.getWidth()).thenReturn(1920f).thenReturn(1200f);
+    when(stage.getHeight()).thenReturn(1080f).thenReturn(800f);
 
-    when(resourceService.loadForMillis(anyInt())).thenReturn(false)
-            .thenReturn(true);
+    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
     when(resourceService.getProgress()).thenReturn(1);
     when(resourceService.getAsset(eq("sounds/BGM_03_mp3.mp3"), eq(Music.class))).thenReturn(music);
     when(resourceService.getAsset(anyString(), eq(com.badlogic.gdx.graphics.Texture.class)))
-            .thenReturn(mock(com.badlogic.gdx.graphics.Texture.class));
+        .thenReturn(mock(com.badlogic.gdx.graphics.Texture.class));
   }
 
   @AfterEach
@@ -121,9 +118,13 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // select a real unit first so the star is created
-    var unit = new Entity().addComponent(
-            new TextureRenderComponent(new com.badlogic.gdx.graphics.Texture(
-                    new com.badlogic.gdx.graphics.Pixmap(1,1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888))));
+    var unit =
+        new Entity()
+            .addComponent(
+                new TextureRenderComponent(
+                    new com.badlogic.gdx.graphics.Texture(
+                        new com.badlogic.gdx.graphics.Pixmap(
+                            1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888))));
     unit.setPosition(10f, 10f);
     area.setSelectedUnit(unit);
 
@@ -165,8 +166,10 @@ class LevelGameAreaTest {
   void spawnUnit_noTile_doesNotCallTileStorage() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
-    var tex = new com.badlogic.gdx.graphics.Texture(
-            new com.badlogic.gdx.graphics.Pixmap(1,1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888));
+    var tex =
+        new com.badlogic.gdx.graphics.Texture(
+            new com.badlogic.gdx.graphics.Pixmap(
+                1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888));
     area.setSelectedUnit(new Entity().addComponent(new TextureRenderComponent(tex)));
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
@@ -236,6 +239,4 @@ class LevelGameAreaTest {
 
     assertNotEquals(tileBefore, tileAfter, "resize() should recompute tileSize");
   }
-
-
 }
