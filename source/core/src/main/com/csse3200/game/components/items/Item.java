@@ -1,7 +1,8 @@
 package com.csse3200.game.components.items;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
 
 public abstract class Item extends Component {
   protected String name;
@@ -66,16 +67,21 @@ public abstract class Item extends Component {
     entity.getEvents().addListener("dropped", this::onPlaced);
   }
 
-  /**
-   * Function called when the entity receives the event "dropped". Triggers an appropriate event for
-   * each target entity.
-   *
-   * @param entities an array of target entities.
-   */
-  protected void onPlaced(Entity[] entities) {
-    for (Entity e : entities) {
-      e.getEvents().trigger(eventName);
+  //  /**
+  //   * Function called when the entity receives the event "dropped". Triggers an appropriate event
+  // for
+  //   * each target entity.
+  //   *
+  //   * @param entities an array of target entities.
+  //   */ //not public?
+  public void onPlaced(Vector2 position, int tileSize) {
+    // e.getEvents().trigger(eventName);
+
+    // this.getComponent(ItemEffect.class);
+    if (this.getName() != null) {
+      // entity.getEvents().trigger("itemUsed", this.getName(), position, tileSize);
+      // ItemEffect.playEffect(getName(), position, tileSize);
+      ServiceLocator.getItemEffectsService().playEffect(getName(), position, tileSize);
     }
-    entity.dispose();
   }
 }
