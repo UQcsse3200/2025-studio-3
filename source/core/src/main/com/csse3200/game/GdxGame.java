@@ -10,6 +10,7 @@ import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
+import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import org.slf4j.Logger;
@@ -94,6 +95,8 @@ public class GdxGame extends Game {
         return new ProfileScreen(this);
       case LOAD_GAME:
         return new LoadGameScreen(this);
+      case NEW_GAME:
+        return new NewGameScreen(this);
       case STATISTICS:
         return new StatisticsScreen(this);
       case ACHIEVEMENTS:
@@ -120,6 +123,7 @@ public class GdxGame extends Game {
     SKILLTREE,
     PROFILE,
     LOAD_GAME,
+    NEW_GAME,
     STATISTICS,
     ACHIEVEMENTS,
     SHOP,
