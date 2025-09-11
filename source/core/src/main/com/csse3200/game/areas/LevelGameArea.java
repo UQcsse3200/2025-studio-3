@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
-import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -41,7 +40,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/slot_icon.png",
     "images/slot_reels_background.png",
-    "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png"
   };
@@ -121,7 +119,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     displayUI();
 
     spawnMap();
-    //    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
@@ -184,14 +181,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeInventoryUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
-  }
-
-  private void spawnSun() {
-    Entity sunSpawner = new Entity();
-    CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
-    sunSpawner.addComponent(currencyGenerator);
-    spawnEntity(sunSpawner);
   }
 
   /**

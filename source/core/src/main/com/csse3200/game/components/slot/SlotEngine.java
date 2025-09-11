@@ -11,8 +11,9 @@ import java.util.logging.Logger;
  * <p>Flow: 1) Roll trigger (default 80%). 2) If triggered, pick an event by weights and return
  * triple reels of that event id. Otherwise, return a non-triple reels array. 3) Effect handling
  *
- * <p>Output for UI: - SpinResult#getReels(): int[3] of ids in [0..7] -
- * SpinResult#isEffectTriggered(): boolean - SpinResult#getEffect(): Optional<Effect>
+ * <p>* Output for UI: * - {@code SpinResult#getReels(): int[3]} of ids in [0..7] * - {@code
+ * SpinResult#isEffectTriggered(): boolean} * - {@code SpinResult#getEffect():
+ * Optional&lt;Effect&gt;}
  */
 public class SlotEngine {
   private static final Logger LOG = Logger.getLogger(SlotEngine.class.getName());
