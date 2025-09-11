@@ -278,26 +278,26 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     selection_star.setPosition(unit.getCenterPosition().x, invSelectedY);
   }
 
-    /**
-     * Adds a unit to the grid
-     *
-     * @param position the grid tile for spawning
-     */
-    @Override
-    public void spawnUnit(int position){
-        Entity unit = new Entity();
-        // Match the texture of the inventory unit - placeholder
-        Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
-        unit.addComponent(new TextureRenderComponent(texture))
-//                .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 1.5f))
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitMarkerComponent())
-                .addComponent(new CombatStatsComponent(50, 1))
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.DEFENSE));
+  /**
+   * Adds a unit to the grid
+   *
+   * @param position the grid tile for spawning
+   */
+  @Override
+  public void spawnUnit(int position) {
+    Entity unit = new Entity();
+    // Match the texture of the inventory unit - placeholder
+    Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
+    unit.addComponent(new TextureRenderComponent(texture))
+        //                .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 1.5f))
+        .addComponent(new PhysicsComponent())
+        .addComponent(new ColliderComponent())
+        .addComponent(new HitMarkerComponent())
+        .addComponent(new CombatStatsComponent(50, 1))
+        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.DEFENSE));
 
-        // Make it so entity cant be moved.
-        unit.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
+    // Make it so entity cant be moved.
+    unit.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
 
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
@@ -314,7 +314,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(unit);
     unit.getEvents().addListener("entityDeath", () -> requestDespawn(unit));
     logger.info("Unit spawned at position {}", position);
-    }
+  }
 
   public void spawnRobot(int x, int y, String robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);

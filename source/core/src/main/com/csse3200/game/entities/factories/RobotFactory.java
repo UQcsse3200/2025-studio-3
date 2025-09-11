@@ -111,9 +111,8 @@ public class RobotFactory {
 
     robot.addComponent(animator);
 
-
-        animator.scaleEntity();
-//        animator.startAnimation("angry"); // angry to differentiate it from the standard robot
+    animator.scaleEntity();
+    //        animator.startAnimation("angry"); // angry to differentiate it from the standard robot
     robot.setScale(robot.getScale().x * 3f, robot.getScale().y * 3f);
 
     return robot;
@@ -159,8 +158,9 @@ public class RobotFactory {
   private static Entity createBaseRobot(BaseEntityConfig config) {
 
     AITaskComponent aiComponent =
-        new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()))
-                        .addTask(new RobotAttackTask(1.5f, PhysicsLayer.DEFENSE));
+        new AITaskComponent()
+            .addTask(new MoveLeftTask(config.getMovementSpeed()))
+            .addTask(new RobotAttackTask(1.5f, PhysicsLayer.DEFENSE));
 
     return new Entity()
         .addComponent(new PhysicsComponent())
@@ -168,9 +168,9 @@ public class RobotFactory {
         .addComponent(new ColliderComponent())
         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
         .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.DEFENSE, 0f))
-                .addComponent(new HitMarkerComponent())
-                .addComponent(new RobotAnimationController())
+        .addComponent(new TouchAttackComponent(PhysicsLayer.DEFENSE, 0f))
+        .addComponent(new HitMarkerComponent())
+        .addComponent(new RobotAnimationController())
         .addComponent(aiComponent);
 
     // The original NPCFactory had:
