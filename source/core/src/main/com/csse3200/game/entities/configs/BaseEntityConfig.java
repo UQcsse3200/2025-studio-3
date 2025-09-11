@@ -10,13 +10,17 @@ public class BaseEntityConfig {
     // Default constructor with default field values
   }
 
+  int health;
+
+  int baseAttack;
+
   /**
    * Gets the health value for this entity.
    *
    * @return the health value
    */
   public int getHealth() {
-    return 1;
+    return health;
   }
 
   /**
@@ -25,7 +29,7 @@ public class BaseEntityConfig {
    * @return the attack value
    */
   public int getAttack() {
-    return 1;
+    return baseAttack;
   }
 
   /**
