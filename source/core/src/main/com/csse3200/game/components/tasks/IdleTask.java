@@ -12,6 +12,7 @@ import java.util.List;
  * remains idle. Otherwise, this task becomes inactive and another task (attack task) takes over.
  */
 public class IdleTask extends TargetDetectionTasks {
+  private final float attackRange;
   /**
    * Creates an IdleTask
    *
@@ -20,12 +21,14 @@ public class IdleTask extends TargetDetectionTasks {
    */
   public IdleTask(List<Entity> targets, float attackRange) {
     super(targets, attackRange);
+    this.attackRange = attackRange;
   }
 
-  //    @Override
-  //    public void update() {
-  //        System.out.println("IdleTask priority: " + getPriority());
-  //    }
+      @Override
+      public void update() {
+          System.out.println("IdleTask priority: " + getPriority() + "attack rage is" + attackRange);
+        owner.getEntity().getEvents().trigger("idleStart");
+      }
 
   /**
    * If task is currently running, determine whether to stay running
@@ -35,6 +38,7 @@ public class IdleTask extends TargetDetectionTasks {
    */
   @Override
   protected int getActivePriority(float dst, Entity target) {
+    System.out.println("distance is " + dst);
     if (dst <= attackRange) {
       return -1; // stop task when target in range
     }

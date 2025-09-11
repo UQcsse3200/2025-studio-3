@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
+  private final float attackRange;
+  private MovementTask movementTask;
 
   /**
    * Creates an attack task
@@ -25,6 +27,7 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(List<Entity> targets, float attackRange) {
     super(targets, attackRange);
+    this.attackRange = attackRange;
   }
 
   /**
@@ -42,7 +45,7 @@ public class AttackTask extends TargetDetectionTasks {
       Entity slingshot = ProjectileFactory.createSlingShot(damage);
     }
 
-    this.owner.getEntity().getEvents().trigger("chaseStart");
+    this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
   /** Updates the task each game frame */
