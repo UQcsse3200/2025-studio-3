@@ -22,7 +22,7 @@ public class DossierScreen extends ScreenAdapter {
     private final GdxGame game;
     private final Renderer renderer;
     private static final String[] dossierTextures = {
-            "images/coins.png"
+            "images/robot_placeholder.png"
     };
 
     public DossierScreen(GdxGame gdxGame) {
