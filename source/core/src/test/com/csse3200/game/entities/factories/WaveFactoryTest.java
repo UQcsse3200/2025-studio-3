@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 import com.csse3200.game.entities.configs.WaveConfigs;
+import com.csse3200.game.entities.WaveManager;
+import java.lang.reflect.Field;
 
 class WaveFactoryTest {
 
   @Test
-  void defaultWave1Test() {
+  void defaultWave1Test() throws Exception {
+    Field f = WaveManager.class.getDeclaredField("currentWave");
+    f.setAccessible(true);
+    f.setInt(null, 0);
     // Provide configs directly to avoid LibGDX file IO during unit tests
     WaveConfigs configs = new WaveConfigs();
     // Set values directly on wave1 inside the container
