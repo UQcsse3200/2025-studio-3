@@ -42,10 +42,10 @@ public class WaveFactory {
    */
   private BaseWaveConfig getWave() {
     return switch (WaveManager.getCurrentWave()) {
-      case 1 -> configs.wave1;
-      case 2 -> configs.wave2;
-      case 3 -> configs.wave3;
-      default -> configs.wave1;
+      case 1 -> configs.getWave1();
+      case 2 -> configs.getWave2();
+      case 3 -> configs.getWave3();
+      default -> configs.getWave1();
     };
   }
 }

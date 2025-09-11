@@ -9,12 +9,13 @@ public class EntitySpawn {
   // Set this to the weight defined for that robot.
   private final int robotWeight;
   private int spawnCount = 0;
+  private final java.util.Random random = new java.util.Random();
 
-  public EntitySpawn(int wave) {
-    this(wave, /* robotWeight */ 2); // TODO: replace 2 with the actual robot weight
+  public EntitySpawn() {
+    this(2);
   }
 
-  public EntitySpawn(int wave, int robotWeight) {
+  public EntitySpawn(int robotWeight) {
     this.waveFactory = new WaveFactory();
     this.robotWeight = robotWeight;
   }
@@ -42,22 +43,17 @@ public class EntitySpawn {
     int robotSpawn = waveWeight / robotWeight;
     if (robotSpawn < minCount) {
       robotSpawn = minCount;
-      waveWeight = robotSpawn * robotWeight;
     }
     spawnCount = robotSpawn;
   }
 
-  /** Returns the robot type string for a given spawn index in this wave. */
-  public String getRobotTypeForIndex(int index) {
-    int r = Math.floorMod(index, 6);
-    switch (r) {
-      case 1:
-      case 4:
-        return "fast";
-      case 5:
-        return "tanky";
-      default:
-        return "standard";
-    }
+  /** Randomly selects an enemy type for this spawn. */
+  public String getRandomRobotType() {
+    int r = random.nextInt(3);
+    return switch (r) {
+      case 0 -> "standard";
+      case 1 -> "fast";
+      default -> "tanky";
+    };
   }
 }

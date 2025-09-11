@@ -1,15 +1,12 @@
 package com.csse3200.game.entities;
 
-import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.services.GameTime;
 import java.util.*;
 
 public class WaveManager {
-  private static final org.slf4j.Logger logger =
-      org.slf4j.LoggerFactory.getLogger(WaveManager.class);
 
-  private static int currentWave;
+  private static int currentWave = 0;
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
@@ -26,17 +23,16 @@ public class WaveManager {
 
   public WaveManager() {
     this.gameTime = new GameTime();
-    currentWave = 0;
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
-    this.entitySpawn = new EntitySpawn(currentWave);
+    this.entitySpawn = new EntitySpawn();
 
     Collections.shuffle(laneOrder);
   }
 
   public void initialiseNewWave() {
-    currentWave++;
+    setCurrentWave(currentWave + 1);
     waveActive = true;
     currentEnemyPos = 0;
     int maxLanes = Math.min(currentWave + 1, 5);
@@ -46,8 +42,6 @@ public class WaveManager {
     Collections.shuffle(waveLaneSequence);
     waveLanePointer = 0;
 
-    logger.info("Wave {} started: enemiesToSpawn={}", currentWave, enemiesToSpawn);
-
     if (gameEntity != null && gameEntity.getEvents() != null) {
       gameEntity.getEvents().trigger("newWaveStarted", currentWave);
       gameEntity.getEvents().trigger("waveChanged", currentWave);
@@ -56,7 +50,6 @@ public class WaveManager {
 
   public void endWave() {
     waveActive = false;
-    logger.info("Wave {} ended", currentWave);
     initialiseNewWave();
   }
 
@@ -72,6 +65,10 @@ public class WaveManager {
     return currentWave;
   }
 
+  private static void setCurrentWave(int wave) {
+    currentWave = wave;
+  }
+
   /**
    * Update function to be called by main game loop Checks if a time interval has passed to spawn
    * the next enemy
@@ -79,11 +76,9 @@ public class WaveManager {
   public void update() {
     timeSinceLastSpawn += gameTime.getDeltaTime();
     float spawnInterval = 5.0f;
-    if (timeSinceLastSpawn >= spawnInterval) {
-      if (waveActive) {
-        spawnEnemy(getLane());
-        timeSinceLastSpawn -= spawnInterval;
-      }
+    if (timeSinceLastSpawn >= spawnInterval && waveActive) {
+      spawnEnemy(getLane());
+      timeSinceLastSpawn -= spawnInterval;
     }
   }
 
@@ -113,16 +108,8 @@ public class WaveManager {
       endWave();
       return;
     }
-    String robotType = entitySpawn.getRobotTypeForIndex(currentEnemyPos);
-    // Spawn via LevelGameArea helper that applies correct offsets and scaling
+    String robotType = entitySpawn.getRandomRobotType();
     levelGameArea.spawnRobot(9, laneNumber, robotType);
-    logger.info(
-        "Spawned enemy: wave={}, index={}/{}, lane={}, type={}",
-        currentWave,
-        currentEnemyPos + 1,
-        enemiesToSpawn,
-        laneNumber,
-        robotType);
     currentEnemyPos++;
   }
 }
