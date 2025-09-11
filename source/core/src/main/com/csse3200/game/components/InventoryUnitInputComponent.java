@@ -4,9 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,21 +13,10 @@ public class InventoryUnitInputComponent extends InputComponent {
 
   private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
   private final AreaAPI area;
-  private Supplier<Entity> supplier;
 
-  public InventoryUnitInputComponent(AreaAPI area, Supplier<Entity> supplier) {
+  public InventoryUnitInputComponent(AreaAPI area) {
     super(5);
     this.area = area;
-    this.supplier = supplier;
-  }
-
-  /**
-   * Getter for the supplier, used when we need an instance of the inventory unit
-   *
-   * @return the supplier for that entity
-   */
-  public Supplier<Entity> getEntitySupplier() {
-    return this.supplier;
   }
 
   /**

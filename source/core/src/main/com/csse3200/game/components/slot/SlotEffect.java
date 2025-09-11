@@ -45,8 +45,23 @@ public final class SlotEffect {
       case GAIN_METALS -> gainMetals();
       case GAIN_COINS -> gainCoins();
       case SUMMON_ENEMY -> summonWave(area);
+      case FOG_EVENT -> showFogOverlay();
       case DESTROY_ENEMY -> destroyAllEnemies();
       default -> logger.info("Effect {} ignored for LevelGameArea.", effect);
+    }
+  }
+
+  /**
+   * Display a layer of clickable fog (reuse your existing FogOverlayActor, making sure there is
+   * only one layer and it is on top).
+   */
+  private static void showFogOverlay() {
+    try {
+      var stage = ServiceLocator.getRenderService().getStage();
+      com.csse3200.game.components.fog.FogOverlayActor.spawnOnce(stage);
+      logger.info("[SlotEffect] FOG_EVENT: fog overlay spawned.");
+    } catch (Throwable t) {
+      logger.error("[SlotEffect] FOG_EVENT failed: {}", t.getMessage(), t);
     }
   }
 
