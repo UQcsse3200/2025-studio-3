@@ -59,7 +59,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     if (target == null) {
       return -1;
     }
-    logger.info("Active target in range, priority 10");
+//    logger.info("Active target in range, priority 10");
     return 10;
   }
 
