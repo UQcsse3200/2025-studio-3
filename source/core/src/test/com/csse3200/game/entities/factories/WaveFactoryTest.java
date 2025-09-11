@@ -2,10 +2,10 @@ package com.csse3200.game.entities.factories;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-import com.csse3200.game.entities.configs.WaveConfigs;
 import com.csse3200.game.entities.WaveManager;
+import com.csse3200.game.entities.configs.WaveConfigs;
 import java.lang.reflect.Field;
+import org.junit.jupiter.api.Test;
 
 class WaveFactoryTest {
 
@@ -26,5 +26,3 @@ class WaveFactoryTest {
     assertEquals(10, wf.getExpGained());
   }
 }
-
-

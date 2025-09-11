@@ -8,17 +8,17 @@ import java.util.*;
  * Manages the lifecycle of enemy waves and schedules spawns over time.
  *
  * <p>WaveManager is a lightweight coordinator:
+ *
  * <ul>
- *   <li>Tracks the current wave number and whether a wave is active.</li>
- *   <li>Determines spawn cadence and a fair, shuffled lane sequence.</li>
- *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should
- *       produce and which type to spawn next.</li>
- *   <li>Delegates the actual entity creation and placement to
- *       {@link LevelGameArea}.</li>
+ *   <li>Tracks the current wave number and whether a wave is active.
+ *   <li>Determines spawn cadence and a fair, shuffled lane sequence.
+ *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should produce and which type
+ *       to spawn next.
+ *   <li>Delegates the actual entity creation and placement to {@link LevelGameArea}.
  * </ul>
  *
- * <p>This class does not construct enemies nor touch rendering; it only
- * orchestrates when/where to request a spawn.</p>
+ * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
+ * request a spawn.
  */
 public class WaveManager {
 
@@ -48,8 +48,8 @@ public class WaveManager {
   }
 
   /**
-   * Test-only constructor to inject a preconfigured {@link EntitySpawn}.
-   * Useful for unit tests that avoid LibGDX file IO.
+   * Test-only constructor to inject a preconfigured {@link EntitySpawn}. Useful for unit tests that
+   * avoid LibGDX file IO.
    *
    * @param entitySpawn spawn helper used by this manager
    */
@@ -64,8 +64,8 @@ public class WaveManager {
   }
 
   /**
-   * Advances to the next wave, resets internal state and lane sequence,
-   * and computes the number of enemies to spawn for this wave.
+   * Advances to the next wave, resets internal state and lane sequence, and computes the number of
+   * enemies to spawn for this wave.
    */
   public void initialiseNewWave() {
     setCurrentWave(currentWave + 1);
@@ -85,8 +85,8 @@ public class WaveManager {
   }
 
   /**
-   * Ends the current wave and immediately begins the next one.
-   * External systems listen to wave change events for UI updates.
+   * Ends the current wave and immediately begins the next one. External systems listen to wave
+   * change events for UI updates.
    */
   public void endWave() {
     waveActive = false;
@@ -123,8 +123,8 @@ public class WaveManager {
   }
 
   /**
-   * Returns the next lane index from a pre-shuffled sequence, reshuffling when
-   * the sequence is exhausted to avoid long runs on the same lane.
+   * Returns the next lane index from a pre-shuffled sequence, reshuffling when the sequence is
+   * exhausted to avoid long runs on the same lane.
    *
    * @return lane index in [0, 5]
    */
@@ -138,17 +138,15 @@ public class WaveManager {
     return lane;
   }
 
-  /**
-   * Computes how many enemies this wave should spawn via EntitySpawn.
-   */
+  /** Computes how many enemies this wave should spawn via EntitySpawn. */
   private void getEnemies() {
     entitySpawn.spawnEnemies();
     enemiesToSpawn = entitySpawn.getSpawnCount();
   }
 
   /**
-   * Spawns a single enemy of the next type in the provided lane. Ends the wave
-   * once the configured number of spawns has been reached.
+   * Spawns a single enemy of the next type in the provided lane. Ends the wave once the configured
+   * number of spawns has been reached.
    *
    * @param laneNumber lane index to spawn into
    */

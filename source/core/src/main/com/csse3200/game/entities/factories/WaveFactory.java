@@ -9,9 +9,8 @@ import com.csse3200.game.persistence.FileLoader;
 /**
  * Lightweight facade over deserialized wave configuration.
  *
- * <p>Provides read-only accessors for values used by wave logic (weight,
- * minimum spawns, experience). This class isolates config loading and selection
- * of the current wave's properties.</p>
+ * <p>Provides read-only accessors for values used by wave logic (weight, minimum spawns,
+ * experience). This class isolates config loading and selection of the current wave's properties.
  */
 public class WaveFactory {
   private final WaveConfigs configs;
@@ -22,7 +21,8 @@ public class WaveFactory {
   }
 
   /**
-   * Test-friendly constructor allowing direct config injection to avoid LibGDX file IO in unit tests.
+   * Test-friendly constructor allowing direct config injection to avoid LibGDX file IO in unit
+   * tests.
    */
   public WaveFactory(WaveConfigs configs) {
     this.configs = configs;

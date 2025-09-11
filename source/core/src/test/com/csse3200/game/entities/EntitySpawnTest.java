@@ -2,9 +2,9 @@ package com.csse3200.game.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Test;
-import com.csse3200.game.entities.factories.WaveFactory;
 import com.csse3200.game.entities.configs.WaveConfigs;
+import com.csse3200.game.entities.factories.WaveFactory;
+import org.junit.jupiter.api.Test;
 
 class EntitySpawnTest {
 
@@ -35,5 +35,3 @@ class EntitySpawnTest {
     assertTrue(s && f && t, "Expected all three types to appear across trials");
   }
 }
-
-

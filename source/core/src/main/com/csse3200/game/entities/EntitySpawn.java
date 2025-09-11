@@ -2,10 +2,7 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
 
-/**
- * Computes how many enemies to spawn in the current wave and selects a type per
- * spawn request.
- */
+/** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
 public class EntitySpawn {
   private final WaveFactory waveFactory;
 
@@ -28,8 +25,8 @@ public class EntitySpawn {
   }
 
   /**
-   * Test-only constructor allowing injection of a prebuilt WaveFactory to avoid
-   * LibGDX file IO in unit tests.
+   * Test-only constructor allowing injection of a prebuilt WaveFactory to avoid LibGDX file IO in
+   * unit tests.
    *
    * @param waveFactory factory providing wave configuration
    * @param robotWeight weight cost per enemy
@@ -39,14 +36,16 @@ public class EntitySpawn {
     this.robotWeight = robotWeight;
   }
 
-  /** @return computed spawn count for this wave. */
+  /**
+   * @return computed spawn count for this wave.
+   */
   public int getSpawnCount() {
     return spawnCount;
   }
 
   /**
-   * Computes spawn count from the current wave's weight budget and minimum
-   * requirement configured in JSON.
+   * Computes spawn count from the current wave's weight budget and minimum requirement configured
+   * in JSON.
    */
   public void spawnEnemies() {
     int waveWeight = waveFactory.getWaveWeight();
@@ -70,7 +69,9 @@ public class EntitySpawn {
     spawnCount = robotSpawn;
   }
 
-  /** @return uniformly random enemy type among "standard", "fast", and "tanky". */
+  /**
+   * @return uniformly random enemy type among "standard", "fast", and "tanky".
+   */
   public String getRandomRobotType() {
     int r = random.nextInt(3);
     return switch (r) {
