@@ -17,6 +17,10 @@ public class EntityService {
 
   private final Array<Entity> entities = new Array<>(false, INITIAL_CAPACITY);
 
+  public Array<Entity> getEntities() {
+    return entities;
+  }
+
   /**
    * Register a new entity with the entity service. The entity will be created and start updating.
    *
