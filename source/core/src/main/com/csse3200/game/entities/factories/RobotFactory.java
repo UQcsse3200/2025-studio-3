@@ -105,5 +105,10 @@ public class RobotFactory {
     robot.setScale(robot.getScale().x * config.getScale(), robot.getScale().y * config.getScale());
 
     return robot;
+
+    // The original NPCFactory had:
+    // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
+    // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+    // I don't think we need that but I'm putting it here for reference
   }
 }
