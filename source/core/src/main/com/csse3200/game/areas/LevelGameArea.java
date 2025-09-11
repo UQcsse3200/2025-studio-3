@@ -109,7 +109,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     invStartX = xOffset;
     invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
     invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
-    inventoryUnitCount = 0;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -176,6 +175,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
   private void spawnInventory() {
+    inventoryUnitCount = 0;
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
     placeInventoryUnit(
