@@ -1,6 +1,6 @@
 package com.csse3200.game.entities.configs;
 
-/** Defines all wave configs to be loaded by the wave Factory. */
+/** Container for deserialized wave configurations. */
 public class WaveConfigs {
   private BaseWaveConfig wave1 = new BaseWaveConfig();
   private BaseWaveConfig wave2 = new BaseWaveConfig();

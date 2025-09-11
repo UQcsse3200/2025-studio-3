@@ -2,29 +2,52 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
 
+/**
+ * Computes how many enemies to spawn in the current wave and selects a type per
+ * spawn request.
+ */
 public class EntitySpawn {
   private final WaveFactory waveFactory;
 
-  // For now, only one robot type exists.
-  // Set this to the weight defined for that robot.
   private final int robotWeight;
   private int spawnCount = 0;
   private final java.util.Random random = new java.util.Random();
 
+  /** Creates a new instance with a default per-enemy weight cost. */
   public EntitySpawn() {
     this(2);
   }
 
+  /**
+   * Creates a new instance with a specified per-enemy weight cost.
+   *
+   * @param robotWeight weight cost of a single enemy used to derive spawn counts
+   */
   public EntitySpawn(int robotWeight) {
-    this.waveFactory = new WaveFactory();
+    this(new WaveFactory(), robotWeight);
+  }
+
+  /**
+   * Test-only constructor allowing injection of a prebuilt WaveFactory to avoid
+   * LibGDX file IO in unit tests.
+   *
+   * @param waveFactory factory providing wave configuration
+   * @param robotWeight weight cost per enemy
+   */
+  public EntitySpawn(WaveFactory waveFactory, int robotWeight) {
+    this.waveFactory = waveFactory;
     this.robotWeight = robotWeight;
   }
 
-  /** Returns the number of enemies to spawn this wave. */
+  /** @return computed spawn count for this wave. */
   public int getSpawnCount() {
     return spawnCount;
   }
 
+  /**
+   * Computes spawn count from the current wave's weight budget and minimum
+   * requirement configured in JSON.
+   */
   public void spawnEnemies() {
     int waveWeight = waveFactory.getWaveWeight();
     int minCount = waveFactory.getMinZombiesSpawn();
@@ -47,7 +70,7 @@ public class EntitySpawn {
     spawnCount = robotSpawn;
   }
 
-  /** Randomly selects an enemy type for this spawn. */
+  /** @return uniformly random enemy type among "standard", "fast", and "tanky". */
   public String getRandomRobotType() {
     int r = random.nextInt(3);
     return switch (r) {
