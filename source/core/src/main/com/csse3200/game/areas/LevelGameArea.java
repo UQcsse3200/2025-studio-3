@@ -1,8 +1,8 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
@@ -10,15 +10,12 @@ import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
-import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,15 +36,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/green_tile.png",
     "images/box_boy.png",
     "images/selected_star.png",
-    "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
+    "images/slot_icon.png",
+    "images/slot_reels_background.png"
   };
 
   private static final String[] levelTextureAtlases = {
     "images/ghost.atlas",
     "images/ghostKing.atlas",
-    "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas"
+    "images/robot_placeholder.atlas",
+    "images/slot_frame.atlas",
+    "images/slot_reels.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -69,10 +67,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private final Entity[] spawned_units;
   private Entity selected_unit;
   private Entity selection_star;
-
-  // May have to use a List<Entity> instead if we need to know what entities are at what position
-  // But for now it doesn't matter
-  private int inventoryUnitCount;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -116,7 +110,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     displayUI();
 
     spawnMap();
-    spawnSun();
+    //    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
@@ -146,6 +140,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Entity ui = new Entity();
     // add components here for additional UI Elements
     ui.addComponent(new GameAreaDisplay("Level One"));
+    ui.addComponent(new com.csse3200.game.components.slot.SlotMachineDisplay(this));
     spawnEntity(ui);
   }
 
@@ -172,12 +167,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
   private void spawnInventory() {
-    inventoryUnitCount = 0;
-    placeInventoryUnit(() -> null, "images/ghost_1.png");
-    placeInventoryUnit(() -> null, "images/ghost_king.png");
-    placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
-        "images/sling_shooter_front.png");
+    placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
+    placeInventoryUnit(2, "images/ghost_king.png");
   }
 
   private void spawnSun() {
@@ -215,16 +206,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   /**
-   * Places a unit with its supplier in the inventory
+   * Creates and Spawns the Units in the inventory
    *
-   * @param supplier function returning a copy of that unit
-   * @param image sprite image for how it will be displayed in the inventory
+   * @param pos the position of the unit in the inventory, pos >= 1
+   * @param image the file path of the unit image
    */
-  private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
-    int pos = ++inventoryUnitCount;
+  private void placeInventoryUnit(int pos, String image) {
     Entity unit =
         new Entity()
-            .addComponent(new InventoryUnitInputComponent(this, supplier))
+            .addComponent(new InventoryUnitInputComponent(this))
             .addComponent(new TextureRenderComponent(image));
     unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
     unit.scaleHeight(tileSize);
@@ -330,33 +320,30 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void spawnUnit(int position) {
+    Entity unit = new Entity();
+
+    // Match the texture of the inventory unit - placeholder
+    Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
+    unit.addComponent(new TextureRenderComponent(texture));
+
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
     float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
-    Vector2 entityPos = new Vector2(tileX, tileY);
-
-    Supplier<Entity> entitySupplier =
-        selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
-    Entity newEntity = entitySupplier.get();
-    if (newEntity == null) {
-      logger.error("Entity fetched was NULL");
-      return;
-    }
-    newEntity.setPosition(entityPos);
+    unit.setPosition(tileX, tileY);
 
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
     if (selectedTile != null) {
-      selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
+      selectedTile.getComponent(TileStorageComponent.class).setTileUnit(unit);
     }
 
     // Add to list of all spawned units
-    spawned_units[position] = newEntity;
-    // set scale to render as desired
-    newEntity.scaleHeight(tileSize);
+    spawned_units[position] = unit;
 
-    spawnEntity(newEntity);
-    // trigger the animation - this will change with more entities
-    newEntity.getEvents().trigger("attackStart");
+    // set scale to render as desired
+    unit.getComponent(TextureRenderComponent.class).scaleEntity();
+    unit.scaleHeight(tileSize);
+
+    spawnEntity(unit);
     logger.info("Unit spawned at position {}", position);
   }
 
