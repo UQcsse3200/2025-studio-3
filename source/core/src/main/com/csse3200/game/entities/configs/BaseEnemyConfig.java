@@ -67,8 +67,9 @@ public class BaseEnemyConfig extends BaseEntityConfig {
 
   /**
    * Gets the size of the enemy sprite. 1 is the standard size, so the enemy will be scaled by this
-   * value
-   * NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the tile height..
+   * value. NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the tile
+   * height.
+   *
    * @return the enemy sprite size.
    */
   public float getScale() {
