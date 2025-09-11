@@ -1,7 +1,5 @@
 package com.csse3200.game.components.slot;
 
-import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -144,61 +142,74 @@ public final class SlotEffect {
     }
   }
 
-  @SuppressWarnings("unchecked")
   private static void freezeAllEnemies(float durationSec) {
-    try {
-      EntityService es = ServiceLocator.getEntityService();
-      if (es == null) {
-        logger.warn("[SlotEffect] FREEZE_ENEMY skipped: no EntityService");
-        return;
-      }
+    EntityService es = ServiceLocator.getEntityService();
+    if (es == null) {
+      logger.warn("[SlotEffect] FREEZE_ENEMY skipped: no EntityService");
+      return;
+    }
 
-      java.lang.reflect.Field fEntities = EntityService.class.getDeclaredField("entities");
-      fEntities.setAccessible(true);
-      com.badlogic.gdx.utils.Array<Entity> entities =
-          (com.badlogic.gdx.utils.Array<Entity>) fEntities.get(es);
+    com.badlogic.gdx.utils.Array<Entity> all = getAllEntitiesUnsafe(es);
 
-      int applied = 0;
-      for (Entity e : entities) {
-        var hb = e.getComponent(HitboxComponent.class);
-        if (hb == null || !PhysicsLayer.contains(hb.getLayer(), PhysicsLayer.ENEMY)) continue;
-
-        final PhysicsMovementComponent pm = e.getComponent(PhysicsMovementComponent.class);
-        if (pm != null) pm.setMoving(false);
-
-        final PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
-        final BodyType prevType =
-            (pc != null && pc.getBody() != null) ? pc.getBody().getType() : null;
-        if (pc != null && pc.getBody() != null) {
-          pc.setLinearVelocity(0f, 0f);
-          pc.getBody().setAngularVelocity(0f);
-          pc.setBodyType(BodyType.StaticBody);
-        }
-
-        Timer.schedule(
-            new Timer.Task() {
-              @Override
-              public void run() {
-                try {
-                  if (pm != null) pm.setMoving(true);
-                  if (pc != null && pc.getBody() != null && prevType != null) {
-                    pc.setBodyType(prevType);
-                    pc.setLinearVelocity(0f, 0f);
-                    pc.getBody().setAngularVelocity(0f);
-                  }
-                } catch (Exception ex) {
-                  logger.error(
-                      "[SlotEffect] FREEZE_ENEMY unfreeze failed: {}", ex.getMessage(), ex);
-                }
-              }
-            },
-            durationSec);
-
+    int applied = 0;
+    for (Entity e : all) {
+      if (!isEnemy(e)) continue;
+      if (applyFreeze(e, durationSec)) {
         applied++;
       }
-      logger.info("[SlotEffect] FREEZE_ENEMY: applied to {} enemies for {}s", applied, durationSec);
-    } catch (Throwable t) {
-      logger.error("[SlotEffect] FREEZE_ENEMY failed: {}", t.getMessage(), t);
     }
+    logger.info("[SlotEffect] FREEZE_ENEMY: applied to {} enemies for {}s", applied, durationSec);
+  }
+
+  @SuppressWarnings({"unchecked", "java:S3011"})
+  private static com.badlogic.gdx.utils.Array<Entity> getAllEntitiesUnsafe(EntityService es) {
+    try {
+      java.lang.reflect.Field fEntities = EntityService.class.getDeclaredField("entities");
+      fEntities.setAccessible(true);
+      return (com.badlogic.gdx.utils.Array<Entity>) fEntities.get(es);
+    } catch (Exception ex) {
+      logger.error("[SlotEffect] FREEZE_ENEMY getAllEntities failed: {}", ex.getMessage(), ex);
+      return new com.badlogic.gdx.utils.Array<>();
+    }
+  }
+
+  private static boolean applyFreeze(Entity e, float durationSec) {
+    try {
+      PhysicsMovementComponent pm = e.getComponent(PhysicsMovementComponent.class);
+      PhysicsComponent pc = e.getComponent(PhysicsComponent.class);
+
+      if (pm != null) pm.setMoving(false);
+      if (pc != null && pc.getBody() != null) {
+        pc.getBody().setLinearVelocity(0f, 0f);
+        pc.getBody().setAngularVelocity(0f);
+      }
+
+      com.badlogic.gdx.utils.Timer.schedule(
+          new com.badlogic.gdx.utils.Timer.Task() {
+            @Override
+            public void run() {
+              try {
+                if (pm != null) pm.setMoving(true);
+                if (pc != null && pc.getBody() != null) {
+                  pc.getBody().setLinearVelocity(0f, 0f);
+                  pc.getBody().setAngularVelocity(0f);
+                }
+              } catch (Exception ex) {
+                logger.error("[SlotEffect] FREEZE_ENEMY unfreeze failed: {}", ex.getMessage(), ex);
+              }
+            }
+          },
+          durationSec);
+
+      return true;
+    } catch (Exception ex) {
+      logger.error("[SlotEffect] FREEZE_ENEMY freeze failed: {}", ex.getMessage(), ex);
+      return false;
+    }
+  }
+
+  private static boolean isEnemy(Entity e) {
+    HitboxComponent hb = e.getComponent(HitboxComponent.class);
+    return hb != null && PhysicsLayer.contains(hb.getLayer(), PhysicsLayer.ENEMY);
   }
 }
