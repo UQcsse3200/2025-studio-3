@@ -466,6 +466,7 @@ public class SlotMachineDisplay extends UIComponent {
       dimmer.setVisible(true);
       dimmer.getColor().a = 0.6f;
     }
+    stoppedCount = 0;
     randomizeReels();
   }
 
@@ -480,7 +481,6 @@ public class SlotMachineDisplay extends UIComponent {
     }
     for (Group col : reelColumns) {
       col.clearActions();
-      col.setY(0f);
     }
   }
 
@@ -516,7 +516,7 @@ public class SlotMachineDisplay extends UIComponent {
     if (frameGroup != null) frameGroup.remove();
   }
 
-  /** */
+  /** Image with precise hit test limited to actually drawn (scaled & aligned) rectangle. */
   private static class HitTestImage extends Image {
     private final Scaling scaling;
     private final int align;

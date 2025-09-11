@@ -49,7 +49,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final String[] levelTextureAtlases = {
     "images/ghost.atlas",
     "images/ghostKing.atlas",
-   "images/sling_shooter.atlas",
+    "images/sling_shooter.atlas",
     "images/robot_placeholder.atlas",
     "images/slot_frame.atlas",
     "images/slot_reels.atlas"

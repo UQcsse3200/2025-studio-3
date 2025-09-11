@@ -50,7 +50,7 @@ public final class SlotEffect {
       case GAIN_COINS -> gainCoins();
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
-      case FREEZE_ENEMY -> freezeAllEnemies(5f);
+      case FREEZE_ENEMY -> freezeAllEnemies(10f);
       default -> logger.info("Effect {} ignored for LevelGameArea.", effect);
     }
   }
