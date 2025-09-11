@@ -115,7 +115,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
       }
       // logger.info("Checking target at distance: " + distance);
       if (distance <= 90f) { // if target visible and in range
-        // logger.info("Target detected within range: " + target);
+        //logger.info("Target detected within range: " + target);
         return target;
       }
     }

@@ -1,13 +1,13 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.entities.Entity;
 
 /** Class that stores an array of tile entities. */
 public class LevelGameGrid {
-  private Entity[] grid_data;
-  private final int rows;
+  private final Entity[] gridData;
   private final int cols;
-  private final int num_tiles;
 
   /**
    * Class constructor for LevelGameGrid.
@@ -16,10 +16,9 @@ public class LevelGameGrid {
    * @param cols number of columns in the level game grid.
    */
   public LevelGameGrid(int rows, int cols) {
-    this.rows = rows;
     this.cols = cols;
-    this.num_tiles = rows * cols;
-    this.grid_data = new Entity[num_tiles];
+    int numTiles = rows * cols;
+    this.gridData = new Entity[numTiles];
   }
 
   /**
@@ -29,7 +28,7 @@ public class LevelGameGrid {
    * @param tile Tile entity that is to be stored at the index.
    */
   public void addTile(int index, Entity tile) {
-    grid_data[index] = tile;
+    gridData[index] = tile;
   }
 
   /**
@@ -40,7 +39,7 @@ public class LevelGameGrid {
    * @return the tile entity found at the given (row, col) position on the grid.
    */
   public Entity getTile(int row, int col) {
-    return grid_data[col * cols + row];
+    return gridData[col * cols + row];
   }
 
   /**
@@ -52,6 +51,18 @@ public class LevelGameGrid {
    * @param tile the tile entity that is to be placed at the (row, col) position.
    */
   public void setTile(int row, int col, Entity tile) {
-    grid_data[col * cols + row] = tile;
+    gridData[col * cols + row] = tile;
+  }
+
+  public Entity getTileFromXY(float x, float y) {
+    for (Entity tile : gridData) {
+      boolean status =
+          tile.getComponent(TileHitboxComponent.class)
+              .inTileHitbox(new GridPoint2((int) x, (int) y));
+      if (status) {
+        return tile;
+      }
+    }
+    return null;
   }
 }

@@ -160,7 +160,7 @@ public class RobotFactory {
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new MoveLeftTask(config.getMovementSpeed()))
-            .addTask(new RobotAttackTask(1.5f, PhysicsLayer.DEFENSE));
+            .addTask(new RobotAttackTask(1.5f, PhysicsLayer.NPC));
 
     return new Entity()
         .addComponent(new PhysicsComponent())
@@ -168,7 +168,7 @@ public class RobotFactory {
         .addComponent(new ColliderComponent())
         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
         .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-        .addComponent(new TouchAttackComponent(PhysicsLayer.DEFENSE, 0f))
+        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
         .addComponent(new HitMarkerComponent())
         .addComponent(new RobotAnimationController())
         .addComponent(aiComponent);
