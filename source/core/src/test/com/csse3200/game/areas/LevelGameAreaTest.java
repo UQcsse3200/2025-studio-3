@@ -7,6 +7,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -141,7 +142,14 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Create a selected unit
-    Entity selected = new Entity().addComponent(new TextureRenderComponent("images/ghost_1png"));
+    Entity selected =
+        new Entity()
+            .addComponent(
+                new InventoryUnitInputComponent(
+                    area,
+                    () ->
+                        new Entity()
+                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
     area.setSelectedUnit(selected);
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
@@ -164,11 +172,15 @@ class LevelGameAreaTest {
   void spawnUnit_noTile_doesNotCallTileStorage() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
-    var tex =
-        new com.badlogic.gdx.graphics.Texture(
-            new com.badlogic.gdx.graphics.Pixmap(
-                1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888));
-    area.setSelectedUnit(new Entity().addComponent(new TextureRenderComponent(tex)));
+    Entity selected =
+        new Entity()
+            .addComponent(
+                new InventoryUnitInputComponent(
+                    area,
+                    () ->
+                        new Entity()
+                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
+    area.setSelectedUnit(selected);
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
     when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(null);
