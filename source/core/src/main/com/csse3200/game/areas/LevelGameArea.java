@@ -338,7 +338,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(unit);
 
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
-
   }
 
   /**
