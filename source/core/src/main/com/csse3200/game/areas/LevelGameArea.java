@@ -69,6 +69,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private final Entity[] spawned_units;
   private Entity selected_unit;
   private Entity selection_star;
+  private boolean isGameOver = false;
+  private final ArrayList<Entity> robots = new ArrayList<>();
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
@@ -287,6 +289,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
+    robots.add(unit);
     logger.info("Unit spawned at position {} {}", col, row);
   }
 
@@ -336,6 +339,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
+    robots.add(unit);
 
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
@@ -411,7 +415,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("attackStart");
-    newEntity.getEvents().addListener("entityDeath", () -> requestDespawn(newEntity));
+    newEntity.getEvents().addListener("entityDeath", () -> {
+        requestDespawn(newEntity);
+        robots.remove(newEntity);
+    });
     logger.info("Unit spawned at position {}", position);
   }
 
@@ -468,5 +475,27 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   /** Method to reset game entity size/position on window resize. */
   public void resize() {
     setScaling();
+  }
+
+  /** Checks the game over condition when a robot reaches the end of the grid */
+  public void checkGameOver() {
+    // check if the game is already over
+    if (isGameOver) {
+      return; // game is already over don't check again
+    }
+    // calculate the robot's position
+    for (Entity robot : robots) {
+      Vector2 worldPos = robot.getPosition();
+      int gridX = (int) ((worldPos.x - xOffset) / tileSize);
+
+      // check if robot has reached the end
+      if (gridX <= 0) {
+        isGameOver = true;
+        // TODO: add UI component here
+        // placeholder for now
+        logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        System.out.println("GAME OVER - Robot reached the left edge at grid x: " + gridX);
+      }
+    }
   }
 }
