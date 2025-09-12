@@ -276,8 +276,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
-    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
     // place on that grid cell (bottom-left of the tile)
     float tileX = xOffset + tileSize * col;
@@ -498,7 +498,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         // TODO: add UI component here
         // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
-        System.out.println("GAME OVER - Robot reached the left edge at grid x: " + gridX);
       }
     }
   }

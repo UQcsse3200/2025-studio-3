@@ -66,7 +66,7 @@ public class RobotFactory {
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new MoveLeftTask(config.getMovementSpeed()))
-            .addTask(new RobotAttackTask(1.5f, PhysicsLayer.NPC));
+            .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
 
     // Animation
     final String atlasPath = config.getAtlasFile();

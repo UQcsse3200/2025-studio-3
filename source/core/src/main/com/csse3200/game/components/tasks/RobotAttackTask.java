@@ -4,17 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-// TODO : integrate with attack system team
 
 /**
  * Allows an entity to attack the closest target entity from a list of potential targets. This task
  * runs when there is a visible target within the entities range of attack
  */
 public class RobotAttackTask extends RobotTargetDetectionTasks {
-  private static final Logger logger = LoggerFactory.getLogger(RobotAttackTask.class);
   private static final float TIME_BETWEEN_ATTACKS = 4f; // seconds
   private float timeLeft = 0f;
 
@@ -56,7 +51,6 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
       timeLeft -= Gdx.graphics.getDeltaTime();
       return;
     }
-    //    logger.info("Attacking target: " + target);
     Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);

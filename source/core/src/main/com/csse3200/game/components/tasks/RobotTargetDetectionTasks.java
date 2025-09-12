@@ -12,11 +12,8 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public abstract class RobotTargetDetectionTasks extends DefaultTask implements PriorityTask {
-//  private static final Logger logger = LoggerFactory.getLogger(RobotTargetDetectionTasks.class);
   protected final float attackRange;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
@@ -62,25 +59,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     return 10;
   }
 
-  /**
-   * Determines if a target is visible by checking for obstacles in the current entities line of
-   * sight
-   *
-   * @param target the target to check
-   * @return {@code true} if the target is visible, {@code false} otherwise
-   */
-  //    protected boolean isTargetVisible(Entity target) {
-  //        Vector2 from = owner.getEntity().getCenterPosition();
-  //        Vector2 to = target.getCenterPosition();
-  //
-  //        // If there is an obstacle in the path to the player, not visible.
-  //        if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
-  //            debugRenderer.drawLine(from, hit.point);
-  //            return false;
-  //        }
-  //        debugRenderer.drawLine(from, to);
-  //        return true;
-  //    }
 
   /**
    * Finds the nearest visible target within attack range.
