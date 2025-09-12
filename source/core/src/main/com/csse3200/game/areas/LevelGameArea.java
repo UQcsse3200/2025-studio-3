@@ -327,8 +327,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       return;
     }
 
-    spawnRobot(bestCol, bestRow, robotType);
-    logger.info("Spawned {} robot on defence at row={}, col={}", robotType, bestRow, bestCol);
+    float spawnCol = Math.min(bestCol + 0.5f, LEVEL_ONE_COLS - 0.01f); // avoid going off-map
+    Entity unit = RobotFactory.createRobotType(robotType);
+
+    float worldX = xOffset + tileSize * spawnCol;
+    float worldY = yOffset + tileSize * bestRow; // same row as the defence
+
+    unit.setPosition(worldX, worldY);
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+
+    logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
+
   }
 
   /**

@@ -1,15 +1,32 @@
 package com.csse3200.game.entities.configs;
 
-public class BungeeRobotConfig extends BaseEntityConfig {
-  public int getHealth() {
-    return 60;
-  }
+/** Defines the stats for a standard robot */
+public class BungeeRobotConfig extends BaseEnemyConfig {
+    public String getName() {
+        return "Bungee Robot";
+    }
 
-  public int getAttack() {
-    return 10;
-  }
+    public String getAtlasFile() {
+        return "images/robot_placeholder.atlas";
+    }
 
-  public float getMovementSpeed() {
-    return 20;
-  }
+    public String getDefaultSprite() {
+        return "images/default_enemy_image.png";
+    }
+
+    public int getHealth() {
+        return 60;
+    }
+
+    public int getAttack() {
+        return 10;
+    }
+
+    public float getMovementSpeed() {
+        return 20;
+    }
+
+    public float getScale() {
+        return 1f;
+    }
 }
