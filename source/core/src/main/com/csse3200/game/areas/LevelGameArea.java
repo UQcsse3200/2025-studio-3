@@ -41,14 +41,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/box_boy.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
+    "images/sling_shooter_front.png",
+    "images/forge_1.png"
   };
 
   private static final String[] levelTextureAtlases = {
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas"
+    "images/robot_placeholder.atlas",
+    "images/forge.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -178,6 +180,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     inventoryUnitCount = 0;
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
+    placeInventoryUnit(() -> DefenceFactory.createForge(enemies), "images/forge_1.png");
     placeInventoryUnit(
         () -> DefenceFactory.createSlingShooter(enemies),
         "images/sling_shooter_front.png");
