@@ -130,12 +130,11 @@ public class MainMapNavigationMenu extends UIComponent {
     // Create tooltips
     createTooltips(settingsX, settingsY, menuX, menuY);
 
-    // Add hover effects to buttons
+    // Add hover effects and click listeners  to buttons 
     addHoverEffect(settingsButton);
     addHoverEffect(menuButton);
-
-    // Add click listener to menu button to trigger dropdown
     addMenuButtonClickListener();
+    addSettingsButtonClickListener();
   }
 
   /** 
@@ -173,6 +172,17 @@ public class MainMapNavigationMenu extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             toggleDropdownMenu();
+          }
+        });
+  }
+
+  /** Adds click listener to settings button to trigger dropdown menu */
+  private void addSettingsButtonClickListener() {
+    settingsButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            entity.getEvents().trigger("open_settings");
           }
         });
   }

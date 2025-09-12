@@ -135,7 +135,7 @@ public class StatisticsDisplay extends UIComponent {
 
   /** Handles navigation back to the Profile Screen. */
   private void backMenu() {
-    game.setScreen(ScreenType.PROFILE);
+    game.setScreen(ScreenType.MAIN_GAME);
   }
 
   @Override

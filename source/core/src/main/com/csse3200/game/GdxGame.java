@@ -91,8 +91,6 @@ public class GdxGame extends Game {
         return new SettingsScreen(this);
       case SKILLTREE:
         return new SkillTreeScreen(this);
-      case PROFILE:
-        return new ProfileScreen(this);
       case LOAD_GAME:
         return new LoadGameScreen(this);
       case NEW_GAME:
@@ -121,7 +119,6 @@ public class GdxGame extends Game {
     MAIN_GAME,
     SETTINGS,
     SKILLTREE,
-    PROFILE,
     LOAD_GAME,
     NEW_GAME,
     STATISTICS,

@@ -28,6 +28,7 @@ public class MainMapNavigationMenuActions extends Component {
     entity.getEvents().addListener("open_inventory", this::onInventory);
     entity.getEvents().addListener("open_achievements", this::onAchievements);
     entity.getEvents().addListener("open_statistics", this::onStats);
+    entity.getEvents().addListener("open_dossier", this::onDossier);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("main_menu", this::onMainMenu);
     entity.getEvents().addListener("quicksave", this::onQuicksave);
@@ -75,6 +76,12 @@ public class MainMapNavigationMenuActions extends Component {
   private void onSave() {
     logger.info("Saving game");
     // Persistence.save();
+  }
+
+  /** Opens the dossier. */
+  private void onDossier() {
+    logger.info("Opening dossier");
+    // game.setScreen(GdxGame.ScreenType.DOSSIER);
   }
 
   /** Quicksaves the game. */

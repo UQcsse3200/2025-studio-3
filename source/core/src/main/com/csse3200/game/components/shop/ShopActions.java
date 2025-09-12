@@ -21,7 +21,7 @@ public class ShopActions extends Component {
 
   /** Return to the main game. */
   private void onBack() {
-    logger.info("Returning to profile");
-    game.setScreen(GdxGame.ScreenType.PROFILE);
+    logger.info("Returning to main game");
+    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

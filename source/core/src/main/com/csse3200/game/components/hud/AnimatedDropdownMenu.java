@@ -56,6 +56,7 @@ public class AnimatedDropdownMenu extends UIComponent {
       "Load Game",
       "Statistics",
       "Achievements",
+      "Dossier",
       "Inventory",
       "Main Menu",
       "Exit Game"
@@ -170,6 +171,10 @@ public class AnimatedDropdownMenu extends UIComponent {
         case "Achievements":
           logger.debug("Achievements button clicked");
           mainEntity.getEvents().trigger("open_achievements");
+          break;
+        case "Dossier":
+          logger.debug("Dossier button clicked");
+          mainEntity.getEvents().trigger("open_dossier");
           break;
         case "Inventory":
           logger.debug("Inventory button clicked");
