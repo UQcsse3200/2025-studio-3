@@ -23,19 +23,26 @@ public class NewGameMenuDisplay extends UIComponent {
   private TextField nameInput;
   private TextButton startButton;
   private Label nameLabel;
+  private boolean overwrite = false;
 
   @Override
   public void create() {
     super.create();
-    loadSaveFiles();
+    saveFiles = Persistence.fetch();
     addActors();
   }
 
-  private void loadSaveFiles() {
-    saveFiles = Persistence.fetch();
-    logger.debug("Loaded {} save files", saveFiles.size());
+  @Override
+  public void update() {
+    // Update label text based on overwrite flag
+    if (overwrite) {
+      nameLabel.setText("Enter Save Name (overwriting existing save):");
+    } else {
+      nameLabel.setText("Enter Save Name:");
+    }
   }
 
+  /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
@@ -57,7 +64,7 @@ public class NewGameMenuDisplay extends UIComponent {
     // Name input field (initially hidden)
     nameLabel = new Label("Enter Save Name:", skin);
     nameInput = new TextField("", skin);
-    nameInput.setMessageText("Enter a name for your save file");
+    nameInput.setMessageText("");
 
     // Add listener to enable/disable start button based on text input
     nameInput.addListener(
@@ -71,11 +78,10 @@ public class NewGameMenuDisplay extends UIComponent {
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
     for (int i = 0; i < 3; i++) {
-      if (i < saveFiles.size()) {
+      if (saveFiles.get(i) != null) {
         // Active save slot - show existing save info
         Savefile save = saveFiles.get(i);
-        String buttonText =
-            "Slot " + (i + 1) + ": " + save.getDisplayName() + "\n" + save.getDisplayDate();
+        String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
         saveSlotButtons[i] = new TextButton(buttonText, skin);
 
         final int slotIndex = i;
@@ -85,12 +91,13 @@ public class NewGameMenuDisplay extends UIComponent {
               public void changed(ChangeEvent changeEvent, Actor actor) {
                 logger.debug("Save slot {} selected for overwrite", slotIndex);
                 showNameInput();
+                overwrite = true;
                 entity.getEvents().trigger("selectSlot", slotIndex);
               }
             });
       } else {
         // Empty save slot
-        String buttonText = "Slot " + (i + 1) + ": Empty";
+        String buttonText = "Empty";
         saveSlotButtons[i] = new TextButton(buttonText, skin);
 
         final int slotIndex = i;
@@ -100,6 +107,7 @@ public class NewGameMenuDisplay extends UIComponent {
               public void changed(ChangeEvent changeEvent, Actor actor) {
                 logger.debug("Empty save slot {} selected", slotIndex);
                 showNameInput();
+                overwrite = false;
                 entity.getEvents().trigger("selectSlot", slotIndex);
               }
             });

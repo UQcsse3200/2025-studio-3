@@ -23,15 +23,11 @@ public class LoadMenuDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-    loadSaveFiles();
+    saveFiles = Persistence.fetch();
     addActors();
   }
 
-  private void loadSaveFiles() {
-    saveFiles = Persistence.fetch();
-    logger.debug("Loaded {} save files", saveFiles.size());
-  }
-
+  /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
@@ -53,7 +49,7 @@ public class LoadMenuDisplay extends UIComponent {
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
     for (int i = 0; i < 3; i++) {
-      if (i < saveFiles.size()) {
+      if (saveFiles.get(i) != null) {
         // Active save slot
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
