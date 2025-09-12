@@ -30,6 +30,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private static final int LEVEL_ONE_ROWS = 5;
   private static final int LEVEL_ONE_COLS = 10;
+  private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelTextures = {
     "images/level-1-map-v2.png",
     "images/selected_star.png",
@@ -42,8 +43,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
-  private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-  private static final String[] levelMusic = {backgroundMusic};
+  private static final String[] levelMusic = {BACKGROUND_MUSIC};
 
   private final TerrainFactory terrainFactory;
 
@@ -189,13 +189,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       Entity tile;
       // Calc tile position
       float tileX = xOffset + tileSize * (i % cols);
-      float tileY = yOffset + tileSize * (float) (i / cols);
-      // logic for alternating tile images
-      if ((i / cols) % 2 == 1) {
-        tile = GridFactory.createTile(tileSize, tileX, tileY, this);
-      } else {
-        tile = GridFactory.createTile(tileSize, tileX, tileY, this);
-      }
+      int col = i / cols;
+      float tileY = yOffset + tileSize * col;
+
+      tile = GridFactory.createTile(tileSize, tileX, tileY, this);
       tile.setPosition(tileX, tileY);
       tile.getComponent(TileStorageComponent.class).setPosition(i);
       grid.addTile(i, tile);
@@ -234,13 +231,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   @Override
   public void dispose() {
     super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+    ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class).stop();
     this.unloadAssets();
   }
 
   /** Starts the music */
   private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+    Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
     music.setLooping(true);
     music.setVolume(0.3f);
     music.play();
@@ -321,7 +318,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public void spawnUnit(int position) {
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
-    float tileY = yOffset + tileSize * ((float) position / LEVEL_ONE_COLS);
+    int row = position / LEVEL_ONE_COLS; // line required to make Sonarqube happy
+    float tileY = yOffset + tileSize * row;
     Vector2 entityPos = new Vector2(tileX, tileY);
 
     Supplier<Entity> entitySupplier =
