@@ -415,10 +415,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("attackStart");
-    newEntity.getEvents().addListener("entityDeath", () -> {
-        requestDespawn(newEntity);
-        robots.remove(newEntity);
-    });
+    newEntity
+        .getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              requestDespawn(newEntity);
+              robots.remove(newEntity);
+            });
     logger.info("Unit spawned at position {}", position);
   }
 
