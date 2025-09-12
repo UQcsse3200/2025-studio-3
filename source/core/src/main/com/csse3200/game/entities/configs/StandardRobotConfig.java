@@ -7,32 +7,32 @@ public class StandardRobotConfig extends BaseEnemyConfig {
     return "Standard Robot";
   }
 
-    @Override
+  @Override
   public String getAtlasFile() {
     return "images/robot_placeholder.atlas";
   }
 
-    @Override
+  @Override
   public String getDefaultSprite() {
     return "images/default_enemy_image.png";
   }
 
-    @Override
+  @Override
   public int getHealth() {
     return 60;
   }
 
-    @Override
+  @Override
   public int getAttack() {
     return 10;
   }
 
-    @Override
+  @Override
   public float getMovementSpeed() {
     return 20;
   }
 
-    @Override
+  @Override
   public float getScale() {
     return 1f;
   }

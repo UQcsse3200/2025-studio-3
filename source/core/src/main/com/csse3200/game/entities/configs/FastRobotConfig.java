@@ -17,22 +17,22 @@ public class FastRobotConfig extends BaseEnemyConfig {
     return "images/default_enemy_image.png";
   }
 
-    @Override
+  @Override
   public int getHealth() {
     return 40;
   }
 
-    @Override
+  @Override
   public int getAttack() {
     return 10;
   }
 
-    @Override
+  @Override
   public float getMovementSpeed() {
     return 50;
   }
 
-    @Override
+  @Override
   public float getScale() {
     return 0.75f;
   }

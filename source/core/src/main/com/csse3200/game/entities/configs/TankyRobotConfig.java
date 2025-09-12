@@ -8,32 +8,32 @@ public class TankyRobotConfig extends BaseEnemyConfig {
     return "Tanky Robot";
   }
 
-    @Override
+  @Override
   public String getAtlasFile() {
     return "images/robot_placeholder.atlas";
   }
 
-    @Override
+  @Override
   public String getDefaultSprite() {
     return "images/default_enemy_image.png";
   }
 
-    @Override
+  @Override
   public int getHealth() {
     return 100;
   }
 
-    @Override
+  @Override
   public int getAttack() {
     return 15;
   }
 
-    @Override
+  @Override
   public float getMovementSpeed() {
     return 10;
   }
 
-    @Override
+  @Override
   public float getScale() {
     return 1.25f;
   }

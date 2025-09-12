@@ -59,7 +59,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     return 10;
   }
 
-
   /**
    * Finds the nearest visible target within attack range.
    *
@@ -69,7 +68,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     Vector2 from = owner.getEntity().getCenterPosition();
     Array<Entity> targets = new Array<>(ServiceLocator.getEntityService().getEntities());
 
-    for(Entity target : targets) {
+    for (Entity target : targets) {
       HitboxComponent hitbox = target.getComponent(HitboxComponent.class);
 
       if (hitbox == null) {
