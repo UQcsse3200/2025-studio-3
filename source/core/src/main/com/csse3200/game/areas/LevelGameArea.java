@@ -8,10 +8,12 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -41,7 +43,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/box_boy.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
+    "images/sling_shooter_front.png",
+          "images/sling_projectile.png"
   };
 
   private static final String[] levelTextureAtlases = {
@@ -290,6 +293,21 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     logger.info("Unit spawned at position {} {}", x, y);
   }
 
+  public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
+    Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+    projectile.setPosition(spawnPos);
+    //TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
+    //projectile.addComponent(render); // <- your projectile image
+
+    // Scale the projectile so it’s more visible
+    projectile.scaleHeight(100f); // set the height in world units
+    projectile.scaleWidth(100f);  // set the width in world units
+
+    projectile.addComponent(new MoveRightComponent()); // pass velocity
+    spawnEntity(projectile); // adds to area and entity service
+    return projectile;
+  }
+
   /**
    * Getter for selected_unit
    *
@@ -361,6 +379,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
+    newEntity.getEvents().addListener("attackStart", () -> {
+      Vector2 spawnPos = newEntity.getCenterPosition();
+      spawnProjectile(spawnPos, 3f, 0f);
+    });
     logger.info("Unit spawned at position {}", position);
   }
 
