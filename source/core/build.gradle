@@ -30,3 +30,12 @@ javadoc {
         tags = ['require', 'requires', 'ensure', 'ensures']
     }
 }
+
+dependencies {
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+    api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
+    api "net.dermetfan.libgdx-utils:libgdx-utils:$gdxUtilsVersion"
+    api "net.dermetfan.libgdx-utils:libgdx-utils-box2d:$gdxUtilsVersion"
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+}

@@ -14,6 +14,8 @@ import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
+import com.csse3200.game.services.FontService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +25,11 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("Creating game");
+    
+    // Register global FontService
+    ServiceLocator.registerFontService(new FontService());
+    
     loadSettings();
-
     loadMenus();
 
     // Sets background to light yellow
