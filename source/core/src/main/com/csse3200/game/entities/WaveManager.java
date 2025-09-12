@@ -1,15 +1,30 @@
 package com.csse3200.game.entities;
 
-import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.services.GameTime;
 import java.util.*;
 
+/**
+ * Manages the lifecycle of enemy waves and schedules spawns over time.
+ *
+ * <p>WaveManager is a lightweight coordinator:
+ *
+ * <ul>
+ *   <li>Tracks the current wave number and whether a wave is active.
+ *   <li>Determines spawn cadence and a fair, shuffled lane sequence.
+ *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should produce and which type
+ *       to spawn next.
+ *   <li>Delegates the actual entity creation and placement to {@link LevelGameArea}.
+ * </ul>
+ *
+ * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
+ * request a spawn.
+ */
 public class WaveManager {
 
-  private static int currentWave;
+  private static int currentWave = 0;
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
-  private Entity[] enemies = {};
+  private int enemiesToSpawn = 0;
   private int currentEnemyPos;
   private float timeSinceLastSpawn;
   private boolean waveActive = false;
@@ -24,17 +39,36 @@ public class WaveManager {
 
   public WaveManager() {
     this.gameTime = new GameTime();
-    currentWave = 0;
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
-    this.entitySpawn = new EntitySpawn(currentWave);
+    this.entitySpawn = new EntitySpawn();
 
     Collections.shuffle(laneOrder);
   }
 
+  /**
+   * Test-only constructor to inject a preconfigured {@link EntitySpawn}. Useful for unit tests that
+   * avoid LibGDX file IO.
+   *
+   * @param entitySpawn spawn helper used by this manager
+   */
+  public WaveManager(EntitySpawn entitySpawn) {
+    this.gameTime = new GameTime();
+    this.timeSinceLastSpawn = 0f;
+    this.waveLaneSequence = new ArrayList<>();
+    this.waveLanePointer = 0;
+    this.entitySpawn = entitySpawn;
+
+    Collections.shuffle(laneOrder);
+  }
+
+  /**
+   * Advances to the next wave, resets internal state and lane sequence, and computes the number of
+   * enemies to spawn for this wave.
+   */
   public void initialiseNewWave() {
-    currentWave++;
+    setCurrentWave(currentWave + 1);
     waveActive = true;
     currentEnemyPos = 0;
     int maxLanes = Math.min(currentWave + 1, 5);
@@ -50,6 +84,10 @@ public class WaveManager {
     }
   }
 
+  /**
+   * Ends the current wave and immediately begins the next one. External systems listen to wave
+   * change events for UI updates.
+   */
   public void endWave() {
     waveActive = false;
     initialiseNewWave();
@@ -67,6 +105,10 @@ public class WaveManager {
     return currentWave;
   }
 
+  private static void setCurrentWave(int wave) {
+    currentWave = wave;
+  }
+
   /**
    * Update function to be called by main game loop Checks if a time interval has passed to spawn
    * the next enemy
@@ -74,19 +116,17 @@ public class WaveManager {
   public void update() {
     timeSinceLastSpawn += gameTime.getDeltaTime();
     float spawnInterval = 5.0f;
-    if (timeSinceLastSpawn >= spawnInterval) {
-      if (waveActive) {
-        spawnEnemy(getLane());
-        timeSinceLastSpawn -= spawnInterval;
-      }
+    if (timeSinceLastSpawn >= spawnInterval && waveActive) {
+      spawnEnemy(getLane());
+      timeSinceLastSpawn -= spawnInterval;
     }
   }
 
   /**
-   * Gets the next lane from a pre-shuffled sequence of available lanes This prevents long strings
-   * of the same lane being chosen
+   * Returns the next lane index from a pre-shuffled sequence, reshuffling when the sequence is
+   * exhausted to avoid long runs on the same lane.
    *
-   * @return The next lane number to spawn an enemy in.
+   * @return lane index in [0, 5]
    */
   public int getLane() {
     if (waveLanePointer >= waveLaneSequence.size()) {
@@ -98,17 +138,25 @@ public class WaveManager {
     return lane;
   }
 
+  /** Computes how many enemies this wave should spawn via EntitySpawn. */
   private void getEnemies() {
     entitySpawn.spawnEnemies();
-    enemies = entitySpawn.getEntities();
+    enemiesToSpawn = entitySpawn.getSpawnCount();
   }
 
+  /**
+   * Spawns a single enemy of the next type in the provided lane. Ends the wave once the configured
+   * number of spawns has been reached.
+   *
+   * @param laneNumber lane index to spawn into
+   */
   public void spawnEnemy(int laneNumber) {
-    if (currentEnemyPos == enemies.length) {
+    if (currentEnemyPos == enemiesToSpawn) {
       endWave();
       return;
     }
-    levelGameArea.spawnRobotAtTile(new GridPoint2(9, laneNumber), true, true);
+    String robotType = entitySpawn.getRandomRobotType();
+    levelGameArea.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;
   }
 }
