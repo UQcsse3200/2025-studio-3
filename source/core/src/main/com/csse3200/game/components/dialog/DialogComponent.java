@@ -11,18 +11,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.DialogService.DialogType;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-
+import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.function.Consumer;
-
 /**
- * A flexible dialog component that can display warning, error, or info messages.
- * Supports customizable positioning, actions, and animations.
+ * A flexible dialog component that can display warning, error, or info messages. Supports
+ * customizable positioning, actions, and animations.
  */
 public class DialogComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DialogComponent.class);
@@ -58,27 +56,25 @@ public class DialogComponent extends UIComponent {
     createDialog();
   }
 
-  /**
-   * Creates the dialog window with appropriate styling based on the dialog type.
-   */
+  /** Creates the dialog window with appropriate styling based on the dialog type. */
   private void createDialog() {
     // Create window without title (we'll add it manually)
     dialog = new Window("", skin);
     dialog.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     dialog.setMovable(false);
     dialog.setModal(true);
-    
+
     // Apply type-specific styling
     applyDialogTypeStyling();
-    
+
     // Create content table
     Table contentTable = new Table();
     contentTable.pad(20f);
-    
+
     // Add title label (centered and bigger)
     Color titleColor = getTextColor();
     logger.debug("Setting title color to: {}", titleColor);
-    
+
     // Create custom label style with the title color
     Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     titleStyle.fontColor = titleColor;
@@ -86,7 +82,7 @@ public class DialogComponent extends UIComponent {
     titleLabel.setAlignment(Align.center);
     titleLabel.setFontScale(1.3f);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
-    
+
     // Add message label (always white)
     Label.LabelStyle messageStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     messageStyle.fontColor = Color.WHITE;
@@ -95,30 +91,29 @@ public class DialogComponent extends UIComponent {
     messageLabel.setAlignment(Align.center);
     logger.debug("Setting message color to: WHITE");
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
-    
+
     // Add buttons based on dialog type
     addButtons(contentTable);
     dialog.add(contentTable);
     dialog.pack();
-    
+
     // Center the dialog
     centerDialog();
-    
+
     // Fade in animation
     dialog.setVisible(false);
     dialog.setColor(1, 1, 1, 0);
     stage.addActor(dialog);
   }
 
-  /**
-   * Applies styling specific to the dialog type.
-   */
+  /** Applies styling specific to the dialog type. */
   private void applyDialogTypeStyling() {
     Window.WindowStyle windowStyle = new Window.WindowStyle(skin.get(Window.WindowStyle.class));
-    
+
     // Set the dialog background image
     try {
-      Texture dialogTexture = ServiceLocator.getResourceService().getAsset("images/dialog.png", Texture.class);
+      Texture dialogTexture =
+          ServiceLocator.getResourceService().getAsset("images/dialog.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
@@ -130,9 +125,7 @@ public class DialogComponent extends UIComponent {
     dialog.setStyle(windowStyle);
   }
 
-  /**
-   * Gets the appropriate text color for the dialog type.
-   */
+  /** Gets the appropriate text color for the dialog type. */
   private Color getTextColor() {
     switch (dialogType) {
       case INFO:
@@ -146,132 +139,123 @@ public class DialogComponent extends UIComponent {
     }
   }
 
-  /**
-   * Adds appropriate buttons to the dialog based on its type.
-   */
+  /** Adds appropriate buttons to the dialog based on its type. */
   private void addButtons(Table contentTable) {
     Table buttonTable = new Table();
-    
+
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
         TextButton okButton = new TextButton("OK", skin);
-        okButton.addListener(new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            hide();
-            if (onClose != null) {
-              onClose.accept(DialogComponent.this);
-            }
-          }
-        });
+        okButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onClose != null) {
+                  onClose.accept(DialogComponent.this);
+                }
+              }
+            });
         buttonTable.add(okButton).pad(5f);
         break;
-      
+
       // Warning dialog buttons
       case WARNING:
         TextButton cancelButton = new TextButton("Cancel", skin);
-        cancelButton.addListener(new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            hide();
-            if (onCancel != null) {
-              onCancel.accept(DialogComponent.this);
-            }
-          }
-        });
-        
+        cancelButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onCancel != null) {
+                  onCancel.accept(DialogComponent.this);
+                }
+              }
+            });
+
         TextButton continueButton = new TextButton("Continue", skin);
-        continueButton.addListener(new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            hide();
-            if (onConfirm != null) {
-              onConfirm.accept(DialogComponent.this);
-            }
-          }
-        });
-        
+        continueButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onConfirm != null) {
+                  onConfirm.accept(DialogComponent.this);
+                }
+              }
+            });
+
         buttonTable.add(cancelButton).pad(5f);
         buttonTable.add(continueButton).pad(5f);
         break;
-      
+
       // Error dialog buttons
       case ERROR:
         TextButton okButtonError = new TextButton("OK", skin);
-        okButtonError.addListener(new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            hide();
-            if (onClose != null) {
-              onClose.accept(DialogComponent.this);
-            }
-          }
-        });
+        okButtonError.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onClose != null) {
+                  onClose.accept(DialogComponent.this);
+                }
+              }
+            });
         buttonTable.add(okButtonError).pad(5f);
         break;
     }
-    
+
     contentTable.add(buttonTable).center();
   }
 
-  /**
-   * Centers the dialog on the screen.
-   */
+  /** Centers the dialog on the screen. */
   private void centerDialog() {
     float x = (stage.getWidth() - dialog.getWidth()) / 2f;
     float y = (stage.getHeight() - dialog.getHeight()) / 2f;
     dialog.setPosition(x, y);
   }
 
-  /**
-   * Handles window resize by re-centering the dialog.
-   */
+  /** Handles window resize by re-centering the dialog. */
   public void resize() {
     if (dialog != null && isVisible) {
       centerDialog();
     }
   }
 
-  /**
-   * Shows the dialog with a fade-in animation.
-   */
+  /** Shows the dialog with a fade-in animation. */
   public void show() {
     if (isVisible) {
       return;
     }
-    
+
     logger.debug("Showing {} dialog: {}", dialogType, title);
     isVisible = true;
     dialog.setVisible(true);
-    
+
     // Fade in animation
     dialog.clearActions();
     dialog.addAction(Actions.fadeIn(ANIMATION_DURATION));
   }
 
-  /**
-   * Hides the dialog with a fade-out animation.
-   */
+  /** Hides the dialog with a fade-out animation. */
   public void hide() {
     if (!isVisible) {
       return;
     }
-    
+
     logger.debug("Hiding {} dialog: {}", dialogType, title);
     isVisible = false;
-    
+
     // Fade out animation
     dialog.clearActions();
-    dialog.addAction(Actions.sequence(
-        Actions.fadeOut(ANIMATION_DURATION),
-        Actions.run(() -> dialog.setVisible(false))
-    ));
+    dialog.addAction(
+        Actions.sequence(
+            Actions.fadeOut(ANIMATION_DURATION), Actions.run(() -> dialog.setVisible(false))));
   }
 
-  /**
-   * Immediately removes the dialog from the stage.
-   */
+  /** Immediately removes the dialog from the stage. */
   @Override
   public void dispose() {
     if (dialog != null) {

@@ -22,7 +22,9 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = {"images/shopbackground.jpg", "images/coins.png", "images/dialog.png"};
+  private static final String[] shopTextures = {
+    "images/shopbackground.jpg", "images/coins.png", "images/dialog.png"
+  };
 
   /**
    * Initialises the shop screen.

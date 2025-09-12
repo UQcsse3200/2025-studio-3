@@ -93,9 +93,9 @@ public class MainMapNavigationMenu extends UIComponent {
     updateDisplay();
   }
 
-  /** 
-   * Creates and positions the settings and menu buttons to the right of the plaque 
-   * 
+  /**
+   * Creates and positions the settings and menu buttons to the right of the plaque
+   *
    * @param plaqueX The x position of the plaque
    * @param plaqueY The y position of the plaque
    */
@@ -130,16 +130,16 @@ public class MainMapNavigationMenu extends UIComponent {
     // Create tooltips
     createTooltips(settingsX, settingsY, menuX, menuY);
 
-    // Add hover effects and click listeners  to buttons 
+    // Add hover effects and click listeners  to buttons
     addHoverEffect(settingsButton);
     addHoverEffect(menuButton);
     addMenuButtonClickListener();
     addSettingsButtonClickListener();
   }
 
-  /** 
+  /**
    * Adds hover effect to a button that shows a tooltip when hovered
-   * 
+   *
    * @param button The button to add the hover effect to
    */
   private void addHoverEffect(ImageButton button) {
@@ -201,7 +201,7 @@ public class MainMapNavigationMenu extends UIComponent {
 
   /**
    * Sets the label's font color to white
-   * 
+   *
    * @param label The label to set the font color of
    */
   private void whiten(Label label) {
@@ -212,7 +212,7 @@ public class MainMapNavigationMenu extends UIComponent {
 
   /**
    * Creates tooltip labels for the buttons
-   * 
+   *
    * @param settingsX The x position of the settings button
    * @param settingsY The y position of the settings button
    * @param menuX The x position of the menu button

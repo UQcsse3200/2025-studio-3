@@ -20,7 +20,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +78,7 @@ public class MainMenuScreen extends ScreenAdapter {
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
+    ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.clear();
   }
 

@@ -15,14 +15,14 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A UI component for displaying the new game menu with save slot selection and name input. */
-public class NewGameMenuDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(NewGameMenuDisplay.class);
+/** A UI component for displaying the save game menu with save slot selection and name input. */
+public class SaveGameMenuDisplay extends UIComponent {
+  private static final Logger logger = LoggerFactory.getLogger(SaveGameMenuDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
   private List<Savefile> saveFiles;
   private TextField nameInput;
-  private TextButton startButton;
+  private TextButton saveButton;
   private Label nameLabel;
   private boolean overwrite = false;
 
@@ -60,7 +60,7 @@ public class NewGameMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = new Label("NEW GAME", skin, "large");
+    Label titleLabel = new Label("SAVE GAME", skin, "large");
 
     // Name input field (initially hidden)
     nameLabel = new Label("Enter Save Name:", skin);
@@ -106,9 +106,9 @@ public class NewGameMenuDisplay extends UIComponent {
       }
     }
 
-    // Start game button
-    startButton = new TextButton("Start Game", skin);
-    startButton.addListener(
+    // Save game button
+    saveButton = new TextButton("Save Game", skin);
+    saveButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -116,16 +116,16 @@ public class NewGameMenuDisplay extends UIComponent {
             if (saveName.isEmpty()) {
               ServiceLocator.getDialogService().error("Error", "Please enter a save name");
             } else {
-              logger.info("Save game button clicked with name: {}", saveName);
+              logger.debug("Save game button clicked with name: {}", saveName);
               if (overwrite) {
                 ServiceLocator.getDialogService()
                     .warning(
                         "Warning",
                         "Are you sure you want to overwrite an existing save? This action cannot be undone.",
-                        dialog -> entity.getEvents().trigger("startGame", saveName),
+                        dialog -> entity.getEvents().trigger("saveGame", saveName),
                         null);
               } else {
-                entity.getEvents().trigger("startGame", saveName);
+                entity.getEvents().trigger("saveGame", saveName);
               }
             }
           }
@@ -149,25 +149,25 @@ public class NewGameMenuDisplay extends UIComponent {
     contentTable.row();
     contentTable.add(nameInput).width(400f).height(40f).padBottom(20f);
     contentTable.row();
-    contentTable.add(startButton).width(200f).height(60f);
+    contentTable.add(saveButton).width(200f).height(60f);
 
     stage.addActor(backTable);
     stage.addActor(contentTable);
     hideNameInput();
   }
 
-  /** Show the name input field and start button. */
+  /** Show the name input field and save button. */
   private void showNameInput() {
     nameLabel.setVisible(true);
     nameInput.setVisible(true);
-    startButton.setVisible(true);
+    saveButton.setVisible(true);
   }
 
-  /** Hide the name input field and start button. */
+  /** Hide the name input field and save button. */
   private void hideNameInput() {
     nameLabel.setVisible(false);
     nameInput.setVisible(false);
-    startButton.setVisible(false);
+    saveButton.setVisible(false);
   }
 
   @Override

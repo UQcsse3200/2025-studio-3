@@ -12,6 +12,11 @@ public class LoadMenuActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(LoadMenuActions.class);
   private GdxGame game;
 
+  /**
+   * Constructor for the LoadMenuActions class.
+   *
+   * @param game The game instance.
+   */
   public LoadMenuActions(GdxGame game) {
     this.game = game;
   }
@@ -24,7 +29,11 @@ public class LoadMenuActions extends Component {
 
   /** Handle going back to the main menu. */
   private void handleBack() {
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    if (Persistence.profile() == null) {
+      game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    } else {
+      game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    }
   }
 
   /**

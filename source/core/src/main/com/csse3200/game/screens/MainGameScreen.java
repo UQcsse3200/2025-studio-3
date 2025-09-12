@@ -116,7 +116,7 @@ public class MainGameScreen extends ScreenAdapter {
   public void resize(int width, int height) {
     renderer.resize(width, height);
     snapCameraBottomLeft();
-    
+
     logger.trace("Resized renderer: ({} x {})", width, height);
     if (levelGameArea != null) {
       levelGameArea.resize();
@@ -143,6 +143,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getResourceService().dispose();
+    ServiceLocator.getDialogService().hideAllDialogs();
 
     ServiceLocator.clear();
   }

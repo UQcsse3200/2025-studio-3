@@ -4,7 +4,6 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,25 +62,34 @@ public class MainMapNavigationMenuActions extends Component {
   /** Exits the game without saving. */
   private void onMainMenu() {
     logger.info("Returning to main menu");
-    ServiceLocator.getDialogService().warning("Return to Main Menu", "Are you sure you want to return to the main menu? Progress will not be saved.", dialog -> game.setScreen(GdxGame.ScreenType.MAIN_MENU), null);
+    ServiceLocator.getDialogService()
+        .warning(
+            "Return to Main Menu",
+            "Are you sure you want to return to the main menu? Progress will not be saved.",
+            dialog -> game.setScreen(GdxGame.ScreenType.MAIN_MENU),
+            null);
   }
 
   /** Exits the game. */
   private void onExit() {
-    logger.info("Exiting game");        
-    ServiceLocator.getDialogService().warning("Exit Game", "Are you sure you want to exit the game? Progress will not be saved.", dialog -> game.exit(), null);
+    logger.info("Exiting game");
+    ServiceLocator.getDialogService()
+        .warning(
+            "Exit Game",
+            "Are you sure you want to exit the game? Progress will not be saved.",
+            dialog -> game.exit(),
+            null);
   }
 
   /** Saves the game. */
   private void onSave() {
-    logger.info("Saving game");
-    // Persistence.save();
+    logger.info("Opening save game screen");
+    game.setScreen(GdxGame.ScreenType.SAVE_GAME);
   }
 
   /** Opens the dossier. */
   private void onDossier() {
     logger.info("Opening dossier");
-    // game.setScreen(GdxGame.ScreenType.DOSSIER);
   }
 
   /** Quicksaves the game. */

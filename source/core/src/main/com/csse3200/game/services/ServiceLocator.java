@@ -116,7 +116,6 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     currencyService = null;
-    menuSpriteService = null;
     dialogService = null;
   }
 
