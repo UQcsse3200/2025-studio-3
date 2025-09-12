@@ -2,7 +2,6 @@ package com.csse3200.game.components.hud;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -76,12 +75,12 @@ public class MainMapNavigationMenu extends UIComponent {
     coinsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
     // Create labels with white text
-    Label.LabelStyle labelStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
-    skillPointsLabel = new Label("0", labelStyle);
-    skillPointsLabel.setFontScale(1.5f);
-
-    coinsLabel = new Label("0", labelStyle);
-    coinsLabel.setFontScale(1.5f);
+    skillPointsLabel = new Label("0", skin);
+    whiten(skillPointsLabel);
+    skillPointsLabel.setFontScale(1f);
+    coinsLabel = new Label("0", skin);
+    whiten(coinsLabel);
+    coinsLabel.setFontScale(1f);
 
     // Add elements to table in a horizontal layout, centered
     plaqueTable.center();
@@ -94,7 +93,12 @@ public class MainMapNavigationMenu extends UIComponent {
     updateDisplay();
   }
 
-  /** Creates and positions the settings and menu buttons to the right of the plaque */
+  /** 
+   * Creates and positions the settings and menu buttons to the right of the plaque 
+   * 
+   * @param plaqueX The x position of the plaque
+   * @param plaqueY The y position of the plaque
+   */
   private void createButtons(float plaqueX, float plaqueY) {
     // Create settings button
     Texture settingsTexture =
@@ -134,7 +138,11 @@ public class MainMapNavigationMenu extends UIComponent {
     addMenuButtonClickListener();
   }
 
-  /** Adds hover effect to a button that shows a tooltip when hovered */
+  /** 
+   * Adds hover effect to a button that shows a tooltip when hovered
+   * 
+   * @param button The button to add the hover effect to
+   */
   private void addHoverEffect(ImageButton button) {
     button.addListener(
         new InputListener() {
@@ -181,12 +189,29 @@ public class MainMapNavigationMenu extends UIComponent {
     }
   }
 
-  /** Creates tooltip labels for the buttons */
-  private void createTooltips(float settingsX, float settingsY, float menuX, float menuY) {
-    Label.LabelStyle tooltipStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+  /**
+   * Sets the label's font color to white
+   * 
+   * @param label The label to set the font color of
+   */
+  private void whiten(Label label) {
+    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+    st.fontColor = Color.WHITE;
+    label.setStyle(st);
+  }
 
+  /**
+   * Creates tooltip labels for the buttons
+   * 
+   * @param settingsX The x position of the settings button
+   * @param settingsY The y position of the settings button
+   * @param menuX The x position of the menu button
+   * @param menuY The y position of the menu button
+   */
+  private void createTooltips(float settingsX, float settingsY, float menuX, float menuY) {
     // Create settings tooltip
-    settingsTooltip = new Label("Settings", tooltipStyle);
+    settingsTooltip = new Label("Settings", skin);
+    whiten(settingsTooltip);
     settingsTooltip.setFontScale(0.8f);
     settingsTooltip.setPosition(
         settingsX + (BUTTON_SIZE - settingsTooltip.getPrefWidth()) / 2f, settingsY - 20f);
@@ -194,7 +219,8 @@ public class MainMapNavigationMenu extends UIComponent {
     stage.addActor(settingsTooltip);
 
     // Create menu tooltip
-    menuTooltip = new Label("Menu", tooltipStyle);
+    menuTooltip = new Label("Menu", skin);
+    whiten(menuTooltip);
     menuTooltip.setFontScale(0.8f);
     menuTooltip.setPosition(menuX + (BUTTON_SIZE - menuTooltip.getPrefWidth()) / 2f, menuY - 20f);
     menuTooltip.setVisible(false);

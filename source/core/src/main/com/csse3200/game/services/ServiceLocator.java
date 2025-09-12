@@ -25,6 +25,7 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
   private static MenuSpriteService menuSpriteService;
+  private static DialogService dialogService;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -56,6 +57,10 @@ public class ServiceLocator {
 
   public static MenuSpriteService getMenuSpriteService() {
     return menuSpriteService;
+  }
+
+  public static DialogService getDialogService() {
+    return dialogService;
   }
 
   public static void registerEntityService(EntityService service) {
@@ -98,6 +103,11 @@ public class ServiceLocator {
     menuSpriteService = source;
   }
 
+  public static void registerDialogService(DialogService source) {
+    logger.debug("Registering dialog service {}", source);
+    dialogService = source;
+  }
+
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -106,6 +116,8 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     currencyService = null;
+    menuSpriteService = null;
+    dialogService = null;
   }
 
   private ServiceLocator() {

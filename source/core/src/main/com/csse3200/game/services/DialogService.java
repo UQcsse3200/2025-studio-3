@@ -1,0 +1,218 @@
+package com.csse3200.game.services;
+
+import com.csse3200.game.components.dialog.DialogComponent;
+import com.csse3200.game.entities.Entity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+/**
+ * Service for managing dialog components throughout the game.
+ * Provides convenient methods for creating and displaying different types of dialogs.
+ */
+public class DialogService {
+  private static final Logger logger = LoggerFactory.getLogger(DialogService.class);
+  private final List<DialogComponent> activeDialogs = new ArrayList<>();
+
+  public enum DialogType {
+    INFO,
+    WARNING,
+    ERROR
+  }
+  
+  /**
+   * Creates a new dialog service.
+   */
+  public DialogService() {
+    logger.debug("Dialog service created");
+  }
+  
+  /**
+   * Creates and shows an info dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent info(String title, String message) {
+    return info(title, message, null);
+  }
+  
+  /**
+   * Creates and shows an info dialog with a close callback.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onClose callback when dialog is closed
+   * @return the created dialog component
+   */
+  public DialogComponent info(String title, String message, Consumer<DialogComponent> onClose) {
+    return createAndShowDialog(DialogType.INFO, title, message, null, null, onClose);
+  }
+  
+  /**
+   * Creates and shows a warning dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent warning(String title, String message) {
+    return warning(title, message, null, null);
+  }
+  
+  /**
+   * Creates and shows a warning dialog with callbacks.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onConfirm callback when user confirms/continues
+   * @param onCancel callback when user cancels
+   * @return the created dialog component
+   */
+  public DialogComponent warning(String title, String message, 
+                                         Consumer<DialogComponent> onConfirm, 
+                                         Consumer<DialogComponent> onCancel) {
+    return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
+  }
+  
+  /**
+   * Creates and shows an error dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent error(String title, String message) {
+    return error(title, message, null);
+  }
+  
+  /**
+   * Creates and shows an error dialog with a close callback.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onClose callback when dialog is closed
+   * @return the created dialog component
+   */
+  public DialogComponent error(String title, String message, Consumer<DialogComponent> onClose) {
+    return createAndShowDialog(DialogType.ERROR, title, message, null, null, onClose);
+  }
+  
+  /**
+   * Creates and shows a confirmation dialog (warning type with custom buttons).
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onConfirm callback when user confirms
+   * @param onCancel callback when user cancels
+   * @return the created dialog component
+   */
+  public DialogComponent showConfirmationDialog(String title, String message,
+                                              Consumer<DialogComponent> onConfirm,
+                                              Consumer<DialogComponent> onCancel) {
+    return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
+  }
+  
+  /**
+   * Creates and shows a dialog at a specific position.
+   *
+   * @param dialogType the type of dialog
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param x the x coordinate
+   * @param y the y coordinate
+   * @return the created dialog component
+   */
+  public DialogComponent showDialogAt(DialogType dialogType, String title, String message, 
+                                    float x, float y) {
+    DialogComponent dialog = createAndShowDialog(dialogType, title, message, null, null, null);
+    dialog.setPosition(x, y);
+    return dialog;
+  }
+  
+  /**
+   * Hides all active dialogs.
+   */
+  public void hideAllDialogs() {
+    logger.debug("Hiding all active dialogs");
+    for (DialogComponent dialog : activeDialogs) {
+      dialog.hide();
+    }
+    activeDialogs.clear();
+  }
+  
+  /**
+   * Gets the number of currently active dialogs.
+   *
+   * @return the number of active dialogs
+   */
+  public int getActiveDialogCount() {
+    return activeDialogs.size();
+  }
+  
+  /**
+   * Checks if there are any active dialogs.
+   *
+   * @return true if there are active dialogs, false otherwise
+   */
+  public boolean hasActiveDialogs() {
+    return !activeDialogs.isEmpty();
+  }
+  
+  /**
+   * Gets a copy of the list of active dialogs.
+   *
+   * @return list of active dialog components
+   */
+  public List<DialogComponent> getActiveDialogs() {
+    return new ArrayList<>(activeDialogs);
+  }
+  
+  /**
+   * Internal method to create and show a dialog with all options.
+   */
+  private DialogComponent createAndShowDialog(DialogType dialogType, String title, String message,
+                                            Consumer<DialogComponent> onConfirm,
+                                            Consumer<DialogComponent> onCancel,
+                                            Consumer<DialogComponent> onClose) {
+    logger.debug("Creating {} dialog: {}", dialogType, title);
+    
+    // Create entity and add dialog component
+    Entity dialogEntity = new Entity();
+    DialogComponent dialog = new DialogComponent(dialogType, title, message);
+    
+    // Set up callbacks
+    if (onConfirm != null) {
+      dialog.setOnConfirm(onConfirm);
+    }
+    if (onCancel != null) {
+      dialog.setOnCancel(onCancel);
+    }
+    if (onClose != null) {
+      dialog.setOnClose(onClose);
+    }
+    
+    // Add cleanup callback to remove from active list
+    dialog.setOnClose(d -> {
+      activeDialogs.remove(dialog);
+      dialogEntity.dispose();
+    });
+    
+    dialogEntity.addComponent(dialog);
+    
+    // Register entity with service locator
+    ServiceLocator.getEntityService().register(dialogEntity);
+    
+    // Show the dialog
+    dialog.show();
+    
+    // Add to active dialogs list
+    activeDialogs.add(dialog);
+    
+    return dialog;
+  }
+}

@@ -19,6 +19,8 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.DialogExample;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +30,7 @@ public class MainMenuScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] mainMenuTextures = {
-    "images/box_boy_title.png", "images/bg.png", "images/bg-text.png"
+    "images/box_boy_title.png", "images/bg.png", "images/bg-text.png", "images/dialog.png"
   };
 
   public MainMenuScreen(GdxGame game) {
@@ -114,7 +116,8 @@ public class MainMenuScreen extends ScreenAdapter {
     Entity ui = new Entity();
     ui.addComponent(new MainMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new MainMenuActions(game));
+        .addComponent(new MainMenuActions(game))
+        .addComponent(new DialogExample());
     ServiceLocator.getEntityService().register(ui);
     logger.debug("Main menu screen ui is created and registered");
   }

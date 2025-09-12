@@ -48,7 +48,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/skillpoints.png",
     "images/settings-icon.png",
     "images/menu-icon.png",
-    "images/profile.png"
+    "images/profile.png",
+    "images/dialog.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
