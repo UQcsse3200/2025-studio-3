@@ -45,9 +45,9 @@ public class CurrentWaveDisplay extends UIComponent {
    */
   private void addActors() {
     table = new Table();
-    table.top().right();
+    table.top().left();
     table.setFillParent(true);
-    table.padTop(65f).padRight(5f);
+    table.padTop(25f).padLeft(5f);
 
     // Wave text label
     waveLabel = new Label("Current Wave:", skin, "small");

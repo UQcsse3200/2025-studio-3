@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
@@ -35,6 +36,7 @@ public class MainMapNavigationMenu extends UIComponent {
   private ImageButton menuButton;
   private Label settingsTooltip;
   private Label menuTooltip;
+  private AnimatedDropdownMenu dropdownMenu;
 
   @Override
   public void create() {
@@ -127,6 +129,9 @@ public class MainMapNavigationMenu extends UIComponent {
     // Add hover effects to buttons
     addHoverEffect(settingsButton);
     addHoverEffect(menuButton);
+
+    // Add click listener to menu button to trigger dropdown
+    addMenuButtonClickListener();
   }
 
   /** Adds hover effect to a button that shows a tooltip when hovered */
@@ -153,9 +158,31 @@ public class MainMapNavigationMenu extends UIComponent {
         });
   }
 
+  /** Adds click listener to menu button to trigger dropdown menu */
+  private void addMenuButtonClickListener() {
+    menuButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            toggleDropdownMenu();
+          }
+        });
+  }
+
+  /** Toggles the dropdown menu */
+  private void toggleDropdownMenu() {
+    if (dropdownMenu == null) {
+      dropdownMenu = new AnimatedDropdownMenu();
+      dropdownMenu.setStage(stage);
+      dropdownMenu.setMainEntity(entity);
+      dropdownMenu.create();
+    } else {
+      dropdownMenu.toggle();
+    }
+  }
+
   /** Creates tooltip labels for the buttons */
   private void createTooltips(float settingsX, float settingsY, float menuX, float menuY) {
-    // Create label style for tooltips
     Label.LabelStyle tooltipStyle = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
 
     // Create settings tooltip
@@ -293,6 +320,10 @@ public class MainMapNavigationMenu extends UIComponent {
     if (menuTooltip != null) {
       menuTooltip.remove();
       menuTooltip = null;
+    }
+    if (dropdownMenu != null) {
+      dropdownMenu.dispose();
+      dropdownMenu = null;
     }
     super.dispose();
   }

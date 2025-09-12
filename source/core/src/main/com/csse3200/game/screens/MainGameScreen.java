@@ -9,6 +9,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
@@ -29,8 +30,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-// this file seems to have
-// been deleted
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -172,6 +171,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new PerformanceDisplay())
         .addComponent(new MainGameActions(this.game))
         .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
