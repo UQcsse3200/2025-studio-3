@@ -31,13 +31,4 @@ public class BaseEntityConfig {
   public int getAttack() {
     return baseAttack;
   }
-
-  /**
-   * Gets the movement speed for this entity.
-   *
-   * @return the movement speed
-   */
-  public float getMovementSpeed() {
-    return 1;
-  }
 }
