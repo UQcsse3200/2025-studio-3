@@ -19,7 +19,7 @@ public class MainGameActions extends Component {
 
   @Override
   public void create() {
-    entity.getEvents().addListener("exit", this::onExit);
+    // Note: exit event is handled by MainMapNavigationMenuActions with confirmation dialog
     entity.getEvents().addListener("open_profile", this::onProfile);
   }
 

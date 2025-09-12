@@ -76,17 +76,24 @@ public class DialogComponent extends UIComponent {
     contentTable.pad(20f);
     
     // Add title label (centered and bigger)
-    Label titleLabel = new Label(title, skin, "title");
+    Color titleColor = getTextColor();
+    logger.debug("Setting title color to: {}", titleColor);
+    
+    // Create custom label style with the title color
+    Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+    titleStyle.fontColor = titleColor;
+    Label titleLabel = new Label(title, titleStyle);
     titleLabel.setAlignment(Align.center);
-    titleLabel.setColor(getTextColor());
     titleLabel.setFontScale(1.3f);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
     
-    // Add message label
-    Label messageLabel = new Label(message, skin);
+    // Add message label (always white)
+    Label.LabelStyle messageStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
+    messageStyle.fontColor = Color.WHITE;
+    Label messageLabel = new Label(message, messageStyle);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
-    messageLabel.setColor(getTextColor());
+    logger.debug("Setting message color to: WHITE");
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
     
     // Add buttons based on dialog type
@@ -131,9 +138,9 @@ public class DialogComponent extends UIComponent {
       case INFO:
         return Color.CYAN;
       case WARNING:
-        return Color.YELLOW;
+        return Color.ORANGE;
       case ERROR:
-        return Color.SALMON;
+        return Color.RED;
       default:
         return Color.WHITE;
     }
@@ -146,8 +153,8 @@ public class DialogComponent extends UIComponent {
     Table buttonTable = new Table();
     
     switch (dialogType) {
+      // Info dialog buttons
       case INFO:
-        // Info dialogs typically just have an "OK" button
         TextButton okButton = new TextButton("OK", skin);
         okButton.addListener(new ClickListener() {
           @Override
@@ -160,7 +167,8 @@ public class DialogComponent extends UIComponent {
         });
         buttonTable.add(okButton).pad(5f);
         break;
-        
+      
+      // Warning dialog buttons
       case WARNING:
         TextButton cancelButton = new TextButton("Cancel", skin);
         cancelButton.addListener(new ClickListener() {
@@ -187,7 +195,8 @@ public class DialogComponent extends UIComponent {
         buttonTable.add(cancelButton).pad(5f);
         buttonTable.add(continueButton).pad(5f);
         break;
-        
+      
+      // Error dialog buttons
       case ERROR:
         TextButton okButtonError = new TextButton("OK", skin);
         okButtonError.addListener(new ClickListener() {
@@ -213,6 +222,15 @@ public class DialogComponent extends UIComponent {
     float x = (stage.getWidth() - dialog.getWidth()) / 2f;
     float y = (stage.getHeight() - dialog.getHeight()) / 2f;
     dialog.setPosition(x, y);
+  }
+
+  /**
+   * Handles window resize by re-centering the dialog.
+   */
+  public void resize() {
+    if (dialog != null && isVisible) {
+      centerDialog();
+    }
   }
 
   /**

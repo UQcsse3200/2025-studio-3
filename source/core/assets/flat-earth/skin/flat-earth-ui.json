@@ -65,6 +65,24 @@ com.badlogic.gdx.graphics.Color: {
       "b": 0,
       "a": 1
     }
+	dialog_info: {
+		"r": 0.4,
+		"g": 0.7,
+		"b": 1.0,
+		"a": 1
+    },
+	dialog_warning: {
+		"r": 1.0,
+		"g": 0.5,
+		"b": 0.0,
+		"a": 1
+    },
+	dialog_error: {
+		"r": 1.0,
+		"g": 0.23,
+		"b": 0.23,
+		"a": 1
+    }
 	window: {
 		r: 0.76862746
 		g: 0.4509804

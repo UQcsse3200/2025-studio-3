@@ -4,7 +4,6 @@ import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,6 +16,9 @@ public class DialogService {
   private static final Logger logger = LoggerFactory.getLogger(DialogService.class);
   private final List<DialogComponent> activeDialogs = new ArrayList<>();
 
+  /**
+   * Enum for the different types of dialogs.
+   */
   public enum DialogType {
     INFO,
     WARNING,
@@ -103,38 +105,6 @@ public class DialogService {
   }
   
   /**
-   * Creates and shows a confirmation dialog (warning type with custom buttons).
-   *
-   * @param title the dialog title
-   * @param message the dialog message
-   * @param onConfirm callback when user confirms
-   * @param onCancel callback when user cancels
-   * @return the created dialog component
-   */
-  public DialogComponent showConfirmationDialog(String title, String message,
-                                              Consumer<DialogComponent> onConfirm,
-                                              Consumer<DialogComponent> onCancel) {
-    return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
-  }
-  
-  /**
-   * Creates and shows a dialog at a specific position.
-   *
-   * @param dialogType the type of dialog
-   * @param title the dialog title
-   * @param message the dialog message
-   * @param x the x coordinate
-   * @param y the y coordinate
-   * @return the created dialog component
-   */
-  public DialogComponent showDialogAt(DialogType dialogType, String title, String message, 
-                                    float x, float y) {
-    DialogComponent dialog = createAndShowDialog(dialogType, title, message, null, null, null);
-    dialog.setPosition(x, y);
-    return dialog;
-  }
-  
-  /**
    * Hides all active dialogs.
    */
   public void hideAllDialogs() {
@@ -170,6 +140,16 @@ public class DialogService {
    */
   public List<DialogComponent> getActiveDialogs() {
     return new ArrayList<>(activeDialogs);
+  }
+
+  /**
+   * Handles window resize by re-centering all active dialogs.
+   */
+  public void resize() {
+    logger.debug("Resizing {} active dialogs", activeDialogs.size());
+    for (DialogComponent dialog : activeDialogs) {
+      dialog.resize();
+    }
   }
   
   /**

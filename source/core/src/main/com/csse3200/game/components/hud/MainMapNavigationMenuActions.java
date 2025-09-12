@@ -3,6 +3,7 @@ package com.csse3200.game.components.hud;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ServiceLocator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,13 +62,13 @@ public class MainMapNavigationMenuActions extends Component {
   /** Exits the game without saving. */
   private void onMainMenu() {
     logger.info("Returning to main menu");
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    ServiceLocator.getDialogService().warning("Return to Main Menu", "Are you sure you want to return to the main menu? Progress will not be saved.", dialog -> game.setScreen(GdxGame.ScreenType.MAIN_MENU), null);
   }
 
   /** Exits the game. */
   private void onExit() {
-    logger.info("Exiting game");
-    game.exit();
+    logger.info("Exiting game");        
+    ServiceLocator.getDialogService().warning("Exit Game", "Are you sure you want to exit the game? Progress will not be saved.", dialog -> game.exit(), null);
   }
 
   /** Saves the game. */
@@ -80,6 +81,7 @@ public class MainMapNavigationMenuActions extends Component {
   private void onQuicksave() {
     logger.info("Quicksaving game");
     Persistence.save();
+    ServiceLocator.getDialogService().info("Quicksaved", "Game has been saved.");
   }
 
   /** Loads the game. */
