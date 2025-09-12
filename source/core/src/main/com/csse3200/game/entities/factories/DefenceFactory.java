@@ -2,8 +2,10 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DefenceStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
@@ -65,7 +67,7 @@ public class DefenceFactory {
             new DefenceStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.type,
+                config.rangeType,
                 config.range,
                 config.state,
                 config.attackSpeed,
@@ -73,9 +75,8 @@ public class DefenceFactory {
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
-    // trigger the initial attack event to kick off behaviour
-    // this will be changed to idle once idle is made
-    defender.getEvents().trigger("idleStart");
+    // Scale to tilesize
+    animator.scaleEntity();
 
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -103,7 +104,7 @@ public class DefenceFactory {
             new DefenceStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.type,
+                config.rangeType,
                 config.range,
                 config.state,
                 config.attackSpeed,
@@ -138,8 +139,10 @@ public class DefenceFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new HitMarkerComponent())
             .addComponent(enemyDetectionTasks);
 
+    npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
   }
