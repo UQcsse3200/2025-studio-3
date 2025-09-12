@@ -10,69 +10,27 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  /**
-   * Gets the name of this entity.
-   *
-   * @return the name
-   */
-  public String getName() {
-    return "Base enemy";
-  }
+  /** The enemy type's name */
+  public String name = "Default Name";
+
+  /** The atlas file for the enemy's animations */
+  public String atlasFilePath = "images/robot_placeholder.atlas";
+
+  /** The enemy's default sprite */
+  public String defaultSprite = "images/default_enemy_image.png";
+
+  /** Maximum health of the enemy */
+  public int health = 1;
+
+  /** Damage dealt by the enemy */
+  public int attack = 1;
+
+  /** The enemy's movement speed */
+  public float movementSpeed = 1f;
 
   /**
-   * Gets the file path atlas file associated with the entity's animations.
-   *
-   * @return the file path of the atlas file.
+   * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
+   * tile height.
    */
-  public String getAtlasFile() {
-    return "images/robot_placeholder.atlas";
-  }
-
-  /**
-   * Gets the filepath of the default sprite for the enemy. This sprite will be used in the enemy
-   * log.
-   *
-   * @return the file path of the default enemy sprite.
-   */
-  public String getDefaultSprite() {
-    return "images/default_enemy_image.png";
-  }
-
-  /**
-   * Gets the health value for this entity.
-   *
-   * @return the health value
-   */
-  public int getHealth() {
-    return 1;
-  }
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getAttack() {
-    return 1;
-  }
-
-  /**
-   * Gets the movement speed for this entity.
-   *
-   * @return the movement speed
-   */
-  public float getMovementSpeed() {
-    return 1;
-  }
-
-  /**
-   * Gets the size of the enemy sprite. 1 is the standard size, so the enemy will be scaled by this
-   * value. NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the tile
-   * height.
-   *
-   * @return the enemy sprite size.
-   */
-  public float getScale() {
-    return 1f;
-  }
+  public float scale = 1f;
 }
