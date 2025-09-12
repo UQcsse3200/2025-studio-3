@@ -123,7 +123,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 4, "fast");
     spawnInventory();
 
-      playMusic();
+    playMusic();
   }
 
   /** Uses the {@link ResourceService} to load the assets for the level. */
@@ -270,12 +270,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.grid = newGrid;
   }
 
-  public void spawnRobot(int x, int y, String robotType) {
+  public void spawnRobot(int col, int row, String robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
-    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
-    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
+    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+
+    // place on that grid cell (bottom-left of the tile)
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
     unit.setPosition(tileX, tileY);
 
     // Add to list of all spawned units
@@ -283,86 +287,49 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
-    logger.info("Unit spawned at position {} {}", x, y);
+    logger.info("Unit spawned at position {} {}", col, row);
   }
 
-/**
- * Spawns a robot directly on top of an existing defence (placed unit) on the grid.
- * If no defence exists, does nothing and logs a warning.
- */
-public void spawnRobotOnDefence(String robotType) {
+  /**
+   * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
+   * exists, does nothing and logs a warning.
+   */
+  public void spawnRobotOnDefence(String robotType) {
     if (grid == null) {
-        logger.warn("Grid not initialised; cannot spawn robot on defence.");
-        return;
+      logger.warn("Grid not initialised; cannot spawn robot on defence.");
+      return;
     }
 
-    // Track the rightmost defence for each lane (row)
-    class Target {
-        final int row, col;
-        final float x, y;   // world pos of the defence tile's bottom-left
-        final Entity tile;  // the tile entity if found, null otherwise
-        Target(int row, int col, float x, float y, Entity tile) {
-            this.row = row; this.col = col; this.x = x; this.y = y; this.tile = tile;
-        }
-    }
-    Target[] bestPerRow = new Target[LEVEL_ONE_ROWS];
-
+    int bestRow = -1, bestCol = -1;
     final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
+
     for (int i = 0; i < total; i++) {
-        int row = i / LEVEL_ONE_COLS;
-        int col = i % LEVEL_ONE_COLS;
+      int row = i / LEVEL_ONE_COLS, col = i % LEVEL_ONE_COLS;
 
-        float tileX = xOffset + tileSize * col;
-        float tileY = yOffset + tileSize * row;
+      float cx = xOffset + tileSize * col + tileSize * 0.5f;
+      float cy = yOffset + tileSize * row + tileSize * 0.5f;
+      Entity tile = grid.getTileFromXY(cx, cy);
 
-        // centre point
-        Entity tile = grid.getTileFromXY(tileX + tileSize * 0.5f, tileY + tileSize * 0.5f);
+      boolean hasDefence =
+          (tile != null
+                  && tile.getComponent(TileStorageComponent.class) != null
+                  && tile.getComponent(TileStorageComponent.class).getTileUnit() != null)
+              || (i < spawned_units.length && spawned_units[i] != null);
 
-        boolean hasDefence = false;
-        if (tile != null) {
-            TileStorageComponent storage = tile.getComponent(TileStorageComponent.class);
-            hasDefence = (storage != null && storage.getTileUnit() != null);
-        }
-        if (!hasDefence && i < spawned_units.length) {
-            hasDefence = (spawned_units[i] != null);
-        }
-
-        if (hasDefence) {
-            Target t = bestPerRow[row];
-            if (t == null || col > t.col) {
-                bestPerRow[row] = new Target(row, col, tileX, tileY, tile);
-            }
-        }
+      if (hasDefence && col > bestCol) {
+        bestCol = col;
+        bestRow = row;
+      }
     }
 
-    // Choose the defence furthest to the right among rows that have one
-    Target chosen = null;
-    for (Target t : bestPerRow) {
-        if (t == null) continue;
-        if (chosen == null || t.col > chosen.col) {
-            chosen = t;
-        }
+    if (bestCol < 0) {
+      logger.info("No defence tiles found to spawn {} robot on.", robotType);
+      return;
     }
 
-    if (chosen == null) {
-        logger.info("No defence tiles found to spawn {} robot on.", robotType);
-        return;
-    }
-
-    int newCol = Math.min(chosen.col, LEVEL_ONE_COLS - 1);
-    int newRow = Math.min(chosen.row, LEVEL_ONE_ROWS - 1);
-
-    // World coords for that cell
-    float rx = xOffset + tileSize * newCol;
-    float ry = yOffset + tileSize * newRow;
-
-    Entity robot = RobotFactory.createRobotType(robotType);
-    robot.setPosition(rx, ry);
-    robot.scaleHeight(tileSize);
-    spawnEntity(robot);
-    logger.info("Spawned {} robot near rightmost defence at row={}, col={} -> pos ({}, {})",
-            robotType, chosen.row, chosen.col, rx, ry);
-}
+    spawnRobot(bestCol, bestRow, robotType);
+    logger.info("Spawned {} robot on defence at row={}, col={}", robotType, bestRow, bestCol);
+  }
 
   /**
    * Getter for selected_unit
