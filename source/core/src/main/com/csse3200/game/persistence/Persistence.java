@@ -14,9 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for loading and saving the user profile / savefile.
  *
- * <p>
- * Save files should be in the format
- * {@code <profilename>$<unixtime>$<slot>.json}.
+ * <p>Save files should be in the format {@code <profilename>$<unixtime>$<slot>.json}.
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
@@ -60,7 +58,7 @@ public class Persistence {
    * Create a new user profile.
    *
    * @param profileName the name of the profile, or null to use the default name
-   * @param slot        the slot to save the profile to
+   * @param slot the slot to save the profile to
    */
   public static void create(String profileName, int slot) {
     profile = new Profile();
@@ -71,9 +69,7 @@ public class Persistence {
     save(slot);
   }
 
-  /**
-   * Ensures that the save directory exists.
-   */
+  /** Ensures that the save directory exists. */
   private static void ensureDirectoryExists() {
     FileHandle dir = Gdx.files.external(ROOT_DIR);
     if (!dir.exists()) {
@@ -84,11 +80,15 @@ public class Persistence {
 
   /**
    * Fetch saves organized by slot.
-   * 
+   *
    * @return the list of savefiles
    */
   public static List<Savefile> fetch() {
     List<Savefile> saves = new ArrayList<>(3);
+    for (int i = 0; i < 3; i++) {
+      saves.add(null);
+    }
+
     ensureDirectoryExists();
     FileHandle rootDir = Gdx.files.external(ROOT_DIR);
     FileHandle[] files = rootDir.list(FILE_EXTENSION);
@@ -99,7 +99,7 @@ public class Persistence {
     for (FileHandle file : files) {
       Savefile savefile = parseSavefile(file);
       if (savefile != null) {
-        saves.add(savefile);
+        saves.set(savefile.getSlot() - 1, savefile);
       }
     }
 
@@ -108,7 +108,7 @@ public class Persistence {
 
   /**
    * Parse a savefile from a file handle.
-   * 
+   *
    * @param file the file handle to parse
    * @return the savefile, or null if the file is invalid
    */
@@ -129,8 +129,7 @@ public class Persistence {
     try {
       timestamp = Long.parseLong(timestampStr);
       slot = Integer.parseInt(slotStr);
-      if (slot > 3 || slot < 1)
-        throw new NumberFormatException();
+      if (slot > 3 || slot < 1) throw new NumberFormatException();
     } catch (NumberFormatException e) {
       logger.error("Failed to parse savefile");
       return null;
@@ -146,7 +145,7 @@ public class Persistence {
 
   /**
    * Save the current user profile to a specific slot.
-   * 
+   *
    * @param slot the slot to save the profile to
    */
   public static void save(int slot) {
@@ -163,15 +162,16 @@ public class Persistence {
     // Delete any existing save in this slot
     List<Savefile> saves = fetch();
     try {
-      if (saves.get(slot) != null) {
-        delete(saves.get(slot));
+      if (saves.get(slot - 1) != null) {
+        delete(saves.get(slot - 1));
       }
     } catch (IndexOutOfBoundsException e) {
       // slot is empty
     }
 
     // Create filename with slot information
-    String filename = profile.getName() + "$" + System.currentTimeMillis() + "$" + slot + FILE_EXTENSION;
+    String filename =
+        profile.getName() + "$" + System.currentTimeMillis() + "$" + slot + FILE_EXTENSION;
     String path = ROOT_DIR + File.separator + filename;
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
 
@@ -182,7 +182,7 @@ public class Persistence {
 
   /**
    * Deletes a savefile from the filesystem.
-   * 
+   *
    * @param save the savefile to delete
    */
   private static void delete(Savefile save) {

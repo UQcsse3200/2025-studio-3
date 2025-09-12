@@ -2,9 +2,7 @@ package com.csse3200.game.persistence;
 
 import java.util.UUID;
 
-/**
- * Represents a savefile in the game.
- */
+/** Represents a savefile in the game. */
 public class Savefile {
   private String name;
   private Long date;
@@ -34,7 +32,7 @@ public class Savefile {
     if (parts.length != 3) {
       return null;
     }
-    
+
     try {
       String name = parts[0];
       Long date = Long.parseLong(parts[1]);
