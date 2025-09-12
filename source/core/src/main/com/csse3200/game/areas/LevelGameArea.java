@@ -1,21 +1,24 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.components.tile.TileStatusComponent;
+import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.ArrayList;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,30 +38,41 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/olive_tile.png",
     "images/green_tile.png",
     "images/box_boy.png",
-    "images/selected_star.png"
+    "images/selected_star.png",
+    "images/sling_shooter_1.png",
+    "images/sling_shooter_front.png"
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/sling_shooter.atlas",
+    "images/robot_placeholder.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
   private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelMusic = {backgroundMusic};
+
   private final TerrainFactory terrainFactory;
 
   // Offset values
-  private final float xOffset;
-  private final float yOffset;
-  private final float tileSize;
-  private final float invStartX;
-  private final float invY;
-  private final float invSelectedY;
-  private CurrencyGeneratorComponent currencyGenerator;
+  private float xOffset;
+  private float yOffset;
+  private float tileSize;
+  private float invStartX;
+  private float invY;
+  private float invSelectedY;
+  private float stageHeight;
+  private float stageToWorldRatio;
   private LevelGameGrid grid;
   private final Entity[] spawned_units;
   private Entity selected_unit;
   private Entity selection_star;
+
+  // May have to use a List<Entity> instead if we need to know what entities are at what position
+  // But for now it doesn't matter
+  private int inventoryUnitCount;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -67,11 +81,23 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   public LevelGameArea(TerrainFactory terrainFactory) {
     super();
+    setScaling();
 
-    // Calculate scaling
-    float stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
+    this.terrainFactory = terrainFactory;
+    selected_unit = null; // None selected at level load
+    spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
+    selection_star = null;
+  }
+
+  /**
+   * Uses stage height and width (screen resolution from {@link
+   * com.csse3200.game.rendering.RenderService}) to set variables relating to tile, grid and
+   * character sizing and placement.
+   */
+  public void setScaling() {
+    stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
     float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
-    float stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
+    stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
 
     float gridHeight = (stageHeight * stageToWorldRatio) / 8f * LEVEL_ONE_ROWS;
     tileSize = gridHeight / LEVEL_ONE_ROWS;
@@ -80,27 +106,22 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     invStartX = xOffset;
     invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
     invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
-
-    this.terrainFactory = terrainFactory;
-    selected_unit = null; // None selected at level load
-    spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
-    selection_star = null;
   }
 
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
     loadAssets();
+
     displayUI();
 
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, "tanky");
-    spawnRobot(10, 1, "standard");
-    spawnRobot(10, 4, "fast");
-    placeInventoryUnit(1, "images/ghost_1.png"); // start at one for 0 to represent none selected
-    placeInventoryUnit(2, "images/ghost_king.png");
+    // spawnRobot(7, 2, "tanky");
+    // spawnRobot(10, 1, "standard");
+    // spawnRobot(10, 4, "fast");
+    spawnInventory();
 
     playMusic();
   }
@@ -149,9 +170,20 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(mapEntity);
   }
 
+  /** Determines inventory units to spawn for the level and calls method to place them. */
+  private void spawnInventory() {
+    inventoryUnitCount = 0;
+    placeInventoryUnit(() -> null, "images/ghost_1.png");
+    placeInventoryUnit(() -> null, "images/ghost_king.png");
+    placeInventoryUnit(
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
+        "images/sling_shooter_front.png");
+  }
+
   private void spawnSun() {
     Entity sunSpawner = new Entity();
-    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
+    CurrencyGeneratorComponent currencyGenerator =
+        new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
     sunSpawner.addComponent(currencyGenerator);
     spawnEntity(sunSpawner);
   }
@@ -176,22 +208,23 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         tile = GridFactory.createTile(1 - (i % 2), tileSize, tileX, tileY, this);
       }
       tile.setPosition(tileX, tileY);
-      tile.getComponent(TileStatusComponent.class).set_position(i);
+      tile.getComponent(TileStorageComponent.class).setPosition(i);
       grid.addTile(i, tile);
       spawnEntity(tile);
     }
   }
 
   /**
-   * Creates and Spawns the Units in the inventory
+   * Places a unit with its supplier in the inventory
    *
-   * @param pos the position of the unit in the inventory, pos >= 1
-   * @param image the file path of the unit image
+   * @param supplier function returning a copy of that unit
+   * @param image sprite image for how it will be displayed in the inventory
    */
-  private void placeInventoryUnit(int pos, String image) {
+  private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
+    int pos = ++inventoryUnitCount;
     Entity unit =
         new Entity()
-            .addComponent(new InventoryUnitInputComponent(this))
+            .addComponent(new InventoryUnitInputComponent(this, supplier))
             .addComponent(new TextureRenderComponent(image));
     unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
     unit.scaleHeight(tileSize);
@@ -229,9 +262,28 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    *
    * @return grid
    */
-  @Override
   public LevelGameGrid getGrid() {
     return grid;
+  }
+
+  public void setGrid(LevelGameGrid newGrid) {
+    this.grid = newGrid;
+  }
+
+  public void spawnRobot(int x, int y, String robotType) {
+    Entity unit = RobotFactory.createRobotType(robotType);
+
+    // Get and set position coords
+    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
+    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+    unit.setPosition(tileX, tileY);
+
+    // Add to list of all spawned units
+
+    // set scale to render as desired
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+    logger.info("Unit spawned at position {} {}", x, y);
   }
 
   /**
@@ -278,43 +330,34 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void spawnUnit(int position) {
-    Entity unit = new Entity();
-
-    // Match the texture of the inventory unit - placeholder
-    Texture texture = selected_unit.getComponent(TextureRenderComponent.class).getTexture();
-    unit.addComponent(new TextureRenderComponent(texture));
-
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
     float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
-    unit.setPosition(tileX, tileY);
+    Vector2 entityPos = new Vector2(tileX, tileY);
+
+    Supplier<Entity> entitySupplier =
+        selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
+    Entity newEntity = entitySupplier.get();
+    if (newEntity == null) {
+      logger.error("Entity fetched was NULL");
+      return;
+    }
+    newEntity.setPosition(entityPos);
+
+    Entity selectedTile = grid.getTileFromXY(tileX, tileY);
+    if (selectedTile != null) {
+      selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
+    }
 
     // Add to list of all spawned units
-    spawned_units[position] = unit;
-
+    spawned_units[position] = newEntity;
     // set scale to render as desired
-    unit.getComponent(TextureRenderComponent.class).scaleEntity();
-    unit.scaleHeight(tileSize);
+    newEntity.scaleHeight(tileSize);
 
-    spawnEntity(unit);
+    spawnEntity(newEntity);
+    // trigger the animation - this will change with more entities
+    newEntity.getEvents().trigger("attackStart");
     logger.info("Unit spawned at position {}", position);
-  }
-
-  public void spawnRobot(int x, int y, String robotType) {
-    Entity unit = RobotFactory.createRobotType(robotType);
-
-    // Get and set position coords
-    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
-    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
-    unit.setPosition(tileX, tileY);
-
-    // Add to list of all spawned units
-    //        spawned_units[position] = unit;
-
-    // set scale to render as desired
-    unit.scaleHeight(tileSize);
-    spawnEntity(unit);
-    logger.info("Unit spawned at position {} {}", x, y);
   }
 
   /**
@@ -333,10 +376,42 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   /**
    * Getter for tile size in world units
    *
-   * @return SCALE the size of the tiles
+   * @return tileSize the size of the tiles
    */
   @Override
   public float getTileSize() {
     return tileSize;
+  }
+
+  /**
+   * Converts stage (mouse/screen) coordinates into world (entity placement) coordinates
+   *
+   * @param pos a and y coordinates in the stage
+   * @return GridPoint 2 containing x and y coordinates in the world
+   */
+  @Override
+  public GridPoint2 stageToWorld(GridPoint2 pos) {
+    float x = pos.x * stageToWorldRatio;
+    float y = (stageHeight - pos.y) * stageToWorldRatio;
+
+    return new GridPoint2((int) x, (int) y);
+  }
+
+  /**
+   * Converts world (entity placement) coordinates into stage (mouse/screen) coordinates
+   *
+   * @param pos a and y coordinates in the world
+   * @return GridPoint 2 containing x and y coordinates in the stage
+   */
+  @Override
+  public GridPoint2 worldToStage(GridPoint2 pos) {
+    float x = pos.x / stageToWorldRatio;
+    float y = stageHeight - (pos.y / stageToWorldRatio);
+    return new GridPoint2((int) x, (int) y);
+  }
+
+  /** Method to reset game entity size/position on window resize. */
+  public void resize() {
+    setScaling();
   }
 }

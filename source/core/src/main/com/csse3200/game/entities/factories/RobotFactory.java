@@ -154,13 +154,16 @@ public class RobotFactory {
     AITaskComponent aiComponent =
         new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
 
-    return new Entity()
-        .addComponent(new PhysicsComponent())
-        .addComponent(new PhysicsMovementComponent())
-        .addComponent(new ColliderComponent())
-        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
-        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-        .addComponent(aiComponent);
+    Entity robot =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsMovementComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
+            .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+            .addComponent(aiComponent);
+    com.csse3200.game.physics.PhysicsUtils.setScaledCollider(robot, 0.9f, 0.6f);
+    return robot;
 
     // The original NPCFactory had:
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
