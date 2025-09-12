@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
@@ -138,11 +139,10 @@ public class DefenceFactory {
 
     Entity npc =
         new Entity()
-            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(enemyDetectionTasks)
-                .addComponent(new PhysicsMovementComponent());
+            .addComponent(enemyDetectionTasks);
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
