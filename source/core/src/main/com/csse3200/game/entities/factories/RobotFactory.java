@@ -11,6 +11,7 @@ import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -30,6 +31,12 @@ import com.csse3200.game.services.ServiceLocator;
  * similar characteristics.
  */
 public class RobotFactory {
+  /**
+   * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
+   * file is missing or deserialization fails, this will be null.
+   */
+  private static final NPCConfigs configs =
+      FileLoader.readClass(NPCConfigs.class, "configs/Enemies.json");
 
   /**
    * A basic function to create a specific type of robot depending on the input TODO make this use
@@ -42,13 +49,13 @@ public class RobotFactory {
   public static Entity createRobotType(String robotType) {
     BaseEnemyConfig config;
     if (robotType.equalsIgnoreCase("fast")) {
-      config = new FastRobotConfig();
+      config = configs.fastRobot;
     } else if (robotType.equalsIgnoreCase("tanky")) {
-      config = new TankyRobotConfig();
+      config = configs.tankyRobot;
     } else if (robotType.equalsIgnoreCase("bungee")) {
-      config = new BungeeRobotConfig();
+      config = configs.bungeeRobot;
     } else {
-      config = new StandardRobotConfig();
+      config = configs.standardRobot;
     }
     return createBaseRobot(config);
   }
@@ -65,11 +72,11 @@ public class RobotFactory {
 
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new MoveLeftTask(config.getMovementSpeed()))
+            .addTask(new MoveLeftTask(config.movementSpeed))
             .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
 
     // Animation
-    final String atlasPath = config.getAtlasFile();
+    final String atlasPath = config.atlasFilePath;
     var rs = ServiceLocator.getResourceService();
 
     AnimationRenderComponent animator =
@@ -83,7 +90,6 @@ public class RobotFactory {
     // We could also do
     // .addComponent(new RobotAnimationController())
     // but that isn't really implemented
-    // make a bit larger
 
     Entity robot =
         new Entity()
@@ -103,7 +109,7 @@ public class RobotFactory {
     animator.startAnimation("chill"); // start an animation
 
     // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
-    robot.setScale(robot.getScale().x * config.getScale(), robot.getScale().y * config.getScale());
+    robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
 
     return robot;
 
