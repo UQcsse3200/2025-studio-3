@@ -15,13 +15,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class InventoryUnitInputComponentTest {
+class DeckInputComponentTest {
 
   @Mock AreaAPI area;
   private static final float TILE = 32f;
 
-  private Entity makeInventoryEntity(float x, float y) {
-    InventoryUnitInputComponent comp = new InventoryUnitInputComponent(area, Entity::new);
+  private Entity makeDeckEntity(float x, float y) {
+    DeckInputComponent comp = new DeckInputComponent(area, Entity::new);
     Entity e = new Entity().addComponent(comp);
     e.setPosition(x, y);
     return e;
@@ -41,11 +41,10 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void leftClickShouldSelectAndReturnTrue() {
-    Entity inv = makeInventoryEntity(10, 20);
+    Entity inv = makeDeckEntity(10, 20);
 
     boolean handled =
-        inv.getComponent(InventoryUnitInputComponent.class)
-            .touchDown(15, 25, 0, Input.Buttons.LEFT);
+        inv.getComponent(DeckInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
 
     assertTrue(handled);
     verify(area).setSelectedUnit(inv);
@@ -54,11 +53,10 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void rightClickClearsSelectionAndReturnsTrue() {
-    Entity inv = makeInventoryEntity(10, 20);
+    Entity inv = makeDeckEntity(10, 20);
 
     boolean handled =
-        inv.getComponent(InventoryUnitInputComponent.class)
-            .touchDown(11, 21, 0, Input.Buttons.RIGHT);
+        inv.getComponent(DeckInputComponent.class).touchDown(11, 21, 0, Input.Buttons.RIGHT);
 
     assertTrue(handled);
     verify(area).setSelectedUnit(null);
@@ -67,11 +65,10 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void otherButtonReturnsFalseAndDoesNothing() {
-    Entity inv = makeInventoryEntity(10, 20);
+    Entity inv = makeDeckEntity(10, 20);
 
     boolean handled =
-        inv.getComponent(InventoryUnitInputComponent.class)
-            .touchDown(12, 22, 0, Input.Buttons.MIDDLE);
+        inv.getComponent(DeckInputComponent.class).touchDown(12, 22, 0, Input.Buttons.MIDDLE);
 
     assertFalse(handled);
     verify(area, never()).setSelectedUnit(any());
@@ -79,11 +76,10 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void clickOutsideReturnsFalseAndDoesNothing() {
-    Entity inv = makeInventoryEntity(100, 200);
+    Entity inv = makeDeckEntity(100, 200);
 
     boolean handled =
-        inv.getComponent(InventoryUnitInputComponent.class)
-            .touchDown(10, 20, 0, Input.Buttons.LEFT);
+        inv.getComponent(DeckInputComponent.class).touchDown(10, 20, 0, Input.Buttons.LEFT);
 
     assertFalse(handled);
     verify(area, never()).setSelectedUnit(any());
@@ -91,9 +87,9 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void boundariesAreInclusive() {
-    Entity inv = makeInventoryEntity(10, 20);
+    Entity inv = makeDeckEntity(10, 20);
 
-    InventoryUnitInputComponent comp = inv.getComponent(InventoryUnitInputComponent.class);
+    DeckInputComponent comp = inv.getComponent(DeckInputComponent.class);
     // exactly on left edge (x == 10)
     assertTrue(comp.touchDown(10, 25, 0, Input.Buttons.LEFT));
     // exactly on right edge (x == 10 + TILE)
@@ -111,13 +107,12 @@ class InventoryUnitInputComponentTest {
 
   @Test
   void stageToWorldIsRespected() {
-    Entity inv = makeInventoryEntity(10, 20);
+    Entity inv = makeDeckEntity(10, 20);
 
     doReturn(new GridPoint2(0, 0)).when(area).stageToWorld(any());
 
     boolean handled =
-        inv.getComponent(InventoryUnitInputComponent.class)
-            .touchDown(12, 22, 0, Input.Buttons.LEFT);
+        inv.getComponent(DeckInputComponent.class).touchDown(12, 22, 0, Input.Buttons.LEFT);
 
     assertFalse(handled);
     verify(area, never()).setSelectedUnit(any());

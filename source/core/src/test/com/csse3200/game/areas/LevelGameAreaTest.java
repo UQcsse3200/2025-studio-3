@@ -4,10 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -61,8 +64,8 @@ class LevelGameAreaTest {
         .when(resourceService.getAsset(eq("sounds/BGM_03_mp3.mp3"), eq(Music.class)))
         .thenReturn(music);
     lenient()
-        .when(resourceService.getAsset(anyString(), eq(com.badlogic.gdx.graphics.Texture.class)))
-        .thenReturn(mock(com.badlogic.gdx.graphics.Texture.class));
+        .when(resourceService.getAsset(anyString(), eq(Texture.class)))
+        .thenReturn(mock(Texture.class));
   }
 
   @AfterEach
@@ -93,7 +96,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void selectingUnit_spawnsAndPositionsSelectionStar() {
+  void selectingUnitSpawnsAndPositionsSelectionStar() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // simple inventory entity
@@ -113,17 +116,14 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void setSelectedUnit_nullMovesStarOffscreen() {
+  void setSelectedUnitNullMovesStarOffscreen() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // select a real unit first so the star is created
     var unit =
         new Entity()
             .addComponent(
-                new TextureRenderComponent(
-                    new com.badlogic.gdx.graphics.Texture(
-                        new com.badlogic.gdx.graphics.Pixmap(
-                            1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888))));
+                new TextureRenderComponent(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888))));
     unit.setPosition(10f, 10f);
     area.setSelectedUnit(unit);
 
@@ -138,14 +138,14 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void spawnUnit_placesOnGrid_andCallsTileStorage() {
+  void spawnUnitPlacesOnGridAndCallsTileStorage() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Create a selected unit
     Entity selected =
         new Entity()
             .addComponent(
-                new InventoryUnitInputComponent(
+                new DeckInputComponent(
                     area,
                     () ->
                         new Entity()
@@ -169,13 +169,13 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void spawnUnit_noTile_doesNotCallTileStorage() {
+  void spawnUnitNoTileDoesNotCallTileStorage() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     Entity selected =
         new Entity()
             .addComponent(
-                new InventoryUnitInputComponent(
+                new DeckInputComponent(
                     area,
                     () ->
                         new Entity()
@@ -194,13 +194,13 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void create_loadsAssetsSpawnsThingsAndStartsMusic() {
+  void createLoadsAssetsSpawnsThingsAndStartsMusic() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Avoid robot factory static
     doNothing().when(area).spawnRobot(anyInt(), anyInt(), anyString());
 
-    var terrain = mock(com.csse3200.game.areas.terrain.TerrainComponent.class);
+    var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);
     when(terrain.getMapBounds(eq(0))).thenReturn(new GridPoint2(12, 6));
     when(terrainFactory.createTerrain(any())).thenReturn(terrain);
@@ -240,7 +240,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void resize_changesScaling() {
+  void resizeChangesScaling() {
     // Given an area built with the initial stage size
     LevelGameArea area = spy(new LevelGameArea(terrainFactory));
     float tileBefore = area.getTileSize();
