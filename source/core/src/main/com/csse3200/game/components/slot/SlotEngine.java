@@ -1,6 +1,7 @@
 package com.csse3200.game.components.slot;
 
 import com.csse3200.game.areas.LevelGameArea;
+import java.security.SecureRandom;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -218,7 +219,7 @@ public class SlotEngine {
 
   /** Construct with default config and RNG. */
   public SlotEngine() {
-    this(new SlotConfig(), new Random());
+    this(new SlotConfig(), new SecureRandom());
   }
 
   /** Construct with injected config and RNG. */
@@ -231,7 +232,7 @@ public class SlotEngine {
 
   public SlotEngine(LevelGameArea area) {
     this.config = new SlotConfig();
-    this.random = new Random();
+    this.random = new SecureRandom();
     this.levelGameArea = area;
   }
 
