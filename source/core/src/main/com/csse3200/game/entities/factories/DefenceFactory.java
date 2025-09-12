@@ -41,15 +41,14 @@ public class DefenceFactory {
    * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
    * file - Animation rendering and animation controller
    *
-   * @param targets the list of the entities that the slingshooter will attack
    * @return entity representing the slingshooter
    */
-  public static Entity createSlingShooter(List<Entity> targets) {
+  public static Entity createSlingShooter() {
     // load the sling shooter’s specific configuration;
     BaseDefenceConfig config = configs.slingshooter;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity defender = createBaseDefender(config);
 
     // animation component
     AnimationRenderComponent animator =
@@ -81,9 +80,6 @@ public class DefenceFactory {
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
 
-    System.out.println("[DEBUG] Targets list size: " + targets.size());
-    targets.forEach(e -> System.out.println("Target: " + e));
-
     return defender;
   }
 
@@ -92,7 +88,7 @@ public class DefenceFactory {
     BaseDefenceConfig config = configs.forge;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity defender = createBaseDefender(config);
 
     // animation component
     AnimationRenderComponent animator =
@@ -131,17 +127,17 @@ public class DefenceFactory {
    *
    * @return entity with physics and collision components
    */
-  public static Entity createBaseDefender(List<Entity> targets, BaseDefenceConfig config) {
+  public static Entity createBaseDefender(BaseDefenceConfig config) {
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(targets, 100))
-            .addTask(new IdleTask(targets, 100));
+            .addTask(new AttackTask(100))
+            .addTask(new IdleTask(100));
 
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
-            .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new ColliderComponent())
             .addComponent(enemyDetectionTasks);
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);

@@ -75,7 +75,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // But for now it doesn't matter
   private int inventoryUnitCount;
 
-  private List<Entity> enemies = new ArrayList<>();
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -179,7 +178,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
     placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(enemies),
+        () -> DefenceFactory.createSlingShooter(),
         "images/sling_shooter_front.png");
   }
 
@@ -286,7 +285,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
-    enemies.add(unit);
     logger.info("Unit spawned at position {} {}", x, y);
   }
 

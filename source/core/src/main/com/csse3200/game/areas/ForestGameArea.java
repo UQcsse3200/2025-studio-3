@@ -66,7 +66,6 @@ public class ForestGameArea extends GameArea {
   private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
-  private final ArrayList<Entity> robots = new ArrayList<>();
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -106,7 +105,7 @@ public class ForestGameArea extends GameArea {
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity slingShooter = DefenceFactory.createSlingShooter(robots);
+    Entity slingShooter = DefenceFactory.createSlingShooter();
 
     spawnEntityAt(slingShooter, randomPos, true, true);
     slingShooter.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
@@ -235,7 +234,6 @@ public class ForestGameArea extends GameArea {
       Entity robot = NPCFactory.createRobot(player);
       spawnEntityAt(robot, randomPos, true, true);
       robot.getEvents().addListener("despawnRobot", (Entity e) -> requestDespawn(e));
-      robots.add(robot);
     }
   }
 
@@ -253,7 +251,6 @@ public class ForestGameArea extends GameArea {
   }
 
   public void despawnRobot(Entity robot) {
-    robots.remove(robot);
     despawnEntity(robot);
   }
 

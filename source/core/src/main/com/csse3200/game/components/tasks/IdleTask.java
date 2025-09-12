@@ -19,8 +19,8 @@ public class IdleTask extends TargetDetectionTasks {
    * @param attackRange the maximum distance at which the entity can attack a target
    * @param targets a list of potential targets
    */
-  public IdleTask(List<Entity> targets, float attackRange) {
-    super(targets, attackRange);
+  public IdleTask(float attackRange) {
+    super(attackRange);
     this.attackRange = attackRange;
   }
 

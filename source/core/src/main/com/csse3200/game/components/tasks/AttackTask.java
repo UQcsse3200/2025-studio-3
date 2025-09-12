@@ -17,16 +17,14 @@ import org.slf4j.LoggerFactory;
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
-  private MovementTask movementTask;
 
   /**
    * Creates an attack task
    *
-   * @param targets a list of potential targets
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(List<Entity> targets, float attackRange) {
-    super(targets, attackRange);
+  public AttackTask(float attackRange) {
+    super(attackRange);
     this.attackRange = attackRange;
   }
 
@@ -41,7 +39,8 @@ public class AttackTask extends TargetDetectionTasks {
     if (target != null) {
       DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
       int damage = stats.getBaseAttack();
-      // TODO this should be specific to defender type??
+      // TODO this should be specific to defender type?? -> can do with specific attackComponents for each entity
+      // have an attack function in the attackComponent and add it as a component to the entity
       Entity slingshot = ProjectileFactory.createSlingShot(damage);
     }
 
