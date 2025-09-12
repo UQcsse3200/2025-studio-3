@@ -45,6 +45,8 @@ public class RobotFactory {
       config = new FastRobotConfig();
     } else if (robotType.equalsIgnoreCase("tanky")) {
       config = new TankyRobotConfig();
+    } else if (robotType.equalsIgnoreCase("bungee")) {
+      config = new BungeeRobotConfig();
     } else {
       config = new StandardRobotConfig();
     }
