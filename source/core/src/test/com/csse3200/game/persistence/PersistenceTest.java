@@ -2,6 +2,7 @@ package com.csse3200.game.persistence;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
@@ -16,7 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 class PersistenceTest {
-  
+
   @Test
   void testProfile() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {

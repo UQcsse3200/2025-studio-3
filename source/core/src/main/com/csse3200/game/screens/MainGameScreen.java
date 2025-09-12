@@ -8,7 +8,7 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.hud.HudDisplay;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
@@ -42,7 +42,14 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {
-    "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png"
+    "images/normal_sunlight.png",
+    "images/heart.png",
+    "images/coins.png",
+    "images/plaque.png",
+    "images/skillpoints.png",
+    "images/settings-icon.png",
+    "images/menu-icon.png",
+    "images/profile.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
@@ -164,7 +171,7 @@ public class MainGameScreen extends ScreenAdapter {
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
         .addComponent(new MainGameActions(this.game))
-        .addComponent(new HudDisplay())
+        .addComponent(new MainMapNavigationMenu())
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
