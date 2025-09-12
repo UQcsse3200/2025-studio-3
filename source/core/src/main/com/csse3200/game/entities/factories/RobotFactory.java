@@ -66,7 +66,7 @@ public class RobotFactory {
    * robots.
    *
    * @param config A config file that contains the robot's stats.
-   * @return A robot entity. Note that it does not have an animator component.
+   * @return A robot entity.
    */
   private static Entity createBaseRobot(BaseEnemyConfig config) {
 
