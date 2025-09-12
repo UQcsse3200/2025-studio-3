@@ -218,7 +218,9 @@ loadScripts(document, 'script');</script>
 <div class="block">Provides a global access point for entities to register themselves.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/EntitySpawn.html" title="class in com.csse3200.game.entities">EntitySpawn</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Computes how many enemies to spawn in the current wave and selects a type per spawn request.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/events/EventHandler.html" title="class in com.csse3200.game.events">EventHandler</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
 <div class="block">Send and receive events between objects.</div>
@@ -784,14 +786,16 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/configs/WaveConfigs.html" title="class in com.csse3200.game.entities.configs">WaveConfigs</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Defines all wave configs to be loaded by the wave Factory.</div>
+<div class="block">Container for deserialized wave configurations.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/factories/WaveFactory.html" title="class in com.csse3200.game.entities.factories">WaveFactory</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Factory to create a wave with predefined components.</div>
+<div class="block">Lightweight facade over deserialized wave configuration.</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Manages the lifecycle of enemy waves and schedules spawns over time.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/screens/WorldMapScreen.html" title="class in com.csse3200.game.screens">WorldMapScreen</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
 </div>

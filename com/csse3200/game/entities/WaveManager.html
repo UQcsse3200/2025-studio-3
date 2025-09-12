@@ -91,6 +91,20 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WaveManager</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Manages the lifecycle of enemy waves and schedules spawns over time.
+
+ <p>WaveManager is a lightweight coordinator:
+
+ <ul>
+   <li>Tracks the current wave number and whether a wave is active.
+   <li>Determines spawn cadence and a fair, shuffled lane sequence.
+   <li>Asks <a href="EntitySpawn.html" title="class in com.csse3200.game.entities"><code>EntitySpawn</code></a> to compute how many enemies a wave should produce and which type
+       to spawn next.
+   <li>Delegates the actual entity creation and placement to <a href="../areas/LevelGameArea.html" title="class in com.csse3200.game.areas"><code>LevelGameArea</code></a>.
+ </ul>
+
+ <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
+ request a spawn.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -104,6 +118,10 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">WaveManager</a>()</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.EntitySpawn)" class="member-name-link">WaveManager</a><wbr>(<a href="EntitySpawn.html" title="class in com.csse3200.game.entities">EntitySpawn</a>&nbsp;entitySpawn)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Test-only constructor to inject a preconfigured <a href="EntitySpawn.html" title="class in com.csse3200.game.entities"><code>EntitySpawn</code></a>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -120,19 +138,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#endWave()" class="member-name-link">endWave</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Ends the current wave and immediately begins the next one.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getCurrentWave()" class="member-name-link">getCurrentWave</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLane()" class="member-name-link">getLane</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the next lane from a pre-shuffled sequence of available lanes This prevents long strings
- of the same lane being chosen</div>
+<div class="block">Returns the next lane index from a pre-shuffled sequence, reshuffling when the sequence is
+ exhausted to avoid long runs on the same lane.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initialiseNewWave()" class="member-name-link">initialiseNewWave</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Advances to the next wave, resets internal state and lane sequence, and computes the number of
+ enemies to spawn for this wave.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGameArea(com.csse3200.game.areas.LevelGameArea)" class="member-name-link">setGameArea</a><wbr>(<a href="../areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a>&nbsp;levelGameArea)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -141,7 +164,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemy(int)" class="member-name-link">spawnEnemy</a><wbr>(int&nbsp;laneNumber)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns a single enemy of the next type in the provided lane.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -171,6 +196,18 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WaveManager</span>()</div>
 </section>
 </li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.EntitySpawn)">
+<h3>WaveManager</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WaveManager</span><wbr><span class="parameters">(<a href="EntitySpawn.html" title="class in com.csse3200.game.entities">EntitySpawn</a>&nbsp;entitySpawn)</span></div>
+<div class="block">Test-only constructor to inject a preconfigured <a href="EntitySpawn.html" title="class in com.csse3200.game.entities"><code>EntitySpawn</code></a>. Useful for unit tests that
+ avoid LibGDX file IO.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>entitySpawn</code> - spawn helper used by this manager</dd>
+</dl>
+</section>
+</li>
 </ul>
 </section>
 </li>
@@ -183,12 +220,16 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="initialiseNewWave()">
 <h3>initialiseNewWave</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">initialiseNewWave</span>()</div>
+<div class="block">Advances to the next wave, resets internal state and lane sequence, and computes the number of
+ enemies to spawn for this wave.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="endWave()">
 <h3>endWave</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">endWave</span>()</div>
+<div class="block">Ends the current wave and immediately begins the next one. External systems listen to wave
+ change events for UI updates.</div>
 </section>
 </li>
 <li>
@@ -221,11 +262,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getLane()">
 <h3>getLane</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLane</span>()</div>
-<div class="block">Gets the next lane from a pre-shuffled sequence of available lanes This prevents long strings
- of the same lane being chosen</div>
+<div class="block">Returns the next lane index from a pre-shuffled sequence, reshuffling when the sequence is
+ exhausted to avoid long runs on the same lane.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>The next lane number to spawn an enemy in.</dd>
+<dd>lane index in [0, 5]</dd>
 </dl>
 </section>
 </li>
@@ -233,6 +274,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="spawnEnemy(int)">
 <h3>spawnEnemy</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemy</span><wbr><span class="parameters">(int&nbsp;laneNumber)</span></div>
+<div class="block">Spawns a single enemy of the next type in the provided lane. Ends the wave once the configured
+ number of spawns has been reached.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>laneNumber</code> - lane index to spawn into</dd>
+</dl>
 </section>
 </li>
 </ul>
