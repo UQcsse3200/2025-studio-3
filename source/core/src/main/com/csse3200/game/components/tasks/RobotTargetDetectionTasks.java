@@ -16,7 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class RobotTargetDetectionTasks extends DefaultTask implements PriorityTask {
-  private static final Logger logger = LoggerFactory.getLogger(RobotTargetDetectionTasks.class);
+//  private static final Logger logger = LoggerFactory.getLogger(RobotTargetDetectionTasks.class);
   protected final float attackRange;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
@@ -59,7 +59,6 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     if (target == null) {
       return -1;
     }
-    //    logger.info("Active target in range, priority 10");
     return 10;
   }
 
@@ -92,8 +91,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     Vector2 from = owner.getEntity().getCenterPosition();
     Array<Entity> targets = new Array<>(ServiceLocator.getEntityService().getEntities());
 
-    //        logger.info("Number of targets: " + targets.size);
-    for (Entity target : targets) {
+    for(Entity target : targets) {
       HitboxComponent hitbox = target.getComponent(HitboxComponent.class);
 
       if (hitbox == null) {
@@ -109,8 +107,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
       if (abs(targetPos.y - from.y) > 10f) {
         continue;
       }
-      if (distance <= 90f) { // if target visible and in range
-        // logger.info("Target detected within range: " + target);
+      if (distance <= attackRange) { // if target visible and in range
         return target;
       }
     }
