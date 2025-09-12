@@ -14,13 +14,16 @@ import org.slf4j.LoggerFactory;
 /**
  * Class for loading and saving the user profile / savefile.
  *
- * <p>Save files should be in the format {@code <profilename>$<unixtime>.json}.
+ * <p>
+ * Save files should be in the format
+ * {@code <profilename>$<unixtime>$<slot>.json}.
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
+  private static int currentSlot;
   private static Profile profile;
   private static final String ROOT_DIR = "The Day We Fought Back" + File.separator + "saves";
-  private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})\\.json$";
+  private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})(?:\\$(\\d+))?\\.json$";
   private static final String FILE_EXTENSION = ".json";
 
   private Persistence() {
@@ -47,19 +50,30 @@ public class Persistence {
     Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (savedProfile != null) {
       profile = savedProfile;
+      currentSlot = save.getSlot();
     } else {
-      logger.error("Failed to load profile, creating new one.");
-      profile = new Profile();
+      throw new IllegalStateException("Failed to load profile, creating new one.");
     }
   }
 
-  /** Creates a new user profile, for use when a new game is started. */
-  public static void load() {
+  /**
+   * Create a new user profile.
+   *
+   * @param profileName the name of the profile, or null to use the default name
+   * @param slot        the slot to save the profile to
+   */
+  public static void create(String profileName, int slot) {
     profile = new Profile();
-    logger.info("Created new profile");
+    if (profileName != null) {
+      profile.setName(profileName);
+    }
+    currentSlot = slot;
+    save(slot);
   }
 
-  /** Ensures that the save directory exists. */
+  /**
+   * Ensures that the save directory exists.
+   */
   private static void ensureDirectoryExists() {
     FileHandle dir = Gdx.files.external(ROOT_DIR);
     if (!dir.exists()) {
@@ -68,12 +82,13 @@ public class Persistence {
     }
   }
 
-  /** Fetch the latest three profile names from the file system. */
+  /**
+   * Fetch saves organized by slot.
+   * 
+   * @return the list of savefiles
+   */
   public static List<Savefile> fetch() {
-    List<Savefile> saves = new ArrayList<>();
-
-    // Search the saves directory for savefiles
-    Pattern filePattern = Pattern.compile(SAVE_FILE_PATTERN);
+    List<Savefile> saves = new ArrayList<>(3);
     ensureDirectoryExists();
     FileHandle rootDir = Gdx.files.external(ROOT_DIR);
     FileHandle[] files = rootDir.list(FILE_EXTENSION);
@@ -81,49 +96,95 @@ public class Persistence {
       return saves;
     }
 
-    // Iterate over files and extract profile names and timestamps
     for (FileHandle file : files) {
-      String filename = file.name();
-      Matcher matcher = filePattern.matcher(filename);
-      if (matcher.matches()) {
-        String profileName = matcher.group(1);
-        String timestampStr = matcher.group(2);
-        try {
-          long timestamp = Long.parseLong(timestampStr);
-          saves.add(new Savefile(profileName, timestamp));
-        } catch (NumberFormatException e) {
-          logger.error("Failed to parse timestamp: {}", timestampStr);
-        }
+      Savefile savefile = parseSavefile(file);
+      if (savefile != null) {
+        saves.add(savefile);
       }
     }
 
-    // Sort on date and return
-    saves.sort((a, b) -> b.getDate().compareTo(a.getDate()));
-    if (saves.size() > 3) {
-      return saves.subList(0, 3);
-    }
     return saves;
   }
 
-  /** Save the current user profile to the savefile. */
-  public static void save() {
-    List<Savefile> saves = fetch();
-    for (Savefile save : saves) {
-      if (save.getName().equals(profile.getName())) {
-        delete(save);
-      }
+  /**
+   * Parse a savefile from a file handle.
+   * 
+   * @param file the file handle to parse
+   * @return the savefile, or null if the file is invalid
+   */
+  private static Savefile parseSavefile(FileHandle file) {
+    Pattern filePattern = Pattern.compile(SAVE_FILE_PATTERN);
+    Matcher matcher = filePattern.matcher(file.name());
+    if (!matcher.matches()) {
+      logger.error("Failed to parse savefile");
+      return null;
     }
-    String path =
-        ROOT_DIR
-            + File.separator
-            + profile.getName()
-            + "$"
-            + System.currentTimeMillis()
-            + FILE_EXTENSION;
-    FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
+
+    String profileName = matcher.group(1);
+    String timestampStr = matcher.group(2);
+    String slotStr = matcher.group(3);
+    long timestamp;
+    int slot;
+
+    try {
+      timestamp = Long.parseLong(timestampStr);
+      slot = Integer.parseInt(slotStr);
+      if (slot > 3 || slot < 1)
+        throw new NumberFormatException();
+    } catch (NumberFormatException e) {
+      logger.error("Failed to parse savefile");
+      return null;
+    }
+
+    return new Savefile(profileName, timestamp, slot);
   }
 
-  /** Deletes a savefile from the filesystem. */
+  /** Quicksave the current user profile to the savefile. */
+  public static void save() {
+    save(currentSlot);
+  }
+
+  /**
+   * Save the current user profile to a specific slot.
+   * 
+   * @param slot the slot to save the profile to
+   */
+  public static void save(int slot) {
+    if (profile == null) {
+      logger.error("No profile to save");
+      return;
+    }
+
+    if (slot > 3 || slot < 1) {
+      logger.error("Invalid slot: {}", slot);
+      return;
+    }
+
+    // Delete any existing save in this slot
+    List<Savefile> saves = fetch();
+    try {
+      if (saves.get(slot) != null) {
+        delete(saves.get(slot));
+      }
+    } catch (IndexOutOfBoundsException e) {
+      // slot is empty
+    }
+
+    // Create filename with slot information
+    String filename = profile.getName() + "$" + System.currentTimeMillis() + "$" + slot + FILE_EXTENSION;
+    String path = ROOT_DIR + File.separator + filename;
+    FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
+
+    // Update current slot
+    currentSlot = slot;
+    logger.info("Saved profile to slot {}: {}", slot, filename);
+  }
+
+  /**
+   * Deletes a savefile from the filesystem.
+   * 
+   * @param save the savefile to delete
+   */
   private static void delete(Savefile save) {
     String path = getPath(save);
     FileHandle file = Gdx.files.external(path);

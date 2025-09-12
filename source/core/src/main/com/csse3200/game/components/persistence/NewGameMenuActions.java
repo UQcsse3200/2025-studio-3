@@ -34,7 +34,7 @@ public class NewGameMenuActions extends Component {
    * @param slotIndex the index of the selected slot
    */
   private void handleSelectSlot(int slotIndex) {
-    selectedSlot = slotIndex;
+    selectedSlot = slotIndex + 1;
     logger.debug("Selected save slot: {}", slotIndex);
   }
 
@@ -44,19 +44,8 @@ public class NewGameMenuActions extends Component {
    * @param saveName the name for the new save file
    */
   private void handleStartGame(String saveName) {
-    if (selectedSlot == -1) {
-      logger.warn("No slot selected, cannot start game");
-      return;
-    }
-
     logger.info("Starting new game with save name: {} in slot: {}", saveName, selectedSlot);
-
-    // Create a new profile with the given name
-    Persistence.load();
-    Persistence.profile().setName(saveName);
-
-    // Load menus and start the game
-    game.loadMenus();
+    Persistence.create(saveName, selectedSlot);
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

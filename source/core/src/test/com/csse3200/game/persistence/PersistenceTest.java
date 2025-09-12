@@ -64,34 +64,19 @@ class PersistenceTest {
 
   @Test
   void testSave() {
-    Files mockFiles = mock(Files.class);
-    FileHandle mockRootDir = mock(FileHandle.class);
-    Gdx.files = mockFiles;
-
-    when(mockFiles.external(anyString())).thenReturn(mockRootDir);
-    when(mockRootDir.exists()).thenReturn(true);
-    when(mockRootDir.list(".json")).thenReturn(new FileHandle[0]);
-
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      Profile testProfile = mock(Profile.class);
-      when(testProfile.getName()).thenReturn("testProfile");
+      // Create a new profile
+      Persistence.load();
 
-      mockFileLoader
-          .when(
-              () ->
-                  FileLoader.readClass(
-                      eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
-          .thenReturn(testProfile);
-
-      Savefile savefile = new Savefile("testProfile", 1234567890L);
-      Persistence.load(savefile);
+      // Set a name for the profile
+      Persistence.profile().setName("testProfile");
 
       Persistence.save();
 
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  eq(testProfile),
+                  eq(Persistence.profile()),
                   matches(".*testProfile\\$\\d+\\.json"),
                   eq(FileLoader.Location.EXTERNAL)));
     }
@@ -111,8 +96,12 @@ class PersistenceTest {
 
     List<Savefile> result = Persistence.fetch();
 
-    assertEquals(1, result.size());
+    // Should return 3 slots, with the first one containing the save
+    assertEquals(3, result.size());
+    assertNotNull(result.get(0));
     assertEquals("testProfile", result.get(0).getName());
+    assertNull(result.get(1));
+    assertNull(result.get(2));
 
     verify(mockRootDir).list(".json");
   }
