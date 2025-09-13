@@ -60,3 +60,12 @@ bounds:2,192,250,188
 angry
 index:1
 bounds:2,192,250,188
+attack
+index:1
+bounds:254,2,250,188
+attack
+index:0
+bounds:758,762,250,188
+attack
+index:2
+bounds:758,192,250,188
