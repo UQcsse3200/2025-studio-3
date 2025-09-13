@@ -52,17 +52,18 @@ public class MainGameActions extends Component {
     this.mainGameScreen = mainGameScreen;
   }
 
-  /** Gets the main game screen reference.
+  /**
+   * Gets the main game screen reference.
    *
    * @return The main game screen reference.
-  */
+   */
   public MainGameScreen getMainGameScreen() {
     return mainGameScreen;
   }
 
-  /** 
+  /**
    * Sets the pause button reference
-   * 
+   *
    * @param pauseButton The pause button to set.
    */
   public void setPauseButton(com.csse3200.game.components.hud.PauseButton pauseButton) {

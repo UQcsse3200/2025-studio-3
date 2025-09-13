@@ -137,46 +137,46 @@ public class AnimatedDropdownMenu extends UIComponent {
   private void handleMenuClick(String buttonText) {
     logger.info("Menu clicked: {}", buttonText);
     closeMenu();
-      switch (buttonText) {
-        case "Quicksave":
-          logger.debug("Quicksave button clicked");
-          entity.getEvents().trigger("quicksave");
-          break;
-        case "Save Game":
-          logger.debug("Save game button clicked");
-          entity.getEvents().trigger("savegame");
-          break;
-        case "Load Game":
-          logger.debug("Load game button clicked");
-          entity.getEvents().trigger("loadgame");
-          break;
-        case "Statistics":
-          logger.debug("Statistics button clicked");
-          entity.getEvents().trigger("open_statistics");
-          break;
-        case "Achievements":
-          logger.debug("Achievements button clicked");
-          entity.getEvents().trigger("open_achievements");
-          break;
-        case "Dossier":
-          logger.debug("Dossier button clicked");
-          entity.getEvents().trigger("open_dossier");
-          break;
-        case "Inventory":
-          logger.debug("Inventory button clicked");
-          entity.getEvents().trigger("open_inventory");
-          break;
-        case "Main Menu":
-          logger.debug("Main menu button clicked");
-          entity.getEvents().trigger("main_menu");
-          break;
-        case "Exit Game":
-          logger.debug("Exit game button clicked");
-          entity.getEvents().trigger("exit");
-          break;
-        default:
-          break;
-      }
+    switch (buttonText) {
+      case "Quicksave":
+        logger.debug("Quicksave button clicked");
+        entity.getEvents().trigger("quicksave");
+        break;
+      case "Save Game":
+        logger.debug("Save game button clicked");
+        entity.getEvents().trigger("savegame");
+        break;
+      case "Load Game":
+        logger.debug("Load game button clicked");
+        entity.getEvents().trigger("loadgame");
+        break;
+      case "Statistics":
+        logger.debug("Statistics button clicked");
+        entity.getEvents().trigger("open_statistics");
+        break;
+      case "Achievements":
+        logger.debug("Achievements button clicked");
+        entity.getEvents().trigger("open_achievements");
+        break;
+      case "Dossier":
+        logger.debug("Dossier button clicked");
+        entity.getEvents().trigger("open_dossier");
+        break;
+      case "Inventory":
+        logger.debug("Inventory button clicked");
+        entity.getEvents().trigger("open_inventory");
+        break;
+      case "Main Menu":
+        logger.debug("Main menu button clicked");
+        entity.getEvents().trigger("main_menu");
+        break;
+      case "Exit Game":
+        logger.debug("Exit game button clicked");
+        entity.getEvents().trigger("exit");
+        break;
+      default:
+        break;
+    }
   }
 
   @Override
