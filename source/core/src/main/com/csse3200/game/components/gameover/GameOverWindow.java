@@ -7,11 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.ui.UIComponent;
 
-public class GameOverPopupDisplay extends UIComponent {
-  private Window popupDisplay;
+/**
+ * Class to create and display a window when the game ends.
+ */
+public class GameOverWindow extends UIComponent {
+  private Window gameOverWindow;
   boolean isDisplayed = false;
-
-  // public GameOverPopupDisplay() {}
 
   /** Creates the game over window. */
   public void create() {
@@ -21,20 +22,20 @@ public class GameOverPopupDisplay extends UIComponent {
     entity.getEvents().addListener("gameOver", this::onGameOver);
 
     // Creates popup display.
-    popupDisplay = new Window("Game over.", skin);
-    popupDisplay.setMovable(false);
-    popupDisplay.setSize(500, 500);
-    popupDisplay.setPosition(
-        (Gdx.graphics.getWidth() - popupDisplay.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - popupDisplay.getHeight()) / 2f);
+    gameOverWindow = new Window("Game over.", skin);
+    gameOverWindow.setMovable(false);
+    gameOverWindow.setSize(500, 500);
+    gameOverWindow.setPosition(
+        (Gdx.graphics.getWidth() - gameOverWindow.getWidth()) / 2f,
+        (Gdx.graphics.getHeight() - gameOverWindow.getHeight()) / 2f);
 
     // Adds text in the popup display.
     Label message = new Label("Game over.\n Press E to go back to main menu.", skin);
-    popupDisplay.add(message).pad(10).row();
+    gameOverWindow.add(message).pad(10).row();
 
     // Sets popup display to false when created.
-    popupDisplay.setVisible(false);
-    stage.addActor(popupDisplay);
+    gameOverWindow.setVisible(false);
+    stage.addActor(gameOverWindow);
   }
 
   /** Checks the status of the popup display */
@@ -48,7 +49,7 @@ public class GameOverPopupDisplay extends UIComponent {
 
     // Press 'E' to take you back to the main menu.
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
-      popupDisplay.setVisible(false);
+      gameOverWindow.setVisible(false);
       isDisplayed = false;
       // return to main menu
     }
@@ -56,15 +57,15 @@ public class GameOverPopupDisplay extends UIComponent {
 
   /** Activates the popup display when game over event is listened for. */
   private void onGameOver() {
-    popupDisplay.setVisible(true);
+    gameOverWindow.setVisible(true);
     isDisplayed = true;
   }
 
   /** Frees the memory. */
   @Override
   public void dispose() {
-    if (popupDisplay != null) {
-      popupDisplay.remove();
+    if (gameOverWindow != null) {
+      gameOverWindow.remove();
     }
 
     super.dispose();
