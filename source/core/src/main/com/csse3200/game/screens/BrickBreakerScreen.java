@@ -28,6 +28,7 @@ public class BrickBreakerScreen extends MiniGame2 {
     private static final String[] BrickBreakerTextures = {
             "images/world_map.png",
             "images/bg.png",
+            "images/BrickBreakerBG.png",
             "images/ball.png",
             "images/paddle.png",
     };
@@ -91,6 +92,29 @@ public class BrickBreakerScreen extends MiniGame2 {
         bg.setScaling(Scaling.fill);
         stage.addActor(bg);
         logger.debug("shows brick breaker mini game screen background");
+
+        Texture BBbgTex = ServiceLocator.getResourceService()
+                .getAsset("images/BrickBreakerBG.png", Texture.class);
+        Image BBbg = new Image(new TextureRegionDrawable(new TextureRegion(BBbgTex)));
+        BBbg.setFillParent(true);
+        BBbg.setScaling(Scaling.fill);
+        stage.addActor(BBbg);
+
+        Texture paddleTex = ServiceLocator.getResourceService()
+                .getAsset("images/paddle.png", Texture.class);
+        Image paddle = new Image(paddleTex);
+        paddle.setSize(100,20);
+        paddle.setPosition(400,50);
+        stage.addActor(paddle);
+
+        Texture ballTex = ServiceLocator.getResourceService()
+                .getAsset("images/ball.png", Texture.class);
+        Image ball = new Image(ballTex);
+        ball.setSize(20,20);
+        ball.setPosition(450,80);
+        stage.addActor(ball);
+
+        logger.debug("Added paddle, BG, and ball to stage");
     }
 
     @Override
