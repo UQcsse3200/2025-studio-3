@@ -10,9 +10,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Service for managing the config files and data loading of the game.
- */
+/** Service for managing the config files and data loading of the game. */
 public class ConfigService {
   private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
   private Map<String, BaseDefenceConfig> defenceConfigs;
