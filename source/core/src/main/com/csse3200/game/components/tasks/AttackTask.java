@@ -2,8 +2,6 @@ package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
-import java.util.List;
-
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +37,8 @@ public class AttackTask extends TargetDetectionTasks {
     if (target != null) {
       DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
       int damage = stats.getBaseAttack();
-      // TODO this should be specific to defender type?? -> can do with specific attackComponents for each entity
+      // TODO this should be specific to defender type?? -> can do with specific attackComponents
+      // for each entity
       // have an attack function in the attackComponent and add it as a component to the entity
       Entity slingshot = ProjectileFactory.createSlingShot(damage);
     }

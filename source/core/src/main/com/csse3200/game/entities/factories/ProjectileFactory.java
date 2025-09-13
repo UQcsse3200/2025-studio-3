@@ -9,19 +9,20 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 
 public class ProjectileFactory {
-    /** private constructor prevents instantiation of this utility class. */
-    private ProjectileFactory() {
-        throw new IllegalStateException("Instantiating static util class");
-    }
+  /** private constructor prevents instantiation of this utility class. */
+  private ProjectileFactory() {
+    throw new IllegalStateException("Instantiating static util class");
+  }
 
-    public static Entity createSlingShot(int damage) {
-        Entity slingShot = new Entity()
-                .addComponent(new PhysicsComponent())
-                .addComponent(new ColliderComponent())
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-                .addComponent(new ProjectileComponent(damage));
+  public static Entity createSlingShot(int damage) {
+    Entity slingShot =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new ProjectileComponent(damage));
 
-        PhysicsUtils.setScaledCollider(slingShot, 0.1f, 0.1f);
-        return slingShot;
-    }
+    PhysicsUtils.setScaledCollider(slingShot, 0.1f, 0.1f);
+    return slingShot;
+  }
 }

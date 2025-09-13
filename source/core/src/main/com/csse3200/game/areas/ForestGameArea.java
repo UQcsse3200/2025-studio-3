@@ -19,7 +19,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
-import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,7 +94,6 @@ public class ForestGameArea extends GameArea {
     spawnRobots();
     spawnSun();
     spawnDefences();
-
 
     playMusic();
   }

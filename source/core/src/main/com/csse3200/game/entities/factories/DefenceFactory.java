@@ -18,7 +18,6 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
@@ -129,9 +128,7 @@ public class DefenceFactory {
    */
   public static Entity createBaseDefender(BaseDefenceConfig config) {
     AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(new AttackTask(100))
-            .addTask(new IdleTask(100));
+        new AITaskComponent().addTask(new AttackTask(100)).addTask(new IdleTask(100));
 
     Entity npc =
         new Entity()
