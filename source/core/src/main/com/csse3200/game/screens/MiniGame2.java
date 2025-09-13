@@ -25,32 +25,37 @@ public abstract class MiniGame2 extends ScreenAdapter{
 
     @Override
     public void show() {
-        //Paddle component
 
+        //Paddle component
         paddle = new Entity();
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new TextureRenderComponent("images/paddle.png"));
-        paddle.getComponent(TextureRenderComponent.class).scaleEntity();
+        TextureRenderComponent paddleRender= paddle.getComponent(TextureRenderComponent.class);
+        paddle.addComponent(paddleRender);
+        paddleRender.scaleEntity();
+        paddle.setScale(300f,300f);
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
         collider_paddle.setRestitution(1f);
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         float paddleStartX= ScreenWidth /2f;
-        float paddleStartY= 50f;
+        float paddleStartY= 70f;
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
         paddle.setPosition(paddleStartX,paddleStartY);
 
-
-
         ServiceLocator.getEntityService().register(paddle);
+        ServiceLocator.getRenderService().register(paddleRender);
 
         //Ball component
 
         ball = new Entity();
         ball.addComponent(new PhysicsComponent());
         ball.addComponent(new TextureRenderComponent("images/ball.png"));
-        ball.getComponent(TextureRenderComponent.class).scaleEntity();
+        TextureRenderComponent ballRender= ball.getComponent(TextureRenderComponent.class);
+        ball.addComponent(ballRender);
+        ballRender.scaleEntity();
+        ball.setScale(200f,200f);
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
         collider_ball.setRestitution(1f);
@@ -61,11 +66,11 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
         float ballStartX = paddleStartX;
-        float ballStartY= 60f;
+        float ballStartY= 80f;
         PhysicsComponent ballPhysics = ball.getComponent(PhysicsComponent.class);
         ball.setPosition(ballStartX,ballStartY);
         ServiceLocator.getEntityService().register(ball);
-
+        ServiceLocator.getRenderService().register(ballRender);
         //wall component
 
         float thickness = 10f;
@@ -89,14 +94,16 @@ public abstract class MiniGame2 extends ScreenAdapter{
         bbwall.getComponent(PhysicsComponent.class).getBody().setTransform(x,y,0);
 
         ServiceLocator.getEntityService().register(bbwall);
+
+
     }
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float paddleSpeed = 75f;
+        float paddleSpeed = 80f;
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
@@ -107,6 +114,8 @@ public abstract class MiniGame2 extends ScreenAdapter{
             paddlePhysics.getBody().setLinearVelocity(0, 0);
         }
 
+        syncEntityPositions();
+
         //end minigame if ball falls below screen
         if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
             endGame();
@@ -114,7 +123,13 @@ public abstract class MiniGame2 extends ScreenAdapter{
 
         ServiceLocator.getEntityService().update();
     }
+    private void syncEntityPositions(){
+        Vector2 paddlePos = paddle.getComponent(PhysicsComponent.class).getBody().getPosition();
+        paddle.setPosition(paddlePos.x,paddlePos.y);
 
+        Vector2 ballPos = ball.getComponent(PhysicsComponent.class).getBody().getPosition();
+        ball.setPosition(ballPos.x,ballPos.y);
+    }
 
     private void endGame(){
         System.out.println("Game Over ! Ending Minigame .... ");
@@ -124,7 +139,14 @@ public abstract class MiniGame2 extends ScreenAdapter{
 
     @Override
     public void dispose() {
-
+        if(paddle!=null){
+            ServiceLocator.getEntityService().unregister(paddle);
+            paddle=null;
+        }
+        if(ball!=null){
+            ServiceLocator.getEntityService().unregister(ball);
+            ball=null;
+        }
     }
 }
 
