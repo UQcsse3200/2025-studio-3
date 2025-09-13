@@ -63,10 +63,7 @@ public abstract class MiniGame2 implements Screen {
         createbbwall(ScreenWidth-thickness/2f, ScreenHeight/2f, thickness, ScreenHeight);
         createbbwall(ScreenWidth/2f, ScreenHeight - thickness/2f,ScreenWidth, thickness);
 
-        //end minigame if ball falls below screen
-        if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
-            endGame();
-        }
+
     }
 
     private void createbbwall(float x, float y, float width, float height) {
@@ -97,6 +94,11 @@ public abstract class MiniGame2 implements Screen {
             paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
         }else{
             paddlePhysics.getBody().setLinearVelocity(0, 0);
+        }
+
+        //end minigame if ball falls below screen
+        if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
+            endGame();
         }
 
         ServiceLocator.getEntityService().update();
