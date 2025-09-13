@@ -97,7 +97,6 @@ public class ForestGameArea extends GameArea {
     spawnSun();
     spawnDefences();
 
-
     playMusic();
   }
 

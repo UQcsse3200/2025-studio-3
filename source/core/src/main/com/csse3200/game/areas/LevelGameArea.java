@@ -44,7 +44,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
-          "images/sling_projectile.png"
+    "images/sling_projectile.png"
   };
 
   private static final String[] levelTextureAtlases = {
@@ -182,8 +182,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
     placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(enemies),
-        "images/sling_shooter_front.png");
+        () -> DefenceFactory.createSlingShooter(enemies), "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
@@ -296,12 +295,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
     projectile.setPosition(spawnPos);
-    //TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
-    //projectile.addComponent(render); // <- your projectile image
+    // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
+    // projectile.addComponent(render); // <- your projectile image
 
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(100f); // set the height in world units
-    projectile.scaleWidth(100f);  // set the width in world units
+    projectile.scaleWidth(100f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
     spawnEntity(projectile); // adds to area and entity service
@@ -379,10 +378,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
-    newEntity.getEvents().addListener("attackStart", () -> {
-      Vector2 spawnPos = newEntity.getCenterPosition();
-      spawnProjectile(spawnPos, 3f, 0f);
-    });
+    newEntity
+        .getEvents()
+        .addListener(
+            "attackStart",
+            () -> {
+              Vector2 spawnPos = newEntity.getCenterPosition();
+              spawnProjectile(spawnPos, 3f, 0f);
+            });
     logger.info("Unit spawned at position {}", position);
   }
 
