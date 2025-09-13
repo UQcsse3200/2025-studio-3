@@ -18,11 +18,12 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class BrickBreakerScreen extends ScreenAdapter {
+public abstract class BrickBreakerScreen extends MiniGame2 {
 
-    private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.MainMenuScreen.class);
+    private static final Logger logger = LoggerFactory.getLogger(BrickBreakerScreen.class);
     private final GdxGame game;
     private final Renderer renderer;
+
     private static final String[] BrickBreakerTextures = {
             "images/world_map.png",
             "images/bg.png",
@@ -42,21 +43,27 @@ public class BrickBreakerScreen extends ScreenAdapter {
         loadAssets();
         createUI();
     }
+
+    @Override
     public void render(float delta) {
+        super.render(delta);
         ServiceLocator.getEntityService().update();
         renderer.render();
     }
+
     private void loadAssets() {
         logger.debug("Loading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.loadTextures(BrickBreakerTextures);
         ServiceLocator.getResourceService().loadAll();
     }
+
     private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.unloadAssets(BrickBreakerTextures);
     }
+
     public void dispose() {
         logger.debug("Disposing brick breaker mini game screen");
 
@@ -75,7 +82,6 @@ public class BrickBreakerScreen extends ScreenAdapter {
         // Add the background image as a Stage actor
         Texture bgTex = ServiceLocator.getResourceService()
                 .getAsset("images/bg.png", Texture.class);
-        logger.debug("loads brick breaker mini game screen background texture asset");
         Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
         bg.setFillParent(true);
         bg.setScaling(Scaling.fill);

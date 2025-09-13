@@ -17,10 +17,6 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public abstract class MiniGame2 implements Screen {
-    private SpriteBatch batch;
-    private Texture paddletexture;
-    private Texture balltexture;
-
     private Entity ball;
     private Entity paddle;
 
@@ -29,16 +25,11 @@ public abstract class MiniGame2 implements Screen {
 
     @Override
     public void show() {
-        batch = new SpriteBatch();
-
-        paddletexture = new Texture("images/paddle.png");
-        balltexture = new Texture("images/ball.png");
-
         //Paddle component
 
         paddle = new Entity();
         paddle.addComponent(new PhysicsComponent());
-        paddle.addComponent(new TextureRenderComponent(paddletexture));
+        paddle.addComponent(new TextureRenderComponent("images/paddle.png"));
         paddle.getComponent(TextureRenderComponent.class).scaleEntity();
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
@@ -51,7 +42,7 @@ public abstract class MiniGame2 implements Screen {
 
         ball = new Entity();
         ball.addComponent(new PhysicsComponent());
-        ball.addComponent(new TextureRenderComponent(balltexture));
+        ball.addComponent(new TextureRenderComponent("images/ball.png"));
         ball.getComponent(TextureRenderComponent.class).scaleEntity();
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
@@ -77,13 +68,6 @@ public abstract class MiniGame2 implements Screen {
             endGame();
         }
     }
-
-    private void endGame(){
-        System.out.println("Game Over ! Ending Minigame .... ");
-        dispose();
-
-    }
-
 
     private void createbbwall(float x, float y, float width, float height) {
         Entity bbwall = new Entity();
@@ -118,11 +102,16 @@ public abstract class MiniGame2 implements Screen {
         ServiceLocator.getEntityService().update();
     }
 
+
+    private void endGame(){
+        System.out.println("Game Over ! Ending Minigame .... ");
+        dispose();
+
+    }
+
     @Override
     public void dispose() {
-        paddletexture.dispose();
-        balltexture.dispose();
-        batch.dispose();
+
     }
 }
 
