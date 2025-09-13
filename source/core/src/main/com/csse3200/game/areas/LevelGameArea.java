@@ -182,14 +182,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeInventoryUnit(() -> null, "images/ghost_king.png");
     placeInventoryUnit(() -> DefenceFactory.createForge(enemies), "images/forge_1.png");
     placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(enemies),
-        "images/sling_shooter_front.png");
+        () -> DefenceFactory.createSlingShooter(enemies), "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
     Entity sunSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
+        new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png");
     sunSpawner.addComponent(currencyGenerator);
     spawnEntity(sunSpawner);
   }

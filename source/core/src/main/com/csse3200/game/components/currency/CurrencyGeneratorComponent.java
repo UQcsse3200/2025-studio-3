@@ -48,7 +48,7 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Creates a new currency generator component with default settings. */
   public CurrencyGeneratorComponent() {
-    this(8f, 25, "images/normal_sunlight.png");
+    this(8f, 25, "images/scrap_metal.png");
   }
 
   /**

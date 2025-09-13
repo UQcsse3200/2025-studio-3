@@ -6,7 +6,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 public final class SunlightFactory {
-  private static final String SUN_TEXTURE = "images/normal_sunlight.png";
+  private static final String SUN_TEXTURE = "images/scrap_metal.png";
 
   private SunlightFactory() {}
 
