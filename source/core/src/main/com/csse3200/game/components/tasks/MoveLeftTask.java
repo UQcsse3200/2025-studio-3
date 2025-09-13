@@ -6,7 +6,7 @@ import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.csse3200.game.physics.components.PhysicsComponent;
 /**
  * Wander around by moving a random position within a range of the starting position. Wait a little
  * bit between movements. Requires an entity with a PhysicsMovementComponent.
@@ -31,25 +31,21 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     return 1; // Low priority task
   }
 
-  @Override
-  public void start() {
-    super.start();
-    startPos = owner.getEntity().getPosition();
+    @Override
+    public void start() {
+        super.start();
+        startPos = owner.getEntity().getPosition();
+        owner.getEntity().getEvents().trigger("moveLeftStart");
+    }
 
-    // Tells the enemy robot to move left at a set speed.
-    movementTask = new MovementTask(new Vector2(0, startPos.y), moveSpeed);
-    movementTask.create(owner);
+    @Override
+    public void update() {
+        PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+        if (phys == null || phys.getBody() == null) return;
 
-    movementTask.start();
-    currentTask = movementTask;
-
-    this.owner.getEntity().getEvents().trigger("moveLeftStart");
-  }
-
-  @Override
-  public void update() {
-    // do nothing
-  }
+        // Horizontal-only: move left, never allow vertical drift
+        phys.getBody().setLinearVelocity(-moveSpeed, 0f);
+    }
 
   // This was used to switch between moving and waiting when this was wanderTask.
   // We might use this to implement attacking.
