@@ -73,6 +73,7 @@ class LevelGameAreaTest {
     try {
       ServiceLocator.clear();
     } catch (Throwable ignored) {
+      // Ignore throwable and continue to next test
     }
   }
 
@@ -202,7 +203,7 @@ class LevelGameAreaTest {
 
     var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);
-    when(terrain.getMapBounds(eq(0))).thenReturn(new GridPoint2(12, 6));
+    when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
     when(terrainFactory.createTerrain(any())).thenReturn(terrain);
     // 2 values to ensure coverage within loading loop
     when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
