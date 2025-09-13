@@ -53,13 +53,13 @@ public class FileLoader {
     T object;
     try {
       String rawJson = file.readString();
-      logger.error("Read {} characters: {}", rawJson.length(), rawJson);
+      logger.debug("Read {} characters: {}", rawJson.length(), rawJson);
       object = json.fromJson(type, file);
     } catch (Exception e) {
       logger.error("Error parsing JSON from file {}: {}", filename, e.getMessage());
       StringWriter sw = new StringWriter();
       e.printStackTrace(new PrintWriter(sw));
-      logger.error("Full stack trace:\n{}", sw);
+      logger.debug("Full stack trace:\n{}", sw);
       return null;
     }
     if (object == null) {
