@@ -125,7 +125,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 4, "fast");
     spawnInventory();
 
-    playMusic();
+    //playMusic();
   }
 
   /** Uses the {@link ResourceService} to load the assets for the level. */
@@ -288,13 +288,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    projectile.setPosition(spawnPos);
+    projectile.setPosition(spawnPos.x, spawnPos.y-50);
     // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
     // projectile.addComponent(render); // <- your projectile image
 
     // Scale the projectile so it’s more visible
-    projectile.scaleHeight(100f); // set the height in world units
-    projectile.scaleWidth(100f); // set the width in world units
+    projectile.scaleHeight(90f); // set the height in world units
+    projectile.scaleWidth(90f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
     spawnEntity(projectile); // adds to area and entity service

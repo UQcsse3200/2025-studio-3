@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +45,6 @@ public class AttackTask extends TargetDetectionTasks {
       Vector2 spawnPos = defender.getCenterPosition();
       // for each entity
       // have an attack function in the attackComponent and add it as a component to the entity
-      Entity slingshot = ProjectileFactory.createSlingShot(damage, 5f);
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");

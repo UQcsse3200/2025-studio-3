@@ -6,7 +6,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
 public class MoveRightComponent extends Component {
-  private float speed = 5f;
+  private float speed = 150f;
   private boolean shoot = false;
 
   @Override
