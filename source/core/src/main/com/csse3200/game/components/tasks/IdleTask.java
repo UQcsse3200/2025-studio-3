@@ -13,6 +13,7 @@ import java.util.List;
  */
 public class IdleTask extends TargetDetectionTasks {
   private final float attackRange;
+
   /**
    * Creates an IdleTask
    *
@@ -24,11 +25,11 @@ public class IdleTask extends TargetDetectionTasks {
     this.attackRange = attackRange;
   }
 
-      @Override
-      public void update() {
-          System.out.println("IdleTask priority: " + getPriority() + "attack rage is" + attackRange);
-        owner.getEntity().getEvents().trigger("idleStart");
-      }
+  @Override
+  public void update() {
+    System.out.println("IdleTask priority: " + getPriority() + "attack rage is" + attackRange);
+    owner.getEntity().getEvents().trigger("idleStart");
+  }
 
   /**
    * If task is currently running, determine whether to stay running

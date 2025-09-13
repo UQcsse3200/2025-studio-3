@@ -110,7 +110,8 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     for (Entity target : targets) {
       Vector2 targetPos = target.getCenterPosition();
 
-      // Skip targets that are not directly to the right of the defense - OpenAI was used to only consider targets to the right of defender
+      // Skip targets that are not directly to the right of the defense - OpenAI was used to only
+      // consider targets to the right of defender
       if (targetPos.x <= from.x) {
         continue;
       }
@@ -121,7 +122,8 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
       float distance = from.dst(targetPos);
       boolean visible = isTargetVisible(target);
-      System.out.println("Target at " + targetPos + " distance: " + distance + " visible: " + visible);
+      System.out.println(
+          "Target at " + targetPos + " distance: " + distance + " visible: " + visible);
       if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in range
         if (distance < closestDist) {
           closestDist = distance;

@@ -2,9 +2,8 @@ package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
-import java.util.List;
-
 import com.csse3200.game.entities.factories.ProjectileFactory;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
