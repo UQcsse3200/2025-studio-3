@@ -7,4 +7,10 @@ public class LaneConfig {
     public static final float LANE_Y = 0f;
     public static final float LANE_HEIGHT = 10f;
     public static final float PLAYER_Y = 2f;
+
+    public static final int OBSTACLE_MAX_COUNT = 10;
+    public static final float OBSTACLE_WIDTH = 2f;
+    public static final float OBSTACLE_HEIGHT = 1.5f;
+    public static final float OBSTACLE_BASE_SPEED = 5f;
+    public static final float OBSTACLE_SPAWN_INTERVAL = 1.0f;
 }
