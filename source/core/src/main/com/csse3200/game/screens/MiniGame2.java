@@ -16,7 +16,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
-public abstract class MiniGame2 implements Screen {
+public abstract class MiniGame2 extends ScreenAdapter{
     private Entity ball;
     private Entity paddle;
 

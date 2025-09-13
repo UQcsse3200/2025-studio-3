@@ -18,7 +18,7 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public abstract class BrickBreakerScreen extends MiniGame2 {
+public class BrickBreakerScreen extends MiniGame2 {
 
     private static final Logger logger = LoggerFactory.getLogger(BrickBreakerScreen.class);
     private final GdxGame game;
