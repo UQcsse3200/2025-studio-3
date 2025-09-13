@@ -19,8 +19,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -77,8 +75,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
   private int inventoryUnitCount;
-
-  private List<Entity> enemies = new ArrayList<>();
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -181,8 +177,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     inventoryUnitCount = 0;
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
-    placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(enemies), "images/sling_shooter_front.png");
+    placeInventoryUnit(() -> DefenceFactory.createSlingShooter(), "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
@@ -288,7 +283,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
-    enemies.add(unit);
     logger.info("Unit spawned at position {} {}", x, y);
   }
 

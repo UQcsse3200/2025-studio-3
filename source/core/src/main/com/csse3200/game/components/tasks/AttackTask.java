@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
 import java.util.List;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,16 +17,14 @@ import org.slf4j.LoggerFactory;
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
-  private MovementTask movementTask;
 
   /**
    * Creates an attack task
    *
-   * @param targets a list of potential targets
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(List<Entity> targets, float attackRange) {
-    super(targets, attackRange);
+  public AttackTask(float attackRange) {
+    super(attackRange);
     this.attackRange = attackRange;
   }
 
@@ -44,6 +43,9 @@ public class AttackTask extends TargetDetectionTasks {
       // TODO this should be specific to defender type??
       Entity defender = owner.getEntity();
       Vector2 spawnPos = defender.getCenterPosition();
+      // for each entity
+      // have an attack function in the attackComponent and add it as a component to the entity
+      Entity slingshot = ProjectileFactory.createSlingShot(damage, 5f);
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
