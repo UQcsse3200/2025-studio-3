@@ -123,7 +123,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
-    spawnInventory();
+    spawnRobot(8, 4, "standard");
+
+      spawnInventory();
 
     playMusic();
   }
@@ -339,6 +341,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
+
     robots.add(unit);
 
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);

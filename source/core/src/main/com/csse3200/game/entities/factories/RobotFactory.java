@@ -47,7 +47,10 @@ public class RobotFactory {
       config = new TankyRobotConfig();
     } else if (robotType.equalsIgnoreCase("bungee")) {
       config = new BungeeRobotConfig();
-    } else {
+    } else if (robotType.equalsIgnoreCase("teleportation")) {
+        config = new TeleportRobotConfig();
+    }
+    else {
       config = new StandardRobotConfig();
     }
     return createBaseRobot(config);
