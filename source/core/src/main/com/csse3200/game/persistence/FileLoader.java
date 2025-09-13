@@ -64,7 +64,7 @@ public class FileLoader {
       // Print full stack trace properly
       StringWriter sw = new StringWriter();
       e.printStackTrace(new PrintWriter(sw));
-      logger.error("Full stack trace:\n{}", sw.toString());
+      logger.trace("Full stack trace:\n{}", sw);
       return null;
     }
 
