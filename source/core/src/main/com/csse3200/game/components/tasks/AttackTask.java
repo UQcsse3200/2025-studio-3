@@ -1,7 +1,10 @@
 package com.csse3200.game.components.tasks;
 
+import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
 import java.util.List;
+
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,6 +16,8 @@ import org.slf4j.LoggerFactory;
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
+  private final float attackRange;
+  private MovementTask movementTask;
 
   /**
    * Creates an attack task
@@ -22,6 +27,7 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(List<Entity> targets, float attackRange) {
     super(targets, attackRange);
+    this.attackRange = attackRange;
   }
 
   /**
@@ -33,10 +39,13 @@ public class AttackTask extends TargetDetectionTasks {
     super.start();
     Entity target = getNearestVisibleTarget();
     if (target != null) {
-      // TODO: attach logic instantiation instead
+      DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
+      int damage = stats.getBaseAttack();
+      // TODO this should be specific to defender type??
+      Entity slingshot = ProjectileFactory.createSlingShot(damage);
     }
 
-    this.owner.getEntity().getEvents().trigger("chaseStart");
+    this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
   /** Updates the task each game frame */
