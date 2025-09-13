@@ -1,24 +1,21 @@
 package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class DossierDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
@@ -32,24 +29,23 @@ public class DossierDisplay extends UIComponent {
   private Label entityInfoLabel;
   private Label entityNameLabel;
   private Image entitySpriteImage;
-  private Texture bookTexture;
-  private Drawable bookBackground;
 
 
-  /** Constructor to display the dossier. */
-  public DossierDisplay(GdxGame game) {
-    super();
-    this.game = game;
-    type = true;
-    this.dossierManager = new DossierManager();
-    // All robot entities
-    entities = new String[] {"Standard Robot"};
-  }
+/** Constructor to display the dossier. */
+public DossierDisplay(GdxGame game) {
+  super();
+  this.game = game;
+  type = true;
+  this.dossierManager = new DossierManager();
+  // All robot entities
+  entities = new String[] {"Standard Robot"};
+}
 
   @Override
   public void create() {
-    super.create();
-    addActors();
+      super.create();
+      registerEntityListener();
+      addActors();
   }
 
   /** Adds all tables to the stage. */
@@ -86,13 +82,13 @@ public class DossierDisplay extends UIComponent {
   /** Logic that changes the type. */
   private void changeTypeListener(TextButton button, boolean value) {
     button.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            type = value;
-            System.out.println(type);
-          }
-        });
+    new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        type = value;
+        System.out.println(type);
+      }
+    });
   }
 
   /** Sets up the buttons to swap between humans and robots. */
@@ -114,6 +110,14 @@ public class DossierDisplay extends UIComponent {
     table.row();
 
     return table;
+  }
+
+  private void registerEntityListener() {
+      // Event listener
+      entity.getEvents().addListener("change_info", () -> {
+          entityNameLabel.setText(dossierManager.getName(entities[0]));
+          entityInfoLabel.setText(dossierManager.getInfo(entities[0]));
+      });
   }
 
   /**
@@ -216,17 +220,30 @@ public class DossierDisplay extends UIComponent {
    * @return table with exit button
    */
   private Table makeEntitiesButtons() {
-    // Example buttons to swap between types of robots
     Table buttonRow = new Table();
     ButtonGroup<TextButton> group = new ButtonGroup<>();
+
     for (int i = 1; i <= 5; i++) {
+      final int index = i; // capture index for listener
       TextButton btn = new TextButton("Robot" + i, skin, "default");
       group.add(btn);
       buttonRow.add(btn).pad(5);
+
+      btn.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent event, Actor actor) {
+          logger.info("Selected robot button {}", index);
+          // Trigger your event or update UI
+          if (entity != null) {
+            entity.getEvents().trigger("change_info");
+          }
+        }
+      });
     }
 
     return buttonRow;
   }
+
 
   /** Handles navigation back to the Profile Screen. */
   private void backMenu() {
@@ -243,9 +260,6 @@ public class DossierDisplay extends UIComponent {
   public void dispose() {
     rootTable.clear();
     stage.dispose();
-    if (bookTexture != null) {
-      bookTexture.dispose();
-    }
     super.dispose();
   }
 }
