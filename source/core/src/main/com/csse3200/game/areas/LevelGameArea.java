@@ -57,9 +57,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
-  private final Entity[] spawned_units;
-  private Entity selected_unit;
-  private Entity selection_star;
+  private final Entity[] spawnedUnits;
+  private Entity selectedUnit;
+  private Entity selectionStar;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
 
@@ -304,7 +304,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
           (tile != null
                   && tile.getComponent(TileStorageComponent.class) != null
                   && tile.getComponent(TileStorageComponent.class).getTileUnit() != null)
-              || (i < spawned_units.length && spawned_units[i] != null);
+              || (i < spawnedUnits.length && spawnedUnits[i] != null);
 
       if (hasDefence && col > bestCol) {
         bestCol = col;
