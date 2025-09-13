@@ -13,12 +13,13 @@ import com.csse3200.game.ui.UIComponent;
  */
 public class CurrentWaveDisplay extends UIComponent {
 
+  private static final String NO_WAVE_TEXT = "No Wave Active";
+
   /** Creates a new current wave display component. */
   public CurrentWaveDisplay() {
     // Default constructor
   }
 
-  private Table table;
   private Label waveLabel;
   private Label waveNumberLabel;
   private int currentWave = 0;
@@ -44,7 +45,7 @@ public class CurrentWaveDisplay extends UIComponent {
    * @see Table for positioning options
    */
   private void addActors() {
-    table = new Table();
+    Table table = new Table();
     table.top().right();
     table.setFillParent(true);
     table.padTop(65f).padRight(5f);
@@ -53,7 +54,7 @@ public class CurrentWaveDisplay extends UIComponent {
     waveLabel = new Label("Current Wave:", skin, "small");
 
     // Wave number label - start at 0 (no wave active)
-    waveNumberLabel = new Label("No Wave Active", skin, "small");
+    waveNumberLabel = new Label(NO_WAVE_TEXT, skin, "small");
 
     // Add labels to table with some spacing
     table.add(waveLabel).padRight(10f);
@@ -78,7 +79,7 @@ public class CurrentWaveDisplay extends UIComponent {
     if (waveNumber > 0) {
       waveNumberLabel.setText("Wave " + waveNumber);
     } else {
-      waveNumberLabel.setText("No Wave Active");
+      waveNumberLabel.setText(NO_WAVE_TEXT);
     }
   }
 
@@ -101,7 +102,7 @@ public class CurrentWaveDisplay extends UIComponent {
     if (currentWave > 0) {
       return "Wave " + currentWave;
     }
-    return "No Wave Active";
+    return NO_WAVE_TEXT;
   }
 
   /**
