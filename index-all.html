@@ -758,7 +758,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a terrain of the given type, using the orientation of the factory.</div>
 </dd>
-<dt><a href="com/csse3200/game/entities/factories/GridFactory.html#createTile(int,float,float,float,com.csse3200.game.areas.AreaAPI)" class="member-name-link">createTile(int, float, float, float, AreaAPI)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/GridFactory.html" title="class in com.csse3200.game.entities.factories">GridFactory</a></dt>
+<dt><a href="com/csse3200/game/entities/factories/GridFactory.html#createTile(float,float,float,com.csse3200.game.areas.AreaAPI)" class="member-name-link">createTile(float, float, float, AreaAPI)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/GridFactory.html" title="class in com.csse3200.game.entities.factories">GridFactory</a></dt>
 <dd>
 <div class="block">Creates a tile entity</div>
 </dd>
@@ -858,6 +858,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/rendering/DebugRenderer.html#%3Cinit%3E()" class="member-name-link">DebugRenderer()</a> - Constructor for class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/DebugRenderer.html#%3Cinit%3E(com.badlogic.gdx.physics.box2d.Box2DDebugRenderer,com.badlogic.gdx.graphics.glutils.ShapeRenderer)" class="member-name-link">DebugRenderer(Box2DDebugRenderer, ShapeRenderer)</a> - Constructor for class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/DeckInputComponent.html" class="type-name-link" title="class in com.csse3200.game.components">DeckInputComponent</a> - Class in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>
+<dd>
+<div class="block">Input handler for inventory units for mouse input.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/DeckInputComponent.html#%3Cinit%3E(com.csse3200.game.areas.AreaAPI,java.util.function.Supplier)" class="member-name-link">DeckInputComponent(AreaAPI, Supplier&lt;Entity&gt;)</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/DeckInputComponent.html" title="class in com.csse3200.game.components">DeckInputComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#DEFAULT" class="member-name-link">DEFAULT</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
@@ -1528,7 +1534,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getEntityService()" class="member-name-link">getEntityService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/InventoryUnitInputComponent.html#getEntitySupplier()" class="member-name-link">getEntitySupplier()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/InventoryUnitInputComponent.html" title="class in com.csse3200.game.components">InventoryUnitInputComponent</a></dt>
+<dt><a href="com/csse3200/game/components/DeckInputComponent.html#getEntitySupplier()" class="member-name-link">getEntitySupplier()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DeckInputComponent.html" title="class in com.csse3200.game.components">DeckInputComponent</a></dt>
 <dd>
 <div class="block">Getter for the supplier, used when we need an instance of the inventory unit</div>
 </dd>
@@ -2206,12 +2212,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new InventoryScreen and registers the services required, creates the renderer, and
  initialises the Inventory UI.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/InventoryUnitInputComponent.html" class="type-name-link" title="class in com.csse3200.game.components">InventoryUnitInputComponent</a> - Class in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>
-<dd>
-<div class="block">Input handler for inventory units for mouse input.</div>
-</dd>
-<dt><a href="com/csse3200/game/components/InventoryUnitInputComponent.html#%3Cinit%3E(com.csse3200.game.areas.AreaAPI,java.util.function.Supplier)" class="member-name-link">InventoryUnitInputComponent(AreaAPI, Supplier&lt;Entity&gt;)</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/InventoryUnitInputComponent.html" title="class in com.csse3200.game.components">InventoryUnitInputComponent</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#isDead()" class="member-name-link">isDead()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
 <div class="block">Returns true if the entity's has 0 health, otherwise false.</div>
@@ -3985,7 +3985,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Iterates over registered input handlers in descending priority and stops as soon as the input
  is processed</div>
 </dd>
-<dt><a href="com/csse3200/game/components/InventoryUnitInputComponent.html#touchDown(int,int,int,int)" class="member-name-link">touchDown(int, int, int, int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/InventoryUnitInputComponent.html" title="class in com.csse3200.game.components">InventoryUnitInputComponent</a></dt>
+<dt><a href="com/csse3200/game/components/DeckInputComponent.html#touchDown(int,int,int,int)" class="member-name-link">touchDown(int, int, int, int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DeckInputComponent.html" title="class in com.csse3200.game.components">DeckInputComponent</a></dt>
 <dd>
 <div class="block">Action on mouse click on entity</div>
 </dd>
