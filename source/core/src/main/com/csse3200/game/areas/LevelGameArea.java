@@ -10,6 +10,7 @@ import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.TeleportRobotConfig;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
@@ -124,11 +125,21 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
     spawnRobot(8, 4, "standard");
+    spawnRobot(9, 3, "teleportation");
+
 
       spawnInventory();
 
     playMusic();
   }
+
+    private float[] computeLaneYs() {
+        float[] ys = new float[LEVEL_ONE_ROWS];
+        for (int r = 0; r < LEVEL_ONE_ROWS; r++) {
+            ys[r] = yOffset + tileSize * r;   // EXACT same formula used to place units
+        }
+        return ys;
+    }
 
   /** Uses the {@link ResourceService} to load the assets for the level. */
   private void loadAssets() {
@@ -275,9 +286,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   public void spawnRobot(int col, int row, String robotType) {
-    Entity unit = RobotFactory.createRobotType(robotType);
+    Entity unit;
 
-    // Get and set position coords
+      if ("teleportation".equalsIgnoreCase(robotType)) {
+          float[] laneYs = computeLaneYs();   // real row Y’s
+          unit = RobotFactory.createTeleportRobot(new TeleportRobotConfig(), laneYs);
+      } else {
+          unit = RobotFactory.createRobotType(robotType);
+      }
+
+      // Get and set position coords
     col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
     row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
 

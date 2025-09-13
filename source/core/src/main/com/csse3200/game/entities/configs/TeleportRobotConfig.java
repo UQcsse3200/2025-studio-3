@@ -33,7 +33,7 @@ public class TeleportRobotConfig extends BaseEnemyConfig{
      * Constant cooldown between teleport attempts (seconds).
      */
     public float getTeleportCooldownSeconds() {
-        return 6f;
+        return 4f;
     }
 
     /**

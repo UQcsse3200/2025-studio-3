@@ -9,6 +9,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
+import com.csse3200.game.components.tasks.TeleportTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -55,6 +56,27 @@ public class RobotFactory {
     }
     return createBaseRobot(config);
   }
+    /**
+   * Creates a Teleport Robot with teleport behaviour attached.
+            * @param cfg Teleport robot config (stats and teleport params)
+   * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
+   * @return Entity with base robot components plus TeleportTask
+   */
+    public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
+        Entity robot = createBaseRobot(cfg);
+        robot.addComponent(new TeleportTask(
+                cfg.getTeleportCooldownSeconds(),
+                cfg.getTeleportChance(),
+                cfg.getMaxTeleports(),
+                laneYs
+        ));
+        return robot;
+    }
+
+    /**
+
+
+
 
   /**
    * Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
@@ -109,6 +131,7 @@ public class RobotFactory {
     robot.setScale(robot.getScale().x * config.getScale(), robot.getScale().y * config.getScale());
 
     return robot;
+
 
     // The original NPCFactory had:
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
