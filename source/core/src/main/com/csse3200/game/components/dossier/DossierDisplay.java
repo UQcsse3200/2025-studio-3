@@ -1,6 +1,8 @@
 package com.csse3200.game.components.dossier;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -9,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
@@ -42,6 +45,7 @@ public class DossierDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
+        registerEntityListener();
         addActors();
     }
 
@@ -93,6 +97,15 @@ public class DossierDisplay extends UIComponent {
         return table;
     }
 
+
+    private void registerEntityListener() {
+        // Event listener
+        entity.getEvents().addListener("change_info", () -> {
+            entityNameLabel.setText("dossierManager.getName(entities[0])");
+            entityInfoLabel.setText("dossierManager.getInfo(entities[0])");
+        });
+    }
+
     private Table makeDossierTable() {
         // Set up the labels and image to display
         entityNameLabel = new Label("Name: " + dossierManager.getName(entities[0]), skin);
@@ -100,20 +113,15 @@ public class DossierDisplay extends UIComponent {
         entitySpriteImage = dossierManager.getSprite();
         entityInfoLabel.setWrap(true);
 
-        TextButton button1 = new TextButton(dossierManager.getName(entities[0]), skin);
-            // Makes the buttons do an action
-            button1.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    entityInfoLabel.setText("hey guys");
-                    entityNameLabel.setText("Robot 2");
-                }
-            });
+        TextButton button = new TextButton(dossierManager.getName(entities[0]), skin);
+        button.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                logger.info("Selected robot: {} from button {}", entityNameLabel, 0);
+                entity.getEvents().trigger("change_info");
+            }
+        });
 
-        TextButton button2 = new TextButton("Robot2", skin);
-        TextButton button3 = new TextButton("Robot3", skin);
-        TextButton button4 = new TextButton("Robot4", skin);
-        TextButton button5 = new TextButton("Robot5", skin);
 
         // Handle creating the main table
         Table table = new Table();
@@ -133,11 +141,7 @@ public class DossierDisplay extends UIComponent {
         Table buttonRow = new Table();
         buttonRow.defaults().expandX().fillX().pad(5);
 
-        buttonRow.add(button1);
-        buttonRow.add(button2);
-        buttonRow.add(button3);
-        buttonRow.add(button4);
-        buttonRow.add(button5);
+        buttonRow.add(button);
 
         table.row();
         table.add(buttonRow).colspan(2);

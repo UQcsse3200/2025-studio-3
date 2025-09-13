@@ -105,12 +105,13 @@ public class ProfileDisplay extends UIComponent {
       // Add button to table with spacing
       buttonTable
           .add(button)
-          .width(buttonWidth)
-          .height(buttonHeight)
+          .width(buttonWidth - 50)
+          .height(buttonHeight - 50)
           .padRight(i < buttonLabels.length - 1 ? stage.getWidth() * BUTTON_SPACING_RATIO : 0);
     }
 
     mainTable.add(buttonTable).center().row();
+    mainTable.debug();
   }
 
   private void createCornerButtons() {
