@@ -11,6 +11,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -27,6 +28,8 @@ public class BrickBreakerScreen extends MiniGame2 {
     private static final String[] BrickBreakerTextures = {
             "images/world_map.png",
             "images/bg.png",
+            "images/ball.png",
+            "images/paddle.png",
     };
 
     public BrickBreakerScreen(GdxGame game) {
@@ -37,17 +40,18 @@ public class BrickBreakerScreen extends MiniGame2 {
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
+        ServiceLocator.registerPhysicsService(new PhysicsService());
 
         renderer = RenderFactory.createRenderer();
 
         loadAssets();
-        createUI();
+        //createUI();
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
-        ServiceLocator.getEntityService().update();
+        //ServiceLocator.getEntityService().update();
         renderer.render();
     }
 
@@ -69,8 +73,8 @@ public class BrickBreakerScreen extends MiniGame2 {
 
         renderer.dispose();
         unloadAssets();
-        ServiceLocator.getRenderService().dispose();
-        ServiceLocator.getEntityService().dispose();
+        //ServiceLocator.getRenderService().dispose();
+        //ServiceLocator.getEntityService().dispose();
 
         ServiceLocator.clear();
     }
@@ -87,6 +91,13 @@ public class BrickBreakerScreen extends MiniGame2 {
         bg.setScaling(Scaling.fill);
         stage.addActor(bg);
         logger.debug("shows brick breaker mini game screen background");
+    }
+
+    @Override
+    public void show() {
+        logger.debug("Showing brick breaker mini game screen");
+        super.show();
+        createUI();
     }
 
 }
