@@ -3,7 +3,6 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
-import java.util.List;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
