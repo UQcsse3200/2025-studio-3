@@ -1,7 +1,6 @@
 package com.csse3200.game.components.currency;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -115,28 +114,9 @@ public class CurrencyGeneratorComponent extends Component {
     sun.setSize(SUN_SIZE_PX, SUN_SIZE_PX);
     sun.setOrigin(SUN_SIZE_PX / 2f, SUN_SIZE_PX / 2f);
 
-    float worldH = stage.getViewport().getWorldHeight();
-    float startX = targetX;
-    float startY = worldH + SUN_SIZE_PX;
-    sun.setPosition(startX, startY);
     stage.addActor(sun);
 
-    // speed (px/s) derived from world height fraction
-    float fallSpeedPps = Math.max(1f, worldH * FALL_FRAC_PER_SEC);
-    float distance = Math.max(0f, startY - targetY);
-    float duration = distance / fallSpeedPps;
-
-    // rotation
-    float oneTurn = (ROT_SPEED_DPS <= 0f) ? 0f : (360f / ROT_SPEED_DPS);
-
-    if (duration > 0f) {
-      sun.addAction(
-          Actions.parallel(
-              Actions.moveTo(targetX, targetY, duration, Interpolation.sine),
-              Actions.forever(Actions.rotateBy(360f, Math.max(0.01f, oneTurn)))));
-    } else {
-      sun.setPosition(targetX, targetY);
-    }
+    sun.setPosition(targetX, targetY);
 
     // Auto-expire if not collected to avoid screen flooding
     float expireSec = SUN_LIFETIME_SEC;
