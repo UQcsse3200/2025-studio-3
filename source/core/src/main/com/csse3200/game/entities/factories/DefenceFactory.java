@@ -55,7 +55,7 @@ public class DefenceFactory {
         new AITaskComponent()
             .addTask(new AttackTask(targets, 100))
             .addTask(new IdleTask(targets, 100));
-    
+
     defender.addComponent(enemyDetectionTasks);
 
     // animation component
@@ -106,10 +106,7 @@ public class DefenceFactory {
 
     // attach components to the entity
     generator
-        .addComponent(
-            new GeneratorStatsComponent(
-                config.getHealth(),
-                config.getInterval()))
+        .addComponent(new GeneratorStatsComponent(config.getHealth(), config.getInterval()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 

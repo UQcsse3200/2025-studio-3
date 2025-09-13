@@ -17,6 +17,5 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
 
   public void setInterval(int interval) {
     this.interval = interval;
-  } 
-    
+  }
 }

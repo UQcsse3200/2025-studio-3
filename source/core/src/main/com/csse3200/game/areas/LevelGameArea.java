@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -121,7 +122,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     displayUI();
 
     spawnMap();
-    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
@@ -185,10 +185,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         () -> DefenceFactory.createSlingShooter(enemies), "images/sling_shooter_front.png");
   }
 
-  private void spawnSun() {
+  private void spawnSun(Vector2 targetPos) {
     Entity sunSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png");
+        new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png", targetPos);
     sunSpawner.addComponent(currencyGenerator);
     spawnEntity(sunSpawner);
   }
@@ -359,6 +359,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawned_units[position] = newEntity;
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
+
+    // if entity is a furnace, trigger currency generation at that point
+    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
+      spawnSun(entityPos);
+    }
 
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities

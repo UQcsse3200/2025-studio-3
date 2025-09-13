@@ -1,7 +1,7 @@
 package com.csse3200.game.components.currency;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -28,6 +28,10 @@ public class CurrencyGeneratorComponent extends Component {
   /** Texture path for the sun sprite */
   private final String sunTexturePath;
 
+  private final float targetX;
+
+  private final float targetY;
+
   /**
    * FALL_FRAC_PER_SEC: Fraction of screen height per second used as falling speed. e.g. 0.25 -> sun
    * falls 25% of the screen height each second
@@ -47,7 +51,7 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Creates a new currency generator component with default settings. */
   public CurrencyGeneratorComponent() {
-    this(8f, 25, "images/scrap_metal.png");
+    this(8f, 25, "images/scrap_metal.png", new Vector2(0, 0));
   }
 
   /**
@@ -57,10 +61,13 @@ public class CurrencyGeneratorComponent extends Component {
    * @param sunValue currency granted per sun
    * @param sunTexturePath texture path for the sun image
    */
-  public CurrencyGeneratorComponent(float intervalSec, int sunValue, String sunTexturePath) {
+  public CurrencyGeneratorComponent(
+      float intervalSec, int sunValue, String sunTexturePath, Vector2 position) {
     this.intervalSec = Math.max(0.5f, intervalSec);
     this.sunValue = Math.max(1, sunValue);
     this.sunTexturePath = sunTexturePath;
+    this.targetX = position.x;
+    this.targetY = position.y;
   }
 
   @Override
@@ -77,19 +84,14 @@ public class CurrencyGeneratorComponent extends Component {
 
     generatorAction =
         Actions.forever(
-            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnOneSunRandom)));
+            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnSunAt)));
     stage.addAction(generatorAction);
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
   /** Spawn a sun that falls from the top to (targetX, targetY) while rotating. */
-  /**
-   * Spawns a sun at the specified coordinates.
-   *
-   * @param targetX the x coordinate to spawn at
-   * @param targetY the y coordinate to spawn at
-   */
-  public void spawnSunAt(float targetX, float targetY) {
+  /** Spawns a sun at the specified coordinates. */
+  public void spawnSunAt() {
     ResourceService rs = ServiceLocator.getResourceService();
     Stage stage =
         ServiceLocator.getRenderService() != null
@@ -116,7 +118,7 @@ public class CurrencyGeneratorComponent extends Component {
 
     stage.addActor(sun);
 
-    sun.setPosition(targetX, targetY);
+    sun.setPosition(this.targetX, this.targetY);
 
     // Auto-expire if not collected to avoid screen flooding
     float expireSec = SUN_LIFETIME_SEC;
@@ -134,55 +136,6 @@ public class CurrencyGeneratorComponent extends Component {
                         "Sun expired without being collected at ({}, {})", targetX, targetY);
                   }
                 })));
-  }
-
-  /** Spawn at a random point within screen bounds (with padding). */
-  private void spawnOneSunRandom() {
-    ResourceService rs = ServiceLocator.getResourceService();
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    if (rs == null) {
-      logger.warn("ResourceService is null. Skipping random sun spawn.");
-      return;
-    }
-    if (stage == null) {
-      logger.warn("Stage is null. Skipping random sun spawn.");
-      return;
-    }
-
-    float padding = 32f;
-    float w = stage.getViewport().getWorldWidth();
-    float h = stage.getViewport().getWorldHeight();
-
-    float targetX = MathUtils.random(padding, Math.max(padding, w - SUN_SIZE_PX - padding));
-    float targetY = MathUtils.random(padding, Math.max(padding, h - SUN_SIZE_PX - padding));
-    spawnSunAt(targetX, targetY);
-  }
-
-  /** Configure falling speed */
-  /**
-   * Sets the fall fraction per second for spawned suns.
-   *
-   * @param frac the fall fraction per second
-   * @return this component for method chaining
-   */
-  public CurrencyGeneratorComponent setFallFracPerSec(float frac) {
-    this.FALL_FRAC_PER_SEC = Math.max(0.01f, frac);
-    return this;
-  }
-
-  /** Configure rotation speed in degrees per second. */
-  /**
-   * Sets the rotating speed in degrees per second for spawned suns.
-   *
-   * @param dps the degrees per second
-   * @return this component for method chaining
-   */
-  public CurrencyGeneratorComponent setRotatingSpeedDps(float dps) {
-    this.ROT_SPEED_DPS = Math.max(0f, dps);
-    return this;
   }
 
   /** Configure sun visual size in pixels. */
