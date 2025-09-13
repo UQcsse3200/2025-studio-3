@@ -3,6 +3,7 @@ package com.csse3200.game.services;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.entities.configs.BaseItemConfig.DeserializedItemConfig;
 import com.csse3200.game.persistence.FileLoader;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,8 +12,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Service for managing the config files and data loading of the game.
- *
- * <p>Warning for future developers -> hours spent trying to make the methods below generic: 3
  */
 public class ConfigService {
   private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
@@ -155,6 +154,7 @@ public class ConfigService {
     return itemConfigs.values().toArray(new BaseItemConfig[0]);
   }
 
+  // TODO: Move these to the Base Config classes for tidyness.
   public static class DeserializedDefenceConfig {
     private HashMap<String, BaseDefenceConfig> config;
 
@@ -183,22 +183,6 @@ public class ConfigService {
     }
 
     public Map<String, BaseEntityConfig> getConfig() {
-      return config;
-    }
-  }
-
-  public static class DeserializedItemConfig {
-    private HashMap<String, BaseItemConfig> config;
-
-    public DeserializedItemConfig() {
-      this.config = new HashMap<>();
-    }
-
-    public void setConfig(Map<String, BaseItemConfig> config) {
-      this.config = new HashMap<>(config);
-    }
-
-    public Map<String, BaseItemConfig> getConfig() {
       return config;
     }
   }

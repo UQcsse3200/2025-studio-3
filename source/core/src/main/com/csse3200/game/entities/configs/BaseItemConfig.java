@@ -1,5 +1,8 @@
 package com.csse3200.game.entities.configs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** Defines a basic set of properties stored in item config files to be loaded by Item Factories. */
 public class BaseItemConfig {
   private String name;
@@ -46,5 +49,33 @@ public class BaseItemConfig {
    */
   public int getCost() {
     return cost;
+  }
+
+  /** DeserializedItemConfig is a wrapper class for the BaseItemConfig class. */
+  public static class DeserializedItemConfig {
+    private HashMap<String, BaseItemConfig> config;
+
+    /** Creates a new DeserializedItemConfig. */
+    public DeserializedItemConfig() {
+      this.config = new HashMap<>();
+    }
+
+    /**
+     * Sets the config map for the item configs.
+     *
+     * @param config the config map for the item configs
+     */
+    public void setConfig(Map<String, BaseItemConfig> config) {
+      this.config = new HashMap<>(config);
+    }
+
+    /**
+     * Gets the config map for the item configs.
+     *
+     * @return the config map for the item configs
+     */
+    public Map<String, BaseItemConfig> getConfig() {
+      return config;
+    }
   }
 }
