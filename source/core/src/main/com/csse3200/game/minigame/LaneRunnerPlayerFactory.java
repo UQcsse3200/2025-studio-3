@@ -10,7 +10,7 @@ public class LaneRunnerPlayerFactory {
         Entity player = new Entity()
                 .addComponent(new TextureRenderComponent(PLAYER_TEXTURE))
                 .addComponent(new PlayerMovementComponent(laneManager))
-                .addComponent(new MinigameInputComponent());
+                .addComponent(new MiniGameInputComponent());
         player.setScale(64f,64f);
         int startingLane = 1;
         player.setPosition(laneManager.getLaneCenter(startingLane),50f);
