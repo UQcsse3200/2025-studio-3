@@ -1,11 +1,13 @@
 {
-  "slingshooter": {
-    "health": 50,
-    "baseAttack": 1,
-    "rangeType": 1,
-    "range": 5,
-    "state": 0,
-    "attackSpeed": 3,
-    "critChance": 1
+  "config": {
+    "slingshooter": {
+      "health": 50,
+      "baseAttack": 1,
+      "rangeType": 1,
+      "range": 5,
+      "state": 0,
+      "attackSpeed": 3,
+      "critChance": 1
+    }
   }
 }

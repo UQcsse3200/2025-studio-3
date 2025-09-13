@@ -1,15 +1,15 @@
 {
-  "configs": {
+  "config": {
     "item1": {
       "name": "Item 1",
-      "description": "Item 1 description",
+      "description": "Item 1 description", 
       "eventName": "item1",
       "cost": 30
     },
     "item2": {
       "name": "Item 2",
       "description": "Item 2 description",
-      "eventName": "item2",
+      "eventName": "item2", 
       "cost": 30
     }
   }

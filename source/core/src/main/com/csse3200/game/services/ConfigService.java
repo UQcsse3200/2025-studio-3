@@ -1,18 +1,18 @@
 package com.csse3200.game.services;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.FileLoader;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service for managing the config files and data loading of the game.
+ *
+ * <p>Warning for future developers -> hours spent trying to make the methods below generic: 3
  */
 public class ConfigService {
   private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
@@ -23,47 +23,84 @@ public class ConfigService {
   private static final String ENEMY_CONFIG_FILE = "configs/Enemies.json";
   private static final String ITEM_CONFIG_FILE = "configs/Items.json";
 
-  /**
-   * On registration, the config service will use the FileLoader to load all config files.
-   */
+  /** On registration, the config service will use the FileLoader to load all config files. */
   public ConfigService() {
-    this.defenceConfigs = loadConfigs(DEFENCE_CONFIG_FILE);
-    this.enemyConfigs = loadConfigs(ENEMY_CONFIG_FILE);
-    this.itemConfigs = loadConfigs(ITEM_CONFIG_FILE);
+    this.defenceConfigs = loadDefenceConfigs(DEFENCE_CONFIG_FILE);
+    this.enemyConfigs = loadEnemyConfigs(ENEMY_CONFIG_FILE);
+    this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
   }
-  
+
   /**
-   * Generic method to load any config type from any JSON file
-   * 
-   * @param filename The JSON file to load from
-   * @param <T> The type of config objects
-   * @return Map of config name to config object
+   * Loads item configs from a file.
+   *
+   * @param filename the filename to load from
+   * @return the item configs
    */
-  @SuppressWarnings("unchecked")
-  public <T> Map<String, T> loadConfigs(String filename) {
-    try {
-      Map<String, T> configs = FileLoader.readClass(Map.class, filename);
-      if (configs != null) {
-        logger.info("Loaded {} entities from {}", configs.size(), filename);
-        return configs;
-      }
+  public Map<String, BaseItemConfig> loadItemConfigs(String filename) {
+    DeserializedItemConfig wrapper = FileLoader.readClass(DeserializedItemConfig.class, filename);
 
-
-      
-      // DeserializedConfig<T> configs = FileLoader.readClass(DeserializedConfig.class, filename);
-      // if (configs != null && configs.getConfigs() != null) {
-      //   logger.info("Loaded {} entities from {}", configs.getConfigs().size(), filename);
-      //   return configs.getConfigs();
-      // }
-    } catch (Exception e) {
-      logger.error("Failed to load configurations from {}", filename, e);
+    if (wrapper == null) {
+      logger.warn("Failed to load item config file: {}", filename);
+      return new HashMap<>();
     }
-    return new HashMap<>();
+
+    Map<String, BaseItemConfig> configs = wrapper.getConfig();
+    if (configs == null) {
+      logger.warn("Item config file {} loaded but contains no configs", filename);
+      return new HashMap<>();
+    }
+
+    return configs;
+  }
+
+  /**
+   * Loads defence configs from a file.
+   *
+   * @param filename the filename to load from
+   * @return the defence configs
+   */
+  public Map<String, BaseDefenceConfig> loadDefenceConfigs(String filename) {
+    DeserializedDefenceConfig wrapper =
+        FileLoader.readClass(DeserializedDefenceConfig.class, filename);
+    if (wrapper == null) {
+      logger.warn("Failed to load defence config file: {}", filename);
+      return new HashMap<>();
+    }
+
+    Map<String, BaseDefenceConfig> configs = wrapper.getConfig();
+    if (configs == null) {
+      logger.warn("Defence config file {} loaded but contains no configs", filename);
+      return new HashMap<>();
+    }
+
+    return configs;
+  }
+
+  /**
+   * Loads enemy configs from a file.
+   *
+   * @param filename the filename to load from
+   * @return the enemy configs
+   */
+  public Map<String, BaseEntityConfig> loadEnemyConfigs(String filename) {
+    DeserializedEnemyConfig wrapper = FileLoader.readClass(DeserializedEnemyConfig.class, filename);
+    if (wrapper == null) {
+      logger.warn("Failed to load enemy config file: {}", filename);
+      return new HashMap<>();
+    }
+
+    Map<String, BaseEntityConfig> configs = wrapper.getConfig();
+    if (configs == null) {
+      logger.warn("Enemy config file {} loaded but contains no configs", filename);
+      return new HashMap<>();
+    }
+
+    return configs;
   }
 
   /**
    * Gets a particular defence config.
-   * 
+   *
    * @param key The identifier or name of the defence config to get.
    * @return The defence config for the given key.
    */
@@ -73,7 +110,7 @@ public class ConfigService {
 
   /**
    * Gets a particular enemy config.
-   * 
+   *
    * @param key The identifier or name of the enemy config to get.
    * @return The enemy config for the given key.
    */
@@ -83,7 +120,7 @@ public class ConfigService {
 
   /**
    * Gets a particular item config.
-   * 
+   *
    * @param key The identifier or name of the item config to get.
    * @return The item config for the given key.
    */
@@ -93,7 +130,7 @@ public class ConfigService {
 
   /**
    * Gets all the defence configs.
-   * 
+   *
    * @return All the defence configs.
    */
   public BaseDefenceConfig[] getDefenceConfigs() {
@@ -102,7 +139,7 @@ public class ConfigService {
 
   /**
    * Gets all the enemy configs.
-   * 
+   *
    * @return All the enemy configs.
    */
   public BaseEntityConfig[] getEnemyConfigs() {
@@ -111,35 +148,58 @@ public class ConfigService {
 
   /**
    * Gets all the item configs.
-   * 
+   *
    * @return All the item configs.
    */
   public BaseItemConfig[] getItemConfigs() {
     return itemConfigs.values().toArray(new BaseItemConfig[0]);
   }
 
-  /**
-   * Generic data-class for the FileLoader to load config files into.
-   * 
-   * @param <T> The base type of config objects
-   */
-  public static class DeserializedConfig<T> {
-    private Map<String, T> configs;
+  public static class DeserializedDefenceConfig {
+    private HashMap<String, BaseDefenceConfig> config;
 
-    /**
-     * Creates a new DeserializedConfig.
-     */
-    public DeserializedConfig() {
-      this.configs = new HashMap<>();
+    public DeserializedDefenceConfig() {
+      this.config = new HashMap<>();
     }
-  
-    /**
-     * Returns the deserialized configs.
-     * 
-     * @return the deserialized configs
-     */
-    public Map<String, T> getConfigs() {
-      return configs;
+
+    public void setConfig(Map<String, BaseDefenceConfig> config) {
+      this.config = new HashMap<>(config);
+    }
+
+    public Map<String, BaseDefenceConfig> getConfig() {
+      return config;
+    }
+  }
+
+  public static class DeserializedEnemyConfig {
+    private HashMap<String, BaseEntityConfig> config;
+
+    public DeserializedEnemyConfig() {
+      this.config = new HashMap<>();
+    }
+
+    public void setConfig(Map<String, BaseEntityConfig> config) {
+      this.config = new HashMap<>(config);
+    }
+
+    public Map<String, BaseEntityConfig> getConfig() {
+      return config;
+    }
+  }
+
+  public static class DeserializedItemConfig {
+    private HashMap<String, BaseItemConfig> config;
+
+    public DeserializedItemConfig() {
+      this.config = new HashMap<>();
+    }
+
+    public void setConfig(Map<String, BaseItemConfig> config) {
+      this.config = new HashMap<>(config);
+    }
+
+    public Map<String, BaseItemConfig> getConfig() {
+      return config;
     }
   }
 }
