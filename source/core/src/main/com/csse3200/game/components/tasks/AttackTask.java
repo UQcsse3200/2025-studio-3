@@ -1,16 +1,9 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.DefenceStatsComponent;
-import com.csse3200.game.components.InventoryUnitInputComponent;
-import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.entities.Entity;
 import java.util.List;
-
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,9 +44,6 @@ public class AttackTask extends TargetDetectionTasks {
       // TODO this should be specific to defender type??
       Entity defender = owner.getEntity();
       Vector2 spawnPos = defender.getCenterPosition();
-
-
-
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
