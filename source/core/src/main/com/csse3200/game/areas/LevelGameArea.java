@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -31,14 +31,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private static final int LEVEL_ONE_ROWS = 5;
   private static final int LEVEL_ONE_COLS = 10;
+  private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelTextures = {
-    "images/box_boy_leaf.png",
-    "images/level-1-map-v1.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/olive_tile.png",
-    "images/green_tile.png",
-    "images/box_boy.png",
+    "images/level-1-map-v2.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
@@ -54,8 +49,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
-  private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-  private static final String[] levelMusic = {backgroundMusic};
+  private static final String[] levelMusic = {BACKGROUND_MUSIC};
 
   private final TerrainFactory terrainFactory;
 
@@ -69,9 +63,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
-  private final Entity[] spawned_units;
-  private Entity selected_unit;
-  private Entity selection_star;
+  private final Entity[] spawnedUnits;
+  private Entity selectedUnit;
+  private Entity selectionStar;
+  private boolean isGameOver = false;
+  private final ArrayList<Entity> robots = new ArrayList<>();
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
@@ -89,9 +85,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     setScaling();
 
     this.terrainFactory = terrainFactory;
-    selected_unit = null; // None selected at level load
-    spawned_units = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
-    selection_star = null;
+    selectedUnit = null; // None selected at level load
+    spawnedUnits = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
+    selectionStar = null;
   }
 
   /**
@@ -126,7 +122,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
-    spawnInventory();
+    spawnDeck();
 
     playMusic();
   }
@@ -206,13 +202,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       Entity tile;
       // Calc tile position
       float tileX = xOffset + tileSize * (i % cols);
-      float tileY = yOffset + tileSize * (float) (i / cols);
-      // logic for alternating tile images
-      if ((i / cols) % 2 == 1) {
-        tile = GridFactory.createTile(i % 2, tileSize, tileX, tileY, this);
-      } else {
-        tile = GridFactory.createTile(1 - (i % 2), tileSize, tileX, tileY, this);
-      }
+      int col = i / cols;
+      float tileY = yOffset + tileSize * col;
+
+      tile = GridFactory.createTile(tileSize, tileX, tileY, this);
       tile.setPosition(tileX, tileY);
       tile.getComponent(TileStorageComponent.class).setPosition(i);
       grid.addTile(i, tile);
@@ -226,11 +219,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * @param supplier function returning a copy of that unit
    * @param image sprite image for how it will be displayed in the inventory
    */
-  private void placeInventoryUnit(Supplier<Entity> supplier, String image) {
-    int pos = ++inventoryUnitCount;
+  private void placeDeckUnit(Supplier<Entity> supplier, String image) {
+    int pos = ++deckUnitCount;
     Entity unit =
         new Entity()
-            .addComponent(new InventoryUnitInputComponent(this, supplier))
+            .addComponent(new DeckInputComponent(this, supplier))
             .addComponent(new TextureRenderComponent(image));
     unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
     unit.scaleHeight(tileSize);
@@ -251,13 +244,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   @Override
   public void dispose() {
     super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
+    ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class).stop();
     this.unloadAssets();
   }
 
   /** Starts the music */
   private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+    Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
     music.setLooping(true);
     music.setVolume(0.3f);
     music.play();
@@ -276,12 +269,17 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.grid = newGrid;
   }
 
-  public void spawnRobot(int x, int y, String robotType) {
+  public void spawnRobot(int col, int row, String robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
-    float tileX = xOffset + tileSize * (x % (LEVEL_ONE_COLS + 10));
-    float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
+
+    // place on that grid cell (bottom-left of the tile)
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
+
     unit.setPosition(tileX, tileY);
 
     // Add to list of all spawned units
@@ -300,7 +298,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public Entity getSelectedUnit() {
-    return selected_unit;
+    return selectedUnit;
   }
 
   /**
@@ -310,24 +308,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
-    selected_unit = unit;
+    selectedUnit = unit;
 
     // if no star, create one
-    if (selection_star == null) {
-      selection_star = new Entity();
-      selection_star.addComponent(new TextureRenderComponent("images/selected_star.png"));
-      selection_star.scaleHeight(tileSize / 2f);
-      spawnEntity(selection_star);
+    if (selectionStar == null) {
+      selectionStar = new Entity();
+      selectionStar.addComponent(new TextureRenderComponent("images/selected_star.png"));
+      selectionStar.scaleHeight(tileSize / 2f);
+      spawnEntity(selectionStar);
     }
 
     // if no unit selected remove star
-    if (selected_unit == null) {
-      selection_star.setPosition(-100f, -100f); // offscreen
+    if (selectedUnit == null) {
+      selectionStar.setPosition(-100f, -100f); // offscreen
       return; // break from method
     }
 
     // set star to correct position and size
-    selection_star.setPosition(unit.getCenterPosition().x, invSelectedY);
+    selectionStar.setPosition(unit.getCenterPosition().x, invSelectedY);
   }
 
   /**
@@ -339,11 +337,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public void spawnUnit(int position) {
     // Get and set position coords
     float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
-    float tileY = yOffset + tileSize * (float) (position / LEVEL_ONE_COLS);
+    int row = position / LEVEL_ONE_COLS; // line required to make Sonarqube happy
+    float tileY = yOffset + tileSize * row;
     Vector2 entityPos = new Vector2(tileX, tileY);
 
     Supplier<Entity> entitySupplier =
-        selected_unit.getComponent(InventoryUnitInputComponent.class).getEntitySupplier();
+        selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
     Entity newEntity = entitySupplier.get();
     if (newEntity == null) {
       logger.error("Entity fetched was NULL");
@@ -357,7 +356,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
 
     // Add to list of all spawned units
-    spawned_units[position] = newEntity;
+    spawnedUnits[position] = newEntity;
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
 
@@ -374,8 +373,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void removeUnit(int position) {
-    spawned_units[position].dispose();
-    spawned_units[position] = null;
+    spawnedUnits[position].dispose();
+    spawnedUnits[position] = null;
 
     logger.info("Unit deleted at position {}", position);
   }
@@ -420,5 +419,26 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   /** Method to reset game entity size/position on window resize. */
   public void resize() {
     setScaling();
+  }
+
+  /** Checks the game over condition when a robot reaches the end of the grid */
+  public void checkGameOver() {
+    // check if the game is already over
+    if (isGameOver) {
+      return; // game is already over don't check again
+    }
+    // calculate the robot's position
+    for (Entity robot : robots) {
+      Vector2 worldPos = robot.getPosition();
+      int gridX = (int) ((worldPos.x - xOffset) / tileSize);
+
+      // check if robot has reached the end
+      if (gridX <= 0) {
+        isGameOver = true;
+        // TODO: add UI component here
+        // placeholder for now
+        logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+      }
+    }
   }
 }

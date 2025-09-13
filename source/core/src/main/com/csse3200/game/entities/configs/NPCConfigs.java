@@ -2,9 +2,9 @@ package com.csse3200.game.entities.configs;
 
 /** Defines all NPC configs to be loaded by the NPC Factory. */
 public class NPCConfigs {
-  public final BaseEntityConfig fastRobot = new FastRobotConfig();
-  public final BaseEntityConfig standardRobot = new StandardRobotConfig();
-  public final BaseEntityConfig tankyRobot = new TankyRobotConfig();
+  public final BaseEnemyConfig fastRobot = new BaseEnemyConfig();
+  public final BaseEnemyConfig standardRobot = new BaseEnemyConfig();
+  public final BaseEnemyConfig tankyRobot = new BaseEnemyConfig();
   public final BaseEntityConfig ghost = new BaseEntityConfig();
   public final GhostKingConfig ghostKing = new GhostKingConfig();
   public final BaseDefenderConfig slingshooter = new BaseDefenderConfig();
