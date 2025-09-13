@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.InventoryUnitInputComponent;
+import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -70,13 +70,11 @@ class TileTest {
     grid.addTile(0, tile);
     levelGameArea.setGrid(grid);
 
-    Entity selected =
-        new Entity()
-            .addComponent(new TextureRenderComponent(mock(Texture.class)))
-            .addComponent(
-                new InventoryUnitInputComponent(
-                    levelGameArea, Entity::new)); // or whatever ctor you use
-    levelGameArea.setSelectedUnit(selected); // setter or reflection
+      Entity selected =
+              new Entity()
+                      .addComponent(new TextureRenderComponent(mock(Texture.class)))
+                      .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
+      levelGameArea.setSelectedUnit(selected);
   }
 
   @Test
