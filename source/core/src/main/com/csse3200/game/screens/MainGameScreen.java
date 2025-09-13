@@ -8,6 +8,7 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
 import com.csse3200.game.components.hud.MainMapNavigationMenu;
 import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.hud.PauseButton;
@@ -106,7 +107,6 @@ public class MainGameScreen extends ScreenAdapter {
     waveManager.setGameArea(levelGameArea);
     levelGameArea.create();
 
-
     snapCameraBottomLeft();
     waveManager.initialiseNewWave();
 
@@ -198,6 +198,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(mainGameActions)
         .addComponent(new MainMapNavigationMenu())
         .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu())
         .addComponent(pauseButton)
         .addComponent(pauseMenu)
         .addComponent(pauseMenuActions)
@@ -259,6 +260,7 @@ public class MainGameScreen extends ScreenAdapter {
               });
     }
   }
+
   /** Returns whether the game is currently paused */
   public boolean isPaused() {
     return isPaused;

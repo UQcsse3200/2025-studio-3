@@ -18,6 +18,11 @@ public class MainGameActions extends Component {
   private MainGameScreen mainGameScreen;
   private com.csse3200.game.components.hud.PauseButton pauseButton;
 
+  /**
+   * Constructor for the MainGameActions class.
+   *
+   * @param game The game instance.
+   */
   public MainGameActions(GdxGame game) {
     this.game = game;
   }
@@ -29,22 +34,37 @@ public class MainGameActions extends Component {
     entity.getEvents().addListener("hide_pause_menu", this::onHidePauseMenu);
   }
 
-  /** Sets the pause menu reference */
+  /**
+   * Sets the pause menu reference.
+   *
+   * @param pauseMenu The pause menu to set.
+   */
   public void setPauseMenu(PauseMenu pauseMenu) {
     this.pauseMenu = pauseMenu;
   }
 
-  /** Sets the main game screen reference */
+  /**
+   * Sets the main game screen reference.
+   *
+   * @param mainGameScreen The main game screen to set.
+   */
   public void setMainGameScreen(MainGameScreen mainGameScreen) {
     this.mainGameScreen = mainGameScreen;
   }
 
-  /** Gets the main game screen reference */
+  /** Gets the main game screen reference.
+   *
+   * @return The main game screen reference.
+  */
   public MainGameScreen getMainGameScreen() {
     return mainGameScreen;
   }
 
-  /** Sets the pause button reference */
+  /** 
+   * Sets the pause button reference
+   * 
+   * @param pauseButton The pause button to set.
+   */
   public void setPauseButton(com.csse3200.game.components.hud.PauseButton pauseButton) {
     this.pauseButton = pauseButton;
   }

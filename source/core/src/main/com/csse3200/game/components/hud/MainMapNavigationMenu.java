@@ -35,7 +35,6 @@ public class MainMapNavigationMenu extends UIComponent {
   private ImageButton menuButton;
   private Label settingsTooltip;
   private Label menuTooltip;
-  private AnimatedDropdownMenu dropdownMenu;
 
   @Override
   public void create() {
@@ -171,7 +170,7 @@ public class MainMapNavigationMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            toggleDropdownMenu();
+            entity.getEvents().trigger("open_dropdown_menu");
           }
         });
   }
@@ -185,18 +184,6 @@ public class MainMapNavigationMenu extends UIComponent {
             entity.getEvents().trigger("open_settings");
           }
         });
-  }
-
-  /** Toggles the dropdown menu */
-  private void toggleDropdownMenu() {
-    if (dropdownMenu == null) {
-      dropdownMenu = new AnimatedDropdownMenu();
-      dropdownMenu.setStage(stage);
-      dropdownMenu.setMainEntity(entity);
-      dropdownMenu.create();
-    } else {
-      dropdownMenu.toggle();
-    }
   }
 
   /**
@@ -356,10 +343,6 @@ public class MainMapNavigationMenu extends UIComponent {
     if (menuTooltip != null) {
       menuTooltip.remove();
       menuTooltip = null;
-    }
-    if (dropdownMenu != null) {
-      dropdownMenu.dispose();
-      dropdownMenu = null;
     }
     super.dispose();
   }

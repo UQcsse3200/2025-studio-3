@@ -22,9 +22,9 @@ public class PauseMenuActions extends Component {
 
   @Override
   public void create() {
-    entity.getEvents().addListener("open_settings", this::onSettings);
+    entity.getEvents().addListener("settings", this::onSettings);
     entity.getEvents().addListener("quit_level", this::onQuitLevel);
-    entity.getEvents().addListener("main_menu", this::onMainMenu);
+    entity.getEvents().addListener("open_main_menu", this::onMainMenu);
     entity.getEvents().addListener("exit_game", this::onExitGame);
   }
 

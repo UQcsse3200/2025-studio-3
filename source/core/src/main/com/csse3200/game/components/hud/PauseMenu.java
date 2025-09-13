@@ -43,8 +43,7 @@ public class PauseMenu extends UIComponent {
     setVisible(false);
 
     // Check if the game is already paused (e.g., returning from settings)
-    if (entity.getComponent(com.csse3200.game.components.maingame.MainGameActions.class) != null)
-    {
+    if (entity.getComponent(com.csse3200.game.components.maingame.MainGameActions.class) != null) {
       // Check if the main game screen is paused
       com.csse3200.game.screens.MainGameScreen mainGameScreen =
           entity
@@ -142,7 +141,7 @@ public class PauseMenu extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("Settings button clicked");
-            entity.getEvents().trigger("open_settings");
+            entity.getEvents().trigger("settings");
           }
         });
 
@@ -164,7 +163,7 @@ public class PauseMenu extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("Main Menu button clicked");
-            entity.getEvents().trigger("main_menu");
+            entity.getEvents().trigger("open_main_menu");
           }
         });
 

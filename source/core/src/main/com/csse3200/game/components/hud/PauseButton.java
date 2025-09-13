@@ -109,12 +109,17 @@ public class PauseButton extends UIComponent {
     updatePosition();
   }
 
-  /** Updates button position when window is resized */
+  /** Updates button and tooltip position when window is resized */
   private void updatePosition() {
     if (pauseButtonComponent != null) {
       float x = (stage.getWidth() - BUTTON_SIZE) / 2f;
       float y = stage.getHeight() - BUTTON_SIZE - 20f;
       pauseButtonComponent.setPosition(x, y);
+
+      // Update tooltip position relative to button
+      if (pauseTooltip != null) {
+        pauseTooltip.setPosition(x + (BUTTON_SIZE - pauseTooltip.getPrefWidth()) / 2f, y - 20f);
+      }
     }
   }
 

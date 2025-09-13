@@ -2,7 +2,6 @@ package com.csse3200.game.components.hud;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.ui.UIComponent;
@@ -15,18 +14,16 @@ public class AnimatedDropdownMenu extends UIComponent {
   private static final int BUTTON_WIDTH = 200;
   private static final int BUTTON_HEIGHT = 40;
   private static final int BUTTON_SPACING = 5;
-
-  private ImageButton triggerButton;
   private TextButton[] menuButtons;
   private boolean isOpen = false;
   private float startX;
   private float startY;
-  private com.csse3200.game.entities.Entity mainEntity;
 
   @Override
   public void create() {
     super.create();
     addActors();
+    entity.getEvents().addListener("open_dropdown_menu", this::toggle);
   }
 
   /** Creates a new AnimatedDropdownMenu. */
@@ -34,30 +31,11 @@ public class AnimatedDropdownMenu extends UIComponent {
     super();
   }
 
-  /**
-   * Sets the stage to use for this dropdown menu
-   *
-   * @param stage The stage to set.
-   */
-  public void setStage(com.badlogic.gdx.scenes.scene2d.Stage stage) {
-    this.stage = stage;
-  }
-
-  /**
-   * Sets the main entity to trigger events on
-   *
-   * @param mainEntity The main entity to set.
-   */
-  public void setMainEntity(com.csse3200.game.entities.Entity mainEntity) {
-    this.mainEntity = mainEntity;
-  }
-
   /** Adds the actors to the stage */
   private void addActors() {
     // Position in top right corner
     startX = stage.getWidth() - 80f;
     startY = stage.getHeight() - 80f;
-
     createMenuButtons();
   }
 
@@ -100,9 +78,6 @@ public class AnimatedDropdownMenu extends UIComponent {
       menuButtons[i] = button;
       stage.addActor(button);
     }
-
-    // Open the menu immediately when created
-    toggleMenu();
   }
 
   /** Toggles the dropdown menu */
@@ -162,51 +137,46 @@ public class AnimatedDropdownMenu extends UIComponent {
   private void handleMenuClick(String buttonText) {
     logger.info("Menu clicked: {}", buttonText);
     closeMenu();
-    // Trigger events on the main entity if available
-    if (mainEntity != null) {
       switch (buttonText) {
         case "Quicksave":
           logger.debug("Quicksave button clicked");
-          mainEntity.getEvents().trigger("quicksave");
+          entity.getEvents().trigger("quicksave");
           break;
         case "Save Game":
           logger.debug("Save game button clicked");
-          mainEntity.getEvents().trigger("savegame");
+          entity.getEvents().trigger("savegame");
           break;
         case "Load Game":
           logger.debug("Load game button clicked");
-          mainEntity.getEvents().trigger("loadgame");
+          entity.getEvents().trigger("loadgame");
           break;
         case "Statistics":
           logger.debug("Statistics button clicked");
-          mainEntity.getEvents().trigger("open_statistics");
+          entity.getEvents().trigger("open_statistics");
           break;
         case "Achievements":
           logger.debug("Achievements button clicked");
-          mainEntity.getEvents().trigger("open_achievements");
+          entity.getEvents().trigger("open_achievements");
           break;
         case "Dossier":
           logger.debug("Dossier button clicked");
-          mainEntity.getEvents().trigger("open_dossier");
+          entity.getEvents().trigger("open_dossier");
           break;
         case "Inventory":
           logger.debug("Inventory button clicked");
-          mainEntity.getEvents().trigger("open_inventory");
+          entity.getEvents().trigger("open_inventory");
           break;
         case "Main Menu":
           logger.debug("Main menu button clicked");
-          mainEntity.getEvents().trigger("main_menu");
+          entity.getEvents().trigger("main_menu");
           break;
         case "Exit Game":
           logger.debug("Exit game button clicked");
-          mainEntity.getEvents().trigger("exit");
+          entity.getEvents().trigger("exit");
           break;
         default:
           break;
       }
-    } else {
-      logger.warn("Entity not set for dropdown menu");
-    }
   }
 
   @Override
@@ -217,20 +187,16 @@ public class AnimatedDropdownMenu extends UIComponent {
 
   /** Updates positions when window is resized */
   private void updatePositions() {
-    float newX = stage.getWidth() - 80f;
-    float newY = stage.getHeight() - 80f;
-
-    if (triggerButton != null) {
-      triggerButton.setPosition(newX, newY);
-    }
-
+    // Update start positions based on current stage size
+    startX = stage.getWidth() - 80f;
+    startY = stage.getHeight() - 80f;
     // Update menu button positions
     if (menuButtons != null) {
       for (int i = 0; i < menuButtons.length; i++) {
         TextButton button = menuButtons[i];
         if (button != null) {
-          float buttonX = newX - BUTTON_WIDTH + 60f;
-          float buttonY = newY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
+          float buttonX = startX - BUTTON_WIDTH + 60f;
+          float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
           button.setPosition(buttonX, buttonY);
         }
       }
@@ -249,11 +215,6 @@ public class AnimatedDropdownMenu extends UIComponent {
 
   @Override
   public void dispose() {
-    if (triggerButton != null) {
-      triggerButton.remove();
-      triggerButton = null;
-    }
-
     if (menuButtons != null) {
       for (TextButton button : menuButtons) {
         if (button != null) {
