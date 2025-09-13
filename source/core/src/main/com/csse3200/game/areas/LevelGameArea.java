@@ -71,7 +71,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
-  private int inventoryUnitCount;
+  private int deckUnitCount;
 
   private List<Entity> enemies = new ArrayList<>();
 
@@ -172,14 +172,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
-  private void spawnInventory() {
-    inventoryUnitCount = 0;
-    placeInventoryUnit(() -> null, "images/ghost_1.png");
-    placeInventoryUnit(() -> null, "images/ghost_king.png");
-    placeInventoryUnit(() -> DefenceFactory.createFurnace(), "images/forge_1.png");
-    placeInventoryUnit(
-        () -> DefenceFactory.createSlingShooter(enemies),
+  private void spawnDeck() {
+    deckUnitCount = 0;
+    placeDeckUnit(
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
+    placeDeckUnit(
+      () -> DefenceFactory.createFurnace(), "images/forge_1.png");
   }
 
   private void spawnSun() {
@@ -288,7 +287,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     enemies.add(unit);
-    logger.info("Unit spawned at position {} {}", x, y);
+    logger.info("Unit spawned at position {} {}", col, row);
   }
 
   /**
