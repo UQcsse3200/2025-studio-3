@@ -36,6 +36,13 @@ public abstract class MiniGame2 extends ScreenAdapter{
         collider_paddle.setRestitution(1f);
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
+        float paddleStartX= ScreenWidth /2f;
+        float paddleStartY= 50f;
+        PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
+        paddle.setPosition(paddleStartX,paddleStartY);
+
+
+
         ServiceLocator.getEntityService().register(paddle);
 
         //Ball component
@@ -53,6 +60,10 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ball.getComponent(PhysicsComponent.class).getBody().setLinearDamping(0f);
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
+        float ballStartX = paddleStartX;
+        float ballStartY= 60f;
+        PhysicsComponent ballPhysics = ball.getComponent(PhysicsComponent.class);
+        ball.setPosition(ballStartX,ballStartY);
         ServiceLocator.getEntityService().register(ball);
 
         //wall component
