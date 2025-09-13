@@ -2,14 +2,9 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -17,8 +12,6 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.minigame.LaneManager;
 import com.csse3200.game.minigame.LaneRunnerPlayerFactory;
-import com.csse3200.game.minigame.MinigameInputComponent;
-import com.csse3200.game.minigame.PlayerLaneManager;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -28,16 +21,13 @@ import org.slf4j.LoggerFactory;
 
 public class LaneRunnerScreen extends ScreenAdapter {
 
-    private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.MainMenuScreen.class);
+    private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.LaneRunnerScreen.class);
     private final GdxGame game;
     private final Renderer renderer;
     private LaneManager laneManager;
-    private PlayerLaneManager playerLaneManager;
-    private Entity player;
     private static final String[] laneRunnerTextures = {
-            "images/bg.png",
             "images/box_boy.png",
-            "images/grass_1.png",
+            "images/LaneRunnerLanes.png",
     };
 
     public LaneRunnerScreen(GdxGame game) {
@@ -50,10 +40,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
         ServiceLocator.registerRenderService(new RenderService());
 
         renderer = RenderFactory.createRenderer();
-
+        this.laneManager= new LaneManager(Gdx.graphics.getWidth());
         loadAssets();
         createUI();
-        //createPlayer();
     }
 
     private void loadAssets() {
@@ -63,36 +52,29 @@ public class LaneRunnerScreen extends ScreenAdapter {
         ServiceLocator.getResourceService().loadAll();
     }
     private void createUI() {
-        logger.debug("Creating ui");
+        logger.debug("Creating UI");
         Stage stage = ServiceLocator.getRenderService().getStage();
 
-        // Add the background image as a Stage actor
-        Texture bgTex = ServiceLocator.getResourceService()
-                .getAsset("images/bg.png", Texture.class);
-        logger.debug("loads lane runner mini game screen background texture asset");
-        Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-        bg.setFillParent(true);
-        bg.setScaling(Scaling.fill);
-        stage.addActor(bg);
-        logger.debug("shows lane runner mini game screen background");
-        //Lanes
-        /*Texture laneTex = ServiceLocator.getResourceService().getAsset("images/grass_1.png", Texture.class);
-        laneManager.createLaneEntities(ServiceLocator.getEntityService(), laneTex);*/
-        Camera camera =ServiceLocator.getRenderService().getStage().getCamera();
-        float screenWidth = camera.viewportWidth;
-        laneManager=new LaneManager(screenWidth);
-        Texture laneTex=ServiceLocator.getResourceService().getAsset("images/grass_1.png", Texture.class);
-        laneManager.createLaneVisuals(stage,laneTex);
-    }
-    /*private void createPlayer() {
-        logger.debug("Creating player");
-        //Stage stage=ServiceLocator.getRenderService().getStage();
-        player= LaneRunnerPlayerFactory.createPlayer();
-        playerLaneManager=new PlayerLaneManager(player,laneManager);
-        player.addComponent(new MinigameInputComponent(playerLaneManager));
+        // Create the background image
+        Texture bgTex = ServiceLocator.getResourceService().getAsset("images/LaneRunnerLanes.png", Texture.class);
+        Image background = new Image(bgTex);
 
+        // Calculate the correct width to avoid stretching, based on our lane logic
+        float totalLaneWidth = laneManager.getLaneWidth() * laneManager.getNumLanes();
+        float screenHeight = Gdx.graphics.getHeight();
+        background.setSize(totalLaneWidth, screenHeight);
+
+        // Center the background on the screen
+        float leftMargin = (Gdx.graphics.getWidth() - totalLaneWidth) / 2;
+        background.setPosition(leftMargin, 0);
+
+        stage.addActor(background);
+
+        // Create the player using the factory and register it
+        Entity player = LaneRunnerPlayerFactory.createPlayer(laneManager);
         ServiceLocator.getEntityService().register(player);
-    }*/
+    }
+
     public void render(float delta) {
         ServiceLocator.getEntityService().update();
         renderer.render();
@@ -102,6 +84,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.unloadAssets(laneRunnerTextures);
     }
+
     public void dispose() {
         logger.debug("Disposing lane runner mini game screen");
 
@@ -112,6 +95,5 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
         ServiceLocator.clear();
     }
-
-
 }
+
