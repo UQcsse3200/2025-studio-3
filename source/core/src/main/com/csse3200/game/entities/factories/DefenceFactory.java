@@ -4,13 +4,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.DefenceStatsComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
+import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
-// import com.csse3200.game.components.WanderTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseDefenceConfig;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -18,7 +19,6 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
@@ -45,11 +45,18 @@ public class DefenceFactory {
    * @return entity representing the slingshooter
    */
   public static Entity createSlingShooter(List<Entity> targets) {
-    // load the sling shooter’s specific configuration;
-    BaseDefenceConfig config = configs.slingshooter;
+    BaseDefenderConfig config = configs.slingshooter;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity defender = createBaseDefender();
+
+    // ai component
+    AITaskComponent enemyDetectionTasks =
+        new AITaskComponent()
+            .addTask(new AttackTask(targets, 100))
+            .addTask(new IdleTask(targets, 100));
+    
+    defender.addComponent(enemyDetectionTasks);
 
     // animation component
     AnimationRenderComponent animator =
@@ -64,14 +71,14 @@ public class DefenceFactory {
     // attach components to the entity
     defender
         .addComponent(
-            new DefenceStatsComponent(
+            new DefenderStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.rangeType,
-                config.range,
-                config.state,
-                config.attackSpeed,
-                config.critChance))
+                config.getRangeType(),
+                config.getRange(),
+                config.getAttackState(),
+                config.getAttackSpeed(),
+                config.getCritChance()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
@@ -80,19 +87,14 @@ public class DefenceFactory {
 
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
-
-    System.out.println("[DEBUG] Targets list size: " + targets.size());
-    targets.forEach(e -> System.out.println("Target: " + e));
-
     return defender;
   }
 
-  public static Entity createForge(List<Entity> targets) {
-    // load the sling shooter’s specific configuration;
-    BaseDefenceConfig config = configs.forge;
+  public static Entity createFurnace() {
+    BaseGeneratorConfig config = configs.furnace;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity generator = createBaseDefender();
 
     // animation component
     AnimationRenderComponent animator =
@@ -101,48 +103,36 @@ public class DefenceFactory {
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+
     // attach components to the entity
-    defender
+    generator
         .addComponent(
-            new DefenceStatsComponent(
+            new GeneratorStatsComponent(
                 config.getHealth(),
-                config.getAttack(),
-                config.rangeType,
-                config.range,
-                config.state,
-                config.attackSpeed,
-                config.critChance))
+                config.getInterval()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
     // trigger the initial attack event to kick off behaviour
-    // this will be changed to idle once idle is made
-    defender.getEvents().trigger("idleStart");
+    generator.getEvents().trigger("idleStart");
 
     // scale the entity to match animation sprite dimensions
-    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
-
-    return defender;
+    generator.getComponent(AnimationRenderComponent.class).scaleEntity();
+    return generator;
   }
 
   /**
-   * Creates a base defender entity with default physics and collider setup. Base defender is also
-   * able to detect enemies and act accordingly - i.e. remain idle or attack
+   * Creates a base defender entity with default physics and collider setup.
    *
    * @return entity with physics and collision components
    */
-  public static Entity createBaseDefender(List<Entity> targets, BaseDefenceConfig config) {
-    AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(new AttackTask(targets, 100))
-            .addTask(new IdleTask(targets, 100));
+  public static Entity createBaseDefender() {
 
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(enemyDetectionTasks);
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC));
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;

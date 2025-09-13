@@ -7,10 +7,10 @@ public class NPCConfigs {
   public final BaseEntityConfig tankyRobot = new TankyRobotConfig();
   public final BaseEntityConfig ghost = new BaseEntityConfig();
   public final GhostKingConfig ghostKing = new GhostKingConfig();
-  public final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
+  public final BaseDefenderConfig slingshooter = new BaseDefenderConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();
   // public BaseDefenceConfig mortar = new BaseDefenceConfig();
-  public final BaseDefenceConfig forge = new BaseDefenceConfig();
+  public final BaseGeneratorConfig furnace = new BaseGeneratorConfig();
 }
