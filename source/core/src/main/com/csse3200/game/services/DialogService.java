@@ -18,8 +18,13 @@ public class DialogService {
 
   /** Enum for the different types of dialogs. */
   public enum DialogType {
+    /** Info dialog type, typically used for informational messages with a single "OK" button. */
     INFO,
+    /**
+     * Warning dialog type, typically used for warning messages with "Confirm" and "Cancel" buttons.
+     */
     WARNING,
+    /** Error dialog type, typically used for error messages with a single "OK" button. */
     ERROR
   }
 

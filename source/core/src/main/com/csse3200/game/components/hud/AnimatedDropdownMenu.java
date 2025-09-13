@@ -29,12 +29,25 @@ public class AnimatedDropdownMenu extends UIComponent {
     addActors();
   }
 
-  /** Sets the stage to use for this dropdown menu */
+  /** Creates a new AnimatedDropdownMenu. */
+  public AnimatedDropdownMenu() {
+    super();
+  }
+
+  /**
+   * Sets the stage to use for this dropdown menu
+   *
+   * @param stage The stage to set.
+   */
   public void setStage(com.badlogic.gdx.scenes.scene2d.Stage stage) {
     this.stage = stage;
   }
 
-  /** Sets the main entity to trigger events on */
+  /**
+   * Sets the main entity to trigger events on
+   *
+   * @param mainEntity The main entity to set.
+   */
   public void setMainEntity(com.csse3200.game.entities.Entity mainEntity) {
     this.mainEntity = mainEntity;
   }

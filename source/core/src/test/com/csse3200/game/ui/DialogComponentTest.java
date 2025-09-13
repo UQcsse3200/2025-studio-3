@@ -1,5 +1,8 @@
 package com.csse3200.game.ui;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.when;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
@@ -12,26 +15,18 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
-/**
- * Test class for DialogComponent functionality.
- */
+/** Test class for DialogComponent functionality. */
 class DialogComponentTest {
 
-  @Mock
-  private GL20 mockGL20;
+  @Mock private GL20 mockGL20;
 
-  @Mock
-  private Stage mockStage;
+  @Mock private Stage mockStage;
 
   private RenderService renderService;
   private ResourceService resourceService;
@@ -58,7 +53,7 @@ class DialogComponentTest {
     // Mock the stage
     when(mockStage.getWidth()).thenReturn(800f);
     when(mockStage.getHeight()).thenReturn(600f);
-    
+
     // Set the stage on the render service
     renderService.setStage(mockStage);
 
@@ -80,9 +75,7 @@ class DialogComponentTest {
     ServiceLocator.clear();
   }
 
-  /**
-   * Helper method to create a DialogComponent with proper setup
-   */
+  /** Helper method to create a DialogComponent with proper setup */
   private DialogComponent createDialogComponent(DialogType type, String title, String message) {
     DialogComponent component = new DialogComponent(type, title, message);
     testEntity.addComponent(component);
@@ -101,7 +94,8 @@ class DialogComponentTest {
   @Test
   void testDialogComponentCreation() {
     DialogComponent infoDialog = new DialogComponent(DialogType.INFO, "Info", "Info message");
-    DialogComponent warningDialog = new DialogComponent(DialogType.WARNING, "Warning", "Warning message");
+    DialogComponent warningDialog =
+        new DialogComponent(DialogType.WARNING, "Warning", "Warning message");
     DialogComponent errorDialog = new DialogComponent(DialogType.ERROR, "Error", "Error message");
 
     assertNotNull(infoDialog);
@@ -123,7 +117,7 @@ class DialogComponentTest {
     assertEquals(testTitle, dialog.getTitle());
     assertEquals(testMessage, dialog.getMessage());
     assertEquals(DialogType.WARNING, dialog.getDialogType());
-    assertFalse(dialog.isVisible()); 
+    assertFalse(dialog.isVisible());
   }
 
   @Test
@@ -134,17 +128,19 @@ class DialogComponentTest {
     dialog.setOnClose(d -> {});
 
     // Verify callbacks are set (we can't easily test execution without a real stage)
-    assertDoesNotThrow(() -> {
-      dialog.setOnConfirm(d -> System.out.println("Confirm called"));
-      dialog.setOnCancel(d -> System.out.println("Cancel called"));
-      dialog.setOnClose(d -> System.out.println("Close called"));
-    });
+    assertDoesNotThrow(
+        () -> {
+          dialog.setOnConfirm(d -> System.out.println("Confirm called"));
+          dialog.setOnCancel(d -> System.out.println("Cancel called"));
+          dialog.setOnClose(d -> System.out.println("Close called"));
+        });
   }
 
   @Test
   void testDialogTypeSpecificBehavior() {
     DialogComponent infoDialog = new DialogComponent(DialogType.INFO, "Info", "Info message");
-    DialogComponent warningDialog = new DialogComponent(DialogType.WARNING, "Warning", "Warning message");
+    DialogComponent warningDialog =
+        new DialogComponent(DialogType.WARNING, "Warning", "Warning message");
     DialogComponent errorDialog = new DialogComponent(DialogType.ERROR, "Error", "Error message");
     assertEquals(DialogType.INFO, infoDialog.getDialogType());
     assertEquals(DialogType.WARNING, warningDialog.getDialogType());
@@ -166,14 +162,14 @@ class DialogComponentTest {
   @Test
   void testShowAndHide() {
     DialogComponent dialog = createDialogComponent(DialogType.INFO, "Test", "Test message");
-    
+
     // Initially not visible
     assertFalse(dialog.isVisible());
-    
+
     // Show dialog
     dialog.show();
     assertTrue(dialog.isVisible());
-    
+
     // Hide dialog
     dialog.hide();
     assertFalse(dialog.isVisible());
@@ -182,7 +178,7 @@ class DialogComponentTest {
   @Test
   void testDialogPositioning() {
     DialogComponent dialog = createDialogComponent(DialogType.INFO, "Test", "Test message");
-    
+
     // Test setting position
     dialog.setPosition(100f, 200f);
     // Note: We can't easily verify the actual position without accessing the internal dialog object
@@ -193,7 +189,7 @@ class DialogComponentTest {
   @Test
   void testDialogSizing() {
     DialogComponent dialog = createDialogComponent(DialogType.INFO, "Test", "Test message");
-    
+
     // Test setting size
     dialog.setSize(400f, 300f);
     // Note: We can't easily verify the actual size without accessing the internal dialog object
@@ -204,7 +200,7 @@ class DialogComponentTest {
   @Test
   void testResize() {
     DialogComponent dialog = createDialogComponent(DialogType.INFO, "Test", "Test message");
-    
+
     // Test resize method
     assertDoesNotThrow(dialog::resize);
   }
