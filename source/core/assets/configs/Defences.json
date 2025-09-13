@@ -7,5 +7,9 @@
     "state": 0,
     "attackSpeed": 3,
     "critChance": 1
+  },
+  "furnace": {
+    "health": 100,
+    "interval": 5
   }
-}
+} 

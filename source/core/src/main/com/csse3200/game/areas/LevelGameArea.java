@@ -180,7 +180,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     inventoryUnitCount = 0;
     placeInventoryUnit(() -> null, "images/ghost_1.png");
     placeInventoryUnit(() -> null, "images/ghost_king.png");
-    placeInventoryUnit(() -> DefenceFactory.createForge(enemies), "images/forge_1.png");
+    placeInventoryUnit(() -> DefenceFactory.createFurnace(), "images/forge_1.png");
     placeInventoryUnit(
         () -> DefenceFactory.createSlingShooter(enemies), "images/sling_shooter_front.png");
   }

@@ -1,6 +1,6 @@
 package com.csse3200.game.components.tasks;
 
-import com.csse3200.game.components.DefenceStatsComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import java.util.List;
@@ -38,7 +38,7 @@ public class AttackTask extends TargetDetectionTasks {
     super.start();
     Entity target = getNearestVisibleTarget();
     if (target != null) {
-      DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
+      DefenderStatsComponent stats = owner.getEntity().getComponent(DefenderStatsComponent.class);
       int damage = stats.getBaseAttack();
       // TODO this should be specific to defender type??
       Entity slingshot = ProjectileFactory.createSlingShot(damage);
