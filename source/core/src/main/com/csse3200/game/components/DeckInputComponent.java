@@ -11,13 +11,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Input handler for inventory units for mouse input. This input handler uses touch input. */
-public class InventoryUnitInputComponent extends InputComponent {
+public class DeckInputComponent extends InputComponent {
 
-  private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
+  private static final Logger logger = LoggerFactory.getLogger(DeckInputComponent.class);
   private final AreaAPI area;
-  private Supplier<Entity> supplier;
+  private final Supplier<Entity> supplier;
 
-  public InventoryUnitInputComponent(AreaAPI area, Supplier<Entity> supplier) {
+  public DeckInputComponent(AreaAPI area, Supplier<Entity> supplier) {
     super(5);
     this.area = area;
     this.supplier = supplier;
@@ -52,7 +52,7 @@ public class InventoryUnitInputComponent extends InputComponent {
         && clickInWorld.x <= position.x + tileSize
         && clickInWorld.y >= position.y
         && clickInWorld.y <= position.y + tileSize) {
-      logger.info("Inventory Entity clicked");
+      logger.info("Deck Entity clicked");
       return switch (button) {
         case Input.Buttons.LEFT -> {
           area.setSelectedUnit(entity);
