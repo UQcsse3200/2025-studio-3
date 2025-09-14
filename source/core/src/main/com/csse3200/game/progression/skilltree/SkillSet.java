@@ -11,36 +11,43 @@ import java.util.List;
 public class SkillSet {
 
   /** Static list of all available skills in the game. */
-  private static final transient List<Skill> Skills = new ArrayList<>();
+  private static final List<Skill> Skills = new ArrayList<>();
 
   /** List of skills that have been unlocked for the player. */
-  private List<Skill> unlockedSkills = new ArrayList<>();
+  private final List<Skill> unlockedSkills = new ArrayList<>();
 
   // Static initializer block to populate the predefined skills.
-  // Skills are categorized into Basic, Intermediate, and Advanced levels with
+  // Skills are categorized into Basic, Intermediate, Advanced  and Expert levels with
   // increasing stat bonuses.
 
   static {
     // Basic Skills
-    Skills.add(new Skill("Increase Health Basic", Skill.StatType.HEALTH, 10, 1));
-    Skills.add(new Skill("Increase AD Basic", Skill.StatType.ATTACK_DAMAGE, 10, 1));
-    Skills.add(new Skill("Increase firing Basic", Skill.StatType.FIRING_SPEED, 10, 1));
-    Skills.add(new Skill("Increase crit Basic", Skill.StatType.CRIT_CHANCE, 10, 1));
-    Skills.add(new Skill("Increase armour Basic", Skill.StatType.ARMOUR, 10, 1));
+    Skills.add(new Skill("Health Basic", Skill.StatType.HEALTH, 1.1f, 1));
+    Skills.add(new Skill("Attack Basic", Skill.StatType.ATTACK_DAMAGE, 1.1f, 1));
+    Skills.add(new Skill("Firing Speed Basic", Skill.StatType.FIRING_SPEED, 1.1f, 1));
+    Skills.add(new Skill("Crit Basic", Skill.StatType.CRIT_CHANCE, 0.1f, 1));
+    Skills.add(new Skill("Currency Basic", Skill.StatType.CURRENCY_GEN, 1.1f, 1));
 
     // Intermediate Skills
-    Skills.add(new Skill("Increase Health Intermediate", Skill.StatType.HEALTH, 20, 2));
-    Skills.add(new Skill("Increase AD Intermediate", Skill.StatType.ATTACK_DAMAGE, 20, 2));
-    Skills.add(new Skill("Increase firing Intermediate", Skill.StatType.FIRING_SPEED, 20, 2));
-    Skills.add(new Skill("Increase crit Intermediate", Skill.StatType.CRIT_CHANCE, 20, 2));
-    Skills.add(new Skill("Increase armour Intermediate", Skill.StatType.ARMOUR, 20, 2));
+    Skills.add(new Skill("Health Intermediate", Skill.StatType.HEALTH, 1.2f, 2));
+    Skills.add(new Skill("Attack Intermediate", Skill.StatType.ATTACK_DAMAGE, 1.2f, 2));
+    Skills.add(new Skill("Firing Speed Intermediate", Skill.StatType.FIRING_SPEED, 1.2f, 2));
+    Skills.add(new Skill("Crit Intermediate", Skill.StatType.CRIT_CHANCE, 0.2f, 2));
+    Skills.add(new Skill("Currency Intermediate", Skill.StatType.CURRENCY_GEN, 1.2f, 2));
 
     // Advanced Skills
-    Skills.add(new Skill("Increase Health Advanced", Skill.StatType.HEALTH, 30, 3));
-    Skills.add(new Skill("Increase AD Advanced", Skill.StatType.ATTACK_DAMAGE, 30, 3));
-    Skills.add(new Skill("Increase firing Advanced", Skill.StatType.FIRING_SPEED, 30, 3));
-    Skills.add(new Skill("Increase crit Advanced", Skill.StatType.CRIT_CHANCE, 30, 3));
-    Skills.add(new Skill("Increase armour Advanced", Skill.StatType.ARMOUR, 30, 3));
+    Skills.add(new Skill("Health Advanced", Skill.StatType.HEALTH, 1.3f, 3));
+    Skills.add(new Skill("Attack Advanced", Skill.StatType.ATTACK_DAMAGE, 1.3f, 3));
+    Skills.add(new Skill("Firing Speed Advanced", Skill.StatType.FIRING_SPEED, 1.3f, 3));
+    Skills.add(new Skill("Crit Advanced", Skill.StatType.CRIT_CHANCE, 0.3f, 3));
+    Skills.add(new Skill("Currency Advanced", Skill.StatType.CURRENCY_GEN, 1.3f, 3));
+
+    // ExpertSkills
+    Skills.add(new Skill("Health Expert", Skill.StatType.HEALTH, 1.50f, 4));
+    Skills.add(new Skill("Attack Expert", Skill.StatType.ATTACK_DAMAGE, 1.50f, 4));
+    Skills.add(new Skill("Firing Speed Expert", Skill.StatType.FIRING_SPEED, 1.50f, 4));
+    Skills.add(new Skill("Crit Expert", Skill.StatType.CRIT_CHANCE, 0.5f, 4));
+    Skills.add(new Skill("Currency Expert", Skill.StatType.CURRENCY_GEN, 1.5f, 4));
   }
 
   /**
@@ -59,6 +66,10 @@ public class SkillSet {
    */
   public void addSkill(Skill skill) {
     unlockedSkills.add(skill);
+  }
+
+  public void removeSkill(Skill.StatType type) {
+    unlockedSkills.removeIf(skill -> skill.getStatType().equals(type));
   }
 
   /**
@@ -98,5 +109,76 @@ public class SkillSet {
       }
     }
     return null;
+  }
+
+  /**
+   * @param type the StatType of the skill to be checked
+   * @return a float that represents the percentage increase of the input stat
+   */
+  public float getUpgradeValue(Skill.StatType type) {
+    int level = getCurrentLevel(type);
+    for (Skill skill : unlockedSkills) {
+      if (skill.getStatType() == type && getLevel(skill.getName()) == level) {
+        return skill.getPercentage();
+      }
+    }
+    if (type == Skill.StatType.CRIT_CHANCE) {
+      return 0;
+    }
+    return 1;
+  }
+
+  /**
+   * @param skillName the name of the skill
+   * @return an integer that corresponds to the level associated with the input
+   */
+  public int getLevel(String skillName) {
+    int level;
+    if (skillName.contains("Basic")) {
+      level = 1;
+    } else if (skillName.contains("Intermediate")) {
+      level = 2;
+    } else if (skillName.contains("Advanced")) {
+      level = 3;
+    } else if (skillName.contains("Expert")) {
+      level = 4;
+    } else {
+      return 0;
+    }
+    return level;
+  }
+
+  /**
+   * @param type the StateType of the skill
+   * @return an integer that corresponds to the furthest unlocked level of that skill
+   */
+  public int getCurrentLevel(Skill.StatType type) {
+    int level = 0;
+    for (Skill skill : unlockedSkills) {
+      if (skill.getStatType() == type && getLevel(skill.getName()) > level) {
+        level = getLevel(skill.getName());
+      }
+    }
+    return level;
+  }
+
+  /**
+   * Checks if a skill with the given name has been unlocked.
+   *
+   * @param skillName the name of the skill to check
+   * @return true if the skill is either Basic or previous levels with same type have been unlocked
+   *     and false if otherwise
+   */
+  public boolean isUnlockable(String skillName) {
+    int level = getLevel(skillName);
+    Skill.StatType type = getSkill(skillName).getStatType();
+
+    if (getCurrentLevel(type) == 0 && level == 1) {
+      return true;
+    } else if (getCurrentLevel(type) == 0 && level != 1) {
+      return false;
+    } else {
+      return getCurrentLevel(type) == level - 1;
+    }
   }
 }
