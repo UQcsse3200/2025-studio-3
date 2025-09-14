@@ -117,7 +117,7 @@ public class RobotFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
-            .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+            .addComponent(new CombatStatsComponent(config.health, config.attack))
             .addComponent(aiComponent)
             .addComponent(new RobotAnimationController())
             .addComponent(new HitMarkerComponent())

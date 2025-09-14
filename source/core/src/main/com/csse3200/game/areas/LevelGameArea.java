@@ -262,8 +262,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public void spawnRobot(int col, int row, String robotType) {
     // Clamp to grid
-    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
     // World coords
     float tileX = xOffset + tileSize * col;
@@ -501,8 +501,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   private void spawnTeleportRobot(int col, int row) {
-    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
     float tileX = xOffset + tileSize * col;
     float tileY = yOffset + tileSize * row;
