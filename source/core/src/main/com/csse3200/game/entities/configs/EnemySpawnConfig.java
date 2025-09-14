@@ -11,4 +11,15 @@ public class EnemySpawnConfig {
      * All chances are normalised before use.
      */
     public float chance = 1.0f;
+
+    /** Default constructor. */
+    public EnemySpawnConfig() {
+        // Default constructor with default field values
+    }
+
+    /** Constructor with parameters. */
+    public EnemySpawnConfig(int cost, float chance) {
+        this.cost = cost;
+        this.chance = chance;
+    }
 }

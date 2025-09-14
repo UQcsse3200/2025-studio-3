@@ -20,7 +20,11 @@ public class WaveFactory {
 
   /** Default constructor. */
   public WaveFactory() {
-    this.configs = FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
+    WaveConfigs.WaveConfigWrapper wrapper = FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
+      this.configs = new WaveConfigs();
+      if (wrapper != null) {
+          this.configs.setConfig(wrapper.getConfig());
+      }
   }
 
   /**
@@ -38,7 +42,11 @@ public class WaveFactory {
    */
   public WaveFactory(Entity gameEntity) {
     WaveManager.setGameEntity(gameEntity);
-    this.configs = FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
+    WaveConfigs.WaveConfigWrapper wrapper = FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
+      this.configs = new WaveConfigs();
+      if (wrapper != null) {
+          this.configs.setConfig(wrapper.getConfig());
+      }
   }
 
   /**
@@ -66,7 +74,13 @@ public class WaveFactory {
    * @return the enemy spawn attributes (cost + chance) for the current wave.
    */
   public Map<String, EnemySpawnConfig> getEnemyConfigs() {
-    return getWave().enemies;
+    BaseWaveConfig wave = getWave();
+    Map<String, EnemySpawnConfig> configs = new java.util.HashMap<>();
+    configs.put("standard", wave.standard);
+    configs.put("fast", wave.fast);
+    configs.put("tanky", wave.tanky);
+    configs.put("bungee", wave.bungee);
+    return configs;
   }
 
   /**
@@ -82,4 +96,5 @@ public class WaveFactory {
       default -> configs.getWave1();
     };
   }
+
 }

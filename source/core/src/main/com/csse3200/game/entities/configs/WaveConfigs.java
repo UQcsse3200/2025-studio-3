@@ -1,20 +1,61 @@
 package com.csse3200.game.entities.configs;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /** Container for deserialized wave configurations. */
 public class WaveConfigs {
-  private BaseWaveConfig wave1 = new BaseWaveConfig();
-  private BaseWaveConfig wave2 = new BaseWaveConfig();
-  private BaseWaveConfig wave3 = new BaseWaveConfig();
+  private Map<String, BaseWaveConfig> config;
+
+  public WaveConfigs() {
+    this.config = new HashMap<>();
+  }
+
+  public void setConfig(Map<String, BaseWaveConfig> config) {
+    this.config = new HashMap<>(config);
+  }
+
+  public Map<String, BaseWaveConfig> getConfig() {
+    return config;
+  }
 
   public BaseWaveConfig getWave1() {
-    return wave1;
+    return config.get("wave1");
   }
 
   public BaseWaveConfig getWave2() {
-    return wave2;
+    return config.get("wave2");
   }
 
   public BaseWaveConfig getWave3() {
-    return wave3;
+    return config.get("wave3");
+  }
+
+  /** WaveConfigWrapper is a wrapper class for the WaveConfigs class. */
+  public static class WaveConfigWrapper {
+    private HashMap<String, BaseWaveConfig> config;
+
+    /** Creates a new WaveConfigWrapper. */
+    public WaveConfigWrapper() {
+      this.config = new HashMap<>();
+    }
+
+    /**
+     * Sets the config map for the wave configs.
+     *
+     * @param config the config map for the wave configs
+     */
+    public void setConfig(Map<String, BaseWaveConfig> config) {
+      this.config = new HashMap<>(config);
+    }
+
+    /**
+     * Gets the config map for the wave configs.
+     *
+     * @return the config map for the wave configs
+     */
+    public Map<String, BaseWaveConfig> getConfig() {
+      return config;
+    }
   }
 }
