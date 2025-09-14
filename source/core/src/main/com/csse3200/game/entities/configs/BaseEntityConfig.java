@@ -14,6 +14,8 @@ public class BaseEntityConfig {
 
   int baseAttack;
 
+  float movementSpeed;
+
   /**
    * Gets the health value for this entity.
    *
@@ -30,5 +32,9 @@ public class BaseEntityConfig {
    */
   public int getAttack() {
     return baseAttack;
+  }
+
+  public float getMovementSpeed() {
+    return movementSpeed;
   }
 }
