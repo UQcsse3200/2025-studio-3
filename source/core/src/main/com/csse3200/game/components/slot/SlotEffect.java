@@ -1,6 +1,7 @@
 package com.csse3200.game.components.slot;
 
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.persistence.Persistence;
@@ -37,7 +38,7 @@ public final class SlotEffect {
    * @param area The active LevelGameArea (use the current instance; inside LevelGameArea you can
    *     pass `this`).
    */
-  public static void executeByEffect(SlotEngine.Effect effect, LevelGameArea area) {
+  public static void executeByEffect(SlotEngine.Effect effect, SlotMachineArea area) {
     logger.info("[SlotEffect] effect={} on {}", effect, area.getClass().getSimpleName());
     if (effect == null) {
       logger.warn("executeByEffect skipped: effect={} area={}", effect, area);
@@ -77,7 +78,7 @@ public final class SlotEffect {
    * where: - (x, y) are "grid-like" positions consistent with your current usage, - type is one of
    * {"tanky", "standard", "fast"} per your RobotFactory.
    */
-  private static void summonWave(LevelGameArea area) {
+  private static void summonWave(SlotMachineArea area) {
     try {
       area.spawnRobot(10, 1, "fast");
       area.spawnRobot(10, 2, "fast");

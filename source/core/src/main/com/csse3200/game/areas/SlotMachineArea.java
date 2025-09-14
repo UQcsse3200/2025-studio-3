@@ -142,7 +142,8 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
     private void displayUI() {
         Entity ui = new Entity();
         // add components here for additional UI Elements
-        ui.addComponent(new GameAreaDisplay("Level One"));
+        ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
+        ui.addComponent(new com.csse3200.game.components.slot.SlotMachineDisplay(this));
         spawnEntity(ui);
     }
 

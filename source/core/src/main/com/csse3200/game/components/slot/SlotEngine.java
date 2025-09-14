@@ -1,6 +1,7 @@
 package com.csse3200.game.components.slot;
 
-import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.SlotMachineArea;
+
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.logging.Level;
@@ -228,16 +229,16 @@ public class SlotEngine {
     this.random = random;
   }
 
-  private LevelGameArea levelGameArea;
+  private SlotMachineArea slotMachineArea;
 
-  public SlotEngine(LevelGameArea area) {
+  public SlotEngine(SlotMachineArea area) {
     this.config = new SlotConfig();
     this.random = new SecureRandom();
-    this.levelGameArea = area;
+    this.slotMachineArea = area;
   }
 
-  public void setLevelGameArea(LevelGameArea area) {
-    this.levelGameArea = area;
+  public void setSlotMachineArea(SlotMachineArea area) {
+    this.slotMachineArea = area;
   }
 
   /**
@@ -322,8 +323,8 @@ public class SlotEngine {
     Effect eff = res.getEffect().orElse(null);
     if (eff == null) return;
 
-    if (levelGameArea != null) {
-      SlotEffect.executeByEffect(eff, levelGameArea);
+    if (slotMachineArea != null) {
+      SlotEffect.executeByEffect(eff, slotMachineArea);
     } else {
       LOG.log(Level.WARNING, "LevelGameArea not set; effect skipped: {0}", eff);
     }
