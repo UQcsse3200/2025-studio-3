@@ -4,7 +4,6 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.InventoryUnitInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -14,10 +13,10 @@ import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.areas.terrain.MapFactory;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
@@ -25,30 +24,16 @@ import org.slf4j.LoggerFactory;
  */
 public class LevelGameArea extends GameArea implements AreaAPI {
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
+
   private static final int LEVEL_ONE_ROWS = 5;
   private static final int LEVEL_ONE_COLS = 10;
-  private static final String[] levelTextures = {
-    "images/box_boy_leaf.png",
-    "images/level-1-map-v1.png",
-    "images/ghost_king.png",
-    "images/ghost_1.png",
-    "images/olive_tile.png",
-    "images/green_tile.png",
-    "images/box_boy.png",
-    "images/selected_star.png"
-  };
-
-  private static final String[] levelTextureAtlases = {
-    "images/ghost.atlas", "images/ghostKing.atlas", "images/robot_placeholder.atlas"
-  };
-
-  private static final String[] levelSounds = {"sounds/Impact4.ogg"};
-  private static final String backgroundMusic = "sounds/BGM_03_mp3.mp3";
-  private static final String[] levelMusic = {backgroundMusic};
 
   private final TerrainFactory terrainFactory;
 
-  // Offset values
+
+  private static final String CURRENT_MAP = "level1";
+
+
   private float xOffset;
   private float yOffset;
   private float tileSize;
@@ -99,7 +84,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
-    loadAssets();
+    MapFactory.loadAssets(CURRENT_MAP);
 
     displayUI();
 
@@ -114,47 +99,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     playMusic();
   }
 
-  /** Uses the {@link ResourceService} to load the assets for the level. */
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(levelTextures);
-    resourceService.loadTextureAtlases(levelTextureAtlases);
-    resourceService.loadSounds(levelSounds);
-    resourceService.loadMusic(levelMusic);
-
-    while (!resourceService.loadForMillis(10)) {
-      // This could be upgraded to a loading screen
-      logger.info("Loading... {}%", resourceService.getProgress());
-    }
-  }
-
   /** Spawns the level UI */
   private void displayUI() {
     Entity ui = new Entity();
-    // add components here for additional UI Elements
+
     ui.addComponent(new GameAreaDisplay("Level One"));
     spawnEntity(ui);
   }
 
-  /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
+  /** Creates the map from MapFactory. */
   private void spawnMap() {
-    logger.debug("Spawning level one map");
-
-    // Create the background terrain (single image map)
-    terrain = terrainFactory.createTerrain(TerrainType.LEVEL_ONE_MAP);
-
-    // Wrap in an entity
-    Entity mapEntity = new Entity().addComponent(terrain);
-
-    // Compute world size
-    float tileWidth = terrain.getTileSize();
-    float tileHeight = terrain.getTileSize();
-    GridPoint2 bounds = terrain.getMapBounds(0);
-    float worldWidth = bounds.x * tileWidth;
-    float worldHeight = bounds.y * tileHeight;
-    mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
-
+    logger.debug("Spawning map: {}", CURRENT_MAP);
+    Entity mapEntity = MapFactory.createMap(CURRENT_MAP, terrainFactory);
     spawnEntity(mapEntity);
   }
 
@@ -214,27 +170,21 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(unit);
   }
 
-  /** Unloads the level assets form the {@link ResourceService} */
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(levelTextures);
-    resourceService.unloadAssets(levelTextureAtlases);
-    resourceService.unloadAssets(levelSounds);
-    resourceService.unloadAssets(levelMusic);
-  }
-
   /** Extends the super method to stop music and unload assets. */
   @Override
   public void dispose() {
     super.dispose();
-    ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class).stop();
-    this.unloadAssets();
+    ServiceLocator.getResourceService()
+        .getAsset(MapFactory.getBackgroundMusic(CURRENT_MAP), Music.class)
+        .stop();
+    MapFactory.unloadAssets(CURRENT_MAP);
   }
 
   /** Starts the music */
   private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(backgroundMusic, Music.class);
+    Music music =
+        ServiceLocator.getResourceService()
+            .getAsset(MapFactory.getBackgroundMusic(CURRENT_MAP), Music.class);
     music.setLooping(true);
     music.setVolume(0.3f);
     music.play();
@@ -261,9 +211,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     float tileY = yOffset + tileSize * (float) (y % LEVEL_ONE_COLS);
     unit.setPosition(tileX, tileY);
 
-    // Add to list of all spawned units
-
-    // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     logger.info("Unit spawned at position {} {}", x, y);
