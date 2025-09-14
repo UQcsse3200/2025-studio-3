@@ -36,7 +36,7 @@ public class Arsenal {
    * @return The list of keys of the defences in the arsenal.
    */
   public List<String> getKeys() {
-    return defences; 
+    return defences;
   }
 
   /**
