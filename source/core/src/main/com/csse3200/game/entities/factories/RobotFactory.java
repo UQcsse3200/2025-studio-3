@@ -59,7 +59,7 @@ public class RobotFactory {
         config = new TeleportRobotConfig();
     }
     else {
-      config = new StandardRobotConfig();
+      //config = new StandardRobotConfig();
 
     }
     return createBaseRobot(config);
