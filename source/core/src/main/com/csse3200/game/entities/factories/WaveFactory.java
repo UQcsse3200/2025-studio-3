@@ -3,8 +3,11 @@ package com.csse3200.game.entities.factories;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
+import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
 import com.csse3200.game.persistence.FileLoader;
+
+import java.util.Map;
 
 /**
  * Lightweight facade over deserialized wave configuration.
@@ -57,6 +60,13 @@ public class WaveFactory {
    */
   public int getExpGained() {
     return getWave().expGained;
+  }
+
+  /**
+   * @return the enemy spawn attributes (cost + chance) for the current wave.
+   */
+  public Map<String, EnemySpawnConfig> getEnemyConfigs() {
+    return getWave().enemies;
   }
 
   /**

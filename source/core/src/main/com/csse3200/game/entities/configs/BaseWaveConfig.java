@@ -1,4 +1,5 @@
 package com.csse3200.game.entities.configs;
+import java.util.Map;
 
 /** Defines a basic set of properties stored in wave config files to be loaded by Wave Factories. */
 @SuppressWarnings("java:S1104") // Public fields are intentional for JSON deserialization
@@ -16,4 +17,7 @@ public class BaseWaveConfig {
 
   /** Minimum number of zombies to spawn in this wave */
   public int minZombiesSpawn = 10;
+
+  /** Enemy definitions */
+  public Map<String, EnemySpawnConfig> enemies;
 }
