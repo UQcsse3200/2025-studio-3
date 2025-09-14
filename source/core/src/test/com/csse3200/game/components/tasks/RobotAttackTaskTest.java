@@ -1,5 +1,7 @@
 package com.csse3200.game.components.tasks;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +45,7 @@ class RobotAttackTaskTest {
 
     attacker = new Entity();
     defender = defender();
-    task = new RobotAttackTask(1.5f, defenderLayer);
+    task = new RobotAttackTask(90f, defenderLayer);
     AITaskComponent ai = new AITaskComponent();
     ai.addTask(task);
     attacker.addComponent(ai);
@@ -56,14 +58,14 @@ class RobotAttackTaskTest {
   @Test
   void noFoundWhenNoEntity() {
     when(ServiceLocator.getEntityService().getEntities()).thenReturn(new Array<>());
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void foundWhenInRange() {
     attacker.setPosition(0, 0);
     defender.setPosition(50, 0);
-    assert (task.getNearestVisibleTarget() == defender);
+    assertEquals(task.getNearestVisibleTarget(), defender);
   }
 
   @Test
@@ -72,35 +74,35 @@ class RobotAttackTaskTest {
         .thenReturn((short) (defenderLayer + 1));
     attacker.setPosition(0, 0);
     defender.setPosition(10, 0);
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenTargetNotInSameLane() {
     attacker.setPosition(0, 0);
     defender.setPosition(10, 1000);
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenAttackerNotInSameLane() {
     attacker.setPosition(0, 1000);
     defender.setPosition(10, 0);
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenTargetTooFarInX() {
     attacker.setPosition(0, 0);
     defender.setPosition(1000, 0);
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenAttackerTooFarInX() {
     attacker.setPosition(1000, 0);
     defender.setPosition(0, 0);
-    assert (task.getNearestVisibleTarget() == null);
+    assertNull(task.getNearestVisibleTarget());
   }
 
   private Entity defender() {

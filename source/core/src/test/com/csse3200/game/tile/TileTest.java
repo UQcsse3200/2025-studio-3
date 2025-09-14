@@ -75,6 +75,7 @@ class TileTest {
                       .addComponent(new TextureRenderComponent(mock(Texture.class)))
                       .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
       levelGameArea.setSelectedUnit(selected);
+
   }
 
   @Test

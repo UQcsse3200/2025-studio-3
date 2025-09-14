@@ -116,6 +116,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 4, "fast");
     spawnRobot(9,3, "teleportation");
 
+
     spawnDeck();
 
     playMusic();
@@ -270,6 +271,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         float tileY = yOffset + tileSize * row;
 
         Entity unit;
+
 
         if ("teleportation".equalsIgnoreCase(robotType)) {
             float[] laneYs = computeLaneYs();
