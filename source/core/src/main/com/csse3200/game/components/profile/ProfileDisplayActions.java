@@ -4,7 +4,6 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

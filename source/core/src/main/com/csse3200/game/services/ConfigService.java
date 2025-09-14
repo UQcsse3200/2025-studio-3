@@ -160,7 +160,6 @@ public class ConfigService {
   public String[] getItemKeys() {
     return itemConfigs.keySet().toArray(new String[0]);
   }
-   
 
   // TODO: Move these to the Base Config classes for tidyness.
   public static class DeserializedDefenceConfig {

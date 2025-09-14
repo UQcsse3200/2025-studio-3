@@ -13,7 +13,6 @@ import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.MenuSpriteService;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -13,7 +13,6 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,7 +69,6 @@ public class InventoryDisplay extends UIComponent {
    */
   private ScrollPane makeInventoryGrid() {
     // Get player's inventory items
-    
 
     // Create grid table
     Table gridTable = new Table();

@@ -23,10 +23,9 @@ public class ItemFactory {
    */
   public static Entity createGrenade() {
     BaseItemConfig config = configService.getItemConfig("grenade");
-    return createBaseItem()
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
-        // TODO: add animation controller and animation thingy
-        // TODO: add effect logic
+    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    // TODO: add animation controller and animation thingy
+    // TODO: add effect logic
   }
 
   /**
@@ -36,10 +35,9 @@ public class ItemFactory {
    */
   public static Entity createCoffee() {
     BaseItemConfig config = configService.getItemConfig("coffee");
-    return createBaseItem()
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
-        // TODO: add animation controller and animation thingy
-        // TODO: add effect logic
+    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    // TODO: add animation controller and animation thingy
+    // TODO: add effect logic
   }
 
   /**
@@ -49,10 +47,9 @@ public class ItemFactory {
    */
   public static Entity createBuff() {
     BaseItemConfig config = configService.getItemConfig("buff");
-    return createBaseItem()
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
-        // TODO: add animation controller and animation thingy
-        // TODO: add effect logic
+    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    // TODO: add animation controller and animation thingy
+    // TODO: add effect logic
   }
 
   /**
@@ -62,10 +59,9 @@ public class ItemFactory {
    */
   public static Entity createEmp() {
     BaseItemConfig config = configService.getItemConfig("emp");
-    return createBaseItem()
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
-        // TODO: add animation controller and animation thingy
-        // TODO: add effect logic
+    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    // TODO: add animation controller and animation thingy
+    // TODO: add effect logic
   }
 
   /**
@@ -75,10 +71,9 @@ public class ItemFactory {
    */
   public static Entity createNuke() {
     BaseItemConfig config = configService.getItemConfig("nuke");
-    return createBaseItem()
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
-        // TODO: add animation controller and animation thingy
-        // TODO: add effect logic
+    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    // TODO: add animation controller and animation thingy
+    // TODO: add effect logic
   }
 
   // TODO: add all the other items
@@ -101,9 +96,7 @@ public class ItemFactory {
     return item;
   }
 
-  /**
-   * Private constructor to prevent instantiation of this utility class.
-   */
+  /** Private constructor to prevent instantiation of this utility class. */
   private ItemFactory() {
     throw new IllegalStateException("Instantiating static util class");
   }

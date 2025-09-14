@@ -29,11 +29,9 @@ public class ShopDisplay extends UIComponent {
   private Window.WindowStyle windowStyle;
   private static final Random random = new Random();
   private ImageButton[] itemSlots = new ImageButton[3];
-  private String[] itemKeys = new String[3]; 
+  private String[] itemKeys = new String[3];
 
-  /**
-   * Creates a new ShopDisplay.
-   */
+  /** Creates a new ShopDisplay. */
   public ShopDisplay() {
     super();
     initializeShopItems();
@@ -58,9 +56,7 @@ public class ShopDisplay extends UIComponent {
     createItemSlots();
   }
 
-  /**
-   * Initializes the shop items.
-   */
+  /** Initializes the shop items. */
   private void initializeShopItems() {
     ConfigService configService = ServiceLocator.getConfigService();
     if (configService == null) {
@@ -74,9 +70,7 @@ public class ShopDisplay extends UIComponent {
     this.itemKeys = new String[] {itemOne, itemTwo, itemThree};
   }
 
-  /**
-   * Creates the item slots.
-   */
+  /** Creates the item slots. */
   private void createItemSlots() {
     float[] pedestalX = {
       stage.getWidth() * 0.25f, stage.getWidth() * 0.5f, stage.getWidth() * 0.75f
@@ -85,13 +79,17 @@ public class ShopDisplay extends UIComponent {
     float pedestalY = stage.getHeight() * 0.4f;
 
     for (int i = 0; i < 3; i++) {
-      createItemSlot(i, pedestalX[i] - SLOT_SIZE / 2f, pedestalY, ServiceLocator.getConfigService().getItemConfig(itemKeys[i]).getAssetPath());
+      createItemSlot(
+          i,
+          pedestalX[i] - SLOT_SIZE / 2f,
+          pedestalY,
+          ServiceLocator.getConfigService().getItemConfig(itemKeys[i]).getAssetPath());
     }
   }
 
   /**
    * Creates an item slot.
-   * 
+   *
    * @param slotIndex The index of the slot.
    * @param x The x position of the slot.
    * @param y The y position of the slot.
@@ -125,7 +123,7 @@ public class ShopDisplay extends UIComponent {
 
   /**
    * Handles the click event for an item slot.
-   * 
+   *
    * @param slotIndex The index of the slot.
    * @param itemTexture The texture of the item.
    */
@@ -137,11 +135,11 @@ public class ShopDisplay extends UIComponent {
 
   /**
    * Shows the shop item pop up.
-   * 
+   *
    * @param itemKey The key of the item.
    */
   private void showShopItemPopUp(String itemKey) {
-    BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey); 
+    BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
     Window popup = new Window("Item Details", windowStyle);
     popup.setModal(true);
     popup.setMovable(false);
@@ -204,11 +202,11 @@ public class ShopDisplay extends UIComponent {
 
   /**
    * Handles the purchase event for an item.
-   * 
+   *
    * @param itemKey The key of the item.
    */
   private void onPurchaseClicked(String itemKey) {
-    BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey); 
+    BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
     if (Persistence.profile().wallet().purchaseShopItem(itemConfig.getCost())) {
       Persistence.profile().inventory().addItem(itemKey);
       logger.info("Successfully purchased: {}", itemConfig.getName());
@@ -216,7 +214,8 @@ public class ShopDisplay extends UIComponent {
       // ServiceLocator.getDialogService().info("Successfully purchased: " + itemConfig.getName());
     } else {
       logger.warn("Insufficient funds to purchase: {}", itemConfig.getName());
-      // ServiceLocator.getDialogService().error("Insufficient funds to purchase: " + itemConfig.getName());
+      // ServiceLocator.getDialogService().error("Insufficient funds to purchase: " +
+      // itemConfig.getName());
     }
   }
 

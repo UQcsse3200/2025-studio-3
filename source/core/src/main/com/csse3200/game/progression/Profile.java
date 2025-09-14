@@ -1,5 +1,6 @@
 package com.csse3200.game.progression;
 
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -8,7 +9,6 @@ import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.entities.configs.BaseItemConfig;
 import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
