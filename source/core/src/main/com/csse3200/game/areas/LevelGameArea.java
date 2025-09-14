@@ -261,38 +261,25 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   public void spawnRobot(int col, int row, String robotType) {
-    // Clamp to grid
-    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+    Entity unit = RobotFactory.createRobotType(robotType);
 
-    // World coords
+    // Get and set position coords
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
+
+    // place on that grid cell (bottom-left of the tile)
     float tileX = xOffset + tileSize * col;
     float tileY = yOffset + tileSize * row;
 
-    Entity unit;
-
-    if ("teleportation".equalsIgnoreCase(robotType)) {
-      float[] laneYs = computeLaneYs();
-
-      // Use factory if implemented
-      unit =
-          RobotFactory.createTeleportRobot(
-              new com.csse3200.game.entities.configs.TeleportRobotConfig(), laneYs);
-
-      // OR fallback: attach TeleportTask manually
-      // unit = RobotFactory.createRobotType("teleportation");
-      // unit.addComponent(new TeleportTask(4f, 1f, 0, laneYs));
-      // unit.create();
-    } else {
-      unit = RobotFactory.createRobotType(robotType);
-    }
-
     unit.setPosition(tileX, tileY);
+
+    // Add to list of all spawned units
+
+    // set scale to render as desired
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
-
-    logger.info("Unit spawned: {} at col={}, row={}", robotType, col, row);
+    logger.info("Unit spawned at position {} {}", col, row);
   }
 
   /**

@@ -54,11 +54,11 @@ public class RobotFactory {
     } else if (robotType.equalsIgnoreCase("tanky")) {
       config = configs.tankyRobot;
     }
-    // else if (robotType.equalsIgnoreCase("bungee")) {
-    //   config = new BungeeRobotConfig();
-    // }
+    //     else if (robotType.equalsIgnoreCase("bungee")) {
+    //       config = configs.bungeeRobot;
+    //     }
     else if (robotType.equalsIgnoreCase("teleportation")) {
-      config = new TeleportRobotConfig();
+      config = configs.teleportRobot;
     } else {
       config = configs.fastRobot;
     }
@@ -126,6 +126,16 @@ public class RobotFactory {
             .addComponent(new HitMarkerComponent())
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
+
+    if (config instanceof TeleportRobotConfig tcfg) {
+      // Pass null for lanes; TeleportTask (next step) will compute 5 lanes automatically.
+      robot.addComponent(
+          new TeleportTask(
+              tcfg.getTeleportCooldownSeconds(),
+              tcfg.getTeleportChance(),
+              tcfg.getMaxTeleports(),
+              null));
+    }
 
     // Scales
     animator.scaleEntity();

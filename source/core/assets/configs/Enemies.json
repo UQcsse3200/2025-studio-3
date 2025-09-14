@@ -31,5 +31,17 @@
   "attack": 10,
   "movementSpeed": 20,
   "scale": 1
+  }, "teleportRobot": {
+  "name": "Teleport Robot",
+  "atlasFilePath": "images/robot_placeholder.atlas",
+  "defaultSprite": "images/default_enemy_image.png",
+  "health": 60,
+  "attack": 10,
+  "movementSpeed": 30,
+  "scale": 1.0,
+  "teleportCooldownSeconds": 4.0,
+  "teleportChance": 0.6,
+  "maxTeleports": 0,
+  "invulnerabilityMs": 200
   }
 }
