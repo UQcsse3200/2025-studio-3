@@ -3,7 +3,6 @@ package com.csse3200.game;
 import static com.badlogic.gdx.Gdx.app;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.persistence.UserSettings;
@@ -12,6 +11,9 @@ import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
+import com.csse3200.game.services.MenuSpriteService;
+import com.csse3200.game.services.ServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,14 +24,8 @@ public class GdxGame extends Game {
   public void create() {
     logger.info("Creating game");
     loadSettings();
-
+    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
     loadMenus();
-
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249f / 255f, 178f / 255f, 1);
-
     setScreen(ScreenType.MAIN_MENU);
   }
 

@@ -3,6 +3,9 @@ package com.csse3200.game.components.mainmenu;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +29,8 @@ public class MainMenuActions extends Component {
   /** Swaps to the Main Game screen. */
   private void onStart() {
     logger.info("Start game");
+    ServiceLocator.registerConfigService(new ConfigService());
     Persistence.load();
-    game.loadMenus();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 

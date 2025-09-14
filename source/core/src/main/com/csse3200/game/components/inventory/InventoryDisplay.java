@@ -8,12 +8,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.components.items.Item;
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.Persistence;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +25,7 @@ public class InventoryDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(InventoryDisplay.class);
   private static final int ITEM_SIZE = 80;
   private static final int GRID_COLUMNS = 5;
+  private Map<String, BaseItemConfig> inventoryItems;
   private final GdxGame game;
 
   // Root table that holds all UI elements for this screen
@@ -38,6 +39,7 @@ public class InventoryDisplay extends UIComponent {
   public InventoryDisplay(GdxGame game) {
     super();
     this.game = game;
+    this.inventoryItems = Persistence.profile().getInventoryItems();
   }
 
   @Override
@@ -51,18 +53,13 @@ public class InventoryDisplay extends UIComponent {
     Label title = new Label("Inventory", skin, "title");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
     Table menuBtns = makeBackBtn();
-
     rootTable = new Table();
     rootTable.setFillParent(true);
-
     rootTable.add(title).expandX().top().padTop(20f);
-
     rootTable.row().padTop(30f);
     rootTable.add(inventoryScrollPane).expandX().expandY().pad(20f);
-
     rootTable.row();
     rootTable.add(menuBtns).fillX();
-
     stage.addActor(rootTable);
   }
 
@@ -73,7 +70,7 @@ public class InventoryDisplay extends UIComponent {
    */
   private ScrollPane makeInventoryGrid() {
     // Get player's inventory items
-    List<Item> inventoryItems = Persistence.profile().inventory().get();
+    
 
     // Create grid table
     Table gridTable = new Table();
@@ -84,14 +81,14 @@ public class InventoryDisplay extends UIComponent {
     } else {
       int itemCount = 0;
 
-      for (Item item : inventoryItems) {
+      for (String itemKey : inventoryItems.keySet()) {
         // Start new row every GRID_COLUMNS items
         if (itemCount % GRID_COLUMNS == 0 && itemCount > 0) {
           gridTable.row().padTop(10f);
         }
 
         // Create item slot
-        Table itemSlot = createItemSlot(item);
+        Table itemSlot = createItemSlot(itemKey);
         gridTable.add(itemSlot).pad(5f);
 
         itemCount++;
@@ -109,14 +106,14 @@ public class InventoryDisplay extends UIComponent {
   /**
    * Creates a visual slot for an inventory item
    *
-   * @param item the item to display
+   * @param itemKey the key of the item to display
    * @return a Table containing the item's visual representation
    */
-  private Table createItemSlot(Item item) {
+  private Table createItemSlot(String itemKey) {
     Table slot = new Table();
 
     // Find the corresponding asset path for this item
-    String assetPath = getAssetPathForItem(item);
+    String assetPath = inventoryItems.get(itemKey).getAssetPath();
 
     if (assetPath != null) {
       // Load and display item texture
@@ -134,27 +131,11 @@ public class InventoryDisplay extends UIComponent {
 
     // Add item name below the image
     slot.row();
-    Label nameLabel = new Label(item.getName(), skin);
+    Label nameLabel = new Label(inventoryItems.get(itemKey).getName(), skin);
     nameLabel.setFontScale(0.8f);
     slot.add(nameLabel).center().padTop(5f);
 
     return slot;
-  }
-
-  /**
-   * Gets the asset path for an item by looking it up in the ItemRegistry
-   *
-   * @param item the item to find the asset for
-   * @return the asset path, or null if not found
-   */
-  private String getAssetPathForItem(Item item) {
-    for (ItemRegistry.ItemEntry entry : ItemRegistry.ITEMS) {
-      // Compare item types/classes since items might be different instances
-      if (entry.item().getClass().equals(item.getClass())) {
-        return entry.assetPath();
-      }
-    }
-    return null;
   }
 
   /**
@@ -191,7 +172,6 @@ public class InventoryDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
-  /** Disposes of this UI component. */
   @Override
   public void dispose() {
     rootTable.clear();

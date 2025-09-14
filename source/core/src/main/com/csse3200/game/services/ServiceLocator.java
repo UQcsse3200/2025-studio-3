@@ -59,6 +59,10 @@ public class ServiceLocator {
     return menuSpriteService;
   }
 
+  public static ConfigService getConfigService() {
+    return configService;
+  }
+
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
@@ -102,6 +106,11 @@ public class ServiceLocator {
   public static void registerConfigService(ConfigService source) {
     logger.debug("Registering config service {}", source);
     configService = source;
+  }
+
+  public static void deregisterConfigService() {
+    logger.debug("Removing config service");
+    configService = null;
   }
 
   public static void clear() {

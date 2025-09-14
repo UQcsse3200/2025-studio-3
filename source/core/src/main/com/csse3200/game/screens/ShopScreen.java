@@ -11,9 +11,9 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -23,7 +23,8 @@ public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = {"images/shopbackground.jpg", "images/coins.png"};
+  private String[] shopTextures = {"images/shopbackground.jpg", "images/coins.png"};
+  private String[] itemTextures;
 
   /**
    * Initialises the shop screen.
@@ -32,65 +33,60 @@ public class ShopScreen extends ScreenAdapter {
    */
   public ShopScreen(GdxGame game) {
     this.game = game;
-
     logger.debug("Initialising shop screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-
     renderer = RenderFactory.createRenderer();
-
     loadAssets();
     createUI();
   }
 
-  /** Renders the shop screen. */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
-  /** Handles resizing of the shop screen. */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
     logger.trace("Resized renderer: ({} x {})", width, height);
   }
 
-  /** Pauses the shop screen. Overridden to do nothing. */
   @Override
   public void pause() {
     // Do nothing
   }
 
-  /** Resumes the shop screen. Overridden to do nothing. */
   @Override
   public void resume() {
     // Do nothing
   }
 
-  /** Disposes of the shop screen's resources. */
   @Override
   public void dispose() {
     logger.debug("Disposing shop screen");
-
     renderer.dispose();
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 
   /** Loads the shop screen's assets. */
   private void loadAssets() {
-    logger.debug("Loading shop assets");
     ServiceLocator.getResourceService().loadTextures(shopTextures);
-    String[] itemTextures = new String[ItemRegistry.ITEMS.length];
-    for (int i = 0; i < ItemRegistry.ITEMS.length; i++) {
-      itemTextures[i] = ItemRegistry.ITEMS[i].assetPath();
+    logger.debug("Loading shop assets");
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return;
+    }
+    itemTextures = new String[configService.getItemConfigs().length];
+    for (int i = 0; i < configService.getItemConfigs().length; i++) {
+      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
@@ -100,6 +96,7 @@ public class ShopScreen extends ScreenAdapter {
   private void unloadAssets() {
     logger.debug("Unloading shop assets");
     ServiceLocator.getResourceService().unloadAssets(shopTextures);
+    ServiceLocator.getResourceService().unloadAssets(itemTextures);
   }
 
   /**

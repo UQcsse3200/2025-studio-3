@@ -4,6 +4,8 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.ConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +26,7 @@ public class LoadMenuActions extends Component {
 
   /** Handle going back to the main menu. */
   private void handleBack() {
+    ServiceLocator.deregisterConfigService();
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
@@ -35,7 +38,7 @@ public class LoadMenuActions extends Component {
   private void handleLoadGame(Savefile savefile) {
     logger.info("Loading game: {}", savefile.getName());
     Persistence.load(savefile);
-    game.loadMenus();
+    ServiceLocator.registerConfigService(new ConfigService());
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

@@ -1,12 +1,11 @@
 package com.csse3200.game.progression.inventory;
 
-import com.csse3200.game.components.items.Item;
 import java.util.ArrayList;
 import java.util.List;
 
 /** Inventory class to manage the player's items. */
 public class Inventory {
-  private final List<Item> items;
+  private final List<String> items;
 
   /** Constructor for the Inventory class. */
   public Inventory() {
@@ -16,42 +15,37 @@ public class Inventory {
   /**
    * Adds an item to the inventory.
    *
-   * @param item The item to add.
+   * @param itemKey The key of the item to add.
    */
-  public void addItem(Item item) {
-    items.add(item);
+  public void addItem(String itemKey) {
+    items.add(itemKey);
   }
 
   /**
    * Removes an item from the inventory.
    *
-   * @param item The item to remove.
+   * @param item The key of the item to remove.
    */
-  public void removeItem(Item item) {
-    items.remove(item);
+  public void removeItem(String itemKey) {
+    items.remove(itemKey);
   }
 
   /**
    * Gets the list of items in the inventory.
    *
-   * @return The list of items.
+   * @return The list of keys of the items in the inventory.
    */
-  public List<Item> get() {
+  public List<String> getKeys() {
     return items;
   }
 
   /**
-   * Gets an item from the inventory by name.
+   * Checks if the inventory contains the specified item key.
    *
-   * @param itemName The name of the item to retrieve.
-   * @return The item with the specified name, or null if not found.
+   * @param itemKey The key of the item to check.
+   * @return True if the inventory contains the item key, false otherwise.
    */
-  public Item getItem(String itemName) {
-    for (Item item : items) {
-      if (item.getName().equals(itemName)) {
-        return item;
-      }
-    }
-    return null;
+  public boolean contains(String itemKey) {
+    return items.contains(itemKey);
   }
 }

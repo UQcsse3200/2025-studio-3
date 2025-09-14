@@ -3,6 +3,8 @@ package com.csse3200.game.components.profile;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +62,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onExit() {
     logger.info("Exiting game");
+    ServiceLocator.deregisterConfigService();
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
