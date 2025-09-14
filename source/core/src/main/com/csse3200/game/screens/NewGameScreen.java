@@ -3,8 +3,8 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.persistence.LoadMenuActions;
-import com.csse3200.game.components.persistence.LoadMenuDisplay;
+import com.csse3200.game.components.persistence.NewGameMenuActions;
+import com.csse3200.game.components.persistence.NewGameMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -18,27 +18,28 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** The game screen containing the load menu. */
-public class LoadGameScreen extends ScreenAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(LoadGameScreen.class);
+/** The game screen containing the new game menu. */
+public class NewGameScreen extends ScreenAdapter {
+  private static final Logger logger = LoggerFactory.getLogger(NewGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] textures = {"images/dialog.png"};
 
   /**
-   * Constructor for the load game screen.
+   * Constructor for the new game screen.
    *
-   * @param game
+   * @param game the game instance
    */
-  public LoadGameScreen(GdxGame game) {
+  public NewGameScreen(GdxGame game) {
     this.game = game;
-    logger.debug("Initialising load game screen services");
+    logger.debug("Initialising new game screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerResourceService(new ResourceService());
-    ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerDialogService(new DialogService());
+    ServiceLocator.registerRenderService(new RenderService());
     renderer = RenderFactory.createRenderer();
+
     loadAssets();
     createUI();
   }
@@ -67,7 +68,7 @@ public class LoadGameScreen extends ScreenAdapter {
 
   @Override
   public void dispose() {
-    logger.debug("Disposing load game screen");
+    logger.debug("Disposing new game screen");
     renderer.dispose();
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
@@ -76,7 +77,7 @@ public class LoadGameScreen extends ScreenAdapter {
     ServiceLocator.clear();
   }
 
-  /** Loads the load game screen's assets. */
+  /** Loads the new game screen's assets. */
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
@@ -84,7 +85,7 @@ public class LoadGameScreen extends ScreenAdapter {
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /** Unloads the load game screen's assets. */
+  /** Unloads the new game screen's assets. */
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
@@ -92,16 +93,16 @@ public class LoadGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the load menu's ui including components for rendering ui elements to the screen and
+   * Creates the new game menu's ui including components for rendering ui elements to the screen and
    * capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new LoadMenuDisplay())
+    ui.addComponent(new NewGameMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new LoadMenuActions(game));
+        .addComponent(new NewGameMenuActions(game));
     ServiceLocator.getEntityService().register(ui);
   }
 }

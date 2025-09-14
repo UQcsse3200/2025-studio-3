@@ -2,6 +2,7 @@ package com.csse3200.game.progression;
 
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.achievements.AchievementManager;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
@@ -20,6 +21,8 @@ public class Profile {
   private SkillSet skillset; // The player's skills / skill tree
   private AchievementManager achievements; // The player's achievements
   private Statistics statistics; // The player's statistics
+  private Arsenal arsenal; // The player's arsenal of unlocked defences
+  private String currentLevel; // The player's current level
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -29,6 +32,8 @@ public class Profile {
     this.skillset = new SkillSet();
     this.achievements = new AchievementManager();
     this.statistics = new Statistics();
+    this.arsenal = new Arsenal();
+    this.currentLevel = "level1"; // TODO: Amend this to match the json.
   }
 
   /** Initialise a profile with the provided values. */
@@ -38,13 +43,17 @@ public class Profile {
       Inventory inventory,
       SkillSet skillset,
       AchievementManager achievements,
-      Statistics statistics) {
+      Statistics statistics,
+      Arsenal arsenal,
+      String currentLevel) {
     this.name = name;
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
     this.achievements = achievements;
     this.statistics = statistics;
+    this.arsenal = arsenal;
+    this.currentLevel = currentLevel;
   }
 
   /**
@@ -66,6 +75,24 @@ public class Profile {
   }
 
   /**
+   * Get the current level of the profile.
+   *
+   * @return the current level of the profile.
+   */
+  public String getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * Set the current level of the profile.
+   *
+   * @param currentLevel the new current level of the profile.
+   */
+  public void setCurrentLevel(String currentLevel) {
+    this.currentLevel = currentLevel;
+  }
+
+  /**
    * Get the wallet associated with the profile.
    *
    * @return the wallet of the profile.
@@ -81,6 +108,15 @@ public class Profile {
    */
   public Inventory inventory() {
     return inventory;
+  }
+
+  /**
+   * Get the arsenal associated with the profile.
+   *
+   * @return the arsenal of the profile.
+   */
+  public Arsenal arsenal() {
+    return arsenal;
   }
 
   /**

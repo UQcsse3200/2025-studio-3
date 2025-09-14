@@ -107,7 +107,7 @@ public class AchievementsScreen extends ScreenAdapter {
         new ClickListener() {
           @Override
           public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            game.setScreen(GdxGame.ScreenType.PROFILE);
+            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
           }
         });
 

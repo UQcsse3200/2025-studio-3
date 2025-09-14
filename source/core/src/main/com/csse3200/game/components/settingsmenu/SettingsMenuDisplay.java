@@ -211,7 +211,7 @@ public class SettingsMenuDisplay extends UIComponent {
     if (Persistence.profile() == null) {
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
-      game.setScreen(ScreenType.PROFILE);
+      game.setScreen(ScreenType.MAIN_GAME);
     }
   }
 

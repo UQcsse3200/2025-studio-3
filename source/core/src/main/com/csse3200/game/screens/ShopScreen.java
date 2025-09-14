@@ -3,9 +3,8 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.shop.ShopActions;
-import com.csse3200.game.components.shop.ShopButtons;
 import com.csse3200.game.components.shop.ShopDisplay;
+import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -19,11 +18,13 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShopScreen extends ScreenAdapter {
+public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] shopTextures = {"images/shopbackground.jpg", "images/coins.png"};
+  private static final String[] shopTextures = {
+    "images/shopbackground.jpg", "images/coins.png", "images/dialog.png"
+  };
 
   /**
    * Initialises the shop screen.
@@ -102,6 +103,18 @@ public class ShopScreen extends ScreenAdapter {
     ServiceLocator.getResourceService().unloadAssets(shopTextures);
   }
 
+  @Override
+  public void register(MenuSpriteData menuSpriteData) {
+    menuSpriteData
+        .edit(this)
+        .position(50, 50)
+        .name("Shop")
+        .description("Shop")
+        .sprite("images/shopsprite.png")
+        .locked(false)
+        .apply();
+  }
+
   /**
    * Creates the shop screen's ui including components for rendering ui elements to the screen and
    * capturing and handling ui input.
@@ -110,10 +123,9 @@ public class ShopScreen extends ScreenAdapter {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new ShopDisplay())
-        .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new ShopButtons())
-        .addComponent(new ShopActions(game));
+    ui.addComponent(new ShopDisplay()).addComponent(new InputDecorator(stage, 10));
+    // .addComponent(new ShopButtons())
+    // .addComponent(new ShopActions(game));
 
     ServiceLocator.getEntityService().register(ui);
   }

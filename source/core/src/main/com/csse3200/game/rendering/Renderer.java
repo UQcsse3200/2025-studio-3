@@ -117,6 +117,9 @@ public class Renderer implements Disposable {
   public void resize(int width, int height) {
     resizeCamera(width, height);
     resizeStage(width, height);
+    if (ServiceLocator.getDialogService() != null) {
+      ServiceLocator.getDialogService().resize();
+    }
     logger.debug("Resizing to ({}x{})", width, height);
   }
 
