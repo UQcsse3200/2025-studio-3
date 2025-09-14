@@ -12,6 +12,7 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.minigame.LaneManager;
 import com.csse3200.game.minigame.LaneRunnerPlayerFactory;
+import com.csse3200.game.minigame.MiniGameInputComponent;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -25,6 +26,8 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private final GdxGame game;
     private final Renderer renderer;
     private LaneManager laneManager;
+    private Image playerImage;
+    private int cureentLane = 1; // Start in the middle lane (0, 1, 2)
     private static final String[] laneRunnerTextures = {
             "images/box_boy.png",
             "images/LaneRunnerLanes.png",
@@ -70,9 +73,42 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
         stage.addActor(background);
 
-        // Create the player using the factory and register it
-        Entity player = LaneRunnerPlayerFactory.createPlayer(laneManager);
-        ServiceLocator.getEntityService().register(player);
+
+        Texture playerTex = ServiceLocator.getResourceService().getAsset("images/box_boy.png", Texture.class);
+        Image playerImage = new Image(playerTex);
+        playerImage.setSize(64f, 64f);
+        float playerX = laneManager.getLaneCenter(1) - 32f;
+        float playerY = 2f;
+        playerImage.setPosition(playerX, playerY);
+        stage.addActor(playerImage);
+        this.playerImage = playerImage;
+        this.cureentLane = 1;
+
+        Entity inputListener = new Entity()
+                .addComponent(new MiniGameInputComponent());
+        ServiceLocator.getEntityService().register(inputListener);
+
+        inputListener.getEvents().addListener("moveLeft",this::movePLayerLeft );
+        inputListener.getEvents().addListener("moveRight",this::movePlayerRight );
+    }
+
+    private void movePlayerRight() {
+        if (cureentLane < laneManager.getNumLanes() - 1) {
+            cureentLane++;
+            updatePlayerPosition();
+            System.out.println("Moved Right to lane: " + cureentLane);
+        }
+    }
+    private void movePLayerLeft() {
+        if (cureentLane > 0) {
+            cureentLane--;
+            updatePlayerPosition();
+            System.out.println("Moved Left to lane: " + cureentLane);
+        }
+    }
+    private void updatePlayerPosition() {
+        float newX = laneManager.getLaneCenter(cureentLane) - 32f; // Center the image
+        playerImage.setPosition(newX, playerImage.getY());
     }
 
     public void render(float delta) {
