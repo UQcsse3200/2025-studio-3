@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.ProjectileComponent;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -21,7 +22,8 @@ public class ProjectileFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new ProjectileComponent(damage));
+            .addComponent(new ProjectileComponent(damage))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1.5f));
 
     // Add render component so it draws above the grid
     TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile_pad.png");
