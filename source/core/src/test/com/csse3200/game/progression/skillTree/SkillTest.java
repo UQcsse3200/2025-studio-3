@@ -31,31 +31,27 @@ class SkillTest {
     assertEquals(2, attackSkill.getCost());
   }
 
-    @Test
-    void testGetDescription_forRegularStat() {
-        Skill skill = new Skill("Health Basic", Skill.StatType.HEALTH, 1.1f, 1);
+  @Test
+  void testGetDescription_forRegularStat() {
+    Skill skill = new Skill("Health Basic", Skill.StatType.HEALTH, 1.1f, 1);
 
-        String description = skill.getDescription();
+    String description = skill.getDescription();
 
-        assertTrue(description.contains("increase health by 10%"),
-                "Description should mention 10% increase for health");
-        assertEquals(
-                "Unlocking this skill will permanently increase health by 10%",
-                description
-        );
-    }
+    assertTrue(
+        description.contains("increase health by 10%"),
+        "Description should mention 10% increase for health");
+    assertEquals("Unlocking this skill will permanently increase health by 10%", description);
+  }
 
-    @Test
-    void testGetDescription_forCritChance() {
-        Skill skill = new Skill("Crit Chance Basic", Skill.StatType.CRIT_CHANCE, 0.25f, 1);
+  @Test
+  void testGetDescription_forCritChance() {
+    Skill skill = new Skill("Crit Chance Basic", Skill.StatType.CRIT_CHANCE, 0.25f, 1);
 
-        String description = skill.getDescription();
+    String description = skill.getDescription();
 
-        assertTrue(description.contains("increase crit chance by 25%"),
-                "Description should mention 25% increase for crit chance");
-        assertEquals(
-                "Unlocking this skill will permanently increase crit chance by 25%",
-                description
-        );
-    }
+    assertTrue(
+        description.contains("increase crit chance by 25%"),
+        "Description should mention 25% increase for crit chance");
+    assertEquals("Unlocking this skill will permanently increase crit chance by 25%", description);
+  }
 }

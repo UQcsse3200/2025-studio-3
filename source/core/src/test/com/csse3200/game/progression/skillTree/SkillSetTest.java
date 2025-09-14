@@ -71,68 +71,65 @@ class SkillSetTest {
     assertTrue(otherSet.getUnlockedSkills().isEmpty());
   }
 
+  @Test
+  void testGetLevel() {
+    assertEquals(1, skillSet.getLevel("Health Basic"));
+    assertEquals(2, skillSet.getLevel("Health Intermediate"));
+    assertEquals(3, skillSet.getLevel("Health Advanced"));
+    assertEquals(4, skillSet.getLevel("Health Expert"));
+    assertEquals(0, skillSet.getLevel("Unknown Skill"));
+  }
 
+  @Test
+  void testGetCurrentLevel_initiallyZero() {
+    assertEquals(0, skillSet.getCurrentLevel(Skill.StatType.HEALTH));
+  }
 
+  @Test
+  void testGetCurrentLevel_afterUnlocking() {
+    Skill basic = skillSet.getSkill("Health Basic");
+    Skill advanced = skillSet.getSkill("Health Advanced");
+    skillSet.addSkill(basic);
+    skillSet.addSkill(advanced);
 
-    @Test
-    void testGetLevel() {
-        assertEquals(1, skillSet.getLevel("Health Basic"));
-        assertEquals(2, skillSet.getLevel("Health Intermediate"));
-        assertEquals(3, skillSet.getLevel("Health Advanced"));
-        assertEquals(4, skillSet.getLevel("Health Expert"));
-        assertEquals(0, skillSet.getLevel("Unknown Skill"));
-    }
+    // Highest unlocked should be "Advanced" -> level 3
+    assertEquals(3, skillSet.getCurrentLevel(Skill.StatType.HEALTH));
+  }
 
-    @Test
-    void testGetCurrentLevel_initiallyZero() {
-        assertEquals(0, skillSet.getCurrentLevel(Skill.StatType.HEALTH));
-    }
+  @Test
+  void testGetUpgradeValue_defaultValues() {
+    // No skills unlocked yet
+    assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
+    assertEquals(0f, skillSet.getUpgradeValue(Skill.StatType.CRIT_CHANCE));
+  }
 
-    @Test
-    void testGetCurrentLevel_afterUnlocking() {
-        Skill basic = skillSet.getSkill("Health Basic");
-        Skill advanced = skillSet.getSkill("Health Advanced");
-        skillSet.addSkill(basic);
-        skillSet.addSkill(advanced);
+  @Test
+  void testGetUpgradeValue_afterUnlocking() {
+    Skill basic = skillSet.getSkill("Health Basic"); // 1.1f
+    Skill intermediate = skillSet.getSkill("Health Intermediate"); // 1.2f
+    skillSet.addSkill(basic);
+    skillSet.addSkill(intermediate);
 
-        // Highest unlocked should be "Advanced" -> level 3
-        assertEquals(3, skillSet.getCurrentLevel(Skill.StatType.HEALTH));
-    }
+    // Current level = 2 -> percentage = 1.2f
+    assertEquals(1.2f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
+  }
 
-    @Test
-    void testGetUpgradeValue_defaultValues() {
-        // No skills unlocked yet
-        assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
-        assertEquals(0f, skillSet.getUpgradeValue(Skill.StatType.CRIT_CHANCE));
-    }
+  @Test
+  void testIsUnlockable_basicLevel() {
+    assertTrue(
+        skillSet.isUnlockable("Health Basic"), "Basic skills should be unlockable at level 0");
+    assertFalse(
+        skillSet.isUnlockable("Health Intermediate"),
+        "Intermediate shouldn't be unlockable without Basic");
+  }
 
-    @Test
-    void testGetUpgradeValue_afterUnlocking() {
-        Skill basic = skillSet.getSkill("Health Basic"); // 1.1f
-        Skill intermediate = skillSet.getSkill("Health Intermediate"); // 1.2f
-        skillSet.addSkill(basic);
-        skillSet.addSkill(intermediate);
+  @Test
+  void testIsUnlockable_higherLevels() {
+    skillSet.addSkill(skillSet.getSkill("Health Basic"));
+    assertTrue(skillSet.isUnlockable("Health Intermediate"));
+    assertFalse(skillSet.isUnlockable("Health Advanced"));
 
-        // Current level = 2 -> percentage = 1.2f
-        assertEquals(1.2f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
-    }
-
-    @Test
-    void testIsUnlockable_basicLevel() {
-        assertTrue(skillSet.isUnlockable("Health Basic"),
-                "Basic skills should be unlockable at level 0");
-        assertFalse(skillSet.isUnlockable("Health Intermediate"),
-                "Intermediate shouldn't be unlockable without Basic");
-    }
-
-    @Test
-    void testIsUnlockable_higherLevels() {
-        skillSet.addSkill(skillSet.getSkill("Health Basic"));
-        assertTrue(skillSet.isUnlockable("Health Intermediate"));
-        assertFalse(skillSet.isUnlockable("Health Advanced"));
-
-        skillSet.addSkill(skillSet.getSkill("Health Intermediate"));
-        assertTrue(skillSet.isUnlockable("Health Advanced"));
-    }
-
+    skillSet.addSkill(skillSet.getSkill("Health Intermediate"));
+    assertTrue(skillSet.isUnlockable("Health Advanced"));
+  }
 }
