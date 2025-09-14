@@ -3,6 +3,8 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -14,17 +16,22 @@ public class TeleportTask extends Component {
   private final float cooldownSec;
   private final float chance; // 0..1
   private final int maxTeleports; // <=0 means unlimited
-  private float[] laneYs; // may be null; we'll derive if needed
+  private final float[] laneYs; // candidate lane Y world positions
 
   private float timer;
   private int teleportsDone;
-  private boolean lanesInit = false; // ⬅️ new
 
+  /**
+   * @param cooldownSec constant seconds between teleport attempts
+   * @param chance probability 0..1 when cooldown elapses
+   * @param maxTeleports max teleports per lifetime ({@code <=} 0 for no cap)
+   * @param laneYs array of lane Y positions; must contain at least 2 distinct values
+   */
   public TeleportTask(float cooldownSec, float chance, int maxTeleports, float[] laneYs) {
     this.cooldownSec = Math.max(0.01f, cooldownSec);
     this.chance = MathUtils.clamp(chance, 0f, 1f);
     this.maxTeleports = maxTeleports;
-    this.laneYs = (laneYs != null) ? laneYs.clone() : null;
+    this.laneYs = laneYs != null ? laneYs.clone() : null;
   }
 
   @Override
@@ -34,11 +41,6 @@ public class TeleportTask extends Component {
 
   @Override
   public void update() {
-    // ⬇️ lazily build 5 lanes if not provided
-    if (!lanesInit) {
-      initLanesIfNeeded();
-    }
-
     if (laneYs == null || laneYs.length < 2) return;
     if (maxTeleports > 0 && teleportsDone >= maxTeleports) return;
 
@@ -48,11 +50,13 @@ public class TeleportTask extends Component {
     if (timer > 0f) return;
 
     timer = cooldownSec; // reset for next attempt
-    if (MathUtils.random() > chance) return;
+    if (MathUtils.random() > chance) return; // failed the chance roll
 
+    // Get current position from the entity.
     Vector2 pos = entity.getPosition();
     if (pos == null) return;
 
+    // Choose a different lane Y
     float currentY = pos.y;
     float targetY = currentY;
     int attempts = 6;
@@ -63,27 +67,44 @@ public class TeleportTask extends Component {
         break;
       }
     }
-    if (Math.abs(targetY - currentY) <= 1e-3f) return;
+    if (Math.abs(targetY - currentY) <= 1e-3f) return; // no different lane found
 
+    // Teleport: keep X, change Y.
     entity.setPosition(pos.x, targetY);
     teleportsDone++;
   }
 
-  // ⬇️ NEW: derive 5 lanes centered around current Y using the entity's scaled height as tile size
-  private void initLanesIfNeeded() {
-    lanesInit = true;
-    if (laneYs != null) return;
+  /**
+   * Returns true if no other entity is already occupying roughly (x,targetY). Uses the entity's
+   * scaled height as a proxy for tile size to derive tolerances.
+   */
+  private boolean isSpotFree(float x, float targetY) {
+    EntityService es = ServiceLocator.getEntityService();
+    if (es == null) return true;
 
-    if (entity == null || entity.getPosition() == null) return;
-    float tile = Math.max(0.01f, entity.getScale().y);
-    float y0 = entity.getPosition().y;
+    // derive tolerances from this entity's size (you scale height to tileSize)
+    float approxTile = Math.max(0.01f, entity.getScale().y);
+    float xTol = approxTile * 0.4f; // "same column" tolerance
+    float yTol = approxTile * 0.2f; // "same row" tolerance
 
-    // Build 5 lanes: y0-2t, y0-t, y0, y0+t, y0+2t  (lane count fixed at 5)
-    laneYs = new float[5];
-    for (int i = 0; i < 5; i++) {
-      laneYs[i] = y0 + (i - 2) * tile;
+    for (Entity other : es.getEntities()) {
+      if (other == null || other == entity) continue;
+      if (other.getPosition() == null) continue;
+
+      float dx = Math.abs(other.getPosition().x - x);
+      float dy = Math.abs(other.getPosition().y - targetY);
+      if (dx <= xTol && dy <= yTol) return false; // occupied
     }
+    return true;
   }
 
-  // (rest of your helpers unchanged)
+  /** Fisher–Yates shuffle for int[] using MathUtils RNG. */
+  private void shuffle(int[] a) {
+    for (int i = a.length - 1; i > 0; i--) {
+      int j = MathUtils.random(i);
+      int t = a[i];
+      a[i] = a[j];
+      a[j] = t;
+    }
+  }
 }
