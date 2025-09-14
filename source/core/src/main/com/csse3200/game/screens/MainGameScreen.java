@@ -101,6 +101,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().update();
     renderer.render();
     waveManager.update();
+    levelGameArea.checkGameOver(); // check game-over state
   }
 
   @Override

@@ -7,31 +7,63 @@ public class BaseDefenceConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  /*
-  public enum Type {
-      LONG_RANGE,
-      RANGED,
-      MELEE
-  };
-
-  public enum State {
-      IDLE,
-      ATTACKING
-  };
-  */
-
   /** Defence type identifier */
-  public int type = 1;
+  public int rangeType;
 
   /** Attack range of the defence */
-  public int range = 1;
+  public int range;
 
   /** Current state of the defence */
-  public int state = 1;
+  public int state;
 
   /** Attack speed of the defence */
-  public int attackSpeed = 1;
+  public int attackSpeed;
 
   /** Critical hit chance percentage */
-  public int critChance = 0;
+  public int critChance;
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRangeType() {
+    return rangeType;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRange() {
+    return range;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackState() {
+    return state;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackSpeed() {
+    return attackSpeed;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getCritChance() {
+    return critChance;
+  }
 }

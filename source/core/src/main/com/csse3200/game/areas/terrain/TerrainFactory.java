@@ -82,7 +82,7 @@ public class TerrainFactory {
         return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
       case LEVEL_ONE_MAP:
         TextureRegion levelMap =
-            new TextureRegion(resourceService.getAsset("images/level-1-map-v1.png", Texture.class));
+            new TextureRegion(resourceService.getAsset("images/level-1-map-v2.png", Texture.class));
         return createLevelMap(levelMap);
       default:
         return null;

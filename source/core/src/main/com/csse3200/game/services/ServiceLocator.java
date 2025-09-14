@@ -25,6 +25,7 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
   private static MenuSpriteService menuSpriteService;
+  private static ConfigService configService;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -96,6 +97,11 @@ public class ServiceLocator {
   public static void registerMenuSpriteService(MenuSpriteService source) {
     logger.debug("Registering menu sprite service {}", source);
     menuSpriteService = source;
+  }
+
+  public static void registerConfigService(ConfigService source) {
+    logger.debug("Registering config service {}", source);
+    configService = source;
   }
 
   public static void clear() {

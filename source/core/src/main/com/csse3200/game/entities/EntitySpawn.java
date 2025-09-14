@@ -2,33 +2,57 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.factories.WaveFactory;
 
+/** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
 public class EntitySpawn {
   private final WaveFactory waveFactory;
 
-  // For now, only one robot type exists.
-  // Set this to the weight defined for that robot.
   private final int robotWeight;
-  private Entity[] entities = new Entity[0];
+  private int spawnCount = 0;
+  private final java.util.Random random = new java.util.Random();
 
-  public EntitySpawn(int wave) {
-    this(wave, /* robotWeight */ 2); // TODO: replace 2 with the actual robot weight
+  /** Creates a new instance with a default per-enemy weight cost. */
+  public EntitySpawn() {
+    this(2);
   }
 
-  public EntitySpawn(int wave, int robotWeight) {
-    this.waveFactory = new WaveFactory();
+  /**
+   * Creates a new instance with a specified per-enemy weight cost.
+   *
+   * @param robotWeight weight cost of a single enemy used to derive spawn counts
+   */
+  public EntitySpawn(int robotWeight) {
+    this(new WaveFactory(), robotWeight);
+  }
+
+  /**
+   * Test-only constructor allowing injection of a prebuilt WaveFactory to avoid LibGDX file IO in
+   * unit tests.
+   *
+   * @param waveFactory factory providing wave configuration
+   * @param robotWeight weight cost per enemy
+   */
+  public EntitySpawn(WaveFactory waveFactory, int robotWeight) {
+    this.waveFactory = waveFactory;
     this.robotWeight = robotWeight;
   }
 
-  public Entity[] getEntities() {
-    return entities;
+  /**
+   * @return computed spawn count for this wave.
+   */
+  public int getSpawnCount() {
+    return spawnCount;
   }
 
+  /**
+   * Computes spawn count from the current wave's weight budget and minimum requirement configured
+   * in JSON.
+   */
   public void spawnEnemies() {
     int waveWeight = waveFactory.getWaveWeight();
     int minCount = waveFactory.getMinZombiesSpawn();
 
     if (robotWeight <= 0 || waveWeight <= 0) {
-      entities = new Entity[0];
+      spawnCount = 0;
       return;
     }
 
@@ -41,15 +65,19 @@ public class EntitySpawn {
     int robotSpawn = waveWeight / robotWeight;
     if (robotSpawn < minCount) {
       robotSpawn = minCount;
-      waveWeight = robotSpawn * robotWeight;
     }
+    spawnCount = robotSpawn;
+  }
 
-    // Builds the array of entities
-    Entity[] result = new Entity[robotSpawn];
-    for (int i = 0; i < robotSpawn; i++) {
-      // TODO: replace with the actual factory method from the robot team
-      result[i] = new Entity();
-    }
-    entities = result;
+  /**
+   * @return uniformly random enemy type among "standard", "fast", and "tanky".
+   */
+  public String getRandomRobotType() {
+    int r = random.nextInt(3);
+    return switch (r) {
+      case 0 -> "standard";
+      case 1 -> "fast";
+      default -> "tanky";
+    };
   }
 }
