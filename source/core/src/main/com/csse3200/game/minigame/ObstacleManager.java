@@ -1,18 +1,31 @@
 package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+
 
 import java.util.List;
 import java.util.Random;
 
 public class ObstacleManager {
-    private final List<Entity> obstacles;
+    private final List<ObstacleImage> obstacles;
     private final LaneManager laneManager;
     public final Random random;
     private float spawnTimer;
 
+    private static class ObstacleImage{
+        public Image image;
+        public float speed;
+        public boolean isAlive;
+        public ObstacleImage(Image image, float speed){
+            this.image=image;
+            this.speed=speed;
+            this.isAlive=true;
+        }
+    }
     public ObstacleManager(LaneManager laneManager) {
         this.laneManager = laneManager;
         this.obstacles = new java.util.ArrayList<>();
@@ -26,58 +39,71 @@ public class ObstacleManager {
             spawnObstacle();
             spawnTimer = 0f;
         }
-        List <Entity> toRemove = new java.util.ArrayList<>();
-        for (Entity obstacle : obstacles) {
-            ObstacleComponent component = obstacle.getComponent(ObstacleComponent.class);
-            if (component != null) {
-                component.update();
+        List <ObstacleImage> toRemove = new java.util.ArrayList<>();
+        for (ObstacleImage obstacle : obstacles) {
+            if(!obstacle.isAlive) {
+                continue;
             }
-            if (obstacle.getPosition().y < 0.2f) {
+            moveObstacleDown(obstacle, deltaTime);
+
+            if(obstacle.image.getY()< -obstacle.image.getHeight()){
+                obstacle.isAlive=false;
                 toRemove.add(obstacle);
             }
-
         }
-
-        for (Entity obstacle : toRemove) {
+        for (ObstacleImage obstacle : toRemove) {
             obstacles.remove(obstacle);
-            ServiceLocator.getEntityService().unregister(obstacle);
-            obstacle.dispose();
+            obstacle.image.remove();
         }
+    }
+    private void moveObstacleDown(ObstacleImage obstacle, float deltaTime) {
+        float newY = obstacle.image.getY() - (obstacle.speed * deltaTime*100);
+        obstacle.image.setPosition(obstacle.image.getX(), newY);
     }
     private void spawnObstacle() {
         int LaneIndex = random.nextInt(laneManager.getNumLanes());
-        float x = laneManager.getLaneCenter(LaneIndex);
-        float y = Gdx.graphics.getHeight() ;
-        Entity obstacle=ObstacleFactory.createObstacle(x, y, LaneConfig.OBSTACLE_BASE_SPEED);
+        float x = laneManager.getLaneCenter(LaneIndex)-32f;
+        float y = Gdx.graphics.getHeight();
+        Texture obstacleTexture = ServiceLocator.getResourceService().getAsset("images/heart.png", Texture.class);
+        Image obstacleImage = new Image(obstacleTexture);
+        obstacleImage.setSize(64f,64f);
+        obstacleImage.setPosition(x, y);
+        ServiceLocator.getRenderService().getStage().addActor(obstacleImage);
+        ObstacleImage obstacle = new ObstacleImage(obstacleImage, LaneConfig.OBSTACLE_BASE_SPEED);
         obstacles.add(obstacle);
-        ServiceLocator.getEntityService().register(obstacle);
+
     }
-    public boolean checkCollision(Entity player) {
-        for (Entity obstacle : obstacles) {
-            if (isColliding(player, obstacle)) {
+    public boolean checkCollision(Image playerImage) {
+        for (ObstacleImage obstacle : obstacles) {
+            if (!obstacle.isAlive) {
+                continue;
+            }
+            if(isColliding(playerImage,obstacle.image)){
                 return true;
             }
         }
         return false;
     }
-    private boolean isColliding(Entity player, Entity obstacle) {
-        float playerX = player.getPosition().x;
-        float playerY = player.getPosition().y;
-        float playerWidth = player.getScale().x;
-        float playerHeight = player.getScale().y;
+    private boolean isColliding(Image player, Image obstacle) {
+        float playerX = player.getX();
+        float playerY = player.getY();
+        float playerWidth = player.getWidth();
+        float playerHeight = player.getHeight();
 
-        float obstacleX = obstacle.getPosition().x;
-        float obstacleY = obstacle.getPosition().y;
-        float obstacleWidth = obstacle.getScale().x;
-        float obstacleHeight = obstacle.getScale().y;
+        float obstacleX = obstacle.getX();
+        float obstacleY = obstacle.getY();
+        float obstacleWidth = obstacle.getWidth();
+        float obstacleHeight = obstacle.getHeight();
 
-        return Math.abs(playerX-obstacleX) < (playerWidth + obstacleWidth) / 2 &&
-                Math.abs(playerY-obstacleY) < (playerHeight + obstacleHeight) / 2;
+        return playerX < obstacleX + obstacleWidth &&
+                playerX + playerWidth > obstacleX &&
+                playerY < obstacleY + obstacleHeight &&
+                playerY + playerHeight > obstacleY;
     }
 
     public void clearObstacles() {
-        for (Entity obstacle : obstacles) {
-            obstacle.dispose();
+        for (ObstacleImage obstacle : obstacles) {
+            obstacle.image.remove();
         }
         obstacles.clear();
         spawnTimer = 0f;

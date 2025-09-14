@@ -10,8 +10,14 @@ public class LaneRunnerPlayerFactory {
         Entity player = new Entity()
                 .addComponent(new TextureRenderComponent(PLAYER_TEXTURE))
                 .addComponent(new MiniGameInputComponent());
-        player.setScale(64f,64f);
+
+        float scaleX = LaneConfig.OBSTACLE_WIDTH;
+        float scaleY = LaneConfig.OBSTACLE_HEIGHT;
+        player.setScale(scaleX,scaleY);
         int startingLane = 1;
+        float x = laneManager.getLaneCenter(startingLane);
+        float y = LaneConfig.PLAYER_Y;
+        player.setPosition(x,y);
         return player;
     }
 }

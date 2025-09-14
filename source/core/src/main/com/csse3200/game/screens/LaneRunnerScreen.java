@@ -10,9 +10,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.minigame.LaneManager;
-import com.csse3200.game.minigame.LaneRunnerPlayerFactory;
-import com.csse3200.game.minigame.MiniGameInputComponent;
+import com.csse3200.game.minigame.*;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -28,9 +27,13 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private LaneManager laneManager;
     private Image playerImage;
     private int cureentLane = 1; // Start in the middle lane (0, 1, 2)
+    private ObstacleManager obstacleManager;
+    private Entity player;
+    private boolean gameOver = false;
     private static final String[] laneRunnerTextures = {
             "images/box_boy.png",
             "images/LaneRunnerLanes.png",
+            "images/heart.png"
     };
 
     public LaneRunnerScreen(GdxGame game) {
@@ -41,11 +44,13 @@ public class LaneRunnerScreen extends ScreenAdapter {
         ServiceLocator.registerResourceService(new ResourceService());
         ServiceLocator.registerEntityService(new EntityService());
         ServiceLocator.registerRenderService(new RenderService());
+        ServiceLocator.registerPhysicsService(new PhysicsService());
 
         renderer = RenderFactory.createRenderer();
         this.laneManager= new LaneManager(Gdx.graphics.getWidth());
         loadAssets();
         createUI();
+        initializeObstacles();
     }
 
     private void loadAssets() {
@@ -91,13 +96,21 @@ public class LaneRunnerScreen extends ScreenAdapter {
         inputListener.getEvents().addListener("moveLeft",this::movePLayerLeft );
         inputListener.getEvents().addListener("moveRight",this::movePlayerRight );
     }
-
+    private void initializeObstacles() {
+        obstacleManager = new ObstacleManager(laneManager);
+        player= LaneRunnerPlayerFactory.createPlayer(laneManager);
+        updatePlayerEntityPosition();
+    }
     private void movePlayerRight() {
         if (cureentLane < laneManager.getNumLanes() - 1) {
             cureentLane++;
             updatePlayerPosition();
             System.out.println("Moved Right to lane: " + cureentLane);
         }
+    }
+    private void updatePlayerEntityPosition() {
+        float newX = laneManager.getLaneCenter(cureentLane);
+        player.setPosition(newX, LaneConfig.PLAYER_Y);
     }
     private void movePLayerLeft() {
         if (cureentLane > 0) {
@@ -112,9 +125,18 @@ public class LaneRunnerScreen extends ScreenAdapter {
     }
 
     public void render(float delta) {
+        obstacleManager.update(delta);
+        updatePlayerEntityPosition();
+        if(obstacleManager.checkCollision(playerImage)){
+            System.out.println("Game Over!");
+            gameOver = true;
+            game.setScreen(new MainMenuScreen(game));
+            return;
+        }
         ServiceLocator.getEntityService().update();
         renderer.render();
     }
+
    private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
@@ -124,6 +146,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
     public void dispose() {
         logger.debug("Disposing lane runner mini game screen");
 
+        if (obstacleManager != null) {
+            obstacleManager.clearObstacles();
+        }
         renderer.dispose();
        unloadAssets();
         ServiceLocator.getRenderService().dispose();

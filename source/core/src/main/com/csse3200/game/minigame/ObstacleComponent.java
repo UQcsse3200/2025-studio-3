@@ -1,5 +1,6 @@
 package com.csse3200.game.minigame;
 
+import com.badlogic.gdx.Gdx;
 import com.csse3200.game.components.Component;
 
 public class ObstacleComponent extends Component {
@@ -24,7 +25,7 @@ public class ObstacleComponent extends Component {
     }
     private void moveDown() {
         float currentY = entity.getPosition().y;
-        float deltaTime = 1/60f; // Assuming 60 FPS, adjust as necessary
+        float deltaTime = Gdx.graphics.getDeltaTime();
         float newY = currentY - (speed * deltaTime);
         entity.setPosition(entity.getPosition().x, newY);
     }
