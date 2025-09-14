@@ -3,20 +3,17 @@ package com.csse3200.game.components.dossier;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.StandardRobotConfig;
 import com.csse3200.game.persistence.FileLoader;
 
 
 public class DossierManager {
 
-    private EntityConfigs entityData;
-
+    private final EntityConfigs entityData;
     private final TextureAtlas atlas;
 
     public DossierManager() {
         this.atlas = new TextureAtlas("images/robot_placeholder.atlas");
-        this.entityData = FileLoader.readClass(EntityConfigs.class, "configs/entityData.json");
+        this.entityData = FileLoader.readClass(EntityConfigs.class, "configs/Enemies.json");
     }
 
     public String getName(String entityName) {
@@ -28,31 +25,29 @@ public class DossierManager {
         return new Image(characterMenuSprite);
     }
 
+    /**
+     * Retrieves info directly from the loaded config object.
+     */
     public String getInfo(String entityName) {
-        BaseEntityConfig config = createConfigFromString(getEntity(entityName).config);
-        return getEntity(entityName).description + '\n'
-                + " Attack: " + config.getAttack() +
-                "\n Health: " + config.getHealth() +
-                "\n Movement Spd.: " + config.getMovementSpeed();
-    }
-
-    public static BaseEntityConfig createConfigFromString(String configName) {
-        if (configName == null) {
-            return null;
+        EntityDataConfig config = getEntity(entityName);
+        if (config == null) {
+            return "Entity not found.";
         }
-        return switch (configName) {
-            case "StandardRobotConfig" -> new StandardRobotConfig();
-
-            default -> {
-                System.err.println("Unknown config name in JSON: " + configName);
-                yield null;
-            }
-        };
+        return " " + config.description +
+                "\n Attack: " + config.attack +
+                "\n Health: " + config.health;
     }
 
+    /**
+     * Retrieves the specific enemy data object based on its name.
+     * Expanded to include all enemy types.
+     */
     private EntityDataConfig getEntity(String entityName) {
         return switch (entityName) {
             case "standardRobot" -> entityData.standardRobot;
+            case "fastRobot" -> entityData.fastRobot;
+            case "tankyRobot" -> entityData.tankyRobot;
+            case "bungeeRobot" -> entityData.bungeeRobot;
             default -> entityData.standardRobot;
         };
     }

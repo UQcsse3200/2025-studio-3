@@ -28,6 +28,7 @@ public class DossierDisplay extends UIComponent {
     private boolean type;
     private String[] entities;
     private DossierManager dossierManager;
+    private int currentEntity = 0;
 
 
     public DossierDisplay(GdxGame game) {
@@ -35,8 +36,8 @@ public class DossierDisplay extends UIComponent {
         this.game = game;
         type = true;
         this.dossierManager = new DossierManager();
-        a = dossierManager.getInfo("");
-        entities = new String[]{"Standard Robot"};
+        entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
+        a = dossierManager.getInfo(entities[currentEntity]);
     }
 
     @Override
@@ -66,7 +67,6 @@ public class DossierDisplay extends UIComponent {
 
     private void changeTypeListener(TextButton button, boolean value) {
         button.addListener(new ClickListener() {
-            @Override
             public void clicked(InputEvent event, float x, float y) {
                 type = value;
                 System.out.println(type);
@@ -93,22 +93,47 @@ public class DossierDisplay extends UIComponent {
     }
 
     private Table makeDossierTable() {
-        Label nameLabel = new Label("Name: " + dossierManager.getName(entities[0]), skin);
+        Label nameLabel = new Label("Name: " + dossierManager.getName(entities[currentEntity]), skin);
+        a = dossierManager.getInfo(entities[currentEntity]);
         Image robotImage = dossierManager.getSprite();
         Label description = new Label(a, skin);
         description.setWrap(true);
-        TextButton button1 = new TextButton("Robot1", skin);
+        TextButton button1 = new TextButton(dossierManager.getName(entities[0]), skin);
+        TextButton button2 = new TextButton(dossierManager.getName(entities[1]), skin);
+        TextButton button3 = new TextButton(dossierManager.getName(entities[2]), skin);
+        TextButton button4 = new TextButton(dossierManager.getName(entities[3]), skin);
         button1.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                System.out.println("hey guys");
+                currentEntity = 0;
+                dispose();
+                create();
             }
         });
-        TextButton button2 = new TextButton("Robot2", skin);
-        TextButton button3 = new TextButton("Robot3", skin);
-        TextButton button4 = new TextButton("Robot4", skin);
-        TextButton button5 = new TextButton("Robot5", skin);
-
+        button2.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                currentEntity = 1;
+                dispose();
+                create();
+            }
+        });
+        button3.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                currentEntity = 2;
+                dispose();
+                create();
+            }
+        });
+        button4.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                currentEntity = 3;
+                dispose();
+                create();
+            }
+        });
         Table table = new Table();
         table.defaults().pad(10);
 
@@ -130,7 +155,6 @@ public class DossierDisplay extends UIComponent {
         buttonRow.add(button2);
         buttonRow.add(button3);
         buttonRow.add(button4);
-        buttonRow.add(button5);
 
         table.row();
         table.add(buttonRow).colspan(2);

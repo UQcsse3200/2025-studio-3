@@ -6,7 +6,8 @@
     "health": 60,
     "attack": 10,
     "movementSpeed": 20,
-    "scale": 1
+    "scale": 1,
+    "description": "Just a regular old robot, not too threatening..."
   }, "fastRobot": {
   "name": "Fast Robot",
   "atlasFilePath": "images/robot_placeholder.atlas",
@@ -14,7 +15,8 @@
   "health": 40,
   "attack": 10,
   "movementSpeed": 50,
-  "scale": 0.75
+  "scale": 0.75,
+  "description": "A robot optimised for speed."
   }, "tankyRobot": {
   "name": "Tanky Robot",
   "atlasFilePath": "images/robot_placeholder.atlas",
@@ -22,7 +24,8 @@
   "health": 100,
   "attack": 15,
   "movementSpeed": 10,
-  "scale": 1.25
+  "scale": 1.25,
+  "description": "A regular old robot, just... bigger."
   }, "bungeeRobot": {
   "name": "Fast Robot",
   "atlasFilePath": "images/robot_placeholder.atlas",
@@ -30,6 +33,7 @@
   "health": 60,
   "attack": 10,
   "movementSpeed": 20,
-  "scale": 1
+  "scale": 1,
+  "description": "ngl no idea what this one is"
   }
 }
