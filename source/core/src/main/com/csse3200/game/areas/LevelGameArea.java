@@ -42,7 +42,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
-    "images/sling_projectile.png"
+    "images/sling_projectile_pad.png"
   };
 
   private static final String[] levelTextureAtlases = {
@@ -125,7 +125,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(10, 4, "fast");
     spawnInventory();
 
-    //playMusic();
+    playMusic();
   }
 
   /** Uses the {@link ResourceService} to load the assets for the level. */
@@ -288,13 +288,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    projectile.setPosition(spawnPos.x, spawnPos.y-50);
+    //projectile.setPosition(spawnPos.x, spawnPos.y-50);
+    projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
     // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
     // projectile.addComponent(render); // <- your projectile image
 
     // Scale the projectile so it’s more visible
-    projectile.scaleHeight(90f); // set the height in world units
-    projectile.scaleWidth(90f); // set the width in world units
+    projectile.scaleHeight(30f); // set the height in world units
+    projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
     spawnEntity(projectile); // adds to area and entity service
@@ -375,7 +376,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     newEntity
         .getEvents()
         .addListener(
-            "attackStart",
+            "fire",
             () -> {
               Vector2 spawnPos = newEntity.getCenterPosition();
               spawnProjectile(spawnPos, 3f, 0f);

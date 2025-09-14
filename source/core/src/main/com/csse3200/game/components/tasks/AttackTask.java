@@ -18,6 +18,10 @@ public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
 
+    // --- NEW: cooldown fields
+    private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+    private float timeSinceLastFire = 0f;
+
   /**
    * Creates an attack task
    *
@@ -35,7 +39,6 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
     Entity target = getNearestVisibleTarget();
     if (target != null) {
       DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
@@ -48,6 +51,7 @@ public class AttackTask extends TargetDetectionTasks {
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
+    owner.getEntity().getEvents().trigger("fire");
   }
 
   /** Updates the task each game frame */
@@ -62,6 +66,13 @@ public class AttackTask extends TargetDetectionTasks {
 
     if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
       // TODO: attack
+        timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
+
+        if (timeSinceLastFire >= fireCooldown) {
+            // tell listeners (LevelGameArea) to spawn a projectile
+            owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
+            timeSinceLastFire = 0f;
+        }
     }
   }
 
