@@ -40,7 +40,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         float paddleStartX= -(ScreenWidth / 4f);
-        float paddleStartY= -(ScreenHeight/1f);
+        float paddleStartY= -(ScreenHeight/0.6f);
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
         paddle.setPosition(paddleStartX,paddleStartY);
 
@@ -55,7 +55,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         TextureRenderComponent ballRender= ball.getComponent(TextureRenderComponent.class);
         ball.addComponent(ballRender);
         ballRender.scaleEntity();
-        ball.setScale(200f,200f);
+        ball.setScale(400f,300f);
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
         ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
         collider_ball.setRestitution(1f);
@@ -66,7 +66,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
         float ballStartX = paddleStartX;
-        float ballStartY= 80f;
+        float ballStartY= 0.5f;
         PhysicsComponent ballPhysics = ball.getComponent(PhysicsComponent.class);
         ball.setPosition(ballStartX,ballStartY);
         ServiceLocator.getEntityService().register(ball);
@@ -110,9 +110,9 @@ public abstract class MiniGame2 extends ScreenAdapter{
         float newX = currentPos.x;
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            newX = Math.max(0, currentPos.x-paddleSpeed);
+            newX = Math.max(-(1110f+paddle.getScale().x)/2f, currentPos.x-paddleSpeed);
         }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            newX = Math.min(ScreenWidth, currentPos.x+paddleSpeed);
+            newX = Math.min(ScreenWidth-100f-paddle.getScale().x/2f, currentPos.x+paddleSpeed);
         }
 
         paddlePhysics.getBody().setTransform(newX, currentPos.y, 0);
