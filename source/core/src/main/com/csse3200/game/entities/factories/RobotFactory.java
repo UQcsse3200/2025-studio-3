@@ -58,7 +58,7 @@ public class RobotFactory {
     //   config = new BungeeRobotConfig();
     // }
     else if (robotType.equalsIgnoreCase("teleportation")) {
-      config = new TeleportRobotConfig();
+      config = configs.teleportRobot;
     } else {
       config = configs.fastRobot;
     }

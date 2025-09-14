@@ -271,21 +271,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     Entity unit;
 
-    if ("teleportation".equalsIgnoreCase(robotType)) {
-      float[] laneYs = computeLaneYs();
 
-      // Use factory if implemented
-      unit =
-          RobotFactory.createTeleportRobot(
-              new com.csse3200.game.entities.configs.TeleportRobotConfig(), laneYs);
+    unit = RobotFactory.createRobotType(robotType);
 
-      // OR fallback: attach TeleportTask manually
-      // unit = RobotFactory.createRobotType("teleportation");
-      // unit.addComponent(new TeleportTask(4f, 1f, 0, laneYs));
-      // unit.create();
-    } else {
-      unit = RobotFactory.createRobotType(robotType);
-    }
 
     unit.setPosition(tileX, tileY);
     unit.scaleHeight(tileSize);
