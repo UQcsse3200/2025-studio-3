@@ -114,8 +114,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
-    spawnRobot(9,3, "teleportation");
-
+    spawnRobot(9, 3, "teleportation");
 
     spawnDeck();
 
@@ -261,39 +260,40 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.grid = newGrid;
   }
 
-    public void spawnRobot(int col, int row, String robotType) {
-        // Clamp to grid
-        col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-        row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+  public void spawnRobot(int col, int row, String robotType) {
+    // Clamp to grid
+    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
+    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
 
-        // World coords
-        float tileX = xOffset + tileSize * col;
-        float tileY = yOffset + tileSize * row;
+    // World coords
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
 
-        Entity unit;
+    Entity unit;
 
+    if ("teleportation".equalsIgnoreCase(robotType)) {
+      float[] laneYs = computeLaneYs();
 
-        if ("teleportation".equalsIgnoreCase(robotType)) {
-            float[] laneYs = computeLaneYs();
+      // Use factory if implemented
+      unit =
+          RobotFactory.createTeleportRobot(
+              new com.csse3200.game.entities.configs.TeleportRobotConfig(), laneYs);
 
-            // Use factory if implemented
-            unit = RobotFactory.createTeleportRobot(new com.csse3200.game.entities.configs.TeleportRobotConfig(), laneYs);
-
-            // OR fallback: attach TeleportTask manually
-            // unit = RobotFactory.createRobotType("teleportation");
-            // unit.addComponent(new TeleportTask(4f, 1f, 0, laneYs));
-            // unit.create();
-        } else {
-            unit = RobotFactory.createRobotType(robotType);
-        }
-
-        unit.setPosition(tileX, tileY);
-        unit.scaleHeight(tileSize);
-        spawnEntity(unit);
-        robots.add(unit);
-
-        logger.info("Unit spawned: {} at col={}, row={}", robotType, col, row);
+      // OR fallback: attach TeleportTask manually
+      // unit = RobotFactory.createRobotType("teleportation");
+      // unit.addComponent(new TeleportTask(4f, 1f, 0, laneYs));
+      // unit.create();
+    } else {
+      unit = RobotFactory.createRobotType(robotType);
     }
+
+    unit.setPosition(tileX, tileY);
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+    robots.add(unit);
+
+    logger.info("Unit spawned: {} at col={}, row={}", robotType, col, row);
+  }
 
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
@@ -505,35 +505,35 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
   }
 
-    /** World Y positions for each row (bottom→top). */
-    private float[] computeLaneYs() {
-        float[] ys = new float[LEVEL_ONE_ROWS];
-        for (int r = 0; r < LEVEL_ONE_ROWS; r++) {
-            ys[r] = yOffset + tileSize * r;
-        }
-        return ys;
+  /** World Y positions for each row (bottom→top). */
+  private float[] computeLaneYs() {
+    float[] ys = new float[LEVEL_ONE_ROWS];
+    for (int r = 0; r < LEVEL_ONE_ROWS; r++) {
+      ys[r] = yOffset + tileSize * r;
     }
+    return ys;
+  }
 
-    private void spawnTeleportRobot(int col, int row) {
-        col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
-        row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
+  private void spawnTeleportRobot(int col, int row) {
+    col = Math.max(0, Math.min(col, LEVEL_ONE_COLS - 1));
+    row = Math.max(0, Math.min(row, LEVEL_ONE_ROWS - 1));
 
-        float tileX = xOffset + tileSize * col;
-        float tileY = yOffset + tileSize * row;
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
 
-        float[] laneYs = computeLaneYs();
+    float[] laneYs = computeLaneYs();
 
-        com.csse3200.game.entities.configs.TeleportRobotConfig cfg =
-                new com.csse3200.game.entities.configs.TeleportRobotConfig();
-        // Optional: set behaviour here if you want different from defaults
-        // cfg.setTeleportCooldownSeconds(4f);
-        // cfg.setTeleportChance(1f);
-        // cfg.setMaxTeleports(0); // unlimited
+    com.csse3200.game.entities.configs.TeleportRobotConfig cfg =
+        new com.csse3200.game.entities.configs.TeleportRobotConfig();
+    // Optional: set behaviour here if you want different from defaults
+    // cfg.setTeleportCooldownSeconds(4f);
+    // cfg.setTeleportChance(1f);
+    // cfg.setMaxTeleports(0); // unlimited
 
-        Entity tele = RobotFactory.createTeleportRobot(cfg, laneYs);
-        tele.setPosition(tileX, tileY);
-        tele.scaleHeight(tileSize);
-        spawnEntity(tele);
-        robots.add(tele);
-    }
+    Entity tele = RobotFactory.createTeleportRobot(cfg, laneYs);
+    tele.setPosition(tileX, tileY);
+    tele.scaleHeight(tileSize);
+    spawnEntity(tele);
+    robots.add(tele);
+  }
 }

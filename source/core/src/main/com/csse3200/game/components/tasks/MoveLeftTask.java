@@ -4,9 +4,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.physics.components.PhysicsComponent;
+
 /**
  * Wander around by moving a random position within a range of the starting position. Wait a little
  * bit between movements. Requires an entity with a PhysicsMovementComponent.
@@ -31,21 +32,21 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     return 1; // Low priority task
   }
 
-    @Override
-    public void start() {
-        super.start();
-        startPos = owner.getEntity().getPosition();
-        owner.getEntity().getEvents().trigger("moveLeftStart");
-    }
+  @Override
+  public void start() {
+    super.start();
+    startPos = owner.getEntity().getPosition();
+    owner.getEntity().getEvents().trigger("moveLeftStart");
+  }
 
-    @Override
-    public void update() {
-        PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
-        if (phys == null || phys.getBody() == null) return;
+  @Override
+  public void update() {
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+    if (phys == null || phys.getBody() == null) return;
 
-        // Horizontal-only: move left, never allow vertical drift
-        phys.getBody().setLinearVelocity(-moveSpeed, 0f);
-    }
+    // Horizontal-only: move left, never allow vertical drift
+    phys.getBody().setLinearVelocity(-moveSpeed, 0f);
+  }
 
   // This was used to switch between moving and waiting when this was wanderTask.
   // We might use this to implement attacking.

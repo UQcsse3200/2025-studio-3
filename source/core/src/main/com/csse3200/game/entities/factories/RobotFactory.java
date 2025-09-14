@@ -53,43 +53,38 @@ public class RobotFactory {
       config = configs.fastRobot;
     } else if (robotType.equalsIgnoreCase("tanky")) {
       config = configs.tankyRobot;
-    } 
+    }
     // else if (robotType.equalsIgnoreCase("bungee")) {
     //   config = new BungeeRobotConfig();
-    // } 
+    // }
     else if (robotType.equalsIgnoreCase("teleportation")) {
-        config = new TeleportRobotConfig();
-    }
-    else {
+      config = new TeleportRobotConfig();
+    } else {
       config = configs.fastRobot;
-
     }
     return createBaseRobot(config);
   }
-    /**
+
+  /**
    * Creates a Teleport Robot with teleport behaviour attached.
-            * @param cfg Teleport robot config (stats and teleport params)
+   *
+   * @param cfg Teleport robot config (stats and teleport params)
    * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
    * @return Entity with base robot components plus TeleportTask
    */
-    public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
-        Entity robot = createBaseRobot(cfg);
-        robot.addComponent(new TeleportTask(
-                cfg.getTeleportCooldownSeconds(),
-                cfg.getTeleportChance(),
-                cfg.getMaxTeleports(),
-                laneYs
-        ));
-        return robot;
-    }
-
-    /**
-
-
-
+  public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
+    Entity robot = createBaseRobot(cfg);
+    robot.addComponent(
+        new TeleportTask(
+            cfg.getTeleportCooldownSeconds(),
+            cfg.getTeleportChance(),
+            cfg.getMaxTeleports(),
+            laneYs));
+    return robot;
+  }
 
   /**
-   * Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
+   * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
    * robots.
    *
@@ -140,7 +135,6 @@ public class RobotFactory {
     robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
 
     return robot;
-
 
     // The original NPCFactory had:
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);

@@ -40,10 +40,8 @@ class MoveLeftTaskTest {
     ServiceLocator.registerPhysicsService(new PhysicsService());
 
     // create new entity & add physics/movement components to it
-      entity =
-              new Entity()
-                      .addComponent(new PhysicsComponent());
-      entity.create(); // <-- REQUIRED so the Physics body exists
+    entity = new Entity().addComponent(new PhysicsComponent());
+    entity.create(); // <-- REQUIRED so the Physics body exists
 
     moveLeftTask = new MoveLeftTask(1f);
     moveLeftTask.create(
@@ -57,41 +55,42 @@ class MoveLeftTaskTest {
 
   // test to see iff the entity moves left
 
-    @Test
-    void testMoveLeft() {
-        // Make sure the entity (and body) exists *before* positioning
-        entity.create(); // IMPORTANT: creates the Box2D body
+  @Test
+  void testMoveLeft() {
+    // Make sure the entity (and body) exists *before* positioning
+    entity.create(); // IMPORTANT: creates the Box2D body
 
-        // Set the true starting position *after* the body exists
-        Vector2 initialPosition = new Vector2(5f, 5f);
-        entity.setPosition(initialPosition);
-        var phys = entity.getComponent(PhysicsComponent.class);
-        assertNotNull(phys, "PhysicsComponent is required");
-        assertNotNull(phys.getBody(), "Body should exist (did you call entity.create()?)");
+    // Set the true starting position *after* the body exists
+    Vector2 initialPosition = new Vector2(5f, 5f);
+    entity.setPosition(initialPosition);
+    var phys = entity.getComponent(PhysicsComponent.class);
+    assertNotNull(phys, "PhysicsComponent is required");
+    assertNotNull(phys.getBody(), "Body should exist (did you call entity.create()?)");
 
-        // Keep gravity from drifting Y in tests (optional but safer)
-        phys.getBody().setGravityScale(0f);
-        // Also sync the body transform explicitly (some engines require this)
-        phys.getBody().setTransform(initialPosition, 0f);
+    // Keep gravity from drifting Y in tests (optional but safer)
+    phys.getBody().setGravityScale(0f);
+    // Also sync the body transform explicitly (some engines require this)
+    phys.getBody().setTransform(initialPosition, 0f);
 
-        // Start the task (your new MoveLeftTask sets velocity on the body)
-        moveLeftTask.start();
+    // Start the task (your new MoveLeftTask sets velocity on the body)
+    moveLeftTask.start();
 
-        // Advance ~1 second so velocity is integrated
-        for (int i = 0; i < 60; i++) {
-            moveLeftTask.update(); // if your task sets velocity each tick
-            ServiceLocator.getPhysicsService().getPhysics().update();
-        }
-
-        // Read from the body (most reliable in tests)
-        Vector2 bodyPos = phys.getBody().getPosition();
-        Vector2 vel = phys.getBody().getLinearVelocity();
-
-        assertTrue(vel.x < 0f, "Velocity.x should be negative (moving left)");
-        assertEquals(0f, vel.y, 1e-6, "Velocity.y should be zero (no vertical drift)");
-        assertTrue(bodyPos.x < initialPosition.x, "Entity should move left (x decreased)");
-        assertEquals(initialPosition.y, bodyPos.y, 1e-3, "Entity should stay in same lane (y constant)");
+    // Advance ~1 second so velocity is integrated
+    for (int i = 0; i < 60; i++) {
+      moveLeftTask.update(); // if your task sets velocity each tick
+      ServiceLocator.getPhysicsService().getPhysics().update();
     }
+
+    // Read from the body (most reliable in tests)
+    Vector2 bodyPos = phys.getBody().getPosition();
+    Vector2 vel = phys.getBody().getLinearVelocity();
+
+    assertTrue(vel.x < 0f, "Velocity.x should be negative (moving left)");
+    assertEquals(0f, vel.y, 1e-6, "Velocity.y should be zero (no vertical drift)");
+    assertTrue(bodyPos.x < initialPosition.x, "Entity should move left (x decreased)");
+    assertEquals(
+        initialPosition.y, bodyPos.y, 1e-3, "Entity should stay in same lane (y constant)");
+  }
 
   // test to check priority of the task
   @Test
