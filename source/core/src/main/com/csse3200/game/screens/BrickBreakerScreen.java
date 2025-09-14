@@ -83,38 +83,6 @@ public class BrickBreakerScreen extends MiniGame2 {
 
     private void createUI() {
         logger.debug("Creating ui");
-        /*Stage stage = ServiceLocator.getRenderService().getStage();
-
-        // Add the background image as a Stage actor
-        Texture bgTex = ServiceLocator.getResourceService()
-                .getAsset("images/bg.png", Texture.class);
-        Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-        bg.setFillParent(true);
-        bg.setScaling(Scaling.fill);
-        stage.addActor(bg);
-        logger.debug("shows brick breaker mini game screen background");
-
-        Texture BBbgTex = ServiceLocator.getResourceService()
-                .getAsset("images/BrickBreakerBG.png", Texture.class);
-        Image BBbg = new Image(new TextureRegionDrawable(new TextureRegion(BBbgTex)));
-        BBbg.setFillParent(true);
-        BBbg.setScaling(Scaling.fill);
-        stage.addActor(BBbg);
-*/
-        //Texture paddleTex = ServiceLocator.getResourceService()
-           //     .getAsset("images/paddle.png", Texture.class);
-       // Image paddle = new Image(paddleTex);
-       // paddle.setSize(100,20);
-       // paddle.setPosition(400,50);
-        //stage.addActor(paddle);
-
-        //Texture ballTex = ServiceLocator.getResourceService()
-        //        .getAsset("images/ball.png", Texture.class);
-       // Image ball = new Image(ballTex);
-       // ball.setSize(20,20);
-       // ball.setPosition(450,80);
-        //stage.addActor(ball);
-
         logger.debug("Added paddle, BG, and ball to stage");
     }
 
