@@ -1,5 +1,8 @@
 package com.csse3200.game.components;
 
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.progression.skilltree.Skill;
+
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
  *
@@ -23,6 +26,16 @@ public class DefenceStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private int critChance;
 
+  // Initialises multiplier values to be applied to base stats from having unlocked skills
+  private static final float attackUpgrade =
+      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE);
+  private static final float healthUpgrade =
+      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.HEALTH);
+  private static final float speedUpgrade =
+      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.FIRING_SPEED);
+  private static final float critUpgrade =
+      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE);
+
   /**
    * Creates a new DefenceStatsComponent with the given stats.
    *
@@ -37,7 +50,8 @@ public class DefenceStatsComponent extends CombatStatsComponent {
   public DefenceStatsComponent(
       int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
-    super(health, baseAttack);
+    // Initialises health and attack stats with consideration of skill upgrades
+    super((int) Math.ceil(health * healthUpgrade), (int) Math.ceil(baseAttack * attackUpgrade));
 
     // Initialise all additional defence stats
     setType(type);
@@ -85,7 +99,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack speed. */
   public void setAttackSpeed(int attackSpeed) {
-    this.attackSpeed = attackSpeed;
+    this.attackSpeed = (int) Math.ceil(attackSpeed * speedUpgrade);
   }
 
   /**
@@ -97,7 +111,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(int critChance) {
-    this.critChance = critChance;
+    this.critChance = (int) (critChance + critUpgrade);
   }
 
   /**

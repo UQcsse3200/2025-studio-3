@@ -44,7 +44,7 @@ public class DefenceFactory {
    */
   public static Entity createSlingShooter(List<Entity> targets) {
     // load the sling shooter’s specific configuration;
-    BaseDefenceConfig config = configs.slingshooter;
+    BaseDefenceConfig config = NPCConfigs.slingshooter;
 
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender(targets, config);
