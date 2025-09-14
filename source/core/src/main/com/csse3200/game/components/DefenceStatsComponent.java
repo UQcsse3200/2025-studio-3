@@ -27,13 +27,13 @@ public class DefenceStatsComponent extends CombatStatsComponent {
   private int critChance;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
-  private static final float attackUpgrade =
+  private static final float ATTACK_UPGRADE =
       Persistence.profile().skillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE);
-  private static final float healthUpgrade =
+  private static final float HEALTH_UPGRADE =
       Persistence.profile().skillset().getUpgradeValue(Skill.StatType.HEALTH);
-  private static final float speedUpgrade =
+  private static final float SPEED_UPGRADE =
       Persistence.profile().skillset().getUpgradeValue(Skill.StatType.FIRING_SPEED);
-  private static final float critUpgrade =
+  private static final float CRIT_UPGRADE =
       Persistence.profile().skillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE);
 
   /**
@@ -51,7 +51,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
       int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
     // Initialises health and attack stats with consideration of skill upgrades
-    super((int) Math.ceil(health * healthUpgrade), (int) Math.ceil(baseAttack * attackUpgrade));
+    super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
     setType(type);
@@ -99,7 +99,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack speed. */
   public void setAttackSpeed(int attackSpeed) {
-    this.attackSpeed = (int) Math.ceil(attackSpeed * speedUpgrade);
+    this.attackSpeed = (int) Math.ceil(attackSpeed * SPEED_UPGRADE);
   }
 
   /**
@@ -111,7 +111,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(int critChance) {
-    this.critChance = (int) (critChance + critUpgrade);
+    this.critChance = (int) (critChance + CRIT_UPGRADE);
   }
 
   /**
