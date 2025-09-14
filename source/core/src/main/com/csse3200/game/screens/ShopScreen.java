@@ -112,7 +112,6 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
         .apply();
   }
 
-  
   /**
    * Creates the shop screen's ui including components for rendering ui elements to the screen and
    * capturing and handling ui input.

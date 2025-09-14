@@ -43,7 +43,7 @@ public class MainGameActions extends Component {
   public void setPauseMenu(PauseMenu pauseMenu) {
     this.pauseMenu = pauseMenu;
   }
-  
+
   /** Swaps to the Main Menu screen. */
   private void onExit() {
     logger.info("Exiting main game screen");

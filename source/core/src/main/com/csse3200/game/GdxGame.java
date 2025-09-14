@@ -26,7 +26,7 @@ public class GdxGame extends Game {
   public void create() {
     logger.info("Creating game");
     loadSettings();
-    
+
     // Sets background to medium grey
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
 

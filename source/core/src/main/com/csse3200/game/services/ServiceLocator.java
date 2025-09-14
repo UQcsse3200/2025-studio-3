@@ -112,11 +112,12 @@ public class ServiceLocator {
     logger.debug("Registering config service {}", source);
     configService = source;
   }
+
   public static void deregisterConfigService() {
     logger.debug("Removing config service");
     configService = null;
   }
-  
+
   public static void registerDialogService(DialogService source) {
     logger.debug("Registering dialog service {}", source);
     dialogService = source;
