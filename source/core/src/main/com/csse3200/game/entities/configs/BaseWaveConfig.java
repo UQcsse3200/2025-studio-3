@@ -1,5 +1,4 @@
 package com.csse3200.game.entities.configs;
-import java.util.Map;
 
 /** Defines a basic set of properties stored in wave config files to be loaded by Wave Factories. */
 @SuppressWarnings("java:S1104") // Public fields are intentional for JSON deserialization
@@ -20,6 +19,7 @@ public class BaseWaveConfig {
 
   /** Enemy definitions - using individual fields for better JSON compatibility */
   public EnemySpawnConfig standard = new EnemySpawnConfig();
+
   public EnemySpawnConfig fast = new EnemySpawnConfig();
   public EnemySpawnConfig tanky = new EnemySpawnConfig();
   public EnemySpawnConfig bungee = new EnemySpawnConfig();

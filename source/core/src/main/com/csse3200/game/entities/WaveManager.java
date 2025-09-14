@@ -73,8 +73,8 @@ public class WaveManager {
     currentEnemyPos = 0;
     int maxLanes = Math.min(currentWave + 1, 5);
 
-//    getEnemies();
-    entitySpawn.spawnEnemiesFromConfig(); //new method
+    //    getEnemies();
+    entitySpawn.spawnEnemiesFromConfig(); // new method
     enemiesToSpawn = entitySpawn.getSpawnCount();
     waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
     Collections.shuffle(waveLaneSequence);
@@ -131,6 +131,11 @@ public class WaveManager {
    * @return lane index in [0, 5]
    */
   public int getLane() {
+    // If waveLaneSequence is empty, initialize it with default lanes
+    if (waveLaneSequence.isEmpty()) {
+      waveLaneSequence = new ArrayList<>(List.of(0, 1, 2, 3, 4));
+    }
+
     if (waveLanePointer >= waveLaneSequence.size()) {
       Collections.shuffle(waveLaneSequence);
       waveLanePointer = 0;
@@ -157,7 +162,7 @@ public class WaveManager {
       endWave();
       return;
     }
-//    String robotType = entitySpawn.getRandomRobotType();
+    //    String robotType = entitySpawn.getRandomRobotType();
     String robotType = entitySpawn.getNextRobotType(); // new method
     levelGameArea.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;

@@ -6,7 +6,6 @@ import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
 import com.csse3200.game.persistence.FileLoader;
-
 import java.util.Map;
 
 /**
@@ -20,11 +19,12 @@ public class WaveFactory {
 
   /** Default constructor. */
   public WaveFactory() {
-    WaveConfigs.WaveConfigWrapper wrapper = FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
-      this.configs = new WaveConfigs();
-      if (wrapper != null) {
-          this.configs.setConfig(wrapper.getConfig());
-      }
+    WaveConfigs.WaveConfigWrapper wrapper =
+        FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
+    this.configs = new WaveConfigs();
+    if (wrapper != null) {
+      this.configs.setConfig(wrapper.getConfig());
+    }
   }
 
   /**
@@ -42,11 +42,12 @@ public class WaveFactory {
    */
   public WaveFactory(Entity gameEntity) {
     WaveManager.setGameEntity(gameEntity);
-    WaveConfigs.WaveConfigWrapper wrapper = FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
-      this.configs = new WaveConfigs();
-      if (wrapper != null) {
-          this.configs.setConfig(wrapper.getConfig());
-      }
+    WaveConfigs.WaveConfigWrapper wrapper =
+        FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
+    this.configs = new WaveConfigs();
+    if (wrapper != null) {
+      this.configs.setConfig(wrapper.getConfig());
+    }
   }
 
   /**
@@ -96,5 +97,4 @@ public class WaveFactory {
       default -> configs.getWave1();
     };
   }
-
 }

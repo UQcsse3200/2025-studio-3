@@ -2,7 +2,6 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.factories.WaveFactory;
-
 import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
@@ -92,9 +91,7 @@ public class EntitySpawn {
     return spawnQueue.isEmpty() ? "standard" : spawnQueue.pollFirst();
   }
 
-  /**
-   * Deterministic expansion: build a fixed pattern from 'chance' weights.
-   */
+  /** Deterministic expansion: build a fixed pattern from 'chance' weights. */
   private List<String> buildPattern(Map<String, EnemySpawnConfig> configs) {
     List<String> pattern = new ArrayList<>();
     // Sort keys so order is stable (alphabetical)
@@ -110,11 +107,9 @@ public class EntitySpawn {
   }
 
   /**
-   * Builds a spawn queue for the current wave using the new system:
-   * - Each wave has a budget (waveWeight).
-   * - Each enemy type consumes budget (cost).
-   * - Enemies are picked randomly, weighted by 'chance'.
-   * - Loop continues until budget runs out.
+   * Builds a spawn queue for the current wave using the new system: - Each wave has a budget
+   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
+   * by 'chance'. - Loop continues until budget runs out.
    */
   public void spawnEnemiesFromConfig() {
     int budget = waveFactory.getWaveWeight();

@@ -9,6 +9,10 @@ public class WaveConfigs {
 
   public WaveConfigs() {
     this.config = new HashMap<>();
+    // Initialize with default wave configs for testing
+    this.config.put("wave1", new BaseWaveConfig());
+    this.config.put("wave2", new BaseWaveConfig());
+    this.config.put("wave3", new BaseWaveConfig());
   }
 
   public void setConfig(Map<String, BaseWaveConfig> config) {
