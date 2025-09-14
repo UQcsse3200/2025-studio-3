@@ -1,6 +1,7 @@
 package com.csse3200.game.entities.configs;
 
 /** Defines a basic set of properties stored in wave config files to be loaded by Wave Factories. */
+@SuppressWarnings("java:S1104") // Public fields are intentional for JSON deserialization
 public class BaseWaveConfig {
   /** Creates a new BaseWaveConfig with default values. */
   public BaseWaveConfig() {

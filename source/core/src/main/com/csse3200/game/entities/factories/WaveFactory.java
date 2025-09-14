@@ -6,13 +6,27 @@ import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.WaveConfigs;
 import com.csse3200.game.persistence.FileLoader;
 
-/** Factory to create a wave with predefined components. */
+/**
+ * Lightweight facade over deserialized wave configuration.
+ *
+ * <p>Provides read-only accessors for values used by wave logic (weight, minimum spawns,
+ * experience). This class isolates config loading and selection of the current wave's properties.
+ */
 public class WaveFactory {
-  private static final WaveConfigs configs =
-      FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
+  private final WaveConfigs configs;
 
-  /** Default constructor */
-  public WaveFactory() {}
+  /** Default constructor. */
+  public WaveFactory() {
+    this.configs = FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
+  }
+
+  /**
+   * Test-friendly constructor allowing direct config injection to avoid LibGDX file IO in unit
+   * tests.
+   */
+  public WaveFactory(WaveConfigs configs) {
+    this.configs = configs;
+  }
 
   /**
    * Constructor with game entity for UI integration
@@ -21,16 +35,26 @@ public class WaveFactory {
    */
   public WaveFactory(Entity gameEntity) {
     WaveManager.setGameEntity(gameEntity);
+    this.configs = FileLoader.readClass(WaveConfigs.class, "configs/level1.json");
   }
 
+  /**
+   * @return the configured weight/budget for the current wave
+   */
   public int getWaveWeight() {
     return getWave().waveWeight;
   }
 
+  /**
+   * @return the minimum number of enemies to spawn for the current wave
+   */
   public int getMinZombiesSpawn() {
     return getWave().minZombiesSpawn;
   }
 
+  /**
+   * @return the experience awarded for completing the current wave
+   */
   public int getExpGained() {
     return getWave().expGained;
   }
@@ -42,10 +66,10 @@ public class WaveFactory {
    */
   private BaseWaveConfig getWave() {
     return switch (WaveManager.getCurrentWave()) {
-      case 1 -> configs.wave1;
-      case 2 -> configs.wave2;
-      case 3 -> configs.wave3;
-      default -> configs.wave1;
+      case 1 -> configs.getWave1();
+      case 2 -> configs.getWave2();
+      case 3 -> configs.getWave3();
+      default -> configs.getWave1();
     };
   }
 }
