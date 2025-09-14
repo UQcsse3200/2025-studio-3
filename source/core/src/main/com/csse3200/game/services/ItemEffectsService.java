@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -29,7 +30,10 @@ public class ItemEffectsService {
       Vector2 position,
       int scale,
       float frameDuration,
-      Animation.PlayMode playMode) {
+      Animation.PlayMode playMode,
+      boolean movingAnimation,
+      Vector2 finalPosition,
+      float totalEffectTime) {
 
     if (atlas == null) {
       logger.error("Atlas not loaded: {}", atlas);
@@ -52,24 +56,69 @@ public class ItemEffectsService {
     effect.addComponent(
         new Component() {
           float age = 0f;
+          float ageAfterArrival = 0f;
+          boolean arrived = false;
 
           @Override
           public void update() {
-            if (playMode == Animation.PlayMode.LOOP) {
-              if (animator.isFinished()) {
-                effect.dispose();
-              }
-              return;
-            }
+            float dt = ServiceLocator.getTimeSource().getDeltaTime();
+            age += dt;
 
-            if (loopDuration > 0f) {
-              age += ServiceLocator.getTimeSource().getDeltaTime();
-              if (age >= loopDuration) {
-                effect.dispose();
+            //            if (playMode == Animation.PlayMode.LOOP) {
+            //              if (animator.isFinished()) {
+            //                effect.dispose();
+            //              }
+            //              return;
+            //            }
+
+            if (movingAnimation && !arrived) {
+              // Moving phase
+              if (age <= 1f) {
+                return;
+              }
+
+              // Move linearly to a lower corner
+              float t = Math.min((age - 1f), 1f);
+              float x = position.x + (finalPosition.x - position.x) * t;
+              float y = position.y + (finalPosition.y - position.y) * t;
+              effect.setPosition(x, y);
+
+              if (t >= 1f) {
+                arrived = true;
+                ageAfterArrival = age;
+              } else {
+                return;
+              }
+            }
+            if (playMode == Animation.PlayMode.NORMAL) {
+              logger.info("still there");
+              //              if (animator.isFinished()) {
+              //                logger.info("finished");
+              //                effect.dispose();
+              //              } else
+              if (totalEffectTime > 0f && age >= totalEffectTime) {
+                // ageAfterArrival += dt;
+                // logger.info("age after arrival: " + ageAfterArrival);
+                // if (ageAfterArrival >= (totalEffectTime - age)) {
+                logger.info("finished 2");
+                // effect.dispose();
+                Gdx.app.postRunnable(effect::dispose);
               }
             }
           }
         });
+
+    //            if (loopDuration > 0f) {
+    //              age += ServiceLocator.getTimeSource().getDeltaTime();
+    //              if (age >= loopDuration) {
+    //                  effect.dispose();
+    // return;
+    //              }
+    //            }
+
+    //            if (playMode == Animation.PlayMode.NORMAL && animator.isFinished()) {
+    //              effect.dispose();
+    //            }
 
     // animator.stopAnimation();
 
@@ -77,18 +126,53 @@ public class ItemEffectsService {
     ServiceLocator.getEntityService().register(effect);
   }
 
-  public void playEffect(String itemName, Vector2 position, int tileSize) {
+  public void playEffect(String itemName, Vector2 position, int tileSize, Vector2 bottomCorner) {
     switch (itemName) {
-      //        case "buff":
-      //            spawnEffect(source, "file", "name", 0.1f, Animation.PlayMode.LOOP);
-      //            break;
-      //        case "coffee":
-      //            spawnEffect(source, "file", "name", 0.1f, Animation.PlayMode.LOOP);
-      //            break;
-      //        case "emp":
-      //            spawnEffect(source, "file", "name", 0.1f, Animation.PlayMode.NORMAL);
-      //            break;
+      case "buff":
+        position.x = position.x - tileSize;
+        position.y = position.y - tileSize;
+        spawnEffect(
+            ServiceLocator.getResourceService().getAsset("images/buff.atlas", TextureAtlas.class),
+            "buff",
+            position,
+            tileSize * 3,
+            0.1f,
+            Animation.PlayMode.NORMAL,
+            true,
+            bottomCorner,
+            30f);
+        break;
+      case "coffee":
+        position.x = position.x - tileSize;
+        position.y = position.y - tileSize;
+        spawnEffect(
+            ServiceLocator.getResourceService().getAsset("images/coffee.atlas", TextureAtlas.class),
+            "coffee",
+            position,
+            tileSize * 3,
+            0.1f,
+            Animation.PlayMode.NORMAL,
+            true,
+            bottomCorner,
+            30f);
+        break;
+      case "emp":
+        position.x = position.x - tileSize;
+        position.y = position.y - tileSize;
+        spawnEffect(
+            ServiceLocator.getResourceService().getAsset("images/emp.atlas", TextureAtlas.class),
+            "emp",
+            position,
+            tileSize * 3,
+            0.1f,
+            Animation.PlayMode.NORMAL,
+            false,
+            bottomCorner,
+            1.5f);
+        break;
       case "grenade":
+        position.x = position.x - tileSize;
+        position.y = position.y - tileSize;
         spawnEffect(
             ServiceLocator.getResourceService()
                 .getAsset("images/grenade.atlas", TextureAtlas.class),
@@ -96,11 +180,25 @@ public class ItemEffectsService {
             position,
             tileSize * 3,
             0.1f,
-            Animation.PlayMode.NORMAL);
+            Animation.PlayMode.NORMAL,
+            false,
+            bottomCorner,
+            1.5f);
         break;
-        //       case "nuke":
-        //            spawnEffect(source, "file", "name", 0.1f, Animation.PlayMode.NORMAL);
-        //            break;
+      case "nuke":
+        position.x = position.x - 2 * tileSize;
+        position.y = position.y - tileSize;
+        spawnEffect(
+            ServiceLocator.getResourceService().getAsset("images/nuke.atlas", TextureAtlas.class),
+            "nuke",
+            position,
+            tileSize * 5,
+            0.1f,
+            Animation.PlayMode.NORMAL,
+            false,
+            bottomCorner,
+            1.5f);
+        break;
     }
   }
 }
