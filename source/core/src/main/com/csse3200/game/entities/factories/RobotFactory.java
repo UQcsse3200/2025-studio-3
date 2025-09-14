@@ -76,10 +76,7 @@ public class RobotFactory {
     Entity robot = createBaseRobot(cfg);
     robot.addComponent(
         new TeleportTask(
-            cfg.getTeleportCooldownSeconds(),
-            cfg.getTeleportChance(),
-            cfg.getMaxTeleports(),
-            laneYs));
+            cfg.teleportCooldownSeconds, cfg.teleportChance, cfg.maxTeleports, laneYs));
     return robot;
   }
 
@@ -127,6 +124,16 @@ public class RobotFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
+    if (config instanceof TeleportRobotConfig tcfg) {
+      float[] laneYs = discoverLaneYsFromTiles();
+      // Only attach if we found at least two distinct lanes
+      if (laneYs != null && laneYs.length >= 2) {
+        robot.addComponent(
+            new TeleportTask(
+                tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
+      }
+    }
+
     // Scales
     animator.scaleEntity();
     animator.startAnimation("chill"); // start an animation
@@ -140,5 +147,30 @@ public class RobotFactory {
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
     // I don't think we need that but I'm putting it here for reference
+  }
+
+  private static float[] discoverLaneYsFromTiles() {
+    var es = com.csse3200.game.services.ServiceLocator.getEntityService();
+    if (es == null) return null;
+
+    // Collect unique tile Y positions from tile entities
+    java.util.Set<Integer> yInts = new java.util.TreeSet<>();
+    for (com.csse3200.game.entities.Entity e : es.getEntities()) {
+      if (e == null) continue;
+      // Tiles have a TileStorageComponent
+      if (e.getComponent(com.csse3200.game.components.tile.TileStorageComponent.class) == null)
+        continue;
+      var p = e.getPosition();
+      if (p == null) continue;
+      // quantize to avoid float jitter
+      yInts.add(Math.round(p.y * 1000f));
+    }
+
+    if (yInts.size() < 2) return null;
+
+    float[] ys = new float[yInts.size()];
+    int i = 0;
+    for (Integer yi : yInts) ys[i++] = yi / 1000f;
+    return ys;
   }
 }

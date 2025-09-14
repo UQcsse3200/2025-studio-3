@@ -271,9 +271,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     Entity unit;
 
-
     unit = RobotFactory.createRobotType(robotType);
-
 
     unit.setPosition(tileX, tileY);
     unit.scaleHeight(tileSize);
