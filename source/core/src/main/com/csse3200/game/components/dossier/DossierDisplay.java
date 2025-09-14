@@ -1,43 +1,45 @@
 package com.csse3200.game.components.dossier;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.swing.*;
 
 public class DossierDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
     private final GdxGame game;
     private Table rootTable;
-    private String a;
     // Where true is robots, false is humans
     private boolean type;
     private String[] entities;
     private DossierManager dossierManager;
     private int currentEntity = 0;
 
+    private Label entityInfoLabel;
+    private Label entityNameLabel;
+    private Image entitySpriteImage;
 
+
+    /** Constructor to display the dossier. */
     public DossierDisplay(GdxGame game) {
         super();
         this.game = game;
         type = true;
         this.dossierManager = new DossierManager();
+        // All robot entities
         entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
-        a = dossierManager.getInfo(entities[currentEntity]);
     }
 
     @Override
@@ -46,36 +48,61 @@ public class DossierDisplay extends UIComponent {
         addActors();
     }
 
+    /** Adds all tables to the stage. */
     private void addActors() {
         Label title = new Label("Dossier", skin, "title");
         Table backBtn = makeBackBtn();
 
+        // create rootTable
         rootTable = new Table();
         rootTable.setFillParent(true);
+        rootTable.padTop(100f);
+        rootTable.padBottom(100f);
+        backBtn.padTop(100f);
+        backBtn.padLeft(75f);
 
+        // title
         rootTable.add(title).expandX().top().padTop(20f);
 
-        rootTable.row().padTop(5f);
+        // button row to swap between humans and robots
+        rootTable.row().padTop(10f);
         rootTable.add(makeSwapBtn()).expandX().expandY();
 
-        rootTable.row().padTop(20f);
-        rootTable.add(makeDossierTable()).expandX().expandY();
+        // main information of entity
+        rootTable.row().padTop(10f);
+        rootTable.add(makeDossierTable()).expand().fill().row();
 
+        rootTable.add(makeEntitiesButtons()).expand().fill().row();
+
+        // add rootTable and back button to stage
         stage.addActor(rootTable);
         stage.addActor(backBtn);
     }
 
+    /** Logic that changes the type. */
     private void changeTypeListener(TextButton button, boolean value) {
-        button.addListener(new ClickListener() {
-            public void clicked(InputEvent event, float x, float y) {
-                type = value;
-                System.out.println(type);
-            }
-        });
+        button.addListener(
+                new ClickListener() {
+                    @Override
+                    public void clicked(InputEvent event, float x, float y) {
+                        if (type == value) {
+                            return;
+                        }
+                        type = value;
+                        if (type) {
+                            entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
+                        } else {
+                            entities = new String[]{"slingshot"};
+                        }
+                        currentEntity = 0;
+                        // Rebuild UI for the new type
+                        stage.clear();
+                        addActors();
+                    }
+                });
     }
 
-
-
+    /** Sets up the buttons to swap between humans and robots. */
     private Table makeSwapBtn() {
         TextButton robotsBtn = new TextButton("Robots", skin);
         changeTypeListener(robotsBtn, true);
@@ -83,90 +110,108 @@ public class DossierDisplay extends UIComponent {
         changeTypeListener(humansBtn, false);
 
         Table table = new Table();
-        table.defaults().pad(10);
+        table.defaults().expandX().fillX().space(50f);
+        table.padTop(50f);
 
-        table.add(humansBtn).colspan(2).left();
-        table.add(robotsBtn).colspan(2).left();
+        float buttonWidth = stage.getWidth() * 0.2f; // 20% of screen
+
+        table.add(humansBtn).width(buttonWidth);
+        table.add(robotsBtn).width(buttonWidth);
+
         table.row();
 
         return table;
     }
 
+    private void updateDossierInfo() {
+        if (entities.length == 0) {
+            entityNameLabel.setText("No entries");
+            entityInfoLabel.setText("");
+            entitySpriteImage.setDrawable(null); // Or a placeholder drawable
+            return;
+        }
+        String currentEntityName = entities[currentEntity];
+        entityNameLabel.setText(dossierManager.getName(currentEntityName));
+        entityInfoLabel.setText(dossierManager.getInfo(currentEntityName));
+        entitySpriteImage.setDrawable(dossierManager.getSprite(currentEntityName).getDrawable());
+    }
+
+
+    /**
+     * Creates the main Dossier table that displays entity information over a book-style background.
+     *
+     * @return a Table containing the book background and entity information table
+     */
     private Table makeDossierTable() {
-        Label nameLabel = new Label("Name: " + dossierManager.getName(entities[currentEntity]), skin);
-        a = dossierManager.getInfo(entities[currentEntity]);
-        Image robotImage = dossierManager.getSprite();
-        Label description = new Label(a, skin);
-        description.setWrap(true);
-        TextButton button1 = new TextButton(dossierManager.getName(entities[0]), skin);
-        TextButton button2 = new TextButton(dossierManager.getName(entities[1]), skin);
-        TextButton button3 = new TextButton(dossierManager.getName(entities[2]), skin);
-        TextButton button4 = new TextButton(dossierManager.getName(entities[3]), skin);
-        button1.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                currentEntity = 0;
-                dispose();
-                create();
-            }
-        });
-        button2.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                currentEntity = 1;
-                dispose();
-                create();
-            }
-        });
-        button3.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                currentEntity = 2;
-                dispose();
-                create();
-            }
-        });
-        button4.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                currentEntity = 3;
-                dispose();
-                create();
-            }
-        });
-        Table table = new Table();
-        table.defaults().pad(10);
+        float stageWidth = stage.getWidth();
+        float stageHeight = stage.getHeight();
 
-        // First Row (name)
-        table.add(nameLabel).colspan(2).left().padBottom(10);
-        table.row();
+        // Load book image as texture
+        Texture bookTexture = new Texture(Gdx.files.internal("images/dossierBackground.png"));
+        bookTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        // Second Row (image and description)
-        robotImage.setScaling(Scaling.fit); // keeps proportions
-        table.add(robotImage).size(250, 250).center().padRight(10);
-        table.add(description).width(700);
-        table.row();
+        // Create background image of dossier
+        Image bookImage = new Image(new TextureRegionDrawable(new TextureRegion(bookTexture)));
+        bookImage.setScaling(Scaling.fit);
+        bookImage.setFillParent(false);
 
-        // Third Row (Buttons to switch between entities)
-        Table buttonRow = new Table();
-        buttonRow.defaults().expandX().fillX().pad(5);
+        // Scale book background to 60% of screen width and preserves aspect ratio
+        float targetWidth = stageWidth * 0.6f;
+        float targetHeight = targetWidth * ((float) bookTexture.getHeight() / bookTexture.getWidth());
+        bookImage.setSize(targetWidth, targetHeight);
 
-        buttonRow.add(button1);
-        buttonRow.add(button2);
-        buttonRow.add(button3);
-        buttonRow.add(button4);
+        // Create content table
+        Table contentTable = new Table(skin);
+        contentTable.defaults().pad(10);
 
-        table.row();
-        table.add(buttonRow).colspan(2);
+        // 1st column for Entity Image
+        entitySpriteImage = dossierManager.getSprite(entities.length > 0 ? entities[currentEntity] : "");
+        entitySpriteImage.setScaling(Scaling.fit);
+        Table imageFrame = new Table(skin);
+        imageFrame.add(entitySpriteImage).width(stageWidth * 0.3f).height(stageHeight * 0.3f).pad(stageHeight * 0.03f);
 
-        table.pack();
+        // 2nd column for Entity Info
+        Table infoTable = new Table(skin);
 
-        table.debug();
-        return table;
+        String name = entities.length > 0 ? dossierManager.getName(entities[currentEntity]) : "No entries";
+        entityNameLabel = new Label(name, skin, "large");
+        entityNameLabel.setAlignment(Align.left);
+        infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
+
+        String info = entities.length > 0 ? dossierManager.getInfo(entities[currentEntity]) : "";
+        entityInfoLabel = new Label(info, skin);
+        entityInfoLabel.setWrap(true);
+        entityInfoLabel.setAlignment(Align.left);
+        infoTable.add(entityInfoLabel).fill().left().expandX().padRight(stageWidth * 0.09f).padTop(stageHeight * 0.03f).row();
+
+        // Add columns to contentTable
+        contentTable.add(imageFrame).fillY();
+        contentTable.add(infoTable).expand().fill();
+        contentTable.row();
+
+        // sizing content table
+        Container<Table> contentContainer = new Container<>(contentTable);
+        contentContainer.size(targetWidth, targetHeight);
+        contentContainer.fill().center();
+
+        // Stack containing book image and content
+        Stack stack = new Stack();
+        stack.add(bookImage);
+        stack.add(contentContainer);
+        stack.setFillParent(false);
+
+        // Wrap in outer table for positioning
+        Table outerTable = new Table();
+        outerTable.add(stack).size(targetWidth, targetHeight).center();;
+
+        return outerTable;
     }
 
-
-
+    /**
+     * Builds a table containing exit button.
+     *
+     * @return table with exit button
+     */
     private Table makeBackBtn() {
         TextButton backBtn = new TextButton("Back", skin);
 
@@ -188,6 +233,35 @@ public class DossierDisplay extends UIComponent {
         return table;
     }
 
+    /**
+     * Builds a table containing buttons to access different entities within either 'Human' or 'Robots' sections.
+     *
+     * @return table with exit button
+     */
+    private Table makeEntitiesButtons() {
+        Table buttonRow = new Table();
+        ButtonGroup<TextButton> group = new ButtonGroup<>();
+
+        for (int i = 0; i < entities.length; i++) {
+            final int index = i; // capture index for listener
+            TextButton btn = new TextButton(dossierManager.getName(entities[i]), skin, "default");
+            group.add(btn);
+            buttonRow.add(btn).pad(5);
+
+            btn.addListener(new ClickListener() {
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    logger.info("Selected entity button {}", index);
+                    currentEntity = index;
+                    updateDossierInfo();
+                }
+            });
+        }
+
+        return buttonRow;
+    }
+
+
     /** Handles navigation back to the Profile Screen. */
     private void backMenu() {
         game.setScreen(GdxGame.ScreenType.PROFILE);
@@ -202,6 +276,7 @@ public class DossierDisplay extends UIComponent {
     @Override
     public void dispose() {
         rootTable.clear();
+        stage.dispose();
         super.dispose();
     }
 }

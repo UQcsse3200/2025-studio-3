@@ -20,7 +20,7 @@ public class DossierManager {
         return getEntity(entityName).name;
     }
 
-    public Image getSprite() {
+    public Image getSprite(String entityName) {
         TextureRegion characterMenuSprite = atlas.findRegion("default");
         return new Image(characterMenuSprite);
     }
