@@ -106,19 +106,22 @@ public abstract class MiniGame2 extends ScreenAdapter{
         float paddleSpeed = 500f*Gdx.graphics.getDeltaTime();
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
 
+        Vector2 currentPos = paddlePhysics.getBody().getPosition();
+        float newX = currentPos.x;
+
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-          //  paddlePhysics.getBody().setLinearVelocity(-paddleSpeed, 0);
-            paddle.setPosition(Math.min(0,paddle.getPosition().x-paddleSpeed),paddle.getPosition().y);
-        }if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            //paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
-            float maxX = ScreenWidth-paddle.getScale().x;
-            paddle.setPosition(Math.max(maxX,paddle.getPosition().x+ paddleSpeed),paddle.getPosition().y);
-        }
-        else{
-            paddlePhysics.getBody().setLinearVelocity(0, 0);
+            newX = Math.max(0, currentPos.x-paddleSpeed);
+        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            newX = Math.min(ScreenWidth, currentPos.x+paddleSpeed);
         }
 
-        syncEntityPositions();
+        paddlePhysics.getBody().setTransform(newX, currentPos.y, 0);
+        paddle.setPosition(newX, currentPos.y);
+
+        paddlePhysics.getBody().setLinearVelocity(0,0);
+
+        Vector2 ballPos = ball.getComponent(PhysicsComponent.class).getBody().getPosition();
+        ball.setPosition(ballPos.x,ballPos.y);
 
         //end minigame if ball falls below screen
         if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
