@@ -21,9 +21,6 @@ public class ObstacleComponent extends Component {
             return;
         }
         moveDown();
-        if (isOffScreen()) {
-            entity.getEvents().trigger("dispose");
-        }
     }
     private void moveDown() {
         float currentY = entity.getPosition().y;

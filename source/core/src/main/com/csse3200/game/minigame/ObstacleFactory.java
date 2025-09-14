@@ -19,7 +19,6 @@ public class ObstacleFactory {
 
         obstacle.setPosition(x, y);
         setObstaclescale(obstacle);
-        obstacle.getEvents().addListener("dispose", obstacle::dispose);
         return obstacle;
     }
     private static void setObstaclescale(Entity obstacle) {
