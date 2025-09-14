@@ -16,7 +16,6 @@ import java.util.Map;
 
 /**
  * Factory class for creating and managing maps.
- * Handles asset loading/unloading and provides map entities for LevelGameArea.
  */
 public class MapFactory {
     private static final Logger logger = LoggerFactory.getLogger(MapFactory.class);
