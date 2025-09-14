@@ -33,14 +33,14 @@ public abstract class MiniGame2 extends ScreenAdapter{
         TextureRenderComponent paddleRender= paddle.getComponent(TextureRenderComponent.class);
         paddle.addComponent(paddleRender);
         paddleRender.scaleEntity();
-        paddle.setScale(300f,300f);
+        paddle.setScale(700f,700f);
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
         collider_paddle.setRestitution(1f);
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
-        float paddleStartX= ScreenWidth /2f;
-        float paddleStartY= 70f;
+        float paddleStartX= -(ScreenWidth / 4f);
+        float paddleStartY= -(ScreenHeight/1f);
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
         paddle.setPosition(paddleStartX,paddleStartY);
 
@@ -103,14 +103,18 @@ public abstract class MiniGame2 extends ScreenAdapter{
         Gdx.gl.glClearColor(1f, 1f, 1f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        float paddleSpeed = 80f;
+        float paddleSpeed = 500f*Gdx.graphics.getDeltaTime();
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            paddlePhysics.getBody().setLinearVelocity(-paddleSpeed, 0);
-        }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
-        }else{
+          //  paddlePhysics.getBody().setLinearVelocity(-paddleSpeed, 0);
+            paddle.setPosition(Math.max(0,paddle.getPosition().x+paddleSpeed),paddle.getPosition().y);
+        }if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            //paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
+            float maxX = ScreenWidth-paddle.getScale().x;
+            paddle.setPosition(Math.min(maxX,paddle.getPosition().x- paddleSpeed),paddle.getPosition().y);
+        }
+        else{
             paddlePhysics.getBody().setLinearVelocity(0, 0);
         }
 
