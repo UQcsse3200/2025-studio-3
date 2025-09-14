@@ -11,9 +11,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
 public abstract class MiniGame2 extends ScreenAdapter{
@@ -25,13 +27,19 @@ public abstract class MiniGame2 extends ScreenAdapter{
 
     @Override
     public void show() {
+        GameTime gameTime = new GameTime();
+        ServiceLocator.registerTimeSource(new GameTime());
+
+        if(ServiceLocator.getPhysicsService() != null){
+            ServiceLocator.registerPhysicsService(new PhysicsService());
+        }
 
         //Paddle component
         paddle = new Entity();
         paddle.addComponent(new PhysicsComponent());
         paddle.addComponent(new TextureRenderComponent("images/paddle.png"));
         TextureRenderComponent paddleRender= paddle.getComponent(TextureRenderComponent.class);
-        paddle.addComponent(paddleRender);
+        //paddle.addComponent(paddleRender);
         paddleRender.scaleEntity();
         paddle.setScale(700f,700f);
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
@@ -53,7 +61,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ball.addComponent(new PhysicsComponent());
         ball.addComponent(new TextureRenderComponent("images/ball.png"));
         TextureRenderComponent ballRender= ball.getComponent(TextureRenderComponent.class);
-        ball.addComponent(ballRender);
+        //ball.addComponent(ballRender);
         ballRender.scaleEntity();
         ball.setScale(400f,300f);
         ball.addComponent(new ColliderComponent().setLayer(PhysicsLayer.BALL));
@@ -61,7 +69,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         collider_ball.setRestitution(1f);
         collider_ball.setFriction(0f);
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(50f,50f);
+        ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(2000f,1000f);
         ball.getComponent(PhysicsComponent.class).getBody().setLinearDamping(0f);
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
 
@@ -116,12 +124,12 @@ public abstract class MiniGame2 extends ScreenAdapter{
         }
 
         paddlePhysics.getBody().setTransform(newX, currentPos.y, 0);
-        paddle.setPosition(newX, currentPos.y);
 
         paddlePhysics.getBody().setLinearVelocity(0,0);
 
-        Vector2 ballPos = ball.getComponent(PhysicsComponent.class).getBody().getPosition();
-        ball.setPosition(ballPos.x,ballPos.y);
+        ServiceLocator.getPhysicsService().getPhysics().update();
+        syncEntityPositions();
+
 
         //end minigame if ball falls below screen
         if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
