@@ -61,7 +61,7 @@ public class RobotFactory {
         config = new TeleportRobotConfig();
     }
     else {
-      //config = new StandardRobotConfig();
+      config = configs.fastRobot;
 
     }
     return createBaseRobot(config);
