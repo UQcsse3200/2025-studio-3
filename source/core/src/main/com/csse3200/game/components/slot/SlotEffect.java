@@ -30,7 +30,7 @@ public final class SlotEffect {
 
   private SlotEffect() {}
 
-  /**
+    /**
    * Execute a slot effect against a LevelGameArea.
    *
    * @param effect The effect chosen by the slot engine.

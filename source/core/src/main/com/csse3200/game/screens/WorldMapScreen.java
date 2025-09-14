@@ -77,7 +77,7 @@ public class WorldMapScreen implements Screen {
     batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     batch.draw(
         backButton, backBtnBounds.x, backBtnBounds.y, backBtnBounds.width, backBtnBounds.height);
-
+    nearbyNode = null;
     for (Node node : nodes) {
       Texture nodeTex;
       if (node.completed) {
@@ -125,15 +125,20 @@ public class WorldMapScreen implements Screen {
       }
     }
 
-    if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if (nearbyNode.level == 1) {
-        logger.info("🚀 Starting Level 1!");
-        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
-      } else {
-        logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
-        nearbyNode.unlocked = true;
+      if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+          if ("slot".equals(nearbyNode.id) || nearbyNode.level == 3) {
+              logger.info("🎰 Starting Slot Machine Level!");
+              game.setScreen(GdxGame.ScreenType.SLOT_MACHINE);
+              return;
+          }
+          if (nearbyNode.level == 1) {
+              logger.info("🚀 Starting Level 1!");
+              game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+          } else {
+              logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
+              nearbyNode.unlocked = true;
+          }
       }
-    }
   }
 
   @Override
