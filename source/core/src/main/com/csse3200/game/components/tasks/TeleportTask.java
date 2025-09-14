@@ -24,7 +24,7 @@ public class TeleportTask extends Component {
   /**
    * @param cooldownSec constant seconds between teleport attempts
    * @param chance probability 0..1 when cooldown elapses
-   * @param maxTeleports max teleports per lifetime (<=0 for no cap)
+   * @param maxTeleports max teleports per lifetime ({@code <=} 0 for no cap)
    * @param laneYs array of lane Y positions; must contain at least 2 distinct values
    */
   public TeleportTask(float cooldownSec, float chance, int maxTeleports, float[] laneYs) {
