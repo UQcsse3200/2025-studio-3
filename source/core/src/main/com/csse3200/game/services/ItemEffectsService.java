@@ -91,7 +91,7 @@ public class ItemEffectsService {
               }
             }
             if (playMode == Animation.PlayMode.NORMAL) {
-              logger.info("still there");
+              // logger.info("still there");
               //              if (animator.isFinished()) {
               //                logger.info("finished");
               //                effect.dispose();
