@@ -14,9 +14,9 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class TeleportTask extends Component {
   private final float cooldownSec;
-  private final float chance; // 0..1
-  private final int maxTeleports; // <=0 means unlimited
-  private final float[] laneYs; // candidate lane Y world positions
+  private final float chance;
+  private final int maxTeleports;
+  private final float[] laneYs;
 
   private float timer;
   private int teleportsDone;
@@ -50,7 +50,7 @@ public class TeleportTask extends Component {
     if (timer > 0f) return;
 
     timer = cooldownSec; // reset for next attempt
-    if (MathUtils.random() > chance) return; // failed the chance roll
+    if (MathUtils.random() > chance) return;
 
     // Get current position from the entity.
     Vector2 pos = entity.getPosition();
