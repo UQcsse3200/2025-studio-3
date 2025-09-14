@@ -108,11 +108,11 @@ public abstract class MiniGame2 extends ScreenAdapter{
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
           //  paddlePhysics.getBody().setLinearVelocity(-paddleSpeed, 0);
-            paddle.setPosition(Math.max(0,paddle.getPosition().x+paddleSpeed),paddle.getPosition().y);
+            paddle.setPosition(Math.min(0,paddle.getPosition().x-paddleSpeed),paddle.getPosition().y);
         }if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             //paddlePhysics.getBody().setLinearVelocity(paddleSpeed, 0);
             float maxX = ScreenWidth-paddle.getScale().x;
-            paddle.setPosition(Math.min(maxX,paddle.getPosition().x- paddleSpeed),paddle.getPosition().y);
+            paddle.setPosition(Math.max(maxX,paddle.getPosition().x+ paddleSpeed),paddle.getPosition().y);
         }
         else{
             paddlePhysics.getBody().setLinearVelocity(0, 0);
