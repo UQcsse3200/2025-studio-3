@@ -1,11 +1,19 @@
 package com.csse3200.game.progression;
 
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.achievements.AchievementManager;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a user profile in the game. Allows customization of player attributes and tracking of
@@ -14,12 +22,15 @@ import com.csse3200.game.progression.wallet.Wallet;
  * <p>Later we can add an arsenal of unlocked defences, and a way to track overall level progress.
  */
 public class Profile {
+  private static final Logger logger = LoggerFactory.getLogger(Profile.class);
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
   private SkillSet skillset; // The player's skills / skill tree
   private AchievementManager achievements; // The player's achievements
   private Statistics statistics; // The player's statistics
+  private Arsenal arsenal; // The player's arsenal of unlocked defences
+  private String currentLevel; // The player's current level
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -29,6 +40,8 @@ public class Profile {
     this.skillset = new SkillSet();
     this.achievements = new AchievementManager();
     this.statistics = new Statistics();
+    this.arsenal = new Arsenal();
+    this.currentLevel = "level1"; // TODO: Amend this to match the json.
   }
 
   /** Initialise a profile with the provided values. */
@@ -38,13 +51,17 @@ public class Profile {
       Inventory inventory,
       SkillSet skillset,
       AchievementManager achievements,
-      Statistics statistics) {
+      Statistics statistics,
+      Arsenal arsenal,
+      String currentLevel) {
     this.name = name;
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
     this.achievements = achievements;
     this.statistics = statistics;
+    this.arsenal = arsenal;
+    this.currentLevel = currentLevel;
   }
 
   /**
@@ -66,6 +83,24 @@ public class Profile {
   }
 
   /**
+   * Get the current level of the profile.
+   *
+   * @return the current level of the profile.
+   */
+  public String getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * Set the current level of the profile.
+   *
+   * @param currentLevel the new current level of the profile.
+   */
+  public void setCurrentLevel(String currentLevel) {
+    this.currentLevel = currentLevel;
+  }
+
+  /**
    * Get the wallet associated with the profile.
    *
    * @return the wallet of the profile.
@@ -81,6 +116,51 @@ public class Profile {
    */
   public Inventory inventory() {
     return inventory;
+  }
+
+  /**
+   * Get the arsenal associated with the profile.
+   *
+   * @return the arsenal of the profile.
+   */
+  public Arsenal arsenal() {
+    return arsenal;
+  }
+
+  /**
+   * Add an item to the inventory.
+   *
+   * @param itemKey the key of the item to add.
+   */
+  public void addItemToInventory(String itemKey) {
+    inventory.addItem(itemKey);
+  }
+
+  /**
+   * Remove an item from the inventory.
+   *
+   * @param itemKey the key of the item to remove.
+   */
+  public void removeItemFromInventory(String itemKey) {
+    inventory.removeItem(itemKey);
+  }
+
+  /**
+   * Get the items in the inventory.
+   *
+   * @return the items in the inventory.
+   */
+  public Map<String, BaseItemConfig> getInventoryItems() {
+    Map<String, BaseItemConfig> items = new HashMap<>();
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return items;
+    }
+    for (String itemKey : inventory.getKeys()) {
+      items.put(itemKey, configService.getItemConfig(itemKey));
+    }
+    return items;
   }
 
   /**

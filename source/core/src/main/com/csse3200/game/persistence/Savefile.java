@@ -2,13 +2,23 @@ package com.csse3200.game.persistence;
 
 import java.util.UUID;
 
+/** Represents a savefile in the game. */
 public class Savefile {
   private String name;
   private Long date;
+  private int slot;
 
-  public Savefile(String name, Long date) {
+  /**
+   * Creates a Savefile object with the given name, date, and slot.
+   *
+   * @param name the name of the savefile
+   * @param date the date of the savefile
+   * @param slot the slot of the savefile
+   */
+  public Savefile(String name, Long date, int slot) {
     this.name = name;
     this.date = date;
+    this.slot = slot;
   }
 
   /**
@@ -19,17 +29,18 @@ public class Savefile {
    */
   public static Savefile fromString(String savefileString) {
     String[] parts = savefileString.split("\\$");
-    if (parts.length != 2) {
+    if (parts.length != 3) {
       return null;
     }
-    String name = parts[0];
-    Long date;
+
     try {
-      date = Long.parseLong(parts[1]);
+      String name = parts[0];
+      Long date = Long.parseLong(parts[1]);
+      int slot = Integer.parseInt(parts[2]);
+      return new Savefile(name, date, slot);
     } catch (NumberFormatException e) {
       return null;
     }
-    return new Savefile(name, date);
   }
 
   /**
@@ -38,7 +49,7 @@ public class Savefile {
    * @return the string representation of the savefile.
    */
   public String toString() {
-    return name + "$" + date;
+    return name + "$" + date + "$" + slot;
   }
 
   /**
@@ -57,6 +68,15 @@ public class Savefile {
    */
   public Long getDate() {
     return date;
+  }
+
+  /**
+   * Get the slot number of the savefile.
+   *
+   * @return the slot number of the savefile.
+   */
+  public int getSlot() {
+    return slot;
   }
 
   /**

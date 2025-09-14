@@ -21,18 +21,21 @@ class ServiceLocatorTest {
     PhysicsService physicsService = mock(PhysicsService.class);
     GameTime gameTime = new GameTime();
     MenuSpriteService menuSpriteService = new MenuSpriteService();
+    DialogService dialogService = new DialogService();
 
     ServiceLocator.registerEntityService(entityService);
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerPhysicsService(physicsService);
     ServiceLocator.registerTimeSource(gameTime);
     ServiceLocator.registerMenuSpriteService(menuSpriteService);
+    ServiceLocator.registerDialogService(dialogService);
 
     assertEquals(ServiceLocator.getEntityService(), entityService);
     assertEquals(ServiceLocator.getRenderService(), renderService);
     assertEquals(ServiceLocator.getPhysicsService(), physicsService);
     assertEquals(ServiceLocator.getTimeSource(), gameTime);
     assertEquals(ServiceLocator.getMenuSpriteService(), menuSpriteService);
+    assertEquals(ServiceLocator.getDialogService(), dialogService);
 
     ServiceLocator.clear();
     assertNull(ServiceLocator.getEntityService());
@@ -40,5 +43,6 @@ class ServiceLocatorTest {
     assertNull(ServiceLocator.getPhysicsService());
     assertNull(ServiceLocator.getTimeSource());
     assertNotNull(ServiceLocator.getMenuSpriteService());
+    assertNull(ServiceLocator.getDialogService());
   }
 }

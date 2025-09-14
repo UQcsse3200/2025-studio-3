@@ -25,6 +25,8 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
   private static MenuSpriteService menuSpriteService;
+  private static ConfigService configService;
+  private static DialogService dialogService;
   private static ItemEffectsService itemEffectsService;
 
   public static EntityService getEntityService() {
@@ -57,6 +59,14 @@ public class ServiceLocator {
 
   public static MenuSpriteService getMenuSpriteService() {
     return menuSpriteService;
+  }
+
+  public static ConfigService getConfigService() {
+    return configService;
+  }
+
+  public static DialogService getDialogService() {
+    return dialogService;
   }
 
   public static ItemEffectsService getItemEffectsService() {
@@ -103,6 +113,21 @@ public class ServiceLocator {
     menuSpriteService = source;
   }
 
+  public static void registerConfigService(ConfigService source) {
+    logger.debug("Registering config service {}", source);
+    configService = source;
+  }
+
+  public static void deregisterConfigService() {
+    logger.debug("Removing config service");
+    configService = null;
+  }
+
+  public static void registerDialogService(DialogService source) {
+    logger.debug("Registering dialog service {}", source);
+    dialogService = source;
+  }
+
   public static void registerItemEffectsService(ItemEffectsService source) {
     logger.debug("Registering item effects service {}", source);
     itemEffectsService = source;
@@ -116,6 +141,8 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     currencyService = null;
+    dialogService = null;
+    itemEffectsService = null;
   }
 
   private ServiceLocator() {

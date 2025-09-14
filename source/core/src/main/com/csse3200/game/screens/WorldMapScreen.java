@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,9 +23,13 @@ public class WorldMapScreen implements Screen {
   private OrthographicCamera camera;
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
   private Texture worldMap;
-  private Texture nodeCompleted, nodeUnlocked;
-  private Texture lockedLevel1, lockedLevel2;
-  private Texture playerTex, backButton;
+  private Texture nodeCompleted;
+  private Texture nodeUnlocked;
+  private Texture lockedLevel1;
+  private Texture lockedLevel2;
+  private Texture shopTexture;
+  private Texture playerTex;
+  private Texture backButton;
 
   private Node[] nodes;
   private Vector2 playerPos;
@@ -50,6 +55,7 @@ public class WorldMapScreen implements Screen {
     nodeUnlocked = new Texture(Gdx.files.internal("images/node_unlocked.png"));
     lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
     lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
+    shopTexture = new Texture(Gdx.files.internal("images/shopsprite.png"));
     playerTex = new Texture(Gdx.files.internal("images/character.png"));
     backButton = new Texture(Gdx.files.internal("images/back_button.png"));
 
@@ -60,7 +66,7 @@ public class WorldMapScreen implements Screen {
     playerPos =
         new Vector2(nodes[0].px * Gdx.graphics.getWidth(), nodes[0].py * Gdx.graphics.getHeight());
 
-    backBtnBounds = new Rectangle(20, Gdx.graphics.getHeight() - 140, 120, 120);
+    backBtnBounds = new Rectangle(20, (float) Gdx.graphics.getHeight() - 140, 120, 120);
 
     font = new BitmapFont();
     font.setColor(Color.WHITE);
@@ -80,7 +86,9 @@ public class WorldMapScreen implements Screen {
 
     for (Node node : nodes) {
       Texture nodeTex;
-      if (node.completed) {
+      if ("shop".equals(node.id)) {
+        nodeTex = shopTexture;
+      } else if (node.completed) {
         nodeTex = nodeCompleted;
       } else if (node.unlocked) {
         nodeTex = nodeUnlocked;
@@ -96,7 +104,14 @@ public class WorldMapScreen implements Screen {
 
       if (playerPos.dst(x, y) < 60) {
         nearbyNode = node;
-        String prompt = (nearbyNode.level == 1) ? "Press E to Start" : "Press E to Checkpoint";
+        String prompt;
+        if ("shop".equals(nearbyNode.id)) {
+          prompt = "Press E to Shop";
+        } else if (nearbyNode.level == 1) {
+          prompt = "Press E to Start";
+        } else {
+          prompt = "Press E to Checkpoint";
+        }
         font.draw(batch, prompt, x, y + 100);
       }
     }
@@ -118,15 +133,19 @@ public class WorldMapScreen implements Screen {
 
     if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
       float mx = Gdx.input.getX();
-      float my = Gdx.graphics.getHeight() - Gdx.input.getY();
+      float my = (float) Gdx.graphics.getHeight() - Gdx.input.getY();
 
       if (backBtnBounds.contains(mx, my)) {
+        ServiceLocator.deregisterConfigService();
         game.setScreen(GdxGame.ScreenType.MAIN_MENU);
       }
     }
 
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if (nearbyNode.level == 1) {
+      if ("shop".equals(nearbyNode.id)) {
+        logger.info("🛒 Opening Shop!");
+        game.setScreen(GdxGame.ScreenType.SHOP);
+      } else if (nearbyNode.level == 1) {
         logger.info("🚀 Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
       } else {
@@ -164,6 +183,7 @@ public class WorldMapScreen implements Screen {
     nodeUnlocked.dispose();
     lockedLevel1.dispose();
     lockedLevel2.dispose();
+    shopTexture.dispose();
     playerTex.dispose();
     backButton.dispose();
     font.dispose();

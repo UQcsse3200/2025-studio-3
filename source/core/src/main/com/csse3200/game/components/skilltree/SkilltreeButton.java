@@ -40,7 +40,7 @@ public class SkilltreeButton extends UIComponent {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Back button clicked");
-            game.setScreen(GdxGame.ScreenType.PROFILE);
+            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
           }
         });
 

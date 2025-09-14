@@ -209,9 +209,10 @@ public class SettingsMenuDisplay extends UIComponent {
 
   private void exitMenu() {
     if (Persistence.profile() == null) {
+      ServiceLocator.deregisterConfigService();
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
-      game.setScreen(ScreenType.PROFILE);
+      game.setScreen(ScreenType.MAIN_GAME);
     }
   }
 

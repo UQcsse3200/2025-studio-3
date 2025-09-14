@@ -10,8 +10,12 @@ import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
+import com.csse3200.game.screens.NewGameScreen;
+import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
+import com.csse3200.game.services.MenuSpriteService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +27,11 @@ public class GdxGame extends Game {
     logger.info("Creating game");
     loadSettings();
 
-    loadMenus();
+    // Sets background to medium grey
+    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
 
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249f / 255f, 178f / 255f, 1);
-
+    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
+    // loadMenus();
     setScreen(ScreenType.MAIN_MENU);
   }
 
@@ -90,10 +92,12 @@ public class GdxGame extends Game {
         return new SettingsScreen(this);
       case SKILLTREE:
         return new SkillTreeScreen(this);
-      case PROFILE:
-        return new ProfileScreen(this);
       case LOAD_GAME:
         return new LoadGameScreen(this);
+      case NEW_GAME:
+        return new NewGameScreen(this);
+      case SAVE_GAME:
+        return new SaveGameScreen(this);
       case STATISTICS:
         return new StatisticsScreen(this);
       case ACHIEVEMENTS:
@@ -109,15 +113,18 @@ public class GdxGame extends Game {
     }
   }
 
-  public enum RegisteredScreens {}
+  public enum RegisteredScreens {
+    SHOP
+  }
 
   public enum ScreenType {
     MAIN_MENU,
     MAIN_GAME,
     SETTINGS,
     SKILLTREE,
-    PROFILE,
     LOAD_GAME,
+    NEW_GAME,
+    SAVE_GAME,
     STATISTICS,
     ACHIEVEMENTS,
     SHOP,
