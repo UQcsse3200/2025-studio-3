@@ -13,6 +13,14 @@ public class ItemEffectsService {
   private static final Logger logger =
       LoggerFactory.getLogger(com.csse3200.game.services.ItemEffectsService.class);
 
+  public static final String GRENADE = "GRENADE";
+  public static final String BUFF = "BUFF";
+  public static final String COFFEE = "COFFEE";
+  public static final String EMP = "EMP";
+  public static final String NUKE = "NUKE";
+
+  public static final int loopDuration = 0;
+
   // private final ItemEffect itemEffect;
 
   public static void spawnEffect(
@@ -22,6 +30,11 @@ public class ItemEffectsService {
       int scale,
       float frameDuration,
       Animation.PlayMode playMode) {
+
+    if (atlas == null) {
+      logger.error("Atlas not loaded: {}", atlas);
+      return;
+    }
     AnimationRenderComponent animator = new AnimationRenderComponent(atlas);
     Entity effect = new Entity().addComponent(animator);
     //        Vector2 position = entity.getCenterPosition();
@@ -38,10 +51,22 @@ public class ItemEffectsService {
     //        });
     effect.addComponent(
         new Component() {
+          float age = 0f;
+
           @Override
           public void update() {
-            if (animator.isFinished()) {
-              effect.dispose();
+            if (playMode == Animation.PlayMode.LOOP) {
+              if (animator.isFinished()) {
+                effect.dispose();
+              }
+              return;
+            }
+
+            if (loopDuration > 0f) {
+              age += ServiceLocator.getTimeSource().getDeltaTime();
+              if (age >= loopDuration) {
+                effect.dispose();
+              }
             }
           }
         });

@@ -1,0 +1,85 @@
+grenade.png
+size: 512,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+
+grenade_0
+  rotate: false
+  xy: 0, 0
+  size: 128, 128
+
+grenade_1
+  rotate: false
+  xy: 128, 0
+  size: 128, 128
+
+grenade_2
+  rotate: false
+  xy: 256, 0
+  size: 128, 128
+
+grenade_3
+  rotate: false
+  xy: 384, 0
+  size: 128, 128
+
+grenade_4
+  rotate: false
+  xy: 0, 128
+  size: 128, 128
+
+grenade_5
+  rotate: false
+  xy: 128, 128
+  size: 128, 128
+
+grenade_6
+  rotate: false
+  xy: 256, 128
+  size: 128, 128
+
+grenade_7
+  rotate: false
+  xy: 384, 128
+  size: 128, 128
+
+grenade_8
+  rotate: false
+  xy: 0, 256
+  size: 128, 128
+
+grenade_9
+  rotate: false
+  xy: 128, 256
+  size: 128, 128
+
+grenade_10
+  rotate: false
+  xy: 256, 256
+  size: 128, 128
+
+grenade_11
+  rotate: false
+  xy: 384, 256
+  size: 128, 128
+
+grenade_12
+  rotate: false
+  xy: 0, 384
+  size: 128, 128
+
+grenade_13
+  rotate: false
+  xy: 128, 384
+  size: 128, 128
+
+grenade_14
+  rotate: false
+  xy: 256, 384
+  size: 128, 128
+
+grenade_15
+  rotate: false
+  xy: 384, 384
+  size: 128, 128

@@ -49,17 +49,20 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     GRASS_TEXTURE,
-    "images/sling_shooter.png"
+    "images/sling_shooter.png",
+    "images/grenade.png"
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
+    "images/grenade.atlas",
     GRASS_TEXTURE,
     "images/robot_placeholder.png",
     "images/normal_sunlight.png",
-    "images/sling_shooter.png"
+    "images/sling_shooter.png",
+    "images/grenade.png"
   };
 
   private final TerrainFactory terrainFactory;
