@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.achievements.AchievementManager;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
@@ -22,6 +23,8 @@ class ProfileTest {
   private SkillSet skillset;
   private AchievementManager achievements;
   private Statistics statistics;
+  private Arsenal arsenal;
+  private String currentLevel;
 
   @BeforeEach
   void setUp() {
@@ -30,6 +33,8 @@ class ProfileTest {
     skillset = new SkillSet();
     achievements = new AchievementManager();
     statistics = new Statistics();
+    arsenal = new Arsenal();
+    currentLevel = "level1";
   }
 
   @Test
@@ -43,7 +48,9 @@ class ProfileTest {
 
   @Test
   void testProfileParameterizedConstructor() {
-    Profile profile = new Profile(name, wallet, inventory, skillset, achievements, statistics);
+    Profile profile =
+        new Profile(
+            name, wallet, inventory, skillset, achievements, statistics, arsenal, currentLevel);
     assertEquals(name, profile.getName());
     assertEquals(100, profile.wallet().getCoins());
     assertEquals(5, profile.wallet().getSkillsPoints());
