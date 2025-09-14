@@ -152,6 +152,15 @@ public class ConfigService {
     return itemConfigs.values().toArray(new BaseItemConfig[0]);
   }
 
+  /**
+   * Gets all the item keys.
+   *
+   * @return All the item keys.
+   */
+  public String[] getItemKeys() {
+    return itemConfigs.keySet().toArray(new String[0]);
+  }
+
   // TODO: Move these to the Base Config classes for tidyness.
   public static class DeserializedDefenceConfig {
     private HashMap<String, BaseDefenceConfig> config;

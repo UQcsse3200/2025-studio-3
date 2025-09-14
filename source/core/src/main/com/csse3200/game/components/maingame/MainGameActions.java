@@ -4,6 +4,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.screens.MainGameScreen;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +42,13 @@ public class MainGameActions extends Component {
    */
   public void setPauseMenu(PauseMenu pauseMenu) {
     this.pauseMenu = pauseMenu;
+  }
+  
+  /** Swaps to the Main Menu screen. */
+  private void onExit() {
+    logger.info("Exiting main game screen");
+    ServiceLocator.deregisterConfigService();
+    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
   /**

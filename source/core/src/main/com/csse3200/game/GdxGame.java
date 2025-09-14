@@ -14,6 +14,8 @@ import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
+import com.csse3200.game.services.MenuSpriteService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,14 +26,12 @@ public class GdxGame extends Game {
   public void create() {
     logger.info("Creating game");
     loadSettings();
+    
+    // Sets background to medium grey
+    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
 
-    loadMenus();
-
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249 / 255f, 178 / 255f, 1);
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f / 255f, 249f / 255f, 178f / 255f, 1);
-
+    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
+    // loadMenus();
     setScreen(ScreenType.MAIN_MENU);
   }
 

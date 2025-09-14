@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,6 +136,7 @@ public class WorldMapScreen implements Screen {
       float my = (float) Gdx.graphics.getHeight() - Gdx.input.getY();
 
       if (backBtnBounds.contains(mx, my)) {
+        ServiceLocator.deregisterConfigService();
         game.setScreen(GdxGame.ScreenType.MAIN_MENU);
       }
     }

@@ -60,6 +60,10 @@ public class ServiceLocator {
     return menuSpriteService;
   }
 
+  public static ConfigService getConfigService() {
+    return configService;
+  }
+
   public static DialogService getDialogService() {
     return dialogService;
   }
@@ -108,7 +112,11 @@ public class ServiceLocator {
     logger.debug("Registering config service {}", source);
     configService = source;
   }
-
+  public static void deregisterConfigService() {
+    logger.debug("Removing config service");
+    configService = null;
+  }
+  
   public static void registerDialogService(DialogService source) {
     logger.debug("Registering dialog service {}", source);
     dialogService = source;

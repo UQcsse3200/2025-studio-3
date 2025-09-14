@@ -1,5 +1,6 @@
 package com.csse3200.game.progression;
 
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.progression.arsenal.Arsenal;
@@ -7,6 +8,12 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
+import java.util.HashMap;
+import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a user profile in the game. Allows customization of player attributes and tracking of
@@ -15,6 +22,7 @@ import com.csse3200.game.progression.wallet.Wallet;
  * <p>Later we can add an arsenal of unlocked defences, and a way to track overall level progress.
  */
 public class Profile {
+  private static final Logger logger = LoggerFactory.getLogger(Profile.class);
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
@@ -117,6 +125,42 @@ public class Profile {
    */
   public Arsenal arsenal() {
     return arsenal;
+  }
+
+  /**
+   * Add an item to the inventory.
+   *
+   * @param itemKey the key of the item to add.
+   */
+  public void addItemToInventory(String itemKey) {
+    inventory.addItem(itemKey);
+  }
+
+  /**
+   * Remove an item from the inventory.
+   *
+   * @param itemKey the key of the item to remove.
+   */
+  public void removeItemFromInventory(String itemKey) {
+    inventory.removeItem(itemKey);
+  }
+
+  /**
+   * Get the items in the inventory.
+   *
+   * @return the items in the inventory.
+   */
+  public Map<String, BaseItemConfig> getInventoryItems() {
+    Map<String, BaseItemConfig> items = new HashMap<>();
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return items;
+    }
+    for (String itemKey : inventory.getKeys()) {
+      items.put(itemKey, configService.getItemConfig(itemKey));
+    }
+    return items;
   }
 
   /**

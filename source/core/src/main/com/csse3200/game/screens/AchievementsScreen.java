@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.achievements.Achievement;
+import com.csse3200.game.services.ServiceLocator;
 
 /** The game screen containing the achievements menu. */
 public class AchievementsScreen extends ScreenAdapter {
@@ -163,6 +164,7 @@ public class AchievementsScreen extends ScreenAdapter {
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+      ServiceLocator.deregisterConfigService();
       game.setScreen(GdxGame.ScreenType.MAIN_MENU);
     }
   }
