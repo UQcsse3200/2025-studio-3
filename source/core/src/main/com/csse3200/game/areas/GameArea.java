@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import java.util.List;
 public abstract class GameArea implements Disposable {
   protected TerrainComponent terrain;
   protected List<Entity> areaEntities;
+  protected WaveManager waveManager;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();
@@ -52,6 +54,11 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().unregister(entity);
     entity.dispose();
     areaEntities.remove(entity);
+    
+    // Notify WaveManager of entity disposal (for wave tracking)
+    if (waveManager != null) {
+      waveManager.onEnemyDisposed();
+    }
   }
 
   /**
@@ -148,5 +155,13 @@ public abstract class GameArea implements Disposable {
     robot.setPosition(x, y);
     spawnEntity(robot);
     return robot;
+  }
+
+  /**
+   * Sets the WaveManager reference for disposal tracking
+   * @param waveManager the WaveManager instance
+   */
+  public void setWaveManager(WaveManager waveManager) {
+    this.waveManager = waveManager;
   }
 }

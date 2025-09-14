@@ -23,11 +23,19 @@ import java.util.*;
 public class WaveManager {
 
   private static int currentWave = 0;
+  private static int currentLevel = 1;
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
+  private int enemiesDisposed = 0;
   private float timeSinceLastSpawn;
   private boolean waveActive = false;
+  private boolean levelCompleted = false;
+  
+  // Preparation phase variables
+  private boolean preparationPhaseActive = false;
+  private float preparationPhaseDuration = 10.0f;
+  private float preparationPhaseTimer = 0.0f;
 
   private static Entity gameEntity;
   private final GameTime gameTime;
@@ -43,6 +51,9 @@ public class WaveManager {
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = new EntitySpawn();
+    this.preparationPhaseActive = false;
+    this.preparationPhaseTimer = 0.0f;
+    this.enemiesDisposed = 0;
 
     Collections.shuffle(laneOrder);
   }
@@ -59,18 +70,31 @@ public class WaveManager {
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = entitySpawn;
+    this.preparationPhaseActive = false;
+    this.preparationPhaseTimer = 0.0f;
+    this.enemiesDisposed = 0;
 
     Collections.shuffle(laneOrder);
   }
 
   /**
    * Advances to the next wave, resets internal state and lane sequence, and computes the number of
-   * enemies to spawn for this wave.
+   * enemies to spawn for this wave. Starts with a preparation phase.
    */
   public void initialiseNewWave() {
+    // Check if level is completed
+    if (levelCompleted) {
+      System.out.println("Level " + currentLevel + " completed! Moving to next level...");
+      startNextLevel();
+      return;
+    }
+    
     setCurrentWave(currentWave + 1);
-    waveActive = true;
+    waveActive = false; // Wave not active during preparation
+    preparationPhaseActive = true;
+    preparationPhaseTimer = 0.0f;
     currentEnemyPos = 0;
+    enemiesDisposed = 0; // Reset disposed counter for new wave
     int maxLanes = Math.min(currentWave + 1, 5);
 
     getEnemies();
@@ -79,7 +103,7 @@ public class WaveManager {
     waveLanePointer = 0;
 
     if (gameEntity != null && gameEntity.getEvents() != null) {
-      gameEntity.getEvents().trigger("newWaveStarted", currentWave);
+      gameEntity.getEvents().trigger("preparationPhaseStarted", currentWave);
       gameEntity.getEvents().trigger("waveChanged", currentWave);
     }
   }
@@ -91,6 +115,19 @@ public class WaveManager {
   public void endWave() {
     waveActive = false;
     initialiseNewWave();
+  }
+
+  /**
+   * Starts the actual wave after preparation phase ends.
+   */
+  private void startWave() {
+    waveActive = true;
+    preparationPhaseActive = false;
+    timeSinceLastSpawn = 0.0f; // Reset spawn timer for new wave
+
+    if (gameEntity != null && gameEntity.getEvents() != null) {
+      gameEntity.getEvents().trigger("waveStarted", currentWave);
+    }
   }
 
   public void setGameArea(LevelGameArea levelGameArea) {
@@ -110,15 +147,118 @@ public class WaveManager {
   }
 
   /**
-   * Update function to be called by main game loop Checks if a time interval has passed to spawn
-   * the next enemy
+   * @return true if currently in preparation phase
+   */
+  public boolean isPreparationPhaseActive() {
+    return preparationPhaseActive;
+  }
+
+  /**
+   * @return remaining time in preparation phase (0 if not in preparation phase)
+   */
+  public float getPreparationPhaseRemainingTime() {
+    if (!preparationPhaseActive) {
+      return 0.0f;
+    }
+    return Math.max(0.0f, preparationPhaseDuration - preparationPhaseTimer);
+  }
+
+  /**
+   * @return preparation phase duration in seconds
+   */
+  public float getPreparationPhaseDuration() {
+    return preparationPhaseDuration;
+  }
+
+  /**
+   * Called when an enemy is disposed/destroyed. Updates the disposed counter
+   * and checks if the wave should end.
+   */
+  public void onEnemyDisposed() {
+    enemiesDisposed++;
+    System.out.println("Enemy disposed. Count: " + enemiesDisposed + "/" + enemiesToSpawn);
+    
+    // Check if all enemies for this wave have been disposed
+    if (enemiesDisposed >= enemiesToSpawn && waveActive) {
+      System.out.println("Wave " + currentWave + " completed! All enemies disposed.");
+      
+      // Check if this was the last wave of the level
+      if (currentWave >= 3) { // Level 1 has 3 waves
+        System.out.println("All waves completed for level " + currentLevel + "!");
+        levelCompleted = true;
+        endWave();
+      } else {
+        endWave();
+      }
+    }
+  }
+
+  /**
+   * @return number of enemies disposed in current wave
+   */
+  public int getEnemiesDisposed() {
+    return enemiesDisposed;
+  }
+
+  /**
+   * @return number of enemies remaining in current wave
+   */
+  public int getEnemiesRemaining() {
+    return Math.max(0, enemiesToSpawn - enemiesDisposed);
+  }
+
+  /**
+   * Starts the next level
+   */
+  private void startNextLevel() {
+    currentLevel++;
+    currentWave = 0;
+    levelCompleted = false;
+    System.out.println("Starting Level " + currentLevel);
+    
+    if (gameEntity != null && gameEntity.getEvents() != null) {
+      gameEntity.getEvents().trigger("levelChanged", currentLevel);
+    }
+    
+    // Start the first wave of the new level
+    initialiseNewWave();
+  }
+
+  /**
+   * @return current level number
+   */
+  public static int getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * @return true if the current level is completed
+   */
+  public boolean isLevelCompleted() {
+    return levelCompleted;
+  }
+
+  /**
+   * Update function to be called by main game loop. Handles preparation phase timer and enemy spawning.
    */
   public void update() {
-    timeSinceLastSpawn += gameTime.getDeltaTime();
-    float spawnInterval = 5.0f;
-    if (timeSinceLastSpawn >= spawnInterval && waveActive) {
-      spawnEnemy(getLane());
-      timeSinceLastSpawn -= spawnInterval;
+    // Handle preparation phase
+    if (preparationPhaseActive) {
+      preparationPhaseTimer += gameTime.getDeltaTime();
+      if (preparationPhaseTimer >= preparationPhaseDuration) {
+        startWave();
+      }
+      return; // Don't spawn enemies during preparation phase
+    }
+
+    // Handle wave spawning
+    if (waveActive) {
+      timeSinceLastSpawn += gameTime.getDeltaTime();
+      float spawnInterval = 5.0f;
+      if (timeSinceLastSpawn >= spawnInterval) {
+        spawnEnemy(getLane());
+        timeSinceLastSpawn -= spawnInterval;
+      }
     }
   }
 
@@ -151,8 +291,8 @@ public class WaveManager {
    * @param laneNumber lane index to spawn into
    */
   public void spawnEnemy(int laneNumber) {
-    if (currentEnemyPos == enemiesToSpawn) {
-      endWave();
+    if (currentEnemyPos >= enemiesToSpawn) {
+      // All enemies for this wave have been spawned, but wave continues until all are disposed
       return;
     }
     String robotType = entitySpawn.getRandomRobotType();
