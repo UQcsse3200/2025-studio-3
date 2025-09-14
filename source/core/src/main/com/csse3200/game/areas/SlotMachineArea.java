@@ -25,8 +25,9 @@ import org.slf4j.LoggerFactory;
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  * inventory allowing the player to add units to the grid.
  */
-public class SlotMachineArea extends GameArea implements AreaAPI {
-    private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
+public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
+
+    private static final Logger logger = LoggerFactory.getLogger(SlotMachineArea.class);
     private static final int LEVEL_ONE_ROWS = 5;
     private static final int LEVEL_ONE_COLS = 10;
     private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
@@ -253,27 +254,29 @@ public class SlotMachineArea extends GameArea implements AreaAPI {
         this.grid = newGrid;
     }
 
+    /**
+     * Spawn a robot at a clamped grid location and scale it to the tile height.
+     */
+    @Override
     public void spawnRobot(int col, int row, String robotType) {
         Entity unit = RobotFactory.createRobotType(robotType);
 
-        // Get and set position coords
+        // Clamp to grid bounds
         col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
         row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
-        // place on that grid cell (bottom-left of the tile)
+        // Place at the bottom-left of the target tile
         float tileX = xOffset + tileSize * col;
         float tileY = yOffset + tileSize * row;
 
         unit.setPosition(tileX, tileY);
-
-        // Add to list of all spawned units
-
-        // set scale to render as desired
         unit.scaleHeight(tileSize);
+
         spawnEntity(unit);
         robots.add(unit);
         logger.info("Unit spawned at position {} {}", col, row);
     }
+
 
     /**
      * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence

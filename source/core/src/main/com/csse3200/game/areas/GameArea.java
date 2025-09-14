@@ -149,4 +149,8 @@ public abstract class GameArea implements Disposable {
     spawnEntity(robot);
     return robot;
   }
+
+  public void spawnRobot(int col, int row, String robotType) {
+      throw new UnsupportedOperationException(getClass().getSimpleName() + " does not support spawnRobot()");
+  }
 }

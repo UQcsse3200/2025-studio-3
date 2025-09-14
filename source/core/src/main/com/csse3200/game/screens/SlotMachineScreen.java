@@ -4,7 +4,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
@@ -18,7 +18,6 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
@@ -29,8 +28,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-// this file seems to have
-// been deleted
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +47,7 @@ public class SlotMachineScreen extends ScreenAdapter {
     private final Renderer renderer;
     private final PhysicsEngine physicsEngine;
     private final WaveManager waveManager;
-    private LevelGameArea levelGameArea;
+    private SlotMachineArea slotMachineArea;
 
     public SlotMachineScreen(GdxGame game) {
         this.game = game;
@@ -84,9 +81,10 @@ public class SlotMachineScreen extends ScreenAdapter {
 
         logger.debug("Initialising main game screen entities");
         TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-        levelGameArea = new LevelGameArea(terrainFactory);
-        waveManager.setGameArea(levelGameArea);
-        levelGameArea.create();
+        slotMachineArea = new SlotMachineArea(terrainFactory);
+        waveManager.setGameArea(slotMachineArea);
+        slotMachineArea.create();
+
 
         snapCameraBottomLeft();
         waveManager.initialiseNewWave();
@@ -98,7 +96,7 @@ public class SlotMachineScreen extends ScreenAdapter {
         ServiceLocator.getEntityService().update();
         renderer.render();
         waveManager.update();
-        levelGameArea.checkGameOver(); // check game-over state
+        slotMachineArea.checkGameOver(); // check game-over state
     }
 
     @Override
@@ -106,8 +104,8 @@ public class SlotMachineScreen extends ScreenAdapter {
         renderer.resize(width, height);
         snapCameraBottomLeft();
         logger.trace("Resized renderer: ({} x {})", width, height);
-        if (levelGameArea != null) {
-            levelGameArea.resize();
+        if (slotMachineArea != null) {
+            slotMachineArea.resize();
         }
     }
 
