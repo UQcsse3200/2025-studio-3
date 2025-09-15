@@ -109,6 +109,25 @@ public class WaveFactory {
   }
 
   /**
+   * Gets the number of waves configured for a specific level.
+   *
+   * @param levelNumber the level number to check
+   * @return the number of waves for that level, or 0 if level not found
+   */
+  public int getWaveCountForLevel(int levelNumber) {
+    if (levelsConfig == null) {
+      return 0;
+    }
+
+    LevelConfig level = levelsConfig.getLevel(levelNumber);
+    if (level == null) {
+      return 0;
+    }
+
+    return level.getWaveCount();
+  }
+
+  /**
    * @return the configured weight/budget for the current wave
    */
   public int getWaveWeight() {

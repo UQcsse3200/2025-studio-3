@@ -1,8 +1,11 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.entities.factories.WaveFactory;
 import com.csse3200.game.services.GameTime;
 import java.util.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Manages the lifecycle of enemy waves and schedules spawns over time.
@@ -21,16 +24,16 @@ import java.util.*;
  * request a spawn.
  */
 public class WaveManager {
+  private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
 
   private static int currentWave = 0;
-  private static int currentLevel = 1;
+  private int currentLevel = 1;
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
   private int enemiesDisposed = 0;
   private float timeSinceLastSpawn;
   private boolean waveActive = false;
-  private boolean levelCompleted = false;
 
   // Preparation phase variables
   private boolean preparationPhaseActive = false;
@@ -41,9 +44,11 @@ public class WaveManager {
   private final GameTime gameTime;
   private final EntitySpawn entitySpawn;
   private LevelGameArea levelGameArea;
+  private WaveFactory waveFactory;
 
   private List<Integer> waveLaneSequence;
   private int waveLanePointer;
+  private boolean levelComplete = false;
 
   public WaveManager() {
     this.gameTime = new GameTime();
@@ -54,6 +59,7 @@ public class WaveManager {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
+    this.waveFactory = new WaveFactory(currentLevel);
 
     Collections.shuffle(laneOrder);
   }
@@ -82,10 +88,9 @@ public class WaveManager {
    * enemies to spawn for this wave. Starts with a preparation phase.
    */
   public void initialiseNewWave() {
-    // Check if level is completed
-    if (levelCompleted) {
-      System.out.println("Level " + currentLevel + " completed! Moving to next level...");
-      startNextLevel();
+    // Don't start new waves if level is complete
+    if (levelComplete) {
+      logger.info("Level complete - no more waves will spawn");
       return;
     }
 
@@ -97,7 +102,6 @@ public class WaveManager {
     enemiesDisposed = 0; // Reset disposed counter for new wave
     int maxLanes = Math.min(currentWave + 1, 5);
 
-    //    getEnemies();
     entitySpawn.spawnEnemiesFromConfig(); // new method
     enemiesToSpawn = entitySpawn.getSpawnCount();
     waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
@@ -176,20 +180,22 @@ public class WaveManager {
    */
   public void onEnemyDisposed() {
     enemiesDisposed++;
-    System.out.println("Enemy disposed. Count: " + enemiesDisposed + "/" + enemiesToSpawn);
+    logger.debug("Enemy disposed. Count: {}/{}", enemiesDisposed, enemiesToSpawn);
 
     // Check if all enemies for this wave have been disposed
     if (enemiesDisposed >= enemiesToSpawn && waveActive) {
-      System.out.println("Wave " + currentWave + " completed! All enemies disposed.");
+      logger.info("Wave {} completed! All enemies disposed.", currentWave);
 
-      // Check if this was the last wave of the level
-      if (currentWave >= 3) { // Level 1 has 3 waves
-        System.out.println("All waves completed for level " + currentLevel + "!");
-        levelCompleted = true;
-        endWave();
-      } else {
-        endWave();
+      // Check if this was the last wave for the current level
+      int maxWaves = waveFactory.getWaveCountForLevel(currentLevel);
+      if (currentWave >= maxWaves) {
+        logger.info("All waves completed for level {}! Level complete!", currentLevel);
+        levelComplete = true;
+        waveActive = false; // Just stop the wave, don't call endWave()
+        return; // Don't start a new wave
       }
+
+      endWave(); // Only call endWave() for non-final waves
     }
   }
 
@@ -201,39 +207,55 @@ public class WaveManager {
   }
 
   /**
+   * @return true if all waves for the current level have been completed
+   */
+  public boolean isLevelComplete() {
+    return levelComplete;
+  }
+
+  /**
+   * Resets the level state for starting a new level. This should be called when switching to a
+   * different level.
+   */
+  public void resetLevel() {
+    levelComplete = false;
+    setCurrentWave(0);
+    enemiesDisposed = 0;
+    waveActive = false;
+    preparationPhaseActive = false;
+    preparationPhaseTimer = 0.0f;
+    currentEnemyPos = 0;
+    waveLaneSequence.clear();
+    waveLanePointer = 0;
+    logger.info("Level reset - ready for new level");
+  }
+
+  /**
    * @return number of enemies remaining in current wave
    */
   public int getEnemiesRemaining() {
     return Math.max(0, enemiesToSpawn - enemiesDisposed);
   }
 
-  /** Starts the next level */
-  private void startNextLevel() {
-    currentLevel++;
-    currentWave = 0;
-    levelCompleted = false;
-    System.out.println("Starting Level " + currentLevel);
-
-    if (gameEntity != null && gameEntity.getEvents() != null) {
-      gameEntity.getEvents().trigger("levelChanged", currentLevel);
-    }
-
-    // Start the first wave of the new level
-    initialiseNewWave();
-  }
-
   /**
    * @return current level number
    */
-  public static int getCurrentLevel() {
+  public int getCurrentLevel() {
     return currentLevel;
   }
 
   /**
-   * @return true if the current level is completed
+   * Sets the current level. This should be called when loading a specific level.
+   *
+   * @param level the level number to set
    */
-  public boolean isLevelCompleted() {
-    return levelCompleted;
+  public void setCurrentLevel(int level) {
+    this.currentLevel = level;
+    // Update waveFactory for the new level
+    waveFactory = new WaveFactory(level);
+    // Reset level state when switching levels
+    resetLevel();
+    logger.info("Level set to {}", level);
   }
 
   /**
@@ -282,12 +304,6 @@ public class WaveManager {
     return lane;
   }
 
-  /** Computes how many enemies this wave should spawn via EntitySpawn. */
-  private void getEnemies() {
-    entitySpawn.spawnEnemies();
-    enemiesToSpawn = entitySpawn.getSpawnCount();
-  }
-
   /**
    * Spawns a single enemy of the next type in the provided lane. Ends the wave once the configured
    * number of spawns has been reached.
@@ -299,7 +315,6 @@ public class WaveManager {
       // All enemies for this wave have been spawned, but wave continues until all are disposed
       return;
     }
-    //    String robotType = entitySpawn.getRandomRobotType();
     String robotType = entitySpawn.getNextRobotType(); // new method
     levelGameArea.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;
