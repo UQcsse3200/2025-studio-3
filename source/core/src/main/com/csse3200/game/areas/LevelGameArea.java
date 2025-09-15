@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -33,17 +34,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final String[] levelTextures = {
     "images/level-1-map-v2.png",
     "images/selected_star.png",
-    "images/slot_icon.png",
-    "images/slot_reels_background.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png"
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas",
-    "images/slot_frame.atlas",
-    "images/slot_reels.atlas"
+    "images/sling_shooter.atlas", "images/robot_placeholder.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -113,6 +109,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     displayUI();
 
     spawnMap();
+    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
@@ -172,6 +169,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     placeDeckUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
+  }
+
+  private void spawnSun() {
+    Entity sunSpawner = new Entity();
+    CurrencyGeneratorComponent currencyGenerator =
+        new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
+    sunSpawner.addComponent(currencyGenerator);
+    spawnEntity(sunSpawner);
   }
 
   /**
@@ -253,28 +258,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.grid = newGrid;
   }
 
-    /**
-     * Spawn a robot at a clamped grid location and scale it to the tile height.
-     */
-    @Override
-    public void spawnRobot(int col, int row, String robotType) {
-        Entity unit = RobotFactory.createRobotType(robotType);
+  public void spawnRobot(int col, int row, String robotType) {
+    Entity unit = RobotFactory.createRobotType(robotType);
 
-        // Clamp to grid bounds
-        col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
-        row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
+    // Get and set position coords
+    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
+    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
-        // Place at the bottom-left of the target tile
-        float tileX = xOffset + tileSize * col;
-        float tileY = yOffset + tileSize * row;
+    // place on that grid cell (bottom-left of the tile)
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
 
-        unit.setPosition(tileX, tileY);
-        unit.scaleHeight(tileSize);
+    unit.setPosition(tileX, tileY);
 
-        spawnEntity(unit);
-        robots.add(unit);
-        logger.info("Unit spawned at position {} {}", col, row);
-    }
+    // Add to list of all spawned units
+
+    // set scale to render as desired
+    unit.scaleHeight(tileSize);
+    spawnEntity(unit);
+    robots.add(unit);
+    logger.info("Unit spawned at position {} {}", col, row);
+  }
 
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
