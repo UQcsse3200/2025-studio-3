@@ -12,9 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -29,144 +27,167 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * SlotMachineDisplay renders and controls a 3-reel slot machine UI with responsive layout. It
- * provides: a bottom-right launcher icon, a centered popup frame, and reel spin/stop logic that can
- * land on predefined target indices.
+ * A 3-reel slot machine UI that lives in the top bar.
+ *
+ * <p>Responsibilities:
+ *
+ * <ul>
+ *   <li>Render a top bar frame with an inner reels area (responsive layout).
+ *   <li>Handle user click to trigger a spin.
+ *   <li>Animate continuous scrolling and smooth stop on target indices.
+ *   <li>Bridge to {@link SlotEngine} to compute outcomes and apply effects.
+ * </ul>
  */
 public class SlotMachineDisplay extends UIComponent {
+  /** Logic engine used to compute spin outcomes and to apply effects. */
   private final SlotEngine slotEngine;
 
+  /** Cached pending spin result (set on spin, consumed when all reels stop). */
+  private SlotEngine.SpinResult pendingResult = null;
+
+  private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
+
+  // ----------- Z-Order ------------
+
+  /** Render order for this UI component. */
+  private static final float Z_INDEX = 3f;
+
+  // ------ Layout Ratios (HUD) ------
+
+  /** Top bar height as a ratio of the short screen dimension. */
+  private static final float TOPBAR_HEIGHT_RATIO = 0.25f;
+
+  /** Horizontal inner margin of the frame relative to short screen dimension. */
+  private static final float TOPBAR_MARGIN_RATIO = 0.015f;
+
+  /** Reels area width relative to the visible frame image. */
+  private static final float REELS_AREA_W_RATIO = 0.70f;
+
+  /** Reels area height relative to the visible frame image. */
+  private static final float REELS_AREA_H_RATIO = 0.83f;
+
+  /** Vertical offset applied to the reels area relative to the visible frame image. */
+  private static final float REELS_AREA_Y_OFFSET = 0.00f;
+
+  /** Number of reels (columns). */
+  private static final int REEL_COUNT = 3;
+
+  /** Gap between reel columns as a fraction of the reels area width. */
+  private static final float REEL_GAP_RATIO = 0.03f;
+
+  // --------- Reel Runtime ----------
+
+  /** Per-column container groups (vertically scrolled). */
+  private final List<Group> reelColumns = new ArrayList<>();
+
+  /** Target symbol indices per column (provided by engine on spin). */
+  private int[] targetIndices;
+
+  /** Standard symbol height in pixels (after scaling into one column). */
+  private float symbolHeight;
+
+  /** Number of distinct symbols (per cycle). */
+  private int symbolCount;
+
+  /** Current vertical speeds per column (used to compute stop curves). */
+  private final List<Float> currentScrollSpeeds = new ArrayList<>();
+
+  /** Base reel scroll speed (pixels/second). */
+  private float reelScrollSpeedPxPerSec;
+
+  /** Whether any spin sequence is currently active. */
+  private boolean isSpinning = false;
+
+  /** Count of columns that have fully stopped in the current sequence. */
+  private int stoppedCount = 0;
+
+  // --------- Runtime Sizes ---------
+
+  /** Frame size in pixels (derived from stage short side). */
+  private float frameSizePx;
+
+  /** Frame inner margin in pixels. */
+  private float marginPx;
+
+  /** Last known stage width (to detect resize). */
+  private float lastStageW = -1f;
+
+  /** Last known stage height (to detect resize). */
+  private float lastStageH = -1f;
+
+  // ----------- UI Nodes ------------
+
+  /** Root group of the persistent top bar. */
+  private Group barGroup;
+
+  /** Full frame image (hit-tested on visible drawn rect). */
+  private Image frameImage;
+
+  /** Reels background image (decorative, not interactive). */
+  private Image reelsBgImage;
+
+  /** Scroll pane that clips the reels content. */
+  private ScrollPane reelsPane;
+
+  /** Reels content holder that scrolls vertically. */
+  private Group reelsContent;
+
+  // -------- Loaded Assets ----------
+
+  /** Drawable for unpressed frame state (atlas region). */
+  private TextureRegionDrawable frameUpDrawable;
+
+  /** Drawable for pressed frame state (atlas region). */
+  private TextureRegionDrawable frameDownDrawable;
+
+  /** Ordered list of symbol regions forming one cycle. */
+  private List<TextureAtlas.AtlasRegion> symbolRegions;
+
+  // ---------- Constructors ---------
+
+  /** Creates a display with a bound {@link SlotMachineArea}. */
   public SlotMachineDisplay(SlotMachineArea area) {
     this.slotEngine = new SlotEngine(area);
   }
 
+  /** Creates a display with a default {@link SlotEngine} (no area bound). */
   public SlotMachineDisplay() {
     this.slotEngine = new SlotEngine();
   }
-
-  private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
-  // --- Logic bridge: Slot logic engine ---
-  private SlotEngine.SpinResult pendingResult = null;
-
-  /** Render order for this UI. */
-  private static final float Z_INDEX = 3f;
-
-  /** Size ratios relative to the stage's short edge. */
-  private static final float ICON_SIZE_RATIO = 0.10f;
-
-  private static final float MARGIN_RATIO = 0.02f;
-  private static final float FRAME_SIZE_RATIO = 0.80f;
-
-  /** Normalized layout ratios inside the frame for the reels area. */
-  private static final float REELS_AREA_W_RATIO = 0.70f;
-
-  private static final float REELS_AREA_H_RATIO = 0.42f;
-  private static final float REELS_AREA_Y_OFFSET = 0.00f;
-  private static final int REEL_COUNT = 3;
-  private static final float REEL_GAP_RATIO = 0.03f;
-  private final List<Group> reelColumns = new ArrayList<>();
-  // Target symbol indices (per column) where reels should stop. (now for test)
-  private int[] targetIndices;
-
-  /** Per-column symbol metrics and runtime state used for smooth stopping. */
-  private float symbolHeight;
-
-  private int symbolCount;
-  private final List<Float> currentScrollSpeeds = new ArrayList<>();
-  // Runtime-computed sizes
-  private float iconSizePx;
-  private float marginPx;
-  private float frameSizePx;
-  // UI elements
-  private ImageButton slotIconBtn;
-  private Group frameGroup;
-  private Image frameImage;
-  private Image reelsBgImage;
-  private Image dimmer;
-  private TextureRegionDrawable frameUpDrawable;
-  private TextureRegionDrawable frameDownDrawable;
-  // reels
-  private ScrollPane reelsPane;
-  private Group reelsContent;
-  private List<TextureAtlas.AtlasRegion> symbolRegions;
-  private int stoppedCount = 0;
-
-  /** Base reel scroll speed in pixels per second. */
-  private float reelScrollSpeedPxPerSec;
-
-  /** Whether a spin sequence is currently active. */
-  private boolean isSpinning = false;
 
   /** Initializes UI hierarchy, loads resources, computes sizes, and applies layout. */
   @Override
   public void create() {
     super.create();
-    initPopup();
-    initLauncher();
+    initTopBar();
     loadSymbols();
     computeSizes();
     applyLayout();
+    randomizeReels();
+    lastStageW = stage.getWidth();
+    lastStageH = stage.getHeight();
   }
 
-  /** The bottom-right launcher icon and toggling behavior. */
-  private void initLauncher() {
-    Texture iconTex =
-        ServiceLocator.getResourceService().getAsset("images/slot_icon.png", Texture.class);
-
-    slotIconBtn = new ImageButton(new TextureRegionDrawable(iconTex));
-    slotIconBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent event, Actor actor) {
-            boolean willShow = !frameGroup.isVisible();
-            if (willShow) {
-              showSlotPopup();
-            } else {
-              if (isSpinning) {
-                return;
-              }
-              hideSlotPopup();
-            }
-          }
-        });
-    stage.addActor(slotIconBtn);
-  }
-
-  /** Popup frame + frame press animation + START on click */
-  private void initPopup() {
-    frameGroup = new Group();
-    frameGroup.setSize(stage.getWidth(), stage.getHeight());
-    frameGroup.setPosition(0f, 0f);
-    frameGroup.setTransform(false);
-    frameGroup.setVisible(false);
-
-    dimmer = new Image(skin.getDrawable("black"));
-    dimmer.setSize(stage.getWidth(), stage.getHeight());
-    dimmer.setPosition(0f, 0f);
-    dimmer.getColor().a = 0.6f;
-    dimmer.setTouchable(Touchable.enabled);
-    dimmer.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            event.stop();
-            if (isSpinning) {
-              return;
-            }
-            hideSlotPopup();
-          }
-        });
-    frameGroup.addActor(dimmer);
-
+  /**
+   * Creates the persistent top bar, loads the frame atlas (up/down), builds the reels pane, and
+   * attaches a click listener that triggers a spin.
+   *
+   * <p>Hit-testing is restricted to the visible drawn portion of the frame image to avoid clicking
+   * in transparent/letterboxed areas.
+   */
+  private void initTopBar() {
+    barGroup = new Group();
+    barGroup.setTransform(false);
+    barGroup.setVisible(true);
+    barGroup.setTouchable(Touchable.childrenOnly);
+    stage.addActor(barGroup);
     TextureAtlas atlas =
         ServiceLocator.getResourceService().getAsset("images/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
-
     for (Texture tex : atlas.getTextures()) {
       tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
-
     frameUpDrawable = new TextureRegionDrawable(upRegion);
     frameDownDrawable = new TextureRegionDrawable(downRegion);
 
@@ -178,14 +199,14 @@ public class SlotMachineDisplay extends UIComponent {
     reelsBgImage.setTouchable(Touchable.disabled);
     reelsBgImage.setScaling(Scaling.fit);
     reelsBgImage.setAlign(Align.center);
-    frameGroup.addActor(reelsBgImage);
+    barGroup.addActor(reelsBgImage);
 
     reelsContent = new Group();
     reelsPane = new ScrollPane(reelsContent);
     reelsPane.setScrollingDisabled(true, true);
     reelsPane.setFadeScrollBars(false);
     reelsPane.setOverscroll(false, false);
-    frameGroup.addActor(reelsPane);
+    barGroup.addActor(reelsPane);
 
     frameImage = new HitTestImage(frameUpDrawable, Scaling.fit, Align.center);
     frameImage.setScaling(Scaling.fit);
@@ -194,24 +215,23 @@ public class SlotMachineDisplay extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Slot frame clicked");
+            if (isSpinning) return;
+            logger.info("Topbar slot clicked");
             pendingResult = slotEngine.spin();
             targetIndices = pendingResult.getReels();
             frameImage.clearActions();
             frameImage.setDrawable(frameDownDrawable);
             frameImage.addAction(
                 Actions.sequence(
-                    Actions.delay(0.15f),
+                    Actions.delay(0.12f),
                     Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
             spinToTargets();
           }
         });
-
-    frameGroup.addActor(frameImage);
-    stage.addActor(frameGroup);
+    barGroup.addActor(frameImage);
   }
 
-  /** Loads the reels atlas and collects symbol regions. */
+  /** Loads the reels atlas and collects symbol regions in name order. */
   private void loadSymbols() {
     TextureAtlas reelsAtlas =
         ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
@@ -229,9 +249,9 @@ public class SlotMachineDisplay extends UIComponent {
    * Builds a single reel column by duplicating the symbol sequence twice to enable seamless
    * vertical looping.
    *
-   * @param colWidth column width
-   * @param colHeight column height
-   * @return the reel column group
+   * @param colWidth column width in pixels
+   * @param colHeight column height in pixels
+   * @return reel column group with images stacked vertically
    */
   private Group buildOneReel(float colWidth, float colHeight) {
     Group reel = new Group();
@@ -265,7 +285,14 @@ public class SlotMachineDisplay extends UIComponent {
     return reel;
   }
 
-  /** Rebuilds all reels and resets per-column states. */
+  /**
+   * Rebuilds all reels and resets per-column speeds.
+   *
+   * @param areaX reels area x
+   * @param areaY reels area y
+   * @param areaW reels area width
+   * @param areaH reels area height
+   */
   private void buildReels(float areaX, float areaY, float areaW, float areaH) {
     reelsContent.clearChildren();
     reelColumns.clear();
@@ -274,7 +301,7 @@ public class SlotMachineDisplay extends UIComponent {
       return;
     }
 
-    float gap = frameSizePx * REEL_GAP_RATIO;
+    float gap = areaW * REEL_GAP_RATIO;
     float colW = (areaW - gap * (REEL_COUNT - 1)) / REEL_COUNT;
     float colH = areaH;
 
@@ -300,14 +327,13 @@ public class SlotMachineDisplay extends UIComponent {
     float h = stage.getHeight();
     float base = Math.min(w, h);
 
-    iconSizePx = base * ICON_SIZE_RATIO;
-    marginPx = base * MARGIN_RATIO;
-    frameSizePx = base * FRAME_SIZE_RATIO;
+    frameSizePx = base * TOPBAR_HEIGHT_RATIO;
+    marginPx = base * TOPBAR_MARGIN_RATIO;
 
-    reelScrollSpeedPxPerSec = frameSizePx * 1.2f;
+    reelScrollSpeedPxPerSec = frameSizePx * 4.0f;
   }
 
-  /** Randomize reel positions when opening slot machine */
+  /** Randomizes reel positions when the slot machine is first shown or rebuilt. */
   private void randomizeReels() {
     if (reelColumns.isEmpty() || symbolCount <= 0) return;
 
@@ -321,43 +347,72 @@ public class SlotMachineDisplay extends UIComponent {
     }
   }
 
-  /** Applies positions/sizes for frame, reels area and launcher icon. */
+  /**
+   * Applies positions/sizes for the top bar frame, the reels area, and then rebuilds reels. This is
+   * responsive and should be called on create and whenever the stage size changes.
+   */
   private void applyLayout() {
-    if (frameGroup != null) {
-      frameGroup.setSize(stage.getWidth(), stage.getHeight());
-      frameGroup.setPosition(0f, 0f);
+    float stageW = stage.getWidth();
+    float stageH = stage.getHeight();
+
+    float barH = frameSizePx;
+    float barW = stageW;
+    float barX = 0f;
+    float barY = stageH - barH;
+
+    if (barGroup != null) {
+      barGroup.setSize(barW, barH);
+      barGroup.setPosition(barX, barY);
     }
 
-    if (dimmer != null) {
-      dimmer.setSize(stage.getWidth(), stage.getHeight());
-      dimmer.setPosition(0f, 0f);
-    }
+    float frameW = barW - 2f * marginPx;
+    float frameH = barH - 2f * marginPx;
 
     if (frameImage != null) {
-      frameImage.setSize(frameSizePx, frameSizePx);
-      float gx = (frameGroup.getWidth() - frameSizePx) / 2f;
-      float gy = (frameGroup.getHeight() - frameSizePx) / 2f;
-      frameImage.setPosition(gx, gy);
-
-      if (reelsBgImage != null) {
-        reelsBgImage.setSize(frameSizePx, frameSizePx);
-        reelsBgImage.setPosition(gx, gy);
-      }
-
-      float areaW = frameSizePx * REELS_AREA_W_RATIO;
-      float areaH = frameSizePx * REELS_AREA_H_RATIO;
-      float areaX = gx + (frameSizePx - areaW) / 2f;
-      float areaY = gy + (frameSizePx - areaH) / 2f + frameSizePx * REELS_AREA_Y_OFFSET;
-
-      buildReels(areaX, areaY, areaW, areaH);
+      frameImage.setSize(frameW, frameH);
+      frameImage.setPosition(marginPx, marginPx);
+    }
+    if (reelsBgImage != null) {
+      reelsBgImage.setSize(frameW, frameH);
+      reelsBgImage.setPosition(marginPx, marginPx);
     }
 
-    if (slotIconBtn != null) {
-      slotIconBtn.setSize(iconSizePx, iconSizePx);
-      float x = stage.getWidth() - iconSizePx - marginPx;
-      float y = marginPx;
-      slotIconBtn.setPosition(x, y);
+    float actorW = frameW;
+    float actorH = frameH;
+    float srcW = frameUpDrawable.getMinWidth();
+    float srcH = frameUpDrawable.getMinHeight();
+
+    Vector2 size = ((HitTestImage) frameImage).scaling.apply(srcW, srcH, actorW, actorH);
+    float drawW = size.x, drawH = size.y;
+
+    int align = frameImage.getAlign();
+    float drawX, drawY;
+    if ((align & Align.left) != 0) drawX = 0f;
+    else if ((align & Align.right) != 0) drawX = actorW - drawW;
+    else drawX = (actorW - drawW) * 0.5f;
+
+    if ((align & Align.bottom) != 0) drawY = 0f;
+    else if ((align & Align.top) != 0) drawY = actorH - drawH;
+    else drawY = (actorH - drawH) * 0.5f;
+
+    float visX = marginPx + drawX;
+    float visY = marginPx + drawY;
+    float visW = drawW;
+    float visH = drawH;
+
+    float areaW = visW * REELS_AREA_W_RATIO;
+    float areaH = visH * REELS_AREA_H_RATIO;
+    float areaX = visX + (visW - areaW) * 0.5f;
+    float areaY = visY + (visH - areaH) * 0.5f + visH * REELS_AREA_Y_OFFSET;
+
+    if (reelsPane != null) {
+      reelsPane.setSize(areaW, areaH);
+      reelsPane.setPosition(areaX, areaY);
     }
+
+    buildReels(areaX, areaY, areaW, areaH);
+    randomizeReels();
+    isSpinning = false;
   }
 
   /**
@@ -458,32 +513,6 @@ public class SlotMachineDisplay extends UIComponent {
                 })));
   }
 
-  /** Show the slot with a mask. */
-  private void showSlotPopup() {
-    frameGroup.setVisible(true);
-    frameGroup.setTouchable(Touchable.enabled);
-    if (dimmer != null) {
-      dimmer.setVisible(true);
-      dimmer.getColor().a = 0.6f;
-    }
-    stoppedCount = 0;
-    randomizeReels();
-  }
-
-  /** Close the slot. */
-  private void hideSlotPopup() {
-    if (isSpinning) {
-      return;
-    }
-    frameGroup.setVisible(false);
-    if (dimmer != null) {
-      dimmer.setVisible(false);
-    }
-    for (Group col : reelColumns) {
-      col.clearActions();
-    }
-  }
-
   /** Count the reels has stopped. While all reels has stopped, resolve outcome. */
   private void notifyReelStopped() {
     stoppedCount++;
@@ -501,8 +530,18 @@ public class SlotMachineDisplay extends UIComponent {
     }
   }
 
+  /** Draw pass also detects stage resize and reapplies layout if needed. */
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    float w = stage.getWidth();
+    float h = stage.getHeight();
+    if (w != lastStageW || h != lastStageH) {
+      lastStageW = w;
+      lastStageH = h;
+      computeSizes();
+      applyLayout();
+    }
+  }
 
   @Override
   public float getZIndex() {
@@ -512,8 +551,7 @@ public class SlotMachineDisplay extends UIComponent {
   @Override
   public void dispose() {
     super.dispose();
-    if (slotIconBtn != null) slotIconBtn.remove();
-    if (frameGroup != null) frameGroup.remove();
+    if (barGroup != null) barGroup.remove();
   }
 
   /** Image with precise hit test limited to actually drawn (scaled & aligned) rectangle. */

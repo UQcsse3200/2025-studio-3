@@ -1,6 +1,5 @@
 package com.csse3200.game.components.slot;
 
-import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -31,7 +30,7 @@ public final class SlotEffect {
 
   private SlotEffect() {}
 
-    /**
+  /**
    * Execute a slot effect against a LevelGameArea.
    *
    * @param effect The effect chosen by the slot engine.

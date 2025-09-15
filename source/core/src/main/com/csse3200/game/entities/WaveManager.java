@@ -1,9 +1,9 @@
 package com.csse3200.game.entities;
 
+import com.csse3200.game.areas.EnemySpawner;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.services.GameTime;
-import com.csse3200.game.areas.GameArea;
-import com.csse3200.game.areas.EnemySpawner;
 import java.util.*;
 
 /**
@@ -95,16 +95,14 @@ public class WaveManager {
     initialiseNewWave();
   }
 
-    /**
-       * Set the game area used for spawning enemies. Must implement EnemySpawner.
-     */
+  /** Set the game area used for spawning enemies. Must implement EnemySpawner. */
   public void setGameArea(GameArea area) {
-          if (area instanceof EnemySpawner spawner) {
-                 this.enemySpawner = spawner;
-          } else {
-                throw new IllegalArgumentException(
-                        "Provided GameArea does not implement EnemySpawner: " + area.getClass().getName());
-               }
+    if (area instanceof EnemySpawner spawner) {
+      this.enemySpawner = spawner;
+    } else {
+      throw new IllegalArgumentException(
+          "Provided GameArea does not implement EnemySpawner: " + area.getClass().getName());
+    }
   }
 
   public static void setGameEntity(Entity gameEntity) {
@@ -166,7 +164,7 @@ public class WaveManager {
       return;
     }
     String robotType = entitySpawn.getRandomRobotType();
-      enemySpawner.spawnRobot(9, laneNumber, robotType);
+    enemySpawner.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;
   }
 }

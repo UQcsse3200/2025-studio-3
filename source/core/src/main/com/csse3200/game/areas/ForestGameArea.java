@@ -302,8 +302,6 @@ public class ForestGameArea extends GameArea {
     this.unloadAssets();
   }
 
-    @Override
-    public void spawnRobot(int col, int row, String robotType) {
-
-    }
+  @Override
+  public void spawnRobot(int col, int row, String robotType) {}
 }
