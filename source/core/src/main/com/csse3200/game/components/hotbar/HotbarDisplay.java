@@ -1,5 +1,6 @@
 package com.csse3200.game.components.hotbar;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -54,12 +55,17 @@ public class HotbarDisplay extends UIComponent {
             tempUnit.setPosition(x, y);
             tempUnit.addListener(new ClickListener() {
                 @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    Entity tempPlaceableUnit =
-                            new Entity()
-                                    .addComponent(new DeckInputComponent(game, unit.getValue()))
-                                    .addComponent(new TextureRenderComponent(unit.getKey()));
-                    game.setSelectedUnit(tempPlaceableUnit);
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (event.getButton() == Input.Buttons.LEFT) {
+                        Entity tempPlaceableUnit =
+                                new Entity()
+                                        .addComponent(new DeckInputComponent(game, unit.getValue()))
+                                        .addComponent(new TextureRenderComponent(unit.getKey()));
+                        game.setSelectedUnit(tempPlaceableUnit);
+                    } else if (event.getButton() == Input.Buttons.RIGHT) {
+                        game.setSelectedUnit(null);
+                    }
+                    return false;
                 }
             });
             layered.addActor(tempUnit);
