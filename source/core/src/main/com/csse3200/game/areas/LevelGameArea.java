@@ -8,16 +8,19 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +39,16 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
-    "images/grenade.png"
+    "images/grenade.png",
+    "images/coffee.png",
+    "images/emp.png",
+    "images/buff.png",
+    "images/nuke.png",
+    "images/items/grenade.png",
+    "images/items/coffee.png",
+    "images/items/emp.png",
+    "images/items/buff.png",
+    "images/items/nuke.png"
   };
 
   private static final String[] levelTextureAtlases = {
@@ -44,7 +56,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
     "images/robot_placeholder.atlas",
-    "images/grenade.atlas"
+    "images/grenade.atlas",
+    "images/coffee.atlas",
+    "images/emp.atlas",
+    "images/buff.atlas",
+    "images/nuke.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -174,6 +190,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeDeckUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
+    placeDeckUnit(ItemFactory::createGrenade, "images/items/grenade.png");
+    placeDeckUnit(ItemFactory::createCoffee, "images/items/coffee.png");
+    placeDeckUnit(ItemFactory::createBuff, "images/items/buff.png");
+    placeDeckUnit(ItemFactory::createEmp, "images/items/emp.png");
+    placeDeckUnit(ItemFactory::createNuke, "images/items/nuke.png");
   }
 
   private void spawnSun() {
@@ -396,7 +417,33 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     newEntity.setPosition(entityPos);
 
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
+    logger.info("entity pos =" + tileX + ", " + tileY);
+    ItemComponent item = newEntity.getComponent(ItemComponent.class);
+    if (item != null && selectedTile != null) {
+      logger.info("spawning item");
+      String key = item.getType().toString().toLowerCase(Locale.ROOT);
+
+      Vector2 spawnPosition = new Vector2(tileX, tileY);
+      logger.info("position {}", spawnPosition);
+      logger.info(key);
+      logger.info("later pos x {}", xOffset * 0.25 + LEVEL_ONE_COLS * tileSize);
+      logger.info("later pos y {}", tileSize * -0.75);
+      ServiceLocator.getItemEffectsService()
+          .playEffect(
+              key,
+              spawnPosition,
+              (int) tileSize,
+              new Vector2(
+                  (float) (xOffset * 0.25 + LEVEL_ONE_COLS * tileSize),
+                  (float) (tileSize * -0.75)));
+
+      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      logger.info("" + selectedTile.getComponent(TileStorageComponent.class).hasUnit());
+      return;
+    }
+
     if (selectedTile != null) {
+      logger.info("here");
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 

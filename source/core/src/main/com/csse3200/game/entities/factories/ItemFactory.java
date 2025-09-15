@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -23,7 +24,9 @@ public class ItemFactory {
    */
   public static Entity createGrenade() {
     BaseItemConfig config = configService.getItemConfig("grenade");
-    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.GRENADE));
     // TODO: add animation controller and animation thingy
     // TODO: add effect logic
   }
@@ -35,7 +38,9 @@ public class ItemFactory {
    */
   public static Entity createCoffee() {
     BaseItemConfig config = configService.getItemConfig("coffee");
-    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.COFFEE));
     // TODO: add animation controller and animation thingy
     // TODO: add effect logic
   }
@@ -47,7 +52,9 @@ public class ItemFactory {
    */
   public static Entity createBuff() {
     BaseItemConfig config = configService.getItemConfig("buff");
-    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.BUFF));
     // TODO: add animation controller and animation thingy
     // TODO: add effect logic
   }
@@ -59,7 +66,9 @@ public class ItemFactory {
    */
   public static Entity createEmp() {
     BaseItemConfig config = configService.getItemConfig("emp");
-    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.EMP));
     // TODO: add animation controller and animation thingy
     // TODO: add effect logic
   }
@@ -71,7 +80,9 @@ public class ItemFactory {
    */
   public static Entity createNuke() {
     BaseItemConfig config = configService.getItemConfig("nuke");
-    return createBaseItem().addComponent(new TextureRenderComponent(config.getAssetPath()));
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.NUKE));
     // TODO: add animation controller and animation thingy
     // TODO: add effect logic
   }

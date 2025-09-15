@@ -28,12 +28,7 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.CurrencyService;
-import com.csse3200.game.services.DialogService;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.ItemEffectsService;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
@@ -93,6 +88,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
+    ServiceLocator.registerConfigService(new ConfigService());
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
