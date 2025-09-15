@@ -19,11 +19,7 @@ public class LaneRunnerGameOverActions extends Component {
         entity.getEvents().addListener("playAgain", this::onPlayAgain);
         entity.getEvents().addListener("mainMenu", this::onMainMenu);
     }
-    @Override
-    public void update() {
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {onMainMenu();}
-        else if(Gdx.input.isKeyPressed(Input.Keys.SPACE)) {onPlayAgain();}
-    }
+
     public void onPlayAgain() {
         logger.info("Restarting Lane Runner Mini game");
         game.setScreen(GdxGame.ScreenType.LANE_RUNNER);

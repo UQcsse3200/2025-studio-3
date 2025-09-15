@@ -76,7 +76,7 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
         table.row();
         table.add(mainmenubtn);
         table.row();
-        Label InstructionLabel = new Label("Press 'Space' to PLayAgain and Escape to go back to Main Menu.", skin);
+        Label InstructionLabel = new Label(" 'Space' to PLayAgain & 'Escape' to Main Menu", skin);
         table.add(InstructionLabel);
         stage.addActor(table);
     }

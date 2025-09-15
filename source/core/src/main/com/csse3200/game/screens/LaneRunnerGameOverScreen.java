@@ -12,6 +12,7 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.minigame.LaneRunnerGameOverActions;
 import com.csse3200.game.minigame.LaneRunnerGameOverDisplay;
+import com.csse3200.game.minigame.MiniGameInputComponent;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
@@ -64,13 +65,12 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
         logger.debug("Creating UI");
         Stage stage = ServiceLocator.getRenderService().getStage();
 
-//        Texture backgroundTexture = ServiceLocator.getResourceService().getAsset("images/Background.png", Texture.class);
-//        Image background = new Image(backgroundTexture);
-//        stage.addActor(background);
+
 
         Entity uiEntity = new Entity();
         uiEntity.addComponent(new LaneRunnerGameOverDisplay(finalScore, survivalTime, obstaclesDodged))
         .addComponent(new InputDecorator(stage,10))
+                .addComponent(new MiniGameInputComponent(true))
         .addComponent(new LaneRunnerGameOverActions(game));
         uiEntity.create();
     }

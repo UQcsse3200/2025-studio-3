@@ -9,7 +9,7 @@ public class LaneRunnerPlayerFactory {
     public static Entity createPlayer(LaneManager laneManager){
         Entity player = new Entity()
                 .addComponent(new TextureRenderComponent(PLAYER_TEXTURE))
-                .addComponent(new MiniGameInputComponent());
+                .addComponent(new MiniGameInputComponent(false));
 
         float scaleX = LaneConfig.OBSTACLE_WIDTH;
         float scaleY = LaneConfig.OBSTACLE_HEIGHT;

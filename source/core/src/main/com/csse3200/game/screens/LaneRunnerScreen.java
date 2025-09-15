@@ -118,7 +118,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
         createScoreUI(stage);
 
         Entity inputListener = new Entity()
-                .addComponent(new MiniGameInputComponent());
+                .addComponent(new MiniGameInputComponent(false));
         ServiceLocator.getEntityService().register(inputListener);
 
         inputListener.getEvents().addListener("moveLeft",this::movePLayerLeft );
