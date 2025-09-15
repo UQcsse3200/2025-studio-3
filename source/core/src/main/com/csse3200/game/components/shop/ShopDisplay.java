@@ -66,7 +66,7 @@ public class ShopDisplay extends UIComponent {
     String[] allItemKeys = configService.getItemKeys();
     int[] itemIndexes =
         ShopRandomizer.getShopItemIndexes(
-            Persistence.profile().getName(), 0, allItemKeys.length, LocalDateTime.now());
+            Persistence.profile().getName(), 0, allItemKeys.length - 1, LocalDateTime.now());
     this.itemKeys =
         new String[] {
           allItemKeys[itemIndexes[0]], allItemKeys[itemIndexes[1]], allItemKeys[itemIndexes[2]]

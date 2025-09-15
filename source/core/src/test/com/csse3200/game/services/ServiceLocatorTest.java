@@ -1,7 +1,7 @@
 package com.csse3200.game.services;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 
@@ -22,6 +22,7 @@ class ServiceLocatorTest {
     GameTime gameTime = new GameTime();
     MenuSpriteService menuSpriteService = new MenuSpriteService();
     DialogService dialogService = new DialogService();
+    ConfigService configService = new ConfigService();
 
     ServiceLocator.registerEntityService(entityService);
     ServiceLocator.registerRenderService(renderService);
@@ -29,6 +30,7 @@ class ServiceLocatorTest {
     ServiceLocator.registerTimeSource(gameTime);
     ServiceLocator.registerMenuSpriteService(menuSpriteService);
     ServiceLocator.registerDialogService(dialogService);
+    ServiceLocator.registerConfigService(configService);
 
     assertEquals(ServiceLocator.getEntityService(), entityService);
     assertEquals(ServiceLocator.getRenderService(), renderService);
@@ -36,6 +38,7 @@ class ServiceLocatorTest {
     assertEquals(ServiceLocator.getTimeSource(), gameTime);
     assertEquals(ServiceLocator.getMenuSpriteService(), menuSpriteService);
     assertEquals(ServiceLocator.getDialogService(), dialogService);
+    assertEquals(ServiceLocator.getConfigService(), configService);
 
     ServiceLocator.clear();
     assertNull(ServiceLocator.getEntityService());
@@ -43,6 +46,7 @@ class ServiceLocatorTest {
     assertNull(ServiceLocator.getPhysicsService());
     assertNull(ServiceLocator.getTimeSource());
     assertNotNull(ServiceLocator.getMenuSpriteService());
+    assertNotNull(ServiceLocator.getConfigService());
     assertNull(ServiceLocator.getDialogService());
   }
 }

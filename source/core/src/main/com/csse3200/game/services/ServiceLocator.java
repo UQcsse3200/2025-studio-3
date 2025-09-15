@@ -30,7 +30,7 @@ public class ServiceLocator {
 
   /**
    * Gets the entity service.
-   * 
+   *
    * @return the entity service
    */
   public static EntityService getEntityService() {
@@ -39,7 +39,7 @@ public class ServiceLocator {
 
   /**
    * Gets the render service.
-   * 
+   *
    * @return the render service
    */
   public static RenderService getRenderService() {
@@ -48,7 +48,7 @@ public class ServiceLocator {
 
   /**
    * Gets the physics service.
-   * 
+   *
    * @return the physics service
    */
   public static PhysicsService getPhysicsService() {
@@ -57,7 +57,7 @@ public class ServiceLocator {
 
   /**
    * Gets the time source.
-   * 
+   *
    * @return the time source
    */
   public static GameTime getTimeSource() {
@@ -66,7 +66,7 @@ public class ServiceLocator {
 
   /**
    * Gets the input service.
-   * 
+   *
    * @return the input service
    */
   public static InputService getInputService() {
@@ -75,7 +75,7 @@ public class ServiceLocator {
 
   /**
    * Gets the resource service.
-   * 
+   *
    * @return the resource service
    */
   public static ResourceService getResourceService() {
@@ -84,7 +84,7 @@ public class ServiceLocator {
 
   /**
    * Gets the currency service.
-   * 
+   *
    * @return the currency service
    */
   public static CurrencyService getCurrencyService() {
@@ -93,7 +93,7 @@ public class ServiceLocator {
 
   /**
    * Gets the menu sprite service.
-   * 
+   *
    * @return the menu sprite service
    */
   public static MenuSpriteService getMenuSpriteService() {
@@ -102,7 +102,7 @@ public class ServiceLocator {
 
   /**
    * Gets the config service.
-   * 
+   *
    * @return the config service
    */
   public static ConfigService getConfigService() {
@@ -111,7 +111,7 @@ public class ServiceLocator {
 
   /**
    * Gets the dialog service.
-   * 
+   *
    * @return the dialog service
    */
   public static DialogService getDialogService() {
@@ -120,7 +120,7 @@ public class ServiceLocator {
 
   /**
    * Registers the entity service.
-   * 
+   *
    * @param service the entity service
    */
   public static void registerEntityService(EntityService service) {
@@ -130,7 +130,7 @@ public class ServiceLocator {
 
   /**
    * Registers the render service.
-   * 
+   *
    * @param service the render service
    */
   public static void registerRenderService(RenderService service) {
@@ -140,7 +140,7 @@ public class ServiceLocator {
 
   /**
    * Registers the physics service.
-   * 
+   *
    * @param service the physics service
    */
   public static void registerPhysicsService(PhysicsService service) {
@@ -150,7 +150,7 @@ public class ServiceLocator {
 
   /**
    * Registers the time source.
-   * 
+   *
    * @param source the time source
    */
   public static void registerTimeSource(GameTime source) {
@@ -160,7 +160,7 @@ public class ServiceLocator {
 
   /**
    * Registers the input service.
-   * 
+   *
    * @param source the input service
    */
   public static void registerInputService(InputService source) {
@@ -170,7 +170,7 @@ public class ServiceLocator {
 
   /**
    * Registers the resource service.
-   * 
+   *
    * @param source the resource service
    */
   public static void registerResourceService(ResourceService source) {
@@ -180,7 +180,7 @@ public class ServiceLocator {
 
   /**
    * Registers the currency service.
-   * 
+   *
    * @param source the currency service
    */
   public static void registerCurrencyService(CurrencyService source) {
@@ -190,7 +190,7 @@ public class ServiceLocator {
 
   /**
    * Registers the menu sprite service.
-   * 
+   *
    * @param source the menu sprite service
    */
   public static void registerMenuSpriteService(MenuSpriteService source) {
@@ -200,7 +200,7 @@ public class ServiceLocator {
 
   /**
    * Registers the config service.
-   * 
+   *
    * @param source the config service
    */
   public static void registerConfigService(ConfigService source) {
@@ -208,9 +208,7 @@ public class ServiceLocator {
     configService = source;
   }
 
-  /**
-   * Deregisters the config service.
-   */
+  /** Deregisters the config service. */
   public static void deregisterConfigService() {
     logger.debug("Removing config service");
     configService = null;
@@ -218,7 +216,7 @@ public class ServiceLocator {
 
   /**
    * Registers the dialog service.
-   * 
+   *
    * @param source the dialog service
    */
   public static void registerDialogService(DialogService source) {
@@ -226,9 +224,7 @@ public class ServiceLocator {
     dialogService = source;
   }
 
-  /**
-   * Clears the services.
-   */
+  /** Clears the services. */
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -240,9 +236,7 @@ public class ServiceLocator {
     dialogService = null;
   }
 
-  /**
-   * Private constructor to prevent instantiation.
-   */
+  /** Private constructor to prevent instantiation. */
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }

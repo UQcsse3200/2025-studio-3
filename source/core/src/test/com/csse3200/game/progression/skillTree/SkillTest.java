@@ -54,4 +54,58 @@ class SkillTest {
         "Description should mention 25% increase for crit chance");
     assertEquals("Unlocking this skill will permanently increase crit chance by 25%", description);
   }
+
+  @Test
+  void testDefaultConstructor() {
+    Skill skill = new Skill();
+    assertNotNull(skill);
+  }
+
+  @Test
+  void testGetDescription_forAttackDamage() {
+    Skill skill = new Skill("Attack Basic", Skill.StatType.ATTACK_DAMAGE, 1.2f, 1);
+
+    String description = skill.getDescription();
+
+    assertTrue(
+        description.contains("increase attack damage by 20%"),
+        "Description should mention 20% increase for attack damage");
+    assertEquals(
+        "Unlocking this skill will permanently increase attack damage by 20%", description);
+  }
+
+  @Test
+  void testGetDescription_forFiringSpeed() {
+    Skill skill = new Skill("Firing Speed Basic", Skill.StatType.FIRING_SPEED, 1.15f, 1);
+
+    String description = skill.getDescription();
+
+    assertTrue(
+        description.contains("increase firing speed by 14%"),
+        "Description should mention 14% increase for firing speed");
+    assertEquals("Unlocking this skill will permanently increase firing speed by 14%", description);
+  }
+
+  @Test
+  void testGetDescription_forCurrencyGen() {
+    Skill skill = new Skill("Currency Basic", Skill.StatType.CURRENCY_GEN, 1.3f, 1);
+
+    String description = skill.getDescription();
+
+    assertTrue(
+        description.contains("increase currency gen by 29%"),
+        "Description should mention 29% increase for currency gen");
+    assertEquals("Unlocking this skill will permanently increase currency gen by 29%", description);
+  }
+
+  @Test
+  void testGetDescription_withZeroPercentageIncrease() {
+    Skill skill = new Skill("No Bonus", Skill.StatType.HEALTH, 1.0f, 1);
+
+    String description = skill.getDescription();
+
+    assertTrue(
+        description.contains("increase health by 0%"), "Description should handle 0% increase");
+    assertEquals("Unlocking this skill will permanently increase health by 0%", description);
+  }
 }

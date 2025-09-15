@@ -5,7 +5,7 @@
       "description": "Spent 100 coins on defenses and items",
       "statistic": "coinsSpent",
       "quota": 100,
-      "skillPoints": 5,
+      "skillPoints": 2,
       "tier": "T2"
     },
     "defenseExpert": {
@@ -13,7 +13,7 @@
       "description": "Purchased 5 different defenses",
       "statistic": "defensesPurchased",
       "quota": 5,
-      "skillPoints": 5,
+      "skillPoints": 1,
       "tier": "T1"
     },
     "sharpshooter": {
@@ -21,7 +21,7 @@
       "description": "Fired 50 shots with precision",
       "statistic": "shotsFired",
       "quota": 50,
-      "skillPoints": 5,
+      "skillPoints": 1,
       "tier": "T1"
     },
     "exterminator": {
@@ -29,7 +29,7 @@
       "description": "Eliminated 50 enemies",
       "statistic": "enemiesKilled",
       "quota": 50,
-      "skillPoints": 10,
+      "skillPoints": 2,
       "tier": "T2"
     },
     "levelMaster": {
@@ -37,7 +37,7 @@
       "description": "Successfully completed the first level",
       "statistic": "levelsCompleted",
       "quota": 1,
-      "skillPoints": 15,
+      "skillPoints": 3,
       "tier": "T3"
     },
     "firstBuy": {
@@ -45,7 +45,7 @@
       "description": "Made your very first purchase",
       "statistic": "purchasesMade",
       "quota": 1,
-      "skillPoints": 3,
+      "skillPoints": 1,
       "tier": "T1"
     },
     "survivalist": {
@@ -53,7 +53,7 @@
       "description": "Survived 10 waves without taking damage",
       "statistic": "perfectWaves",
       "quota": 10,
-      "skillPoints": 20,
+      "skillPoints": 3,
       "tier": "T3"
     },
     "waveSlayer": {
@@ -61,7 +61,7 @@
       "description": "Completed 5 waves in a single level",
       "statistic": "wavesCompleted",
       "quota": 5,
-      "skillPoints": 8,
+      "skillPoints": 2,
       "tier": "T2"
     },
     "collector": {
@@ -69,7 +69,7 @@
       "description": "Gathered 10 different items",
       "statistic": "itemsCollected",
       "quota": 10,
-      "skillPoints": 7,
+      "skillPoints": 2,
       "tier": "T2"
     }
   }

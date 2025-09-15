@@ -60,8 +60,14 @@ public class AchievementDialogComponent extends UIComponent {
       Texture achievementTexture =
           ServiceLocator.getResourceService().getAsset(ACHIEVEMENT_TEXTURE, Texture.class);
       if (achievementTexture != null) {
-        Drawable achievementBackground = new TextureRegionDrawable(achievementTexture);
-        // Create custom window style with achievement background
+        // Create a scaled drawable that fits our smaller dialog size
+        TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
+
+        // Scale the background to fit the smaller dialog dimensions
+        achievementBackground.setMinWidth(400f);
+        achievementBackground.setMinHeight(200f);
+
+        // Create custom window style with scaled achievement background
         Window.WindowStyle customStyle = new Window.WindowStyle(windowStyle);
         customStyle.background = achievementBackground;
         dialog = new Window("", customStyle);
@@ -80,7 +86,7 @@ public class AchievementDialogComponent extends UIComponent {
 
     // Create main content table
     Table contentTable = new Table();
-    contentTable.pad(20f);
+    contentTable.pad(10f);
 
     // Create text content table (no icon needed since background is the achievement box)
     Table textTable = new Table();
@@ -89,33 +95,35 @@ public class AchievementDialogComponent extends UIComponent {
     Label.LabelStyle headerStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     headerStyle.fontColor = Color.GOLD;
     Label headerLabel = new Label("Achievement Unlocked!", headerStyle);
-    headerLabel.setFontScale(1.2f);
-    headerLabel.setAlignment(Align.center);
-    textTable.add(headerLabel).center().row();
+    headerLabel.setFontScale(0.9f);
+    headerLabel.setAlignment(Align.left);
+    textTable.add(headerLabel).left().row();
 
     // Achievement name
     Label.LabelStyle nameStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     nameStyle.fontColor = Color.WHITE;
     Label nameLabel = new Label(name, nameStyle);
-    nameLabel.setFontScale(1.1f);
-    nameLabel.setAlignment(Align.center);
-    textTable.add(nameLabel).center().padTop(5f).row();
+    nameLabel.setFontScale(0.8f);
+    nameLabel.setAlignment(Align.left);
+    textTable.add(nameLabel).left().padTop(2f).row();
 
     // Achievement description
     Label.LabelStyle descStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     descStyle.fontColor = Color.LIGHT_GRAY;
     Label descLabel = new Label(description, descStyle);
     descLabel.setWrap(true);
-    descLabel.setAlignment(Align.center);
-    textTable.add(descLabel).width(200f).center().padTop(5f).row();
+    descLabel.setAlignment(Align.left);
+    descLabel.setFontScale(0.7f);
+    textTable.add(descLabel).width(320f).left().padTop(2f).row();
 
     // Tier information
     if (tier != null && !tier.isEmpty()) {
       Label.LabelStyle tierStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
       tierStyle.fontColor = Color.YELLOW;
       Label tierLabel = new Label("Tier: " + tier, tierStyle);
-      tierLabel.setAlignment(Align.center);
-      textTable.add(tierLabel).center().padTop(5f).row();
+      tierLabel.setAlignment(Align.left);
+      tierLabel.setFontScale(0.6f);
+      textTable.add(tierLabel).left().padTop(2f).row();
     }
 
     // Skill points earned with icon
@@ -129,7 +137,7 @@ public class AchievementDialogComponent extends UIComponent {
         if (skillPointTexture != null) {
           Drawable skillPointDrawable = new TextureRegionDrawable(skillPointTexture);
           Image skillPointIcon = new Image(skillPointDrawable);
-          skillPointTable.add(skillPointIcon).size(16f, 16f).padRight(5f);
+          skillPointTable.add(skillPointIcon).size(12f, 12f).padRight(3f);
         }
       } catch (Exception e) {
         logger.debug("Could not load skill point texture: {}", e.getMessage());
@@ -139,10 +147,11 @@ public class AchievementDialogComponent extends UIComponent {
       Label.LabelStyle pointsStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
       pointsStyle.fontColor = Color.CYAN;
       Label pointsLabel = new Label("+" + skillPoints + " Skill Points", pointsStyle);
-      pointsLabel.setAlignment(Align.center);
+      pointsLabel.setAlignment(Align.left);
+      pointsLabel.setFontScale(0.6f);
       skillPointTable.add(pointsLabel);
 
-      textTable.add(skillPointTable).center().padTop(10f).row();
+      textTable.add(skillPointTable).left().padTop(2f).row();
     }
 
     contentTable.add(textTable).expand().fill();

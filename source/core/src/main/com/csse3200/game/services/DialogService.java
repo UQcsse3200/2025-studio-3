@@ -112,11 +112,17 @@ public class DialogService {
   /** Hides all active dialogs. */
   public void hideAllDialogs() {
     logger.debug("Hiding all active dialogs");
-    for (DialogComponent dialog : activeDialogs) {
+    // Create copies of the lists to avoid ConcurrentModificationException
+    List<DialogComponent> dialogsCopy = new ArrayList<>(activeDialogs);
+    List<AchievementDialogComponent> achievementDialogsCopy =
+        new ArrayList<>(activeAchievementDialogs);
+
+    for (DialogComponent dialog : dialogsCopy) {
       dialog.hide();
     }
     activeDialogs.clear();
-    for (AchievementDialogComponent dialog : activeAchievementDialogs) {
+
+    for (AchievementDialogComponent dialog : achievementDialogsCopy) {
       dialog.hide();
     }
     activeAchievementDialogs.clear();

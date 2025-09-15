@@ -50,7 +50,10 @@ public class Statistics {
     stats.putIfAbsent("enemiesKilled", 0);
     stats.putIfAbsent("shotsFired", 0);
     stats.putIfAbsent("levelsCompleted", 0);
-    stats.putIfAbsent("defensesPurchased", 0);
+    stats.putIfAbsent("levelsLost", 0);
+    stats.putIfAbsent("defencesPlanted", 0);
+    stats.putIfAbsent("defencesUnlocked", 0);
+    stats.putIfAbsent("defencesLost", 0);
     stats.putIfAbsent("coinsCollected", 30);
     stats.putIfAbsent("coinsSpent", 0);
     stats.putIfAbsent("skillPointsCollected", 1);
