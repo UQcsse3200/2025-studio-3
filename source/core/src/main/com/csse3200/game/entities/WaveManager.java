@@ -31,7 +31,7 @@ public class WaveManager {
   private float timeSinceLastSpawn;
   private boolean waveActive = false;
   private boolean levelCompleted = false;
-  
+
   // Preparation phase variables
   private boolean preparationPhaseActive = false;
   private float preparationPhaseDuration = 10.0f;
@@ -88,7 +88,7 @@ public class WaveManager {
       startNextLevel();
       return;
     }
-    
+
     setCurrentWave(currentWave + 1);
     waveActive = false; // Wave not active during preparation
     preparationPhaseActive = true;
@@ -119,9 +119,7 @@ public class WaveManager {
     initialiseNewWave();
   }
 
-  /**
-   * Starts the actual wave after preparation phase ends.
-   */
+  /** Starts the actual wave after preparation phase ends. */
   private void startWave() {
     waveActive = true;
     preparationPhaseActive = false;
@@ -173,17 +171,17 @@ public class WaveManager {
   }
 
   /**
-   * Called when an enemy is disposed/destroyed. Updates the disposed counter
-   * and checks if the wave should end.
+   * Called when an enemy is disposed/destroyed. Updates the disposed counter and checks if the wave
+   * should end.
    */
   public void onEnemyDisposed() {
     enemiesDisposed++;
     System.out.println("Enemy disposed. Count: " + enemiesDisposed + "/" + enemiesToSpawn);
-    
+
     // Check if all enemies for this wave have been disposed
     if (enemiesDisposed >= enemiesToSpawn && waveActive) {
       System.out.println("Wave " + currentWave + " completed! All enemies disposed.");
-      
+
       // Check if this was the last wave of the level
       if (currentWave >= 3) { // Level 1 has 3 waves
         System.out.println("All waves completed for level " + currentLevel + "!");
@@ -209,19 +207,17 @@ public class WaveManager {
     return Math.max(0, enemiesToSpawn - enemiesDisposed);
   }
 
-  /**
-   * Starts the next level
-   */
+  /** Starts the next level */
   private void startNextLevel() {
     currentLevel++;
     currentWave = 0;
     levelCompleted = false;
     System.out.println("Starting Level " + currentLevel);
-    
+
     if (gameEntity != null && gameEntity.getEvents() != null) {
       gameEntity.getEvents().trigger("levelChanged", currentLevel);
     }
-    
+
     // Start the first wave of the new level
     initialiseNewWave();
   }
@@ -241,7 +237,8 @@ public class WaveManager {
   }
 
   /**
-   * Update function to be called by main game loop. Handles preparation phase timer and enemy spawning.
+   * Update function to be called by main game loop. Handles preparation phase timer and enemy
+   * spawning.
    */
   public void update() {
     // Handle preparation phase

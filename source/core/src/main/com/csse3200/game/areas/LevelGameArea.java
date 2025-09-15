@@ -274,12 +274,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
-    
+
     // Add disposal tracking for wave management
-    unit.getEvents().addListener("entityDeath", () -> {
-      robots.remove(unit);
-    });
-    
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              robots.remove(unit);
+            });
+
     logger.info("Unit spawned at position {} {}", col, row);
   }
 
@@ -499,6 +502,4 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public ArrayList<Entity> getRobots() {
     return robots;
   }
-
-
 }

@@ -10,6 +10,7 @@ public class BaseWaveConfig {
 
   /**
    * Constructor with parameters
+   *
    * @param waveWeight the weight budget for this wave
    * @param expGained experience gained for completing this wave
    * @param minZombiesSpawn minimum number of enemies to spawn

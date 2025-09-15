@@ -54,7 +54,7 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().unregister(entity);
     entity.dispose();
     areaEntities.remove(entity);
-    
+
     // Notify WaveManager of entity disposal (for wave tracking)
     if (waveManager != null) {
       waveManager.onEnemyDisposed();
@@ -159,6 +159,7 @@ public abstract class GameArea implements Disposable {
 
   /**
    * Sets the WaveManager reference for disposal tracking
+   *
    * @param waveManager the WaveManager instance
    */
   public void setWaveManager(WaveManager waveManager) {
