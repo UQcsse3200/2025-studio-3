@@ -23,6 +23,8 @@ import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -341,8 +343,8 @@ public class SlotMachineDisplay extends UIComponent {
     float centerOffset = (reelsPane.getHeight() - h) / 2f;
 
     for (Group col : reelColumns) {
-      int randIndex = (int) (Math.random() * symbolCount);
-      float targetY = -(randIndex * h) + centerOffset;
+        int randIndex = ThreadLocalRandom.current().nextInt(symbolCount);
+        float targetY = -(randIndex * h) + centerOffset;
       col.setY(targetY);
     }
   }
@@ -382,37 +384,44 @@ public class SlotMachineDisplay extends UIComponent {
     float srcW = frameUpDrawable.getMinWidth();
     float srcH = frameUpDrawable.getMinHeight();
 
-    Vector2 size = ((HitTestImage) frameImage).scaling.apply(srcW, srcH, actorW, actorH);
-    float drawW = size.x, drawH = size.y;
+    if (frameImage != null) {
+        Vector2 size = ((HitTestImage) frameImage).scaling.apply(srcW, srcH, actorW, actorH);
 
-    int align = frameImage.getAlign();
-    float drawX, drawY;
-    if ((align & Align.left) != 0) drawX = 0f;
-    else if ((align & Align.right) != 0) drawX = actorW - drawW;
-    else drawX = (actorW - drawW) * 0.5f;
 
-    if ((align & Align.bottom) != 0) drawY = 0f;
-    else if ((align & Align.top) != 0) drawY = actorH - drawH;
-    else drawY = (actorH - drawH) * 0.5f;
+        float drawW = size.x;
+        float drawH = size.y;
 
-    float visX = marginPx + drawX;
-    float visY = marginPx + drawY;
-    float visW = drawW;
-    float visH = drawH;
+        int align = frameImage.getAlign();
+        float drawX;
+        float drawY;
+        if ((align & Align.left) != 0) drawX = 0f;
+        else if ((align & Align.right) != 0) drawX = actorW - drawW;
+        else drawX = (actorW - drawW) * 0.5f;
 
-    float areaW = visW * REELS_AREA_W_RATIO;
-    float areaH = visH * REELS_AREA_H_RATIO;
-    float areaX = visX + (visW - areaW) * 0.5f;
-    float areaY = visY + (visH - areaH) * 0.5f + visH * REELS_AREA_Y_OFFSET;
+        if ((align & Align.bottom) != 0) drawY = 0f;
+        else if ((align & Align.top) != 0) drawY = actorH - drawH;
+        else drawY = (actorH - drawH) * 0.5f;
 
-    if (reelsPane != null) {
-      reelsPane.setSize(areaW, areaH);
-      reelsPane.setPosition(areaX, areaY);
+        float visX = marginPx + drawX;
+        float visY = marginPx + drawY;
+        float visW = drawW;
+        float visH = drawH;
+
+        float areaW = visW * REELS_AREA_W_RATIO;
+        float areaH = visH * REELS_AREA_H_RATIO;
+        float areaX = visX + (visW - areaW) * 0.5f;
+        float areaY = visY + (visH - areaH) * 0.5f + visH * REELS_AREA_Y_OFFSET;
+
+
+        if (reelsPane != null) {
+            reelsPane.setSize(areaW, areaH);
+            reelsPane.setPosition(areaX, areaY);
+        }
+
+        buildReels(areaX, areaY, areaW, areaH);
+        randomizeReels();
+        isSpinning = false;
     }
-
-    buildReels(areaX, areaY, areaW, areaH);
-    randomizeReels();
-    isSpinning = false;
   }
 
   /**
@@ -491,19 +500,18 @@ public class SlotMachineDisplay extends UIComponent {
         mappedY -= oneCycle;
         delta = mappedY - currentY;
       }
-    } else if (v0 > 1e-3f) {
-      if (delta < 0f && Math.abs(delta) > halfSymbol) {
+    } else if (v0 > 1e-3f && delta < 0f && Math.abs(delta) > halfSymbol) {
         mappedY += oneCycle;
         delta = mappedY - currentY;
-      }
     }
 
     float distance = Math.abs(delta);
     float base = Math.max(20f, Math.abs(v0));
     float tSuggested = distance / (base * 0.9f);
-    float t = Math.max(0.40f, Math.min(1.10f, tSuggested));
+    float t = Math.clamp(tSuggested, 0.40f, 1.10f);
 
-    col.addAction(
+
+      col.addAction(
         Actions.sequence(
             new HermiteStopYAction(t, currentY, mappedY, v0),
             Actions.run(
@@ -573,13 +581,16 @@ public class SlotMachineDisplay extends UIComponent {
       if (touchable && getTouchable() != Touchable.enabled) return null;
       if (getDrawable() == null) return null;
 
-      float actorW = getWidth(), actorH = getHeight();
+      float actorW = getWidth();
+      float actorH = getHeight();
       float srcW = getDrawable().getMinWidth();
       float srcH = getDrawable().getMinHeight();
 
       Vector2 size = scaling.apply(srcW, srcH, actorW, actorH);
-      float drawW = size.x, drawH = size.y;
-      float drawX, drawY;
+      float drawW = size.x;
+      float drawH = size.y;
+      float drawX;
+        float drawY;
 
       if ((align & Align.left) != 0) {
         drawX = 0f;
@@ -640,8 +651,10 @@ public class SlotMachineDisplay extends UIComponent {
 
   /** Cubic Hermite deceleration from current Y/velocity to a target Y with zero end velocity. */
   private static class HermiteStopYAction extends TemporalAction {
-    private final float y0, y1;
-    private final float v0, v1;
+    private final float y0;
+    private final  float y1;
+    private final float v0;
+    private final float v1;
 
     HermiteStopYAction(float duration, float y0, float y1, float v0) {
       super(duration);
@@ -657,7 +670,7 @@ public class SlotMachineDisplay extends UIComponent {
       Actor a = getActor();
       if (a == null) return;
 
-      float t = Math.max(0f, Math.min(1f, percent));
+      float t = Math.clamp(percent, 0.0f, 1.0f);
       float t2 = t * t;
       float t3 = t2 * t;
       float h00 = 2 * t3 - 3 * t2 + 1;
@@ -665,8 +678,8 @@ public class SlotMachineDisplay extends UIComponent {
       float h01 = -2 * t3 + 3 * t2;
       float h11 = t3 - t2;
 
-      float T = getDuration();
-      float y = h00 * y0 + h10 * (v0 * T) + h01 * y1 + h11 * (v1 * T);
+      float d = getDuration();
+      float y = h00 * y0 + h10 * (v0 * d) + h01 * y1 + h11 * (v1 * d);
       a.setY(y);
     }
   }
