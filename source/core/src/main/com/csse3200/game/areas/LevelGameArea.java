@@ -54,18 +54,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private float xOffset;
   private float yOffset;
   private float tileSize;
-  private float invStartX;
-  private float invY;
-  private float invSelectedY;
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
   private final Entity[] spawnedUnits;
   private Entity selectedUnit;
-  private Entity selectionStar;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
   private Entity ui;
+  private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
@@ -83,7 +80,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.terrainFactory = terrainFactory;
     selectedUnit = null; // None selected at level load
     spawnedUnits = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
-    selectionStar = null;
   }
 
   /**
@@ -100,9 +96,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     tileSize = gridHeight / LEVEL_ONE_ROWS;
     xOffset = 2f * tileSize;
     yOffset = tileSize;
-    invStartX = xOffset;
-    invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
-    invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -118,7 +111,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
-    spawnDeck();
 
     playMusic();
   }
@@ -142,10 +134,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private void displayUI() {
     ui = new Entity();
     // add components here for additional UI Elements
-    Map<String, Supplier<Entity>> m = new HashMap<>();
-    m.put("images/sling_shooter_front.png", () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
+    unitList.put("images/sling_shooter_front.png", () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
     ui.addComponent(new GameAreaDisplay("Level One"))
-            .addComponent(new HotbarDisplay(this, tileSize, m));
+            .addComponent(new HotbarDisplay(this, tileSize, unitList));
 
     spawnEntity(ui);
   }
@@ -169,14 +160,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
 
     spawnEntity(mapEntity);
-  }
-
-  /** Determines inventory units to spawn for the level and calls method to place them. */
-  private void spawnDeck() {
-    deckUnitCount = 0;
-//    placeDeckUnit(
-//        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
-//        "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
@@ -208,23 +191,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       grid.addTile(i, tile);
       spawnEntity(tile);
     }
-  }
-
-  /**
-   * Places a unit with its supplier in the inventory
-   *
-   * @param supplier function returning a copy of that unit
-   * @param image sprite image for how it will be displayed in the inventory
-   */
-  private void placeDeckUnit(Supplier<Entity> supplier, String image) {
-    int pos = ++deckUnitCount;
-    Entity unit =
-        new Entity()
-            .addComponent(new DeckInputComponent(this, supplier))
-            .addComponent(new TextureRenderComponent(image));
-    unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
-    unit.scaleHeight(tileSize);
-    spawnEntity(unit);
   }
 
   /** Unloads the level assets form the {@link ResourceService} */
