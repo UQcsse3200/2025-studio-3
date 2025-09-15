@@ -356,24 +356,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
-    selectedUnit = unit;
-
-    // if no star, create one
-    if (selectionStar == null) {
-      selectionStar = new Entity();
-      selectionStar.addComponent(new TextureRenderComponent("images/selected_star.png"));
-      selectionStar.scaleHeight(tileSize / 2f);
-      spawnEntity(selectionStar);
-    }
-
-    // if no unit selected remove star
-    if (selectedUnit == null) {
-      selectionStar.setPosition(-100f, -100f); // offscreen
-      return; // break from method
-    }
-
-    // set star to correct position and size
-    selectionStar.setPosition(unit.getCenterPosition().x, invSelectedY);
+      selectedUnit = unit;
   }
 
   /**

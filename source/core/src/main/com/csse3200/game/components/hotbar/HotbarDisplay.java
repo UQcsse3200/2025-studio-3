@@ -45,6 +45,12 @@ public class HotbarDisplay extends UIComponent {
 
         layered.setSize(base.getPrefWidth(), base.getPrefHeight());
 
+        Image star = new Image(new Texture("images/selected_star.png"));
+        layered.addActor(star);
+        star.setPosition(-1000, -1000);
+        star.setSize(0.5f * scaling, 0.5f * scaling);
+        star.toFront();
+
         float hotbarWidth = layered.getWidth();
         float cellWidth = hotbarWidth / 6;
         float x = cellWidth / 4;
@@ -62,8 +68,10 @@ public class HotbarDisplay extends UIComponent {
                                         .addComponent(new DeckInputComponent(game, unit.getValue()))
                                         .addComponent(new TextureRenderComponent(unit.getKey()));
                         game.setSelectedUnit(tempPlaceableUnit);
+                        star.setPosition(x + 1.5f * cellWidth / 4, 100);
                     } else if (event.getButton() == Input.Buttons.RIGHT) {
                         game.setSelectedUnit(null);
+                        star.setPosition(-1000, -1000);
                     }
                     return false;
                 }
