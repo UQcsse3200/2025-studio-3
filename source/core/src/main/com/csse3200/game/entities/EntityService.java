@@ -57,7 +57,4 @@ public class EntityService {
     }
   }
 
-  public Array<Entity> getEntities() {
-    return entities;
-  }
 }

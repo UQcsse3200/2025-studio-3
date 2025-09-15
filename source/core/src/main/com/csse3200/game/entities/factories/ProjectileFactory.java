@@ -1,5 +1,6 @@
 package com.csse3200.game.entities.factories;
 
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
@@ -23,7 +24,8 @@ public class ProjectileFactory {
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
             .addComponent(new ProjectileComponent(damage))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1.5f));
+            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 1.5f))
+                .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
     TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
