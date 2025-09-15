@@ -5,10 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -45,6 +43,8 @@ public class DossierDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
+        updateDossierInfoListener();
+        changeTypeListener();
         addActors();
     }
 
@@ -79,37 +79,54 @@ public class DossierDisplay extends UIComponent {
         stage.addActor(backBtn);
     }
 
-    /** Logic that changes the type. */
-    private void changeTypeListener(TextButton button, boolean value) {
-        button.addListener(
-                new ClickListener() {
-                    @Override
-                    public void clicked(InputEvent event, float x, float y) {
-                        if (type == value) {
-                            return;
-                        }
-                        type = value;
-                        if (type) {
-                            dossierManager.changeMode();
-                            entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
-                        } else {
-                            dossierManager.changeMode();
-                            entities = new String[]{"slingshot"};
-                        }
-                        currentEntity = 0;
-                        // Rebuild UI for the new type
-                        stage.clear();
-                        addActors();
-                    }
-                });
+    /** A listener to change the type of entity shown */
+    private void changeTypeListener() {
+        entity.getEvents().addListener("change_type", (input) -> {
+            boolean value = (boolean) input;
+            if (value == type) {
+                return;
+            }
+            type = value;
+            if (type) {
+                dossierManager.changeMode();
+                entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
+            } else {
+                dossierManager.changeMode();
+                entities = new String[]{"slingshot"};
+            }
+            currentEntity = 0;
+            // Rebuild UI for the new type
+            stage.clear();
+            addActors();
+        });
+
     }
 
     /** Sets up the buttons to swap between humans and robots. */
     private Table makeSwapBtn() {
         TextButton robotsBtn = new TextButton("Robots", skin);
-        changeTypeListener(robotsBtn, true);
+        robotsBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        if (robotsBtn.isChecked()) {
+                            logger.info("Selected robot type button");
+                            entity.getEvents().trigger("change_type", true);
+                        }
+                    }
+                });
+
         TextButton humansBtn = new TextButton("Humans", skin);
-        changeTypeListener(humansBtn, false);
+        humansBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        if (humansBtn.isChecked()) {
+                            logger.info("Selected human type button");
+                            entity.getEvents().trigger("change_type", false);
+                        }
+                    }
+                });
 
         Table table = new Table();
         table.defaults().expandX().fillX().space(50f);
@@ -125,17 +142,19 @@ public class DossierDisplay extends UIComponent {
         return table;
     }
 
-    private void updateDossierInfo() {
-        if (entities.length == 0) {
-            entityNameLabel.setText("No entries");
-            entityInfoLabel.setText("");
-            entitySpriteImage.setDrawable(null); // Or a placeholder drawable
-            return;
-        }
-        String currentEntityName = entities[currentEntity];
-        entityNameLabel.setText(dossierManager.getName(currentEntityName));
-        entityInfoLabel.setText(dossierManager.getInfo(currentEntityName));
-        entitySpriteImage.setDrawable(dossierManager.getSprite(currentEntityName).getDrawable());
+    private void updateDossierInfoListener() {
+        entity.getEvents().addListener("change_info", (index) -> {
+            if (entities.length == 0) {
+                entityNameLabel.setText("No entries");
+                entityInfoLabel.setText("");
+                entitySpriteImage.setDrawable(null); // Or a placeholder drawable
+                return;
+            }
+            String currentEntityName = entities[(int) index];
+            entityNameLabel.setText(dossierManager.getName(currentEntityName));
+            entityInfoLabel.setText(dossierManager.getInfo(currentEntityName));
+            entitySpriteImage.setDrawable(dossierManager.getSprite(currentEntityName).getDrawable());
+        });
     }
 
 
@@ -250,16 +269,17 @@ public class DossierDisplay extends UIComponent {
             group.add(btn);
             buttonRow.add(btn).pad(5);
 
-            btn.addListener(new ClickListener() {
-                @Override
-                public void clicked(InputEvent event, float x, float y) {
-                    logger.info("Selected entity button {}", index);
-                    currentEntity = index;
-                    updateDossierInfo();
-                }
-            });
+            btn.addListener(
+                    new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent changeEvent, Actor actor) {
+                            if (btn.isChecked()) {
+                                logger.info("Selected robot button {}", index);
+                                entity.getEvents().trigger("change_info", index);
+                            }
+                        }
+                    });
         }
-
         return buttonRow;
     }
 
