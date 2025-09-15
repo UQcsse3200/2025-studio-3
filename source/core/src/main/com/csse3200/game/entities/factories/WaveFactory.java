@@ -22,7 +22,7 @@ public class WaveFactory {
   /** Default constructor. */
   public WaveFactory() {
     LevelsConfig.LevelsConfigWrapper wrapper =
-        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level3.json");
+        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level1.json");
 
     this.levelsConfig = new LevelsConfig();
     if (wrapper != null) {
@@ -56,7 +56,7 @@ public class WaveFactory {
   public WaveFactory(Entity gameEntity) {
     WaveManager.setGameEntity(gameEntity);
     LevelsConfig.LevelsConfigWrapper wrapper =
-        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level3.json");
+        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level1.json");
     this.levelsConfig = new LevelsConfig();
     if (wrapper != null) {
       // Convert list to map for easier access
