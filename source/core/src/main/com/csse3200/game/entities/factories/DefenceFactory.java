@@ -33,7 +33,7 @@ public class DefenceFactory {
    * If the file is missing or deserialization fails, this will be null.
    */
   private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
+      FileLoader.readClass(NPCConfigs.class, "configs/defences.json");
 
   /**
    * Creates a fully configured Sling Shooter defence entity.

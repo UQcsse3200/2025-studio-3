@@ -8,6 +8,7 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
@@ -169,7 +170,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
+        .addComponent(new CurrentWaveDisplay())
+        .addComponent(new HotbarDisplay());
 
     // Connect the UI entity to the WaveManager for event triggering
     WaveManager.setGameEntity(ui);
