@@ -62,9 +62,9 @@ public class ObstacleManager {
     }
     private void spawnObstacle() {
         int LaneIndex = random.nextInt(laneManager.getNumLanes());
-        float x = laneManager.getLaneCenter(LaneIndex)-32f;
+        float x = laneManager.getLaneCenter(LaneIndex);
         float y = Gdx.graphics.getHeight();
-        Texture obstacleTexture = ServiceLocator.getResourceService().getAsset("images/heart.png", Texture.class);
+        Texture obstacleTexture = ServiceLocator.getResourceService().getAsset("images/Bomb.png", Texture.class);
         Image obstacleImage = new Image(obstacleTexture);
         obstacleImage.setSize(64f,64f);
         obstacleImage.setPosition(x, y);

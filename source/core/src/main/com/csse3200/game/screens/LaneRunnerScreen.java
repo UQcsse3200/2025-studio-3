@@ -44,7 +44,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private static final String[] laneRunnerTextures = {
             "images/box_boy.png",
             "images/lanes.png",
-            "images/heart.png",
+            "images/Bomb.png",
             "images/Background.png",
             "images/GameOver.png"
     };
