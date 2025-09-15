@@ -9,10 +9,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.GameTime;
@@ -44,7 +46,9 @@ public abstract class MiniGame2 extends ScreenAdapter{
         paddle.setScale(700f,700f);
         paddle.addComponent(new ColliderComponent().setLayer(PhysicsLayer.PADDLE));
         ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
+        collider_paddle.setLayer(PhysicsLayer.PADDLE);
         collider_paddle.setRestitution(1f);
+        collider_paddle.setAsBox(new Vector2(paddle.getScale().x/2f,paddle.getScale().y/2f));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         float paddleStartX= -(ScreenWidth / 4f);
@@ -68,13 +72,17 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
         collider_ball.setRestitution(1f);
         collider_ball.setFriction(0f);
+        collider_ball.setAsBox(new Vector2(ball.getScale().x/2f,ball.getScale().y/2f));
+
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
-        ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(2000f,1000f);
+        ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(900f,900f);
         ball.getComponent(PhysicsComponent.class).getBody().setLinearDamping(0f);
         ball.getComponent(PhysicsComponent.class).getBody().setAngularDamping(0f);
-
-        float ballStartX = paddleStartX;
-        float ballStartY= 0.5f;
+        ball.addComponent(new HitboxComponent());
+        ball.addComponent(new TouchAttackComponent((short)(PhysicsLayer.PADDLE | PhysicsLayer.OBSTACLE), 0f));
+        Vector2 paddlePos=paddle.getPosition();
+        float ballStartX = paddlePos.x;
+        float ballStartY= 0.06f;
         PhysicsComponent ballPhysics = ball.getComponent(PhysicsComponent.class);
         ball.setPosition(ballStartX,ballStartY);
         ServiceLocator.getEntityService().register(ball);
@@ -93,7 +101,11 @@ public abstract class MiniGame2 extends ScreenAdapter{
     private void createbbwall(float x, float y, float width, float height) {
         Entity bbwall = new Entity();
         bbwall.addComponent(new PhysicsComponent());
-        ColliderComponent collider = new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE);
+        ColliderComponent collider = new ColliderComponent()
+                .setLayer(PhysicsLayer.OBSTACLE)
+                .setFriction(0f)
+                .setRestitution(1f);
+
         bbwall.addComponent(collider);
 
         bbwall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
@@ -114,29 +126,58 @@ public abstract class MiniGame2 extends ScreenAdapter{
         float paddleSpeed = 500f*Gdx.graphics.getDeltaTime();
         PhysicsComponent paddlePhysics = paddle.getComponent(PhysicsComponent.class);
 
-        Vector2 currentPos = paddlePhysics.getBody().getPosition();
-        float newX = currentPos.x;
+        Vector2 paddlePos = paddlePhysics.getBody().getPosition();
+        float newX = paddlePos.x;
 
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            newX = Math.max(-(1110f+paddle.getScale().x)/2f, currentPos.x-paddleSpeed);
+            newX = Math.max(-(1110f+paddle.getScale().x)/2f, paddlePos.x-paddleSpeed);
         }else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            newX = Math.min(ScreenWidth-100f-paddle.getScale().x/2f, currentPos.x+paddleSpeed);
+            newX = Math.min(ScreenWidth-100f-paddle.getScale().x/2f, paddlePos.x+paddleSpeed);
         }
 
-        paddlePhysics.getBody().setTransform(newX, currentPos.y, 0);
-
+        paddlePhysics.getBody().setTransform(newX, paddlePos.y, 0);
         paddlePhysics.getBody().setLinearVelocity(0,0);
 
         ServiceLocator.getPhysicsService().getPhysics().update();
         syncEntityPositions();
 
+        PhysicsComponent ballPhysics = ball.getComponent(PhysicsComponent.class);
+        Vector2 ballPos = ballPhysics.getBody().getPosition();
+        Vector2 ballVel = ballPhysics.getBody().getLinearVelocity();
 
-        //end minigame if ball falls below screen
-        if(ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
-            endGame();
+        if(ballPos.x-ball.getScale().x/2f<0 && ballVel.x<0){
+            ballPos.x=ball.getScale().x/2f;
+            ballVel.x=-ballVel.x;
+        }else if(ballPos.x+ball.getScale().x/2f>ScreenWidth && ballVel.x>0){
+            ballPos.x=ScreenWidth-ball.getScale().x/2f;
+            ballVel.x=-ballVel.x;
         }
 
-        ServiceLocator.getEntityService().update();
+        if(ballPos.y+ball.getScale().y/2f>ScreenHeight && ballVel.y>0){
+            ballPos.y=ScreenHeight-ball.getScale().y/2f;
+            ballVel.y=-ballVel.y;
+        }
+
+        if((ballPos.y-ball.getScale().y/2f<=paddlePos.y+paddle.getScale().y/2f) &&
+                (ballPos.y-ball.getScale().y/2f>=paddlePos.y) &&
+                (ballPos.x+ball.getScale().x/2f>=paddlePos.x-paddle.getScale().x/2f) &&
+                (ballPos.x-ball.getScale().x/2f<=paddlePos.x+paddle.getScale().x/2f)&&
+                (ballVel.y<0)){
+            ballPos.y=paddlePos.y+paddle.getScale().y/2f+ball.getScale().y/2f;
+            ballVel.y=-ballVel.y;
+        }
+
+        ballPhysics.getBody().setTransform(ballPos.x, ballPos.y, 0);
+        ballPhysics.getBody().setLinearVelocity(ballVel);
+        //end minigame if ball falls below screen
+        if(ball!=null && ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
+            endGame();
+            return;
+        }
+        if(ServiceLocator.getEntityService()!=null){
+            ServiceLocator.getEntityService().update();
+        }
+
     }
     private void syncEntityPositions(){
         Vector2 paddlePos = paddle.getComponent(PhysicsComponent.class).getBody().getPosition();
