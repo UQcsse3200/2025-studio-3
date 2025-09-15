@@ -90,8 +90,10 @@ public class DossierDisplay extends UIComponent {
                         }
                         type = value;
                         if (type) {
+                            dossierManager.changeMode();
                             entities = new String[]{"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
                         } else {
+                            dossierManager.changeMode();
                             entities = new String[]{"slingshot"};
                         }
                         currentEntity = 0;
