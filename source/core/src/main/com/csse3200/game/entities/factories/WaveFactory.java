@@ -4,7 +4,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
-import com.csse3200.game.entities.configs.WaveConfigs;
+import com.csse3200.game.entities.configs.LevelConfig;
+import com.csse3200.game.entities.configs.LevelsConfig;
 import com.csse3200.game.persistence.FileLoader;
 import java.util.Map;
 
@@ -15,15 +16,27 @@ import java.util.Map;
  * experience). This class isolates config loading and selection of the current wave's properties.
  */
 public class WaveFactory {
-  private final WaveConfigs configs;
+  private final LevelsConfig levelsConfig;
+  private int currentLevel = 1;
 
   /** Default constructor. */
   public WaveFactory() {
-    WaveConfigs.WaveConfigWrapper wrapper =
-        FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
-    this.configs = new WaveConfigs();
+    LevelsConfig.LevelsConfigWrapper wrapper =
+        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level3.json");
+
+    this.levelsConfig = new LevelsConfig();
     if (wrapper != null) {
-      this.configs.setConfig(wrapper.getConfig());
+      // Convert list to map for easier access
+      Map<Integer, LevelConfig> levelMap = new java.util.HashMap<>();
+      for (LevelConfig level : wrapper.getLevels()) {
+        levelMap.put(level.getLevelNumber(), level);
+      }
+      this.levelsConfig.setLevels(levelMap);
+
+      // Set current level to the first level found in the JSON
+      if (!levelMap.isEmpty()) {
+        this.currentLevel = levelMap.keySet().iterator().next();
+      }
     }
   }
 
@@ -31,8 +44,8 @@ public class WaveFactory {
    * Test-friendly constructor allowing direct config injection to avoid LibGDX file IO in unit
    * tests.
    */
-  public WaveFactory(WaveConfigs configs) {
-    this.configs = configs;
+  public WaveFactory(LevelsConfig levelsConfig) {
+    this.levelsConfig = levelsConfig;
   }
 
   /**
@@ -42,12 +55,40 @@ public class WaveFactory {
    */
   public WaveFactory(Entity gameEntity) {
     WaveManager.setGameEntity(gameEntity);
-    WaveConfigs.WaveConfigWrapper wrapper =
-        FileLoader.readClass(WaveConfigs.WaveConfigWrapper.class, "configs/level1.json");
-    this.configs = new WaveConfigs();
+    LevelsConfig.LevelsConfigWrapper wrapper =
+        FileLoader.readClass(LevelsConfig.LevelsConfigWrapper.class, "configs/level3.json");
+    this.levelsConfig = new LevelsConfig();
     if (wrapper != null) {
-      this.configs.setConfig(wrapper.getConfig());
+      // Convert list to map for easier access
+      Map<Integer, LevelConfig> levelMap = new java.util.HashMap<>();
+      for (LevelConfig level : wrapper.getLevels()) {
+        levelMap.put(level.getLevelNumber(), level);
+      }
+      this.levelsConfig.setLevels(levelMap);
+
+      // Set current level to the first level found in the JSON
+      if (!levelMap.isEmpty()) {
+        this.currentLevel = levelMap.keySet().iterator().next();
+      }
     }
+  }
+
+  /**
+   * Sets the current level.
+   *
+   * @param level the level number
+   */
+  public void setCurrentLevel(int level) {
+    this.currentLevel = level;
+  }
+
+  /**
+   * Gets the current level.
+   *
+   * @return the current level number
+   */
+  public int getCurrentLevel() {
+    return currentLevel;
   }
 
   /**
@@ -85,16 +126,12 @@ public class WaveFactory {
   }
 
   /**
-   * Helper function to allocate the wave number to the correct index in the config file
+   * Helper function to get the current wave config based on current level and wave number.
    *
    * @return base wave config with the corresponding wave number
    */
   private BaseWaveConfig getWave() {
-    return switch (WaveManager.getCurrentWave()) {
-      case 1 -> configs.getWave1();
-      case 2 -> configs.getWave2();
-      case 3 -> configs.getWave3();
-      default -> configs.getWave1();
-    };
+    int waveIndex = WaveManager.getCurrentWave() - 1; // Convert to 0-based index
+    return levelsConfig.getWave(currentLevel, waveIndex);
   }
 }
