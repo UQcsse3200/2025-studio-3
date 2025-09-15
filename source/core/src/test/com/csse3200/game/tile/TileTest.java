@@ -38,13 +38,13 @@ class TileTest {
     com.badlogic.gdx.scenes.scene2d.Stage stage = mock(com.badlogic.gdx.scenes.scene2d.Stage.class);
     com.csse3200.game.rendering.RenderService renderService =
         mock(com.csse3200.game.rendering.RenderService.class);
-    when(renderService.getStage()).thenReturn(stage);
+    lenient().when(renderService.getStage()).thenReturn(stage);
     ServiceLocator.registerRenderService(renderService);
 
     // creates mock resource service
     com.csse3200.game.services.ResourceService resourceService =
         mock(com.csse3200.game.services.ResourceService.class);
-    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+    lenient().when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
     ServiceLocator.registerResourceService(resourceService);
 
     // creates mock input service
@@ -90,7 +90,7 @@ class TileTest {
 
     // checks if the tile unit has not been replaced with new unit if there was already a unit
     // placed
-    assert (beforeSecondTriggerId == afterSecondTriggerId);
+    assertEquals(beforeSecondTriggerId, afterSecondTriggerId);
   }
 
   @Test
