@@ -3,6 +3,7 @@ package com.csse3200.game.entities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.entities.configs.BaseWaveConfig;
+import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.configs.LevelConfig;
 import com.csse3200.game.entities.configs.LevelsConfig;
 import com.csse3200.game.entities.factories.WaveFactory;
@@ -27,14 +28,10 @@ class EntitySpawnTest {
     wave1.expGained = 10;
 
     // Set up enemy configs with cost 2 (so 10/2 = 5 enemies)
-    wave1.standard.cost = 2;
-    wave1.standard.chance = 1.0f;
-    wave1.fast.cost = 2;
-    wave1.fast.chance = 0.0f;
-    wave1.tanky.cost = 2;
-    wave1.tanky.chance = 0.0f;
-    wave1.bungee.cost = 2;
-    wave1.bungee.chance = 0.0f;
+    wave1.standard = new EnemySpawnConfig(2, 1.0f);
+    wave1.fast = new EnemySpawnConfig(2, 0.0f);
+    wave1.tanky = new EnemySpawnConfig(2, 0.0f);
+    wave1.bungee = new EnemySpawnConfig(2, 0.0f);
 
     level1.addWave(wave1);
 

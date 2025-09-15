@@ -111,9 +111,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, "tanky");
-    spawnRobot(10, 1, "standard");
-    spawnRobot(10, 4, "fast");
     spawnDeck();
 
     playMusic();
@@ -277,6 +274,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
+
+    // Add disposal tracking for wave management
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              robots.remove(unit);
+            });
+
     logger.info("Unit spawned at position {} {}", col, row);
   }
 
@@ -488,5 +494,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
       }
     }
+  }
+
+  /**
+   * @return the list of robots currently in the level
+   */
+  public ArrayList<Entity> getRobots() {
+    return robots;
   }
 }

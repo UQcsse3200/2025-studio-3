@@ -68,8 +68,7 @@ public class LevelsConfig {
    * @return the wave config, or a default one if not found
    */
   public BaseWaveConfig getWave(int levelNumber, int waveIndex) {
-    LevelConfig level = getLevel(levelNumber);
-    return level.getWave(waveIndex);
+    return getLevel(levelNumber).getWave(waveIndex);
   }
 
   /** LevelsConfigWrapper is a wrapper class for JSON deserialization. */

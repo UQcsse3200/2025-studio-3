@@ -121,6 +121,7 @@ public class EntitySpawn {
     if (configs == null || configs.isEmpty() || budget <= 0) return;
 
     List<String> pattern = buildPattern(configs);
+
     int i = 0;
     while (budget > 0) {
       String enemy = pattern.get(i % pattern.size());

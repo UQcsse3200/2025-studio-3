@@ -198,9 +198,6 @@ class LevelGameAreaTest {
   void createLoadsAssetsSpawnsThingsAndStartsMusic() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
-    // Avoid robot factory static
-    doNothing().when(area).spawnRobot(anyInt(), anyInt(), anyString());
-
     var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);
     when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
