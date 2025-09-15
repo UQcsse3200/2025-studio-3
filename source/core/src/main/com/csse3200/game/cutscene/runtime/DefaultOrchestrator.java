@@ -22,12 +22,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
 
     private List<ActionState> queue;
     private List<ActionState> active;
-    private boolean parallel;
     private boolean beatStarted;
-
-    // Fixed states
-//    private DialogueState dialogueState;
-//    private List<CharacterState> characterStates;
 
     /**
      * Loads a cutscene from a {@link Cutscene} object
@@ -45,7 +40,6 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
 
         this.queue = new ArrayList<>();
         this.active = new ArrayList<>();
-        this.parallel = false;
         this.beatStarted = false;
 
         if (ServiceLocator.getTimeSource() == null) {
@@ -92,10 +86,6 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
 
             queue.add(ActionStates.advance(beatIdx.getAdvance()));
 
-            if (parallel) {
-                active.addAll(queue);
-            }
-
             beatStarted = true;
         }
 
@@ -103,19 +93,15 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
             actionState.tick(dtMs);
         });
 
-        if (parallel) {
-            active.removeIf(ActionState::done);
-        } else {
-            if (!active.isEmpty() && active.getFirst().done()) {
-                active.removeFirst();
-                if (!queue.isEmpty()) {
-                    active.add(queue.getFirst());
-                    queue.removeFirst();
-                }
-            } else if (active.isEmpty() && !queue.isEmpty()) {
+        if (!active.isEmpty() && active.getFirst().done()) {
+            active.removeFirst();
+            if (!queue.isEmpty()) {
                 active.add(queue.getFirst());
                 queue.removeFirst();
             }
+        } else if (active.isEmpty() && !queue.isEmpty()) {
+            active.add(queue.getFirst());
+            queue.removeFirst();
         }
 
         // if there are no more blocking actions move on to next beat
@@ -199,5 +185,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
     @Override
     public void stop() {
         this.running = false;
+        this.active.clear();
+        this.queue.clear();
     }
 }

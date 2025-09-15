@@ -32,6 +32,7 @@ public class CutsceneHudComponent extends UIComponent {
     private PaneGroup leftPane;
     private PaneGroup rightPane;
 
+    private Container<Table> choicesContainer;
     private Table choicesTable;
     private Table choicesLeft;
     private Table choicesCenter;
@@ -132,17 +133,21 @@ public class CutsceneHudComponent extends UIComponent {
         choicesTable.defaults().pad(8f);
 
         choicesLeft = new Table();
-        choicesLeft.defaults().growX().pad(6f);
+        choicesLeft.pad(6f);
         choicesCenter = new Table();
-        choicesCenter.defaults().growX().pad(6f);
+        choicesCenter.pad(6f);
         choicesRight = new Table();
-        choicesRight.defaults().growX().pad(6f);
+        choicesRight.pad(6f);
 
         choicesTable.add(choicesLeft).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
         choicesTable.add(choicesCenter).width(Value.percentWidth(0.34f, choicesTable)).expandY().fillY();
         choicesTable.add(choicesRight).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
 
 //        root.add(choicesTable).growX().fillX().row();
+        choicesContainer = new Container<>(choicesTable);
+//        choicesContainer.fillX();
+
+//        root.add(choicesContainer).row();
 
 
         // Make dialogue panel

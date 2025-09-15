@@ -6,12 +6,12 @@ import com.badlogic.gdx.Screen;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.screens.*;
-import com.csse3200.game.services.MenuSpriteService;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
+import com.csse3200.game.services.CutsceneService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +24,8 @@ public class GdxGame extends Game {
     public void create() {
         logger.info("Creating game");
         loadMenus();
+
+        ServiceLocator.registerCutsceneService(new CutsceneService());
 
 
     loadMenus();
