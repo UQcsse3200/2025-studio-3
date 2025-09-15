@@ -349,6 +349,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
+    projectile.getEvents().addListener("despawnSlingshot", (Entity e) -> {
+      requestDespawn(e);
+    });
     spawnEntity(projectile); // adds to area and entity service
     return projectile;
   }
