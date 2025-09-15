@@ -3,8 +3,14 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -19,6 +25,9 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.*;
+import com.badlogic.gdx.graphics.Color;
+
 public class LaneRunnerScreen extends ScreenAdapter {
 
     private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.screens.LaneRunnerScreen.class);
@@ -30,10 +39,14 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private ObstacleManager obstacleManager;
     private Entity player;
     private boolean gameOver = false;
+    private float gameOverTimer = 0f;
+    private boolean gameOverShown = false;
     private static final String[] laneRunnerTextures = {
             "images/box_boy.png",
-            "images/LaneRunnerLanes.png",
-            "images/heart.png"
+            "images/lanes.png",
+            "images/heart.png",
+            "images/Background.png",
+            "images/GameOver.png"
     };
 
     public LaneRunnerScreen(GdxGame game) {
@@ -59,12 +72,44 @@ public class LaneRunnerScreen extends ScreenAdapter {
         resourceService.loadTextures(laneRunnerTextures);
         ServiceLocator.getResourceService().loadAll();
     }
+    private void addBackground(String texturePath,float width, float height) {
+        Texture bgTex=ServiceLocator.getResourceService().getAsset(texturePath, Texture.class);
+        Image background=new Image(bgTex);
+        background.setSize(width, height);
+        background.setPosition(0, 0);
+        ServiceLocator.getRenderService().getStage().addActor(background);
+    }
+    private void showGameOverBox(){
+        if (gameOverShown) return; // prevent multiple calls
+        gameOverShown = true;
+
+        Stage stage = ServiceLocator.getRenderService().getStage();
+
+        // Load the Game Over PNG
+        Texture gameOverTexture = new Texture("images/GameOver.png");
+        Image gameOverImage = new Image(gameOverTexture);
+
+        float imageWidth = 400f;
+        float imageHeight = 200f;
+        gameOverImage.setSize(imageWidth, imageHeight);
+
+        // Center the image
+        gameOverImage.setPosition(
+                (Gdx.graphics.getWidth() - imageWidth) / 2f,
+                (Gdx.graphics.getHeight() - imageHeight) / 2f
+        );
+
+        stage.addActor(gameOverImage);
+        gameOverImage.toFront();
+    }
     private void createUI() {
         logger.debug("Creating UI");
         Stage stage = ServiceLocator.getRenderService().getStage();
 
+        addBackground("images/Background.png",Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+
         // Create the background image
-        Texture bgTex = ServiceLocator.getResourceService().getAsset("images/LaneRunnerLanes.png", Texture.class);
+        Texture bgTex = ServiceLocator.getResourceService().getAsset("images/lanes.png", Texture.class);
         Image background = new Image(bgTex);
 
         // Calculate the correct width to avoid stretching, based on our lane logic
@@ -125,18 +170,31 @@ public class LaneRunnerScreen extends ScreenAdapter {
     }
 
     public void render(float delta) {
-        obstacleManager.update(delta);
-        updatePlayerEntityPosition();
-        if(obstacleManager.checkCollision(playerImage)){
-            System.out.println("Game Over!");
-            gameOver = true;
-            game.setScreen(new MainMenuScreen(game));
-            return;
-        }
-        ServiceLocator.getEntityService().update();
-        renderer.render();
-    }
+        // Only update game logic if not game over
+        if (!gameOver) {
+            ServiceLocator.getEntityService().update();
+            obstacleManager.update(delta);
 
+            if (obstacleManager.checkCollision(playerImage)) {
+                gameOver = true;
+                showGameOverBox();
+                gameOverTimer = 0f; // reset timer
+            }
+        } else {
+            // If game is over, just count the timer
+            gameOverTimer += delta;
+            if (gameOverTimer >= 3f) { // 3 seconds
+                game.setScreen(new MainMenuScreen(game));
+                return;
+            }
+        }
+
+        // Always render the scene & stage so Game Over box shows
+        renderer.render();
+        Stage stage = ServiceLocator.getRenderService().getStage();
+        stage.act(delta);
+        stage.draw();
+    }
    private void unloadAssets() {
         logger.debug("Unloading assets");
         ResourceService resourceService = ServiceLocator.getResourceService();
