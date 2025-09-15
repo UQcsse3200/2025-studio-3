@@ -1,5 +1,7 @@
 package com.csse3200.game.services;
 
+import com.csse3200.game.entities.configs.BaseAchievementConfig;
+import com.csse3200.game.entities.configs.BaseAchievementConfig.DeserializedAchievementConfig;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -16,15 +18,18 @@ public class ConfigService {
   private Map<String, BaseDefenceConfig> defenceConfigs;
   private Map<String, BaseEntityConfig> enemyConfigs;
   private Map<String, BaseItemConfig> itemConfigs;
-  private static final String DEFENCE_CONFIG_FILE = "configs/Defences.json";
-  private static final String ENEMY_CONFIG_FILE = "configs/Enemies.json";
-  private static final String ITEM_CONFIG_FILE = "configs/Items.json";
+  private Map<String, BaseAchievementConfig> achievementConfigs;
+  private static final String DEFENCE_CONFIG_FILE = "configs/defences.json";
+  private static final String ENEMY_CONFIG_FILE = "configs/enemies.json";
+  private static final String ITEM_CONFIG_FILE = "configs/items.json";
+  private static final String ACHIEVEMENT_CONFIG_FILE = "configs/achievements.json";
 
   /** On registration, the config service will use the FileLoader to load all config files. */
   public ConfigService() {
     this.defenceConfigs = loadDefenceConfigs(DEFENCE_CONFIG_FILE);
     this.enemyConfigs = loadEnemyConfigs(ENEMY_CONFIG_FILE);
     this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
+    this.achievementConfigs = loadAchievementConfigs(ACHIEVEMENT_CONFIG_FILE);
   }
 
   /**
@@ -96,6 +101,29 @@ public class ConfigService {
   }
 
   /**
+   * Loads achievement configs from a file.
+   *
+   * @param filename the filename to load from
+   * @return the achievement configs
+   */
+  public Map<String, BaseAchievementConfig> loadAchievementConfigs(String filename) {
+    DeserializedAchievementConfig wrapper =
+        FileLoader.readClass(DeserializedAchievementConfig.class, filename);
+    if (wrapper == null) {
+      logger.warn("Failed to load achievement config file: {}", filename);
+      return new HashMap<>();
+    }
+
+    Map<String, BaseAchievementConfig> configs = wrapper.getConfig();
+    if (configs == null) {
+      logger.warn("Achievement config file {} loaded but contains no configs", filename);
+      return new HashMap<>();
+    }
+
+    return configs;
+  }
+
+  /**
    * Gets a particular defence config.
    *
    * @param key The identifier or name of the defence config to get.
@@ -126,6 +154,16 @@ public class ConfigService {
   }
 
   /**
+   * Gets a particular achievement config.
+   *
+   * @param key The identifier or name of the achievement config to get.
+   * @return The achievement config for the given key.
+   */
+  public BaseAchievementConfig getAchievementConfig(String key) {
+    return achievementConfigs.get(key);
+  }
+
+  /**
    * Gets all the defence configs.
    *
    * @return All the defence configs.
@@ -153,12 +191,48 @@ public class ConfigService {
   }
 
   /**
+   * Gets all achievement configs.
+   *
+   * @return map of achievement key to config
+   */
+  public Map<String, BaseAchievementConfig> getAchievementConfigs() {
+    return achievementConfigs;
+  }
+
+  /**
    * Gets all the item keys.
    *
    * @return All the item keys.
    */
   public String[] getItemKeys() {
     return itemConfigs.keySet().toArray(new String[0]);
+  }
+
+  /**
+   * Gets all the achievement keys.
+   *
+   * @return All the achievement keys.
+   */
+  public String[] getAchievementKeys() {
+    return achievementConfigs.keySet().toArray(new String[0]);
+  }
+
+  /**
+   * Gets all the defence keys.
+   *
+   * @return All the defence keys.
+   */
+  public String[] getDefenceKeys() {
+    return defenceConfigs.keySet().toArray(new String[0]);
+  }
+
+  /**
+   * Gets all the enemy keys.
+   *
+   * @return All the enemy keys.
+   */
+  public String[] getEnemyKeys() {
+    return enemyConfigs.keySet().toArray(new String[0]);
   }
 
   // TODO: Move these to the Base Config classes for tidyness.

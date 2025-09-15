@@ -2,7 +2,6 @@ package com.csse3200.game.progression;
 
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.persistence.Savefile;
-import com.csse3200.game.progression.achievements.AchievementManager;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
@@ -27,8 +26,7 @@ public class Profile {
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
   private SkillSet skillset; // The player's skills / skill tree
-  private AchievementManager achievements; // The player's achievements
-  private Statistics statistics; // The player's statistics
+  private Statistics statistics; // The player's statistics (includes achievements)
   private Arsenal arsenal; // The player's arsenal of unlocked defences
   private String currentLevel; // The player's current level
 
@@ -38,10 +36,9 @@ public class Profile {
     this.wallet = new Wallet();
     this.inventory = new Inventory();
     this.skillset = new SkillSet();
-    this.achievements = new AchievementManager();
     this.statistics = new Statistics();
     this.arsenal = new Arsenal();
-    this.currentLevel = "level1"; // TODO: Amend this to match the json.
+    this.currentLevel = "level1"; // Default level, will be updated when levels are loaded
   }
 
   /** Initialise a profile with the provided values. */
@@ -50,7 +47,6 @@ public class Profile {
       Wallet wallet,
       Inventory inventory,
       SkillSet skillset,
-      AchievementManager achievements,
       Statistics statistics,
       Arsenal arsenal,
       String currentLevel) {
@@ -58,8 +54,7 @@ public class Profile {
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
-    this.achievements = achievements;
-    this.statistics = statistics;
+    this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
     this.currentLevel = currentLevel;
   }
@@ -172,14 +167,8 @@ public class Profile {
     return skillset;
   }
 
-  /**
-   * Get the achievements associated with the profile.
-   *
-   * @return the achievements of the profile.
-   */
-  public AchievementManager achievements() {
-    return achievements;
-  }
+  // Achievement methods now delegate to Statistics class
+  // (which manages achievements based on statistical progress)
 
   /**
    * Get the statistics associated with the profile.

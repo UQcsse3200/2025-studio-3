@@ -1,0 +1,76 @@
+{
+  "config": {
+    "bigSpender": {
+      "name": "Big Spender",
+      "description": "Spent 100 coins on defenses and items",
+      "statistic": "coinsSpent",
+      "quota": 100,
+      "skillPoints": 5,
+      "tier": "T2"
+    },
+    "defenseExpert": {
+      "name": "Defense Expert",
+      "description": "Purchased 5 different defenses",
+      "statistic": "defensesPurchased",
+      "quota": 5,
+      "skillPoints": 5,
+      "tier": "T1"
+    },
+    "sharpshooter": {
+      "name": "Sharpshooter",
+      "description": "Fired 50 shots with precision",
+      "statistic": "shotsFired",
+      "quota": 50,
+      "skillPoints": 5,
+      "tier": "T1"
+    },
+    "exterminator": {
+      "name": "Exterminator", 
+      "description": "Eliminated 50 enemies",
+      "statistic": "enemiesKilled",
+      "quota": 50,
+      "skillPoints": 10,
+      "tier": "T2"
+    },
+    "levelMaster": {
+      "name": "Level Master",
+      "description": "Successfully completed the first level",
+      "statistic": "levelsCompleted",
+      "quota": 1,
+      "skillPoints": 15,
+      "tier": "T3"
+    },
+    "firstBuy": {
+      "name": "First Buy",
+      "description": "Made your very first purchase",
+      "statistic": "purchasesMade",
+      "quota": 1,
+      "skillPoints": 3,
+      "tier": "T1"
+    },
+    "survivalist": {
+      "name": "Survivalist",
+      "description": "Survived 10 waves without taking damage",
+      "statistic": "perfectWaves",
+      "quota": 10,
+      "skillPoints": 20,
+      "tier": "T3"
+    },
+    "waveSlayer": {
+      "name": "Wave Slayer",
+      "description": "Completed 5 waves in a single level",
+      "statistic": "wavesCompleted",
+      "quota": 5,
+      "skillPoints": 8,
+      "tier": "T2"
+    },
+    "collector": {
+      "name": "Collector",
+      "description": "Gathered 10 different items",
+      "statistic": "itemsCollected",
+      "quota": 10,
+      "skillPoints": 7,
+      "tier": "T2"
+    }
+  }
+}

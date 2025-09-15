@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.csse3200.game.components.dialog.AchievementDialogComponent;
 import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class DialogService {
   private static final Logger logger = LoggerFactory.getLogger(DialogService.class);
   private final List<DialogComponent> activeDialogs = new ArrayList<>();
+  private final List<AchievementDialogComponent> activeAchievementDialogs = new ArrayList<>();
 
   /** Enum for the different types of dialogs. */
   public enum DialogType {
@@ -114,6 +116,10 @@ public class DialogService {
       dialog.hide();
     }
     activeDialogs.clear();
+    for (AchievementDialogComponent dialog : activeAchievementDialogs) {
+      dialog.hide();
+    }
+    activeAchievementDialogs.clear();
   }
 
   /**
@@ -149,9 +155,22 @@ public class DialogService {
     for (DialogComponent dialog : activeDialogs) {
       dialog.resize();
     }
+    for (AchievementDialogComponent dialog : activeAchievementDialogs) {
+      dialog.resize();
+    }
   }
 
-  /** Internal method to create and show a dialog with all options. */
+  /**
+   * Internal method to create and show a dialog with all options.
+   *
+   * @param dialogType the type of dialog
+   * @param title the title of the dialog
+   * @param message the message of the dialog
+   * @param onConfirm the callback for the confirm button
+   * @param onCancel the callback for the cancel button
+   * @param onClose the callback for the close button
+   * @return the created dialog component
+   */
   private DialogComponent createAndShowDialog(
       DialogType dialogType,
       String title,
@@ -195,5 +214,32 @@ public class DialogService {
     activeDialogs.add(dialog);
 
     return dialog;
+  }
+
+  /**
+   * Creates and shows an achievement dialog.
+   *
+   * @param name the name of the achievement
+   * @param description the description of the achievement
+   * @param skillPoints the skill points of the achievement
+   * @param tier the tier of the achievement
+   * @return the created achievement dialog component
+   */
+  public AchievementDialogComponent achievement(
+      String name, String description, int skillPoints, String tier) {
+    AchievementDialogComponent dialogComponent =
+        new AchievementDialogComponent(name, description, skillPoints, tier != null ? tier : "T1");
+    Entity dialogEntity = new Entity();
+    dialogEntity.addComponent(dialogComponent);
+    ServiceLocator.getEntityService().register(dialogEntity);
+    dialogComponent.show();
+    dialogComponent.setOnCompletion(
+        d -> {
+          activeAchievementDialogs.remove(dialogComponent);
+          dialogEntity.dispose();
+        });
+
+    activeAchievementDialogs.add(dialogComponent);
+    return dialogComponent;
   }
 }

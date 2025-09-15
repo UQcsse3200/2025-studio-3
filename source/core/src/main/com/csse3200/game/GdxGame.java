@@ -26,17 +26,13 @@ public class GdxGame extends Game {
   public void create() {
     logger.info("Creating game");
     loadSettings();
-
-    // Sets background to medium grey
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
-
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
-    // loadMenus();
     setScreen(ScreenType.MAIN_MENU);
   }
 
   /** Runs the appropriate register function to register screen sprites. */
-  public void loadMenus() {
+  public void loadScreens() {
     for (RegisteredScreens screenType : RegisteredScreens.values()) {
       if (!contains(ScreenType.values(), screenType.name())) {
         return;
@@ -61,6 +57,7 @@ public class GdxGame extends Game {
     UserSettings.applySettings(settings);
   }
 
+  /** Sets the game screen to the provided type. */
   public void setScreen(ScreenType screenType) {
     logger.info("Setting game screen to {}", screenType);
     Screen currentScreen = getScreen();
@@ -113,26 +110,47 @@ public class GdxGame extends Game {
     }
   }
 
+  /** Enum for screens that require registration on the world map. */
   public enum RegisteredScreens {
+    /** Shop screen. */
     SHOP
   }
 
+  /** Enum for all screens. */
   public enum ScreenType {
+    /** Main menu screen. */
     MAIN_MENU,
+    /** Main game screen. */
     MAIN_GAME,
+    /** Settings screen. */
     SETTINGS,
+    /** Skill tree screen. */
     SKILLTREE,
+    /** Load game screen. */
     LOAD_GAME,
+    /** New game screen. */
     NEW_GAME,
+    /** Save game screen. */
     SAVE_GAME,
+    /** Statistics screen. */
     STATISTICS,
+    /** Achievements screen. */
     ACHIEVEMENTS,
+    /** Shop screen. */
     SHOP,
+    /** Inventory screen. */
     INVENTORY,
+    /** World map screen. */
     WORLD_MAP
   }
 
-  /** Helper method to check if an enum value exists in another enum type */
+  /**
+   * Helper method to check if an enum value exists in another enum type
+   *
+   * @param values the values to check
+   * @param name the name to check
+   * @return true if the name exists in the values, false otherwise
+   */
   private boolean contains(ScreenType[] values, String name) {
     for (ScreenType type : values) {
       if (type.name().equals(name)) {
@@ -142,6 +160,7 @@ public class GdxGame extends Game {
     return false;
   }
 
+  /** Exits the game. */
   public void exit() {
     app.exit();
   }
