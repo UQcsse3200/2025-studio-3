@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -12,6 +13,7 @@ import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -35,7 +37,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/level-1-map-v2.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
+    "images/sling_shooter_front.png",
+    "images/items/grenade.png" // for item testing
   };
 
   private static final String[] levelTextureAtlases = {
@@ -412,6 +415,37 @@ public class LevelGameArea extends GameArea implements AreaAPI {
               robots.remove(newEntity);
             });
     logger.info("Unit spawned at position {}", position);
+
+    // GRENADE TEST CODE
+    float grenadeOffset = tileSize; // one tile in front
+    Vector2 grenadePos = new Vector2(entityPos.x + grenadeOffset, entityPos.y);
+
+    // Create grenade entity
+    Entity grenade = ItemFactory.createGrenade();
+    grenade.setPosition(grenadePos);
+    grenade.scaleHeight(tileSize);
+
+    // Spawn grenade into the world
+    spawnEntity(grenade);
+
+    // Window query
+    float radius = 1.5f * tileSize;
+    for (Entity r : robots) {
+      Vector2 pos = r.getPosition();
+      if (Math.abs(grenadePos.x - pos.x) <= radius &&
+          Math.abs(grenadePos.y - pos.y) <= radius) {
+        int grenadeCol = (int) ((grenadePos.x - xOffset) / tileSize);
+        int grenadeRow = (int) ((grenadePos.y - yOffset) / tileSize);
+        int robotCol = (int) ((pos.x - xOffset) / tileSize);
+        int robotRow = (int) ((pos.y - yOffset) / tileSize);
+        logger.info(
+                "Grenade at ({}, {}) hits robot at ({}, {})",
+                grenadeCol, grenadeRow, robotCol, robotRow
+        );
+        r.getComponent(CombatStatsComponent.class).setHealth(0); // kill, doesn't work
+      }
+    }
+
   }
 
   /**
