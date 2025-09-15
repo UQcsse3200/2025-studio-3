@@ -170,8 +170,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay())
-        .addComponent(new HotbarDisplay());
+        .addComponent(new CurrentWaveDisplay());
 
     // Connect the UI entity to the WaveManager for event triggering
     WaveManager.setGameEntity(ui);

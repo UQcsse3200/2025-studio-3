@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -18,6 +19,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +65,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private Entity selectionStar;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
+  private Entity ui;
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
@@ -136,9 +140,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   /** Spawns the level UI */
   private void displayUI() {
-    Entity ui = new Entity();
+    ui = new Entity();
     // add components here for additional UI Elements
-    ui.addComponent(new GameAreaDisplay("Level One"));
+    Map<String, Supplier<Entity>> m = new HashMap<>();
+    m.put("images/sling_shooter_front.png", () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
+    ui.addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new HotbarDisplay(this, tileSize, m));
+
     spawnEntity(ui);
   }
 
@@ -166,9 +174,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   /** Determines inventory units to spawn for the level and calls method to place them. */
   private void spawnDeck() {
     deckUnitCount = 0;
-    placeDeckUnit(
-        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
-        "images/sling_shooter_front.png");
+//    placeDeckUnit(
+//        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
+//        "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
