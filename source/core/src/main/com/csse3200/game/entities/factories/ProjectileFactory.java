@@ -26,7 +26,7 @@ public class ProjectileFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 1.5f));
 
     // Add render component so it draws above the grid
-    TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile_pad.png");
+    TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
     slingShot.addComponent(render);
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly

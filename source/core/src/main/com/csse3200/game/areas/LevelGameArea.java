@@ -42,6 +42,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
+          "images/sling_projectile.png",
     "images/sling_projectile_pad.png"
   };
 
@@ -288,8 +289,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    //projectile.setPosition(spawnPos.x, spawnPos.y-50);
-    projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
+    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize/2f);
+    //projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
     // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
     // projectile.addComponent(render); // <- your projectile image
 
@@ -379,7 +380,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "fire",
             () -> {
               Vector2 spawnPos = newEntity.getCenterPosition();
-              spawnProjectile(spawnPos, 3f, 0f);
+              spawnProjectile(entityPos, 3f, 0f);
             });
     logger.info("Unit spawned at position {}", position);
   }
