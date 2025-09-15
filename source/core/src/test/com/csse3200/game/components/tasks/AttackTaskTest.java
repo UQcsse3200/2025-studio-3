@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 
 class AttackTaskTest {
   private Entity target;
-  private List<Entity> targets;
 
   @BeforeEach
   void setup() {
@@ -31,8 +30,6 @@ class AttackTaskTest {
     ServiceLocator.registerPhysicsService(new PhysicsService());
 
     target = new Entity();
-    targets = new ArrayList<>();
-    targets.add(target);
   }
 
   @Test
@@ -41,11 +38,14 @@ class AttackTaskTest {
     float attackRange = 5f;
 
     AttackTask attackTask =
-        new AttackTask(targets, attackRange) {
+        new AttackTask(attackRange) {
           @Override
           protected boolean isTargetVisible(Entity target) {
             return true;
           }
+
+          @Override
+          protected Entity getNearestVisibleTarget() {return target;}
         };
 
     // Set up defender entity and attach AI task component
@@ -70,7 +70,12 @@ class AttackTaskTest {
   void noAttackWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f;
-    AttackTask attackTask = new AttackTask(targets, attackRange);
+    AttackTask attackTask = new AttackTask(attackRange) {
+      @Override
+      protected Entity getNearestVisibleTarget() {
+        return target;
+      }
+    };
 
     int priority = attackTask.getActivePriority(targetDistance, target);
     assertEquals(-1, priority, "Attack task should stop when target is out of range");
