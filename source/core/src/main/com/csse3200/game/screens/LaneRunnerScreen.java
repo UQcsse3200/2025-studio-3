@@ -39,8 +39,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
     private ObstacleManager obstacleManager;
     private Entity player;
     private boolean gameOver = false;
-    private float gameOverTimer = 0f;
-    private boolean gameOverShown = false;
+    private int score = 0;
+    private float survivalTime = 0f;
+    private float scoreTimer = 0f;
+    private Label scoreLabel;
+    private Label timeLabel;
     private static final String[] laneRunnerTextures = {
             "images/box_boy.png",
             "images/lanes.png",
@@ -79,29 +82,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
         background.setPosition(0, 0);
         ServiceLocator.getRenderService().getStage().addActor(background);
     }
-    private void showGameOverBox(){
-        if (gameOverShown) return; // prevent multiple calls
-        gameOverShown = true;
 
-        Stage stage = ServiceLocator.getRenderService().getStage();
-
-        // Load the Game Over PNG
-        Texture gameOverTexture = new Texture("images/GameOver.png");
-        Image gameOverImage = new Image(gameOverTexture);
-
-        float imageWidth = 400f;
-        float imageHeight = 200f;
-        gameOverImage.setSize(imageWidth, imageHeight);
-
-        // Center the image
-        gameOverImage.setPosition(
-                (Gdx.graphics.getWidth() - imageWidth) / 2f,
-                (Gdx.graphics.getHeight() - imageHeight) / 2f
-        );
-
-        stage.addActor(gameOverImage);
-        gameOverImage.toFront();
-    }
     private void createUI() {
         logger.debug("Creating UI");
         Stage stage = ServiceLocator.getRenderService().getStage();
@@ -134,12 +115,45 @@ public class LaneRunnerScreen extends ScreenAdapter {
         this.playerImage = playerImage;
         this.cureentLane = 1;
 
+        createScoreUI(stage);
+
         Entity inputListener = new Entity()
                 .addComponent(new MiniGameInputComponent());
         ServiceLocator.getEntityService().register(inputListener);
 
         inputListener.getEvents().addListener("moveLeft",this::movePLayerLeft );
         inputListener.getEvents().addListener("moveRight",this::movePlayerRight );
+    }
+    private void createScoreUI(Stage stage) {
+       com.badlogic.gdx.graphics.g2d.BitmapFont font = new BitmapFont();
+        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
+
+        scoreLabel = new Label("Score: 0", labelStyle);
+        scoreLabel.setFontScale(2f);
+        scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40);
+        scoreLabel.setAlignment(Align.left);
+        stage.addActor(scoreLabel);
+
+        timeLabel = new Label("Time: 0.0s", labelStyle);
+        timeLabel.setFontScale(2f);
+        timeLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40);
+        timeLabel.setAlignment(Align.right);
+        stage.addActor(timeLabel);
+
+        // Update score and time every second
+        stage.addAction(com.badlogic.gdx.scenes.scene2d.actions.Actions.forever(
+                com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence(
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.delay(1f),
+                        com.badlogic.gdx.scenes.scene2d.actions.Actions.run(() -> {
+                            if (!gameOver) {
+                                score += 0.5; // Increment score
+                                survivalTime += 1f; // Increment survival time
+                                scoreLabel.setText("Score: " + score);
+                                timeLabel.setText(String.format("Time: %.1fs", survivalTime));
+                            }
+                        })
+                )
+        ));
     }
     private void initializeObstacles() {
         obstacleManager = new ObstacleManager(laneManager);
@@ -172,23 +186,28 @@ public class LaneRunnerScreen extends ScreenAdapter {
     public void render(float delta) {
         // Only update game logic if not game over
         if (!gameOver) {
+            survivalTime += delta;
+            scoreTimer += delta;
+            if (scoreTimer >= 1f) { // Every second
+                score += 0.5; // Increment score
+                scoreTimer = 0f;
+            }
+            int previousDodged = obstacleManager.getObstaclesDodged();
             ServiceLocator.getEntityService().update();
             obstacleManager.update(delta);
-
-            if (obstacleManager.checkCollision(playerImage)) {
-                gameOver = true;
-                showGameOverBox();
-                gameOverTimer = 0f; // reset timer
+            int newDodged= obstacleManager.getObstaclesDodged();
+            if (newDodged  > previousDodged) {
+                score += (newDodged-previousDodged) * 5; // Bonus for dodging
             }
-        } else {
-            // If game is over, just count the timer
-            gameOverTimer += delta;
-            if (gameOverTimer >= 3f) { // 3 seconds
-                game.setScreen(new MainMenuScreen(game));
+            scoreLabel.setText("Score: " + score);
+            timeLabel.setText(String.format("Time: %.1fs", survivalTime));
+            if (obstacleManager.checkCollision(playerImage)) {
+                logger.info("Player collided with an obstacle. Game Over!");
+                gameOver = true;
+                game.setScreen(new LaneRunnerGameOverScreen(game, score, survivalTime, obstacleManager.getObstaclesDodged()));
                 return;
             }
         }
-
         // Always render the scene & stage so Game Over box shows
         renderer.render();
         Stage stage = ServiceLocator.getRenderService().getStage();

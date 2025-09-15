@@ -15,6 +15,11 @@ public class ObstacleManager {
     private final LaneManager laneManager;
     public final Random random;
     private float spawnTimer;
+    private int obstaclesDodged = 0;
+
+    public int getObstaclesDodged() {
+        return obstaclesDodged;
+    }
 
     private static class ObstacleImage{
         public Image image;
@@ -48,6 +53,7 @@ public class ObstacleManager {
 
             if(obstacle.image.getY()< -obstacle.image.getHeight()){
                 obstacle.isAlive=false;
+                obstaclesDodged++;
                 toRemove.add(obstacle);
             }
         }
