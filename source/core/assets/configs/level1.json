@@ -4,7 +4,7 @@
       "levelNumber": 1,
       "waves": [
         {
-          "waveWeight": 10,
+          "waveWeight": 20,
           "expGained": 10,
           "minZombiesSpawn": 5,
           "standard": { "cost": 2, "chance": 0.5 },
@@ -29,6 +29,70 @@
           "fast": { "cost": 3, "chance": 0.35 },
           "tanky": { "cost": 5, "chance": 0.2 },
           "bungee": { "cost": 4, "chance": 0.1 }
+        }
+      ]
+    },
+    {
+      "levelNumber": 2,
+      "waves": [
+        {
+          "waveWeight": 25,
+          "expGained": 15,
+          "minZombiesSpawn": 8,
+          "standard": { "cost": 2, "chance": 0.3 },
+          "fast": { "cost": 3, "chance": 0.4 },
+          "tanky": { "cost": 5, "chance": 0.2 },
+          "bungee": { "cost": 4, "chance": 0.1 }
+        },
+        {
+          "waveWeight": 60,
+          "expGained": 25,
+          "minZombiesSpawn": 12,
+          "standard": { "cost": 2, "chance": 0.25 },
+          "fast": { "cost": 3, "chance": 0.35 },
+          "tanky": { "cost": 5, "chance": 0.25 },
+          "bungee": { "cost": 4, "chance": 0.15 }
+        },
+        {
+          "waveWeight": 90,
+          "expGained": 35,
+          "minZombiesSpawn": 18,
+          "standard": { "cost": 2, "chance": 0.2 },
+          "fast": { "cost": 3, "chance": 0.3 },
+          "tanky": { "cost": 5, "chance": 0.3 },
+          "bungee": { "cost": 4, "chance": 0.2 }
+        }
+      ]
+    },
+    {
+      "levelNumber": 3,
+      "waves": [
+        {
+          "waveWeight": 30,
+          "expGained": 20,
+          "minZombiesSpawn": 10,
+          "standard": { "cost": 2, "chance": 0.2 },
+          "fast": { "cost": 3, "chance": 0.3 },
+          "tanky": { "cost": 5, "chance": 0.3 },
+          "bungee": { "cost": 4, "chance": 0.2 }
+        },
+        {
+          "waveWeight": 70,
+          "expGained": 30,
+          "minZombiesSpawn": 15,
+          "standard": { "cost": 2, "chance": 0.15 },
+          "fast": { "cost": 3, "chance": 0.25 },
+          "tanky": { "cost": 5, "chance": 0.35 },
+          "bungee": { "cost": 4, "chance": 0.25 }
+        },
+        {
+          "waveWeight": 100,
+          "expGained": 40,
+          "minZombiesSpawn": 20,
+          "standard": { "cost": 2, "chance": 0.1 },
+          "fast": { "cost": 3, "chance": 0.2 },
+          "tanky": { "cost": 5, "chance": 0.4 },
+          "bungee": { "cost": 4, "chance": 0.3 }
         }
       ]
     }

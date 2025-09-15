@@ -47,6 +47,7 @@ public class LevelConfig {
     if (waveIndex >= 0 && waveIndex < waves.size()) {
       return waves.get(waveIndex);
     }
+
     return new BaseWaveConfig();
   }
 
