@@ -28,4 +28,11 @@ public class BaseWaveConfig {
 
   /** Minimum number of zombies to spawn in this wave */
   public int minZombiesSpawn = 10;
+
+  /** Enemy definitions - using individual fields for better JSON compatibility */
+  public EnemySpawnConfig standard = new EnemySpawnConfig();
+
+  public EnemySpawnConfig fast = new EnemySpawnConfig();
+  public EnemySpawnConfig tanky = new EnemySpawnConfig();
+  public EnemySpawnConfig bungee = new EnemySpawnConfig();
 }

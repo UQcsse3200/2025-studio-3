@@ -1,6 +1,8 @@
 package com.csse3200.game.entities;
 
+import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.factories.WaveFactory;
+import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
 public class EntitySpawn {
@@ -9,6 +11,7 @@ public class EntitySpawn {
   private final int robotWeight;
   private int spawnCount = 0;
   private final java.util.Random random = new java.util.Random();
+  private final Deque<String> spawnQueue = new ArrayDeque<>();
 
   /** Creates a new instance with a default per-enemy weight cost. */
   public EntitySpawn() {
@@ -56,7 +59,7 @@ public class EntitySpawn {
       return;
     }
 
-    // If not divisible, add 1 toe the waveWeight
+    // If not divisible, add 1 to the waveWeight
     if (waveWeight % robotWeight != 0) {
       waveWeight += 1;
     }
@@ -79,5 +82,54 @@ public class EntitySpawn {
       case 1 -> "fast";
       default -> "tanky";
     };
+  }
+
+  /**
+   * @return next enemy type from the spawn queue, or "standard" if empty.
+   */
+  public String getNextRobotType() {
+    return spawnQueue.isEmpty() ? "standard" : spawnQueue.pollFirst();
+  }
+
+  /** Deterministic expansion: build a fixed pattern from 'chance' weights. */
+  private List<String> buildPattern(Map<String, EnemySpawnConfig> configs) {
+    List<String> pattern = new ArrayList<>();
+    // Sort keys so order is stable (alphabetical)
+    List<String> types = new ArrayList<>(configs.keySet());
+    Collections.sort(types);
+    for (String type : types) {
+      int repeat = Math.max(1, Math.round(configs.get(type).chance));
+      for (int i = 0; i < repeat; i++) {
+        pattern.add(type);
+      }
+    }
+    return pattern;
+  }
+
+  /**
+   * Builds a spawn queue for the current wave using the new system: - Each wave has a budget
+   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
+   * by 'chance'. - Loop continues until budget runs out.
+   */
+  public void spawnEnemiesFromConfig() {
+    int budget = waveFactory.getWaveWeight();
+    Map<String, EnemySpawnConfig> configs = waveFactory.getEnemyConfigs();
+
+    spawnQueue.clear();
+    spawnCount = 0;
+
+    if (configs == null || configs.isEmpty() || budget <= 0) return;
+
+    List<String> pattern = buildPattern(configs);
+    int i = 0;
+    while (budget > 0) {
+      String enemy = pattern.get(i % pattern.size());
+      EnemySpawnConfig cfg = configs.get(enemy);
+      if (cfg.cost > budget) break;
+      spawnQueue.add(enemy);
+      spawnCount++;
+      budget -= cfg.cost;
+      i++;
+    }
   }
 }
