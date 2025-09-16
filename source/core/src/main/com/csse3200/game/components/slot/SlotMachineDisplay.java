@@ -1,9 +1,7 @@
 package com.csse3200.game.components.slot;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -21,707 +19,764 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.Array; // gdx Array
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.components.cards.CardActor;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Top-bar 3-reel slot machine UI.
- * Only drops a HERO card when all 3 reels show the hero face (8_SlingShooter).
+ * A 3-reel slot machine UI that lives in the top bar.
+ *
+ * <p>Responsibilities:
+ *
+ * <ul>
+ *   <li>Render a top bar frame with an inner reels area (responsive layout).
+ *   <li>Handle user click to trigger a spin.
+ *   <li>Animate continuous scrolling and smooth stop on target indices.
+ *   <li>Bridge to {@link SlotEngine} to compute outcomes and apply effects.
+ * </ul>
  */
 public class SlotMachineDisplay extends UIComponent {
-    // ----- engine & pending result -----
-    private final SlotEngine slotEngine;
-    private SlotEngine.SpinResult pendingResult = null;
+  /** Logic engine used to compute spin outcomes and to apply effects. */
+  private final SlotEngine slotEngine;
 
-    private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
+  /** Cached pending spin result (set on spin, consumed when all reels stop). */
+  private SlotEngine.SpinResult pendingResult = null;
 
-    // ----- card atlas (UI cards) -----
-    private static final String CARD_ATLAS = "images/ui_cards.atlas";
-    private static final String CARD_REGION_HERO = "Card_SlingShooter";
+  private static final Logger logger = LoggerFactory.getLogger(SlotMachineDisplay.class);
 
-    private TextureAtlas cardAtlas = null;
-    private boolean ownsCardAtlas = false;
-    private final List<Texture> ownedRuntimeTextures = new ArrayList<>();
+  // ----------- Z-Order ------------
 
-    // ----- reels atlas hero region name -----
-    private static final String REEL_REGION_HERO = "8_SlingShooter";
+  /** Render order for this UI component. */
+  private static final float Z_INDEX = 3f;
 
-    // ----- z-order -----
-    private static final float Z_INDEX = 3f;
+  // ------ Layout Ratios (HUD) ------
 
-    // ----- layout ratios -----
-    private static final float TOPBAR_HEIGHT_RATIO = 0.25f;
-    private static final float TOPBAR_MARGIN_RATIO = 0.015f;
-    private static final float REELS_AREA_W_RATIO  = 0.70f;
-    private static final float REELS_AREA_H_RATIO  = 0.83f;
-    private static final float REELS_AREA_Y_OFFSET = 0.00f;
-    private static final int   REEL_COUNT          = 3;
-    private static final float REEL_GAP_RATIO      = 0.03f;
+  /** Top bar height as a ratio of the short screen dimension. */
+  private static final float TOPBAR_HEIGHT_RATIO = 0.25f;
 
-    // Card height = screenHeight * ratio (tweak to 0.12~0.14 if you want smaller)
-    private static float CARD_SCREEN_HEIGHT_RATIO = 0.16f;
+  /** Horizontal inner margin of the frame relative to short screen dimension. */
+  private static final float TOPBAR_MARGIN_RATIO = 0.015f;
 
-    // Track live cards so we can rescale & reanchor them when the window size changes
-    private static class LiveCard {
-        final CardActor actor;
-        final float heightRatio; // usually same as CARD_SCREEN_HEIGHT_RATIO
-        final float aspect;      // width/height
-        LiveCard(CardActor a, float heightRatio, float aspect) {
-            this.actor = a; this.heightRatio = heightRatio; this.aspect = aspect;
-        }
+  /** Reels area width relative to the visible frame image. */
+  private static final float REELS_AREA_W_RATIO = 0.70f;
+
+  /** Reels area height relative to the visible frame image. */
+  private static final float REELS_AREA_H_RATIO = 0.83f;
+
+  /** Vertical offset applied to the reels area relative to the visible frame image. */
+  private static final float REELS_AREA_Y_OFFSET = 0.00f;
+
+  /** Number of reels (columns). */
+  private static final int REEL_COUNT = 3;
+
+  /** Gap between reel columns as a fraction of the reels area width. */
+  private static final float REEL_GAP_RATIO = 0.03f;
+
+  // --------- Reel Runtime ----------
+
+  /** Per-column container groups (vertically scrolled). */
+  private final List<Group> reelColumns = new ArrayList<>();
+
+  /** Target symbol indices per column (provided by engine on spin). */
+  private int[] targetIndices;
+
+  /** Standard symbol height in pixels (after scaling into one column). */
+  private float symbolHeight;
+
+  /** Number of distinct symbols (per cycle). */
+  private int symbolCount;
+
+  /** Current vertical speeds per column (used to compute stop curves). */
+  private final List<Float> currentScrollSpeeds = new ArrayList<>();
+
+  /** Base reel scroll speed (pixels/second). */
+  private float reelScrollSpeedPxPerSec;
+
+  /** Whether any spin sequence is currently active. */
+  private boolean isSpinning = false;
+
+  /** Count of columns that have fully stopped in the current sequence. */
+  private int stoppedCount = 0;
+
+  // --------- Runtime Sizes ---------
+
+  /** Frame size in pixels (derived from stage short side). */
+  private float frameSizePx;
+
+  /** Frame inner margin in pixels. */
+  private float marginPx;
+
+  /** Last known stage width (to detect resize). */
+  private float lastStageW = -1f;
+
+  /** Last known stage height (to detect resize). */
+  private float lastStageH = -1f;
+
+  // ----------- UI Nodes ------------
+
+  /** Root group of the persistent top bar. */
+  private Group barGroup;
+
+  /** Full frame image (hit-tested on visible drawn rect). */
+  private Image frameImage;
+
+  /** Reels background image (decorative, not interactive). */
+  private Image reelsBgImage;
+
+  /** Scroll pane that clips the reels content. */
+  private ScrollPane reelsPane;
+
+  /** Reels content holder that scrolls vertically. */
+  private Group reelsContent;
+
+  // -------- Loaded Assets ----------
+
+  /** Drawable for unpressed frame state (atlas region). */
+  private TextureRegionDrawable frameUpDrawable;
+
+  /** Drawable for pressed frame state (atlas region). */
+  private TextureRegionDrawable frameDownDrawable;
+
+  /** Ordered list of symbol regions forming one cycle. */
+  private List<TextureAtlas.AtlasRegion> symbolRegions;
+
+  private static final String CARDS_ATLAS_PATH = "images/ui_cards.atlas";
+  private TextureAtlas cardsAtlas;
+  private boolean ownsCardsAtlas = false;
+
+  // Card target size/animation parameters
+  private static final float CARD_SCREEN_W_RATIO = 0.06f;
+  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float DROP_FADE_SEC = 0.15f;
+  private static final float DROP_MOVE_SEC = 0.35f;
+  private static final float DROP_PADDING_PCT = 0.02f;
+  private static final float DROP_PADDING_MIN = 8f;
+
+  // ---------- Constructors ---------
+
+  /** Creates a display with a bound {@link SlotMachineArea}. */
+  public SlotMachineDisplay(SlotMachineArea area) {
+    this.slotEngine = new SlotEngine(area);
+  }
+
+  /** Creates a display with a default {@link SlotEngine} (no area bound). */
+  public SlotMachineDisplay() {
+    this.slotEngine = new SlotEngine();
+  }
+
+  /** Initializes UI hierarchy, loads resources, computes sizes, and applies layout. */
+  @Override
+  public void create() {
+    super.create();
+    initTopBar();
+    loadSymbols();
+    computeSizes();
+    applyLayout();
+    randomizeReels();
+    lastStageW = stage.getWidth();
+    lastStageH = stage.getHeight();
+  }
+
+  /**
+   * Creates the persistent top bar, loads the frame atlas (up/down), builds the reels pane, and
+   * attaches a click listener that triggers a spin.
+   *
+   * <p>Hit-testing is restricted to the visible drawn portion of the frame image to avoid clicking
+   * in transparent/letterboxed areas.
+   */
+  private void initTopBar() {
+    barGroup = new Group();
+    barGroup.setTransform(false);
+    barGroup.setVisible(true);
+    barGroup.setTouchable(Touchable.childrenOnly);
+    stage.addActor(barGroup);
+    TextureAtlas atlas =
+        ServiceLocator.getResourceService().getAsset("images/slot_frame.atlas", TextureAtlas.class);
+    TextureRegion upRegion = atlas.findRegion("slot_frame_up");
+    TextureRegion downRegion = atlas.findRegion("slot_frame_down");
+    for (Texture tex : atlas.getTextures()) {
+      tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
-    private final List<LiveCard> liveCards = new ArrayList<>();
+    frameUpDrawable = new TextureRegionDrawable(upRegion);
+    frameDownDrawable = new TextureRegionDrawable(downRegion);
 
-    // ----- runtime state (reels) -----
-    private final List<Group> reelColumns = new ArrayList<>();
-    private int[] targetIndices;
-    private float symbolHeight;
-    private int symbolCount;
-    private final List<Float> currentScrollSpeeds = new ArrayList<>();
-    private float reelScrollSpeedPxPerSec;
-    private boolean isSpinning = false;
-    private int stoppedCount = 0;
+    Texture reelsBgTex =
+        ServiceLocator.getResourceService()
+            .getAsset("images/slot_reels_background.png", Texture.class);
+    reelsBgTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    reelsBgImage = new Image(reelsBgTex);
+    reelsBgImage.setTouchable(Touchable.disabled);
+    reelsBgImage.setScaling(Scaling.fit);
+    reelsBgImage.setAlign(Align.center);
+    barGroup.addActor(reelsBgImage);
 
-    // ----- runtime sizes -----
-    private float frameSizePx;
-    private float marginPx;
-    private float lastStageW = -1f, lastStageH = -1f;
+    reelsContent = new Group();
+    reelsPane = new ScrollPane(reelsContent);
+    reelsPane.setScrollingDisabled(true, true);
+    reelsPane.setFadeScrollBars(false);
+    reelsPane.setOverscroll(false, false);
+    barGroup.addActor(reelsPane);
 
-    // ----- UI nodes -----
-    private Group barGroup;
-    private Image frameImage;
-    private Image reelsBgImage;
-    private ScrollPane reelsPane;
-    private Group reelsContent;
-
-    // ----- loaded assets -----
-    private TextureRegionDrawable frameUpDrawable;
-    private TextureRegionDrawable frameDownDrawable;
-    private List<TextureAtlas.AtlasRegion> symbolRegions;
-
-    // ----- ctors -----
-    public SlotMachineDisplay(SlotMachineArea area) { this.slotEngine = new SlotEngine(area); }
-    public SlotMachineDisplay() { this.slotEngine = new SlotEngine(); }
-
-    // ----- lifecycle -----
-    @Override
-    public void create() {
-        super.create();
-        ensureCardAtlasAvailable();
-        initTopBar();
-        loadSymbols();
-        computeSizes();
-        applyLayout();
-        randomizeReels();
-        lastStageW = stage.getWidth();
-        lastStageH = stage.getHeight();
-    }
-
-    /** Try ResourceService first; otherwise load atlas locally if present. */
-    private void ensureCardAtlasAvailable() {
-        var rs = ServiceLocator.getResourceService();
-        TextureAtlas rsAtlas = null;
-        try { rsAtlas = rs.getAsset(CARD_ATLAS, TextureAtlas.class); } catch (Exception ignore) {}
-        if (rsAtlas != null) {
-            cardAtlas = rsAtlas;
-            ownsCardAtlas = false;
-            logger.info("Using atlas from ResourceService: {}", CARD_ATLAS);
-        } else if (Gdx.files.internal(CARD_ATLAS).exists()) {
-            cardAtlas = new TextureAtlas(Gdx.files.internal(CARD_ATLAS));
-            ownsCardAtlas = true;
-            logger.info("Loaded local atlas: {}", CARD_ATLAS);
-        } else {
-            logger.warn("Card atlas not found: {}", CARD_ATLAS);
-        }
-    }
-
-    // ----- UI build -----
-    private void initTopBar() {
-        barGroup = new Group();
-        barGroup.setTransform(false);
-        barGroup.setVisible(true);
-        barGroup.setTouchable(Touchable.childrenOnly);
-        stage.addActor(barGroup);
-
-        TextureAtlas frameAtlas =
-                ServiceLocator.getResourceService().getAsset("images/slot_frame.atlas", TextureAtlas.class);
-        TextureRegion upRegion = frameAtlas.findRegion("slot_frame_up");
-        TextureRegion downRegion = frameAtlas.findRegion("slot_frame_down");
-        for (Texture tex : frameAtlas.getTextures()) {
-            tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        }
-        frameUpDrawable = new TextureRegionDrawable(upRegion);
-        frameDownDrawable = new TextureRegionDrawable(downRegion);
-
-        Texture reelsBgTex =
-                ServiceLocator.getResourceService().getAsset("images/slot_reels_background.png", Texture.class);
-        reelsBgTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        reelsBgImage = new Image(reelsBgTex);
-        reelsBgImage.setTouchable(Touchable.disabled);
-        reelsBgImage.setScaling(Scaling.fit);
-        reelsBgImage.setAlign(Align.center);
-        barGroup.addActor(reelsBgImage);
-
-        reelsContent = new Group();
-        reelsPane = new ScrollPane(reelsContent);
-        reelsPane.setScrollingDisabled(true, true);
-        reelsPane.setFadeScrollBars(false);
-        reelsPane.setOverscroll(false, false);
-        barGroup.addActor(reelsPane);
-
-        frameImage = new HitTestImage(frameUpDrawable, Scaling.fit, Align.center);
-        frameImage.setScaling(Scaling.fit);
-        frameImage.setAlign(Align.center);
-        frameImage.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                if (isSpinning) return;
-                pendingResult = slotEngine.spin();
-                targetIndices = pendingResult.getReels();
-                frameImage.clearActions();
-                frameImage.setDrawable(frameDownDrawable);
-                frameImage.addAction(Actions.sequence(
-                        Actions.delay(0.12f),
-                        Actions.run(() -> frameImage.setDrawable(frameUpDrawable))
-                ));
-                spinToTargets();
-            }
+    frameImage = new HitTestImage(frameUpDrawable, Scaling.fit, Align.center);
+    frameImage.setScaling(Scaling.fit);
+    frameImage.setAlign(Align.center);
+    frameImage.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (isSpinning) return;
+            logger.info("Topbar slot clicked");
+            pendingResult = slotEngine.spin();
+            targetIndices = pendingResult.getReels();
+            frameImage.clearActions();
+            frameImage.setDrawable(frameDownDrawable);
+            frameImage.addAction(
+                Actions.sequence(
+                    Actions.delay(0.12f),
+                    Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
+            spinToTargets();
+          }
         });
-        barGroup.addActor(frameImage);
+    barGroup.addActor(frameImage);
+  }
+
+  /** Loads the reels atlas and collects symbol regions in name order. */
+  private void loadSymbols() {
+    TextureAtlas reelsAtlas =
+        ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
+    symbolRegions = new ArrayList<>();
+    for (TextureAtlas.AtlasRegion r : reelsAtlas.getRegions()) {
+      symbolRegions.add(r);
+    }
+    symbolRegions.sort(Comparator.comparing(a -> a.name));
+    if (symbolRegions.isEmpty()) {
+      logger.warn("No symbol regions found.");
+    }
+  }
+
+  /**
+   * Builds a single reel column by duplicating the symbol sequence twice to enable seamless
+   * vertical looping.
+   *
+   * @param colWidth column width in pixels
+   * @param colHeight column height in pixels
+   * @return reel column group with images stacked vertically
+   */
+  private Group buildOneReel(float colWidth, float colHeight) {
+    Group reel = new Group();
+    float y = 0f;
+
+    if (symbolRegions == null || symbolRegions.isEmpty()) {
+      reel.setSize(colWidth, colHeight);
+      return reel;
     }
 
-    /** Load reels atlas and collect regions sorted by name (handle gdx Array). */
-    private void loadSymbols() {
-        TextureAtlas reelsAtlas =
-                ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
+    symbolCount = symbolRegions.size();
 
-        Array<TextureAtlas.AtlasRegion> gdxRegions = reelsAtlas.getRegions();
-        symbolRegions = new ArrayList<>(gdxRegions.size);
-        for (TextureAtlas.AtlasRegion r : gdxRegions) symbolRegions.add(r);
+    TextureRegion first = symbolRegions.getFirst();
+    float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
+    float wStd = first.getRegionWidth() * scale;
+    float hStd = first.getRegionHeight() * scale;
+    symbolHeight = hStd;
 
-        symbolRegions.sort(Comparator.comparing(a -> a.name));
-        if (symbolRegions.isEmpty()) logger.warn("No symbol regions found.");
+    for (int k = 0; k < 2; k++) {
+      for (TextureRegion r : symbolRegions) {
+        Image img = new Image(r);
+        img.setSize(wStd, hStd);
+        img.setPosition((colWidth - wStd) / 2f, y);
+        y += hStd;
+        reel.addActor(img);
+      }
     }
 
-    private Group buildOneReel(float colWidth, float colHeight) {
-        Group reel = new Group();
-        float y = 0f;
+    reel.setSize(colWidth, y);
+    reel.setPosition(0f, 0f);
+    return reel;
+  }
 
-        if (symbolRegions == null || symbolRegions.isEmpty()) {
-            reel.setSize(colWidth, colHeight);
-            return reel;
-        }
+  /**
+   * Rebuilds all reels and resets per-column speeds.
+   *
+   * @param areaX reels area x
+   * @param areaY reels area y
+   * @param areaW reels area width
+   * @param areaH reels area height
+   */
+  private void buildReels(float areaX, float areaY, float areaW, float areaH) {
+    reelsContent.clearChildren();
+    reelColumns.clear();
 
-        symbolCount = symbolRegions.size();
-
-        TextureRegion first = symbolRegions.get(0);
-        float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
-        float wStd = first.getRegionWidth() * scale;
-        float hStd = first.getRegionHeight() * scale;
-        symbolHeight = hStd;
-
-        for (int k = 0; k < 2; k++) {
-            for (TextureRegion r : symbolRegions) {
-                Image img = new Image(r);
-                img.setSize(wStd, hStd);
-                img.setPosition((colWidth - wStd) / 2f, y);
-                y += hStd;
-                reel.addActor(img);
-            }
-        }
-
-        reel.setSize(colWidth, y);
-        reel.setPosition(0f, 0f);
-        return reel;
+    if (symbolRegions == null || symbolRegions.isEmpty()) {
+      return;
     }
 
-    private void buildReels(float areaX, float areaY, float areaW, float areaH) {
-        reelsContent.clearChildren();
-        reelColumns.clear();
+    float gap = areaW * REEL_GAP_RATIO;
+    float colW = (areaW - gap * (REEL_COUNT - 1)) / REEL_COUNT;
+    float colH = areaH;
 
-        if (symbolRegions == null || symbolRegions.isEmpty()) return;
+    reelsPane.setSize(areaW, areaH);
+    reelsPane.setPosition(areaX, areaY);
 
-        float gap = areaW * REEL_GAP_RATIO;
-        float colW = (areaW - gap * (REEL_COUNT - 1)) / REEL_COUNT;
-        float colH = areaH;
+    for (int i = 0; i < REEL_COUNT; i++) {
+      Group col = buildOneReel(colW, colH);
+      col.setPosition(i * (colW + gap), 0f);
+      reelColumns.add(col);
+      reelsContent.addActor(col);
+    }
 
+    currentScrollSpeeds.clear();
+    for (int i = 0; i < REEL_COUNT; i++) {
+      currentScrollSpeeds.add(0f);
+    }
+  }
+
+  /** Compute pixel sizes based on the current stage dimensions. */
+  private void computeSizes() {
+    float w = stage.getWidth();
+    float h = stage.getHeight();
+    float base = Math.min(w, h);
+
+    frameSizePx = base * TOPBAR_HEIGHT_RATIO;
+    marginPx = base * TOPBAR_MARGIN_RATIO;
+
+    reelScrollSpeedPxPerSec = frameSizePx * 4.0f;
+  }
+
+  /** Randomizes reel positions when the slot machine is first shown or rebuilt. */
+  private void randomizeReels() {
+    if (reelColumns.isEmpty() || symbolCount <= 0) return;
+
+    float h = symbolHeight;
+    float centerOffset = (reelsPane.getHeight() - h) / 2f;
+
+    for (Group col : reelColumns) {
+      int randIndex = ThreadLocalRandom.current().nextInt(symbolCount);
+      float targetY = -(randIndex * h) + centerOffset;
+      col.setY(targetY);
+    }
+  }
+
+  /**
+   * Applies positions/sizes for the top bar frame, the reels area, and then rebuilds reels. This is
+   * responsive and should be called on create and whenever the stage size changes.
+   */
+  private void applyLayout() {
+    float stageW = stage.getWidth();
+    float stageH = stage.getHeight();
+
+    float barH = frameSizePx;
+    float barW = stageW;
+    float barX = 0f;
+    float barY = stageH - barH;
+
+    if (barGroup != null) {
+      barGroup.setSize(barW, barH);
+      barGroup.setPosition(barX, barY);
+    }
+
+    float frameW = barW - 2f * marginPx;
+    float frameH = barH - 2f * marginPx;
+
+    if (frameImage != null) {
+      frameImage.setSize(frameW, frameH);
+      frameImage.setPosition(marginPx, marginPx);
+    }
+    if (reelsBgImage != null) {
+      reelsBgImage.setSize(frameW, frameH);
+      reelsBgImage.setPosition(marginPx, marginPx);
+    }
+
+    float actorW = frameW;
+    float actorH = frameH;
+    float srcW = frameUpDrawable.getMinWidth();
+    float srcH = frameUpDrawable.getMinHeight();
+
+    if (frameImage != null) {
+      Vector2 size = ((HitTestImage) frameImage).scaling.apply(srcW, srcH, actorW, actorH);
+
+      float drawW = size.x;
+      float drawH = size.y;
+
+      int align = frameImage.getAlign();
+      float drawX;
+      float drawY;
+      if ((align & Align.left) != 0) drawX = 0f;
+      else if ((align & Align.right) != 0) drawX = actorW - drawW;
+      else drawX = (actorW - drawW) * 0.5f;
+
+      if ((align & Align.bottom) != 0) drawY = 0f;
+      else if ((align & Align.top) != 0) drawY = actorH - drawH;
+      else drawY = (actorH - drawH) * 0.5f;
+
+      float visX = marginPx + drawX;
+      float visY = marginPx + drawY;
+      float visW = drawW;
+      float visH = drawH;
+
+      float areaW = visW * REELS_AREA_W_RATIO;
+      float areaH = visH * REELS_AREA_H_RATIO;
+      float areaX = visX + (visW - areaW) * 0.5f;
+      float areaY = visY + (visH - areaH) * 0.5f + visH * REELS_AREA_Y_OFFSET;
+
+      if (reelsPane != null) {
         reelsPane.setSize(areaW, areaH);
         reelsPane.setPosition(areaX, areaY);
+      }
 
-        for (int i = 0; i < REEL_COUNT; i++) {
-            Group col = buildOneReel(colW, colH);
-            col.setPosition(i * (colW + gap), 0f);
-            reelColumns.add(col);
-            reelsContent.addActor(col);
-        }
+      buildReels(areaX, areaY, areaW, areaH);
+      randomizeReels();
+      isSpinning = false;
+    }
+  }
 
-        currentScrollSpeeds.clear();
-        for (int i = 0; i < REEL_COUNT; i++) currentScrollSpeeds.add(0f);
+  /**
+   * Starts looped scrolling for all reels and schedules staggered smooth stop landing on target.
+   */
+  private void spinToTargets() {
+    if (isSpinning) {
+      logger.info("Already spinning.");
+      return;
     }
 
-    private void computeSizes() {
-        float w = stage.getWidth();
-        float h = stage.getHeight();
-        float base = Math.min(w, h);
+    stoppedCount = 0;
+    isSpinning = true;
 
-        frameSizePx = base * TOPBAR_HEIGHT_RATIO;
-        marginPx = base * TOPBAR_MARGIN_RATIO;
+    for (int i = 0; i < reelColumns.size(); i++) {
+      final int colIndex = i;
+      Group col = reelColumns.get(i);
+      col.clearActions();
 
-        reelScrollSpeedPxPerSec = frameSizePx * 4.0f;
+      float oneCycle = symbolHeight * symbolCount;
+      float speed = reelScrollSpeedPxPerSec * (0.9f + 0.1f * i);
+
+      ScrollAction loop =
+          new ScrollAction(
+              8f, speed, oneCycle, col.getY(), v -> currentScrollSpeeds.set(colIndex, v));
+      col.addAction(loop);
     }
 
-    private void randomizeReels() {
-        if (reelColumns.isEmpty() || symbolCount <= 0) return;
-        float h = symbolHeight;
-        float centerOffset = (reelsPane.getHeight() - h) / 2f;
-        for (Group col : reelColumns) {
-            int randIndex = ThreadLocalRandom.current().nextInt(symbolCount);
-            float targetY = -(randIndex * h) + centerOffset;
-            col.setY(targetY);
+    for (int i = 0; i < reelColumns.size(); i++) {
+      final int colIndex = i;
+      float delay = 1.2f + 0.6f * i;
+
+      Group col = reelColumns.get(i);
+      col.addAction(
+          Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
+    }
+  }
+
+  private void spawnSlingShooterCard() {
+    // 1) Get atlas (try resource service first, if that doesn't work, open it from assets as a
+    // fallback)
+    if (cardsAtlas == null) {
+      try {
+        cardsAtlas =
+            ServiceLocator.getResourceService().getAsset(CARDS_ATLAS_PATH, TextureAtlas.class);
+      } catch (Exception ignore) {
+        cardsAtlas = null;
+      }
+      if (cardsAtlas == null) {
+        if (!Gdx.files.internal(CARDS_ATLAS_PATH).exists()) {
+          logger.error("Card atlas not found: {}", CARDS_ATLAS_PATH);
+          return;
         }
+        cardsAtlas = new TextureAtlas(Gdx.files.internal(CARDS_ATLAS_PATH));
+        ownsCardsAtlas = true;
+      }
+    }
+    if (cardsAtlas.findRegion("Card_SlingShooter") == null) {
+      logger.error("Region 'Card_SlingShooter' not found in {}", CARDS_ATLAS_PATH);
+      return;
     }
 
-    private void applyLayout() {
-        float stageW = stage.getWidth();
-        float stageH = stage.getHeight();
+    // 2) Calculate the start/end points based on the reels pane (using stage coordinates)
+    if (reelsPane == null) {
+      logger.error("reelsPane is null");
+      return;
+    }
+    Vector2 slotTopCenter =
+        reelsPane.localToStageCoordinates(
+            new Vector2(reelsPane.getWidth() * 0.5f, reelsPane.getHeight()));
+    Vector2 slotBottomCenter =
+        reelsPane.localToStageCoordinates(new Vector2(reelsPane.getWidth() * 0.5f, 0f));
 
-        float barH = frameSizePx;
-        float barW = stageW;
-        float barX = 0f;
-        float barY = stageH - barH;
+    float stageW = stage.getWidth(), stageH = stage.getHeight();
+    float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
 
-        if (barGroup != null) {
-            barGroup.setSize(barW, barH);
-            barGroup.setPosition(barX, barY);
-        }
+    // 3) Create a card and limit the "target width" to 6% of the screen width and no more than "22%
+    // of the slot machine window width"
+    CardActor card = CardActor.fromAtlas(stage, cardsAtlas, "Card_SlingShooter");
+    float desiredWpx =
+        Math.min(stageW * CARD_SCREEN_W_RATIO, reelsPane.getWidth() * CARD_SLOT_W_RATIO);
+    card.setPercentWidth(desiredWpx / stageW);
+    card.act(0f);
 
-        float frameW = barW - 2f * marginPx;
-        float frameH = barH - 2f * marginPx;
+    // 4) Drop start/end point (center coordinates)
+    float startCx = slotTopCenter.x;
+    float startCy = slotTopCenter.y + card.getHeight() / 2f + padding;
+    float targetCx = slotBottomCenter.x;
+    float targetCy =
+        Math.max(slotBottomCenter.y - card.getHeight() / 2f - padding, card.getHeight() / 2f + 4f);
 
-        if (frameImage != null) {
-            frameImage.setSize(frameW, frameH);
-            frameImage.setPosition(marginPx, marginPx);
-        }
-        if (reelsBgImage != null) {
-            reelsBgImage.setSize(frameW, frameH);
-            reelsBgImage.setPosition(marginPx, marginPx);
-        }
+    // Place the starting point in pixels (pixel coordinates during animation), and solidify to
+    // percentages after the animation is complete
+    card.setPosition(startCx - card.getWidth() / 2f, startCy - card.getHeight() / 2f);
+    card.getColor().a = 0f;
+    stage.addActor(card);
+    card.toFront();
 
-        float actorW = frameW;
-        float actorH = frameH;
-        float srcW = frameUpDrawable.getMinWidth();
-        float srcH = frameUpDrawable.getMinHeight();
+    float targetX = targetCx - card.getWidth() / 2f;
+    float targetY = targetCy - card.getHeight() / 2f;
 
-        if (frameImage != null) {
-            Vector2 size = ((HitTestImage) frameImage).scaling.apply(srcW, srcH, actorW, actorH);
+    card.addAction(
+        Actions.sequence(
+            Actions.parallel(
+                Actions.fadeIn(DROP_FADE_SEC),
+                Actions.moveTo(targetX, targetY, DROP_MOVE_SEC, Interpolation.sine)),
+            Actions.run(
+                () -> {
+                  float px = targetCx / stageW;
+                  float py = targetCy / stageH;
+                  card.setPercentPosition(px, py);
+                })));
+  }
 
-            float drawW = size.x;
-            float drawH = size.y;
+  /**
+   * Smoothly stops a given column at its target index, avoiding large bounce-back by optionally
+   * advancing to the next equivalent lap when over half a symbol height.
+   *
+   * @param colIdx reel column index
+   */
+  private void stopColumnAt(int colIdx) {
+    if (colIdx < 0 || colIdx >= reelColumns.size()) return;
 
-            int align = frameImage.getAlign();
-            float drawX = (align & Align.left) != 0 ? 0f :
-                    (align & Align.right) != 0 ? actorW - drawW : (actorW - drawW) * 0.5f;
-            float drawY = (align & Align.bottom) != 0 ? 0f :
-                    (align & Align.top) != 0 ? actorH - drawH : (actorH - drawH) * 0.5f;
+    Group col = reelColumns.get(colIdx);
+    col.clearActions();
 
-            float visX = marginPx + drawX;
-            float visY = marginPx + drawY;
-            float visW = drawW;
-            float visH = drawH;
+    float h = symbolHeight;
+    int baseCount = symbolCount;
+    float oneCycle = h * baseCount;
 
-            float areaW = visW * REELS_AREA_W_RATIO;
-            float areaH = visH * REELS_AREA_H_RATIO;
-            float areaX = visX + (visW - areaW) * 0.5f;
-            float areaY = visY + (visH - areaH) * 0.5f + visH * REELS_AREA_Y_OFFSET;
+    int rawIndex = targetIndices[colIdx];
+    int target = ((rawIndex % baseCount) + baseCount) % baseCount;
 
-            if (reelsPane != null) {
-                reelsPane.setSize(areaW, areaH);
-                reelsPane.setPosition(areaX, areaY);
-            }
+    float centerOffset = (reelsPane != null ? (reelsPane.getHeight() - h) / 2f : 0f);
+    float idealY = -(target * h) + centerOffset;
 
-            buildReels(areaX, areaY, areaW, areaH);
-            randomizeReels();
-            isSpinning = false;
-        }
+    float currentY = col.getY();
+
+    float kNearest = Math.round((currentY - idealY) / (-oneCycle));
+    float mappedY = idealY - kNearest * oneCycle;
+
+    float v0 =
+        (colIdx < currentScrollSpeeds.size())
+            ? currentScrollSpeeds.get(colIdx)
+            : -reelScrollSpeedPxPerSec;
+
+    float delta = mappedY - currentY;
+    float halfSymbol = 0.5f * h;
+
+    if (v0 < -1e-3f) {
+      if (delta > 0f && Math.abs(delta) > halfSymbol) {
+        mappedY -= oneCycle;
+        delta = mappedY - currentY;
+      }
+    } else if (v0 > 1e-3f && delta < 0f && Math.abs(delta) > halfSymbol) {
+      mappedY += oneCycle;
+      delta = mappedY - currentY;
     }
 
-    private void spinToTargets() {
-        if (isSpinning) {
-            logger.info("Already spinning.");
-            return;
+    float distance = Math.abs(delta);
+    float base = Math.max(20f, Math.abs(v0));
+    float tSuggested = distance / (base * 0.9f);
+    float t = Math.clamp(tSuggested, 0.40f, 1.10f);
+
+    col.addAction(
+        Actions.sequence(
+            new HermiteStopYAction(t, currentY, mappedY, v0),
+            Actions.run(
+                () -> {
+                  currentScrollSpeeds.set(colIdx, 0f);
+                  notifyReelStopped();
+                })));
+  }
+
+  /** Count the reels has stopped. While all reels has stopped, resolve outcome. */
+  private void notifyReelStopped() {
+    stoppedCount++;
+    if (stoppedCount >= REEL_COUNT) {
+      isSpinning = false;
+      logger.info("All reels stopped.");
+      if (pendingResult != null) {
+        if (pendingResult.isEffectTriggered()) {
+          SlotEngine.Effect eff = pendingResult.getEffect().orElse(null);
+          if (eff == SlotEngine.Effect.DROP_SLINGSHOOTER_CARD) {
+            spawnSlingShooterCard();
+          } else {
+            slotEngine.applyEffect(pendingResult);
+          }
+        } else {
+          logger.info("No effect triggered.");
         }
-
-        stoppedCount = 0;
-        isSpinning = true;
-
-        for (int i = 0; i < reelColumns.size(); i++) {
-            final int colIndex = i;
-            Group col = reelColumns.get(i);
-            col.clearActions();
-
-            float oneCycle = symbolHeight * symbolCount;
-            float speed = reelScrollSpeedPxPerSec * (0.9f + 0.1f * i);
-
-            ScrollAction loop =
-                    new ScrollAction(8f, speed, oneCycle, col.getY(), v -> currentScrollSpeeds.set(colIndex, v));
-            col.addAction(loop);
-        }
-
-        for (int i = 0; i < reelColumns.size(); i++) {
-            final int colIndex = i;
-            float delay = 1.2f + 0.6f * i;
-
-            Group col = reelColumns.get(i);
-            col.addAction(Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
-        }
+        pendingResult = null;
+      }
     }
+  }
 
-    private void stopColumnAt(int colIdx) {
-        if (colIdx < 0 || colIdx >= reelColumns.size()) return;
-
-        Group col = reelColumns.get(colIdx);
-        col.clearActions();
-
-        float h = symbolHeight;
-        int baseCount = symbolCount;
-        float oneCycle = h * baseCount;
-
-        int rawIndex = targetIndices[colIdx];
-        int target = ((rawIndex % baseCount) + baseCount) % baseCount;
-
-        float centerOffset = (reelsPane != null ? (reelsPane.getHeight() - h) / 2f : 0f);
-        float idealY = -(target * h) + centerOffset;
-
-        float currentY = col.getY();
-
-        float kNearest = Math.round((currentY - idealY) / (-oneCycle));
-        float mappedY = idealY - kNearest * oneCycle;
-
-        float v0 = (colIdx < currentScrollSpeeds.size())
-                ? currentScrollSpeeds.get(colIdx) : -reelScrollSpeedPxPerSec;
-
-        float delta = mappedY - currentY;
-        float halfSymbol = 0.5f * h;
-
-        if (v0 < -1e-3f) {
-            if (delta > 0f && Math.abs(delta) > halfSymbol) {
-                mappedY -= oneCycle;
-                delta = mappedY - currentY;
-            }
-        } else if (v0 > 1e-3f && delta < 0f && Math.abs(delta) > halfSymbol) {
-            mappedY += oneCycle;
-            delta = mappedY - currentY;
-        }
-
-        float distance = Math.abs(delta);
-        float base = Math.max(20f, Math.abs(v0));
-        float tSuggested = distance / (base * 0.9f);
-        float t = Math.clamp(tSuggested, 0.40f, 1.10f);
-
-        col.addAction(
-                Actions.sequence(
-                        new HermiteStopYAction(t, currentY, mappedY, v0),
-                        Actions.run(() -> {
-                            currentScrollSpeeds.set(colIdx, 0f);
-                            notifyReelStopped();
-                        })
-                )
-        );
+  /** Draw pass also detects stage resize and reapplies layout if needed. */
+  @Override
+  public void draw(SpriteBatch batch) {
+    float w = stage.getWidth();
+    float h = stage.getHeight();
+    if (w != lastStageW || h != lastStageH) {
+      lastStageW = w;
+      lastStageH = h;
+      computeSizes();
+      applyLayout();
     }
+  }
 
-    // ----- hero triple detection -----
+  @Override
+  public float getZIndex() {
+    return Z_INDEX;
+  }
 
-    private String symbolNameAt(int safeIndex) {
-        if (symbolRegions == null || symbolRegions.isEmpty()) return null;
-        int n = symbolRegions.size();
-        int idx = ((safeIndex % n) + n) % n;
-        return symbolRegions.get(idx).name;
+  @Override
+  public void dispose() {
+    super.dispose();
+    if (barGroup != null) barGroup.remove();
+    if (ownsCardsAtlas && cardsAtlas != null) {
+      cardsAtlas.dispose();
+      cardsAtlas = null;
     }
+  }
 
-    private boolean isTripleOf(String regionName) {
-        if (targetIndices == null || targetIndices.length < 3 || symbolCount <= 0) return false;
-        String a = symbolNameAt(targetIndices[0]);
-        String b = symbolNameAt(targetIndices[1]);
-        String c = symbolNameAt(targetIndices[2]);
-        return regionName.equals(a) && regionName.equals(b) && regionName.equals(c);
-    }
+  /** Image with precise hit test limited to actually drawn (scaled & aligned) rectangle. */
+  private static class HitTestImage extends Image {
+    private final Scaling scaling;
+    private final int align;
 
-    private boolean isHeroTriple() { return isTripleOf(REEL_REGION_HERO); }
-
-    /** Called when each reel fully stops; when all stop we resolve the outcome. */
-    private void notifyReelStopped() {
-        stoppedCount++;
-        if (stoppedCount >= REEL_COUNT) {
-            isSpinning = false;
-            if (pendingResult != null) {
-                boolean engineTriggered = pendingResult.isEffectTriggered();
-                if (engineTriggered) {
-                    slotEngine.applyEffect(pendingResult);
-                }
-                if (isHeroTriple()) {
-                    logger.info("Hero triple -> drop hero card.");
-                    playHeroCardSpawnAnimation();
-                }
-                pendingResult = null;
-            }
-        }
-    }
-
-    @Override
-    public void draw(SpriteBatch batch) {
-        // Quick resolution switches (optional)
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) Gdx.graphics.setWindowedMode(960, 540);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) Gdx.graphics.setWindowedMode(1280, 720);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) Gdx.graphics.setWindowedMode(1600, 900);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) Gdx.graphics.setWindowedMode(1920, 1080);
-
-        // Runtime tweak of card size ratio
-        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET))
-            CARD_SCREEN_HEIGHT_RATIO = Math.max(0.08f, CARD_SCREEN_HEIGHT_RATIO - 0.01f);
-        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET))
-            CARD_SCREEN_HEIGHT_RATIO = Math.min(0.30f, CARD_SCREEN_HEIGHT_RATIO + 0.01f);
-
-        // Optional: press H to spit a card for testing
-        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) playHeroCardSpawnAnimation();
-
-        float w = stage.getWidth();
-        float h = stage.getHeight();
-        if (w != lastStageW || h != lastStageH) {
-            float oldW = lastStageW, oldH = lastStageH; // remember old size
-            lastStageW = w; lastStageH = h;
-
-            computeSizes();
-            applyLayout();
-
-            // rescale and reanchor existing cards so they don't drift
-            rescaleAndReanchorCards(oldW, oldH, w, h);
-        }
+    HitTestImage(TextureRegionDrawable drawable, Scaling scaling, int align) {
+      super(drawable);
+      this.scaling = scaling != null ? scaling : Scaling.stretch;
+      this.align = align;
+      setScaling(this.scaling);
+      setAlign(this.align);
+      setTouchable(Touchable.enabled);
     }
 
     @Override
-    public float getZIndex() { return Z_INDEX; }
+    public Actor hit(float x, float y, boolean touchable) {
+      if (touchable && getTouchable() != Touchable.enabled) return null;
+      if (getDrawable() == null) return null;
+
+      float actorW = getWidth();
+      float actorH = getHeight();
+      float srcW = getDrawable().getMinWidth();
+      float srcH = getDrawable().getMinHeight();
+
+      Vector2 size = scaling.apply(srcW, srcH, actorW, actorH);
+      float drawW = size.x;
+      float drawH = size.y;
+      float drawX;
+      float drawY;
+
+      if ((align & Align.left) != 0) {
+        drawX = 0f;
+      } else if ((align & Align.right) != 0) {
+        drawX = actorW - drawW;
+      } else {
+        drawX = (actorW - drawW) * 0.5f;
+      }
+
+      if ((align & Align.bottom) != 0) {
+        drawY = 0f;
+      } else if ((align & Align.top) != 0) {
+        drawY = actorH - drawH;
+      } else {
+        drawY = (actorH - drawH) * 0.5f;
+      }
+
+      if (x >= drawX && x <= drawX + drawW && y >= drawY && y <= drawY + drawH) {
+        return this;
+      }
+      return null;
+    }
+  }
+
+  /** Continuous scrolling action with constant speed and modular wrap. */
+  private static class ScrollAction extends TemporalAction {
+    private final float speed;
+    private final float cycle;
+    private final float startY;
+    private final java.util.function.Consumer<Float> speedTap;
+
+    ScrollAction(
+        float duration,
+        float speed,
+        float cycle,
+        float startY,
+        java.util.function.Consumer<Float> speedTap) {
+      super(duration);
+      this.speed = speed;
+      this.cycle = cycle;
+      this.startY = startY;
+      this.speedTap = speedTap;
+      setInterpolation(null);
+    }
 
     @Override
-    public void dispose() {
-        super.dispose();
-        if (barGroup != null) barGroup.remove();
-        if (ownsCardAtlas && cardAtlas != null) {
-            cardAtlas.dispose();
-            cardAtlas = null;
-        }
-        for (Texture t : ownedRuntimeTextures) if (t != null) t.dispose();
-        ownedRuntimeTextures.clear();
-        liveCards.clear();
+    protected void update(float percent) {
+      Actor a = getActor();
+      if (a == null) return;
+      float t = getTime();
+      float rawY = startY - speed * t;
+      float y = rawY % (-cycle);
+      if (y > 0) y -= cycle;
+      a.setY(y);
+      if (speedTap != null) speedTap.accept(-speed);
+    }
+  }
+
+  /** Cubic Hermite deceleration from current Y/velocity to a target Y with zero end velocity. */
+  private static class HermiteStopYAction extends TemporalAction {
+    private final float y0;
+    private final float y1;
+    private final float v0;
+    private final float v1;
+
+    HermiteStopYAction(float duration, float y0, float y1, float v0) {
+      super(duration);
+      this.y0 = y0;
+      this.y1 = y1;
+      this.v0 = v0;
+      this.v1 = 0f;
+      setInterpolation(null);
     }
 
-    // ----- helpers & actions -----
+    @Override
+    protected void update(float percent) {
+      Actor a = getActor();
+      if (a == null) return;
 
-    private static class HitTestImage extends Image {
-        private final Scaling scaling;
-        private final int align;
-        HitTestImage(TextureRegionDrawable drawable, Scaling scaling, int align) {
-            super(drawable);
-            this.scaling = scaling != null ? scaling : Scaling.stretch;
-            this.align = align;
-            setScaling(this.scaling);
-            setAlign(this.align);
-            setTouchable(Touchable.enabled);
-        }
-        @Override
-        public Actor hit(float x, float y, boolean touchable) {
-            if (touchable && getTouchable() != Touchable.enabled) return null;
-            if (getDrawable() == null) return null;
-            float actorW = getWidth(), actorH = getHeight();
-            float srcW = getDrawable().getMinWidth(), srcH = getDrawable().getMinHeight();
-            Vector2 size = scaling.apply(srcW, srcH, actorW, actorH);
-            float drawW = size.x, drawH = size.y;
-            float drawX = (align & Align.left) != 0 ? 0f :
-                    (align & Align.right) != 0 ? actorW - drawW : (actorW - drawW) * 0.5f;
-            float drawY = (align & Align.bottom) != 0 ? 0f :
-                    (align & Align.top) != 0 ? actorH - drawH : (actorH - drawH) * 0.5f;
-            return (x >= drawX && x <= drawX + drawW && y >= drawY && y <= drawY + drawH) ? this : null;
-        }
+      float t = Math.clamp(percent, 0.0f, 1.0f);
+      float t2 = t * t;
+      float t3 = t2 * t;
+      float h00 = 2 * t3 - 3 * t2 + 1;
+      float h10 = t3 - 2 * t2 + t;
+      float h01 = -2 * t3 + 3 * t2;
+      float h11 = t3 - t2;
+
+      float d = getDuration();
+      float y = h00 * y0 + h10 * (v0 * d) + h01 * y1 + h11 * (v1 * d);
+      a.setY(y);
     }
-
-    private static class ScrollAction extends TemporalAction {
-        private final float speed, cycle, startY;
-        private final java.util.function.Consumer<Float> speedTap;
-        ScrollAction(float duration, float speed, float cycle, float startY,
-                     java.util.function.Consumer<Float> speedTap) {
-            super(duration);
-            this.speed = speed; this.cycle = cycle; this.startY = startY; this.speedTap = speedTap;
-            setInterpolation(null);
-        }
-        @Override
-        protected void update(float percent) {
-            Actor a = getActor(); if (a == null) return;
-            float t = getTime();
-            float rawY = startY - speed * t;
-            float y = rawY % (-cycle);
-            if (y > 0) y -= cycle;
-            a.setY(y);
-            if (speedTap != null) speedTap.accept(-speed);
-        }
-    }
-
-    private static class HermiteStopYAction extends TemporalAction {
-        private final float y0, y1, v0, v1;
-        HermiteStopYAction(float duration, float y0, float y1, float v0) {
-            super(duration);
-            this.y0 = y0; this.y1 = y1; this.v0 = v0; this.v1 = 0f;
-            setInterpolation(null);
-        }
-        @Override
-        protected void update(float percent) {
-            Actor a = getActor(); if (a == null) return;
-            float t = Math.clamp(percent, 0.0f, 1.0f);
-            float t2 = t * t, t3 = t2 * t;
-            float h00 = 2 * t3 - 3 * t2 + 1;
-            float h10 = t3 - 2 * t2 + t;
-            float h01 = -2 * t3 + 3 * t2;
-            float h11 = t3 - t2;
-            float d = getDuration();
-            float y = h00 * y0 + h10 * (v0 * d) + h01 * y1 + h11 * (v1 * d);
-            a.setY(y);
-        }
-    }
-
-    // ----- card spawning & resize support -----
-
-    private Vector2 reelMouthStageCenter() {
-        if (reelsPane == null) return new Vector2(stage.getWidth() * 0.5f, stage.getHeight() * 0.8f);
-        return reelsPane.localToStageCoordinates(new Vector2(reelsPane.getWidth() * 0.5f, reelsPane.getHeight()));
-    }
-
-    /** Spawn a hero card (prefer atlas region; fallback to hero face or a runtime blank). */
-    private void playHeroCardSpawnAnimation() {
-        try {
-            CardActor card = newHeroCard();
-            if (card == null) return;
-
-            // Size by screen height first
-            float targetH = stage.getHeight() * CARD_SCREEN_HEIGHT_RATIO;
-            float aspect  = card.getWidth() / Math.max(1f, card.getHeight());
-            if (aspect <= 0f) aspect = 2f / 3f;
-            float targetW = targetH * aspect;
-            card.setSize(targetW, targetH);
-
-            // Position
-            Vector2 mouth = reelMouthStageCenter();
-            float startX = mouth.x - card.getWidth() * 0.5f;
-            float startY = mouth.y + card.getHeight() * 0.20f;
-            card.setPosition(startX, startY);
-            card.getColor().a = 0f;
-            card.setOrigin(Align.center);
-
-            float endX = startX;
-            float endY = Math.max(stage.getHeight() * 0.12f - card.getHeight() * 0.5f, 16f);
-
-            stage.addActor(card);
-            // Track the card so we can rescale/reanchor on future resizes
-            liveCards.add(new LiveCard(card, CARD_SCREEN_HEIGHT_RATIO, aspect));
-
-            float rot = (ThreadLocalRandom.current().nextFloat() * 12f) - 6f;
-            card.addAction(Actions.sequence(
-                    Actions.parallel(
-                            Actions.fadeIn(0.12f),
-                            Actions.rotateBy(rot, 0.55f),
-                            Actions.moveTo(endX, endY, 0.55f, Interpolation.pow2In)
-                    ),
-                    Actions.scaleTo(1.06f, 0.94f, 0.07f),
-                    Actions.scaleTo(1f, 1f, 0.08f)
-            ));
-
-            if (entity != null && entity.getEvents() != null) {
-                entity.getEvents().trigger("slot-card-spawned", "hero:SlingShooter");
-            }
-        } catch (Exception e) {
-            logger.warn("Failed to play hero card spawn animation: {}", e.getMessage());
-        }
-    }
-
-    /** Rescale & reanchor existing cards when the stage size changes. */
-    private void rescaleAndReanchorCards(float oldW, float oldH, float newW, float newH) {
-        if (liveCards.isEmpty()) return;
-        for (int i = liveCards.size() - 1; i >= 0; i--) {
-            LiveCard c = liveCards.get(i);
-            CardActor a = c.actor;
-            if (a == null || a.getStage() == null || a.getParent() == null) {
-                liveCards.remove(i);
-                continue;
-            }
-            // relative position under the old size
-            float xr = oldW <= 0f ? 0f : a.getX() / oldW;
-            float yr = oldH <= 0f ? 0f : a.getY() / oldH;
-
-            // rescale by new screen height
-            float h = newH * c.heightRatio;
-            float w = h * c.aspect;
-            a.setSize(w, h);
-
-            // reanchor by relative position
-            a.setPosition(newW * xr, newH * yr);
-        }
-    }
-
-    private CardActor newHeroCard() {
-        TextureRegion r = null;
-        if (cardAtlas != null) r = cardAtlas.findRegion(CARD_REGION_HERO);
-        if (r == null) {
-            try {
-                TextureAtlas reelsAtlas =
-                        ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
-                r = reelsAtlas.findRegion(REEL_REGION_HERO);
-            } catch (Exception ignore) {}
-        }
-        if (r == null) r = createRuntimeBlankCardRegion(512, 768);
-        return new CardActor(r);
-    }
-
-    private TextureRegion createRuntimeBlankCardRegion(int w, int h) {
-        Pixmap pm = new Pixmap(w, h, Pixmap.Format.RGBA8888);
-        pm.setColor(0, 0, 0, 0); pm.fill();
-
-        int radius = Math.max(12, Math.min(w, h) / 16);
-        int border = Math.max(8, Math.min(w, h) / 32);
-
-        // white rounded rect
-        pm.setColor(1, 1, 1, 1);
-        pm.fillCircle(radius, radius, radius);
-        pm.fillCircle(w - 1 - radius, radius, radius);
-        pm.fillCircle(radius, h - 1 - radius, radius);
-        pm.fillCircle(w - 1 - radius, h - 1 - radius, radius);
-        pm.fillRectangle(radius, 0, w - 2 * radius, h);
-        pm.fillRectangle(0, radius, w, h - 2 * radius);
-
-        // black border
-        pm.setColor(0, 0, 0, 1);
-        for (int i = 0; i < border; i++) {
-            int r = radius - i; if (r < 1) break;
-            pm.drawCircle(radius, radius, r);
-            pm.drawCircle(w - 1 - radius, radius, r);
-            pm.drawCircle(radius, h - 1 - radius, r);
-            pm.drawCircle(w - 1 - radius, h - 1 - radius, r);
-            pm.drawLine(radius, i, w - 1 - radius, i);
-            pm.drawLine(radius, h - 1 - i, w - 1 - radius, h - 1 - i);
-            pm.drawLine(i, radius, i, h - 1 - radius);
-            pm.drawLine(w - 1 - i, radius, w - 1 - i, h - 1 - radius);
-        }
-
-        Texture tex = new Texture(pm);
-        tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        pm.dispose();
-        ownedRuntimeTextures.add(tex);
-        return new TextureRegion(tex);
-    }
+  }
 }
