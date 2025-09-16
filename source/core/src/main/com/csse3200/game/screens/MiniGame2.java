@@ -48,7 +48,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ColliderComponent collider_paddle = paddle.getComponent(ColliderComponent.class);
         collider_paddle.setLayer(PhysicsLayer.PADDLE);
         collider_paddle.setRestitution(1f);
-        collider_paddle.setAsBox(new Vector2(paddle.getScale().x/2f,paddle.getScale().y/2f));
+        collider_paddle.setAsBox(new Vector2(1f,0.2f));
         paddle.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.KinematicBody);
 
         float paddleStartX= -(ScreenWidth / 4f);
@@ -72,7 +72,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ColliderComponent collider_ball = ball.getComponent(ColliderComponent.class);
         collider_ball.setRestitution(1f);
         collider_ball.setFriction(0f);
-        collider_ball.setAsBox(new Vector2(ball.getScale().x/2f,ball.getScale().y/2f));
+        collider_ball.setAsBox(new Vector2(0.2f,0.2f));
 
         ball.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.DynamicBody);
         ball.getComponent(PhysicsComponent.class).getBody().setLinearVelocity(900f,900f);
@@ -170,7 +170,7 @@ public abstract class MiniGame2 extends ScreenAdapter{
         ballPhysics.getBody().setTransform(ballPos.x, ballPos.y, 0);
         ballPhysics.getBody().setLinearVelocity(ballVel);
         //end minigame if ball falls below screen
-        if(ball!=null && ball.getComponent(PhysicsComponent.class).getBody().getPosition().y<0){
+        if(ball!=null && ball.getPosition().y<0){
             endGame();
             return;
         }
