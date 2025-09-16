@@ -5,6 +5,4 @@ public class TeleportRobotConfig extends BaseEnemyConfig {
   public float teleportChance = 0.6f;
   public int maxTeleports = 3;
   public int invulnerabilityMs = 200;
-
-
 }

@@ -75,5 +75,4 @@ public class TeleportTask extends Component {
    * Returns true if no other entity is already occupying roughly (x,targetY). Uses the entity's
    * scaled height as a proxy for tile size to derive tolerances.
    */
-
 }
