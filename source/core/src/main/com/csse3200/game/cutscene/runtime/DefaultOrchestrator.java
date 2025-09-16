@@ -112,7 +112,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
             beatStarted = false;
 
             if (!beats.hasNext()) {
-                this.running = false;
+//                this.running = false;
+                ServiceLocator.getCutsceneService().end();
+                System.out.println("sfdagjhklfsdgkhjsfgdhjklfgjkhl");
             } else {
                 beatIdx = beats.next();
             }

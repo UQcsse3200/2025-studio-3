@@ -46,8 +46,8 @@ public class CutsceneService {
      */
     public void end() {
         if (cutsceneEntity != null) {
-            orchestrator.stop();
-            ServiceLocator.getEntityService().unregister(cutsceneEntity);
+            cutsceneEntity.setEnabled(false);
+            cutsceneEntity.dispose();
         }
     }
 }

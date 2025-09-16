@@ -24,8 +24,5 @@ public class CutsceneTickComponent extends Component {
     public void update() {
         float df = ServiceLocator.getTimeSource().getDeltaTime();
         orchestrator.update(df);
-        if (!orchestrator.isRuning()) {
-            entity.dispose();
-        }
     }
 }

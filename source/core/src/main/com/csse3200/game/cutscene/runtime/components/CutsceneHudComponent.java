@@ -219,4 +219,23 @@ public class CutsceneHudComponent extends UIComponent {
             }
         });
     }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        layers.remove();
+        root.remove();
+        backgroundImage.remove();
+        oldBackgroundImage.remove();
+        characterSprites.remove();
+        leftPane.remove();
+        rightPane.remove();
+        choicesGroup.remove();
+        choicesLeft.remove();
+        choicesCenter.remove();
+        choicesRight.remove();
+        dialogueBox.remove();
+        characterName.remove();
+        text.remove();
+    }
 }
