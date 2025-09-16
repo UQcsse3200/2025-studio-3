@@ -3,6 +3,7 @@ package com.csse3200.game.persistence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.csse3200.game.progression.Profile;
+import net.dermetfan.utils.Pair;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,12 +19,13 @@ import org.slf4j.LoggerFactory;
  */
 public class Persistence {
   private static Logger logger = LoggerFactory.getLogger(Persistence.class);
-  private static int currentSlot;
-  private static Profile profile;
   private static final String ROOT_DIR = "The Day We Fought Back" + File.separator + "saves";
   private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})(?:\\$(\\d+))?\\.json$";
   private static final String FILE_EXTENSION = ".json";
 
+  /**
+   * Private constructor to prevent instantiation.
+   */
   private Persistence() {
     throw new IllegalStateException("Instantiating static util class");
   }
@@ -42,13 +44,13 @@ public class Persistence {
    * Load a user profile from a savefile.
    *
    * @param save the savefile object
+   * @return the profile and the slot
    */
-  public static void load(Savefile save) {
+  public static net.dermetfan.utils.Pair<Profile, Integer> load(Savefile save) {
     String path = getPath(save);
     Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (savedProfile != null) {
-      profile = savedProfile;
-      currentSlot = save.getSlot();
+      return new Pair<>(savedProfile, save.getSlot());
     } else {
       throw new IllegalStateException("Failed to load profile, creating new one.");
     }
@@ -59,14 +61,15 @@ public class Persistence {
    *
    * @param profileName the name of the profile, or null to use the default name
    * @param slot the slot to save the profile to
+   * @return the profile and the slot
    */
-  public static void create(String profileName, int slot) {
-    profile = new Profile();
+  public static Pair<Profile, Integer> create(String profileName, int slot) {
+    Profile profile = new Profile();
     if (profileName != null) {
       profile.setName(profileName);
-    }
-    currentSlot = slot;
-    save(slot);
+    }    
+    save(slot, profile);
+    return new Pair<>(profile, slot);
   }
 
   /** Ensures that the save directory exists. */
@@ -138,22 +141,13 @@ public class Persistence {
     return new Savefile(profileName, timestamp, slot);
   }
 
-  /** Quicksave the current user profile to the savefile. */
-  public static void save() {
-    save(currentSlot);
-  }
-
   /**
    * Save the current user profile to a specific slot.
    *
    * @param slot the slot to save the profile to
+   * @param profile the profile to save
    */
-  public static void save(int slot) {
-    if (profile == null) {
-      logger.error("No profile to save");
-      return;
-    }
-
+  public static void save(int slot, Profile profile) {
     if (slot > 3 || slot < 1) {
       logger.error("Invalid slot: {}", slot);
       return;
@@ -174,9 +168,6 @@ public class Persistence {
         profile.getName() + "$" + System.currentTimeMillis() + "$" + slot + FILE_EXTENSION;
     String path = ROOT_DIR + File.separator + filename;
     FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
-
-    // Update current slot
-    currentSlot = slot;
     logger.info("Saved profile to slot {}: {}", slot, filename);
   }
 
@@ -198,17 +189,5 @@ public class Persistence {
     } else {
       logger.warn("Savefile does not exist: {}", path);
     }
-  }
-
-  /**
-   * Get the current user profile.
-   *
-   * @return the current user profile.
-   */
-  public static Profile profile() {
-    if (profile == null) {
-      return null;
-    }
-    return profile;
   }
 }

@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -26,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
   private static final float Z_INDEX = 2f;
-
+  
   private Table table;
   private final GdxGame game;
   private final SkillSet skillSet;
@@ -40,8 +39,7 @@ public class SkilltreeButtons extends UIComponent {
    * @param display the skill tree display used to render skill connections
    */
   public SkilltreeButtons(GdxGame game, SkilltreeDisplay display) {
-    assert Persistence.profile() != null : "Profile must not be null";
-    this.skillSet = Persistence.profile().skillset();
+    this.skillSet = ServiceLocator.getProfileService().getProfile().getSkillset();
     this.game = game;
     this.display = display;
   }
@@ -63,14 +61,20 @@ public class SkilltreeButtons extends UIComponent {
 
   /** Creates a "Back" button that navigates back to the profile screen. */
   private void createBackButton() {
-    table = new Table();
-    table.top().right();
-    table.setFillParent(true);
-
-    TextButton backButton = new TextButton("Back", skin);
+    // Create close button using close-icon.png
+    ImageButton closeButton = new ImageButton(
+        new TextureRegionDrawable(
+            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(
+        20f,  // 20f padding from left
+        stage.getHeight() - 60f - 20f  // 20f padding from top
+    );
 
     // Trigger an event when the button is pressed
-    backButton.addListener(
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -79,14 +83,12 @@ public class SkilltreeButtons extends UIComponent {
           }
         });
 
-    table.add(backButton).padTop(10f).padRight(10f);
-    stage.addActor(table);
+    stage.addActor(closeButton);
   }
 
   /**
    * Creates a skill button with click handling for unlocking skills.
-   *
-   * @param stage the stage to add the button to
+   * 
    * @param skillName the name of the skill
    * @param labelText the label text shown under the button
    * @param lockedTexture texture displayed when skill is locked
@@ -96,7 +98,6 @@ public class SkilltreeButtons extends UIComponent {
    * @param display the skill tree display instance
    */
   private void createSkillButton(
-      Stage stage,
       String skillName,
       String labelText,
       Texture lockedTexture,
@@ -118,7 +119,7 @@ public class SkilltreeButtons extends UIComponent {
 
     stage.addActor(skillButton);
     stage.addActor(createLabel(labelText, skillButton));
-    addSkillImage(stage);
+    addSkillImage();
   }
 
   /**
@@ -191,7 +192,6 @@ public class SkilltreeButtons extends UIComponent {
 
     // Basic, Intermediate, Advanced, Expert skill buttons
     createSkillButton(
-        stage,
         "Attack Basic",
         "Attack Damage",
         basicLocked,
@@ -200,7 +200,6 @@ public class SkilltreeButtons extends UIComponent {
         0.1f * height,
         display);
     createSkillButton(
-        stage,
         "Firing Speed Basic",
         "Firing Speed",
         basicLocked,
@@ -209,7 +208,6 @@ public class SkilltreeButtons extends UIComponent {
         0.11f * height,
         display);
     createSkillButton(
-        stage,
         "Health Basic",
         "Health",
         basicLocked,
@@ -218,7 +216,6 @@ public class SkilltreeButtons extends UIComponent {
         0.09f * height,
         display);
     createSkillButton(
-        stage,
         "Currency Basic",
         "Currency Generation",
         basicLocked,
@@ -227,7 +224,6 @@ public class SkilltreeButtons extends UIComponent {
         0.105f * height,
         display);
     createSkillButton(
-        stage,
         "Crit Basic",
         "Critical Chance",
         basicLocked,
@@ -238,7 +234,6 @@ public class SkilltreeButtons extends UIComponent {
 
     // Intermediate Skills
     createSkillButton(
-        stage,
         "Attack Intermediate",
         "",
         intLocked,
@@ -247,7 +242,6 @@ public class SkilltreeButtons extends UIComponent {
         0.25f * height,
         display);
     createSkillButton(
-        stage,
         "Firing Speed Intermediate",
         "",
         intLocked,
@@ -256,7 +250,6 @@ public class SkilltreeButtons extends UIComponent {
         0.27f * height,
         display);
     createSkillButton(
-        stage,
         "Health Intermediate",
         "",
         intLocked,
@@ -265,7 +258,6 @@ public class SkilltreeButtons extends UIComponent {
         0.26f * height,
         display);
     createSkillButton(
-        stage,
         "Currency Intermediate",
         "",
         intLocked,
@@ -274,7 +266,6 @@ public class SkilltreeButtons extends UIComponent {
         0.25f * height,
         display);
     createSkillButton(
-        stage,
         "Crit Intermediate",
         "",
         intLocked,
@@ -285,7 +276,6 @@ public class SkilltreeButtons extends UIComponent {
 
     // Advanced Skills
     createSkillButton(
-        stage,
         "Attack Advanced",
         "",
         advancedLocked,
@@ -294,7 +284,6 @@ public class SkilltreeButtons extends UIComponent {
         0.42f * height,
         display);
     createSkillButton(
-        stage,
         "Firing Speed Advanced",
         "",
         advancedLocked,
@@ -303,7 +292,6 @@ public class SkilltreeButtons extends UIComponent {
         0.45f * height,
         display);
     createSkillButton(
-        stage,
         "Health Advanced",
         "",
         advancedLocked,
@@ -312,7 +300,6 @@ public class SkilltreeButtons extends UIComponent {
         0.44f * height,
         display);
     createSkillButton(
-        stage,
         "Currency Advanced",
         "",
         advancedLocked,
@@ -321,7 +308,6 @@ public class SkilltreeButtons extends UIComponent {
         0.43f * height,
         display);
     createSkillButton(
-        stage,
         "Crit Advanced",
         "",
         advancedLocked,
@@ -332,7 +318,6 @@ public class SkilltreeButtons extends UIComponent {
 
     // Expert Skills
     createSkillButton(
-        stage,
         "Attack Expert",
         "",
         lockedAttackExpert,
@@ -341,7 +326,6 @@ public class SkilltreeButtons extends UIComponent {
         0.6295f * height,
         display);
     createSkillButton(
-        stage,
         "Firing Speed Expert",
         "",
         lockedSpeedExpert,
@@ -350,7 +334,6 @@ public class SkilltreeButtons extends UIComponent {
         0.629f * height,
         display);
     createSkillButton(
-        stage,
         "Crit Expert",
         "",
         lockedCritExpert,
@@ -359,7 +342,6 @@ public class SkilltreeButtons extends UIComponent {
         0.629f * height,
         display);
     createSkillButton(
-        stage,
         "Health Expert",
         "",
         lockedHealthExpert,
@@ -368,7 +350,6 @@ public class SkilltreeButtons extends UIComponent {
         0.631f * height,
         display);
     createSkillButton(
-        stage,
         "Currency Expert",
         "",
         lockedCurrencyExpert,
@@ -396,10 +377,8 @@ public class SkilltreeButtons extends UIComponent {
 
   /**
    * Adds the skill point image icon to the stage.
-   *
-   * @param stage the stage to add the image to
    */
-  private void addSkillImage(Stage stage) {
+  private void addSkillImage() {
     Texture texture = new Texture(Gdx.files.internal("images/skillpoints.png"));
     Image image = new Image(texture);
 
@@ -417,8 +396,7 @@ public class SkilltreeButtons extends UIComponent {
    */
   private void totalSkillPoints(Stage stage) {
     Skin skin2 = new Skin(Gdx.files.internal("uiskin.json"));
-    assert Persistence.profile() != null;
-    int points = Persistence.profile().wallet().getSkillsPoints();
+    int points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
     String skillPointsNumber = String.format("Skill Points: %d", points);
     skillPointLabel = new Label(skillPointsNumber, skin2);
     skillPointLabel.setColor(Color.WHITE);

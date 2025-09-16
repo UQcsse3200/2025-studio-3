@@ -1,7 +1,7 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.skilltree.Skill;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
@@ -28,13 +28,13 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
-      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE);
+      ServiceLocator.getProfileService().getProfile().getSkillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE);
   private static final float HEALTH_UPGRADE =
-      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.HEALTH);
+      ServiceLocator.getProfileService().getProfile().getSkillset().getUpgradeValue(Skill.StatType.HEALTH);
   private static final float SPEED_UPGRADE =
-      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.FIRING_SPEED);
+      ServiceLocator.getProfileService().getProfile().getSkillset().getUpgradeValue(Skill.StatType.FIRING_SPEED);
   private static final float CRIT_UPGRADE =
-      Persistence.profile().skillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE);
+      ServiceLocator.getProfileService().getProfile().getSkillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE);
 
   /**
    * Creates a new DefenceStatsComponent with the given stats.

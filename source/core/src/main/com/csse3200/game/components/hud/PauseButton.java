@@ -31,15 +31,15 @@ public class PauseButton extends UIComponent {
   private void addActors() {
     // Create pause button
     Texture pauseTexture =
-        ServiceLocator.getResourceService().getAsset("images/pause-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/pause-icon.png", Texture.class);
     pauseButtonComponent =
         new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseTexture)));
     pauseButtonComponent.setSize(BUTTON_SIZE, BUTTON_SIZE);
     pauseButtonComponent.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
 
-    // Position in top middle of screen
-    float x = (stage.getWidth() - BUTTON_SIZE) / 2f;
-    float y = stage.getHeight() - BUTTON_SIZE - 20f;
+    // Position in top right of screen
+    float x = stage.getWidth() - BUTTON_SIZE - 20f;  // 20f padding from right
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;  // 20f padding from top
     pauseButtonComponent.setPosition(x, y);
     pauseButtonComponent.setVisible(true);
     stage.addActor(pauseButtonComponent);
@@ -65,8 +65,8 @@ public class PauseButton extends UIComponent {
     pauseTooltip.setFontScale(0.8f);
 
     // Position tooltip below the button
-    float x = (stage.getWidth() - BUTTON_SIZE) / 2f;
-    float y = stage.getHeight() - BUTTON_SIZE - 20f;
+    float x = stage.getWidth() - BUTTON_SIZE - 20f;  // 20f padding from right
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;  // 20f padding from top
     pauseTooltip.setPosition(x + (BUTTON_SIZE - pauseTooltip.getPrefWidth()) / 2f, y - 20f);
     pauseTooltip.setVisible(false);
     pauseTooltip.setZIndex(60);
@@ -112,8 +112,8 @@ public class PauseButton extends UIComponent {
   /** Updates button and tooltip position when window is resized */
   private void updatePosition() {
     if (pauseButtonComponent != null) {
-      float x = (stage.getWidth() - BUTTON_SIZE) / 2f;
-      float y = stage.getHeight() - BUTTON_SIZE - 20f;
+      float x = stage.getWidth() - BUTTON_SIZE - 20f;  // 20f padding from right
+      float y = stage.getHeight() - BUTTON_SIZE - 20f;  // 20f padding from top
       pauseButtonComponent.setPosition(x, y);
 
       // Update tooltip position relative to button

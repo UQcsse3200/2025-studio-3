@@ -27,6 +27,8 @@ public class ServiceLocator {
   private static MenuSpriteService menuSpriteService;
   private static ConfigService configService;
   private static DialogService dialogService;
+  private static ResourceService globalResourceService;
+  private static ProfileService profileService;
 
   /**
    * Gets the entity service.
@@ -119,6 +121,24 @@ public class ServiceLocator {
   }
 
   /**
+   * Gets the global resource service.
+   *
+   * @return the global resource service
+   */
+  public static ResourceService getGlobalResourceService() {
+    return globalResourceService;
+  }
+
+  /**
+   * Gets the profile service.
+   *
+   * @return the profile service
+   */
+  public static ProfileService getProfileService() {
+    return profileService;
+  }
+
+  /**
    * Registers the entity service.
    *
    * @param service the entity service
@@ -179,6 +199,24 @@ public class ServiceLocator {
   }
 
   /**
+   * Registers the global resource service.
+   * 
+   * @param source the global resource service
+   */
+  public static void registerGlobalResourceService(ResourceService source) {
+    logger.debug("Registering global resource service {}", source);
+    globalResourceService = source;
+  }
+
+  /**
+   * Deregisters the global resource service.
+   */
+  public static void deregisterGlobalResourceService() {
+    logger.debug("Removing global resource service");
+    globalResourceService = null;
+  }
+
+  /**
    * Registers the currency service.
    *
    * @param source the currency service
@@ -196,6 +234,14 @@ public class ServiceLocator {
   public static void registerMenuSpriteService(MenuSpriteService source) {
     logger.debug("Registering menu sprite service {}", source);
     menuSpriteService = source;
+  }
+
+  /**
+   * Deregisters the menu sprite service.
+   */
+  public static void deregisterMenuSpriteService() {
+    logger.debug("Removing menu sprite service");
+    menuSpriteService = null;
   }
 
   /**
@@ -224,7 +270,33 @@ public class ServiceLocator {
     dialogService = source;
   }
 
-  /** Clears the services. */
+  /**
+   * Deregisters the dialog service.
+   */
+  public static void deregisterDialogService() {
+    logger.debug("Removing dialog service");
+    dialogService = null;
+  }
+
+  /**
+   * Registers the profile service.
+   *
+   * @param source the profile service
+   */
+  public static void registerProfileService(ProfileService source) {
+    logger.debug("Registering profile service {}", source);
+    profileService = source;
+  }
+
+  /**
+   * Deregisters the profile service.
+   */
+  public static void deregisterProfileService() {
+    logger.debug("Removing profile service");
+    profileService = null;
+  }
+
+  /** Clears all transient services. */
   public static void clear() {
     entityService = null;
     renderService = null;
@@ -233,7 +305,6 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     currencyService = null;
-    dialogService = null;
   }
 
   /** Private constructor to prevent instantiation. */

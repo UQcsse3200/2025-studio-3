@@ -1,13 +1,15 @@
 package com.csse3200.game.components.statistics;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.statistics.Statistics;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,7 +66,7 @@ public class StatisticsDisplay extends UIComponent {
    */
   private Table makeStatisticsTable() {
     // Get current values
-    Statistics statistics = Persistence.profile().statistics();
+    Statistics statistics = ServiceLocator.getProfileService().getProfile().getStatistics();
 
     // Create components
     Label killsLabel = new Label("Total Kills:", skin);
@@ -180,10 +182,20 @@ public class StatisticsDisplay extends UIComponent {
    * @return table with exit button
    */
   private Table makeBackBtn() {
-    TextButton backBtn = new TextButton("Back", skin);
+    // Create close button using close-icon.png
+    ImageButton closeButton = new ImageButton(
+        new TextureRegionDrawable(
+            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(
+        20f,  // 20f padding from left
+        stage.getHeight() - 60f - 20f  // 20f padding from top
+    );
 
     // Add listener for the back button
-    backBtn.addListener(
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -195,8 +207,7 @@ public class StatisticsDisplay extends UIComponent {
     // Place button in a table
     Table table = new Table();
     table.setFillParent(true);
-    table.top().left().pad(15f);
-    table.add(backBtn);
+    table.add(closeButton).top().right().pad(20f);
     return table;
   }
 

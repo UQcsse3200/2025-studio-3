@@ -19,8 +19,6 @@ public class AchievementDialogComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(AchievementDialogComponent.class);
   private static final float DISPLAY_DURATION = 4.0f;
   private static final float ANIMATION_DURATION = 0.5f;
-  private static final String ACHIEVEMENT_TEXTURE = "images/achievement.png";
-  private static final String SKILL_POINT_TEXTURE = "images/skillpoints.png";
   private String name;
   private String description;
   private int skillPoints;
@@ -58,7 +56,7 @@ public class AchievementDialogComponent extends UIComponent {
     // Set the achievement background
     try {
       Texture achievementTexture =
-          ServiceLocator.getResourceService().getAsset(ACHIEVEMENT_TEXTURE, Texture.class);
+          ServiceLocator.getGlobalResourceService().getAsset("images/achievement.png", Texture.class);
       if (achievementTexture != null) {
         // Create a scaled drawable that fits our smaller dialog size
         TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
@@ -133,7 +131,7 @@ public class AchievementDialogComponent extends UIComponent {
       // Try to add skill point icon
       try {
         Texture skillPointTexture =
-            ServiceLocator.getResourceService().getAsset(SKILL_POINT_TEXTURE, Texture.class);
+            ServiceLocator.getGlobalResourceService().getAsset("images/skillpoints.png", Texture.class);
         if (skillPointTexture != null) {
           Drawable skillPointDrawable = new TextureRegionDrawable(skillPointTexture);
           Image skillPointIcon = new Image(skillPointDrawable);

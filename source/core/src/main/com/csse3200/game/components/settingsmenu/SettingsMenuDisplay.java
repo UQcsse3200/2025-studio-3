@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
@@ -165,9 +166,15 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private Table makeMenuBtns() {
-    TextButton exitBtn = new TextButton("Back", skin);
-    TextButton applyBtn = new TextButton("Apply", skin);
-
+    // Back button positioned at top-left with close icon
+    ImageButton exitBtn = new ImageButton(
+        new TextureRegionDrawable(
+            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    exitBtn.setSize(60f, 60f);
+    exitBtn.setPosition(
+        20f,  // 20f padding from left
+        stage.getHeight() - 60f - 20f  // 20f padding from top
+    );
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -176,6 +183,8 @@ public class SettingsMenuDisplay extends UIComponent {
             exitMenu();
           }
         });
+
+    TextButton applyBtn = new TextButton("Apply", skin);
 
     applyBtn.addListener(
         new ChangeListener() {
@@ -186,9 +195,14 @@ public class SettingsMenuDisplay extends UIComponent {
           }
         });
 
+    // Add back button directly to stage
+    stage.addActor(exitBtn);
+    
+    // Create table for apply button only
     Table table = new Table();
-    table.add(exitBtn).expandX().left().pad(0f, 15f, 15f, 0f);
-    table.add(applyBtn).expandX().right().pad(0f, 0f, 15f, 15f);
+    table.setFillParent(true);
+    table.top().right().pad(20f);
+    table.add(applyBtn).size(100f, 50f);
     return table;
   }
 
@@ -207,9 +221,11 @@ public class SettingsMenuDisplay extends UIComponent {
     UserSettings.set(settings, true);
   }
 
+  /**
+   * Exits the menu.
+   */
   private void exitMenu() {
-    if (Persistence.profile() == null) {
-      ServiceLocator.deregisterConfigService();
+    if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
       game.setScreen(ScreenType.MAIN_GAME);

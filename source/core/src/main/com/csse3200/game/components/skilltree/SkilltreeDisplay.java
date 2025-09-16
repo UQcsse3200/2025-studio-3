@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.services.ServiceLocator;
@@ -107,15 +106,14 @@ public class SkilltreeDisplay extends UIComponent {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
             int cost = skill.getCost();
-            assert Persistence.profile() != null;
-            int points = Persistence.profile().wallet().getSkillsPoints();
+            int points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
             boolean locked = !skillSet.checkIfUnlocked(skill.getName());
 
             // unlock skill conditions which removes skill points and replaces button if successful
             if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
               skillSet.addSkill(skill);
-              Persistence.profile().wallet().unlockSkill(cost);
-              points = Persistence.profile().wallet().getSkillsPoints();
+              ServiceLocator.getProfileService().getProfile().getWallet().unlockSkill(cost);
+              points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
               skillPointLabel.setText("Skill Points: " + points);
 
               // Replace button with unlocked image

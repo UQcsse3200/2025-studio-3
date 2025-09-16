@@ -47,6 +47,6 @@ class ServiceLocatorTest {
     assertNull(ServiceLocator.getTimeSource());
     assertNotNull(ServiceLocator.getMenuSpriteService());
     assertNotNull(ServiceLocator.getConfigService());
-    assertNull(ServiceLocator.getDialogService());
+    assertNotNull(ServiceLocator.getDialogService());
   }
 }

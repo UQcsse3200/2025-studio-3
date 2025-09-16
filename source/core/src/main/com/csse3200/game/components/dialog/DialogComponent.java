@@ -113,7 +113,7 @@ public class DialogComponent extends UIComponent {
     // Set the dialog background image
     try {
       Texture dialogTexture =
-          ServiceLocator.getResourceService().getAsset("images/dialog.png", Texture.class);
+          ServiceLocator.getGlobalResourceService().getAsset("images/dialog.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);

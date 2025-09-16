@@ -1,7 +1,12 @@
 package com.csse3200.game.progression.inventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
 
 /** Inventory class to manage the player's items. */
 public class Inventory {
@@ -47,5 +52,23 @@ public class Inventory {
    */
   public boolean contains(String itemKey) {
     return items.contains(itemKey);
+  }
+
+
+  /**
+   * Get the items in the inventory.
+   *
+   * @return the items in the inventory.
+   */
+  public Map<String, BaseItemConfig> getInventoryItems() {
+    Map<String, BaseItemConfig> itemMap = new HashMap<>();
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      return itemMap;
+    }
+    for (String itemKey : getKeys()) {
+      itemMap.put(itemKey, configService.getItemConfig(itemKey));
+    }
+    return itemMap;
   }
 }

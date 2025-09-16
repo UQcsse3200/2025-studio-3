@@ -8,9 +8,6 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.SunlightHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
@@ -23,13 +20,11 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.CurrencyService;
-import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -72,26 +67,20 @@ public class MainGameScreen extends ScreenAdapter {
     this.game = game;
     this.waveManager = new WaveManager();
 
-    if (Persistence.profile() == null) {
-      throw new IllegalStateException("No profile loaded, cannot start game");
+    if (!ServiceLocator.getProfileService().isActive()) {
+      logger.error("[MainGameScreen] No profile is loaded. This is undefined behaviour.");
     }
 
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
-
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
     physicsEngine = physicsService.getPhysics();
-
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
-
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerDialogService(new DialogService());
-
     ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
-
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -193,15 +182,12 @@ public class MainGameScreen extends ScreenAdapter {
     PauseButton pauseButton = new PauseButton();
     PauseMenu pauseMenu = new PauseMenu();
     PauseMenuActions pauseMenuActions = new PauseMenuActions(this.game);
-    MainGameActions mainGameActions = new MainGameActions(this.game);
+    MainGameActions mainGameActions = new MainGameActions();
 
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
         .addComponent(mainGameActions)
-        .addComponent(new MainMapNavigationMenu())
-        .addComponent(new MainMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu())
         .addComponent(pauseButton)
         .addComponent(pauseMenu)
         .addComponent(pauseMenuActions)

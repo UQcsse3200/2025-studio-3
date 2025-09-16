@@ -11,11 +11,21 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.rendering.RenderService;
 
 public class WorldMapScreen implements Screen {
   private final GdxGame game;
@@ -30,17 +40,20 @@ public class WorldMapScreen implements Screen {
   private Texture shopTexture;
   private Texture playerTex;
   private Texture backButton;
-
   private Node[] nodes;
   private Vector2 playerPos;
   private float playerSpeed = 200f;
   private Node nearbyNode = null;
-
   private Rectangle backBtnBounds;
   private BitmapFont font;
 
   public WorldMapScreen(GdxGame game) {
     this.game = game;
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+    createUI();
   }
 
   @Override
@@ -57,7 +70,6 @@ public class WorldMapScreen implements Screen {
     lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
     shopTexture = new Texture(Gdx.files.internal("images/shopsprite.png"));
     playerTex = new Texture(Gdx.files.internal("images/character.png"));
-    backButton = new Texture(Gdx.files.internal("images/back_button.png"));
 
     FileHandle file = Gdx.files.internal("data/nodes.json");
     Json json = new Json();
@@ -65,8 +77,6 @@ public class WorldMapScreen implements Screen {
 
     playerPos =
         new Vector2(nodes[0].px * Gdx.graphics.getWidth(), nodes[0].py * Gdx.graphics.getHeight());
-
-    backBtnBounds = new Rectangle(20, (float) Gdx.graphics.getHeight() - 140, 120, 120);
 
     font = new BitmapFont();
     font.setColor(Color.WHITE);
@@ -136,20 +146,19 @@ public class WorldMapScreen implements Screen {
       float my = (float) Gdx.graphics.getHeight() - Gdx.input.getY();
 
       if (backBtnBounds.contains(mx, my)) {
-        ServiceLocator.deregisterConfigService();
         game.setScreen(GdxGame.ScreenType.MAIN_MENU);
       }
     }
 
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       if ("shop".equals(nearbyNode.id)) {
-        logger.info("🛒 Opening Shop!");
+        logger.info("Opening Shop!");
         game.setScreen(GdxGame.ScreenType.SHOP);
       } else if (nearbyNode.level == 1) {
-        logger.info("🚀 Starting Level 1!");
+        logger.info("Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
       } else {
-        logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
+        logger.info("Checkpoint reached at Level {}", nearbyNode.level);
         nearbyNode.unlocked = true;
       }
     }
@@ -187,5 +196,20 @@ public class WorldMapScreen implements Screen {
     playerTex.dispose();
     backButton.dispose();
     font.dispose();
+  }
+
+    /**
+   * Creates the StatisticsScreen's UI including components for rendering UI elements to the screen
+   * and capturing and handling UI input.
+   */
+  private void createUI() {
+    logger.debug("Creating ui");
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    Entity ui = new Entity();
+    ui.addComponent(new InputDecorator(stage, 10))
+        .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu());
+    ServiceLocator.getEntityService().register(ui);
   }
 }

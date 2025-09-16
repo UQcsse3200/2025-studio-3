@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.entities.configs.BaseItemConfig;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
@@ -38,7 +37,7 @@ public class InventoryDisplay extends UIComponent {
   public InventoryDisplay(GdxGame game) {
     super();
     this.game = game;
-    this.inventoryItems = Persistence.profile().getInventoryItems();
+    this.inventoryItems = ServiceLocator.getProfileService().getProfile().getInventory().getInventoryItems();
   }
 
   @Override
@@ -142,10 +141,19 @@ public class InventoryDisplay extends UIComponent {
    * @return table with exit button
    */
   private Table makeBackBtn() {
-    TextButton backBtn = new TextButton("Back", skin);
+    // Create close button using close-icon.png
+    ImageButton closeButton = new ImageButton(
+        new TextureRegionDrawable(
+            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    
+    // Position in top left 
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, 
+        stage.getHeight() - 60f - 20f  // 20f padding from top
+    );
 
     // Add listener for the back button
-    backBtn.addListener(
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -156,7 +164,8 @@ public class InventoryDisplay extends UIComponent {
 
     // Place button in a table
     Table table = new Table();
-    table.add(backBtn).expandX().left().pad(0f, 15f, 15f, 0f);
+    table.setFillParent(true);
+    table.add(closeButton).top().right().pad(20f);
     return table;
   }
 

@@ -13,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.entities.configs.BaseItemConfig;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.ShopRandomizer;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +26,13 @@ import org.slf4j.LoggerFactory;
 public class ShopDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ShopDisplay.class);
   private static final float Z_INDEX = 2f;
-  private static final int SLOT_SIZE = 50;
+  private static final int ITEM_SIZE = 160;
+  private static final int COIN_ICON_SIZE = 40;
   private Window.WindowStyle windowStyle;
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
+  private Label timerLabel;
+  private Table mainTable;
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -44,16 +47,97 @@ public class ShopDisplay extends UIComponent {
     addActors();
   }
 
+  @Override
+  public void update() {
+    super.update();
+    updateTimer();
+    recenterTable();
+  }
+
   /** Adds actors to the stage. */
   private void addActors() {
-    Image backgroundImage =
-        new Image(
-            ServiceLocator.getResourceService()
-                .getAsset("images/shopbackground.jpg", Texture.class));
-
-    backgroundImage.setFillParent(true);
+    // Create main table with fixed dimensions
+    mainTable = new Table();
+    mainTable.setSize(778f, 564f);
+    mainTable.setPosition(
+        (stage.getWidth() - 778f) / 2f, 
+        (stage.getHeight() - 564f) / 2f
+    );
+    
+    // Set shop-popup.png as background with fixed size
+    Image backgroundImage = new Image(
+        ServiceLocator.getGlobalResourceService().getAsset("images/shop-popup.png", Texture.class));
+    backgroundImage.setSize(778f, 564f);
+    backgroundImage.setPosition(
+        (stage.getWidth() - 778f) / 2f, 
+        (stage.getHeight() - 564f) / 2f
+    );
     stage.addActor(backgroundImage);
+    
+    createShopUI();
+    stage.addActor(mainTable);
+  }
+
+  /**
+   * Sets the label's font color to white
+   *
+   * @param label The label to set the font color of
+   */
+  private void whiten(Label label) {
+    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+    st.fontColor = Color.WHITE;
+    label.setStyle(st);
+  }
+
+  /** Creates the main shop UI layout. */
+  private void createShopUI() {
+    mainTable.clear();
+    Label titleLabel = new Label("SHOP", skin, "title");
+    titleLabel.setColor(Color.BLACK);
+    titleLabel.setFontScale(1.5f);
+    mainTable.add(titleLabel).colspan(3).center().padTop(-40).padBottom(34f).row();
+    createTimerDisplay();
+    mainTable.add(timerLabel).colspan(3).center().padBottom(30f).row();
     createItemSlots();
+  }
+  
+  /** Creates and displays the reset timer. */
+  private void createTimerDisplay() {
+    timerLabel = new Label("", skin);
+    whiten(timerLabel);
+    updateTimer();
+  }
+  
+  /** Updates the countdown timer display. */
+  private void updateTimer() {
+    if (timerLabel == null) return;
+    
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime nextHour = now.truncatedTo(ChronoUnit.HOURS).plusHours(1);
+    long minutesLeft = ChronoUnit.MINUTES.between(now, nextHour);
+    long secondsLeft = ChronoUnit.SECONDS.between(now, nextHour) % 60;
+    
+    timerLabel.setText(String.format("Shop resets in: %02d:%02d", minutesLeft, secondsLeft));
+  }
+  
+  /** Recenters the table and background to ensure they stay centered on screen. */
+  private void recenterTable() {
+    if (mainTable == null) return;
+    
+    // Calculate center position for the fixed 778x564 dimensions
+    float centerX = (stage.getWidth() - 778f) / 2f;
+    float centerY = (stage.getHeight() - 564f) / 2f;
+    
+    // Recenter the main table
+    mainTable.setPosition(centerX, centerY);
+    
+    // Recenter the background image if it exists
+    for (Actor actor : stage.getActors()) {
+      if (actor instanceof Image image && image.getWidth() == 778f && image.getHeight() == 564f) {
+          image.setPosition(centerX, centerY);
+          break;
+      }
+    }
   }
 
   /** Initializes the shop items. */
@@ -66,62 +150,75 @@ public class ShopDisplay extends UIComponent {
     String[] allItemKeys = configService.getItemKeys();
     int[] itemIndexes =
         ShopRandomizer.getShopItemIndexes(
-            Persistence.profile().getName(), 0, allItemKeys.length - 1, LocalDateTime.now());
+            ServiceLocator.getProfileService().getProfile().getName(), 0, allItemKeys.length - 1, LocalDateTime.now());
     this.itemKeys =
         new String[] {
           allItemKeys[itemIndexes[0]], allItemKeys[itemIndexes[1]], allItemKeys[itemIndexes[2]]
         };
   }
 
-  /** Creates the item slots. */
+  /** Creates the item slots with prices and coin icons. */
   private void createItemSlots() {
-    float[] pedestalX = {
-      stage.getWidth() * 0.25f, stage.getWidth() * 0.5f, stage.getWidth() * 0.75f
-    };
-
-    float pedestalY = stage.getHeight() * 0.4f;
-
+    Table itemTable = new Table();
+    
     for (int i = 0; i < 3; i++) {
-      createItemSlot(
-          i,
-          pedestalX[i] - SLOT_SIZE / 2f,
-          pedestalY,
-          ServiceLocator.getConfigService().getItemConfig(itemKeys[i]).getAssetPath());
+      BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKeys[i]);
+      
+      // Create item column
+      Table itemColumn = new Table();
+      
+      // Item image button
+      createItemSlot(i, itemConfig, itemColumn);
+      
+      Table priceTable = new Table();
+
+      Image coinIcon = new Image(
+          ServiceLocator.getGlobalResourceService().getAsset("images/coins.png", Texture.class));
+      coinIcon.setSize(COIN_ICON_SIZE, COIN_ICON_SIZE);
+      priceTable.add(coinIcon).size(COIN_ICON_SIZE).padRight(8f);
+
+      Label priceLabel = new Label(String.valueOf(itemConfig.getCost()), skin);
+      whiten(priceLabel);
+      priceLabel.setFontScale(1.2f);
+      priceTable.add(priceLabel);
+      
+      itemColumn.add(priceTable).padTop(25f);
+      
+      // Add to main item table
+      itemTable.add(itemColumn).padLeft(30f).padRight(30f);
     }
+    
+    mainTable.add(itemTable).center();
   }
 
   /**
    * Creates an item slot.
    *
    * @param slotIndex The index of the slot.
-   * @param x The x position of the slot.
-   * @param y The y position of the slot.
-   * @param itemTexture The texture of the item.
+   * @param itemConfig The item configuration.
+   * @param container The container to add the slot to.
    */
-  private void createItemSlot(int slotIndex, float x, float y, String itemTexture) {
+  private void createItemSlot(int slotIndex, BaseItemConfig itemConfig, Table container) {
     // Load the item texture
-    Texture itemTex = ServiceLocator.getResourceService().getAsset(itemTexture, Texture.class);
+    Texture itemTex = ServiceLocator.getResourceService().getAsset(itemConfig.getAssetPath(), Texture.class);
 
     // Create ImageButton with the item texture
     ImageButton slot = new ImageButton(new TextureRegionDrawable(itemTex));
-
-    // Position and size the slot
-    slot.setPosition(x, y);
-    slot.setSize(SLOT_SIZE, SLOT_SIZE);
+    slot.setSize(ITEM_SIZE, ITEM_SIZE);
 
     // Add click listener
     slot.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Item slot {} clicked ({})", slotIndex, itemTexture);
-            onItemSlotClicked(slotIndex, itemTexture);
+            logger.debug("Item slot {} clicked ({})", slotIndex, itemConfig.getName());
+            onItemSlotClicked(slotIndex, itemConfig.getAssetPath());
           }
         });
 
-    // Store reference and add to stage
+    // Store reference and add to container
     itemSlots[slotIndex] = slot;
-    stage.addActor(slot);
+    container.add(slot).size(ITEM_SIZE).row();
   }
 
   /**
@@ -210,16 +307,12 @@ public class ShopDisplay extends UIComponent {
    */
   private void onPurchaseClicked(String itemKey) {
     BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
-    if (Persistence.profile().wallet().purchaseShopItem(itemConfig.getCost())) {
-      Persistence.profile().inventory().addItem(itemKey);
+    if (ServiceLocator.getProfileService().getProfile().getWallet().purchaseShopItem(itemConfig.getCost())) {
+      ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
       logger.info("Successfully purchased: {}", itemConfig.getName());
       entity.getEvents().trigger("purchased");
-      // ServiceLocator.getDialogService().info("Successfully purchased: " +
-      // itemConfig.getName());
     } else {
       logger.warn("Insufficient funds to purchase: {}", itemConfig.getName());
-      // ServiceLocator.getDialogService().error("Insufficient funds to purchase: " +
-      // itemConfig.getName());
     }
   }
 

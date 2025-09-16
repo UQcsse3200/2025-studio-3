@@ -23,7 +23,7 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
   private final Renderer renderer;
   private final GdxGame game;
   private String[] shopTextures = {
-    "images/shopbackground.jpg", "images/coins.png", "images/dialog.png"
+    "images/shop-popup.png", "images/coins.png", "images/dialog.png"
   };
   private String[] itemTextures;
 
@@ -121,9 +121,6 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
     ui.addComponent(new ShopDisplay()).addComponent(new InputDecorator(stage, 10));
-    // .addComponent(new ShopButtons())
-    // .addComponent(new ShopActions(game));
-
     ServiceLocator.getEntityService().register(ui);
   }
 }

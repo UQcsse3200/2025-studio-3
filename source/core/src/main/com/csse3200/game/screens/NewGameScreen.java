@@ -12,7 +12,6 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -23,7 +22,6 @@ public class NewGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(NewGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] textures = {"images/dialog.png", "images/shopbackground.jpg"};
 
   /**
    * Constructor for the new game screen.
@@ -36,11 +34,8 @@ public class NewGameScreen extends ScreenAdapter {
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerResourceService(new ResourceService());
-    ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerRenderService(new RenderService());
     renderer = RenderFactory.createRenderer();
-
-    loadAssets();
     createUI();
   }
 
@@ -70,26 +65,10 @@ public class NewGameScreen extends ScreenAdapter {
   public void dispose() {
     logger.debug("Disposing new game screen");
     renderer.dispose();
-    unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.clear();
-  }
-
-  /** Loads the new game screen's assets. */
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(textures);
-    ServiceLocator.getResourceService().loadAll();
-  }
-
-  /** Unloads the new game screen's assets. */
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(textures);
   }
 
   /**

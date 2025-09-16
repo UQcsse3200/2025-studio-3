@@ -2,7 +2,9 @@ package com.csse3200.game.components.persistence;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ServiceLocator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +14,10 @@ public class SaveGameMenuActions extends Component {
   private GdxGame game;
   private int selectedSlot = -1;
 
+  /**
+   * Constructor for the SaveGameMenuActions class.
+   * @param game the game instance
+   */
   public SaveGameMenuActions(GdxGame game) {
     this.game = game;
   }
@@ -46,17 +52,11 @@ public class SaveGameMenuActions extends Component {
    */
   private void handleSaveGame(String saveName) {
     logger.info("Saving game with save name: {} in slot: {}", saveName, selectedSlot);
-
-    // Save the current profile to the selected slot
-    Persistence.save(selectedSlot);
-
-    // Update the profile name if it's different
-    if (Persistence.profile() != null && !Persistence.profile().getName().equals(saveName)) {
-      Persistence.profile().setName(saveName);
-      Persistence.save(selectedSlot); // Save again with the new name
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService.getProfile() != null && !profileService.getProfile().getName().equals(saveName)) {
+      profileService.getProfile().setName(saveName);
     }
-
-    // Return to the main game screen
+    profileService.saveProfileToSlot(selectedSlot);
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

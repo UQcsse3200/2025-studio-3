@@ -2,7 +2,7 @@ package com.csse3200.game.components.persistence;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,8 +45,7 @@ public class NewGameMenuActions extends Component {
    */
   private void handleStartGame(String saveName) {
     logger.info("Starting new game with save name: {} in slot: {}", saveName, selectedSlot);
-    Persistence.create(saveName, selectedSlot);
-    game.loadScreens();
+    ServiceLocator.getProfileService().createProfile(saveName, selectedSlot);
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -46,7 +45,7 @@ public class MainMapNavigationMenu extends UIComponent {
   private void addActors() {
     // Create the plaque background
     Texture plaqueTexture =
-        ServiceLocator.getResourceService().getAsset("images/plaque.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/plaque.png", Texture.class);
     plaqueBackground = new Image(plaqueTexture);
     plaqueBackground.setSize(PLAQUE_WIDTH, PLAQUE_HEIGHT);
 
@@ -63,13 +62,13 @@ public class MainMapNavigationMenu extends UIComponent {
 
     // Create skill points icon
     Texture skillPointsTexture =
-        ServiceLocator.getResourceService().getAsset("images/skillpoints.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/skillpoints.png", Texture.class);
     Image skillPointsIcon = new Image(skillPointsTexture);
     skillPointsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
     // Create coins icon
     Texture coinsTexture =
-        ServiceLocator.getResourceService().getAsset("images/coins.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/coins.png", Texture.class);
     Image coinsIcon = new Image(coinsTexture);
     coinsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
@@ -101,7 +100,7 @@ public class MainMapNavigationMenu extends UIComponent {
   private void createButtons(float plaqueX, float plaqueY) {
     // Create settings button
     Texture settingsTexture =
-        ServiceLocator.getResourceService().getAsset("images/settings-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/settings-icon.png", Texture.class);
     settingsButton = new ImageButton(new TextureRegionDrawable(settingsTexture));
     settingsButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     settingsButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
@@ -115,7 +114,7 @@ public class MainMapNavigationMenu extends UIComponent {
 
     // Create menu button
     Texture menuTexture =
-        ServiceLocator.getResourceService().getAsset("images/menu-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/menu-icon.png", Texture.class);
     menuButton = new ImageButton(new TextureRegionDrawable(menuTexture));
     menuButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     menuButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
@@ -228,8 +227,8 @@ public class MainMapNavigationMenu extends UIComponent {
   public void updateDisplay() {
     try {
       // Get values from profile wallet
-      int skillPoints = Persistence.profile().wallet().getSkillsPoints();
-      int coins = Persistence.profile().wallet().getCoins();
+      int skillPoints = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
+      int coins = ServiceLocator.getProfileService().getProfile().getWallet().getCoins();
       skillPointsLabel.setText((skillPoints > 999) ? "99+" : String.valueOf(skillPoints));
       coinsLabel.setText((coins > 9999) ? "9999+" : String.valueOf(coins));
     } catch (Exception e) {

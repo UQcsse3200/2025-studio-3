@@ -1,10 +1,8 @@
 package com.csse3200.game.components.maingame;
 
-import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.screens.MainGameScreen;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,18 +12,15 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(MainGameActions.class);
-  private final GdxGame game;
   private PauseMenu pauseMenu;
   private MainGameScreen mainGameScreen;
   private com.csse3200.game.components.hud.PauseButton pauseButton;
 
   /**
    * Constructor for the MainGameActions class.
-   *
-   * @param game The game instance.
    */
-  public MainGameActions(GdxGame game) {
-    this.game = game;
+  public MainGameActions() {
+    // Do nothing
   }
 
   @Override
@@ -42,13 +37,6 @@ public class MainGameActions extends Component {
    */
   public void setPauseMenu(PauseMenu pauseMenu) {
     this.pauseMenu = pauseMenu;
-  }
-
-  /** Swaps to the Main Menu screen. */
-  private void onExit() {
-    logger.info("Exiting main game screen");
-    ServiceLocator.deregisterConfigService();
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
   /**

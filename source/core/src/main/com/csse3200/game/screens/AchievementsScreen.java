@@ -5,14 +5,15 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
@@ -29,8 +30,6 @@ public class AchievementsScreen extends ScreenAdapter {
   private final GdxGame game;
   private Stage stage;
   private Table rootTable;
-
-  // Styles
   private Skin skin;
   private Label.LabelStyle headerStyle;
   private Label.LabelStyle textStyle;
@@ -45,11 +44,6 @@ public class AchievementsScreen extends ScreenAdapter {
   public void show() {
     stage = new Stage(new ScreenViewport());
     Gdx.input.setInputProcessor(stage);
-
-    // Load skin
-    skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
-
-    // Styles from skin
     headerStyle =
         skin.has("title", Label.LabelStyle.class)
             ? skin.get("title", Label.LabelStyle.class)
@@ -73,10 +67,15 @@ public class AchievementsScreen extends ScreenAdapter {
     // Create achievement display
     createAchievementDisplay();
 
-    // Back button
-    TextButton backButton = new TextButton("Back", skin);
-    backButton.getLabel().setFontScale(2f);
-    backButton.pad(20, 60, 20, 60);
+    // Back button positioned at top-left with close icon
+    ImageButton backButton = new ImageButton(
+        new TextureRegionDrawable(
+            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    backButton.setSize(60f, 60f);
+    backButton.setPosition(
+        20f,  // 20f padding from left
+        stage.getHeight() - 60f - 20f  // 20f padding from top
+    );
 
     backButton.addListener(
         new ClickListener() {
@@ -86,8 +85,7 @@ public class AchievementsScreen extends ScreenAdapter {
           }
         });
 
-    rootTable.row().padBottom(40);
-    rootTable.add(backButton).center().expandX();
+    stage.addActor(backButton);
   }
 
   /** Creates the achievement display with achievements organized by tier. */
@@ -101,7 +99,7 @@ public class AchievementsScreen extends ScreenAdapter {
       return;
     }
 
-    Statistics statistics = Persistence.profile().statistics();
+    Statistics statistics = ServiceLocator.getProfileService().getProfile().getStatistics();
     Map<String, BaseAchievementConfig> achievementConfigs = configService.getAchievementConfigs();
 
     if (achievementConfigs == null || achievementConfigs.isEmpty()) {
@@ -112,6 +110,38 @@ public class AchievementsScreen extends ScreenAdapter {
       return;
     }
 
+    Table[] tables = populateTable(achievementConfigs, statistics);
+    Table t1Table = tables[0];
+    Table t2Table = tables[1];
+    Table t3Table = tables[2];
+    
+    // Stack tables vertically
+    Table allTables = new Table();
+
+    allTables.add(new Label("Tier 1", headerStyle)).center().row();
+    allTables.add(t1Table).left().padBottom(20).row();
+
+    allTables.add(new Label("Tier 2", headerStyle)).center().row();
+    allTables.add(t2Table).left().padBottom(20).row();
+
+    allTables.add(new Label("Tier 3", headerStyle)).center().row();
+    allTables.add(t3Table).left().padBottom(20).row();
+
+    ScrollPane scrollPane = new ScrollPane(allTables, skin);
+    scrollPane.setFadeScrollBars(false);
+
+    rootTable.row().padTop(20);
+    rootTable.add(scrollPane).expand().fill().row();
+  }
+
+  /**
+   * Populates the table with achievements organized by tier.
+   * 
+   * @param achievementConfigs the achievement configs
+   * @param statistics the statistics
+   * @return the tables
+   */
+  private Table[] populateTable(Map<String, BaseAchievementConfig> achievementConfigs, Statistics statistics) {
     // Separate achievements by tier
     Table t1Table = new Table();
     Table t2Table = new Table();
@@ -146,25 +176,9 @@ public class AchievementsScreen extends ScreenAdapter {
         if (colCountT3 % 7 == 0) t3Table.row();
       }
     }
-
-    // Stack tables vertically
-    Table allTables = new Table();
-
-    allTables.add(new Label("Tier 1", headerStyle)).center().row();
-    allTables.add(t1Table).left().padBottom(20).row();
-
-    allTables.add(new Label("Tier 2", headerStyle)).center().row();
-    allTables.add(t2Table).left().padBottom(20).row();
-
-    allTables.add(new Label("Tier 3", headerStyle)).center().row();
-    allTables.add(t3Table).left().padBottom(20).row();
-
-    ScrollPane scrollPane = new ScrollPane(allTables, skin);
-    scrollPane.setFadeScrollBars(false);
-
-    rootTable.row().padTop(20);
-    rootTable.add(scrollPane).expand().fill().row();
+    return new Table[] {t1Table, t2Table, t3Table};
   }
+  
 
   /**
    * Creates a button for displaying an achievement.

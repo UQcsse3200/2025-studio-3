@@ -51,7 +51,10 @@ public class PauseMenuActions extends Component {
         .warning(
             "Main Menu",
             "Are you sure you want to return to the main menu? Your progress will not be saved.",
-            dialog -> game.setScreen(GdxGame.ScreenType.MAIN_MENU),
+            dialog ->{
+              game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+              ServiceLocator.getProfileService().clear();
+            },
             null);
   }
 

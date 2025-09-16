@@ -17,8 +17,6 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -30,22 +28,22 @@ public class MainMenuScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] mainMenuTextures = {
-    "images/box_boy_title.png", "images/bg.png", "images/bg-text.png", "images/dialog.png"
+    "images/box_boy_title.png", "images/bg.png", "images/bg-text.png"
   };
 
+  /**
+   * Constructor for the main menu screen.
+   *
+   * @param game the game instance
+   */
   public MainMenuScreen(GdxGame game) {
     this.game = game;
-
     logger.debug("Initialising main menu screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerDialogService(new DialogService());
-    ServiceLocator.registerConfigService(new ConfigService());
-
     renderer = RenderFactory.createRenderer();
-
     loadAssets();
     createUI();
   }
