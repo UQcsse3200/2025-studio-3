@@ -1,6 +1,7 @@
 package com.csse3200.game.components.slot;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -20,7 +21,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
-import com.badlogic.gdx.utils.Array;                    // <-- gdx Array (important)
+import com.badlogic.gdx.utils.Array; // gdx Array
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.components.cards.CardActor;
 import com.csse3200.game.services.ServiceLocator;
@@ -46,10 +47,10 @@ public class SlotMachineDisplay extends UIComponent {
 
     // ----- card atlas (UI cards) -----
     private static final String CARD_ATLAS = "images/ui_cards.atlas";
-    private static final String CARD_REGION_HERO = "Card_SlingShooter";   // prefer this if present
+    private static final String CARD_REGION_HERO = "Card_SlingShooter";
 
-    private TextureAtlas cardAtlas = null; // prefer ResourceService asset; fallback to local file
-    private boolean ownsCardAtlas = false; // dispose only if we created it
+    private TextureAtlas cardAtlas = null;
+    private boolean ownsCardAtlas = false;
     private final List<Texture> ownedRuntimeTextures = new ArrayList<>();
 
     // ----- reels atlas hero region name -----
@@ -61,11 +62,25 @@ public class SlotMachineDisplay extends UIComponent {
     // ----- layout ratios -----
     private static final float TOPBAR_HEIGHT_RATIO = 0.25f;
     private static final float TOPBAR_MARGIN_RATIO = 0.015f;
-    private static final float REELS_AREA_W_RATIO = 0.70f;
-    private static final float REELS_AREA_H_RATIO = 0.83f;
+    private static final float REELS_AREA_W_RATIO  = 0.70f;
+    private static final float REELS_AREA_H_RATIO  = 0.83f;
     private static final float REELS_AREA_Y_OFFSET = 0.00f;
-    private static final int REEL_COUNT = 3;
-    private static final float REEL_GAP_RATIO = 0.03f;
+    private static final int   REEL_COUNT          = 3;
+    private static final float REEL_GAP_RATIO      = 0.03f;
+
+    // Card height = screenHeight * ratio (tweak to 0.12~0.14 if you want smaller)
+    private static float CARD_SCREEN_HEIGHT_RATIO = 0.16f;
+
+    // Track live cards so we can rescale & reanchor them when the window size changes
+    private static class LiveCard {
+        final CardActor actor;
+        final float heightRatio; // usually same as CARD_SCREEN_HEIGHT_RATIO
+        final float aspect;      // width/height
+        LiveCard(CardActor a, float heightRatio, float aspect) {
+            this.actor = a; this.heightRatio = heightRatio; this.aspect = aspect;
+        }
+    }
+    private final List<LiveCard> liveCards = new ArrayList<>();
 
     // ----- runtime state (reels) -----
     private final List<Group> reelColumns = new ArrayList<>();
@@ -190,11 +205,9 @@ public class SlotMachineDisplay extends UIComponent {
         TextureAtlas reelsAtlas =
                 ServiceLocator.getResourceService().getAsset("images/slot_reels.atlas", TextureAtlas.class);
 
-        Array<TextureAtlas.AtlasRegion> gdxRegions = reelsAtlas.getRegions(); // gdx Array
+        Array<TextureAtlas.AtlasRegion> gdxRegions = reelsAtlas.getRegions();
         symbolRegions = new ArrayList<>(gdxRegions.size);
-        for (TextureAtlas.AtlasRegion r : gdxRegions) {
-            symbolRegions.add(r);
-        }
+        for (TextureAtlas.AtlasRegion r : gdxRegions) symbolRegions.add(r);
 
         symbolRegions.sort(Comparator.comparing(a -> a.name));
         if (symbolRegions.isEmpty()) logger.warn("No symbol regions found.");
@@ -211,13 +224,12 @@ public class SlotMachineDisplay extends UIComponent {
 
         symbolCount = symbolRegions.size();
 
-        TextureRegion first = symbolRegions.get(0); // fixed: get(0) instead of getFirst()
+        TextureRegion first = symbolRegions.get(0);
         float scale = Math.min(colWidth / first.getRegionWidth(), colHeight / first.getRegionHeight());
         float wStd = first.getRegionWidth() * scale;
         float hStd = first.getRegionHeight() * scale;
         symbolHeight = hStd;
 
-        // Build 2 copies to allow continuous scroll.
         for (int k = 0; k < 2; k++) {
             for (TextureRegion r : symbolRegions) {
                 Image img = new Image(r);
@@ -444,9 +456,7 @@ public class SlotMachineDisplay extends UIComponent {
         return regionName.equals(a) && regionName.equals(b) && regionName.equals(c);
     }
 
-    private boolean isHeroTriple() {
-        return isTripleOf(REEL_REGION_HERO);
-    }
+    private boolean isHeroTriple() { return isTripleOf(REEL_REGION_HERO); }
 
     /** Called when each reel fully stops; when all stop we resolve the outcome. */
     private void notifyReelStopped() {
@@ -455,13 +465,9 @@ public class SlotMachineDisplay extends UIComponent {
             isSpinning = false;
             if (pendingResult != null) {
                 boolean engineTriggered = pendingResult.isEffectTriggered();
-
-                // Let the engine apply its non-hero effects (if any).
                 if (engineTriggered) {
                     slotEngine.applyEffect(pendingResult);
                 }
-
-                // Only drop a card when the triple is the hero face.
                 if (isHeroTriple()) {
                     logger.info("Hero triple -> drop hero card.");
                     playHeroCardSpawnAnimation();
@@ -473,12 +479,32 @@ public class SlotMachineDisplay extends UIComponent {
 
     @Override
     public void draw(SpriteBatch batch) {
+        // Quick resolution switches (optional)
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F6)) Gdx.graphics.setWindowedMode(960, 540);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F7)) Gdx.graphics.setWindowedMode(1280, 720);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F8)) Gdx.graphics.setWindowedMode(1600, 900);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.F9)) Gdx.graphics.setWindowedMode(1920, 1080);
+
+        // Runtime tweak of card size ratio
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET))
+            CARD_SCREEN_HEIGHT_RATIO = Math.max(0.08f, CARD_SCREEN_HEIGHT_RATIO - 0.01f);
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET))
+            CARD_SCREEN_HEIGHT_RATIO = Math.min(0.30f, CARD_SCREEN_HEIGHT_RATIO + 0.01f);
+
+        // Optional: press H to spit a card for testing
+        if (Gdx.input.isKeyJustPressed(Input.Keys.H)) playHeroCardSpawnAnimation();
+
         float w = stage.getWidth();
         float h = stage.getHeight();
         if (w != lastStageW || h != lastStageH) {
+            float oldW = lastStageW, oldH = lastStageH; // remember old size
             lastStageW = w; lastStageH = h;
+
             computeSizes();
             applyLayout();
+
+            // rescale and reanchor existing cards so they don't drift
+            rescaleAndReanchorCards(oldW, oldH, w, h);
         }
     }
 
@@ -495,6 +521,7 @@ public class SlotMachineDisplay extends UIComponent {
         }
         for (Texture t : ownedRuntimeTextures) if (t != null) t.dispose();
         ownedRuntimeTextures.clear();
+        liveCards.clear();
     }
 
     // ----- helpers & actions -----
@@ -569,19 +596,27 @@ public class SlotMachineDisplay extends UIComponent {
         }
     }
 
-    // ----- card spawning -----
+    // ----- card spawning & resize support -----
 
     private Vector2 reelMouthStageCenter() {
         if (reelsPane == null) return new Vector2(stage.getWidth() * 0.5f, stage.getHeight() * 0.8f);
         return reelsPane.localToStageCoordinates(new Vector2(reelsPane.getWidth() * 0.5f, reelsPane.getHeight()));
     }
 
-    /** Spawn a hero card (prefer the card atlas region; fallback to the hero face or a runtime blank). */
+    /** Spawn a hero card (prefer atlas region; fallback to hero face or a runtime blank). */
     private void playHeroCardSpawnAnimation() {
         try {
             CardActor card = newHeroCard();
             if (card == null) return;
 
+            // Size by screen height first
+            float targetH = stage.getHeight() * CARD_SCREEN_HEIGHT_RATIO;
+            float aspect  = card.getWidth() / Math.max(1f, card.getHeight());
+            if (aspect <= 0f) aspect = 2f / 3f;
+            float targetW = targetH * aspect;
+            card.setSize(targetW, targetH);
+
+            // Position
             Vector2 mouth = reelMouthStageCenter();
             float startX = mouth.x - card.getWidth() * 0.5f;
             float startY = mouth.y + card.getHeight() * 0.20f;
@@ -593,6 +628,9 @@ public class SlotMachineDisplay extends UIComponent {
             float endY = Math.max(stage.getHeight() * 0.12f - card.getHeight() * 0.5f, 16f);
 
             stage.addActor(card);
+            // Track the card so we can rescale/reanchor on future resizes
+            liveCards.add(new LiveCard(card, CARD_SCREEN_HEIGHT_RATIO, aspect));
+
             float rot = (ThreadLocalRandom.current().nextFloat() * 12f) - 6f;
             card.addAction(Actions.sequence(
                     Actions.parallel(
@@ -609,6 +647,30 @@ public class SlotMachineDisplay extends UIComponent {
             }
         } catch (Exception e) {
             logger.warn("Failed to play hero card spawn animation: {}", e.getMessage());
+        }
+    }
+
+    /** Rescale & reanchor existing cards when the stage size changes. */
+    private void rescaleAndReanchorCards(float oldW, float oldH, float newW, float newH) {
+        if (liveCards.isEmpty()) return;
+        for (int i = liveCards.size() - 1; i >= 0; i--) {
+            LiveCard c = liveCards.get(i);
+            CardActor a = c.actor;
+            if (a == null || a.getStage() == null || a.getParent() == null) {
+                liveCards.remove(i);
+                continue;
+            }
+            // relative position under the old size
+            float xr = oldW <= 0f ? 0f : a.getX() / oldW;
+            float yr = oldH <= 0f ? 0f : a.getY() / oldH;
+
+            // rescale by new screen height
+            float h = newH * c.heightRatio;
+            float w = h * c.aspect;
+            a.setSize(w, h);
+
+            // reanchor by relative position
+            a.setPosition(newW * xr, newH * yr);
         }
     }
 
