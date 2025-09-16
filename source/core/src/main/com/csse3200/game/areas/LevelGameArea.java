@@ -10,7 +10,6 @@ import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
