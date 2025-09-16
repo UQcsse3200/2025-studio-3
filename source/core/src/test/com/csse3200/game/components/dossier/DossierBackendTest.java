@@ -28,7 +28,7 @@ class DossierBackendTest {
         DefenceConfigs defenceConfigs = new DefenceConfigs();
         defenceConfigs.slingshooter = new DefenceDataConfig();
         defenceConfigs.slingshooter.name = "Slingshooter";
-        defenceConfigs.slingshooter.description = "A basic defence.";
+        defenceConfigs.slingshooter.description = "A basic defense.";
         defenceConfigs.slingshooter.health = 50;
         defenceConfigs.slingshooter.baseAttack = 1;
 
@@ -50,7 +50,7 @@ class DossierBackendTest {
 
     @Test
     void getInfoInEnemyMode() {
-        String expectedInfo = " Standard Robot\n Attack: 10\n Health: 40";
+        String expectedInfo = " A standard enemy.\n Attack: 10\n Health: 40";
         assertEquals(expectedInfo, dossierManager.getInfo("standardRobot"));
     }
 
@@ -59,7 +59,7 @@ class DossierBackendTest {
         dossierManager.changeMode();
         dossierManager.changeMode();
         dossierManager.changeMode();
-        String expectedInfo = " Slingshooter\n Attack: 1\n Health: 50";
+        String expectedInfo = " A basic defense.\n Attack: 1\n Health: 50";
         assertEquals(expectedInfo, dossierManager.getInfo("slingshooter"));
     }
 
