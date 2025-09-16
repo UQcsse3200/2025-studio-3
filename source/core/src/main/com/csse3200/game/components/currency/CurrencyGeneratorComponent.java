@@ -42,7 +42,7 @@ public class CurrencyGeneratorComponent extends Component {
   private float ROT_SPEED_DPS = 100f;
 
   /** Sun visual size in pixels */
-  private float SUN_SIZE_PX = 128f;
+  private float SUN_SIZE_PX = 64f;
 
   /** Sun lifetime in second */
   private float SUN_LIFETIME_SEC = 20f;
