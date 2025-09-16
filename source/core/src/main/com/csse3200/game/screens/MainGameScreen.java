@@ -88,7 +88,7 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     levelGameArea = new LevelGameArea(terrainFactory);
-    waveManager.setGameArea(levelGameArea);
+    waveManager.setEnemySpawnCallback(levelGameArea::spawnRobot);
     levelGameArea.setWaveManager(waveManager);
     levelGameArea.create();
 
@@ -101,7 +101,7 @@ public class MainGameScreen extends ScreenAdapter {
     physicsEngine.update();
     ServiceLocator.getEntityService().update();
     renderer.render();
-    waveManager.update();
+    waveManager.update(delta);
     levelGameArea.checkGameOver(); // check game-over state
   }
 
@@ -170,10 +170,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
-
-    // Connect the UI entity to the WaveManager for event triggering
-    WaveManager.setGameEntity(ui);
+        .addComponent(new CurrentWaveDisplay(waveManager));
 
     ServiceLocator.getEntityService().register(ui);
   }

@@ -1,8 +1,9 @@
 package com.csse3200.game.entities;
 
-import com.csse3200.game.areas.LevelGameArea;
-import com.csse3200.game.entities.factories.WaveFactory;
-import com.csse3200.game.services.GameTime;
+import com.csse3200.game.entities.configs.BaseWaveConfig;
+import com.csse3200.game.entities.configs.EnemySpawnConfig;
+import com.csse3200.game.entities.configs.GameConfig;
+import com.csse3200.game.persistence.FileLoader;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *   <li>Determines spawn cadence and a fair, shuffled lane sequence.
  *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should produce and which type
  *       to spawn next.
- *   <li>Delegates the actual entity creation and placement to {@link LevelGameArea}.
+ *   <li>Delegates the actual entity creation and placement via callback interface.
  * </ul>
  *
  * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
@@ -40,26 +41,41 @@ public class WaveManager {
   private float preparationPhaseDuration = 10.0f;
   private float preparationPhaseTimer = 0.0f;
 
-  private static Entity gameEntity;
-  private final GameTime gameTime;
   private final EntitySpawn entitySpawn;
-  private LevelGameArea levelGameArea;
-  private WaveFactory waveFactory;
+
+  // Callback interface for spawning enemies
+  public interface EnemySpawnCallback {
+    void spawnEnemy(int col, int row, String robotType);
+  }
+
+  // Event listener interface for wave events
+  public interface WaveEventListener {
+    void onPreparationPhaseStarted(int waveNumber);
+
+    void onWaveChanged(int waveNumber);
+
+    void onWaveStarted(int waveNumber);
+  }
+
+  private EnemySpawnCallback enemySpawnCallback;
+  private WaveEventListener waveEventListener;
 
   private List<Integer> waveLaneSequence;
   private int waveLanePointer;
+
+  // Wave configuration management
+  private static GameConfig gameConfig = null;
   private boolean levelComplete = false;
 
   public WaveManager() {
-    this.gameTime = new GameTime();
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = new EntitySpawn();
+    this.entitySpawn.setWaveManager(this);
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
-    this.waveFactory = new WaveFactory(currentLevel);
 
     Collections.shuffle(laneOrder);
   }
@@ -71,11 +87,11 @@ public class WaveManager {
    * @param entitySpawn spawn helper used by this manager
    */
   public WaveManager(EntitySpawn entitySpawn) {
-    this.gameTime = new GameTime();
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = entitySpawn;
+    this.entitySpawn.setWaveManager(this);
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
@@ -108,9 +124,9 @@ public class WaveManager {
     Collections.shuffle(waveLaneSequence);
     waveLanePointer = 0;
 
-    if (gameEntity != null && gameEntity.getEvents() != null) {
-      gameEntity.getEvents().trigger("preparationPhaseStarted", currentWave);
-      gameEntity.getEvents().trigger("waveChanged", currentWave);
+    if (waveEventListener != null) {
+      waveEventListener.onPreparationPhaseStarted(currentWave);
+      waveEventListener.onWaveChanged(currentWave);
     }
   }
 
@@ -129,17 +145,17 @@ public class WaveManager {
     preparationPhaseActive = false;
     timeSinceLastSpawn = 0.0f; // Reset spawn timer for new wave
 
-    if (gameEntity != null && gameEntity.getEvents() != null) {
-      gameEntity.getEvents().trigger("waveStarted", currentWave);
+    if (waveEventListener != null) {
+      waveEventListener.onWaveStarted(currentWave);
     }
   }
 
-  public void setGameArea(LevelGameArea levelGameArea) {
-    this.levelGameArea = levelGameArea;
+  public void setEnemySpawnCallback(EnemySpawnCallback callback) {
+    this.enemySpawnCallback = callback;
   }
 
-  public static void setGameEntity(Entity gameEntity) {
-    WaveManager.gameEntity = gameEntity;
+  public void setWaveEventListener(WaveEventListener listener) {
+    this.waveEventListener = listener;
   }
 
   public static int getCurrentWave() {
@@ -180,14 +196,19 @@ public class WaveManager {
    */
   public void onEnemyDisposed() {
     enemiesDisposed++;
-    logger.debug("Enemy disposed. Count: {}/{}", enemiesDisposed, enemiesToSpawn);
+    logger.debug(
+        "Enemy disposed. Count: {}/{} (spawned: {})",
+        enemiesDisposed,
+        enemiesToSpawn,
+        currentEnemyPos);
 
     // Check if all enemies for this wave have been disposed
-    if (enemiesDisposed >= enemiesToSpawn && waveActive) {
-      logger.info("Wave {} completed! All enemies disposed.", currentWave);
+    // Also ensure all enemies have been spawned before completing the wave
+    if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
+      logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
 
       // Check if this was the last wave for the current level
-      int maxWaves = waveFactory.getWaveCountForLevel(currentLevel);
+      int maxWaves = getWaveCountForLevel(currentLevel);
       if (currentWave >= maxWaves) {
         logger.info("All waves completed for level {}! Level complete!", currentLevel);
         levelComplete = true;
@@ -204,6 +225,13 @@ public class WaveManager {
    */
   public int getEnemiesDisposed() {
     return enemiesDisposed;
+  }
+
+  /**
+   * @return number of enemies spawned in current wave
+   */
+  public int getEnemiesSpawned() {
+    return currentEnemyPos;
   }
 
   /**
@@ -251,8 +279,6 @@ public class WaveManager {
    */
   public void setCurrentLevel(int level) {
     this.currentLevel = level;
-    // Update waveFactory for the new level
-    waveFactory = new WaveFactory(level);
     // Reset level state when switching levels
     resetLevel();
     logger.info("Level set to {}", level);
@@ -261,11 +287,13 @@ public class WaveManager {
   /**
    * Update function to be called by main game loop. Handles preparation phase timer and enemy
    * spawning.
+   *
+   * @param deltaTime time elapsed since last update in seconds
    */
-  public void update() {
+  public void update(float deltaTime) {
     // Handle preparation phase
     if (preparationPhaseActive) {
-      preparationPhaseTimer += gameTime.getDeltaTime();
+      preparationPhaseTimer += deltaTime;
       if (preparationPhaseTimer >= preparationPhaseDuration) {
         startWave();
       }
@@ -274,7 +302,7 @@ public class WaveManager {
 
     // Handle wave spawning
     if (waveActive) {
-      timeSinceLastSpawn += gameTime.getDeltaTime();
+      timeSinceLastSpawn += deltaTime;
       float spawnInterval = 5.0f;
       if (timeSinceLastSpawn >= spawnInterval) {
         spawnEnemy(getLane());
@@ -315,8 +343,92 @@ public class WaveManager {
       // All enemies for this wave have been spawned, but wave continues until all are disposed
       return;
     }
+    if (enemySpawnCallback == null) {
+      logger.warn("No enemy spawn callback set - cannot spawn enemy");
+      return;
+    }
     String robotType = entitySpawn.getNextRobotType(); // new method
-    levelGameArea.spawnRobot(9, laneNumber, robotType);
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
+  }
+
+  // Wave configuration methods (moved from WaveFactory)
+
+  /** Gets the game configuration, loading it lazily if needed. */
+  private static GameConfig getGameConfig() {
+    if (gameConfig == null) {
+      gameConfig = loadGameConfig();
+    }
+    return gameConfig;
+  }
+
+  /** Loads game configuration data from JSON. */
+  private static GameConfig loadGameConfig() {
+    return FileLoader.readClass(GameConfig.class, "configs/level1.json");
+  }
+
+  /**
+   * Gets the number of waves configured for a specific level.
+   *
+   * @param levelNumber the level number to check
+   * @return the number of waves for that level
+   */
+  public int getWaveCountForLevel(int levelNumber) {
+    GameConfig config = getGameConfig();
+    return config.getWaveCountForLevel(levelNumber);
+  }
+
+  /**
+   * @return the configured weight/budget for the current wave
+   */
+  public int getWaveWeight() {
+    return getCurrentWaveConfig().waveWeight;
+  }
+
+  /**
+   * @return the minimum number of enemies to spawn for the current wave
+   */
+  public int getMinZombiesSpawn() {
+    return getCurrentWaveConfig().minZombiesSpawn;
+  }
+
+  /**
+   * @return the experience awarded for completing the current wave
+   */
+  public int getExpGained() {
+    return getCurrentWaveConfig().expGained;
+  }
+
+  /**
+   * @return the enemy spawn attributes (cost + chance) for the current wave.
+   */
+  public Map<String, EnemySpawnConfig> getEnemyConfigs() {
+    BaseWaveConfig wave = getCurrentWaveConfig();
+
+    if (wave == null) {
+      return new java.util.HashMap<>();
+    }
+
+    // Construct Map from individual fields for backward compatibility
+    Map<String, EnemySpawnConfig> configs = new java.util.HashMap<>();
+    configs.put("standard", wave.standard);
+    configs.put("fast", wave.fast);
+    configs.put("tanky", wave.tanky);
+    configs.put("bungee", wave.bungee);
+
+    return configs;
+  }
+
+  /**
+   * Helper function to get the current wave config based on current level and wave number.
+   *
+   * @return base wave config with the corresponding wave number
+   */
+  private BaseWaveConfig getCurrentWaveConfig() {
+    int waveNumber = getCurrentWave();
+    int waveIndex = waveNumber - 1; // Convert to 0-based index
+
+    GameConfig config = getGameConfig();
+    return config.getWave(currentLevel, waveIndex);
   }
 }

@@ -1,12 +1,11 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
-import com.csse3200.game.entities.factories.WaveFactory;
 import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
 public class EntitySpawn {
-  private final WaveFactory waveFactory;
+  private WaveManager waveManager;
 
   private final int robotWeight;
   private int spawnCount = 0;
@@ -19,24 +18,34 @@ public class EntitySpawn {
   }
 
   /**
-   * Creates a new instance with a specified per-enemy weight cost.
+   * Creates a new instance with a specified per-enemy weight cost. Note: WaveManager must be set
+   * separately using setWaveManager().
    *
    * @param robotWeight weight cost of a single enemy used to derive spawn counts
    */
   public EntitySpawn(int robotWeight) {
-    this(new WaveFactory(), robotWeight);
+    this.robotWeight = robotWeight;
   }
 
   /**
-   * Test-only constructor allowing injection of a prebuilt WaveFactory to avoid LibGDX file IO in
+   * Test-only constructor allowing injection of a prebuilt WaveManager to avoid LibGDX file IO in
    * unit tests.
    *
-   * @param waveFactory factory providing wave configuration
+   * @param waveManager manager providing wave configuration
    * @param robotWeight weight cost per enemy
    */
-  public EntitySpawn(WaveFactory waveFactory, int robotWeight) {
-    this.waveFactory = waveFactory;
+  public EntitySpawn(WaveManager waveManager, int robotWeight) {
+    this.waveManager = waveManager;
     this.robotWeight = robotWeight;
+  }
+
+  /**
+   * Sets the WaveManager instance for this EntitySpawn.
+   *
+   * @param waveManager the WaveManager instance to use
+   */
+  public void setWaveManager(WaveManager waveManager) {
+    this.waveManager = waveManager;
   }
 
   /**
@@ -51,8 +60,12 @@ public class EntitySpawn {
    * in JSON.
    */
   public void spawnEnemies() {
-    int waveWeight = waveFactory.getWaveWeight();
-    int minCount = waveFactory.getMinZombiesSpawn();
+    if (waveManager == null) {
+      spawnCount = 0;
+      return;
+    }
+    int waveWeight = waveManager.getWaveWeight();
+    int minCount = waveManager.getMinZombiesSpawn();
 
     if (robotWeight <= 0 || waveWeight <= 0) {
       spawnCount = 0;
@@ -112,8 +125,12 @@ public class EntitySpawn {
    * by 'chance'. - Loop continues until budget runs out.
    */
   public void spawnEnemiesFromConfig() {
-    int budget = waveFactory.getWaveWeight();
-    Map<String, EnemySpawnConfig> configs = waveFactory.getEnemyConfigs();
+    if (waveManager == null) {
+      spawnCount = 0;
+      return;
+    }
+    int budget = waveManager.getWaveWeight();
+    Map<String, EnemySpawnConfig> configs = waveManager.getEnemyConfigs();
 
     spawnQueue.clear();
     spawnCount = 0;

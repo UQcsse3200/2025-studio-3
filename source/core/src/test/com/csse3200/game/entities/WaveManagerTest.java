@@ -2,16 +2,13 @@ package com.csse3200.game.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.csse3200.game.entities.configs.LevelsConfig;
-import com.csse3200.game.entities.factories.WaveFactory;
 import org.junit.jupiter.api.Test;
 
 class WaveManagerTest {
 
   @Test
   void initialiseNewWaveIncrementTest() {
-    LevelsConfig levelsConfig = new LevelsConfig();
-    EntitySpawn spawner = new EntitySpawn(new WaveFactory(levelsConfig), 2);
+    EntitySpawn spawner = new EntitySpawn(2);
     WaveManager wm = new WaveManager(spawner);
     int before = WaveManager.getCurrentWave();
     wm.initialiseNewWave();
@@ -20,8 +17,7 @@ class WaveManagerTest {
 
   @Test
   void getLaneTest() {
-    LevelsConfig levelsConfig = new LevelsConfig();
-    EntitySpawn spawner = new EntitySpawn(new WaveFactory(levelsConfig), 2);
+    EntitySpawn spawner = new EntitySpawn(2);
     WaveManager wm = new WaveManager(spawner);
     wm.initialiseNewWave();
     int lane = wm.getLane();
