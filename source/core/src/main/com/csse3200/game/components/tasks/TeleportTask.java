@@ -3,8 +3,6 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -77,33 +75,5 @@ public class TeleportTask extends Component {
    * Returns true if no other entity is already occupying roughly (x,targetY). Uses the entity's
    * scaled height as a proxy for tile size to derive tolerances.
    */
-  private boolean isSpotFree(float x, float targetY) {
-    EntityService es = ServiceLocator.getEntityService();
-    if (es == null) return true;
 
-    // derive tolerances from this entity's size (you scale height to tileSize)
-    float approxTile = Math.max(0.01f, entity.getScale().y);
-    float xTol = approxTile * 0.4f; // "same column" tolerance
-    float yTol = approxTile * 0.2f; // "same row" tolerance
-
-    for (Entity other : es.getEntities()) {
-      if (other == null || other == entity) continue;
-      if (other.getPosition() == null) continue;
-
-      float dx = Math.abs(other.getPosition().x - x);
-      float dy = Math.abs(other.getPosition().y - targetY);
-      if (dx <= xTol && dy <= yTol) return false; // occupied
-    }
-    return true;
-  }
-
-  /** Fisher–Yates shuffle for int[] using MathUtils RNG. */
-  private void shuffle(int[] a) {
-    for (int i = a.length - 1; i > 0; i--) {
-      int j = MathUtils.random(i);
-      int t = a[i];
-      a[i] = a[j];
-      a[j] = t;
-    }
-  }
 }

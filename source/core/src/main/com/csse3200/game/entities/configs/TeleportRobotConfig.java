@@ -6,8 +6,5 @@ public class TeleportRobotConfig extends BaseEnemyConfig {
   public int maxTeleports = 3;
   public int invulnerabilityMs = 200;
 
-  // Optional FX ids
-  public String fxOutId;
-  public String fxInId;
-  public String teleportSfxId;
+
 }
