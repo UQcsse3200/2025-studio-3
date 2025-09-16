@@ -10,8 +10,6 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
-
 /**
  * ItemEffectsService is a centralised helper for spawning animations for Items used in-level.
  *
@@ -104,10 +102,10 @@ public class ItemEffectsService {
                 Gdx.app.postRunnable(effect::dispose);
                 // Trigger Defence listener to stop double attack speed/double damage
                 // if (Objects.equals(animatorName, "emp")) {
-                    // [].getEvents().trigger("stopDoubleDamage");
+                // [].getEvents().trigger("stopDoubleDamage");
                 // }
                 // if (Objects.equals(animatorName, "coffee")) {
-                    // [].getEvents().trigger("stopDoubleSpeed");
+                // [].getEvents().trigger("stopDoubleSpeed");
                 // }
                 logger.info("Effect disposed");
               }

@@ -119,9 +119,7 @@ public class ServiceLocator {
     return dialogService;
   }
 
-  /**
-   * Registers the entity service.
-   */
+  /** Registers the item effects service. */
   public static ItemEffectsService getItemEffectsService() {
     return itemEffectsService;
   }

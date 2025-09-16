@@ -430,11 +430,19 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
 
-    // If entity to be spawned is an Item and the player has such item in their inventory
+    // Where entity to be spawned is an Item and the player has such item in their inventory
     ItemComponent item = newEntity.getComponent(ItemComponent.class);
     if (item != null
-        && selectedTile != null
-        && Persistence.profile().inventory().contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
+        && !Persistence.profile()
+            .inventory()
+            .contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
+      // Clear Item from tile storage
+      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      logger.info(
+          "Not spawning item {} since none in player's inventory", item.getType().toString());
+      return;
+    }
+    if (item != null && selectedTile != null) {
       logger.info("Spawning item {}", item.getType().toString());
       String key = item.getType().toString().toLowerCase(Locale.ROOT);
 
@@ -460,7 +468,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
 
     // Add entity to tile unless it is an Item
-    if (selectedTile != null && item != null) {
+    if (selectedTile != null && item == null) {
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 

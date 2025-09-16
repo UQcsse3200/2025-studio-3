@@ -57,17 +57,17 @@ class ItemEffectsServiceTest {
         .when(entities)
         .register(any(Entity.class));
 
-    // Any requested atlas has frames for all our animation names by default
+    // Any requested atlas has frames for all animation names by default
     when(resources.getAsset(anyString(), eq(TextureAtlas.class)))
         .thenAnswer(inv -> atlasWithFramesFor("buff", "coffee", "emp", "grenade", "nuke"));
 
     when(time.getDeltaTime()).thenReturn(0.1f);
 
-    // Keep a field for app if you verify disposals:
+    // Keep a field for app
     this.app = app;
   }
 
-  // ---- helpers --------------------------------------------------------------
+  // helpers
 
   private static TextureAtlas atlasWithFramesFor(String... animNames) {
     TextureAtlas atlas = mock(TextureAtlas.class);
@@ -76,7 +76,7 @@ class ItemEffectsServiceTest {
       regions.add(mock(AtlasRegion.class));
       when(atlas.findRegions(eq(name))).thenReturn(regions);
     }
-    // For safety, return 1 region for any non-empty name not explicitly listed
+    // Return 1 region for any non-empty name not explicitly listed
     when(atlas.findRegions(argThat(s -> s != null && !s.isEmpty())))
         .thenReturn(new Array<>(new AtlasRegion[] {mock(AtlasRegion.class)}));
     return atlas;
@@ -85,7 +85,7 @@ class ItemEffectsServiceTest {
   private Entity captureRegisteredEntity() {
     ArgumentCaptor<Entity> cap = ArgumentCaptor.forClass(Entity.class);
     verify(entities, atLeastOnce()).register(cap.capture());
-    // Return the most recently registered (useful when multiple effects are spawned)
+    // Return the most recently registered
     List<Entity> all = cap.getAllValues();
     return all.get(all.size() - 1);
   }
@@ -96,7 +96,7 @@ class ItemEffectsServiceTest {
     for (int i = 0; i < frames; i++) e.update();
   }
 
-  // ---- tests ----------------------------------------------------------------
+  // tests
 
   @Test
   void spawnEffect_registers_setsPositionScale_andAddsAnimation() {
@@ -149,11 +149,11 @@ class ItemEffectsServiceTest {
 
     Entity e = captureRegisteredEntity();
 
-    // Before threshold: nothing posted
+    // Before threshold, nothing posted
     step(e, 0.1f, 14); // ~1.4s
     verify(app, never()).postRunnable(any());
 
-    // Cross threshold: runnable posted
+    // Cross threshold, runnable posted
     step(e, 0.1f, 2); // ~1.6s
     ArgumentCaptor<Runnable> runCap = ArgumentCaptor.forClass(Runnable.class);
     verify(app, atLeastOnce()).postRunnable(runCap.capture());
@@ -181,13 +181,13 @@ class ItemEffectsServiceTest {
 
     Entity e = captureRegisteredEntity();
 
-    // First just under 1s: definitely still in waiting phase
+    // First just under 1s - definitely still in waiting phase
     step(e, 0.1f, 9); // ~0.9s
     assertEquals(0f, e.getPosition().x, 1e-5f);
     assertEquals(0f, e.getPosition().y, 1e-5f);
 
-    // Hit the 1.0s boundary (code checks <= 1.0f -> still waiting).
-    // Use a tiny tolerance to dodge float rounding.
+    // Hit the 1.0s boundary (code checks <= 1.0f -> still waiting)
+    // Use a tiny tolerance to dodge float rounding
     step(e, 0.1f, 1); // ~1.0s
     assertEquals(0f, e.getPosition().x, 1e-5f);
     assertEquals(0f, e.getPosition().y, 1e-5f);
