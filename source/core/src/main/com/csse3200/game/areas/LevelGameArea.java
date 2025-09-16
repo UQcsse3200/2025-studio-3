@@ -8,16 +8,18 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,17 +53,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private float xOffset;
   private float yOffset;
   private float tileSize;
-  private float invStartX;
-  private float invY;
-  private float invSelectedY;
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
   private final Entity[] spawnedUnits;
   private Entity selectedUnit;
-  private Entity selectionStar;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
+  private Entity ui;
+  private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
 
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
@@ -79,7 +79,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.terrainFactory = terrainFactory;
     selectedUnit = null; // None selected at level load
     spawnedUnits = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
-    selectionStar = null;
   }
 
   /**
@@ -96,9 +95,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     tileSize = gridHeight / LEVEL_ONE_ROWS;
     xOffset = 2f * tileSize;
     yOffset = tileSize;
-    invStartX = xOffset;
-    invY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
-    invSelectedY = yOffset + (LEVEL_ONE_ROWS + 0.5f) * tileSize;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -114,7 +110,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
-    spawnDeck();
 
     playMusic();
   }
@@ -136,9 +131,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   /** Spawns the level UI */
   private void displayUI() {
-    Entity ui = new Entity();
+    ui = new Entity();
     // add components here for additional UI Elements
-    ui.addComponent(new GameAreaDisplay("Level One"));
+    unitList.put(
+        "images/sling_shooter_front.png",
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
+    ui.addComponent(new GameAreaDisplay("Level One"))
+        .addComponent(new HotbarDisplay(this, tileSize, unitList));
+
     spawnEntity(ui);
   }
 
@@ -161,14 +161,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
 
     spawnEntity(mapEntity);
-  }
-
-  /** Determines inventory units to spawn for the level and calls method to place them. */
-  private void spawnDeck() {
-    deckUnitCount = 0;
-    placeDeckUnit(
-        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
-        "images/sling_shooter_front.png");
   }
 
   private void spawnSun() {
@@ -200,23 +192,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       grid.addTile(i, tile);
       spawnEntity(tile);
     }
-  }
-
-  /**
-   * Places a unit with its supplier in the inventory
-   *
-   * @param supplier function returning a copy of that unit
-   * @param image sprite image for how it will be displayed in the inventory
-   */
-  private void placeDeckUnit(Supplier<Entity> supplier, String image) {
-    int pos = ++deckUnitCount;
-    Entity unit =
-        new Entity()
-            .addComponent(new DeckInputComponent(this, supplier))
-            .addComponent(new TextureRenderComponent(image));
-    unit.setPosition(invStartX + (pos - 1) * (tileSize * 1.5f), invY);
-    unit.scaleHeight(tileSize);
-    spawnEntity(unit);
   }
 
   /** Unloads the level assets form the {@link ResourceService} */
@@ -349,23 +324,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   @Override
   public void setSelectedUnit(Entity unit) {
     selectedUnit = unit;
-
-    // if no star, create one
-    if (selectionStar == null) {
-      selectionStar = new Entity();
-      selectionStar.addComponent(new TextureRenderComponent("images/selected_star.png"));
-      selectionStar.scaleHeight(tileSize / 2f);
-      spawnEntity(selectionStar);
-    }
-
-    // if no unit selected remove star
-    if (selectedUnit == null) {
-      selectionStar.setPosition(-100f, -100f); // offscreen
-      return; // break from method
-    }
-
-    // set star to correct position and size
-    selectionStar.setPosition(unit.getCenterPosition().x, invSelectedY);
   }
 
   /**

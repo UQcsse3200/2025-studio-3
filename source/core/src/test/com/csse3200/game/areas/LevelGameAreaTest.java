@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -94,48 +93,6 @@ class LevelGameAreaTest {
 
     // y values should be flipped
     assertNotEquals(s.y, world.y);
-  }
-
-  @Test
-  void selectingUnitSpawnsAndPositionsSelectionStar() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
-
-    // simple inventory entity
-    Entity unit = new Entity().addComponent(new TextureRenderComponent("images/ghost_1.png"));
-    unit.setPosition(100f, 50f);
-
-    area.setSelectedUnit(unit);
-
-    assertFalse(area.spawned.isEmpty(), "expected a star to be spawned");
-    Entity star = area.spawned.get(0);
-
-    TextureRenderComponent tex = star.getComponent(TextureRenderComponent.class);
-    assertNotNull(tex, "Star should have a texture");
-
-    // Star in correct x position
-    assertEquals(unit.getCenterPosition().x, star.getPosition().x, 0.001f);
-  }
-
-  @Test
-  void setSelectedUnitNullMovesStarOffscreen() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
-
-    // select a real unit first so the star is created
-    var unit =
-        new Entity()
-            .addComponent(
-                new TextureRenderComponent(new Texture(new Pixmap(1, 1, Pixmap.Format.RGBA8888))));
-    unit.setPosition(10f, 10f);
-    area.setSelectedUnit(unit);
-
-    // last spawned is the star the method created
-    Entity star = area.spawned.get(area.spawned.size() - 1);
-
-    // now hide it
-    area.setSelectedUnit(null);
-
-    assertEquals(-100f, star.getPosition().x, 0.0001f);
-    assertEquals(-100f, star.getPosition().y, 0.0001f);
   }
 
   @Test
