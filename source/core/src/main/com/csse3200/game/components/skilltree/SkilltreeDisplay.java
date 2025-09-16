@@ -116,8 +116,8 @@ public class SkilltreeDisplay extends UIComponent {
               unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
               skillButton.remove();
               unlockSound.play();
-
               stage.addActor(unlockedImage);
+              unlockedImage.setZIndex(1);
               popup.remove();
             } else {
               errorSound.play();
