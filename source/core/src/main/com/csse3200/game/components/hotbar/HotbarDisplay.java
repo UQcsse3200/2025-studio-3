@@ -20,10 +20,9 @@ import java.util.function.Supplier;
 public class HotbarDisplay extends UIComponent {
 
     private Table hotbarTable;
-    private float scaling;
-    private LevelGameArea game;
-    private Map<String, Supplier<Entity>> unitList;
-
+    private final float scaling;
+    private final LevelGameArea game;
+    private final Map<String, Supplier<Entity>> unitList;
 
     public HotbarDisplay(LevelGameArea game, Float scaling, Map<String, Supplier<Entity>> unitList) {
         this.scaling = scaling;
@@ -37,28 +36,37 @@ public class HotbarDisplay extends UIComponent {
         addActors();
     }
 
+    /**
+     * This method creates the ui for the hotbar and the units
+     * that are selectable within its slots
+     */
     private void addActors() {
         Group layered = new Group();
 
-        Image base = new Image(new Texture("images/hotbar.png"));
-        layered.addActor(base);
+        // create hotbar image
+        Image hotbar = new Image(new Texture("images/hotbar.png"));
+        layered.addActor(hotbar);
 
-        layered.setSize(base.getPrefWidth(), base.getPrefHeight());
+        layered.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
+        // create selection star image and set it off screen
         Image star = new Image(new Texture("images/selected_star.png"));
         layered.addActor(star);
         star.setPosition(-1000, -1000);
         star.setSize(0.5f * scaling, 0.5f * scaling);
         star.toFront();
 
+        // initialise the values needed for placing unit images in slots
         float hotbarWidth = layered.getWidth();
         float cellWidth = hotbarWidth / 6;
         float x = cellWidth / 4;
         float y = 30;
+        // creates unit images and places in slots
         for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
             Image tempUnit = new Image(new Texture(unit.getKey()));
             tempUnit.setSize(scaling, scaling);
             tempUnit.setPosition(x, y);
+            // creates listener that allows for selection and unselection of units
             tempUnit.addListener(new ClickListener() {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -80,6 +88,7 @@ public class HotbarDisplay extends UIComponent {
             x += cellWidth;
         }
 
+        // sets the position to the top middle of screen
         hotbarTable = new Table();
         hotbarTable.setFillParent(true);
         hotbarTable.center().top();
@@ -88,8 +97,10 @@ public class HotbarDisplay extends UIComponent {
 
         layered.setScale(scale);
 
+        // makes only the images touchable
         hotbarTable.setTouchable(Touchable.childrenOnly);
 
+        // changes size to fit screen
         hotbarTable.add(layered)
                 .size(layered.getWidth() * scale, layered.getHeight() * scale);
 
@@ -99,7 +110,7 @@ public class HotbarDisplay extends UIComponent {
 
     @Override
     protected void draw(SpriteBatch batch) {
-        // ignore
+        // draw is handled by the stage
     }
 
     @Override
