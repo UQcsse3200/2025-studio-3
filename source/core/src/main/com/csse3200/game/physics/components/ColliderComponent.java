@@ -225,17 +225,6 @@ public class ColliderComponent extends Component {
     return bbox;
   }
 
-  public ColliderComponent setMask(short maskBits) {
-    if (fixture == null) {
-      fixtureDef.filter.maskBits = maskBits;
-    } else {
-      Filter filter = fixture.getFilterData();
-      filter.maskBits = maskBits;
-      fixture.setFilterData(filter);
-    }
-    return this;
-  }
-
   public ColliderComponent setCollisionFilter(short categoryBits, short maskBits) {
     if (fixture == null) {
       fixtureDef.filter.categoryBits = categoryBits;
