@@ -13,6 +13,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -112,9 +113,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, "tanky");
-    spawnRobot(10, 1, "standard");
-    spawnRobot(10, 4, "fast");
+    spawnRobot(7, 2, RobotType.TANKY);
+    spawnRobot(10, 1, RobotType.STANDARD);
+    spawnRobot(10, 4, RobotType.FAST);
     spawnDeck();
 
     playMusic();
@@ -259,7 +260,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.grid = newGrid;
   }
 
-  public void spawnRobot(int col, int row, String robotType) {
+  public void spawnRobot(int col, int row, RobotType robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
@@ -293,7 +294,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
    * exists, does nothing and logs a warning.
    */
-  public void spawnRobotOnDefence(String robotType) {
+  public void spawnRobotOnDefence(RobotType robotType) {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot spawn robot on defence.");
       return;

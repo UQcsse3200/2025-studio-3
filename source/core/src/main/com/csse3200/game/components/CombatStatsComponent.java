@@ -1,9 +1,5 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.persistence.Persistence;
-import com.csse3200.game.physics.PhysicsLayer;
-import com.csse3200.game.physics.components.HitboxComponent;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

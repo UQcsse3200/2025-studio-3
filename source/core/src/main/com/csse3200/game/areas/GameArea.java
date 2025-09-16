@@ -7,6 +7,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
@@ -95,12 +96,12 @@ public abstract class GameArea implements Disposable {
 
   // If no robot type given, spawns a standard robot
   public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
-    return spawnRobotAtTile(cell, centerX, centerY, "standard");
+    return spawnRobotAtTile(cell, centerX, centerY, RobotType.STANDARD);
   }
 
   // uses LevelGameArea (Level One) grid params
   public Entity spawnRobotAtTile(
-      GridPoint2 cell, boolean centerX, boolean centerY, String robotType) {
+      GridPoint2 cell, boolean centerX, boolean centerY, RobotType robotType) {
     // grid params copied from LevelGameArea (Level One)
     final float xOffset = 2.9f;
     final float yOffset = 1.45f;
@@ -139,10 +140,10 @@ public abstract class GameArea implements Disposable {
 
   // Spawns a standard robot if no type is specified
   public Entity spawnRobotAtFloat(float x, float y) {
-    return spawnRobotAtFloat(x, y, "standard");
+    return spawnRobotAtFloat(x, y, RobotType.STANDARD);
   }
 
-  public Entity spawnRobotAtFloat(float x, float y, String robotType) {
+  public Entity spawnRobotAtFloat(float x, float y, RobotType robotType) {
 
     Entity robot = RobotFactory.createRobotType(robotType);
     robot.setPosition(x, y);

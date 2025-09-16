@@ -2,15 +2,12 @@ package com.csse3200.game.persistence;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
-import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.progression.Profile;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,17 +158,16 @@ public class Persistence {
       Persistence.profile().wallet().addCoins(extraCoins);
       Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
       logger.info(
-              "[Death] wallet: {} + {} -> {}",
-              before,
-              extraCoins,
-              Persistence.profile().wallet().getCoins());
+          "[Death] wallet: {} + {} -> {}",
+          before,
+          extraCoins,
+          Persistence.profile().wallet().getCoins());
     } else {
-      logger.warn(
-              "[Death] Persistence.profile() is null; cannot update progression wallet/stats");
+      logger.warn("[Death] Persistence.profile() is null; cannot update progression wallet/stats");
     }
-//            if (ServiceLocator.getCurrencyService() != null) {
-//              ServiceLocator.getCurrencyService().add(extraCoins);
-//              logger.info("[Death] CurrencyService +{}", extraCoins);
-//            }
+    //            if (ServiceLocator.getCurrencyService() != null) {
+    //              ServiceLocator.getCurrencyService().add(extraCoins);
+    //              logger.info("[Death] CurrencyService +{}", extraCoins);
+    //            }
   }
 }
