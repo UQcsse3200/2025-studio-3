@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
-class TileTest {
+class TileHitboxComponentTest {
   @Mock Texture texture;
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
@@ -76,53 +76,6 @@ class TileTest {
             .addComponent(
                 new DeckInputComponent(levelGameArea, Entity::new)); // or whatever ctor you use
     levelGameArea.setSelectedUnit(selected); // setter or reflection
-  }
-
-  @Test
-  void shouldntAddUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
-
-    int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
-    tileStorageComponent.triggerSpawnUnit();
-    int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
-
-    // checks if the tile unit has not been replaced with new unit if there was already a unit
-    // placed
-    assertEquals(beforeSecondTriggerId, afterSecondTriggerId);
-  }
-
-  @Test
-  void shouldAddUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
-    assertTrue(tileStorageComponent.hasUnit());
-  }
-
-  @Test
-  void shouldRemoveUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
-    tileStorageComponent.removeTileUnit();
-    assertFalse(tileStorageComponent.hasUnit());
-  }
-
-  @Test
-  void shouldBeNullUnitByDefault() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    assertNull(tileStorageComponent.getTileUnit());
-  }
-
-  @Test
-  void removeNullUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.removeTileUnit();
-    assertNull(tileStorageComponent.getTileUnit());
   }
 
   @Test
