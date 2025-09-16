@@ -64,15 +64,13 @@ public class SkilltreeDisplay extends UIComponent {
    * @param unlockedTexture texture to display when a skill is unlocked
    * @param skillButton the button representing the skill in the tree
    * @param stage the stage to which the popup will be added
-   * @param skillPointLabel label displaying the player's remaining skill points
    */
   public void unlockedPopUp(
       Skill skill,
       SkillSet skillSet,
       Texture unlockedTexture,
       Button skillButton,
-      Stage stage,
-      Label skillPointLabel) {
+      Stage stage) {
     Window popup = new Window(skill.getStatType().name(), windowStyle);
     popup.setModal(true);
     popup.setMovable(false);
@@ -115,9 +113,6 @@ public class SkilltreeDisplay extends UIComponent {
             if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
               skillSet.addSkill(skill);
               ServiceLocator.getProfileService().getProfile().getWallet().unlockSkill(cost);
-              points =
-                  ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
-              skillPointLabel.setText("Skill Points: " + points);
 
               // Replace button with unlocked image
               Image unlockedImage = new Image(unlockedTexture);

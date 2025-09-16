@@ -27,8 +27,6 @@ public class ItemFactory {
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.GRENADE));
-    // TODO: add animation controller and animation thingy
-    // TODO: add effect logic
   }
 
   /**
@@ -41,8 +39,6 @@ public class ItemFactory {
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.COFFEE));
-    // TODO: add animation controller and animation thingy
-    // TODO: add effect logic
   }
 
   /**
@@ -55,8 +51,6 @@ public class ItemFactory {
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.BUFF));
-    // TODO: add animation controller and animation thingy
-    // TODO: add effect logic
   }
 
   /**
@@ -69,8 +63,6 @@ public class ItemFactory {
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.EMP));
-    // TODO: add animation controller and animation thingy
-    // TODO: add effect logic
   }
 
   /**
@@ -83,11 +75,7 @@ public class ItemFactory {
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.NUKE));
-    // TODO: add animation controller and animation thingy
-    // TODO: add effect logic
   }
-
-  // TODO: add all the other items
 
   /**
    * Creates a generic item to be used as a base entity by more specific item creation methods.

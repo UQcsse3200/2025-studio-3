@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 /** A UI component for displaying a plaque with skill points and coins in the top right corner. */
 public class MainMapNavigationMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainMapNavigationMenu.class);
-  private static final float Z_INDEX = 3f;
+  private static final float Z_INDEX = 10f;
   private static final int ICON_SIZE = 32;
   private static final int PLAQUE_WIDTH = 240;
   private static final int PLAQUE_HEIGHT = 60;

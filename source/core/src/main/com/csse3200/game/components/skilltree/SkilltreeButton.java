@@ -41,8 +41,8 @@ public class SkilltreeButton extends UIComponent {
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
+        20f,
+        stage.getHeight() - 60f - 20f
         );
 
     // Triggers an event when the button is pressed.

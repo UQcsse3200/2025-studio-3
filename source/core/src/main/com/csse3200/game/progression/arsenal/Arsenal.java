@@ -15,7 +15,7 @@ public class Arsenal {
   /**
    * Adds a defence to the arsenal.
    *
-   * @param itemKey The key of the item to add.
+   * @param defenceKey The key of the defence to add.
    */
   public void unlockDefence(String defenceKey) {
     defences.add(defenceKey);
@@ -24,7 +24,7 @@ public class Arsenal {
   /**
    * Removes a defence from the arsenal.
    *
-   * @param item The key of the defence to remove.
+   * @param defenceKey The key of the defence to remove.
    */
   public void lockDefence(String defenceKey) {
     defences.remove(defenceKey);

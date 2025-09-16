@@ -113,10 +113,11 @@ public class SkillTreeScreen extends ScreenAdapter implements MenuSpriteScreen {
     // Create UI entity with various components
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
+        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
         .addComponent(new MainMapNavigationMenu())
         .addComponent(new MainMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu())
-        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()));
+        .addComponent(new AnimatedDropdownMenu());
+
 
     ServiceLocator.getEntityService().register(ui);
   }

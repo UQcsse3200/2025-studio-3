@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.progression.skilltree.Skill;
@@ -35,9 +34,6 @@ public class SkilltreeActions extends ClickListener {
   /** Stage where UI elements are displayed. */
   private final Stage stage;
 
-  /** Label showing the current number of skill points. */
-  private final Label skillPointLabel;
-
   /** The skill tree display used to render the unlock popup. */
   private final SkilltreeDisplay display;
 
@@ -55,7 +51,6 @@ public class SkilltreeActions extends ClickListener {
    * @param unlockedTexture texture to display once the skill is unlocked
    * @param skillButton the button representing the skill
    * @param stage the stage to which UI components are added
-   * @param skillPointLabel label that displays remaining skill points
    * @param display the skill tree display that manages popups
    */
   public SkilltreeActions(
@@ -64,14 +59,12 @@ public class SkilltreeActions extends ClickListener {
       Texture unlockedTexture,
       Button skillButton,
       Stage stage,
-      Label skillPointLabel,
       SkilltreeDisplay display) {
     this.skillName = skillName;
     this.skillSet = skillSet;
     this.unlockedTexture = unlockedTexture;
     this.skillButton = skillButton;
     this.stage = stage;
-    this.skillPointLabel = skillPointLabel;
     this.display = display;
     skillButton.setTransform(true);
   }
@@ -88,7 +81,7 @@ public class SkilltreeActions extends ClickListener {
   public void clicked(InputEvent event, float x, float y) {
     clickSound.play();
     Skill skill = skillSet.getSkill(skillName);
-    display.unlockedPopUp(skill, skillSet, unlockedTexture, skillButton, stage, skillPointLabel);
+    display.unlockedPopUp(skill, skillSet, unlockedTexture, skillButton, stage);
   }
 
   /**

@@ -26,7 +26,6 @@ public class SkilltreeButtons extends UIComponent {
   private static final float Z_INDEX = 2f;
   private final GdxGame game;
   private final SkillSet skillSet;
-  private Label skillPointLabel;
   private final SkilltreeDisplay display;
 
   // Texture path constants
@@ -177,10 +176,10 @@ public class SkilltreeButtons extends UIComponent {
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
+        20f,
+        stage.getHeight() - 60f - 20f
         );
-    closeButton.setZIndex(1); // Set z-index lower than navigation menu (3f)
+    closeButton.setZIndex(0); 
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -221,11 +220,11 @@ public class SkilltreeButtons extends UIComponent {
     Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
     setButtonSize(skillButton, skillName);
     skillButton.setPosition(x, y);
-    skillButton.setZIndex(1); // Set z-index lower than navigation menu (3f)
+    skillButton.setZIndex(0); // Set z-index lower than navigation menu (3f)
 
     skillButton.addListener(
         new SkilltreeActions(
-            skillName, skillSet, unlockedTexture, skillButton, stage, skillPointLabel, display));
+            skillName, skillSet, unlockedTexture, skillButton, stage, display));
 
     stage.addActor(skillButton);
     stage.addActor(createLabel(labelText, skillButton));
@@ -270,7 +269,7 @@ public class SkilltreeButtons extends UIComponent {
     attackLabel.setColor(Color.WHITE);
     attackLabel.setPosition(
         button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
-    attackLabel.setZIndex(1); // Set z-index lower than navigation menu (3f)
+    attackLabel.setZIndex(0); // Set z-index lower than navigation menu (3f)
     return attackLabel;
   }
 

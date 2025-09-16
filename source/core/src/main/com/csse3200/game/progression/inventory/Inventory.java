@@ -29,7 +29,7 @@ public class Inventory {
   /**
    * Removes an item from the inventory.
    *
-   * @param item The key of the item to remove.
+   * @param itemKey The key of the item to remove.
    */
   public void removeItem(String itemKey) {
     items.remove(itemKey);
