@@ -9,6 +9,7 @@ import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -63,9 +64,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private Entity ui;
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
 
-  // May have to use a List<Entity> instead if we need to know what entities are at what position
-  // But for now it doesn't matter
-  private int deckUnitCount;
+  // Initialising an Entity
+  private Entity gameOverEntity;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -140,6 +140,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         .addComponent(new HotbarDisplay(this, tileSize, unitList));
 
     spawnEntity(ui);
+
+    // Creates a game over entity to handle the game over window UI
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
@@ -265,11 +270,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       return;
     }
 
-    int bestRow = -1, bestCol = -1;
+    int bestRow = -1;
+    int bestCol = -1;
+
     final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
 
     for (int i = 0; i < total; i++) {
-      int row = i / LEVEL_ONE_COLS, col = i % LEVEL_ONE_COLS;
+      int row = i / LEVEL_ONE_COLS;
+      int col = i % LEVEL_ONE_COLS;
 
       float cx = xOffset + tileSize * col + tileSize * 0.5f;
       float cy = yOffset + tileSize * row + tileSize * 0.5f;
@@ -439,11 +447,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
-        // TODO: add UI component here
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        // Window activation trigger
+        gameOverEntity.getEvents().trigger("gameOver");
       }
     }
   }
