@@ -9,6 +9,8 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
@@ -90,10 +92,10 @@ class SpawnRobotTest {
 
     try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
       Entity dummy = new Entity();
-      mocked.when(() -> RobotFactory.createRobotType("standard")).thenReturn(dummy);
+      mocked.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(dummy);
 
       int col = 3, row = 1;
-      lvl.spawnRobot(col, row, "standard");
+      lvl.spawnRobot(col, row, RobotType.STANDARD);
 
       assertEquals(worldX(col), dummy.getPosition().x, EPS);
       assertEquals(worldY(row), dummy.getPosition().y, EPS);
@@ -114,11 +116,11 @@ class SpawnRobotTest {
           .thenReturn(e1) // first call
           .thenReturn(e2); // second call
 
-      lvl.spawnRobot(-5, -7, "tanky");
+      lvl.spawnRobot(-5, -7, RobotType.STANDARD);
       assertEquals(worldX(0), e1.getPosition().x, EPS);
       assertEquals(worldY(0), e1.getPosition().y, EPS);
 
-      lvl.spawnRobot(999, 999, "fast");
+      lvl.spawnRobot(999, 999, RobotType.FAST);
       assertEquals(worldX(COLS - 1), e2.getPosition().x, EPS);
       assertEquals(worldY(ROWS - 1), e2.getPosition().y, EPS);
     }
@@ -135,9 +137,9 @@ class SpawnRobotTest {
 
     try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
       Entity dummy = new Entity();
-      mocked.when(() -> RobotFactory.createRobotType("standard")).thenReturn(dummy);
+      mocked.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(dummy);
 
-      lvl.spawnRobot(2, 2, "standard");
+      lvl.spawnRobot(2, 2, RobotType.STANDARD);
       verify(es, times(1)).register(same(dummy));
     }
   }
@@ -147,7 +149,7 @@ class SpawnRobotTest {
     LevelGameArea lvl = newLevelAreaWithGeometry();
 
     try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
-      lvl.spawnRobotOnDefence("standard");
+      lvl.spawnRobotOnDefence(RobotType.STANDARD);
       rf.verify(() -> RobotFactory.createRobotType(any()), times(0));
     }
   }
@@ -160,9 +162,9 @@ class SpawnRobotTest {
 
     Entity spawned = spy(new Entity());
     try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
-      rf.when(() -> RobotFactory.createRobotType("standard")).thenReturn(spawned);
+      rf.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(spawned);
 
-      lvl.spawnRobotOnDefence("standard");
+      lvl.spawnRobotOnDefence(RobotType.STANDARD);
 
       assertEquals(worldX(6 + 0.5f), spawned.getPosition().x, EPS);
       assertEquals(worldY(2), spawned.getPosition().y, EPS);
@@ -179,9 +181,9 @@ class SpawnRobotTest {
 
     Entity spawned = spy(new Entity());
     try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
-      rf.when(() -> RobotFactory.createRobotType("fast")).thenReturn(spawned);
+      rf.when(() -> RobotFactory.createRobotType(RobotType.FAST)).thenReturn(spawned);
 
-      lvl.spawnRobotOnDefence("fast");
+      lvl.spawnRobotOnDefence(RobotType.FAST);
 
       float spawnCol = Math.min(9 + 0.5f, COLS - 0.01f);
       assertEquals(worldX(spawnCol), spawned.getPosition().x, EPS);
