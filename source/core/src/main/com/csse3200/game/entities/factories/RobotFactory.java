@@ -94,12 +94,18 @@ public class RobotFactory {
     // We could also do
     // .addComponent(new RobotAnimationController())
     // but that isn't really implemented
+    ColliderComponent solid = new ColliderComponent()
+            .setCollisionFilter(
+                    PhysicsLayer.ENEMY,
+                    (short)(PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE) // no ENEMY
+            )
+            .setFriction(0f);
 
     Entity robot =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
-            .addComponent(new ColliderComponent())
+            .addComponent(solid)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
             .addComponent(new CombatStatsComponent(config.health, config.attack))
             .addComponent(aiComponent)
