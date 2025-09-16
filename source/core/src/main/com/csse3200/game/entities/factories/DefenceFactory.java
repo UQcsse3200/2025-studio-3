@@ -110,7 +110,8 @@ public class DefenceFactory {
         .addComponent(
             new GeneratorStatsComponent(
                 config.getHealth(),
-                config.getInterval()))
+                config.getInterval(),
+                config.getScrapValue()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
