@@ -149,7 +149,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.gameOverEntity = new Entity();
     gameOverEntity.addComponent(new GameOverWindow());
     spawnEntity(this.gameOverEntity);
-
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
@@ -493,8 +492,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       // check if robot has reached the end
       if (gridX <= 0) {
         isGameOver = true;
-        // TODO: add UI component here
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
