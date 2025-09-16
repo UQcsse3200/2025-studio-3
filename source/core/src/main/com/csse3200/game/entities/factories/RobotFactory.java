@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
+import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
+import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.FastRobotConfig;
-import com.csse3200.game.entities.configs.StandardRobotConfig;
-import com.csse3200.game.entities.configs.TankyRobotConfig;
+import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -29,6 +31,12 @@ import com.csse3200.game.services.ServiceLocator;
  * similar characteristics.
  */
 public class RobotFactory {
+  /**
+   * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
+   * file is missing or deserialization fails, this will be null.
+   */
+  private static final NPCConfigs configs =
+      FileLoader.readClass(NPCConfigs.class, "configs/Enemies.json");
 
   /**
    * A basic function to create a specific type of robot depending on the input TODO make this use
@@ -39,106 +47,17 @@ public class RobotFactory {
    * @return The created robot
    */
   public static Entity createRobotType(String robotType) {
+    BaseEnemyConfig config;
     if (robotType.equalsIgnoreCase("fast")) {
-      return createFastRobot();
+      config = configs.fastRobot;
     } else if (robotType.equalsIgnoreCase("tanky")) {
-      return createTankyRobot();
+      config = configs.tankyRobot;
+    } else if (robotType.equalsIgnoreCase("bungee")) {
+      config = configs.bungeeRobot;
     } else {
-      return createStandardRobot();
+      config = configs.standardRobot;
     }
-  }
-
-  /**
-   * Creates a standard robot
-   *
-   * @return the created robot entity
-   */
-  public static Entity createStandardRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new StandardRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    // We could also do
-    // .addComponent(new RobotAnimationController())
-    // but that isn't really implemented
-
-    animator.scaleEntity();
-    animator.startAnimation("chill"); // start an animation
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
-
-    return robot;
-  }
-
-  public static Entity createFastRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new FastRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    animator.scaleEntity();
-    animator.startAnimation("angry"); // angry to differentiate it from the standard robot
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 3f, robot.getScale().y * 3f);
-
-    return robot;
-  }
-
-  public static Entity createTankyRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new TankyRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    animator.scaleEntity();
-    animator.startAnimation("angry"); // angry to differentiate it from the standard robot
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
-
-    return robot;
+    return createBaseRobot(config);
   }
 
   /**
@@ -147,20 +66,52 @@ public class RobotFactory {
    * robots.
    *
    * @param config A config file that contains the robot's stats.
-   * @return A robot entity. Note that it does not have an animator component.
+   * @return A robot entity.
    */
-  private static Entity createBaseRobot(BaseEntityConfig config) {
+  private static Entity createBaseRobot(BaseEnemyConfig config) {
 
     AITaskComponent aiComponent =
-        new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
+        new AITaskComponent()
+            .addTask(new MoveLeftTask(config.movementSpeed))
+            .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
 
-    return new Entity()
-        .addComponent(new PhysicsComponent())
-        .addComponent(new PhysicsMovementComponent())
-        .addComponent(new ColliderComponent())
-        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
-        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-        .addComponent(aiComponent);
+    // Animation
+    final String atlasPath = config.atlasFilePath;
+    var rs = ServiceLocator.getResourceService();
+
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+
+    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
+
+    // We could also do
+    // .addComponent(new RobotAnimationController())
+    // but that isn't really implemented
+
+    Entity robot =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsMovementComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
+            .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+            .addComponent(aiComponent)
+            .addComponent(new RobotAnimationController())
+            .addComponent(new HitMarkerComponent())
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
+            .addComponent(animator);
+
+    // Scales
+    animator.scaleEntity();
+    animator.startAnimation("chill"); // start an animation
+
+    // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
+    robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
+
+    return robot;
 
     // The original NPCFactory had:
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
