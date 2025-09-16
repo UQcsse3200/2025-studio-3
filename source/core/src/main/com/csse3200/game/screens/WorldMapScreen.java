@@ -34,12 +34,15 @@ public class WorldMapScreen implements Screen {
   private OrthographicCamera camera;
   private final Renderer renderer;
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
+  private static final String SHOP_NODE_ID = "shop";
+  private static final String SKILLS_NODE_ID = "skills";
   private Texture worldMap;
   private Texture nodeCompleted;
   private Texture nodeUnlocked;
   private Texture lockedLevel1;
   private Texture lockedLevel2;
   private Texture shopTexture;
+  private Texture skillsTexture;
   private Texture playerTex;
   private Node[] nodes;
   private Vector2 playerPos;
@@ -70,6 +73,7 @@ public class WorldMapScreen implements Screen {
     lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
     lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
     shopTexture = new Texture(Gdx.files.internal("images/shopsprite.png"));
+    skillsTexture = new Texture(Gdx.files.internal("images/skills.png"));
     playerTex = new Texture(Gdx.files.internal("images/character.png"));
 
     FileHandle file = Gdx.files.internal("data/nodes.json");
@@ -95,8 +99,10 @@ public class WorldMapScreen implements Screen {
 
     for (Node node : nodes) {
       Texture nodeTex;
-      if ("shop".equals(node.id)) {
+      if (SHOP_NODE_ID.equals(node.id)) {
         nodeTex = shopTexture;
+      } else if (SKILLS_NODE_ID.equals(node.id)) {
+        nodeTex = skillsTexture;
       } else if (node.completed) {
         nodeTex = nodeCompleted;
       } else if (node.unlocked) {
@@ -114,8 +120,10 @@ public class WorldMapScreen implements Screen {
       if (playerPos.dst(x, y) < 60) {
         nearbyNode = node;
         String prompt;
-        if ("shop".equals(nearbyNode.id)) {
+        if (SHOP_NODE_ID.equals(nearbyNode.id)) {
           prompt = "Press E to Shop";
+        } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
+          prompt = "Press E to view Skills";
         } else if (nearbyNode.level == 1) {
           prompt = "Press E to Start";
         } else {
@@ -147,9 +155,12 @@ public class WorldMapScreen implements Screen {
     if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
 
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if ("shop".equals(nearbyNode.id)) {
+      if (SHOP_NODE_ID.equals(nearbyNode.id)) {
         logger.info("Opening Shop!");
         game.setScreen(GdxGame.ScreenType.SHOP);
+      } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
+        logger.info("Opening Skills!");
+        game.setScreen(GdxGame.ScreenType.SKILLTREE);
       } else if (nearbyNode.level == 1) {
         logger.info("Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
@@ -190,6 +201,7 @@ public class WorldMapScreen implements Screen {
     lockedLevel1.dispose();
     lockedLevel2.dispose();
     shopTexture.dispose();
+    skillsTexture.dispose();
     playerTex.dispose();
     font.dispose();
     ServiceLocator.getRenderService().dispose();

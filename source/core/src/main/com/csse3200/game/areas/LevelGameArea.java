@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -484,17 +483,18 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         List<Entity> toRemove = new ArrayList<>(); // targets
         for (Entity r : robots) {
           Vector2 pos = r.getPosition();
-          if (Math.abs(entityPos.x - pos.x) <= radius &&
-                  Math.abs(entityPos.y - pos.y) <= radius) {
+          if (Math.abs(entityPos.x - pos.x) <= radius && Math.abs(entityPos.y - pos.y) <= radius) {
             // for logger
             int grenadeCol = (int) ((entityPos.x - xOffset) / tileSize);
             int grenadeRow = (int) ((entityPos.y - yOffset) / tileSize);
             int robotCol = (int) ((pos.x - xOffset) / tileSize);
             int robotRow = (int) ((pos.y - yOffset) / tileSize);
             logger.info(
-                    "Grenade at ({}, {}) hits robot at ({}, {})",
-                    grenadeCol, grenadeRow, robotCol, robotRow
-            );
+                "Grenade at ({}, {}) hits robot at ({}, {})",
+                grenadeCol,
+                grenadeRow,
+                robotCol,
+                robotRow);
             toRemove.add(r);
           }
         }
@@ -505,7 +505,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
           robots.remove(r);
         }
       }
-
 
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();

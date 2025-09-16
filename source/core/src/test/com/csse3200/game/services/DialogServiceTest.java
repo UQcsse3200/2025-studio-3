@@ -25,9 +25,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-/**
- * Test class for DialogService.
- */
+/** Test class for DialogService. */
 @ExtendWith(GameExtension.class)
 class DialogServiceTest {
   @Mock private GL20 mockGL20;
@@ -69,11 +67,14 @@ class DialogServiceTest {
     ServiceLocator.registerEntityService(mockEntityService);
 
     // Mock entity registration to call create() on entities
-    doAnswer(invocation -> {
-      Entity entity = invocation.getArgument(0);
-      entity.create();
-      return null;
-    }).when(mockEntityService).register(any(Entity.class));
+    doAnswer(
+            invocation -> {
+              Entity entity = invocation.getArgument(0);
+              entity.create();
+              return null;
+            })
+        .when(mockEntityService)
+        .register(any(Entity.class));
 
     dialogService = new DialogService();
     ServiceLocator.registerDialogService(dialogService);
@@ -109,7 +110,7 @@ class DialogServiceTest {
   void testInfoDialog_WithCallback() {
     @SuppressWarnings("unchecked")
     Consumer<DialogComponent> callback = mock(Consumer.class);
-    
+
     DialogComponent dialog = dialogService.info("Test", "Test", callback);
     assertNotNull(dialog);
     assertEquals(DialogService.DialogType.INFO, dialog.getDialogType());
@@ -138,8 +139,9 @@ class DialogServiceTest {
     Consumer<DialogComponent> onConfirm = mock(Consumer.class);
     @SuppressWarnings("unchecked")
     Consumer<DialogComponent> onCancel = mock(Consumer.class);
-    
-    DialogComponent dialog = dialogService.warning("Warning", "Warning Message", onConfirm, onCancel);
+
+    DialogComponent dialog =
+        dialogService.warning("Warning", "Warning Message", onConfirm, onCancel);
     assertNotNull(dialog);
     assertEquals(DialogService.DialogType.WARNING, dialog.getDialogType());
     assertEquals("Warning", dialog.getTitle());
@@ -165,7 +167,7 @@ class DialogServiceTest {
   void testErrorDialog_WithCallback() {
     @SuppressWarnings("unchecked")
     Consumer<DialogComponent> callback = mock(Consumer.class);
-    
+
     DialogComponent dialog = dialogService.error("Error", "Error Message", callback);
     assertNotNull(dialog);
     assertEquals(DialogService.DialogType.ERROR, dialog.getDialogType());
@@ -178,7 +180,8 @@ class DialogServiceTest {
 
   @Test
   void testAchievementDialog() {
-    AchievementDialogComponent dialog = dialogService.achievement("Test Achievement", "Test Description", 100, "T2");
+    AchievementDialogComponent dialog =
+        dialogService.achievement("Test Achievement", "Test Description", 100, "T2");
     assertNotNull(dialog);
     // Achievement dialogs are tracked separately, so they don't affect the regular dialog count
     assertEquals(0, dialogService.getActiveDialogCount());
@@ -188,7 +191,8 @@ class DialogServiceTest {
 
   @Test
   void testAchievementDialog_WithNullTier() {
-    AchievementDialogComponent dialog = dialogService.achievement("Test Achievement", "Test Description", 100, null);
+    AchievementDialogComponent dialog =
+        dialogService.achievement("Test Achievement", "Test Description", 100, null);
     assertNotNull(dialog);
     // Achievement dialogs are tracked separately, so they don't affect the regular dialog count
     assertEquals(0, dialogService.getActiveDialogCount());
@@ -201,10 +205,10 @@ class DialogServiceTest {
     DialogComponent dialog1 = dialogService.info("Title1", "Message1");
     DialogComponent dialog2 = dialogService.warning("Title2", "Message2");
     DialogComponent dialog3 = dialogService.error("Title3", "Message3");
-    
+
     assertEquals(3, dialogService.getActiveDialogCount());
     assertTrue(dialogService.hasActiveDialogs());
-    
+
     assertDoesNotThrow(dialog1::hide);
     assertDoesNotThrow(dialog2::hide);
     assertDoesNotThrow(dialog3::hide);
@@ -215,12 +219,12 @@ class DialogServiceTest {
     dialogService.info("Title1", "Message1");
     dialogService.warning("Title2", "Message2");
     dialogService.error("Title3", "Message3");
-    
+
     assertEquals(3, dialogService.getActiveDialogCount());
     assertTrue(dialogService.hasActiveDialogs());
-    
+
     dialogService.hideAllDialogs();
-    
+
     assertEquals(0, dialogService.getActiveDialogCount());
     assertFalse(dialogService.hasActiveDialogs());
   }
@@ -230,7 +234,7 @@ class DialogServiceTest {
     List<DialogComponent> dialogs = dialogService.getActiveDialogs();
     assertNotNull(dialogs);
     assertTrue(dialogs.isEmpty());
-    
+
     DialogComponent dialog = dialogService.info("Test", "Test");
     dialogs = dialogService.getActiveDialogs();
     assertEquals(1, dialogs.size());
@@ -247,7 +251,7 @@ class DialogServiceTest {
   void testDialogTypeEnum() {
     DialogService.DialogType[] types = DialogService.DialogType.values();
     assertEquals(3, types.length);
-    
+
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.INFO));
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.WARNING));
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.ERROR));

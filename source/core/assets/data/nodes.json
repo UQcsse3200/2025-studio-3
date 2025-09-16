@@ -32,10 +32,20 @@
   {
     "id": "shop",
     "label": "Shop",
-    "px": 0.15,
+    "px": 0.75,
     "py": 0.40,
     "completed": false,
     "unlocked": true,
+    "level": 0,
+    "lockReason": null
+  },
+  {
+    "id": "skills",
+    "label": "Skills",
+    "px": 0.20,
+    "py": 0.80,
+    "completed": false,
+    "unlocked": false,
     "level": 0,
     "lockReason": null
   }

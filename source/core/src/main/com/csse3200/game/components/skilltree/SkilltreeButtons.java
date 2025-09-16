@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -25,7 +24,6 @@ import org.slf4j.LoggerFactory;
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
   private static final float Z_INDEX = 2f;
-  private Table table;
   private final GdxGame game;
   private final SkillSet skillSet;
   private Label skillPointLabel;
@@ -153,9 +151,7 @@ public class SkilltreeButtons extends UIComponent {
   /** Adds all actors including back button, skill buttons, and skill points label. */
   private void addActors() {
     createBackButton();
-    totalSkillPoints(stage);
     createSkillButtons();
-    stage.addActor(skillPointLabel);
   }
 
   private void createSkillButtons() {
@@ -184,6 +180,7 @@ public class SkilltreeButtons extends UIComponent {
         20f, // 20f padding from left
         stage.getHeight() - 60f - 20f // 20f padding from top
         );
+    closeButton.setZIndex(1); // Set z-index lower than navigation menu (3f)
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -191,7 +188,7 @@ public class SkilltreeButtons extends UIComponent {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Back button clicked");
-            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
           }
         });
 
@@ -224,6 +221,7 @@ public class SkilltreeButtons extends UIComponent {
     Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
     setButtonSize(skillButton, skillName);
     skillButton.setPosition(x, y);
+    skillButton.setZIndex(1); // Set z-index lower than navigation menu (3f)
 
     skillButton.addListener(
         new SkilltreeActions(
@@ -231,7 +229,6 @@ public class SkilltreeButtons extends UIComponent {
 
     stage.addActor(skillButton);
     stage.addActor(createLabel(labelText, skillButton));
-    addSkillImage();
   }
 
   /**
@@ -273,37 +270,8 @@ public class SkilltreeButtons extends UIComponent {
     attackLabel.setColor(Color.WHITE);
     attackLabel.setPosition(
         button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
+    attackLabel.setZIndex(1); // Set z-index lower than navigation menu (3f)
     return attackLabel;
-  }
-
-  /** Adds the skill point image icon to the stage. */
-  private void addSkillImage() {
-    Texture texture = new Texture(Gdx.files.internal("images/skillpoints.png"));
-    Image image = new Image(texture);
-
-    float width = stage.getViewport().getWorldWidth();
-    float height = stage.getViewport().getWorldHeight();
-    image.setSize(0.05f * width, 0.11f * height);
-    image.setPosition(0.06f * width, 0.85f * height);
-    stage.addActor(image);
-  }
-
-  /**
-   * Creates and displays a label showing the total skill points.
-   *
-   * @param stage the stage to add the label to
-   */
-  private void totalSkillPoints(Stage stage) {
-    Skin skin2 = new Skin(Gdx.files.internal("uiskin.json"));
-    int points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
-    String skillPointsNumber = String.format("Skill Points: %d", points);
-    skillPointLabel = new Label(skillPointsNumber, skin2);
-    skillPointLabel.setColor(Color.WHITE);
-
-    float width = stage.getViewport().getWorldWidth();
-    float height = stage.getViewport().getWorldHeight();
-    skillPointLabel.setFontScale(0.0013f * height);
-    skillPointLabel.setPosition(0.04f * width, 0.8f * height);
   }
 
   @Override
@@ -314,11 +282,5 @@ public class SkilltreeButtons extends UIComponent {
   @Override
   public float getZIndex() {
     return Z_INDEX;
-  }
-
-  @Override
-  public void dispose() {
-    table.clear();
-    super.dispose();
   }
 }

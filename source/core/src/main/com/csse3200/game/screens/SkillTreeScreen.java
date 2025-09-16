@@ -7,13 +7,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.gamearea.PerformanceDisplay;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.skilltree.SkilltreeButtons;
 import com.csse3200.game.components.skilltree.SkilltreeDisplay;
+import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
-import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
@@ -21,8 +23,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.terminal.Terminal;
-import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * skill buttons, shows skill points, and handles user interaction. It integrates with game
  * services, rendering, input, and entity systems.
  */
-public class SkillTreeScreen extends ScreenAdapter {
+public class SkillTreeScreen extends ScreenAdapter implements MenuSpriteScreen {
   private static final Logger logger = LoggerFactory.getLogger(SkillTreeScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
@@ -110,20 +110,27 @@ public class SkillTreeScreen extends ScreenAdapter {
         stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
     stage.addActor(backgroundImage);
 
-    // Input handling for terminal and UI interactions
-    InputComponent inputComponent =
-        ServiceLocator.getInputService().getInputFactory().createForTerminal();
-
     // Create UI entity with various components
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new PerformanceDisplay())
-        .addComponent(new Terminal())
-        .addComponent(inputComponent)
-        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
-        .addComponent(new TerminalDisplay());
+        .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()));
 
     ServiceLocator.getEntityService().register(ui);
+  }
+
+  @Override
+  public void register(MenuSpriteData menuSpriteData) {
+    menuSpriteData
+        .edit(this)
+        .position(50, 50)
+        .name("Skills")
+        .description("Skills")
+        .sprite("images/skills.png")
+        .locked(false)
+        .apply();
   }
 
   @Override
