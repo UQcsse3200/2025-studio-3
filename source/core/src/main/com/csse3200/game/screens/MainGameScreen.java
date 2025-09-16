@@ -66,11 +66,6 @@ public class MainGameScreen extends ScreenAdapter {
   public MainGameScreen(GdxGame game) {
     this.game = game;
     this.waveManager = new WaveManager();
-
-    if (!ServiceLocator.getProfileService().isActive()) {
-      logger.error("[MainGameScreen] No profile is loaded. This is undefined behaviour.");
-    }
-
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();

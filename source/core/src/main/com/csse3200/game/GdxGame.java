@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.screens.LoadingScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.NewGameScreen;
@@ -39,6 +40,17 @@ public class GdxGame extends Game {
     logger.info("[GdxGame] Initialising core game services.");
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
 
+    // Show loading screen first
+    setScreen(new LoadingScreen(this));
+  }
+
+  /**
+   * Initializes the game after loading screen is complete.
+   * This method is called by the LoadingScreen when loading is finished.
+   */
+  public void initializeGame() {
+    logger.info("[GdxGame] Initializing game after loading screen");
+    
     //  Game-dependent services
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());

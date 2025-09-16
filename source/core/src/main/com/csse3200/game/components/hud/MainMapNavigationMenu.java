@@ -43,6 +43,11 @@ public class MainMapNavigationMenu extends UIComponent {
 
   /** Adds the actors to the stage */
   private void addActors() {
+    // Check if stage is available, if not, defer initialization
+    if (stage == null) {
+      return;
+    }
+    
     // Create the plaque background
     Texture plaqueTexture =
         ServiceLocator.getGlobalResourceService().getAsset("images/plaque.png", Texture.class);
@@ -259,6 +264,12 @@ public class MainMapNavigationMenu extends UIComponent {
   @Override
   public void update() {
     super.update();
+    
+    // Initialize actors if stage is now available
+    if (stage != null && plaqueBackground == null) {
+      addActors();
+    }
+    
     updateDisplay();
     updatePlaquePosition();
   }

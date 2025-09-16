@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
@@ -39,12 +38,10 @@ public class WorldMapScreen implements Screen {
   private Texture lockedLevel2;
   private Texture shopTexture;
   private Texture playerTex;
-  private Texture backButton;
   private Node[] nodes;
   private Vector2 playerPos;
   private float playerSpeed = 200f;
   private Node nearbyNode = null;
-  private Rectangle backBtnBounds;
   private BitmapFont font;
 
   public WorldMapScreen(GdxGame game) {
@@ -91,8 +88,6 @@ public class WorldMapScreen implements Screen {
     batch.begin();
 
     batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    batch.draw(
-        backButton, backBtnBounds.x, backBtnBounds.y, backBtnBounds.width, backBtnBounds.height);
 
     for (Node node : nodes) {
       Texture nodeTex;
@@ -141,15 +136,6 @@ public class WorldMapScreen implements Screen {
     if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= moveAmount;
     if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
 
-    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-      float mx = Gdx.input.getX();
-      float my = (float) Gdx.graphics.getHeight() - Gdx.input.getY();
-
-      if (backBtnBounds.contains(mx, my)) {
-        game.setScreen(GdxGame.ScreenType.MAIN_MENU);
-      }
-    }
-
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       if ("shop".equals(nearbyNode.id)) {
         logger.info("Opening Shop!");
@@ -194,7 +180,6 @@ public class WorldMapScreen implements Screen {
     lockedLevel2.dispose();
     shopTexture.dispose();
     playerTex.dispose();
-    backButton.dispose();
     font.dispose();
   }
 

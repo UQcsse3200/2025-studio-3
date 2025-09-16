@@ -33,6 +33,11 @@ public class AnimatedDropdownMenu extends UIComponent {
 
   /** Adds the actors to the stage */
   private void addActors() {
+    // Check if stage is available, if not, defer initialization
+    if (stage == null) {
+      return;
+    }
+    
     // Position in top right corner
     startX = stage.getWidth() - 80f;
     startY = stage.getHeight() - 80f;
@@ -182,11 +187,22 @@ public class AnimatedDropdownMenu extends UIComponent {
   @Override
   public void update() {
     super.update();
+    
+    // Initialize actors if stage is now available
+    if (stage != null && menuButtons == null) {
+      addActors();
+    }
+    
     updatePositions();
   }
 
   /** Updates positions when window is resized */
   private void updatePositions() {
+    // Check if stage is available
+    if (stage == null) {
+      return;
+    }
+    
     // Update start positions based on current stage size
     startX = stage.getWidth() - 80f;
     startY = stage.getHeight() - 80f;
