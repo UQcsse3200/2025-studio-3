@@ -48,6 +48,7 @@ public class LoadMenuActions extends Component {
     logger.info("Loading game: {}", savefile.getName());
     Persistence.load(savefile);
     ServiceLocator.registerConfigService(new ConfigService());
+    game.loadScreens();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

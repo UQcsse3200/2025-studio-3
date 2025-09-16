@@ -132,4 +132,100 @@ class SkillSetTest {
     skillSet.addSkill(skillSet.getSkill("Health Intermediate"));
     assertTrue(skillSet.isUnlockable("Health Advanced"));
   }
+
+  @Test
+  void testRemoveSkill() {
+    Skill healthBasic = skillSet.getSkill("Health Basic");
+    Skill attackBasic = skillSet.getSkill("Attack Basic");
+
+    skillSet.addSkill(healthBasic);
+    skillSet.addSkill(attackBasic);
+    assertEquals(2, skillSet.getUnlockedSkills().size());
+
+    skillSet.removeSkill(Skill.StatType.HEALTH);
+    assertEquals(1, skillSet.getUnlockedSkills().size());
+    assertFalse(skillSet.getUnlockedSkills().contains(healthBasic));
+    assertTrue(skillSet.getUnlockedSkills().contains(attackBasic));
+  }
+
+  @Test
+  void testCheckIfUnlocked() {
+    Skill healthBasic = skillSet.getSkill("Health Basic");
+    assertFalse(skillSet.checkIfUnlocked("Health Basic"));
+
+    skillSet.addSkill(healthBasic);
+    assertTrue(skillSet.checkIfUnlocked("Health Basic"));
+    assertFalse(skillSet.checkIfUnlocked("Health Intermediate"));
+  }
+
+  @Test
+  void testGetUpgradeValue_critChanceDefault() {
+    // CRIT_CHANCE should return 0 by default when no skills are unlocked
+    assertEquals(0f, skillSet.getUpgradeValue(Skill.StatType.CRIT_CHANCE));
+  }
+
+  @Test
+  void testGetUpgradeValue_nonCritChanceDefault() {
+    // Other stat types should return 1 by default when no skills are unlocked
+    assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
+    assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.ATTACK_DAMAGE));
+    assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.FIRING_SPEED));
+    assertEquals(1f, skillSet.getUpgradeValue(Skill.StatType.CURRENCY_GEN));
+  }
+
+  @Test
+  void testGetUpgradeValue_multipleSkillsUnlocked() {
+    Skill healthBasic = skillSet.getSkill("Health Basic"); // 1.1f
+    Skill healthIntermediate = skillSet.getSkill("Health Intermediate"); // 1.2f
+    Skill healthAdvanced = skillSet.getSkill("Health Advanced"); // 1.3f
+
+    skillSet.addSkill(healthBasic);
+    skillSet.addSkill(healthAdvanced); // Skip intermediate
+    skillSet.addSkill(healthIntermediate);
+
+    // Should return the highest level unlocked (Advanced = level 3)
+    assertEquals(1.3f, skillSet.getUpgradeValue(Skill.StatType.HEALTH));
+  }
+
+  @Test
+  void testGetLevel_edgeCases() {
+    assertEquals(0, skillSet.getLevel("Random Skill Name"));
+    assertEquals(0, skillSet.getLevel(""));
+    assertEquals(0, skillSet.getLevel("No Level Keyword"));
+  }
+
+  @Test
+  void testIsUnlockable_edgeCases() {
+    // Test with expert level skills when no previous levels are unlocked
+    assertFalse(skillSet.isUnlockable("Health Expert"));
+    assertFalse(skillSet.isUnlockable("Attack Expert"));
+
+    // Test skipping levels
+    skillSet.addSkill(skillSet.getSkill("Health Basic"));
+    assertFalse(skillSet.isUnlockable("Health Advanced")); // Can't skip intermediate
+  }
+
+  @Test
+  void testGetCurrentLevel_multipleStatTypes() {
+    skillSet.addSkill(skillSet.getSkill("Health Intermediate")); // level 2
+    skillSet.addSkill(skillSet.getSkill("Attack Expert")); // level 4
+    skillSet.addSkill(skillSet.getSkill("Crit Basic")); // level 1
+
+    assertEquals(2, skillSet.getCurrentLevel(Skill.StatType.HEALTH));
+    assertEquals(4, skillSet.getCurrentLevel(Skill.StatType.ATTACK_DAMAGE));
+    assertEquals(1, skillSet.getCurrentLevel(Skill.StatType.CRIT_CHANCE));
+    assertEquals(0, skillSet.getCurrentLevel(Skill.StatType.FIRING_SPEED)); // No skills unlocked
+  }
+
+  @Test
+  void testGetUpgradeValue_withCritChanceSkills() {
+    Skill critBasic = skillSet.getSkill("Crit Basic"); // 0.1f
+    Skill critIntermediate = skillSet.getSkill("Crit Intermediate"); // 0.2f
+
+    skillSet.addSkill(critBasic);
+    assertEquals(0.1f, skillSet.getUpgradeValue(Skill.StatType.CRIT_CHANCE));
+
+    skillSet.addSkill(critIntermediate);
+    assertEquals(0.2f, skillSet.getUpgradeValue(Skill.StatType.CRIT_CHANCE));
+  }
 }

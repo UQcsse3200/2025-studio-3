@@ -23,7 +23,7 @@ public class LoadGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(LoadGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] textures = {"images/dialog.png"};
+  private static final String[] textures = {"images/dialog.png", "images/shopbackground.jpg"};
 
   /**
    * Constructor for the load game screen.

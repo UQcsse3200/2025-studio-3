@@ -20,8 +20,8 @@ import org.slf4j.LoggerFactory;
 
 public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
-  private final GdxGame game;
   private final Renderer renderer;
+  private final GdxGame game;
   private String[] shopTextures = {
     "images/shopbackground.jpg", "images/coins.png", "images/dialog.png"
   };

@@ -66,9 +66,9 @@ public class CombatStatsComponent extends Component {
         // 2) Progression stats (HudDisplay / coins.png reads this)
         if (Persistence.profile() != null) {
           int before = Persistence.profile().wallet().getCoins();
-          Persistence.profile().statistics().increaseKills();
+          Persistence.profile().statistics().incrementStatistic("enemiesKilled");
           Persistence.profile().wallet().addCoins(extraCoins);
-          Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
+          Persistence.profile().statistics().incrementStatistic("coinsCollected", extraCoins);
           logger.info(
               "[Death] wallet: {} + {} -> {}",
               before,

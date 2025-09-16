@@ -46,6 +46,7 @@ public class NewGameMenuActions extends Component {
   private void handleStartGame(String saveName) {
     logger.info("Starting new game with save name: {} in slot: {}", saveName, selectedSlot);
     Persistence.create(saveName, selectedSlot);
+    game.loadScreens();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
 }

@@ -400,7 +400,7 @@ public class SkilltreeButtons extends UIComponent {
    * @param stage the stage to add the image to
    */
   private void addSkillImage(Stage stage) {
-    Texture texture = new Texture(Gdx.files.internal("images/skillpoint.png"));
+    Texture texture = new Texture(Gdx.files.internal("images/skillpoints.png"));
     Image image = new Image(texture);
 
     float width = stage.getViewport().getWorldWidth();

@@ -17,7 +17,8 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import java.util.Random;
+import com.csse3200.game.utils.ShopRandomizer;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,6 @@ public class ShopDisplay extends UIComponent {
   private static final float Z_INDEX = 2f;
   private static final int SLOT_SIZE = 50;
   private Window.WindowStyle windowStyle;
-  private static final Random random = new Random();
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
 
@@ -64,10 +64,13 @@ public class ShopDisplay extends UIComponent {
       return;
     }
     String[] allItemKeys = configService.getItemKeys();
-    String itemOne = allItemKeys[random.nextInt(allItemKeys.length)];
-    String itemTwo = allItemKeys[random.nextInt(allItemKeys.length)];
-    String itemThree = allItemKeys[random.nextInt(allItemKeys.length)];
-    this.itemKeys = new String[] {itemOne, itemTwo, itemThree};
+    int[] itemIndexes =
+        ShopRandomizer.getShopItemIndexes(
+            Persistence.profile().getName(), 0, allItemKeys.length - 1, LocalDateTime.now());
+    this.itemKeys =
+        new String[] {
+          allItemKeys[itemIndexes[0]], allItemKeys[itemIndexes[1]], allItemKeys[itemIndexes[2]]
+        };
   }
 
   /** Creates the item slots. */
@@ -211,7 +214,8 @@ public class ShopDisplay extends UIComponent {
       Persistence.profile().inventory().addItem(itemKey);
       logger.info("Successfully purchased: {}", itemConfig.getName());
       entity.getEvents().trigger("purchased");
-      // ServiceLocator.getDialogService().info("Successfully purchased: " + itemConfig.getName());
+      // ServiceLocator.getDialogService().info("Successfully purchased: " +
+      // itemConfig.getName());
     } else {
       logger.warn("Insufficient funds to purchase: {}", itemConfig.getName());
       // ServiceLocator.getDialogService().error("Insufficient funds to purchase: " +

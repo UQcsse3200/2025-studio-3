@@ -68,19 +68,50 @@ public class StatisticsDisplay extends UIComponent {
 
     // Create components
     Label killsLabel = new Label("Total Kills:", skin);
-    Label kills = new Label(Integer.toString(statistics.getKills()), skin);
+    Label kills = new Label(Integer.toString(statistics.getStatistic("enemiesKilled")), skin);
 
     Label shotsLabel = new Label("Shots Fired:", skin);
-    Label shots = new Label(Integer.toString(statistics.getShotsFired()), skin);
+    Label shots = new Label(Integer.toString(statistics.getStatistic("shotsFired")), skin);
 
     Label levelsLabel = new Label("Levels Passed:", skin);
-    Label levels = new Label(Integer.toString(statistics.getLevelsPassed()), skin);
+    Label levels = new Label(Integer.toString(statistics.getStatistic("levelsCompleted")), skin);
 
-    Label defencesLabel = new Label("Defences Unlocked:", skin);
-    Label defences = new Label(Integer.toString(statistics.getNumDefencesUnlocked()), skin);
+    Label lostLevelsLabel = new Label("Levels Lost:", skin);
+    Label lostLevels = new Label(Integer.toString(statistics.getStatistic("levelsLost")), skin);
+
+    Label defencesPlantedLabel = new Label("Defences Planted:", skin);
+    Label defencesPlanted =
+        new Label(Integer.toString(statistics.getStatistic("defencesPlanted")), skin);
+
+    Label defencesUnlockedLabel = new Label("Defences Unlocked:", skin);
+    Label defencesUnlocked =
+        new Label(Integer.toString(statistics.getStatistic("defencesUnlocked")), skin);
+
+    Label defencesLostLabel = new Label("Defences Lost:", skin);
+    Label defencesLost = new Label(Integer.toString(statistics.getStatistic("defencesLost")), skin);
 
     Label coinsLabel = new Label("Total Coins Earned:", skin);
-    Label coins = new Label(Integer.toString(statistics.getTotalCoinsEarned()), skin);
+    Label coins = new Label(Integer.toString(statistics.getStatistic("coinsCollected")), skin);
+
+    Label coinsSpentLabel = new Label("Total Coins Spent:", skin);
+    Label coinsSpent = new Label(Integer.toString(statistics.getStatistic("coinsSpent")), skin);
+
+    Label skillPointsLabel = new Label("Skill Points Collected:", skin);
+    Label skillPoints =
+        new Label(Integer.toString(statistics.getStatistic("skillPointsCollected")), skin);
+
+    Label skillPointsSpentLabel = new Label("Skill Points Spent:", skin);
+    Label skillPointsSpent =
+        new Label(Integer.toString(statistics.getStatistic("skillPointsSpent")), skin);
+
+    Label purchasesLabel = new Label("Purchases Made:", skin);
+    Label purchases = new Label(Integer.toString(statistics.getStatistic("purchasesMade")), skin);
+
+    Label wavesLabel = new Label("Waves Completed:", skin);
+    Label waves = new Label(Integer.toString(statistics.getStatistic("wavesCompleted")), skin);
+
+    Label itemsLabel = new Label("Items Collected:", skin);
+    Label items = new Label(Integer.toString(statistics.getStatistic("itemsCollected")), skin);
 
     // Position Components on table
     Table table = new Table();
@@ -97,12 +128,48 @@ public class StatisticsDisplay extends UIComponent {
     table.add(levels).left();
 
     table.row().padTop(10f);
-    table.add(defencesLabel).right().padRight(15f);
-    table.add(defences).left();
+    table.add(lostLevelsLabel).right().padRight(15f);
+    table.add(lostLevels).left();
+
+    table.row().padTop(10f);
+    table.add(defencesPlantedLabel).right().padRight(15f);
+    table.add(defencesPlanted).left();
+
+    table.row().padTop(10f);
+    table.add(defencesUnlockedLabel).right().padRight(15f);
+    table.add(defencesUnlocked).left();
+
+    table.row().padTop(10f);
+    table.add(defencesLostLabel).right().padRight(15f);
+    table.add(defencesLost).left();
 
     table.row().padTop(10f);
     table.add(coinsLabel).right().padRight(15f);
     table.add(coins).left();
+
+    table.row().padTop(10f);
+    table.add(coinsSpentLabel).right().padRight(15f);
+    table.add(coinsSpent).left();
+
+    table.row().padTop(10f);
+    table.add(skillPointsSpentLabel).right().padRight(15f);
+    table.add(skillPointsSpent).left();
+
+    table.row().padTop(10f);
+    table.add(skillPointsLabel).right().padRight(15f);
+    table.add(skillPoints).left();
+
+    table.row().padTop(10f);
+    table.add(purchasesLabel).right().padRight(15f);
+    table.add(purchases).left();
+
+    table.row().padTop(10f);
+    table.add(wavesLabel).right().padRight(15f);
+    table.add(waves).left();
+
+    table.row().padTop(10f);
+    table.add(itemsLabel).right().padRight(15f);
+    table.add(items).left();
 
     return table;
   }
