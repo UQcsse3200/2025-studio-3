@@ -4,19 +4,32 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Input handler for inventory units for mouse input. This input handler uses touch input. */
-public class InventoryUnitInputComponent extends InputComponent {
+public class DeckInputComponent extends InputComponent {
 
-  private static final Logger logger = LoggerFactory.getLogger(InventoryUnitInputComponent.class);
+  private static final Logger logger = LoggerFactory.getLogger(DeckInputComponent.class);
   private final AreaAPI area;
+  private final Supplier<Entity> supplier;
 
-  public InventoryUnitInputComponent(AreaAPI area) {
+  public DeckInputComponent(AreaAPI area, Supplier<Entity> supplier) {
     super(5);
     this.area = area;
+    this.supplier = supplier;
+  }
+
+  /**
+   * Getter for the supplier, used when we need an instance of the inventory unit
+   *
+   * @return the supplier for that entity
+   */
+  public Supplier<Entity> getEntitySupplier() {
+    return this.supplier;
   }
 
   /**
@@ -39,7 +52,7 @@ public class InventoryUnitInputComponent extends InputComponent {
         && clickInWorld.x <= position.x + tileSize
         && clickInWorld.y >= position.y
         && clickInWorld.y <= position.y + tileSize) {
-      logger.info("Inventory Entity clicked");
+      logger.info("Deck Entity clicked");
       return switch (button) {
         case Input.Buttons.LEFT -> {
           area.setSelectedUnit(entity);
