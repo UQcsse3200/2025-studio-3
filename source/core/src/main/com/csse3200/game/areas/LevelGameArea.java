@@ -13,6 +13,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -282,6 +283,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "entityDeath",
             () -> {
               requestDespawn(unit);
+              Persistence.addCoins(3);
               robots.remove(unit);
             });
     logger.info("Unit spawned at position {} {}", col, row);

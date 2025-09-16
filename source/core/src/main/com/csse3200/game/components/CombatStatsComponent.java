@@ -61,37 +61,6 @@ public class CombatStatsComponent extends Component {
     //    logger.info(String.valueOf(this.health));
 
     if (entity != null) {
-      if (this.health == 0) {
-        // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
-        int extraCoins = 3; // TODO: replace with your real drop logic
-
-        HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);
-        if (hitbox == null) {
-          return;
-        }
-        short layer = hitbox.getLayer();
-        // 2) Progression stats (HudDisplay / coins.png reads this)
-        if (Persistence.profile() != null && layer == PhysicsLayer.ENEMY) {
-          int before = Persistence.profile().wallet().getCoins();
-          Persistence.profile().statistics().increaseKills();
-          Persistence.profile().wallet().addCoins(extraCoins);
-          Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
-          logger.info(
-              "[Death] wallet: {} + {} -> {}",
-              before,
-              extraCoins,
-              Persistence.profile().wallet().getCoins());
-        } else {
-          logger.warn(
-              "[Death] Persistence.profile() is null; cannot update progression wallet/stats");
-        }
-
-        // 3) Gameplay currency service (SunlightHudDisplay reads this)
-        if (ServiceLocator.getCurrencyService() != null) {
-          ServiceLocator.getCurrencyService().add(extraCoins);
-          logger.info("[Death] CurrencyService +{}", extraCoins);
-        }
-      }
       entity.getEvents().trigger("updateHealth", this.health);
     }
   }
