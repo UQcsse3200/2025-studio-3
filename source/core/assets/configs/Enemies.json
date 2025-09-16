@@ -27,7 +27,7 @@
   "scale": 1.25,
   "description": "A regular old robot, just... bigger."
   }, "bungeeRobot": {
-  "name": "Fast Robot",
+  "name": "Bungee Robot",
   "atlasFilePath": "images/robot_placeholder.atlas",
   "defaultSprite": "images/default_enemy_image.png",
   "health": 60,
