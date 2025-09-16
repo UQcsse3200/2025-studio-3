@@ -81,4 +81,13 @@ public abstract class GameArea implements Disposable {
     if (entity == null) return;
     Gdx.app.postRunnable(() -> despawnEntity(entity));
   }
+
+  /**
+   * Gets all entities in this area.
+   *
+   * @return list of entities in this area
+   */
+  public List<Entity> getEntities() {
+    return areaEntities;
+  }
 }
