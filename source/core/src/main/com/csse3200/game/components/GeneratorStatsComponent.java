@@ -4,6 +4,7 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
 
   /** Integer identifier for the type of defender (e.g., tower, trap, etc.). */
   private int interval;
+
   private int scrapValue;
 
   public GeneratorStatsComponent(int health, int interval, int scrapValue) {

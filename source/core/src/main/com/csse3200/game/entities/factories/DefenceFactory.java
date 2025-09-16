@@ -109,9 +109,7 @@ public class DefenceFactory {
     generator
         .addComponent(
             new GeneratorStatsComponent(
-                config.getHealth(),
-                config.getInterval(),
-                config.getScrapValue()))
+                config.getHealth(), config.getInterval(), config.getScrapValue()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
