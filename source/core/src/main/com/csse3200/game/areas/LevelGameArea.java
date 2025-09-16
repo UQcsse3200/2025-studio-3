@@ -339,9 +339,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
     projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    // projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
-    // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
-    // projectile.addComponent(render); // <- your projectile image
 
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
@@ -352,9 +349,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         .getEvents()
         .addListener(
             "despawnSlingshot",
-            (Entity e) -> {
-              requestDespawn(e);
-            });
+            (Entity e) -> requestDespawn(e));
     spawnEntity(projectile); // adds to area and entity service
     return projectile;
   }
@@ -438,7 +433,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
-    // newEntity.getEvents().trigger("attackStart");
     newEntity
         .getEvents()
         .addListener(
@@ -453,7 +447,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         .addListener(
             "fire",
             () -> {
-              Vector2 spawnPos = newEntity.getCenterPosition();
               spawnProjectile(entityPos, 3f, 0f);
               newEntity.getEvents().trigger("attackStart");
               newEntity
