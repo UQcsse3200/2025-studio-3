@@ -490,7 +490,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
         // Window activation trigger
