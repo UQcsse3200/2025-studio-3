@@ -16,16 +16,12 @@ public class RobotAnimationController extends Component {
     animator = this.entity.getComponent(AnimationRenderComponent.class);
     entity.getEvents().addListener("moveLeftStart", this::animateMoveLeft);
     entity.getEvents().addListener("attackStart", this::animateAttack);
-    entity.getEvents().addListener("chaseStart", this::animateChase);
   }
 
   void animateMoveLeft() {
-    animator.startAnimation("angry");
+    animator.startAnimation("moveLeft");
   }
 
-  void animateChase() {
-    animator.startAnimation("angry");
-  }
 
   void animateAttack() {
     animator.startAnimation("attack");
