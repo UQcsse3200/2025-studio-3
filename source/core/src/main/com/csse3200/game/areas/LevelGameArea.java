@@ -9,6 +9,7 @@ import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -95,6 +96,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // But for now it doesn't matter
   private int deckUnitCount;
 
+  // Initialising an Entity
+  private Entity gameOverEntity;
+
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
    *
@@ -168,6 +172,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // add components here for additional UI Elements
     ui.addComponent(new GameAreaDisplay("Level One"));
     spawnEntity(ui);
+
+    // Creates a game over entity to handle the game over window UI
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
@@ -451,12 +460,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             .contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      String itemType = item.getType().toString();
       logger.info(
-          "Not spawning item {} since none in player's inventory", item.getType().toString());
+          "Not spawning item {} since none in player's inventory", itemType);
       return;
     }
     if (item != null && selectedTile != null) {
-      logger.info("Spawning item {}", item.getType().toString());
+      String itemType = item.getType().toString();
+      logger.info("Spawning item {}", itemType);
       String key = item.getType().toString().toLowerCase(Locale.ROOT);
 
       // Remove one instance of the Item from the inventory
@@ -475,8 +486,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
                   (float) (tileSize * -0.75)));
 
       // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
-      Set<String> damaging_items = Set.of("GRENADE", "EMP", "NUKE");
-      if (damaging_items.contains(item.getType().toString())) {
+      Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");
+      if (damagingItems.contains(item.getType().toString())) {
         // Window query (3x3)
         float radius = 1.5f * tileSize;
 
@@ -512,7 +523,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
 
     // Add entity to tile unless it is an Item
-    if (selectedTile != null && item == null) {
+    if (selectedTile != null) {
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 
@@ -602,11 +613,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
-        // TODO: add UI component here
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        // Window activation trigger
+        gameOverEntity.getEvents().trigger("gameOver");
       }
     }
   }
