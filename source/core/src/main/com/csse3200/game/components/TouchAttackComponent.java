@@ -25,6 +25,7 @@ public class TouchAttackComponent extends Component {
 
   /**
    * Create a component which attacks entities on collision, without knockback.
+   *
    * @param targetLayer The physics layer of the target's collider.
    */
   public TouchAttackComponent(short targetLayer) {
@@ -33,6 +34,7 @@ public class TouchAttackComponent extends Component {
 
   /**
    * Create a component which attacks entities on collision, with knockback.
+   *
    * @param targetLayer The physics layer of the target's collider.
    * @param knockback The magnitude of the knockback applied to the entity.
    */
@@ -62,8 +64,14 @@ public class TouchAttackComponent extends Component {
     // Try to attack target.
     Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+
+    if (targetStats == null) {
+      targetStats = target.getComponent(DefenceStatsComponent.class);
+    }
+
     if (targetStats != null) {
       targetStats.hit(combatStats);
+      target.getEvents().trigger("hitMarker", target);
     }
 
     // Apply knockback

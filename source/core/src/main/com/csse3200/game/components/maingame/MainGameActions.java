@@ -20,13 +20,18 @@ public class MainGameActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("exit", this::onExit);
+    entity.getEvents().addListener("open_profile", this::onProfile);
   }
 
-  /**
-   * Swaps to the Main Menu screen.
-   */
+  /** Swaps to the Main Menu screen. */
   private void onExit() {
     logger.info("Exiting main game screen");
     game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+  }
+
+  /** Swaps to the Profile screen. */
+  private void onProfile() {
+    logger.info("Entering profile screen");
+    game.setScreen(GdxGame.ScreenType.PROFILE);
   }
 }

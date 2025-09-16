@@ -1,14 +1,13 @@
 package com.csse3200.game.input;
 
+import static org.mockito.Mockito.*;
+
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.extensions.GameExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class InputServiceTest {
@@ -202,8 +201,9 @@ class InputServiceTest {
   }
 
   /**
-   * This is a generic method that is used to test that each of the InputService's registered input handlers are called
-   * by descending priority order. As well as, that the InputService returns as soon as the input is handled.
+   * This is a generic method that is used to test that each of the InputService's registered input
+   * handlers are called by descending priority order. As well as, that the InputService returns as
+   * soon as the input is handled.
    *
    * @param method input component method
    * @param serviceMethod input service method

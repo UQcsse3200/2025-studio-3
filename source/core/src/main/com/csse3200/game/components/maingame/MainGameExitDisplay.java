@@ -9,9 +9,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Displays a button to exit the Main Game screen to the Main Menu screen.
- */
+/** Displays a button to exit the Main Game screen to the Main Menu screen. */
 public class MainGameExitDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainGameExitDisplay.class);
   private static final float Z_INDEX = 2f;
@@ -32,13 +30,13 @@ public class MainGameExitDisplay extends UIComponent {
 
     // Triggers an event when the button is pressed.
     mainMenuBtn.addListener(
-      new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("Exit button clicked");
-          entity.getEvents().trigger("exit");
-        }
-      });
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Exit button clicked");
+            entity.getEvents().trigger("exit");
+          }
+        });
 
     table.add(mainMenuBtn).padTop(10f).padRight(10f);
 

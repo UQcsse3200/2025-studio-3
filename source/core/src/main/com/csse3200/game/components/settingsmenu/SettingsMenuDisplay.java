@@ -3,6 +3,7 @@ package com.csse3200.game.components.settingsmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -11,8 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.files.UserSettings;
-import com.csse3200.game.files.UserSettings.DisplaySettings;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.persistence.UserSettings;
+import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
@@ -71,25 +73,30 @@ public class SettingsMenuDisplay extends UIComponent {
     // Create components
     Label fpsLabel = new Label("FPS Cap:", skin);
     fpsText = new TextField(Integer.toString(settings.fps), skin);
+    whiten(fpsLabel);
 
     Label fullScreenLabel = new Label("Fullscreen:", skin);
     fullScreenCheck = new CheckBox("", skin);
     fullScreenCheck.setChecked(settings.fullscreen);
+    whiten(fullScreenLabel);
 
     Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
     vsyncCheck.setChecked(settings.vsync);
+    whiten(vsyncLabel);
 
     Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+    whiten(uiScaleLabel);
 
     Label displayModeLabel = new Label("Resolution:", skin);
     displayModeSelect = new SelectBox<>(skin);
     Monitor selectedMonitor = Gdx.graphics.getMonitor();
     displayModeSelect.setItems(getDisplayModes(selectedMonitor));
     displayModeSelect.setSelected(getActiveMode(displayModeSelect.getItems()));
+    whiten(displayModeLabel);
 
     // Position Components on table
     Table table = new Table();
@@ -158,7 +165,7 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private Table makeMenuBtns() {
-    TextButton exitBtn = new TextButton("Exit", skin);
+    TextButton exitBtn = new TextButton("Back", skin);
     TextButton applyBtn = new TextButton("Apply", skin);
 
     exitBtn.addListener(
@@ -201,7 +208,11 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private void exitMenu() {
-    game.setScreen(ScreenType.MAIN_MENU);
+    if (Persistence.profile() == null) {
+      game.setScreen(ScreenType.MAIN_MENU);
+    } else {
+      game.setScreen(ScreenType.PROFILE);
+    }
   }
 
   private Integer parseOrNull(String num) {
@@ -226,5 +237,13 @@ public class SettingsMenuDisplay extends UIComponent {
   public void dispose() {
     rootTable.clear();
     super.dispose();
+  }
+
+  /** Sets the provided label's font color to white by cloning their style */
+  private static void whiten(Label label) {
+    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+    st.fontColor = Color.WHITE;
+    label.setStyle(st);
+    logger.debug("Labels are white");
   }
 }

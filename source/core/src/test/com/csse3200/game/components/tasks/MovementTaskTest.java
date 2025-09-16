@@ -10,9 +10,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.Task.Status;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
-import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,9 +45,11 @@ class MovementTaskTest {
     assertEquals(Status.ACTIVE, task.getStatus());
   }
 
+  // TODO add a task testing the speed
+
   @Test
   void shouldStopWhenClose() {
-    MovementTask task = new MovementTask(new Vector2(10f, 10f), 2f);
+    MovementTask task = new MovementTask(new Vector2(10f, 10f), 2f, 2f);
     Entity entity = new Entity().addComponent(new PhysicsComponent());
     PhysicsMovementComponent movementComponent = new PhysicsMovementComponent();
     entity.addComponent(movementComponent);

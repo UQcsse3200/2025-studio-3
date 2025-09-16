@@ -1,9 +1,34 @@
 package com.csse3200.game.entities.configs;
 
 /**
- * Defines a basic set of properties stored in entities config files to be loaded by Entity Factories.
+ * Defines a basic set of properties stored in entities config files to be loaded by Entity
+ * Factories.
  */
 public class BaseEntityConfig {
-    public int health = 1;
-    public int baseAttack = 0;
+  /** Creates a new BaseEntityConfig with default values. */
+  public BaseEntityConfig() {
+    // Default constructor with default field values
+  }
+
+  int health;
+
+  int baseAttack;
+
+  /**
+   * Gets the health value for this entity.
+   *
+   * @return the health value
+   */
+  public int getHealth() {
+    return health;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttack() {
+    return baseAttack;
+  }
 }

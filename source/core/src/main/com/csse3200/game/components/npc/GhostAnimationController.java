@@ -20,9 +20,9 @@ public class GhostAnimationController extends Component {
 
   void animateWander() {
     animator.startAnimation("float");
-  }
+  } // used to say float
 
   void animateChase() {
     animator.startAnimation("angry_float");
-  }
+  } // used to say angry_float
 }

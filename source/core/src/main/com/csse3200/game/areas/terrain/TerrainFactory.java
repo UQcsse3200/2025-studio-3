@@ -13,9 +13,9 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainComponent.TerrainOrientation;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.utils.math.RandomUtils;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.utils.math.RandomUtils;
 
 /** Factory for creating game terrains. */
 public class TerrainFactory {
@@ -80,9 +80,41 @@ public class TerrainFactory {
         TextureRegion hexRocks =
             new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
         return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
+      case LEVEL_ONE_MAP:
+        TextureRegion levelMap =
+            new TextureRegion(resourceService.getAsset("images/level-1-map-v2.png", Texture.class));
+        return createLevelMap(levelMap);
       default:
         return null;
     }
+  }
+
+  /**
+   * Creates the map for a game level
+   *
+   * @param levelMap the map to create
+   * @return the Terrain Component
+   */
+  private TerrainComponent createLevelMap(TextureRegion levelMap) {
+    // Scale based on height so image fills viewport vertically
+    float worldHeight = camera.viewportHeight;
+    float scale = worldHeight / levelMap.getRegionHeight();
+    float worldWidth = levelMap.getRegionWidth() * scale;
+
+    // Create fake tiled map with one cell
+    TiledMap tiledMap = new TiledMap();
+    TerrainTile mapTile = new TerrainTile(levelMap);
+
+    TiledMapTileLayer layer = new TiledMapTileLayer(1, 1, (int) worldWidth, (int) worldHeight);
+    Cell cell = new Cell();
+    cell.setTile(mapTile);
+    layer.setCell(0, 0, cell);
+
+    tiledMap.getLayers().add(layer);
+
+    TiledMapRenderer renderer = createRenderer(tiledMap, scale);
+
+    return new TerrainComponent(camera, tiledMap, renderer, orientation, worldWidth);
   }
 
   private TerrainComponent createForestDemoTerrain(
@@ -155,6 +187,7 @@ public class TerrainFactory {
   public enum TerrainType {
     FOREST_DEMO,
     FOREST_DEMO_ISO,
-    FOREST_DEMO_HEX
+    FOREST_DEMO_HEX,
+    LEVEL_ONE_MAP
   }
 }

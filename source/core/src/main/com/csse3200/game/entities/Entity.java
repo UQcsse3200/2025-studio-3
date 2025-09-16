@@ -7,6 +7,8 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.HashMap;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,12 +40,18 @@ public class Entity {
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
 
+  private final int coins = 5; // number of coins to add when enemy is killed
+
   public Entity() {
     id = nextId;
     nextId++;
 
     components = new IntMap<>(4);
     eventHandler = new EventHandler();
+  }
+
+  public int getCoins() {
+    return coins;
   }
 
   /**
@@ -138,6 +146,23 @@ public class Entity {
   public void scaleWidth(float x) {
     this.scale.y = this.scale.y / this.scale.x * x;
     this.scale.x = x;
+  }
+
+  /**
+   * this sets the property like isProjectile and returns the value when asked for.
+   *
+   * @param name is the name of property like isProjectile
+   * @param value is the value of property like true
+   */
+  private Map<String, Object> property = new HashMap<>();
+
+  public Entity setProperty(String name, Object value) {
+    property.put(name, value);
+    return this;
+  }
+
+  public Object getProperty(String name) {
+    return property.get(name);
   }
 
   /**

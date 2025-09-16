@@ -1,5 +1,8 @@
 package com.csse3200.game.rendering;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -10,9 +13,6 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(GameExtension.class)
 class AnimationRenderComponentTest {
@@ -82,13 +82,13 @@ class AnimationRenderComponentTest {
     for (int i = 0; i < 5; i++) {
       // Each draw advances 1 frame, check that it matches for each
       animator.draw(batch);
-      verify(batch).draw(
-          regions.get(i),
-          entity.getPosition().x,
-          entity.getPosition().y,
-          entity.getScale().x,
-          entity.getScale().y
-      );
+      verify(batch)
+          .draw(
+              regions.get(i),
+              entity.getPosition().x,
+              entity.getPosition().y,
+              entity.getScale().x,
+              entity.getScale().y);
     }
   }
 
