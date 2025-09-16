@@ -33,7 +33,7 @@ class ItemEffectsServiceTest {
   @BeforeEach
   void setUp() {
     // Intercept postRunnable
-    Application app = mock(Application.class);
+    app = mock(Application.class);
     Gdx.app = app;
 
     // Service mocks
@@ -62,9 +62,6 @@ class ItemEffectsServiceTest {
         .thenAnswer(inv -> atlasWithFramesFor("buff", "coffee", "emp", "grenade", "nuke"));
 
     when(time.getDeltaTime()).thenReturn(0.1f);
-
-    // Keep a field for app
-    this.app = app;
   }
 
   // helpers
@@ -74,7 +71,7 @@ class ItemEffectsServiceTest {
     for (String name : animNames) {
       Array<AtlasRegion> regions = new Array<>(1);
       regions.add(mock(AtlasRegion.class));
-      when(atlas.findRegions(eq(name))).thenReturn(regions);
+      when(atlas.findRegions(name)).thenReturn(regions);
     }
     // Return 1 region for any non-empty name not explicitly listed
     when(atlas.findRegions(argThat(s -> s != null && !s.isEmpty())))
@@ -254,5 +251,9 @@ class ItemEffectsServiceTest {
       assertEquals(tile * 3f, emp.getScale().x);
       assertEquals(tile * 3f, emp.getScale().y);
     }
+
+    // Verify the correct asset path was requested
+    assertEquals(List.of("images/emp.atlas"), paths);
+    assertTrue(emp.getComponent(AnimationRenderComponent.class).hasAnimation("emp"));
   }
 }

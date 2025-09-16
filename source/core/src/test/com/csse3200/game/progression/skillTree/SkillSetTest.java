@@ -12,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class SkillSetTest {
-
   private SkillSet skillSet;
 
   @BeforeEach

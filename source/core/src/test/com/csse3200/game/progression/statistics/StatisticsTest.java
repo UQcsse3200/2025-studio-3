@@ -66,7 +66,7 @@ class StatisticsTest {
 
     assertEquals(10, statisticsNew.getStatistic("enemiesKilled"));
     assertEquals(50, statisticsNew.getStatistic("shotsFired"));
-    assertEquals(30, statisticsNew.getStatistic("coinsCollected")); // default value
+    assertEquals(30, statisticsNew.getStatistic("coinsCollected"));
 
     assertEquals(2, statisticsNew.getUnlockedAchievements().size());
     assertTrue(statisticsNew.isAchievementUnlocked("firstKill"));

@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -80,7 +81,7 @@ class LevelGameAreaTest {
     profile.getInventory().addItem("grenade"); // so inventory not null
     lenient().when(profileService.getProfile()).thenReturn(profile);
 
-    persistenceMock = mockStatic(Persistence.class, withSettings().lenient());
+    persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
     // Note: Persistence.profile() no longer exists in the reworked system
   }
 

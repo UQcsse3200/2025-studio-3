@@ -1,13 +1,23 @@
 package com.csse3200.game.progression.inventory;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
+@ExtendWith(GameExtension.class)
 class InventoryTest {
-
   private Inventory inventory;
 
   @BeforeEach
@@ -275,5 +285,36 @@ class InventoryTest {
     assertEquals("potion", items.get(1));
     assertEquals("shield", items.get(2));
     assertEquals("potion", items.get(3));
+  }
+
+  @Test
+  void shouldGetInventoryItems() {
+    inventory.addItem("sword");
+    inventory.addItem("shield");
+    inventory.addItem("potion");
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+    when(configService.getItemConfig("sword")).thenReturn(new BaseItemConfig());
+    when(configService.getItemConfig("shield")).thenReturn(new BaseItemConfig());
+    when(configService.getItemConfig("potion")).thenReturn(new BaseItemConfig());
+    Map<String, BaseItemConfig> items = inventory.getInventoryItems();
+    assertEquals(3, items.size());
+    assertTrue(items.containsKey("sword"));
+    assertTrue(items.containsKey("shield"));
+    assertTrue(items.containsKey("potion"));
+  }
+
+  @Test
+  void shouldGetEmptyInventoryItems() {
+    Map<String, BaseItemConfig> items = inventory.getInventoryItems();
+    assertTrue(items.isEmpty());
+  }
+
+  @Test
+  void shouldGetInventoryItemsWithNullConfigService() {
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+    Map<String, BaseItemConfig> items = inventory.getInventoryItems();
+    assertTrue(items.isEmpty());
   }
 }

@@ -2,12 +2,14 @@ package com.csse3200.game.progression.arsenal;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.csse3200.game.extensions.GameExtension;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(GameExtension.class)
 class ArsenalTest {
-
   private Arsenal arsenal;
 
   @BeforeEach

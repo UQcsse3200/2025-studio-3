@@ -14,3 +14,7 @@ animation of the dialog box and the animation of the achievement box.
 - Generative AI was used sporadically to assist with identifying where
 code coverage was missing and how to fix it.
 
+## Jackie
+
+- Generative AI was used to generate tests for the SkillSet and Skill classes.
+- Generative AI was used to generate javadocs for same.

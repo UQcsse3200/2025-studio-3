@@ -12,7 +12,7 @@ class WalletTest {
   @Test
   void testDefaultWalletCoins() {
     Wallet wallet = new Wallet();
-    assertEquals(30, wallet.getCoins()); // Corrected to match actual default value
+    assertEquals(30, wallet.getCoins());
     wallet.setCoins(200);
     assertEquals(200, wallet.getCoins());
     wallet.addCoins(10);
@@ -41,7 +41,7 @@ class WalletTest {
   @Test
   void testDefaultWalletSkillsPoints() {
     Wallet wallet = new Wallet();
-    assertEquals(1, wallet.getSkillsPoints()); // Corrected to match actual default value
+    assertEquals(1, wallet.getSkillsPoints());
     wallet.setSkillsPoints(20);
     assertEquals(20, wallet.getSkillsPoints());
     wallet.addSkillsPoints(10);
@@ -67,7 +67,7 @@ class WalletTest {
     Wallet wallet = new Wallet();
     int originalCoins = wallet.getCoins();
     wallet.setCoins(-10);
-    assertEquals(originalCoins, wallet.getCoins()); // Should remain unchanged
+    assertEquals(originalCoins, wallet.getCoins());
   }
 
   @Test
@@ -75,7 +75,7 @@ class WalletTest {
     Wallet wallet = new Wallet();
     int originalSkillsPoints = wallet.getSkillsPoints();
     wallet.setSkillsPoints(-5);
-    assertEquals(originalSkillsPoints, wallet.getSkillsPoints()); // Should remain unchanged
+    assertEquals(originalSkillsPoints, wallet.getSkillsPoints());
   }
 
   @Test
@@ -84,7 +84,7 @@ class WalletTest {
     int originalCoins = wallet.getCoins();
     boolean result = wallet.purchaseShopItem(originalCoins + 10);
     assertFalse(result);
-    assertEquals(originalCoins, wallet.getCoins()); // Should remain unchanged
+    assertEquals(originalCoins, wallet.getCoins());
   }
 
   @Test
@@ -101,7 +101,7 @@ class WalletTest {
     Wallet wallet = new Wallet();
     int originalCoins = wallet.getCoins();
     wallet.addCoins(-10);
-    assertEquals(originalCoins - 10, wallet.getCoins()); // Negative addition should work
+    assertEquals(originalCoins - 10, wallet.getCoins());
   }
 
   @Test
@@ -109,7 +109,6 @@ class WalletTest {
     Wallet wallet = new Wallet();
     int originalSkillsPoints = wallet.getSkillsPoints();
     wallet.addSkillsPoints(-1);
-    assertEquals(
-        originalSkillsPoints - 1, wallet.getSkillsPoints()); // Negative addition should work
+    assertEquals(originalSkillsPoints - 1, wallet.getSkillsPoints());
   }
 }

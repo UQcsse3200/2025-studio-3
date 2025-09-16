@@ -44,7 +44,7 @@ public class Persistence {
    * @param save the savefile object
    * @return the profile and the slot
    */
-  public static net.dermetfan.utils.Pair<Profile, Integer> load(Savefile save) {
+  public static Pair<Profile, Integer> load(Savefile save) {
     String path = getPath(save);
     Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (savedProfile != null) {
