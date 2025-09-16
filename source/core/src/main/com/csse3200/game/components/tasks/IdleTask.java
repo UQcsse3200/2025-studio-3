@@ -17,7 +17,6 @@ public class IdleTask extends TargetDetectionTasks {
    * Creates an IdleTask
    *
    * @param attackRange the maximum distance at which the entity can attack a target
-   * @param targets a list of potential targets
    */
   public IdleTask(float attackRange) {
     super(attackRange);
@@ -26,7 +25,6 @@ public class IdleTask extends TargetDetectionTasks {
 
   @Override
   public void update() {
-    System.out.println("IdleTask priority: " + getPriority() + "attack rage is" + attackRange);
     owner.getEntity().getEvents().trigger("idleStart");
   }
 
@@ -38,7 +36,6 @@ public class IdleTask extends TargetDetectionTasks {
    */
   @Override
   protected int getActivePriority(float dst, Entity target) {
-    System.out.println("distance is " + dst);
     if (dst <= attackRange) {
       return -1; // stop task when target in range
     }
