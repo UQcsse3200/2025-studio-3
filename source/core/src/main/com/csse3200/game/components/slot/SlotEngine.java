@@ -36,10 +36,10 @@ public class SlotEngine {
     GAIN_METALS(0, "GainMetals", 2),
     GAIN_COINS(1, "GainCoins", 2),
     SUMMON_ENEMY(2, "SummonEnemy", 1),
-    LOSE_METALS(3, "LoseMetals", 1),
-    FREEZE_ENEMY(4, "FreezeEnemy", 1),
-    DESTROY_ENEMY(5, "DestroyEnemy", 1),
-    DROP_CARD(6, "DropCard", 10);
+    LOSE_METALS(4, "LoseMetals", 1),
+    FREEZE_ENEMY(5, "FreezeEnemy", 1),
+    DESTROY_ENEMY(7, "DestroyEnemy", 1),
+    DROP_CARD(8, "DropCard", 10);
 
     private final int id;
     private final String displayName;
