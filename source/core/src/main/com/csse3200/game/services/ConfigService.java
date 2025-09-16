@@ -25,6 +25,7 @@ public class ConfigService {
     this.defenceConfigs = loadDefenceConfigs(DEFENCE_CONFIG_FILE);
     this.enemyConfigs = loadEnemyConfigs(ENEMY_CONFIG_FILE);
     this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
+    logger.info("Loaded {} item configs", itemConfigs.size());
   }
 
   /**

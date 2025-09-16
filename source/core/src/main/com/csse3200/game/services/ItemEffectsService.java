@@ -10,6 +10,8 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
+
 /**
  * ItemEffectsService is a centralised helper for spawning animations for Items used in-level.
  *
@@ -100,6 +102,13 @@ public class ItemEffectsService {
             if (playMode == Animation.PlayMode.NORMAL) {
               if (totalEffectTime > 0f && age >= totalEffectTime) {
                 Gdx.app.postRunnable(effect::dispose);
+                // Trigger Defence listener to stop double attack speed/double damage
+                // if (Objects.equals(animatorName, "emp")) {
+                    // [].getEvents().trigger("stopDoubleDamage");
+                // }
+                // if (Objects.equals(animatorName, "coffee")) {
+                    // [].getEvents().trigger("stopDoubleSpeed");
+                // }
                 logger.info("Effect disposed");
               }
             }
@@ -136,6 +145,9 @@ public class ItemEffectsService {
             true, // allows display in bottom right to indicate effect duration
             bottomCorner,
             30f); // buff effects remain for 30 seconds
+
+        // Trigger Defence listener to start double damage
+        // [].getEvents().trigger("startDoubleDamage");
         logger.info("Created buff effect");
         break;
       case "coffee":
@@ -153,6 +165,9 @@ public class ItemEffectsService {
             true, // allows display in bottom right to indicate effect duration
             bottomCorner,
             30f); // coffee effects remain for 30 seconds
+
+        // Trigger Defence listener to begin double attack speed
+        // [].getEvents().trigger("startDoubleSpeed");
         logger.info("Created coffee effect");
         break;
       case "emp":

@@ -15,6 +15,7 @@ import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -190,11 +191,21 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeDeckUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
-    placeDeckUnit(ItemFactory::createGrenade, "images/items/grenade.png");
-    placeDeckUnit(ItemFactory::createCoffee, "images/items/coffee.png");
-    placeDeckUnit(ItemFactory::createBuff, "images/items/buff.png");
-    placeDeckUnit(ItemFactory::createEmp, "images/items/emp.png");
-    placeDeckUnit(ItemFactory::createNuke, "images/items/nuke.png");
+    if (Persistence.profile().inventory().contains("grenade")) {
+      placeDeckUnit(ItemFactory::createGrenade, "images/items/grenade.png");
+    }
+    if (Persistence.profile().inventory().contains("coffee")) {
+      placeDeckUnit(ItemFactory::createCoffee, "images/items/coffee.png");
+    }
+    if (Persistence.profile().inventory().contains("buff")) {
+      placeDeckUnit(ItemFactory::createBuff, "images/items/buff.png");
+    }
+    if (Persistence.profile().inventory().contains("emp")) {
+      placeDeckUnit(ItemFactory::createEmp, "images/items/emp.png");
+    }
+    if (Persistence.profile().inventory().contains("nuke")) {
+      placeDeckUnit(ItemFactory::createNuke, "images/items/nuke.png");
+    }
   }
 
   private void spawnSun() {
@@ -416,18 +427,22 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
     newEntity.setPosition(entityPos);
 
+    // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
-    logger.info("entity pos =" + tileX + ", " + tileY);
+
+    // If entity to be spawned is an Item and the player has such item in their inventory
     ItemComponent item = newEntity.getComponent(ItemComponent.class);
-    if (item != null && selectedTile != null) {
-      logger.info("spawning item");
+    if (item != null
+        && selectedTile != null
+        && Persistence.profile().inventory().contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
+      logger.info("Spawning item {}", item.getType().toString());
       String key = item.getType().toString().toLowerCase(Locale.ROOT);
 
+      // Remove one instance of the Item from the inventory
+      Persistence.profile().inventory().removeItem(key);
+
+      // Spawn effect
       Vector2 spawnPosition = new Vector2(tileX, tileY);
-      logger.info("position {}", spawnPosition);
-      logger.info(key);
-      logger.info("later pos x {}", xOffset * 0.25 + LEVEL_ONE_COLS * tileSize);
-      logger.info("later pos y {}", tileSize * -0.75);
       ServiceLocator.getItemEffectsService()
           .playEffect(
               key,
@@ -437,13 +452,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
                   (float) (xOffset * 0.25 + LEVEL_ONE_COLS * tileSize),
                   (float) (tileSize * -0.75)));
 
+      // ADD damage to enemies
+
+      // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-      logger.info("" + selectedTile.getComponent(TileStorageComponent.class).hasUnit());
       return;
     }
 
-    if (selectedTile != null) {
-      logger.info("here");
+    // Add entity to tile unless it is an Item
+    if (selectedTile != null && item != null) {
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 
