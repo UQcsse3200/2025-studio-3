@@ -150,4 +150,24 @@ public class Persistence {
     }
     return profile;
   }
+
+  public static void addCoins(int extraCoins) {
+    if (Persistence.profile() != null) {
+      int before = Persistence.profile().wallet().getCoins();
+      Persistence.profile().statistics().increaseKills();
+      Persistence.profile().wallet().addCoins(extraCoins);
+      Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
+      logger.info(
+          "[Death] wallet: {} + {} -> {}",
+          before,
+          extraCoins,
+          Persistence.profile().wallet().getCoins());
+    } else {
+      logger.warn("[Death] Persistence.profile() is null; cannot update progression wallet/stats");
+    }
+    //            if (ServiceLocator.getCurrencyService() != null) {
+    //              ServiceLocator.getCurrencyService().add(extraCoins);
+    //              logger.info("[Death] CurrencyService +{}", extraCoins);
+    //            }
+  }
 }
