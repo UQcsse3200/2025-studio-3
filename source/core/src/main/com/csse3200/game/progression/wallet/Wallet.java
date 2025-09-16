@@ -19,7 +19,7 @@ public class Wallet {
   /** Default constructor for Wallet. */
   public Wallet() {
     this.coins = 30; // Default starting coins
-    this.skillsPoints = 50; // Default starting skillsPoints
+    this.skillsPoints = 1; // Default starting skillsPoints
   }
 
   /**
