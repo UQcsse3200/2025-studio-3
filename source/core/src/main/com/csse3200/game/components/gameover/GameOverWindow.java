@@ -5,13 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
 
-/**
- * Class to create and display a window when the game ends.
- */
+/** Class to create and display a window when the game ends. */
 public class GameOverWindow extends UIComponent {
+  // Initialises the game over window.
   private Window gameOverWindow;
+  // Tracks the display status of the window.
   boolean isDisplayed = false;
 
   /** Creates the game over window. */
@@ -47,11 +48,23 @@ public class GameOverWindow extends UIComponent {
       return;
     }
 
-    // Press 'E' to take you back to the main menu.
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q)) {
+    // Press 'E' to take the player back to the main menu.
+    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+      // Closes popup window
       gameOverWindow.setVisible(false);
       isDisplayed = false;
-      // return to main menu
+
+      // Updates next frame to return to the main menu without crashing.
+      Gdx.app.postRunnable(
+          new Runnable() {
+            @Override
+            public void run() {
+              // Gets the game.
+              GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
+              // Switches to main menu.
+              game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+            }
+          });
     }
   }
 
