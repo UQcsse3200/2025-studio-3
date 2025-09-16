@@ -36,7 +36,7 @@ public class RobotFactory {
    * file is missing or deserialization fails, this will be null.
    */
   private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Enemies.json");
+      FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
 
   /**
    * A basic function to create a specific type of robot depending on the input TODO make this use
