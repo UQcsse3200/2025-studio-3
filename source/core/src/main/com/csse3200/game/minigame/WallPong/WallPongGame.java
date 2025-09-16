@@ -3,6 +3,7 @@ package com.csse3200.game.minigame.WallPong;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -30,6 +31,7 @@ public class WallPongGame extends ScreenAdapter {
         createWall(thickness/2f,ScreenHeight/2f,thickness,ScreenHeight);
         createWall(ScreenWidth-thickness/2f,ScreenHeight/2f,thickness,ScreenHeight);
         createWall(ScreenWidth/2f,ScreenHeight- thickness/2f,ScreenWidth,thickness);
+
     }
 
     private void createWall(float x,float y,float width,float height) {
@@ -42,7 +44,7 @@ public class WallPongGame extends ScreenAdapter {
         wall.addComponent(collider);
 
         wall.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
-        wall.getComponent(ColliderComponent.class);
+        wall.getComponent(ColliderComponent.class).setAsBox(new Vector2(width/2f,height/2f));
         wall.getComponent(PhysicsComponent.class).getBody().setTransform(x, y, 0);
 
         ServiceLocator.getEntityService().register(wall);
