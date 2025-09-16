@@ -176,10 +176,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         "images/sling_shooter_front.png");
   }
 
-  private void spawnSun(Vector2 targetPos) {
+  private void spawnSun(Vector2 targetPos, int spawnInterval) {
     Entity sunSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png", targetPos);
+        new CurrencyGeneratorComponent(spawnInterval, 25, "images/scrap_metal.png", targetPos);
     sunSpawner.addComponent(currencyGenerator);
     spawnEntity(sunSpawner);
   }
@@ -407,7 +407,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      spawnSun(entityPos);
+      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+      //int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+      spawnSun(entityPos, spawnInterval);
     }
 
     spawnEntity(newEntity);
