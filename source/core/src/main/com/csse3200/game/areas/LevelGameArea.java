@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -20,7 +21,9 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -461,6 +464,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       ServiceLocator.getProfileService().getProfile().getInventory().removeItem(key);
 
       // Spawn effect
+      // Currently just effect displays, not entity itself then effect after a delay
       Vector2 spawnPosition = new Vector2(tileX, tileY);
       ServiceLocator.getItemEffectsService()
           .playEffect(
@@ -471,7 +475,37 @@ public class LevelGameArea extends GameArea implements AreaAPI {
                   (float) (xOffset * 0.25 + LEVEL_ONE_COLS * tileSize),
                   (float) (tileSize * -0.75)));
 
-      // ADD damage to enemies
+      // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
+      Set<String> damaging_items = Set.of("GRENADE", "EMP", "NUKE");
+      if (damaging_items.contains(item.getType().toString())) {
+        // Window query (3x3)
+        float radius = 1.5f * tileSize;
+
+        List<Entity> toRemove = new ArrayList<>(); // targets
+        for (Entity r : robots) {
+          Vector2 pos = r.getPosition();
+          if (Math.abs(entityPos.x - pos.x) <= radius &&
+                  Math.abs(entityPos.y - pos.y) <= radius) {
+            // for logger
+            int grenadeCol = (int) ((entityPos.x - xOffset) / tileSize);
+            int grenadeRow = (int) ((entityPos.y - yOffset) / tileSize);
+            int robotCol = (int) ((pos.x - xOffset) / tileSize);
+            int robotRow = (int) ((pos.y - yOffset) / tileSize);
+            logger.info(
+                    "Grenade at ({}, {}) hits robot at ({}, {})",
+                    grenadeCol, grenadeRow, robotCol, robotRow
+            );
+            toRemove.add(r);
+          }
+        }
+        // can't remove from a list while iterating through it
+        for (Entity r : toRemove) {
+          // trigger entityDeath does NOT work
+          requestDespawn(r);
+          robots.remove(r);
+        }
+      }
+
 
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
