@@ -35,6 +35,13 @@ public class RobotFactory {
    * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
    * file is missing or deserialization fails, this will be null.
    */
+  public enum RobotType {
+    STANDARD,
+    FAST,
+    TANKY,
+    BUNGEE
+  }
+
   private static final NPCConfigs configs =
       FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
 
@@ -46,16 +53,13 @@ public class RobotFactory {
    * @param robotType The type of robot to create
    * @return The created robot
    */
-  public static Entity createRobotType(String robotType) {
-    BaseEnemyConfig config;
-    if (robotType.equalsIgnoreCase("fast")) {
-      config = configs.fastRobot;
-    } else if (robotType.equalsIgnoreCase("tanky")) {
-      config = configs.tankyRobot;
-    } else if (robotType.equalsIgnoreCase("bungee")) {
-      config = configs.bungeeRobot;
-    } else {
-      config = configs.standardRobot;
+  public static Entity createRobotType(RobotType robotType) {
+    BaseEnemyConfig config = null;
+    switch (robotType) {
+      case FAST -> config = configs.fastRobot;
+      case TANKY -> config = configs.tankyRobot;
+      case BUNGEE -> config = configs.bungeeRobot;
+      case STANDARD -> config = configs.standardRobot;
     }
     return createBaseRobot(config);
   }
