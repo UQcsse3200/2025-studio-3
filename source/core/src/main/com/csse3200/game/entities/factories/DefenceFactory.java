@@ -134,11 +134,11 @@ public class DefenceFactory {
             .addTask(new AttackTask(targets, config.range))
             .addTask(new IdleTask(targets, config.range));
 
-    ColliderComponent solid = new ColliderComponent()
+    ColliderComponent solid =
+        new ColliderComponent()
             .setCollisionFilter(
-                    PhysicsLayer.NPC,
-                    (short)(PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY)
-            );
+                PhysicsLayer.NPC,
+                (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY));
 
     Entity npc =
         new Entity()
