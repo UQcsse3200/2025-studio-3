@@ -10,7 +10,6 @@ import com.badlogic.gdx.Graphics.DisplayMode;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.persistence.UserSettings.Settings;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -39,9 +38,7 @@ class UserSettingsTest {
     Gdx.graphics = mock(Graphics.class);
     DisplayMode correctMode = new CustomDisplayMode(200, 100, 60, 0);
     DisplayMode[] displayModes = {
-        new CustomDisplayMode(100, 200, 30, 0),
-        new CustomDisplayMode(100, 200, 60, 0),
-        correctMode
+      new CustomDisplayMode(100, 200, 30, 0), new CustomDisplayMode(100, 200, 60, 0), correctMode
     };
     when(Gdx.graphics.getDisplayModes()).thenReturn(displayModes);
 
@@ -56,9 +53,7 @@ class UserSettingsTest {
     verify(Gdx.graphics).setFullscreenMode(correctMode);
   }
 
-  /**
-   * This exists to make the constructor public
-   */
+  /** This exists to make the constructor public */
   static class CustomDisplayMode extends DisplayMode {
     public CustomDisplayMode(int width, int height, int refreshRate, int bitsPerPixel) {
       super(width, height, refreshRate, bitsPerPixel);

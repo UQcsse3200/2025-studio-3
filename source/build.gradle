@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id "org.sonarqube" version "4.4.1.3373"
     id "jacoco"
+    id "com.diffplug.spotless" version "7.2.1"
 }
 
 sonarqube {
@@ -19,6 +20,29 @@ sonarqube {
         property "sonar.organization", "uqcsse3200"
         property "sonar.host.url", "https://sonarcloud.io"
     }
+}
+
+// formatting config
+spotless {
+    java {
+        googleJavaFormat()
+        trimTrailingWhitespace()
+        endWithNewline()
+        target '*/src/**/*.java'
+    }
+}
+
+// alias 'spotlessApply' to 'format'
+tasks.register('format') {
+    group = 'formatting'
+    description = 'Formats java code'
+    dependsOn 'spotlessApply'
+}
+
+tasks.register('formatCheck') {
+    group = 'verification'
+    description = 'Checks code formatting'
+    dependsOn 'spotlessCheck'
 }
 
 allprojects {
@@ -110,6 +134,7 @@ project(":core") {
         testImplementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
         testImplementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
         testImplementation "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+
     }
 
     test {

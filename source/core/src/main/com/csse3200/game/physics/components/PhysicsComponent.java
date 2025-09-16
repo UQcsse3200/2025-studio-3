@@ -56,6 +56,21 @@ public class PhysicsComponent extends Component {
   }
 
   /**
+   * Sets the linear velocity of the physics body. This controls the speed and direction the entity
+   * moves in the physics world.
+   *
+   * @param x horizontal velocity
+   * @param y vertical velocity
+   * @return this PhysicsComponent for chaining
+   */
+  public PhysicsComponent setLinearVelocity(float x, float y) {
+    if (body != null) {
+      body.setLinearVelocity(x, y);
+    }
+    return this;
+  }
+
+  /**
    * Get the physics body.
    *
    * @return physics body if entity has been created, null otherwise.

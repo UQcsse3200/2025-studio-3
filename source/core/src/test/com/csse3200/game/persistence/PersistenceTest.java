@@ -3,19 +3,17 @@ package com.csse3200.game.persistence;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.csse3200.game.progression.Profile;
 import java.io.File;
 import java.util.List;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Files;
-import com.badlogic.gdx.files.FileHandle;
-import com.csse3200.game.progression.Profile;
 
 @ExtendWith(MockitoExtension.class)
 class PersistenceTest {
@@ -24,7 +22,11 @@ class PersistenceTest {
   void testProfile() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       Profile testProfile = new Profile();
-      mockFileLoader.when(() -> FileLoader.readClass(eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.readClass(
+                      eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenReturn(testProfile);
 
       Savefile savefile = new Savefile("testProfile", 1234567890L);
@@ -39,16 +41,23 @@ class PersistenceTest {
   void testLoad() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       Profile expectedProfile = new Profile();
-      String expectedPath = "The Day We Fought Back" + File.separator + "saves" + File.separator
-          + "testProfile$1234567890.json";
+      String expectedPath =
+          "The Day We Fought Back"
+              + File.separator
+              + "saves"
+              + File.separator
+              + "testProfile$1234567890.json";
 
-      mockFileLoader.when(() -> FileLoader.readClass(Profile.class, expectedPath, FileLoader.Location.EXTERNAL))
+      mockFileLoader
+          .when(
+              () -> FileLoader.readClass(Profile.class, expectedPath, FileLoader.Location.EXTERNAL))
           .thenReturn(expectedProfile);
 
       Savefile savefile = new Savefile("testProfile", 1234567890L);
       Persistence.load(savefile);
 
-      mockFileLoader.verify(() -> FileLoader.readClass(Profile.class, expectedPath, FileLoader.Location.EXTERNAL));
+      mockFileLoader.verify(
+          () -> FileLoader.readClass(Profile.class, expectedPath, FileLoader.Location.EXTERNAL));
       assertEquals(expectedProfile, Persistence.profile());
     }
   }
@@ -67,7 +76,11 @@ class PersistenceTest {
       Profile testProfile = mock(Profile.class);
       when(testProfile.getName()).thenReturn("testProfile");
 
-      mockFileLoader.when(() -> FileLoader.readClass(eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.readClass(
+                      eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenReturn(testProfile);
 
       Savefile savefile = new Savefile("testProfile", 1234567890L);
@@ -75,8 +88,12 @@ class PersistenceTest {
 
       Persistence.save();
 
-      mockFileLoader.verify(() -> FileLoader.writeClass(eq(testProfile), matches(".*testProfile\\$\\d+\\.json"),
-          eq(FileLoader.Location.EXTERNAL)));
+      mockFileLoader.verify(
+          () ->
+              FileLoader.writeClass(
+                  eq(testProfile),
+                  matches(".*testProfile\\$\\d+\\.json"),
+                  eq(FileLoader.Location.EXTERNAL)));
     }
   }
 
@@ -90,7 +107,7 @@ class PersistenceTest {
     when(mockFiles.external(anyString())).thenReturn(mockRootDir);
     when(mockRootDir.exists()).thenReturn(true);
     when(mockSaveFile.name()).thenReturn("testProfile$1234567890.json");
-    when(mockRootDir.list(".json")).thenReturn(new FileHandle[] { mockSaveFile });
+    when(mockRootDir.list(".json")).thenReturn(new FileHandle[] {mockSaveFile});
 
     List<Savefile> result = Persistence.fetch();
 

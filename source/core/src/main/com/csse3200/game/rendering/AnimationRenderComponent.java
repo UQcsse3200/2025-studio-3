@@ -1,5 +1,6 @@
 package com.csse3200.game.rendering;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -10,11 +11,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Renders animations from a texture atlas on an entity.
@@ -30,7 +30,8 @@ import java.util.Map;
  *
  * Texture atlases can be created using: <br>
  * - libgdx texture packer (included in External Libraries/gdx-tools) <br>
- * - gdx-texture-packer-gui (recommended) https://github.com/crashinvaders/gdx-texture-packer-gui <br>
+ * - gdx-texture-packer-gui (recommended) https://github.com/crashinvaders/gdx-texture-packer-gui
+ * <br>
  * - other third-party tools, e.g. https://www.codeandweb.com/texturepacker <br>
  */
 public class AnimationRenderComponent extends RenderComponent {
@@ -44,6 +45,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Create the component for a given texture atlas.
+   *
    * @param atlas libGDX-supported texture atlas containing desired animations
    */
   public AnimationRenderComponent(TextureAtlas atlas) {
@@ -54,8 +56,9 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Register an animation from the texture atlas. Will play once when called with startAnimation()
+   *
    * @param name Name of the animation. Must match the name of this animation inside the texture
-   *             atlas.
+   *     atlas.
    * @param frameDuration How long, in seconds, to show each frame of the animation for when playing
    * @return true if added successfully, false otherwise
    */
@@ -65,8 +68,9 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Register an animation from the texture atlas.
+   *
    * @param name Name of the animation. Must match the name of this animation inside the texture
-   *             atlas.
+   *     atlas.
    * @param frameDuration How long, in seconds, to show each frame of the animation for when playing
    * @param playMode How the animation should be played (e.g. looping, backwards)
    * @return true if added successfully, false otherwise
@@ -97,6 +101,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Remove an animation from this animator. This is not required before disposing.
+   *
    * @param name Name of the previously added animation.
    * @return true if removed, false if animation was not found.
    */
@@ -107,6 +112,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Whether the animator has added the given animation.
+   *
    * @param name Name of the added animation.
    * @return true if added, false otherwise.
    */
@@ -116,6 +122,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Start playback of an animation. The animation must have been added using addAnimation().
+   *
    * @param name Name of the animation to play.
    */
   public void startAnimation(String name) {
@@ -135,6 +142,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Stop the currently running animation. Does nothing if no animation is playing.
+   *
    * @return true if animation was stopped, false if no animation is playing.
    */
   public boolean stopAnimation() {
@@ -151,6 +159,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Get the name of the animation currently being played.
+   *
    * @return current animation name, or null if not playing.
    */
   public String getCurrentAnimation() {
@@ -159,6 +168,7 @@ public class AnimationRenderComponent extends RenderComponent {
 
   /**
    * Has the playing animation finished? This will always be false for looping animations.
+   *
    * @return true if animation was playing and has now finished, false otherwise.
    */
   public boolean isFinished() {
@@ -173,13 +183,15 @@ public class AnimationRenderComponent extends RenderComponent {
     TextureRegion region = currentAnimation.getKeyFrame(animationPlayTime);
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
+    batch.setColor(colour);
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
+    batch.setColor(Color.WHITE);
     animationPlayTime += timeSource.getDeltaTime();
   }
 
   @Override
   public void dispose() {
-    atlas.dispose();
+    // atlas.dispose();
     super.dispose();
   }
 }

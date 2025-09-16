@@ -2,13 +2,14 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.GhostAnimationController;
-import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.ChaseTask;
-import com.csse3200.game.components.tasks.WanderTask;
+// import com.csse3200.game.components.tasks.WanderTask;
+import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.GhostKingConfig;
@@ -50,17 +51,40 @@ public class NPCFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset("images/ghost.atlas", TextureAtlas.class));
+
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("float", 0.05f, Animation.PlayMode.LOOP);
 
     ghost
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
+        .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
-
     ghost.getComponent(AnimationRenderComponent.class).scaleEntity();
 
     return ghost;
+  }
+
+  public static Entity createRobot(Entity target) {
+    Entity robot = createBaseNPC(target);
+    BaseEntityConfig config = configs.standardRobot;
+
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(
+            ServiceLocator.getResourceService()
+                .getAsset("images/robot_placeholder.atlas", TextureAtlas.class));
+    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("chill", 0.2f, Animation.PlayMode.LOOP);
+
+    robot
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+        .addComponent(animator)
+        .addComponent(new HitMarkerComponent())
+        .addComponent(new RobotAnimationController());
+
+    robot.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    return robot;
   }
 
   /**
@@ -76,13 +100,16 @@ public class NPCFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
-                .getAsset("images/ghostKing.atlas", TextureAtlas.class));
+                .getAsset(
+                    "images/ghostKing.atlas",
+                    TextureAtlas.class)); // it used to say ghostKing.atlas
     animator.addAnimation("float", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("angry_float", 0.1f, Animation.PlayMode.LOOP);
 
     ghostKing
-        .addComponent(new CombatStatsComponent(config.health, config.baseAttack))
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
         .addComponent(animator)
+        .addComponent(new HitMarkerComponent())
         .addComponent(new GhostAnimationController());
 
     ghostKing.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -95,9 +122,10 @@ public class NPCFactory {
    * @return entity
    */
   private static Entity createBaseNPC(Entity target) {
+
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new WanderTask(new Vector2(2f, 2f), 2f))
+            .addTask(new MoveLeftTask(2f))
             .addTask(new ChaseTask(target, 10, 3f, 4f));
     Entity npc =
         new Entity()
@@ -105,7 +133,7 @@ public class NPCFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
+            //            .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
             .addComponent(aiComponent);
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);

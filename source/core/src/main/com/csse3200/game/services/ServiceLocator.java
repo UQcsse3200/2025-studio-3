@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
  * A simplified implementation of the Service Locator pattern:
  * https://martinfowler.com/articles/injection.html#UsingAServiceLocator
  *
- * <p>Allows global access to a few core game services.
- * Warning: global access is a trap and should be used <i>extremely</i> sparingly.
- * Read the wiki for details (https://github.com/UQcsse3200/game-engine/wiki/Service-Locator).
+ * <p>Allows global access to a few core game services. Warning: global access is a trap and should
+ * be used <i>extremely</i> sparingly. Read the wiki for details
+ * (https://github.com/UQcsse3200/game-engine/wiki/Service-Locator).
  */
 public class ServiceLocator {
   private static final Logger logger = LoggerFactory.getLogger(ServiceLocator.class);
@@ -23,7 +23,9 @@ public class ServiceLocator {
   private static GameTime timeSource;
   private static InputService inputService;
   private static ResourceService resourceService;
+  private static CurrencyService currencyService;
   private static MenuSpriteService menuSpriteService;
+  private static ConfigService configService;
 
   public static EntityService getEntityService() {
     return entityService;
@@ -47,6 +49,10 @@ public class ServiceLocator {
 
   public static ResourceService getResourceService() {
     return resourceService;
+  }
+
+  public static CurrencyService getCurrencyService() {
+    return currencyService;
   }
 
   public static MenuSpriteService getMenuSpriteService() {
@@ -83,9 +89,19 @@ public class ServiceLocator {
     resourceService = source;
   }
 
+  public static void registerCurrencyService(CurrencyService source) {
+    logger.debug("Registering currency service {}", source);
+    currencyService = source;
+  }
+
   public static void registerMenuSpriteService(MenuSpriteService source) {
     logger.debug("Registering menu sprite service {}", source);
     menuSpriteService = source;
+  }
+
+  public static void registerConfigService(ConfigService source) {
+    logger.debug("Registering config service {}", source);
+    configService = source;
   }
 
   public static void clear() {
@@ -95,10 +111,10 @@ public class ServiceLocator {
     timeSource = null;
     inputService = null;
     resourceService = null;
+    currencyService = null;
   }
 
   private ServiceLocator() {
     throw new IllegalStateException("Instantiating static util class");
   }
-
 }

@@ -1,26 +1,5 @@
 [
-  {
-    "id": "node1",
-    "label": "Start",
-    "px": 142,
-    "py": 269,
-    "locked": false,
-    "lockReason": null
-  },
-  {
-    "id": "node2",
-    "label": "Checkpoint 1",
-    "px": 320,
-    "py": 185,
-    "locked": true,
-    "lockReason": "Complete Start"
-  },
-  {
-    "id": "node3",
-    "label": "Checkpoint 2",
-    "px": 418,
-    "py": 262,
-    "locked": true,
-    "lockReason": "Complete Checkpoint 1"
-  }
+  { "x": 120, "y": 160, "level": 1, "unlocked": true, "completed": false },
+  { "x": 260, "y": 200, "level": 2, "unlocked": false, "completed": false },
+  { "x": 400, "y": 180, "level": 3, "unlocked": false, "completed": false }
 ]

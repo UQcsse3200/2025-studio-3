@@ -7,8 +7,8 @@ import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.utils.math.Vector2Utils;
 
 /**
- * Input handler for the player for keyboard and touch (mouse) input.
- * This input handler only uses keyboard input.
+ * Input handler for the player for keyboard and touch (mouse) input. This input handler only uses
+ * keyboard input.
  */
 public class KeyboardPlayerInputComponent extends InputComponent {
   private final Vector2 walkDirection = Vector2.Zero.cpy();

@@ -3,12 +3,9 @@ package com.csse3200.game.persistence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.csse3200.game.persistence.FileLoader.Location;
-
 import java.io.File;
 
-/**
- * Reading, Writing, and applying user settings in the game.
- */
+/** Reading, Writing, and applying user settings in the game. */
 public class UserSettings {
   private static final String ROOT_DIR = "The Day We Fought Back";
   private static final String SETTINGS_FILE = "settings.json";
@@ -18,6 +15,7 @@ public class UserSettings {
 
   /**
    * Get the stored user settings
+   *
    * @return Copy of the current settings
    */
   public static Settings get() {
@@ -29,6 +27,7 @@ public class UserSettings {
 
   /**
    * Set the stored user settings
+   *
    * @param settings New settings to store
    * @param applyImmediate true to immediately apply new settings.
    */
@@ -43,6 +42,7 @@ public class UserSettings {
 
   /**
    * Apply the given settings without storing them.
+   *
    * @param settings Settings to apply
    */
   public static void applySettings(Settings settings) {
@@ -75,26 +75,21 @@ public class UserSettings {
     return null;
   }
 
-  /**
-   * Stores game settings, can be serialised/deserialised.
-   */
+  /** Stores game settings, can be serialised/deserialised. */
   public static class Settings {
-    /**
-     * FPS cap of the game. Independant of screen FPS.
-     */
+    /** FPS cap of the game. Independant of screen FPS. */
     public int fps = 60;
+
     public boolean fullscreen = true;
     public boolean vsync = true;
-    /**
-     * ui Scale. Currently unused, but can be implemented.
-     */
+
+    /** ui Scale. Currently unused, but can be implemented. */
     public float uiScale = 1f;
+
     public DisplaySettings displayMode = null;
   }
 
-  /**
-   * Stores chosen display settings. Can be serialised/deserialised.
-   */
+  /** Stores chosen display settings. Can be serialised/deserialised. */
   public static class DisplaySettings {
     public int width;
     public int height;

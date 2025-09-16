@@ -3,148 +3,169 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.files.FileHandle;
 import com.csse3200.game.GdxGame;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class WorldMapScreen implements Screen {
+  private final GdxGame game;
+  private SpriteBatch batch;
+  private OrthographicCamera camera;
+  private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
+  private Texture worldMap;
+  private Texture nodeCompleted, nodeUnlocked;
+  private Texture lockedLevel1, lockedLevel2;
+  private Texture playerTex, backButton;
 
-    private final GdxGame game;
+  private Node[] nodes;
+  private Vector2 playerPos;
+  private float playerSpeed = 200f;
+  private Node nearbyNode = null;
 
-    private com.badlogic.gdx.graphics.Texture worldMap;
-    private SpriteBatch batch;
-    private OrthographicCamera camera;
-    private BitmapFont font;
-    private ShapeRenderer shapeRenderer;
+  private Rectangle backBtnBounds;
+  private BitmapFont font;
 
-    private Node[] nodes;
-    private Vector2 playerPos;
-    private float playerSpeed = 200f;
+  public WorldMapScreen(GdxGame game) {
+    this.game = game;
+  }
 
-    private Node nearbyNode = null;
+  @Override
+  public void show() {
+    batch = new SpriteBatch();
 
-    public WorldMapScreen(GdxGame game) {
-        this.game = game;
+    camera = new OrthographicCamera();
+    camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+    worldMap = new Texture(Gdx.files.internal("images/world_map.png"));
+    nodeCompleted = new Texture(Gdx.files.internal("images/node_completed.png"));
+    nodeUnlocked = new Texture(Gdx.files.internal("images/node_unlocked.png"));
+    lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
+    lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
+    playerTex = new Texture(Gdx.files.internal("images/character.png"));
+    backButton = new Texture(Gdx.files.internal("images/back_button.png"));
+
+    FileHandle file = Gdx.files.internal("data/nodes.json");
+    Json json = new Json();
+    nodes = json.fromJson(Node[].class, file);
+
+    playerPos =
+        new Vector2(nodes[0].px * Gdx.graphics.getWidth(), nodes[0].py * Gdx.graphics.getHeight());
+
+    backBtnBounds = new Rectangle(20, Gdx.graphics.getHeight() - 140, 120, 120);
+
+    font = new BitmapFont();
+    font.setColor(Color.WHITE);
+    font.getData().setScale(2f);
+  }
+
+  @Override
+  public void render(float delta) {
+    camera.update();
+    batch.setProjectionMatrix(camera.combined);
+
+    batch.begin();
+
+    batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    batch.draw(
+        backButton, backBtnBounds.x, backBtnBounds.y, backBtnBounds.width, backBtnBounds.height);
+
+    for (Node node : nodes) {
+      Texture nodeTex;
+      if (node.completed) {
+        nodeTex = nodeCompleted;
+      } else if (node.unlocked) {
+        nodeTex = nodeUnlocked;
+      } else if (node.level == 2) {
+        nodeTex = lockedLevel1;
+      } else {
+        nodeTex = lockedLevel2;
+      }
+
+      float x = node.px * Gdx.graphics.getWidth();
+      float y = node.py * Gdx.graphics.getHeight();
+      batch.draw(nodeTex, x, y, 80, 80);
+
+      if (playerPos.dst(x, y) < 60) {
+        nearbyNode = node;
+        String prompt = (nearbyNode.level == 1) ? "Press E to Start" : "Press E to Checkpoint";
+        font.draw(batch, prompt, x, y + 100);
+      }
     }
 
-    @Override
-    public void show() {
-        worldMap = new com.badlogic.gdx.graphics.Texture(Gdx.files.internal("images/world_map.png"));
+    batch.draw(playerTex, playerPos.x, playerPos.y, 96, 96);
 
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.setToOrtho(false);
+    batch.end();
 
-        font = new BitmapFont();
-        shapeRenderer = new ShapeRenderer();
+    handleInput(delta);
+  }
 
+  private void handleInput(float delta) {
+    float moveAmount = playerSpeed * delta;
 
-        FileHandle file = Gdx.files.internal("data/nodes.json");
-        Json json = new Json();
-        nodes = json.fromJson(Node[].class, file);
+    if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += moveAmount;
+    if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= moveAmount;
+    if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= moveAmount;
+    if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
 
+    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
+      float mx = Gdx.input.getX();
+      float my = Gdx.graphics.getHeight() - Gdx.input.getY();
 
-        playerPos = new Vector2(142, 269);
-
+      if (backBtnBounds.contains(mx, my)) {
+        game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+      }
     }
 
-    @Override
-    public void render(float delta) {
-
-
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= playerSpeed * delta;
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += playerSpeed * delta;
-
-        batch.begin();
-        batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        batch.end();
-
-
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        for (Node node : nodes) {
-            if (node.locked) {
-                shapeRenderer.setColor(Color.RED);
-            } else {
-                shapeRenderer.setColor(Color.GREEN);
-            }
-            shapeRenderer.circle(node.px, node.py, 16);
-        }
-
-
-        shapeRenderer.setColor(Color.BLUE);
-        shapeRenderer.rect(playerPos.x, playerPos.y, 32, 32);
-        shapeRenderer.end();
-
-
-        nearbyNode = null;
-        for (Node node : nodes) {
-            Rectangle nodeRect = new Rectangle(node.px - 16, node.py - 16, 32, 32);
-            Rectangle playerRect = new Rectangle(playerPos.x, playerPos.y, 32, 32);
-            if (playerRect.overlaps(nodeRect)) {
-                nearbyNode = node;
-                break;
-            }
-        }
-
-
-        batch.begin();
-        if (nearbyNode != null) {
-            font.draw(batch, "Press E to " + nearbyNode.label,
-                    nearbyNode.px, nearbyNode.py + 50);
-        }
-        batch.end();
-
-
-        if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-            if (nearbyNode.locked) {
-                System.out.println("Level is locked: " + nearbyNode.lockReason);
-            } else {
-                System.out.println("Loading level: " + nearbyNode.label);
-            }
-        }
-
-
-        if (Gdx.input.justTouched()) {
-            int x = Gdx.input.getX();
-            int y = Gdx.graphics.getHeight() - Gdx.input.getY();
-            System.out.println("Clicked at: (" + x + ", " + y + ")");
-        }
+    if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+      if (nearbyNode.level == 1) {
+        logger.info("🚀 Starting Level 1!");
+        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+      } else {
+        logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
+        nearbyNode.unlocked = true;
+      }
     }
+  }
 
+  @Override
+  public void resize(int width, int height) {
+    camera.setToOrtho(false, width, height);
+  }
 
+  @Override
+  public void pause() {
+    // Do nothing
+  }
 
-    @Override
-    public void resize(int width, int height) {
-        camera.setToOrtho(false, width, height);
-    }
+  @Override
+  public void resume() {
+    // Do nothing
+  }
 
-    @Override public void pause() {}
-    @Override public void resume() {}
-    @Override public void hide() {}
+  @Override
+  public void hide() {
+    // Do nothing
+  }
 
-    @Override
-    public void dispose() {
-        worldMap.dispose();
-        batch.dispose();
-        font.dispose();
-        shapeRenderer.dispose();
-    }
+  @Override
+  public void dispose() {
+    batch.dispose();
+    worldMap.dispose();
+    nodeCompleted.dispose();
+    nodeUnlocked.dispose();
+    lockedLevel1.dispose();
+    lockedLevel2.dispose();
+    playerTex.dispose();
+    backButton.dispose();
+    font.dispose();
+  }
 }
-
