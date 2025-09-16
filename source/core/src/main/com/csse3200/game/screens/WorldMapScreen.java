@@ -194,16 +194,36 @@ public class WorldMapScreen implements Screen {
   @Override
   public void dispose() {
     renderer.dispose();
-    batch.dispose();
-    worldMap.dispose();
-    nodeCompleted.dispose();
-    nodeUnlocked.dispose();
-    lockedLevel1.dispose();
-    lockedLevel2.dispose();
-    shopTexture.dispose();
-    skillsTexture.dispose();
-    playerTex.dispose();
-    font.dispose();
+    if (batch != null) {
+      batch.dispose();
+    }
+    if (worldMap != null) {
+      worldMap.dispose();
+    }
+    if (nodeCompleted != null) {
+      nodeCompleted.dispose();
+    }
+    if (nodeUnlocked != null) {
+      nodeUnlocked.dispose();
+    }
+    if (lockedLevel1 != null) {
+      lockedLevel1.dispose();
+    }
+    if (lockedLevel2 != null) {
+      lockedLevel2.dispose();
+    }
+    if (shopTexture != null) {
+      shopTexture.dispose();
+    }
+    if (skillsTexture != null) {
+      skillsTexture.dispose();
+    }
+    if (playerTex != null) {
+      playerTex.dispose();
+    }
+    if (font != null) {
+      font.dispose();
+    }
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.clear();

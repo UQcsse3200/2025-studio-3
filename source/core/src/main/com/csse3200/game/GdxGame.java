@@ -80,6 +80,8 @@ public class GdxGame extends Game {
           ((MenuSpriteScreen) screen).register(menuSpriteData);
         } else if (DynamicMenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
           ((DynamicMenuSpriteScreen<?>) screen).register(screenType);
+        } else {
+          screen.dispose();
         }
       }
     }

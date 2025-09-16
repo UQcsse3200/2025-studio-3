@@ -8,8 +8,8 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.gameover.GameOverWindow;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -461,8 +461,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
       String itemType = item.getType().toString();
-      logger.info(
-          "Not spawning item {} since none in player's inventory", itemType);
+      logger.info("Not spawning item {} since none in player's inventory", itemType);
       return;
     }
     if (item != null && selectedTile != null) {
