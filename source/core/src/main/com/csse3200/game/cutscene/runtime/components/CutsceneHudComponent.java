@@ -3,12 +3,10 @@ package com.csse3200.game.cutscene.runtime.components;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -16,8 +14,6 @@ import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
 import com.csse3200.game.ui.UIComponent;
-
-import java.util.Map;
 
 public class CutsceneHudComponent extends UIComponent {
     private final CutsceneOrchestrator orchestrator;
@@ -32,11 +28,10 @@ public class CutsceneHudComponent extends UIComponent {
     private PaneGroup leftPane;
     private PaneGroup rightPane;
 
-    private Container<Table> choicesContainer;
-    private Table choicesTable;
-    private Table choicesLeft;
-    private Table choicesCenter;
-    private Table choicesRight;
+    private Table choicesGroup;
+    private VerticalGroup choicesLeft;
+    private VerticalGroup choicesCenter;
+    private VerticalGroup choicesRight;
 
     private Table dialogueBox;
     private Label characterName;
@@ -128,26 +123,31 @@ public class CutsceneHudComponent extends UIComponent {
 
 
         // Setup choices
-        choicesTable = new Table();
-        choicesTable.setDebug(true);
-        choicesTable.defaults().pad(8f);
+        choicesGroup = new Table();
+        choicesGroup.setDebug(true);
+        choicesGroup.defaults().uniformX().expandX().fillY().pad(8f);
+        choicesGroup.setDebug(true);
 
-        choicesLeft = new Table();
-        choicesLeft.pad(6f);
-        choicesCenter = new Table();
-        choicesCenter.pad(6f);
-        choicesRight = new Table();
-        choicesRight.pad(6f);
+        choicesLeft = new VerticalGroup();
+        choicesLeft.fill();
+        choicesCenter = new VerticalGroup();
+        choicesCenter.fill();
+        choicesRight = new VerticalGroup();
+        choicesRight.fill();
 
-        choicesTable.add(choicesLeft).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
-        choicesTable.add(choicesCenter).width(Value.percentWidth(0.34f, choicesTable)).expandY().fillY();
-        choicesTable.add(choicesRight).width(Value.percentWidth(0.33f, choicesTable)).expandY().fillY();
+        choicesGroup.add(choicesLeft).fill().expand();
+        choicesGroup.add(choicesCenter).fill().expand();
+        choicesGroup.add(choicesRight).fill().expand();
 
-//        root.add(choicesTable).growX().fillX().row();
-        choicesContainer = new Container<>(choicesTable);
-//        choicesContainer.fillX();
+        TextButton testButton1 = new TextButton("Test", skin);
+        TextButton testButton2 = new TextButton("Test2", skin);
+        TextButton testButton3 = new TextButton("Test3", skin);
 
-//        root.add(choicesContainer).row();
+        choicesLeft.addActor(testButton1);
+        choicesCenter.addActor(testButton2);
+        choicesRight.addActor(testButton3);
+
+//        root.add(choicesGroup).growX().fillX().row();
 
 
         // Make dialogue panel
