@@ -14,6 +14,8 @@ import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -25,6 +27,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(GameExtension.class)
@@ -35,6 +38,9 @@ class LevelGameAreaTest {
   @Mock Stage stage;
   @Mock ResourceService resourceService;
   @Mock Music music;
+
+  private MockedStatic<Persistence> persistenceMock;
+  private Profile profile;
 
   /** A class to capture spawned entities without needing a full ECS */
   static class CapturingLevelGameArea extends LevelGameArea {
@@ -66,12 +72,20 @@ class LevelGameAreaTest {
     lenient()
         .when(resourceService.getAsset(anyString(), eq(Texture.class)))
         .thenReturn(mock(Texture.class));
+
+    profile = new Profile();
+    profile.inventory().addItem("grenade"); // so inventory not null
+    persistenceMock = mockStatic(Persistence.class, withSettings().lenient());
+    persistenceMock.when(() -> Persistence.profile()).thenReturn(profile);
   }
 
   @AfterEach
   void afterEach() {
     try {
       ServiceLocator.clear();
+      if (persistenceMock != null) {
+        persistenceMock.close();
+      }
     } catch (Throwable ignored) {
       // Ignore throwable and continue to next test
     }

@@ -30,6 +30,7 @@ public class ConfigService {
     this.enemyConfigs = loadEnemyConfigs(ENEMY_CONFIG_FILE);
     this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
     this.achievementConfigs = loadAchievementConfigs(ACHIEVEMENT_CONFIG_FILE);
+    logger.info("Loaded {} item configs", itemConfigs.size());
   }
 
   /**

@@ -29,6 +29,7 @@ public class ServiceLocator {
   private static DialogService dialogService;
   private static ResourceService globalResourceService;
   private static ProfileService profileService;
+  private static ItemEffectsService itemEffectsService;
 
   /**
    * Gets the entity service.
@@ -136,6 +137,11 @@ public class ServiceLocator {
    */
   public static ProfileService getProfileService() {
     return profileService;
+  }
+
+  /** Registers the item effects service. */
+  public static ItemEffectsService getItemEffectsService() {
+    return itemEffectsService;
   }
 
   /**
@@ -271,6 +277,16 @@ public class ServiceLocator {
   }
 
   /**
+   * Registers the item effects service.
+   *
+   * @param source the item effects service
+   */
+  public static void registerItemEffectsService(ItemEffectsService source) {
+    logger.debug("Registering item effects service {}", source);
+    itemEffectsService = source;
+  }
+
+  /**
    * Deregisters the dialog service.
    */
   public static void deregisterDialogService() {
@@ -305,6 +321,7 @@ public class ServiceLocator {
     inputService = null;
     resourceService = null;
     currencyService = null;
+    itemEffectsService = null;
   }
 
   /** Private constructor to prevent instantiation. */

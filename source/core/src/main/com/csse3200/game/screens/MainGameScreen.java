@@ -81,6 +81,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
+
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -159,6 +160,7 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(mainGameTextures);
+    resourceService.loadTextureAtlases(new String[] {"images/grenade.atlas"});
     ServiceLocator.getResourceService().loadAll();
   }
 

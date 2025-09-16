@@ -8,16 +8,19 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +38,34 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/level-1-map-v2.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
+    "images/sling_shooter_front.png",
+    "images/items/grenade.png",
+    "images/items/coffee.png",
+    "images/items/emp.png",
+    "images/items/buff.png",
+    "images/items/nuke.png",
+    "images/items/shield.png",
+    "images/items/charmHack.png",
+    "images/items/scrapper.png",
+    "images/items/conscriptionOrder.png",
+    "images/items/doomHack.png",
+    "images/grenade.png",
+    "images/coffee.png",
+    "images/emp.png",
+    "images/buff.png",
+    "images/nuke.png",
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/sling_shooter.atlas", "images/robot_placeholder.atlas"
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/sling_shooter.atlas",
+    "images/robot_placeholder.atlas",
+    "images/grenade.atlas",
+    "images/coffee.atlas",
+    "images/emp.atlas",
+    "images/buff.atlas",
+    "images/nuke.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -169,6 +195,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeDeckUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
+
+    for (String itemKey : ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
+      if (itemKey.equals("grenade")) {
+        placeDeckUnit(ItemFactory::createGrenade, "images/items/grenade.png");
+      }
+      if (itemKey.equals("coffee")) {
+        placeDeckUnit(ItemFactory::createCoffee, "images/items/coffee.png");
+      }
+      if (itemKey.equals("buff")) {
+        placeDeckUnit(ItemFactory::createBuff, "images/items/buff.png");
+      }
+      if (itemKey.equals("emp")) {
+        placeDeckUnit(ItemFactory::createEmp, "images/items/emp.png");
+      }
+      if (itemKey.equals("nuke")) {
+        placeDeckUnit(ItemFactory::createNuke, "images/items/nuke.png");
+      }
+    }
   }
 
   private void spawnSun() {
@@ -290,11 +334,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       return;
     }
 
-    int bestRow = -1, bestCol = -1;
+    int bestRow = -1;
+    int bestCol = -1;
     final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
 
     for (int i = 0; i < total; i++) {
-      int row = i / LEVEL_ONE_COLS, col = i % LEVEL_ONE_COLS;
+      int row = i / LEVEL_ONE_COLS;
+      int col = i % LEVEL_ONE_COLS;
 
       float cx = xOffset + tileSize * col + tileSize * 0.5f;
       float cy = yOffset + tileSize * row + tileSize * 0.5f;
@@ -390,8 +436,46 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     }
     newEntity.setPosition(entityPos);
 
+    // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
-    if (selectedTile != null) {
+
+    // Where entity to be spawned is an Item and the player has such item in their inventory
+    ItemComponent item = newEntity.getComponent(ItemComponent.class);
+    if (item != null
+        && !ServiceLocator.getProfileService().getProfile().getInventory().contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
+      // Clear Item from tile storage
+      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      logger.info(
+          "Not spawning item {} since none in player's inventory", item.getType().toString());
+      return;
+    }
+    if (item != null && selectedTile != null) {
+      logger.info("Spawning item {}", item.getType().toString());
+      String key = item.getType().toString().toLowerCase(Locale.ROOT);
+
+      // Remove one instance of the Item from the inventory
+      ServiceLocator.getProfileService().getProfile().getInventory().removeItem(key);
+
+      // Spawn effect
+      Vector2 spawnPosition = new Vector2(tileX, tileY);
+      ServiceLocator.getItemEffectsService()
+          .playEffect(
+              key,
+              spawnPosition,
+              (int) tileSize,
+              new Vector2(
+                  (float) (xOffset * 0.25 + LEVEL_ONE_COLS * tileSize),
+                  (float) (tileSize * -0.75)));
+
+      // ADD damage to enemies
+
+      // Clear Item from tile storage
+      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      return;
+    }
+
+    // Add entity to tile unless it is an Item
+    if (selectedTile != null && item == null) {
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 
