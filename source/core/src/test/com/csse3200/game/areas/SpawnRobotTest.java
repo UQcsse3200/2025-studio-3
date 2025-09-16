@@ -4,11 +4,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,10 +30,20 @@ class SpawnRobotTest {
   private static final float CELL = GRID_HEIGHT / ROWS; // tileSize
   private static final float EPS = 1e-4f;
 
+  private static void ensureRenderService() {
+    RenderService rs = mock(RenderService.class);
+    Stage stage = mock(Stage.class);
+    when(stage.getWidth()).thenReturn(1920f);
+    when(stage.getHeight()).thenReturn(1080f);
+    when(rs.getStage()).thenReturn(stage);
+    ServiceLocator.registerRenderService(rs);
+  }
+
   @BeforeEach
   void setup() {
     ServiceLocator.clear();
     ServiceLocator.registerEntityService(new EntityService());
+    ensureRenderService();
   }
 
   private static void setPrivateField(Object target, String name, Object value) throws Exception {
@@ -47,12 +59,16 @@ class SpawnRobotTest {
   }
 
   private static LevelGameArea newLevelAreaWithGeometry() throws Exception {
+    ensureRenderService();
     var terrainFactory = mock(TerrainFactory.class);
     LevelGameArea lvl = new LevelGameArea(terrainFactory);
     setPrivateField(lvl, "tileSize", CELL);
     setPrivateField(lvl, "xOffset", X_OFFSET);
     setPrivateField(lvl, "yOffset", Y_OFFSET);
-    setPrivateField(lvl, "grid", new LevelGameGrid(ROWS, COLS));
+    LevelGameGrid grid = mock(LevelGameGrid.class);
+    when(grid.getTileFromXY(anyFloat(), anyFloat()))
+        .thenReturn(new Entity()); // avoid NPE inside method
+    lvl.setGrid(grid);
     return lvl;
   }
 
@@ -93,9 +109,10 @@ class SpawnRobotTest {
     try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
       Entity e1 = new Entity();
       Entity e2 = new Entity();
-      mocked.when(() -> RobotFactory.createRobotType(any()))
-              .thenReturn(e1)  // first call
-              .thenReturn(e2); // second call
+      mocked
+          .when(() -> RobotFactory.createRobotType(any()))
+          .thenReturn(e1) // first call
+          .thenReturn(e2); // second call
 
       lvl.spawnRobot(-5, -7, "tanky");
       assertEquals(worldX(0), e1.getPosition().x, EPS);
