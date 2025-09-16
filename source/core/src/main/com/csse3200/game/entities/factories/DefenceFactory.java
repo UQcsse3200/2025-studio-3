@@ -107,7 +107,11 @@ public class DefenceFactory {
 
     // attach components to the entity
     generator
-        .addComponent(new GeneratorStatsComponent(config.getHealth(), config.getInterval()))
+        .addComponent(
+            new GeneratorStatsComponent(
+                config.getHealth(),
+                config.getInterval(),
+                config.getScrapValue()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
