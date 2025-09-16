@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
 /** Interactive currency item that can be clicked to collect sunlight. */
 public class CurrencyInteraction extends Image {
   private static final Logger logger = LoggerFactory.getLogger(CurrencyInteraction.class);
-
   private final int value;
 
   /**
@@ -59,14 +58,14 @@ public class CurrencyInteraction extends Image {
     setTouchable(Touchable.disabled);
     clearActions();
     float padding = 16f;
-    float targetX = padding;
+    // float targetX = padding;
     float targetY = getStage().getHeight() - padding - getHeight();
 
     float dur = 0.35f;
     addAction(
         Actions.sequence(
             Actions.parallel(
-                Actions.moveTo(targetX, targetY, dur, Interpolation.pow2In),
+                Actions.moveTo(padding, targetY, dur, Interpolation.pow2In),
                 Actions.scaleTo(0.6f, 0.6f, dur),
                 Actions.fadeOut(dur)),
             Actions.run(

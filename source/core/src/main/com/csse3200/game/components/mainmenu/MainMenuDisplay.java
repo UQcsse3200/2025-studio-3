@@ -32,8 +32,8 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/box_boy_title.png", Texture.class));
 
-    TextButton startBtn = new TextButton("Start", skin);
-    TextButton loadBtn = new TextButton("Load", skin);
+    TextButton startBtn = new TextButton("New Game", skin);
+    TextButton loadBtn = new TextButton("Load Game", skin);
     TextButton worldMapBtn = new TextButton("World Map", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
     TextButton exitBtn = new TextButton("Exit", skin);

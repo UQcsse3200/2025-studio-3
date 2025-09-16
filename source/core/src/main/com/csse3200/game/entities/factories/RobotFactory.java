@@ -86,20 +86,27 @@ public class RobotFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
 
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+    // These are the animations that all robots should have
+    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damagedMoveLeft", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damagedAttack", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
 
-    // We could also do
-    // .addComponent(new RobotAnimationController())
-    // but that isn't really implemented
+    ColliderComponent solid =
+        new ColliderComponent()
+            .setCollisionFilter(
+                PhysicsLayer.ENEMY,
+                (short)
+                    (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE) // no ENEMY
+                )
+            .setFriction(0f);
 
     Entity robot =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
-            .addComponent(new ColliderComponent())
+            .addComponent(solid)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
             .addComponent(new CombatStatsComponent(config.health, config.attack))
             .addComponent(aiComponent)
@@ -110,7 +117,7 @@ public class RobotFactory {
 
     // Scales
     animator.scaleEntity();
-    animator.startAnimation("chill"); // start an animation
+    animator.startAnimation("default"); // start an animation
 
     // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
     robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
