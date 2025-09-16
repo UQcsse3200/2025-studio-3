@@ -49,9 +49,7 @@ public class SkilltreeButtons extends UIComponent {
   private static final String CURRENCY_EXPERT_LOCKED = "images/currency_expert_locked.png";
   private static final String CURRENCY_EXPERT_UNLOCKED = "images/currency_expert_unlocked.png";
 
-  /**
-   * Configuration for a skill button.
-   */
+  /** Configuration for a skill button. */
   private static class SkillButtonConfig {
     final String name;
     final String statType;
@@ -166,7 +164,8 @@ public class SkilltreeButtons extends UIComponent {
     for (SkillButtonConfig cfg : SKILL_BUTTONS) {
       Texture locked = new Texture(Gdx.files.internal(cfg.lockedPath));
       Texture unlocked = new Texture(Gdx.files.internal(cfg.unlockedPath));
-      createSkillButton(cfg.name, cfg.statType, locked, unlocked, cfg.x * width, cfg.y * height, display);
+      createSkillButton(
+          cfg.name, cfg.statType, locked, unlocked, cfg.x * width, cfg.y * height, display);
     }
   }
 

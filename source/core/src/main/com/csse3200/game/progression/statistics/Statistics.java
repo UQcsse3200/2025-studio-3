@@ -181,7 +181,10 @@ public class Statistics {
     if (!achievements.contains(achievementKey)) {
       achievements.add(achievementKey);
       logger.info("Achievement unlocked: {} - {}", config.getName(), config.getDescription());
-      ServiceLocator.getProfileService().getProfile().getWallet().addSkillsPoints(config.getSkillPoints());
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getWallet()
+          .addSkillsPoints(config.getSkillPoints());
       incrementStatistic("skillPointsCollected", config.getSkillPoints());
 
       // Display achievement popup
