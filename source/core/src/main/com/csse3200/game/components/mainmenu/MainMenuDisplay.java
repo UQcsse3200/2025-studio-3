@@ -1,6 +1,14 @@
 package com.csse3200.game.components.mainmenu;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -23,22 +31,39 @@ public class MainMenuDisplay extends UIComponent {
     @Override
     public void create() {
         super.create();
+
+        // Load the button atlas first
+        ServiceLocator.getResourceService().loadTextureAtlases(new String[] { "images/btn-blue.atlas" });
+//        ServiceLocator.getResourceService().loadFonts(new String[] { "flat-earth/skin/fonts/pixel_32.fnt" });
+        ServiceLocator.getResourceService().loadAll(); // blocks until finished
+
         addActors();
     }
 
-    private void addActors() {
-//        Image background = new Image(
-//                ServiceLocator.getResourceService().getAsset("images/bg.png", Texture.class)
-//        );
-//        background.setFillParent(true);
-//        stage.addActor(background);
+    private TextButton makeTexturedButton(String text, TextureAtlas atlas, String region) {
+        Drawable background = new TextureRegionDrawable(atlas.findRegion(region));
 
+        BitmapFont font = new BitmapFont();
+        font.getData().setScale(1.5f);
+        font.setColor(Color.BLACK);
+
+        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
+        style.up = background;
+        style.down = background;   // you can replace later with a "pressed" region
+        style.over = background;   // you can replace later with a "hover" region
+        style.font = font; // default font
+
+        TextButton button = new TextButton(text, style);
+        button.getLabel().setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
+        button.getLabel().setAlignment(com.badlogic.gdx.utils.Align.center);
+        return button;
+    }
+
+
+
+    private void addActors() {
         table = new Table();
         table.setFillParent(true);
-//         Image title =
-//            new Image(
-//                ServiceLocator.getResourceService()
-//                    .getAsset("images/box_boy_title.png", Texture.class));
         Image title =
                 new Image(
                         ServiceLocator.getResourceService()
@@ -46,11 +71,13 @@ public class MainMenuDisplay extends UIComponent {
 
         logger.debug("show background title");
 
-        TextButton startBtn = new TextButton("Start", skin);
-        TextButton loadBtn = new TextButton("Load", skin);
-        TextButton worldMapBtn = new TextButton("World Map", skin);
-        TextButton settingsBtn = new TextButton("Settings", skin);
-        TextButton exitBtn = new TextButton("Exit", skin);
+        TextureAtlas buttonAtlas = ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
+
+        TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
+        TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
+        TextButton worldMapBtn = makeTexturedButton("World Map", buttonAtlas, "default");
+        TextButton settingsBtn = makeTexturedButton("Settings", buttonAtlas, "default");
+        TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
 
         // Triggers an event when the button is pressed
         startBtn.addListener(
@@ -98,18 +125,32 @@ public class MainMenuDisplay extends UIComponent {
                     }
                 });
 
-        table.add(title);
+        table.center();
 
+        // add title
+        float xf = 0.40f;
+
+        table.add(title)
+                .size(title.getWidth() * xf, title.getHeight() * xf) // scale the cell
+                .top()  // vertical alignment
+                .center() // horizontal alignment
+                .padTop(20f)
+                .padBottom(20f); // optional padding
         table.row();
-        table.add(startBtn).padTop(30f);
+
+        // add buttons with consistent width and spacing
+        float buttonWidth = 200f;
+        float buttonHeight = 50f;
+
+        table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(2f);
         table.row();
-        table.add(loadBtn).padTop(15f);
+        table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(2f);
         table.row();
-        table.add(settingsBtn).padTop(15f);
+        table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(2f);
         table.row();
-        table.add(worldMapBtn).padTop(15f);
+        table.add(worldMapBtn).size(buttonWidth, buttonHeight).padBottom(2f);
         table.row();
-        table.add(exitBtn).padTop(15f);
+        table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(2f);
 
         stage.addActor(table);
     }

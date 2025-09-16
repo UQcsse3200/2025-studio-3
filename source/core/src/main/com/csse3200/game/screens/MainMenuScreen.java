@@ -17,7 +17,11 @@ public class MainMenuScreen extends BaseScreen {
 
     private static final String[] MAIN_MENU_TEXTURES = {
             "images/bg.png",
-            "images/bg-text.png"
+            "images/bg-text.png",
+            "images/btn-blue.png",
+            "images/btn-blue.atlas"
+//            "flat-earth/skin/fonts/pixel_32.png",
+//            "flat-earth/skin/fonts/pixel_32.fnt"
     };
 
     public MainMenuScreen(GdxGame game) { super(game, MAIN_MENU_TEXTURES); }

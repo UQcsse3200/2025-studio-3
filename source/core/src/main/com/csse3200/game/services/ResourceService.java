@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.utils.Disposable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public class ResourceService implements Disposable {
    * @return Instance of class loaded from path
    * @see AssetManager#get(String, Class)
    */
+
   public <T> T getAsset(String filename, Class<T> type) {
     return assetManager.get(filename, type);
   }
@@ -143,6 +145,7 @@ public class ResourceService implements Disposable {
     loadAssets(textureNames, Texture.class);
   }
 
+    public void loadFonts(String[] fontNames) { loadAssets(fontNames, BitmapFont.class); }
   /**
    * Loads a list of texture atlas assets into the asset manager.
    *
