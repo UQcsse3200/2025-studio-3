@@ -64,7 +64,8 @@ public class AttackTask extends TargetDetectionTasks {
       return;
     }
 
-    if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
+//    if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
+    if (getDistanceToTarget() <= attackRange) {
       // TODO: attack
         timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
@@ -91,7 +92,8 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1; // stop task if no target
     }
-    if (dst > attackRange || !isTargetVisible(target)) {
+//    if (dst > attackRange || !isTargetVisible(target)) {
+    if (dst > attackRange ) {
       return -1; // stop task when target not visible or out of range
     }
     return 1;
@@ -106,7 +108,8 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1;
     }
-    if (dst <= attackRange && isTargetVisible(target)) {
+//    if (dst <= attackRange && isTargetVisible(target)) {
+      if (dst <= attackRange) {
       return 1; // start task if target is visible and in range
     }
     return -1;
