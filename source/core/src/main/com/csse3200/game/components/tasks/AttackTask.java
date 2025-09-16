@@ -12,13 +12,13 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Allows an entity to attack the closest target entity from a list of potential targets. This task
- * runs when there is a visible target within the entities range of attack
+ * runs when there is a target within the entities range of attack
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
 
-    // --- NEW: cooldown fields
+    // cooldown fields
     private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
     private float timeSinceLastFire = 0f;
 
@@ -39,17 +39,6 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-    Entity target = getNearestVisibleTarget();
-    if (target != null) {
-      DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
-      int damage = stats.getBaseAttack();
-      // TODO this should be specific to defender type??
-      Entity defender = owner.getEntity();
-      Vector2 spawnPos = defender.getCenterPosition();
-      // for each entity
-      // have an attack function in the attackComponent and add it as a component to the entity
-    }
-
     this.owner.getEntity().getEvents().trigger("attackStart");
     owner.getEntity().getEvents().trigger("fire");
   }
@@ -59,14 +48,11 @@ public class AttackTask extends TargetDetectionTasks {
   public void update() {
     logger.info("AttackTask priority: {}", getPriority());
     Entity target = getNearestVisibleTarget();
-
     if (target == null) {
       return;
     }
 
-//    if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
     if (getDistanceToTarget() <= attackRange) {
-      // TODO: attack
         timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
         if (timeSinceLastFire >= fireCooldown) {
@@ -92,7 +78,6 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1; // stop task if no target
     }
-//    if (dst > attackRange || !isTargetVisible(target)) {
     if (dst > attackRange ) {
       return -1; // stop task when target not visible or out of range
     }
@@ -108,7 +93,6 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1;
     }
-//    if (dst <= attackRange && isTargetVisible(target)) {
       if (dst <= attackRange) {
       return 1; // start task if target is visible and in range
     }

@@ -11,12 +11,26 @@ import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
+/**
+ * Factory class for creating projectile entities for defense entities (e.g., sling shoots for sling shooters).
+ * This class should not be instantiated — all methods and configuration are static utilities.
+ */
 public class ProjectileFactory {
   /** private constructor prevents instantiation of this utility class. */
   private ProjectileFactory() {
     throw new IllegalStateException("Instantiating static util class");
   }
 
+  /**
+   * Creates a sling shot projectile entity.
+   * <p>
+   * The sling shot is designed to be used by defense entities such as sling shooters. It includes components
+   * for physics, collision, attack damage, and rendering. The projectile is set to deal damage to enemies
+   * and is destroyed upon impact.
+   * @param damage amount of damage dealt to an enemy entity
+   * @param speed the speed the sling shot moves at
+   * @return entity representing a sling shot projectile
+   */
   public static Entity createSlingShot(int damage, float speed) {
     Entity slingShot =
         new Entity()
