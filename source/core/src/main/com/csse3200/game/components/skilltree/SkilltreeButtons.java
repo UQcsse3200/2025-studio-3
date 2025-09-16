@@ -25,12 +25,113 @@ import org.slf4j.LoggerFactory;
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
   private static final float Z_INDEX = 2f;
-
   private Table table;
   private final GdxGame game;
   private final SkillSet skillSet;
   private Label skillPointLabel;
   private final SkilltreeDisplay display;
+
+  // Texture path constants
+  private static final String BASIC_LOCKED = "images/basic_locked.png";
+  private static final String BASIC_UNLOCKED = "images/basic_unlocked.png";
+  private static final String INTERMEDIATE_LOCKED = "images/intermediate_locked.png";
+  private static final String INTERMEDIATE_UNLOCKED = "images/intermediate_unlocked.png";
+  private static final String ADVANCED_LOCKED = "images/advanced_locked.png";
+  private static final String ADVANCED_UNLOCKED = "images/advanced_unlocked.png";
+  private static final String ATTACK_EXPERT_LOCKED = "images/attack_expert_locked.png";
+  private static final String ATTACK_EXPERT_UNLOCKED = "images/attack_expert_unlocked.png";
+  private static final String HEALTH_EXPERT_LOCKED = "images/health_expert_locked.png";
+  private static final String HEALTH_EXPERT_UNLOCKED = "images/health_expert_unlocked.png";
+  private static final String SPEED_EXPERT_LOCKED = "images/speed_expert_locked.png";
+  private static final String SPEED_EXPERT_UNLOCKED = "images/speed_expert_unlocked.png";
+  private static final String CRIT_EXPERT_LOCKED = "images/speed_expert_locked.png";
+  private static final String CRIT_EXPERT_UNLOCKED = "images/speed_expert_unlocked.png";
+  private static final String CURRENCY_EXPERT_LOCKED = "images/currency_expert_locked.png";
+  private static final String CURRENCY_EXPERT_UNLOCKED = "images/currency_expert_unlocked.png";
+
+  /**
+   * Configuration for a skill button.
+   */
+  private static class SkillButtonConfig {
+    final String name;
+    final String statType;
+    final String lockedPath;
+    final String unlockedPath;
+    final float x;
+    final float y;
+
+    /**
+     * Constructs a SkillButtonConfig.
+     *
+     * @param name the name of the skill
+     * @param statType the type of stat the skill affects
+     * @param lockedPath the path to the locked texture
+     * @param unlockedPath the path to the unlocked texture
+     * @param xPercent the x-coordinate of the skill button
+     * @param yPercent the y-coordinate of the skill button
+     */
+    SkillButtonConfig(
+        String name,
+        String statType,
+        String lockedPath,
+        String unlockedPath,
+        float xPercent,
+        float yPercent) {
+      this.name = name;
+      this.statType = statType;
+      this.lockedPath = lockedPath;
+      this.unlockedPath = unlockedPath;
+      this.x = xPercent;
+      this.y = yPercent;
+    }
+  }
+
+  /** Configuration for all skill buttons in the skill tree. */
+  private static final SkillButtonConfig[] SKILL_BUTTONS = {
+    // Basic
+    new SkillButtonConfig(
+        "Attack Basic", "Attack Damage", BASIC_LOCKED, BASIC_UNLOCKED, 0.09f, 0.10f),
+    new SkillButtonConfig(
+        "Firing Speed Basic", "Firing Speed", BASIC_LOCKED, BASIC_UNLOCKED, 0.23f, 0.11f),
+    new SkillButtonConfig("Health Basic", "Health", BASIC_LOCKED, BASIC_UNLOCKED, 0.42f, 0.09f),
+    new SkillButtonConfig(
+        "Currency Basic", "Currency Generation", BASIC_LOCKED, BASIC_UNLOCKED, 0.69f, 0.105f),
+    new SkillButtonConfig(
+        "Crit Basic", "Critical Chance", BASIC_LOCKED, BASIC_UNLOCKED, 0.88f, 0.10f),
+
+    // Intermediate
+    new SkillButtonConfig(
+        "Attack Intermediate", "", INTERMEDIATE_LOCKED, INTERMEDIATE_UNLOCKED, 0.06f, 0.25f),
+    new SkillButtonConfig(
+        "Firing Speed Intermediate", "", INTERMEDIATE_LOCKED, INTERMEDIATE_UNLOCKED, 0.24f, 0.27f),
+    new SkillButtonConfig(
+        "Health Intermediate", "", INTERMEDIATE_LOCKED, INTERMEDIATE_UNLOCKED, 0.46f, 0.26f),
+    new SkillButtonConfig(
+        "Currency Intermediate", "", INTERMEDIATE_LOCKED, INTERMEDIATE_UNLOCKED, 0.695f, 0.25f),
+    new SkillButtonConfig(
+        "Crit Intermediate", "", INTERMEDIATE_LOCKED, INTERMEDIATE_UNLOCKED, 0.875f, 0.25f),
+
+    // Advanced
+    new SkillButtonConfig("Attack Advanced", "", ADVANCED_LOCKED, ADVANCED_UNLOCKED, 0.05f, 0.42f),
+    new SkillButtonConfig(
+        "Firing Speed Advanced", "", ADVANCED_LOCKED, ADVANCED_UNLOCKED, 0.21f, 0.45f),
+    new SkillButtonConfig("Health Advanced", "", ADVANCED_LOCKED, ADVANCED_UNLOCKED, 0.42f, 0.44f),
+    new SkillButtonConfig(
+        "Currency Advanced", "", ADVANCED_LOCKED, ADVANCED_UNLOCKED, 0.65f, 0.43f),
+    new SkillButtonConfig("Crit Advanced", "", ADVANCED_LOCKED, ADVANCED_UNLOCKED, 0.85f, 0.41f),
+
+    // Expert
+    new SkillButtonConfig(
+        "Attack Expert", "", ATTACK_EXPERT_LOCKED, ATTACK_EXPERT_UNLOCKED, 0.135f, 0.6295f),
+    new SkillButtonConfig(
+        "Firing Speed Expert", "", SPEED_EXPERT_LOCKED, SPEED_EXPERT_UNLOCKED, 0.23f, 0.629f),
+    new SkillButtonConfig(
+        "Crit Expert", "", CRIT_EXPERT_LOCKED, CRIT_EXPERT_UNLOCKED, 0.86f, 0.629f),
+    new SkillButtonConfig(
+        "Health Expert", "", HEALTH_EXPERT_LOCKED, HEALTH_EXPERT_UNLOCKED, 0.34f, 0.631f),
+    new SkillButtonConfig(
+        "Currency Expert", "", CURRENCY_EXPERT_LOCKED, CURRENCY_EXPERT_UNLOCKED, 0.60f, 0.631f),
+  };
 
   /**
    * Constructs a SkilltreeButtons component.
@@ -55,8 +156,18 @@ public class SkilltreeButtons extends UIComponent {
   private void addActors() {
     createBackButton();
     totalSkillPoints(stage);
-    createAllButtons(display);
+    createSkillButtons();
     stage.addActor(skillPointLabel);
+  }
+
+  private void createSkillButtons() {
+    float width = stage.getViewport().getWorldWidth();
+    float height = stage.getViewport().getWorldHeight();
+    for (SkillButtonConfig cfg : SKILL_BUTTONS) {
+      Texture locked = new Texture(Gdx.files.internal(cfg.lockedPath));
+      Texture unlocked = new Texture(Gdx.files.internal(cfg.unlockedPath));
+      createSkillButton(cfg.name, cfg.statType, locked, unlocked, cfg.x * width, cfg.y * height, display);
+    }
   }
 
   /** Creates a "Back" button that navigates back to the profile screen. */
@@ -148,199 +259,6 @@ public class SkilltreeButtons extends UIComponent {
     } else {
       skillButton.setSize(width * 0.1f, height * 0.1f);
     }
-  }
-
-  /**
-   * Creates all skill buttons for the skill tree including Basic, Intermediate, Advanced, and
-   * Expert skills.
-   *
-   * @param display the skill tree display instance
-   */
-  private void createAllButtons(SkilltreeDisplay display) {
-    Stage stage = ServiceLocator.getRenderService().getStage();
-    float width = stage.getViewport().getWorldWidth();
-    float height = stage.getViewport().getWorldHeight();
-
-    // Load textures
-    Texture basicLocked = new Texture(Gdx.files.internal("images/basic_locked.png"));
-    Texture basicUnlocked = new Texture(Gdx.files.internal("images/basic_unlocked.png"));
-
-    Texture intLocked = new Texture(Gdx.files.internal("images/intermediate_locked.png"));
-    Texture intUnlocked = new Texture(Gdx.files.internal("images/intermediate_unlocked.png"));
-
-    Texture advancedLocked = new Texture(Gdx.files.internal("images/advanced_locked.png"));
-    Texture advancedUnlocked = new Texture(Gdx.files.internal("images/advanced_unlocked.png"));
-
-    Texture lockedAttackExpert = new Texture(Gdx.files.internal("images/attack_expert_locked.png"));
-    Texture unlockedAttackExpert =
-        new Texture(Gdx.files.internal("images/attack_expert_unlocked.png"));
-
-    Texture lockedHealthExpert = new Texture(Gdx.files.internal("images/health_expert_locked.png"));
-    Texture unlockedHealthExpert =
-        new Texture(Gdx.files.internal("images/health_expert_unlocked.png"));
-
-    Texture lockedSpeedExpert = new Texture(Gdx.files.internal("images/speed_expert_locked.png"));
-    Texture unlockedSpeedExpert =
-        new Texture(Gdx.files.internal("images/speed_expert_unlocked.png"));
-
-    Texture lockedCritExpert = new Texture(Gdx.files.internal("images/speed_expert_locked.png"));
-    Texture unlockedCritExpert =
-        new Texture(Gdx.files.internal("images/speed_expert_unlocked.png"));
-
-    Texture lockedCurrencyExpert =
-        new Texture(Gdx.files.internal("images/currency_expert_locked.png"));
-    Texture unlockedCurrencyExpert =
-        new Texture(Gdx.files.internal("images/currency_expert_unlocked.png"));
-
-    // Basic, Intermediate, Advanced, Expert skill buttons
-    createSkillButton(
-        "Attack Basic",
-        "Attack Damage",
-        basicLocked,
-        basicUnlocked,
-        0.09f * width,
-        0.1f * height,
-        display);
-    createSkillButton(
-        "Firing Speed Basic",
-        "Firing Speed",
-        basicLocked,
-        basicUnlocked,
-        0.23f * width,
-        0.11f * height,
-        display);
-    createSkillButton(
-        "Health Basic",
-        "Health",
-        basicLocked,
-        basicUnlocked,
-        0.42f * width,
-        0.09f * height,
-        display);
-    createSkillButton(
-        "Currency Basic",
-        "Currency Generation",
-        basicLocked,
-        basicUnlocked,
-        0.69f * width,
-        0.105f * height,
-        display);
-    createSkillButton(
-        "Crit Basic",
-        "Critical Chance",
-        basicLocked,
-        basicUnlocked,
-        0.88f * width,
-        0.1f * height,
-        display);
-
-    // Intermediate Skills
-    createSkillButton(
-        "Attack Intermediate", "", intLocked, intUnlocked, 0.06f * width, 0.25f * height, display);
-    createSkillButton(
-        "Firing Speed Intermediate",
-        "",
-        intLocked,
-        intUnlocked,
-        0.24f * width,
-        0.27f * height,
-        display);
-    createSkillButton(
-        "Health Intermediate", "", intLocked, intUnlocked, 0.46f * width, 0.26f * height, display);
-    createSkillButton(
-        "Currency Intermediate",
-        "",
-        intLocked,
-        intUnlocked,
-        0.695f * width,
-        0.25f * height,
-        display);
-    createSkillButton(
-        "Crit Intermediate", "", intLocked, intUnlocked, 0.875f * width, 0.25f * height, display);
-
-    // Advanced Skills
-    createSkillButton(
-        "Attack Advanced",
-        "",
-        advancedLocked,
-        advancedUnlocked,
-        0.05f * width,
-        0.42f * height,
-        display);
-    createSkillButton(
-        "Firing Speed Advanced",
-        "",
-        advancedLocked,
-        advancedUnlocked,
-        0.21f * width,
-        0.45f * height,
-        display);
-    createSkillButton(
-        "Health Advanced",
-        "",
-        advancedLocked,
-        advancedUnlocked,
-        0.42f * width,
-        0.44f * height,
-        display);
-    createSkillButton(
-        "Currency Advanced",
-        "",
-        advancedLocked,
-        advancedUnlocked,
-        0.65f * width,
-        0.43f * height,
-        display);
-    createSkillButton(
-        "Crit Advanced",
-        "",
-        advancedLocked,
-        advancedUnlocked,
-        0.85f * width,
-        0.41f * height,
-        display);
-
-    // Expert Skills
-    createSkillButton(
-        "Attack Expert",
-        "",
-        lockedAttackExpert,
-        unlockedAttackExpert,
-        0.135f * width,
-        0.6295f * height,
-        display);
-    createSkillButton(
-        "Firing Speed Expert",
-        "",
-        lockedSpeedExpert,
-        unlockedSpeedExpert,
-        0.23f * width,
-        0.629f * height,
-        display);
-    createSkillButton(
-        "Crit Expert",
-        "",
-        lockedCritExpert,
-        unlockedCritExpert,
-        0.86f * width,
-        0.629f * height,
-        display);
-    createSkillButton(
-        "Health Expert",
-        "",
-        lockedHealthExpert,
-        unlockedHealthExpert,
-        0.34f * width,
-        0.631f * height,
-        display);
-    createSkillButton(
-        "Currency Expert",
-        "",
-        lockedCurrencyExpert,
-        unlockedCurrencyExpert,
-        0.6f * width,
-        0.631f * height,
-        display);
   }
 
   /**

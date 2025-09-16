@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
+import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
@@ -129,6 +130,14 @@ public class SkilltreeDisplay extends UIComponent {
               popup.remove();
             } else {
               errorSound.play();
+              DialogService dialogService = ServiceLocator.getDialogService();
+              // display corresponding error message
+              if (cost > points) {
+                dialogService.error("Error", "Not enough skill points for this purchase");
+              } else if (!skillSet.isUnlockable(skill.getName())) {
+                dialogService.error(
+                    "Error", "Previous skills for this stat must be unlocked first.");
+              }
             }
           }
         });
