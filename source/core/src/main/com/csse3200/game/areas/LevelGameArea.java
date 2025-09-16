@@ -6,9 +6,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -72,6 +72,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
   private int deckUnitCount;
+
+  // Initialising an Entity
+  private Entity gameOverEntity;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -145,6 +148,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // add components here for additional UI Elements
     ui.addComponent(new GameAreaDisplay("Level One"));
     spawnEntity(ui);
+
+    // Creates a game over entity to handle the game over window UI
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
@@ -528,11 +536,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
-        // TODO: add UI component here
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        // Window activation trigger
+        gameOverEntity.getEvents().trigger("gameOver");
       }
     }
   }
