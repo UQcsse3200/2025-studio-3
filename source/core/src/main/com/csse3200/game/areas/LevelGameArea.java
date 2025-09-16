@@ -277,6 +277,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              requestDespawn(unit);
+              robots.remove(unit);
+            });
     logger.info("Unit spawned at position {} {}", col, row);
   }
 

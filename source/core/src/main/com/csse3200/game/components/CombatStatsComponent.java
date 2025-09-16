@@ -1,6 +1,8 @@
 package com.csse3200.game.components;
 
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +65,13 @@ public class CombatStatsComponent extends Component {
         // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
         int extraCoins = 3; // TODO: replace with your real drop logic
 
+        HitboxComponent hitbox = entity.getComponent(HitboxComponent.class);
+        if (hitbox == null) {
+          return;
+        }
+        short layer = hitbox.getLayer();
         // 2) Progression stats (HudDisplay / coins.png reads this)
-        if (Persistence.profile() != null) {
+        if (Persistence.profile() != null && layer == PhysicsLayer.ENEMY) {
           int before = Persistence.profile().wallet().getCoins();
           Persistence.profile().statistics().increaseKills();
           Persistence.profile().wallet().addCoins(extraCoins);
@@ -84,9 +91,6 @@ public class CombatStatsComponent extends Component {
           ServiceLocator.getCurrencyService().add(extraCoins);
           logger.info("[Death] CurrencyService +{}", extraCoins);
         }
-
-        // 4) Now despawn
-        entity.getEvents().trigger("despawnRobot", entity);
       }
       entity.getEvents().trigger("updateHealth", this.health);
     }
