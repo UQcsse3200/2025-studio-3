@@ -1,10 +1,10 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
-import java.util.List;
-
 import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,21 +12,23 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Allows an entity to attack the closest target entity from a list of potential targets. This task
- * runs when there is a visible target within the entities range of attack
+ * runs when there is a target within the entities range of attack
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
-  private MovementTask movementTask;
+
+    // cooldown fields
+    private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+    private float timeSinceLastFire = 0f;
 
   /**
    * Creates an attack task
    *
-   * @param targets a list of potential targets
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(List<Entity> targets, float attackRange) {
-    super(targets, attackRange);
+  public AttackTask(float attackRange) {
+    super(attackRange);
     this.attackRange = attackRange;
   }
 
@@ -37,15 +39,8 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-    Entity target = getNearestVisibleTarget();
-    if (target != null) {
-      DefenceStatsComponent stats = owner.getEntity().getComponent(DefenceStatsComponent.class);
-      int damage = stats.getBaseAttack();
-      // TODO this should be specific to defender type??
-      Entity slingshot = ProjectileFactory.createSlingShot(damage);
-    }
-
     this.owner.getEntity().getEvents().trigger("attackStart");
+    owner.getEntity().getEvents().trigger("fire");
   }
 
   /** Updates the task each game frame */
@@ -53,13 +48,18 @@ public class AttackTask extends TargetDetectionTasks {
   public void update() {
     logger.info("AttackTask priority: {}", getPriority());
     Entity target = getNearestVisibleTarget();
-
     if (target == null) {
       return;
     }
 
-    if (getDistanceToTarget() <= attackRange && isTargetVisible(target)) {
-      // TODO: attack
+    if (getDistanceToTarget() <= attackRange) {
+        timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
+
+        if (timeSinceLastFire >= fireCooldown) {
+            // tell listeners (LevelGameArea) to spawn a projectile
+            owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
+            timeSinceLastFire = 0f;
+        }
     }
   }
 
@@ -78,7 +78,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1; // stop task if no target
     }
-    if (dst > attackRange || !isTargetVisible(target)) {
+    if (dst > attackRange ) {
       return -1; // stop task when target not visible or out of range
     }
     return 1;
@@ -93,7 +93,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1;
     }
-    if (dst <= attackRange && isTargetVisible(target)) {
+      if (dst <= attackRange) {
       return 1; // start task if target is visible and in range
     }
     return -1;

@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 
 class IdleTaskTest {
   private Entity target;
-  private List<Entity> targets;
 
   @BeforeEach
   void setup() {
@@ -30,8 +29,6 @@ class IdleTaskTest {
     ServiceLocator.registerPhysicsService(new PhysicsService());
 
     target = new Entity();
-    targets = new ArrayList<>();
-    targets.add(target);
   }
 
   // test defender is idle when target out of range -> priority should be 1
@@ -39,7 +36,12 @@ class IdleTaskTest {
   void idleWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f; // out of range
-    IdleTask idleTask = new IdleTask(targets, attackRange);
+    IdleTask idleTask = new IdleTask(attackRange) {
+      @Override
+      protected Entity getNearestVisibleTarget() {
+        return target;
+      }
+    };
 
     int priorityRunning = idleTask.getActivePriority(targetDistance, target);
     assertEquals(1, priorityRunning, "Idle task should keep running when target is out of range");
@@ -52,7 +54,12 @@ class IdleTaskTest {
   void notIdleWhenInRange() {
     float attackRange = 5f;
     float targetDistance = 3f;
-    IdleTask idleTask = new IdleTask(targets, attackRange);
+    IdleTask idleTask = new IdleTask(attackRange) {
+      @Override
+      protected Entity getNearestVisibleTarget() {
+        return target;
+      }
+    };
 
     int priority = idleTask.getActivePriority(targetDistance, target);
     assertEquals(-1, priority, "Idle task should not keep running when target is in range");

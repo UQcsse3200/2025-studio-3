@@ -1,7 +1,6 @@
 package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
-import java.util.List;
 
 /**
  * Keeps an entity idle until a target entity is detected within the attack range.
@@ -13,22 +12,21 @@ import java.util.List;
  */
 public class IdleTask extends TargetDetectionTasks {
   private final float attackRange;
+
   /**
    * Creates an IdleTask
    *
    * @param attackRange the maximum distance at which the entity can attack a target
-   * @param targets a list of potential targets
    */
-  public IdleTask(List<Entity> targets, float attackRange) {
-    super(targets, attackRange);
+  public IdleTask(float attackRange) {
+    super(attackRange);
     this.attackRange = attackRange;
   }
 
-      @Override
-      public void update() {
-          System.out.println("IdleTask priority: " + getPriority() + "attack rage is" + attackRange);
-        owner.getEntity().getEvents().trigger("idleStart");
-      }
+  @Override
+  public void update() {
+    owner.getEntity().getEvents().trigger("idleStart");
+  }
 
   /**
    * If task is currently running, determine whether to stay running
@@ -38,7 +36,6 @@ public class IdleTask extends TargetDetectionTasks {
    */
   @Override
   protected int getActivePriority(float dst, Entity target) {
-    System.out.println("distance is " + dst);
     if (dst <= attackRange) {
       return -1; // stop task when target in range
     }

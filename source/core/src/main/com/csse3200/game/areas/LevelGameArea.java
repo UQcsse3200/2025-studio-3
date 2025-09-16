@@ -8,17 +8,19 @@ import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+
 import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +39,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
-    "images/forge_1.png"
+    "images/forge_1.png",
+          "images/sling_projectile.png",
+    "images/sling_projectile_pad.png"
   };
 
   private static final String[] levelTextureAtlases = {
@@ -72,8 +76,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
   private int deckUnitCount;
-
-  private List<Entity> enemies = new ArrayList<>();
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -172,10 +174,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
+
+
   private void spawnDeck() {
     deckUnitCount = 0;
     placeDeckUnit(
-        () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
+        () -> DefenceFactory.createSlingShooter(),
         "images/sling_shooter_front.png");
   }
 
@@ -339,6 +343,25 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
+  public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
+    Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize/2f);
+    //projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
+    // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
+    // projectile.addComponent(render); // <- your projectile image
+
+    // Scale the projectile so it’s more visible
+    projectile.scaleHeight(30f); // set the height in world units
+    projectile.scaleWidth(30f); // set the width in world units
+
+    projectile.addComponent(new MoveRightComponent()); // pass velocity
+    projectile.getEvents().addListener("despawnSlingshot", (Entity e) -> {
+      requestDespawn(e);
+    });
+    spawnEntity(projectile); // adds to area and entity service
+    return projectile;
+  }
+
   /**
    * Getter for selected_unit
    *
@@ -390,7 +413,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Vector2 entityPos = new Vector2(tileX, tileY);
 
     Supplier<Entity> entitySupplier =
-        selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
+            selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
     Entity newEntity = entitySupplier.get();
     if (newEntity == null) {
       logger.error("Entity fetched was NULL");
@@ -421,6 +444,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
               robots.remove(newEntity);
             });
     logger.info("Unit spawned at position {}", position);
+    newEntity
+            .getEvents()
+            .addListener(
+                    "fire",
+                    () -> {
+                      Vector2 spawnPos = newEntity.getCenterPosition();
+                      spawnProjectile(entityPos, 3f, 0f);
+                      newEntity.getEvents().trigger("attackStart");
+                      newEntity
+                              .getEvents()
+                              .addListener(
+                                      "entityDeath",
+                                      () -> {
+                                        requestDespawn(newEntity);
+                                        robots.remove(newEntity);
+                                      });
+                      logger.info("Unit spawned at position {}", position);
+                    });
   }
 
   /**

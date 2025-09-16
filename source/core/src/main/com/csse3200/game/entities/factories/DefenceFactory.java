@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
@@ -19,7 +20,6 @@ import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
@@ -42,15 +42,14 @@ public class DefenceFactory {
    * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
    * file - Animation rendering and animation controller
    *
-   * @param targets the list of the entities that the slingshooter will attack
    * @return entity representing the slingshooter
    */
-  public static Entity createSlingShooter(List<Entity> targets) {
+  public static Entity createSlingShooter() {
     // load the sling shooter’s specific configuration;
     BaseDefenceConfig config = configs.slingshooter;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity defender = createBaseDefender(config);
 
     // animation component
     AnimationRenderComponent animator =
@@ -82,9 +81,6 @@ public class DefenceFactory {
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
 
-    System.out.println("[DEBUG] Targets list size: " + targets.size());
-    targets.forEach(e -> System.out.println("Target: " + e));
-
     return defender;
   }
 
@@ -93,7 +89,7 @@ public class DefenceFactory {
     BaseDefenceConfig config = configs.forge;
 
     // start with a base defender (physics + collider)
-    Entity defender = createBaseDefender(targets, config);
+    Entity defender = createBaseDefender(config);
 
     // animation component
     AnimationRenderComponent animator =
@@ -132,17 +128,15 @@ public class DefenceFactory {
    *
    * @return entity with physics and collision components
    */
-  public static Entity createBaseDefender(List<Entity> targets, BaseDefenceConfig config) {
+  public static Entity createBaseDefender(BaseDefenceConfig config) {
     AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(new AttackTask(targets, 100))
-            .addTask(new IdleTask(targets, 100));
+        new AITaskComponent().addTask(new AttackTask(100)).addTask(new IdleTask(100));
 
     Entity npc =
         new Entity()
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
-            .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
+            .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent())
             .addComponent(enemyDetectionTasks);
 
