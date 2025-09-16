@@ -15,7 +15,6 @@ import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
@@ -134,9 +133,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private void displayUI() {
     ui = new Entity();
     // add components here for additional UI Elements
-    unitList.put("images/sling_shooter_front.png", () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
+    unitList.put(
+        "images/sling_shooter_front.png",
+        () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
     ui.addComponent(new GameAreaDisplay("Level One"))
-            .addComponent(new HotbarDisplay(this, tileSize, unitList));
+        .addComponent(new HotbarDisplay(this, tileSize, unitList));
 
     spawnEntity(ui);
   }
@@ -322,7 +323,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
-      selectedUnit = unit;
+    selectedUnit = unit;
   }
 
   /**

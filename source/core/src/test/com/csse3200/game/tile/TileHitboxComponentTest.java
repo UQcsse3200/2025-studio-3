@@ -44,7 +44,9 @@ class TileHitboxComponentTest {
     // creates mock resource service
     com.csse3200.game.services.ResourceService resourceService =
         mock(com.csse3200.game.services.ResourceService.class);
-    lenient().when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+    lenient()
+        .when(resourceService.getAsset(anyString(), eq(Texture.class)))
+        .thenReturn(mock(Texture.class));
     ServiceLocator.registerResourceService(resourceService);
 
     // creates mock input service
