@@ -63,6 +63,11 @@ public class MainGameScreen extends ScreenAdapter {
   public MainGameScreen(GdxGame game) {
     this.game = game;
     this.waveManager = new WaveManager();
+
+   // if (Persistence.profile() == null) {
+     // throw new IllegalStateException("No profile loaded, cannot start game");
+   // }
+
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
@@ -163,7 +168,7 @@ public class MainGameScreen extends ScreenAdapter {
    * Creates the main game's ui including components for rendering ui elements to* the screen and
    * capturing and handling ui input.
    */
-  protected void createUI() {
+  private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     InputComponent inputComponent =
