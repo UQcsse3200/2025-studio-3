@@ -10,8 +10,6 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -36,12 +34,13 @@ class IdleTaskTest {
   void idleWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f; // out of range
-    IdleTask idleTask = new IdleTask(attackRange) {
-      @Override
-      protected Entity getNearestVisibleTarget() {
-        return target;
-      }
-    };
+    IdleTask idleTask =
+        new IdleTask(attackRange) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
+        };
 
     int priorityRunning = idleTask.getActivePriority(targetDistance, target);
     assertEquals(1, priorityRunning, "Idle task should keep running when target is out of range");
@@ -54,12 +53,13 @@ class IdleTaskTest {
   void notIdleWhenInRange() {
     float attackRange = 5f;
     float targetDistance = 3f;
-    IdleTask idleTask = new IdleTask(attackRange) {
-      @Override
-      protected Entity getNearestVisibleTarget() {
-        return target;
-      }
-    };
+    IdleTask idleTask =
+        new IdleTask(attackRange) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
+        };
 
     int priority = idleTask.getActivePriority(targetDistance, target);
     assertEquals(-1, priority, "Idle task should not keep running when target is in range");

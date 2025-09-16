@@ -28,7 +28,7 @@ public class SunlightHudDisplay extends UIComponent {
     ResourceService resources = ServiceLocator.getResourceService();
     CurrencyService currencyService = ServiceLocator.getCurrencyService();
 
-    Texture sunTex = resources.getAsset("images/normal_sunlight.png", Texture.class);
+    Texture sunTex = resources.getAsset("images/scrap_metal.png", Texture.class);
     Image sunIcon = new Image(sunTex);
     sunIcon.setSize(22f, 22f);
 

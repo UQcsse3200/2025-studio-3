@@ -6,7 +6,7 @@ package com.csse3200.game.components;
  * <p>This component stores additional combat-related stats beyond health and base attack, such as
  * range, attack speed, and critical hit chance.
  */
-public class DefenceStatsComponent extends CombatStatsComponent {
+public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Integer identifier for the type of defender (e.g., tower, trap, etc.). */
   private int type;
@@ -34,7 +34,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
    */
-  public DefenceStatsComponent(
+  public DefenderStatsComponent(
       int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
     super(health, baseAttack);
