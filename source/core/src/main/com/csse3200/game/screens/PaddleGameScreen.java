@@ -113,4 +113,12 @@ public class PaddleGameScreen extends ScreenAdapter {
             dispose();
         }
     }
+    @Override
+    public void dispose(){
+        stage.dispose();
+        if(paddleTex!=null) paddleTex.dispose();
+            if(ballTex!=null) ballTex.dispose();
+            if(bgTex!=null)bgTex.dispose();
+
+    }
 }
