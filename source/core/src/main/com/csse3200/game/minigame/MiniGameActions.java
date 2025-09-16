@@ -35,7 +35,7 @@ public class MiniGameActions extends Component {
         logger.info("Brick Breaker Mini game");
         Persistence.load();
         game.loadMenus();
-        game.setScreen(GdxGame.ScreenType.BRICK_BREAKER);
+        game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
     }
     /**
      * Swaps to the Main Menu screen.

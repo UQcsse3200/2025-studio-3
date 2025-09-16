@@ -7,7 +7,7 @@ public class PaddleComponent extends Component {
     private Image paddleImage;
     private float speed=500f;
 
-   /* public PaddleComponent(Image paddleImage){
+   public PaddleComponent(Image paddleImage){
         this.paddleImage=paddleImage;
     }
     @Override
@@ -25,6 +25,6 @@ public class PaddleComponent extends Component {
         paddleImage.setPosition(newX,paddleImage.getY());
     }
 
-*/
+
 
 }

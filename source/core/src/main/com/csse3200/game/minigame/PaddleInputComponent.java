@@ -13,10 +13,10 @@ public class PaddleInputComponent extends Component{
     public void update(){
         float delta=Gdx.graphics.getDeltaTime();
         if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-          //  paddle.moveLeft(delta);
+            paddle.moveLeft(delta);
         }
         if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-         //   paddle.moveRight(delta);
+           paddle.moveRight(delta);
         }
     }
 

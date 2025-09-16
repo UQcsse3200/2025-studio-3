@@ -12,6 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.minigame.BallComponent;
+import com.csse3200.game.minigame.CollisionComponent;
+import com.csse3200.game.minigame.PaddleComponent;
+import com.csse3200.game.minigame.PaddleInputComponent;
 
 /*import com.csse3200.game.minigame.BallComponent;
 import com.csse3200.game.minigame.CollisionComponent;
@@ -65,8 +69,8 @@ public class PaddleGameScreen extends ScreenAdapter {
         stage.addActor(paddleImage);
 
         paddle = new Entity();
-        //paddle.addComponent(new PaddleComponent(paddleImage));
-        //paddle.addComponent(new PaddleInputComponent(paddle));
+        paddle.addComponent(new PaddleComponent(paddleImage));
+        paddle.addComponent(new PaddleInputComponent(paddle));
         paddle.create();
     }
 
@@ -77,8 +81,8 @@ public class PaddleGameScreen extends ScreenAdapter {
         stage.addActor(ballImage);
 
         ball = new Entity();
-        //ball.addComponent(new BallComponent(ballImage, 300f, 300f));
-        //ball.addComponent(new CollisionComponent(paddleImage));
+        ball.addComponent(new BallComponent(ballImage, 300f, 300f));
+        ball.addComponent(new CollisionComponent(paddleImage));
         ball.create();
     }
 
@@ -93,15 +97,20 @@ public class PaddleGameScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        /*paddle.getComponent(PaddleComponent.class).update();
+        paddle.getComponent(PaddleComponent.class).update();
         paddle.getComponent(PaddleInputComponent.class).update();
         ball.getComponent(BallComponent.class).update(delta);
         ball.getComponent(CollisionComponent.class).update(delta);
 
-        score = ball.getComponent(BallComponent.class).getScore();*/
+        score = ball.getComponent(BallComponent.class).getScore();
         scoreLabel.setText("Score: " + score);
 
         stage.act(delta);
         stage.draw();
+
+        if(ball.getComponent(BallComponent.class).getImage().getY()<=0){
+            game.setScreen(new MainMenuScreen(game));
+            dispose();
+        }
     }
 }
