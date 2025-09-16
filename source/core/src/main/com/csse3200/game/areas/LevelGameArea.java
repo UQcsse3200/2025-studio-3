@@ -41,7 +41,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/sling_shooter.atlas", "images/robot_placeholder.atlas"
+    "images/sling_shooter.atlas", "images/robot_placeholder.atlas", "images/basic_robot.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
