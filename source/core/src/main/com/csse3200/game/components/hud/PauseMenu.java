@@ -49,7 +49,7 @@ public class PauseMenu extends UIComponent {
 
     // Check if the game is already paused (e.g., returning from settings)
     // This doesn't seem to be working currently.
-    if (entity.getComponent(com.csse3200.game.components.maingame.MainGameActions.class) != null) {
+    if (entity.getComponent(MainGameActions.class) != null) {
       MainGameScreen mainGameScreen =
           entity.getComponent(MainGameActions.class).getMainGameScreen();
       if (mainGameScreen != null && mainGameScreen.isPaused()) {
@@ -61,7 +61,7 @@ public class PauseMenu extends UIComponent {
   /** Creates the dimmed background overlay */
   private void createDimBackground() {
     // Create a solid color texture for the dim background
-    Pixmap pixmap = new Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+    Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
     pixmap.setColor(0, 0, 0, DIM_ALPHA);
     pixmap.fill();
     Texture dimTexture = new Texture(pixmap);
