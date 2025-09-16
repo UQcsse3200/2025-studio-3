@@ -29,10 +29,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final int LEVEL_ONE_COLS = 10;
 
   private final TerrainFactory terrainFactory;
-
-
   private static final String CURRENT_MAP = "level1";
-
 
   private float xOffset;
   private float yOffset;
@@ -111,6 +108,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private void spawnMap() {
     logger.debug("Spawning map: {}", CURRENT_MAP);
     Entity mapEntity = MapFactory.createMap(CURRENT_MAP, terrainFactory);
+
+    // Position the map appropriately - you might need to adjust this based on your game layout
+    mapEntity.setPosition(0, 0);
     spawnEntity(mapEntity);
   }
 

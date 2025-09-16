@@ -1,156 +1,100 @@
 package com.csse3200.game.areas.terrain;
 
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.math.GridPoint2;
-import com.csse3200.game.areas.terrain.TerrainComponent;
-import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Factory class for creating and managing maps.
+ * Factory for creating game maps as single images instead of tiled maps.
+ * Simplifies the map loading process by removing tiling logic.
  */
 public class MapFactory {
-    private static final Logger logger = LoggerFactory.getLogger(MapFactory.class);
-
-    /**
-     * Data container for map-specific assets.
-     */
-    private static class MapAssets {
-        String[] textures;
-        String[] atlases;
-        String[] sounds;
-        String[] music;
-        TerrainType terrainType;
-
-        MapAssets(String[] textures, String[] atlases, String[] sounds, String[] music, TerrainType terrainType) {
-            this.textures = textures;
-            this.atlases = atlases;
-            this.sounds = sounds;
-            this.music = music;
-            this.terrainType = terrainType;
-        }
-    }
-
-
-    private static final Map<String, MapAssets> maps = new HashMap<>();
+    private static final Map<String, MapAssets> MAP_ASSETS = new HashMap<>();
 
     static {
-
-        maps.put("level1", new MapAssets(
-            new String[] {
-                "images/box_boy_leaf.png",
-                "images/level-1-map-v1.png",
-                "images/ghost_king.png",
-                "images/ghost_1.png",
-                "images/olive_tile.png",
-                "images/green_tile.png",
-                "images/box_boy.png",
-                "images/selected_star.png"
-            },
-            new String[] {
-                "images/ghost.atlas",
-                "images/ghostKing.atlas",
-                "images/robot_placeholder.atlas"
-            },
-            new String[] {
-                "sounds/Impact4.ogg"
-            },
-            new String[] {
-                "sounds/BGM_03_mp3.mp3"
-            },
-            TerrainType.LEVEL_ONE_MAP
+        MAP_ASSETS.put("level1", new MapAssets(
+            "images/level-1-map-v1.png",
+            "audio/music/level1.mp3"
         ));
-
-        // maps.put("level2", new MapAssets(
-        //     new String[] {"images/level-2-map.png"},
-        //     new String[] {"images/level2.atlas"},
-        //     new String[] {"sounds/Impact5.ogg"},
-        //     new String[] {"sounds/BGM_04_mp3.mp3"},
-        //     TerrainType.LEVEL_TWO_MAP
-        // ));
     }
 
     /**
-     * Loads all assets for the given map into the ResourceService.
+     * Loads all assets required for a specific map
+     * @param mapName the name of the map to load assets for
      */
     public static void loadAssets(String mapName) {
-        if (!maps.containsKey(mapName)) {
+        MapAssets assets = MAP_ASSETS.get(mapName);
+        if (assets == null) {
             throw new IllegalArgumentException("Unknown map: " + mapName);
         }
-        MapAssets assets = maps.get(mapName);
+
         ResourceService resourceService = ServiceLocator.getResourceService();
 
-        resourceService.loadTextures(assets.textures);
-        resourceService.loadTextureAtlases(assets.atlases);
-        resourceService.loadSounds(assets.sounds);
-        resourceService.loadMusic(assets.music);
+        resourceService.loadTextures(new String[]{assets.texturePath});
 
-        // Wait until loading is complete (could be replaced with loading screen)
-        while (!resourceService.loadForMillis(10)) {
-            logger.info("Loading map {}... {}%", mapName, resourceService.getProgress());
-        }
+        resourceService.loadMusic(new String[]{assets.musicPath});
+
+        resourceService.loadAll();
     }
 
     /**
-     * Unloads all assets for the given map from the ResourceService.
+     * Unloads all assets for a specific map
      */
     public static void unloadAssets(String mapName) {
-        if (!maps.containsKey(mapName)) {
+        MapAssets assets = MAP_ASSETS.get(mapName);
+        if (assets == null) {
             throw new IllegalArgumentException("Unknown map: " + mapName);
         }
-        MapAssets assets = maps.get(mapName);
-        ResourceService resourceService = ServiceLocator.getResourceService();
 
-        resourceService.unloadAssets(assets.textures);
-        resourceService.unloadAssets(assets.atlases);
-        resourceService.unloadAssets(assets.sounds);
-        resourceService.unloadAssets(assets.music);
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        resourceService.unloadAssets(new String[]{assets.texturePath, assets.musicPath});
     }
 
     /**
-     * Creates the terrain entity for the given map.
-     *
-     * @param mapName the map key (e.g., "level1")
-     * @param terrainFactory the terrain factory used to build terrain
-     * @return a fully configured map entity
+     * Creates a map entity for the specified map
      */
     public static Entity createMap(String mapName, TerrainFactory terrainFactory) {
-        if (!maps.containsKey(mapName)) {
+        MapAssets assets = MAP_ASSETS.get(mapName);
+        if (assets == null) {
             throw new IllegalArgumentException("Unknown map: " + mapName);
         }
-        MapAssets assets = maps.get(mapName);
 
-        TerrainComponent terrain = terrainFactory.createTerrain(assets.terrainType);
+        ResourceService resourceService = ServiceLocator.getResourceService();
+        Texture mapTexture = resourceService.getAsset(assets.texturePath, Texture.class);
 
-        Entity mapEntity = new Entity().addComponent(terrain);
-
-        float tileWidth = terrain.getTileSize();
-        float tileHeight = terrain.getTileSize();
-        GridPoint2 bounds = terrain.getMapBounds(0);
-        float worldWidth = bounds.x * tileWidth;
-        float worldHeight = bounds.y * tileHeight;
-        mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
-
+        Entity mapEntity = new Entity();
+        mapEntity.addComponent(new TextureRenderComponent(new TextureRegion(mapTexture).getTexture()));
         return mapEntity;
     }
 
     /**
-     * Gets the background music file path for the given map.
-     * Useful for starting playback in LevelGameArea.
+     * Gets the background music path for a specific map
      */
     public static String getBackgroundMusic(String mapName) {
-        if (!maps.containsKey(mapName)) {
+        MapAssets assets = MAP_ASSETS.get(mapName);
+        if (assets == null) {
             throw new IllegalArgumentException("Unknown map: " + mapName);
         }
-        MapAssets assets = maps.get(mapName);
-        return assets.music.length > 0 ? assets.music[0] : null;
+        return assets.musicPath;
+    }
+
+    /**
+     * Helper class to store map asset paths
+     */
+    private static class MapAssets {
+        public final String texturePath;
+        public final String musicPath;
+
+        public MapAssets(String texturePath, String musicPath) {
+            this.texturePath = texturePath;
+            this.musicPath = musicPath;
+        }
     }
 }
