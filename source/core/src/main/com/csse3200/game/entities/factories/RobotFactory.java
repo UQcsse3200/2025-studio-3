@@ -89,7 +89,6 @@ public class RobotFactory {
     animator.addAnimation("damagedAttack", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
 
-
     Entity robot =
         new Entity()
             .addComponent(new PhysicsComponent())

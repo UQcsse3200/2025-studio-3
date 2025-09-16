@@ -22,7 +22,6 @@ public class RobotAnimationController extends Component {
     animator.startAnimation("moveLeft");
   }
 
-
   void animateAttack() {
     animator.startAnimation("attack");
   }
