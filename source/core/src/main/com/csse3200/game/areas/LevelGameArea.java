@@ -175,13 +175,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeDeckUnit(() -> DefenceFactory.createSlingShooter(), "images/sling_shooter_front.png");
   }
 
-  private void spawnSun(Vector2 targetPos, int spawnInterval, int scrapValue) {
-    Entity sunSpawner = new Entity();
+  private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+    Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
         new CurrencyGeneratorComponent(
             spawnInterval, scrapValue, "images/scrap_metal.png", targetPos);
-    sunSpawner.addComponent(currencyGenerator);
-    spawnEntity(sunSpawner);
+    scrapSpawner.addComponent(currencyGenerator);
+    spawnEntity(scrapSpawner);
   }
 
   /**
@@ -432,7 +432,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
       int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
       int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-      spawnSun(entityPos, spawnInterval, scrapValue);
+      spawnScrap(entityPos, spawnInterval, scrapValue);
     }
 
     spawnEntity(newEntity);

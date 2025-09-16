@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.currency.SunlightHudDisplay;
+import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
@@ -82,7 +82,7 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
     ServiceLocator.getEntityService().register(uiHud);
 
     logger.debug("Initialising main game screen entities");

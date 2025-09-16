@@ -2,13 +2,13 @@ package com.csse3200.game.components.currency;
 
 /** Represents a currency system with sunlight as the primary currency. */
 public class Currency {
-  private int sunlight;
-  private int maxSunlight;
+  private int scrap;
+  private final int maxScrap;
 
   /** Creates a new currency with zero sunlight and no maximum limit. */
   public Currency() {
-    this.sunlight = 0;
-    this.maxSunlight = Integer.MAX_VALUE;
+    this.scrap = 0;
+    this.maxScrap = Integer.MAX_VALUE;
   }
 
   /**
@@ -17,8 +17,8 @@ public class Currency {
    * @param initialAmount the initial sunlight amount
    */
   public Currency(int initialAmount) {
-    this.sunlight = initialAmount;
-    this.maxSunlight = Integer.MAX_VALUE;
+    this.scrap = initialAmount;
+    this.maxScrap = Integer.MAX_VALUE;
   }
 
   /**
@@ -28,8 +28,8 @@ public class Currency {
    * @param maxSunshine the maximum sunlight limit
    */
   public Currency(int initialAmount, int maxSunshine) {
-    this.sunlight = initialAmount;
-    this.maxSunlight = maxSunshine;
+    this.scrap = initialAmount;
+    this.maxScrap = maxSunshine;
   }
 
   /**
@@ -37,8 +37,8 @@ public class Currency {
    *
    * @return the current sunlight amount
    */
-  public int getSunlight() {
-    return sunlight;
+  public int getScrap() {
+    return scrap;
   }
 
   /**
@@ -46,8 +46,8 @@ public class Currency {
    *
    * @param amount the new sunlight amount
    */
-  public void setSunlight(int amount) {
-    this.sunlight = Math.max(0, amount);
+  public void setScrap(int amount) {
+    this.scrap = Math.max(0, amount);
   }
 
   /**
@@ -55,13 +55,13 @@ public class Currency {
    *
    * @param amount the amount of sunlight to add
    */
-  public void addSunshine(int amount) {
+  public void addScrap(int amount) {
     if (amount > 0) {
-      long sum = (long) sunlight + amount;
-      if (sum > maxSunlight) {
-        sunlight = maxSunlight;
+      long sum = (long) scrap + amount;
+      if (sum > maxScrap) {
+        scrap = maxScrap;
       } else {
-        sunlight += amount;
+        scrap += amount;
       }
     }
   }
@@ -72,8 +72,8 @@ public class Currency {
    * @param amount the cost to check
    * @return true if affordable, false otherwise
    */
-  public boolean canAffordSunshine(int amount) {
-    return sunlight >= amount;
+  public boolean canAffordScrap(int amount) {
+    return scrap >= amount;
   }
 
   /**
@@ -82,9 +82,9 @@ public class Currency {
    * @param amount the amount to spend
    * @return true if successful, false if insufficient funds
    */
-  public boolean spendSunshine(int amount) {
-    if (amount > 0 && canAffordSunshine(amount)) {
-      sunlight -= amount;
+  public boolean spendScrap(int amount) {
+    if (amount > 0 && canAffordScrap(amount)) {
+      scrap -= amount;
       return true;
     }
     return false;

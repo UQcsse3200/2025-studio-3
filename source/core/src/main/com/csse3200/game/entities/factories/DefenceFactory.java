@@ -50,9 +50,10 @@ public class DefenceFactory {
     // start with a base defender (physics + collider)
 
     AITaskComponent enemyDetectionTasks =
-        new AITaskComponent().addTask(new AttackTask(config.getRange()))
-        .addTask(new IdleTask(config.getRange()));
-    
+        new AITaskComponent()
+            .addTask(new AttackTask(config.getRange()))
+            .addTask(new IdleTask(config.getRange()));
+
     defender.addComponent(enemyDetectionTasks);
     // animation component
     AnimationRenderComponent animator =
@@ -95,8 +96,7 @@ public class DefenceFactory {
     // animation component
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-            .getAsset("images/forge.atlas", TextureAtlas.class));
+            ServiceLocator.getResourceService().getAsset("images/forge.atlas", TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);

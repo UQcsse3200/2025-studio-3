@@ -79,7 +79,7 @@ public class CombatStatsComponent extends Component {
               "[Death] Persistence.profile() is null; cannot update progression wallet/stats");
         }
 
-        // 3) Gameplay currency service (SunlightHudDisplay reads this)
+        // 3) Gameplay currency service (ScrapHudDisplay reads this)
         if (ServiceLocator.getCurrencyService() != null) {
           ServiceLocator.getCurrencyService().add(extraCoins);
           logger.info("[Death] CurrencyService +{}", extraCoins);

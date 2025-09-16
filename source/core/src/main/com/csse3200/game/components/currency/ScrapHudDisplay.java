@@ -13,7 +13,7 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
-public class SunlightHudDisplay extends UIComponent {
+public class ScrapHudDisplay extends UIComponent {
 
   private transient CurrencyService currencyService;
   private transient ResourceService resources;

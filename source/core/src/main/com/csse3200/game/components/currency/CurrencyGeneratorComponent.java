@@ -12,8 +12,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Periodically spawns "sunlight" currency at random positions on the screen. The spawn interval,
- * sun value, texture path and motion parameters are configurable. Actions registered on the Stage
+ * Periodically spawns "Scrap Metal" currency at random positions on the screen. The spawn interval,
+ * scrap value, texture path and motion parameters are configurable. Actions registered on the Stage
  * are removed in {@link #dispose()} to avoid leaks.
  */
 public class CurrencyGeneratorComponent extends Component {
@@ -22,50 +22,45 @@ public class CurrencyGeneratorComponent extends Component {
   /** Spawn interval in seconds */
   private final float intervalSec;
 
-  /** Currency amount each sun grants on pick-up */
-  private final int sunValue;
+  /** Currency amount each scrap grants on pick-up */
+  private final int scrapValue;
 
-  /** Texture path for the sun sprite */
-  private final String sunTexturePath;
+  /** Texture path for the scrap sprite */
+  private final String scrapTexturePath;
 
   private final float targetX;
 
   private final float targetY;
 
   /**
-   * FALL_FRAC_PER_SEC: Fraction of screen height per second used as falling speed. e.g. 0.25 -> sun
-   * falls 25% of the screen height each second
+   * FALL_FRAC_PER_SEC: Fraction of screen height per second used as falling speed. e.g. 0.25 ->
+   * scrap falls 25% of the screen height each second
    */
   private float FALL_FRAC_PER_SEC = 0.1f;
 
   /** Rotation speed in degrees per second. */
   private float ROT_SPEED_DPS = 100f;
 
-  /** Sun visual size in pixels */
-  private float SUN_SIZE_PX = 64f;
+  /** Scrap visual size in pixels */
+  private float SCRAP_SIZE_PX = 64f;
 
-  /** Sun lifetime in second */
-  private float SUN_LIFETIME_SEC = 20f;
+  /** Scrap lifetime in second */
+  private float SCRAP_LIFETIME_SEC = 20f;
 
   private transient Action generatorAction;
-
-  /** Creates a new currency generator component with default settings. */
-  public CurrencyGeneratorComponent() {
-    this(8f, 25, "images/scrap_metal.png", new Vector2(0, 0));
-  }
 
   /**
    * Creates a new currency generator component with the specified parameters.
    *
    * @param intervalSec seconds between spawns
-   * @param sunValue currency granted per sun
-   * @param sunTexturePath texture path for the sun image
+   * @param scrapValue currency granted per scrap
+   * @param scrapTexturePath texture path for the scrap image
    */
   public CurrencyGeneratorComponent(
-      float intervalSec, int sunValue, String sunTexturePath, Vector2 position) {
+      float intervalSec, int scrapValue, String scrapTexturePath, Vector2 position) {
     this.intervalSec = Math.max(0.5f, intervalSec);
-    this.sunValue = Math.max(1, sunValue);
-    this.sunTexturePath = sunTexturePath;
+    this.scrapValue = Math.max(1, scrapValue);
+    this.scrapTexturePath = scrapTexturePath;
     this.targetX = position.x;
     this.targetY = position.y;
   }
@@ -84,69 +79,69 @@ public class CurrencyGeneratorComponent extends Component {
 
     generatorAction =
         Actions.forever(
-            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnSunAt)));
+            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
     stage.addAction(generatorAction);
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
-  /** Spawn a sun that falls from the top to (targetX, targetY) while rotating. */
-  /** Spawns a sun at the specified coordinates. */
-  public void spawnSunAt() {
+  /** Spawn a scrap that falls from the top to (targetX, targetY) while rotating. */
+  /** Spawns a scrap at the specified coordinates. */
+  public void spawnScrapAt() {
     ResourceService rs = ServiceLocator.getResourceService();
     Stage stage =
         ServiceLocator.getRenderService() != null
             ? ServiceLocator.getRenderService().getStage()
             : null;
     if (rs == null) {
-      logger.warn("ResourceService is null. Cannot spawn sun.");
+      logger.warn("ResourceService is null. Cannot spawn scrap.");
       return;
     }
     if (stage == null) {
-      logger.warn("Stage is null. Cannot spawn sun.");
+      logger.warn("Stage is null. Cannot spawn scrap.");
       return;
     }
 
-    Texture tex = rs.getAsset(sunTexturePath, Texture.class);
+    Texture tex = rs.getAsset(scrapTexturePath, Texture.class);
     if (tex == null) {
-      logger.warn("Texture '{}' not loaded.", sunTexturePath);
+      logger.warn("Texture '{}' not loaded.", scrapTexturePath);
       return;
     }
 
-    CurrencyInteraction sun = new CurrencyInteraction(tex, sunValue);
-    sun.setSize(SUN_SIZE_PX, SUN_SIZE_PX);
-    sun.setOrigin(SUN_SIZE_PX / 2f, SUN_SIZE_PX / 2f);
+    CurrencyInteraction scrap = new CurrencyInteraction(tex, scrapValue);
+    scrap.setSize(SCRAP_SIZE_PX, SCRAP_SIZE_PX);
+    scrap.setOrigin(SCRAP_SIZE_PX / 2f, SCRAP_SIZE_PX / 2f);
 
-    stage.addActor(sun);
+    stage.addActor(scrap);
 
-    sun.setPosition(this.targetX, this.targetY);
+    scrap.setPosition(this.targetX, this.targetY);
 
     // Auto-expire if not collected to avoid screen flooding
-    float expireSec = SUN_LIFETIME_SEC;
-    sun.addAction(
+    float expireSec = SCRAP_LIFETIME_SEC;
+    scrap.addAction(
         Actions.sequence(
             Actions.delay(expireSec),
             Actions.parallel(Actions.fadeOut(0.25f), Actions.scaleTo(0.85f, 0.85f, 0.25f)),
             Actions.run(
                 () -> {
-                  if (sun.hasParent()) {
-                    sun.clearActions();
-                    sun.clearListeners();
-                    sun.remove();
+                  if (scrap.hasParent()) {
+                    scrap.clearActions();
+                    scrap.clearListeners();
+                    scrap.remove();
                     logger.debug(
-                        "Sun expired without being collected at ({}, {})", targetX, targetY);
+                        "Scrap expired without being collected at ({}, {})", targetX, targetY);
                   }
                 })));
   }
 
-  /** Configure sun visual size in pixels. */
+  /** Configure scrap visual size in pixels. */
   /**
-   * Sets the size of spawned suns in pixels.
+   * Sets the size of spawned scraps in pixels.
    *
    * @param px the size in pixels
    * @return this component for method chaining
    */
-  public CurrencyGeneratorComponent setSunSizePx(float px) {
-    this.SUN_SIZE_PX = Math.max(8f, px);
+  public CurrencyGeneratorComponent setScrapSizePx(float px) {
+    this.SCRAP_SIZE_PX = Math.max(8f, px);
     return this;
   }
 
