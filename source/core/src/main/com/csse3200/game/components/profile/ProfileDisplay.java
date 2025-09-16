@@ -105,8 +105,8 @@ public class ProfileDisplay extends UIComponent {
       // Add button to table with spacing
       buttonTable
           .add(button)
-          .width(buttonWidth)
-          .height(buttonHeight)
+          .width(buttonWidth - 30)
+          .height(buttonHeight - 30)
           .padRight(i < buttonLabels.length - 1 ? stage.getWidth() * BUTTON_SPACING_RATIO : 0);
     }
 
