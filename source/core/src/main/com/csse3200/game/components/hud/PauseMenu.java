@@ -1,9 +1,12 @@
 package com.csse3200.game.components.hud;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -11,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.components.maingame.MainGameActions;
+import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,12 +48,10 @@ public class PauseMenu extends UIComponent {
     setVisible(false);
 
     // Check if the game is already paused (e.g., returning from settings)
+    // This doesn't seem to be working currently.
     if (entity.getComponent(com.csse3200.game.components.maingame.MainGameActions.class) != null) {
-      // Check if the main game screen is paused
-      com.csse3200.game.screens.MainGameScreen mainGameScreen =
-          entity
-              .getComponent(com.csse3200.game.components.maingame.MainGameActions.class)
-              .getMainGameScreen();
+      MainGameScreen mainGameScreen =
+          entity.getComponent(MainGameActions.class).getMainGameScreen();
       if (mainGameScreen != null && mainGameScreen.isPaused()) {
         show();
       }
@@ -58,9 +61,7 @@ public class PauseMenu extends UIComponent {
   /** Creates the dimmed background overlay */
   private void createDimBackground() {
     // Create a solid color texture for the dim background
-    com.badlogic.gdx.graphics.Pixmap pixmap =
-        new com.badlogic.gdx.graphics.Pixmap(
-            1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
+    Pixmap pixmap = new Pixmap(1, 1, com.badlogic.gdx.graphics.Pixmap.Format.RGBA8888);
     pixmap.setColor(0, 0, 0, DIM_ALPHA);
     pixmap.fill();
     Texture dimTexture = new Texture(pixmap);
@@ -71,18 +72,13 @@ public class PauseMenu extends UIComponent {
     dimBackground.setFillParent(true);
     dimBackground.setVisible(false);
     dimBackground.setZIndex(45);
-    dimBackground.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
+    dimBackground.setTouchable(Touchable.enabled);
 
     // Add click listener to prevent clicks from going through
     dimBackground.addListener(
-        new com.badlogic.gdx.scenes.scene2d.utils.ClickListener() {
+        new ClickListener() {
           @Override
-          public boolean touchDown(
-              com.badlogic.gdx.scenes.scene2d.InputEvent event,
-              float x,
-              float y,
-              int pointer,
-              int button) {
+          public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
             // Consume the event to prevent it from reaching actors below
             return true;
           }
@@ -129,7 +125,7 @@ public class PauseMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Resume button clicked");
+            logger.info("[PauseMenu] Resume button clicked");
             entity.getEvents().trigger("resume_game");
           }
         });
@@ -140,7 +136,7 @@ public class PauseMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Settings button clicked");
+            logger.info("[PauseMenu] Settings button clicked");
             entity.getEvents().trigger("settings");
           }
         });
@@ -151,7 +147,7 @@ public class PauseMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Quit Level button clicked");
+            logger.info("[PauseMenu] Quit Level button clicked");
             entity.getEvents().trigger("quit_level");
           }
         });
@@ -162,7 +158,7 @@ public class PauseMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Main Menu button clicked");
+            logger.info("[PauseMenu] Main Menu button clicked");
             entity.getEvents().trigger("open_main_menu");
           }
         });
@@ -173,7 +169,7 @@ public class PauseMenu extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Exit Game button clicked");
+            logger.info("[PauseMenu] Exit Game button clicked");
             entity.getEvents().trigger("exit_game");
           }
         });
@@ -205,7 +201,7 @@ public class PauseMenu extends UIComponent {
     menuTable.getColor().a = 0f;
     menuTable.addAction(Actions.alpha(1f, 0.3f));
 
-    logger.info("Pause menu shown");
+    logger.info("[PauseMenu] Pause menu shown");
   }
 
   /** Hides the pause menu with animation */
@@ -214,7 +210,7 @@ public class PauseMenu extends UIComponent {
     isVisible = false;
     dimBackground.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
     menuTable.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
-    logger.info("Pause menu hidden");
+    logger.info("[PauseMenu] Pause menu hidden");
   }
 
   /**
@@ -240,7 +236,7 @@ public class PauseMenu extends UIComponent {
   }
 
   @Override
-  public void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
+  public void draw(SpriteBatch batch) {
     // Draw is handled by the stage
   }
 

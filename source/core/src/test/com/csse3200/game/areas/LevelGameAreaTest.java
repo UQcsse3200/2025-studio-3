@@ -18,6 +18,7 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ class LevelGameAreaTest {
   @Mock Stage stage;
   @Mock ResourceService resourceService;
   @Mock Music music;
+  @Mock ProfileService profileService;
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
@@ -60,6 +62,7 @@ class LevelGameAreaTest {
   void beforeEach() {
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
+    ServiceLocator.registerProfileService(profileService);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
@@ -74,9 +77,11 @@ class LevelGameAreaTest {
         .thenReturn(mock(Texture.class));
 
     profile = new Profile();
-    profile.inventory().addItem("grenade"); // so inventory not null
+    profile.getInventory().addItem("grenade"); // so inventory not null
+    lenient().when(profileService.getProfile()).thenReturn(profile);
+
     persistenceMock = mockStatic(Persistence.class, withSettings().lenient());
-    persistenceMock.when(() -> Persistence.profile()).thenReturn(profile);
+    // Note: Persistence.profile() no longer exists in the reworked system
   }
 
   @AfterEach

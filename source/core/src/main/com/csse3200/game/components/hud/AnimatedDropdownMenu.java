@@ -187,7 +187,6 @@ public class AnimatedDropdownMenu extends UIComponent {
   @Override
   public void update() {
     super.update();
-
     // Initialize actors if stage is now available
     if (stage != null && menuButtons == null) {
       addActors();

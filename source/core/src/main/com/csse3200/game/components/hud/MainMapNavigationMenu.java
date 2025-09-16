@@ -77,7 +77,7 @@ public class MainMapNavigationMenu extends UIComponent {
     Image coinsIcon = new Image(coinsTexture);
     coinsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
-    // Create labels with white text
+    // Create labels
     skillPointsLabel = new Label("0", skin);
     whiten(skillPointsLabel);
     skillPointsLabel.setFontScale(1f);
@@ -85,7 +85,7 @@ public class MainMapNavigationMenu extends UIComponent {
     whiten(coinsLabel);
     coinsLabel.setFontScale(1f);
 
-    // Add elements to table in a horizontal layout, centered
+    // Add elements to table
     plaqueTable.center();
     plaqueTable.add(skillPointsIcon).size(ICON_SIZE, ICON_SIZE).padRight(5f);
     plaqueTable.add(skillPointsLabel).padRight(10f);
@@ -134,7 +134,7 @@ public class MainMapNavigationMenu extends UIComponent {
     // Create tooltips
     createTooltips(settingsX, settingsY, menuX, menuY);
 
-    // Add hover effects and click listeners  to buttons
+    // Add hover effects and click listeners to buttons
     addHoverEffect(settingsButton);
     addHoverEffect(menuButton);
     addMenuButtonClickListener();
@@ -239,7 +239,8 @@ public class MainMapNavigationMenu extends UIComponent {
       skillPointsLabel.setText((skillPoints > 999) ? "99+" : String.valueOf(skillPoints));
       coinsLabel.setText((coins > 9999) ? "9999+" : String.valueOf(coins));
     } catch (Exception e) {
-      logger.warn("Could not get wallet data from profile: {}", e.getMessage());
+      logger.warn(
+          "[MainMapNavigationMenu] Could not get wallet data from profile: {}", e.getMessage());
       skillPointsLabel.setText("0");
       coinsLabel.setText("0");
     }

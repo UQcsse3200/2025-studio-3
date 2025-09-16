@@ -50,23 +50,15 @@ public class AchievementDialogComponent extends UIComponent {
 
   /** Creates and configures the achievement dialog window. */
   private void createAchievementDialog() {
-    // Create window with custom styling and achievement background
     Window.WindowStyle windowStyle = skin.get(Window.WindowStyle.class);
-
-    // Set the achievement background
     try {
       Texture achievementTexture =
           ServiceLocator.getGlobalResourceService()
               .getAsset("images/achievement.png", Texture.class);
       if (achievementTexture != null) {
-        // Create a scaled drawable that fits our smaller dialog size
         TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
-
-        // Scale the background to fit the smaller dialog dimensions
         achievementBackground.setMinWidth(400f);
         achievementBackground.setMinHeight(200f);
-
-        // Create custom window style with scaled achievement background
         Window.WindowStyle customStyle = new Window.WindowStyle(windowStyle);
         customStyle.background = achievementBackground;
         dialog = new Window("", customStyle);
@@ -75,7 +67,8 @@ public class AchievementDialogComponent extends UIComponent {
       }
     } catch (Exception e) {
       logger.warn(
-          "Could not load achievement texture, using default background: {}", e.getMessage());
+          "[AchievementDialogComponent] Could not load achievement texture, using default background: {}",
+          e.getMessage());
       dialog = new Window("", windowStyle);
     }
 
@@ -83,11 +76,8 @@ public class AchievementDialogComponent extends UIComponent {
     dialog.setMovable(false);
     dialog.setModal(false); // Don't block interaction
 
-    // Create main content table
     Table contentTable = new Table();
     contentTable.pad(10f);
-
-    // Create text content table (no icon needed since background is the achievement box)
     Table textTable = new Table();
 
     // Achievement unlocked header
@@ -140,7 +130,8 @@ public class AchievementDialogComponent extends UIComponent {
           skillPointTable.add(skillPointIcon).size(12f, 12f).padRight(3f);
         }
       } catch (Exception e) {
-        logger.debug("Could not load skill point texture: {}", e.getMessage());
+        logger.debug(
+            "[AchievementDialogComponent] Could not load skill point texture: {}", e.getMessage());
         // Continue without icon
       }
 
@@ -150,16 +141,11 @@ public class AchievementDialogComponent extends UIComponent {
       pointsLabel.setAlignment(Align.left);
       pointsLabel.setFontScale(0.6f);
       skillPointTable.add(pointsLabel);
-
       textTable.add(skillPointTable).left().padTop(2f).row();
     }
 
     contentTable.add(textTable).expand().fill();
     dialog.add(contentTable).expand().fill();
-
-    // Apply golden tint effect (since background is already the achievement box)
-    applyAchievementStyling();
-
     dialog.pack();
     centerDialog();
 
@@ -169,16 +155,10 @@ public class AchievementDialogComponent extends UIComponent {
     stage.addActor(dialog);
   }
 
-  /** Applies special styling for the achievement dialog. */
-  private void applyAchievementStyling() {
-    // Add a subtle golden glow effect (since achievement.png is already the background)
-    dialog.setColor(1f, 1f, 0.9f, 1f); // Subtle warm tint
-  }
-
   /** Positions the dialog in the bottom right corner. */
   private void centerDialog() {
-    float x = stage.getWidth() - dialog.getWidth() - 20f; // Bottom right with padding
-    float y = 20f; // Bottom of screen with padding
+    float x = stage.getWidth() - dialog.getWidth() - 20f;
+    float y = 20f;
     dialog.setPosition(x, y);
   }
 
@@ -189,7 +169,7 @@ public class AchievementDialogComponent extends UIComponent {
     }
 
     isVisible = true;
-    logger.info("Showing achievement dialog for: {}", name);
+    logger.info("[AchievementDialogComponent] Showing achievement dialog for: {}", name);
 
     // Slide in from bottom right
     float targetX = stage.getWidth() - dialog.getWidth() - 20f;
@@ -237,17 +217,12 @@ public class AchievementDialogComponent extends UIComponent {
     if (!isVisible) {
       return;
     }
-
     isVisible = false;
-    logger.debug("Hiding achievement dialog for: {}", name);
-
+    logger.debug("[AchievementDialogComponent] Hiding achievement dialog for: {}", name);
     if (dialog != null) {
       dialog.remove();
     }
-
-    // Dispose of the entity
     entity.dispose();
-
     if (onCompletion != null) {
       onCompletion.accept(this);
     }
@@ -264,7 +239,7 @@ public class AchievementDialogComponent extends UIComponent {
 
   @Override
   public void draw(SpriteBatch batch) {
-    // Dialog is handled by the stage, no custom drawing needed
+    // Dialog is handled by the stage
   }
 
   @Override

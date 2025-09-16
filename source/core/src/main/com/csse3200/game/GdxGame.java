@@ -37,7 +37,8 @@ public class GdxGame extends Game {
     "images/settings-icon.png",
     "images/menu-icon.png",
     "images/achievement.png",
-    "images/pause-icon.png"
+    "images/pause-icon.png",
+    "images/placeholder.png"
   };
 
   @Override

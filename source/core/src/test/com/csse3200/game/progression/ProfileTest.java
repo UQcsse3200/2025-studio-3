@@ -3,7 +3,6 @@ package com.csse3200.game.progression;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -12,7 +11,6 @@ import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,9 +52,9 @@ class ProfileTest {
   void testProfileDefaultConstructor() {
     Profile profile = new Profile();
     assertNotNull(profile.getName());
-    assertNotNull(profile.wallet());
-    assertEquals(30, profile.wallet().getCoins()); // Corrected default value
-    assertEquals(1, profile.wallet().getSkillsPoints()); // Corrected default value
+    assertNotNull(profile.getWallet());
+    assertEquals(30, profile.getWallet().getCoins()); // Corrected default value
+    assertEquals(1, profile.getWallet().getSkillsPoints()); // Corrected default value
   }
 
   @Test
@@ -64,9 +62,8 @@ class ProfileTest {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
     assertEquals(name, profile.getName());
-    assertEquals(100, profile.wallet().getCoins());
-    assertEquals(5, profile.wallet().getSkillsPoints());
-    // Insert
+    assertEquals(100, profile.getWallet().getCoins());
+    assertEquals(5, profile.getWallet().getSkillsPoints());
   }
 
   @Test
@@ -96,85 +93,40 @@ class ProfileTest {
   void testGetInventory() {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    assertEquals(inventory, profile.inventory());
+    assertEquals(inventory, profile.getInventory());
   }
 
   @Test
   void testGetArsenal() {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    assertEquals(arsenal, profile.arsenal());
+    assertEquals(arsenal, profile.getArsenal());
   }
 
   @Test
   void testGetSkillset() {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    assertEquals(skillset, profile.skillset());
+    assertEquals(skillset, profile.getSkillset());
   }
 
   @Test
   void testGetStatistics() {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    assertEquals(statistics, profile.statistics());
+    assertEquals(statistics, profile.getStatistics());
   }
 
   @Test
-  void testAddItemToInventory() {
+  void testGetWallet() {
     Profile profile =
         new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    profile.addItemToInventory("sword");
-    assertTrue(inventory.contains("sword"));
-  }
-
-  @Test
-  void testRemoveItemFromInventory() {
-    Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    inventory.addItem("sword");
-    profile.removeItemFromInventory("sword");
-    assertFalse(inventory.contains("sword"));
-  }
-
-  @Test
-  void testGetInventoryItemsWithConfigService() {
-    // Mock ConfigService
-    BaseItemConfig mockItemConfig = mock(BaseItemConfig.class);
-    when(mockConfigService.getItemConfig("sword")).thenReturn(mockItemConfig);
-    ServiceLocator.registerConfigService(mockConfigService);
-
-    Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
-    inventory.addItem("sword");
-
-    Map<String, BaseItemConfig> items = profile.getInventoryItems();
-    assertEquals(1, items.size());
-    assertTrue(items.containsKey("sword"));
-    assertEquals(mockItemConfig, items.get("sword"));
-  }
-
-  @Test
-  void testGetInventoryItemsWithNullConfigService() {
-    // Create a completely fresh inventory to avoid any state leakage
-    Inventory freshInventory = new Inventory();
-
-    ServiceLocator.deregisterConfigService();
-
-    // Verify that ConfigService is indeed null
-    assertNull(ServiceLocator.getConfigService());
-
-    Profile profile =
-        new Profile(name, wallet, freshInventory, skillset, statistics, arsenal, currentLevel);
-    freshInventory.addItem("sword");
-
-    Map<String, BaseItemConfig> items = profile.getInventoryItems();
-    assertTrue(items.isEmpty());
+    assertEquals(wallet, profile.getWallet());
   }
 
   @Test
   void testParameterizedConstructorWithNullStatistics() {
     Profile profile = new Profile(name, wallet, inventory, skillset, null, arsenal, currentLevel);
-    assertNotNull(profile.statistics());
+    assertNotNull(profile.getStatistics());
   }
 }

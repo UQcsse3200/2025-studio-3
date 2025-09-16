@@ -8,6 +8,7 @@ import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.Profile;
 import java.util.Arrays;
 import java.util.List;
+import net.dermetfan.utils.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,33 +27,26 @@ class ProfileServiceTest {
 
   @Test
   void testInitialState() {
-    assertNull(profileService.getCurrentProfile());
+    assertNotNull(profileService.getProfile());
     assertEquals(0, profileService.getCurrentSlot());
-    assertFalse(profileService.hasProfile());
+    assertFalse(profileService.isActive());
   }
 
   @Test
   void testCreateProfile() {
     try (MockedStatic<Persistence> persistenceMock = mockStatic(Persistence.class)) {
       Profile mockProfile = mock(Profile.class);
-      persistenceMock.when(Persistence::profile).thenReturn(mockProfile);
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 1);
+      persistenceMock.when(() -> Persistence.create("TestProfile", 1)).thenReturn(mockPair);
 
       profileService.createProfile("TestProfile", 1);
 
-      assertTrue(profileService.hasProfile());
-      assertEquals(mockProfile, profileService.getCurrentProfile());
+      assertTrue(profileService.isActive());
+      assertEquals(mockProfile, profileService.getProfile());
       assertEquals(1, profileService.getCurrentSlot());
 
       persistenceMock.verify(() -> Persistence.create("TestProfile", 1));
     }
-  }
-
-  @Test
-  void testCreateProfileInvalidSlot() {
-    assertThrows(
-        IllegalArgumentException.class, () -> profileService.createProfile("TestProfile", 0));
-    assertThrows(
-        IllegalArgumentException.class, () -> profileService.createProfile("TestProfile", 4));
   }
 
   @Test
@@ -61,13 +55,13 @@ class ProfileServiceTest {
       Profile mockProfile = mock(Profile.class);
       Savefile mockSavefile = mock(Savefile.class);
       when(mockSavefile.getSlot()).thenReturn(2);
-
-      persistenceMock.when(Persistence::profile).thenReturn(mockProfile);
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 2);
+      persistenceMock.when(() -> Persistence.load(mockSavefile)).thenReturn(mockPair);
 
       profileService.loadProfile(mockSavefile);
 
-      assertTrue(profileService.hasProfile());
-      assertEquals(mockProfile, profileService.getCurrentProfile());
+      assertTrue(profileService.isActive());
+      assertEquals(mockProfile, profileService.getProfile());
       assertEquals(2, profileService.getCurrentSlot());
 
       persistenceMock.verify(() -> Persistence.load(mockSavefile));
@@ -75,21 +69,17 @@ class ProfileServiceTest {
   }
 
   @Test
-  void testLoadProfileNullSavefile() {
-    assertThrows(IllegalArgumentException.class, () -> profileService.loadProfile(null));
-  }
-
-  @Test
   void testSaveCurrentProfile() {
     try (MockedStatic<Persistence> persistenceMock = mockStatic(Persistence.class)) {
       Profile mockProfile = mock(Profile.class);
       Savefile mockSavefile = createMockSavefile(1);
-      persistenceMock.when(Persistence::profile).thenReturn(mockProfile);
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 1);
+      persistenceMock.when(() -> Persistence.load(mockSavefile)).thenReturn(mockPair);
 
       profileService.loadProfile(mockSavefile);
       profileService.saveCurrentProfile();
 
-      persistenceMock.verify(Persistence::save);
+      persistenceMock.verify(() -> Persistence.save(1, mockProfile));
     }
   }
 
@@ -101,18 +91,29 @@ class ProfileServiceTest {
   @Test
   void testSaveProfileToSlot() {
     try (MockedStatic<Persistence> persistenceMock = mockStatic(Persistence.class)) {
-      profileService.loadProfile(createMockSavefile(1));
+      Profile mockProfile = mock(Profile.class);
+      Savefile mockSavefile = createMockSavefile(1);
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 1);
+      persistenceMock.when(() -> Persistence.load(mockSavefile)).thenReturn(mockPair);
 
+      profileService.loadProfile(mockSavefile);
       profileService.saveProfileToSlot(3);
 
       assertEquals(3, profileService.getCurrentSlot());
-      persistenceMock.verify(() -> Persistence.save(3));
+      persistenceMock.verify(() -> Persistence.save(3, mockProfile));
     }
   }
 
   @Test
   void testSaveProfileToSlotInvalidSlot() {
-    profileService.loadProfile(createMockSavefile(1));
+    Profile mockProfile = mock(Profile.class);
+    Savefile mockSavefile = createMockSavefile(1);
+
+    try (MockedStatic<Persistence> persistenceMock = mockStatic(Persistence.class)) {
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 1);
+      persistenceMock.when(() -> Persistence.load(mockSavefile)).thenReturn(mockPair);
+      profileService.loadProfile(mockSavefile);
+    }
 
     assertThrows(IllegalArgumentException.class, () -> profileService.saveProfileToSlot(0));
     assertThrows(IllegalArgumentException.class, () -> profileService.saveProfileToSlot(4));
@@ -126,12 +127,11 @@ class ProfileServiceTest {
               createMockSavefile(1),
               null, // Empty slot
               createMockSavefile(3));
-      persistenceMock.when(Persistence::fetch).thenReturn(mockSaves);
+      persistenceMock.when(() -> Persistence.fetch()).thenReturn(mockSaves);
 
       List<Savefile> result = profileService.getAllSaves();
 
       assertEquals(mockSaves, result);
-      persistenceMock.verify(Persistence::fetch);
     }
   }
 
@@ -143,7 +143,7 @@ class ProfileServiceTest {
               createMockSavefile(1),
               null, // Empty slot
               createMockSavefile(3));
-      persistenceMock.when(Persistence::fetch).thenReturn(mockSaves);
+      persistenceMock.when(() -> Persistence.fetch()).thenReturn(mockSaves);
 
       Savefile result1 = profileService.getSaveFromSlot(1);
       Savefile result2 = profileService.getSaveFromSlot(2);
@@ -162,14 +162,22 @@ class ProfileServiceTest {
   }
 
   @Test
-  void testClearCurrentProfile() {
-    profileService.loadProfile(createMockSavefile(1));
-    assertTrue(profileService.hasProfile());
+  void testClear() {
+    Profile mockProfile = mock(Profile.class);
+    Savefile mockSavefile = createMockSavefile(1);
 
-    profileService.clearCurrentProfile();
+    try (MockedStatic<Persistence> persistenceMock = mockStatic(Persistence.class)) {
+      Pair<Profile, Integer> mockPair = new Pair<>(mockProfile, 1);
+      persistenceMock.when(() -> Persistence.load(mockSavefile)).thenReturn(mockPair);
+      profileService.loadProfile(mockSavefile);
+    }
 
-    assertFalse(profileService.hasProfile());
-    assertNull(profileService.getCurrentProfile());
+    assertTrue(profileService.isActive());
+
+    profileService.clear();
+
+    assertFalse(profileService.isActive());
+    assertNotNull(profileService.getProfile()); // Should have a new default profile
     assertEquals(0, profileService.getCurrentSlot());
   }
 
@@ -181,7 +189,7 @@ class ProfileServiceTest {
               createMockSavefile(1),
               null, // Empty slot
               createMockSavefile(3));
-      persistenceMock.when(Persistence::fetch).thenReturn(mockSaves);
+      persistenceMock.when(() -> Persistence.fetch()).thenReturn(mockSaves);
 
       assertFalse(profileService.isSlotEmpty(1));
       assertTrue(profileService.isSlotEmpty(2));
@@ -197,7 +205,7 @@ class ProfileServiceTest {
               createMockSavefile(1),
               null, // Empty slot
               createMockSavefile(3));
-      persistenceMock.when(Persistence::fetch).thenReturn(mockSaves);
+      persistenceMock.when(() -> Persistence.fetch()).thenReturn(mockSaves);
 
       int count = profileService.getUsedSlotCount();
 

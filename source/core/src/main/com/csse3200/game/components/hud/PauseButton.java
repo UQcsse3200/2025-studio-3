@@ -38,8 +38,8 @@ public class PauseButton extends UIComponent {
     pauseButtonComponent.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
 
     // Position in top right of screen
-    float x = stage.getWidth() - BUTTON_SIZE - 20f; // 20f padding from right
-    float y = stage.getHeight() - BUTTON_SIZE - 20f; // 20f padding from top
+    float x = stage.getWidth() - BUTTON_SIZE - 20f;
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;
     pauseButtonComponent.setPosition(x, y);
     pauseButtonComponent.setVisible(true);
     stage.addActor(pauseButtonComponent);
@@ -49,7 +49,7 @@ public class PauseButton extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            logger.info("Pause button clicked");
+            logger.info("[PauseButton] Pause button clicked");
             entity.getEvents().trigger("pause_game");
           }
         });
@@ -65,8 +65,8 @@ public class PauseButton extends UIComponent {
     pauseTooltip.setFontScale(0.8f);
 
     // Position tooltip below the button
-    float x = stage.getWidth() - BUTTON_SIZE - 20f; // 20f padding from right
-    float y = stage.getHeight() - BUTTON_SIZE - 20f; // 20f padding from top
+    float x = stage.getWidth() - BUTTON_SIZE - 20f;
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;
     pauseTooltip.setPosition(x + (BUTTON_SIZE - pauseTooltip.getPrefWidth()) / 2f, y - 20f);
     pauseTooltip.setVisible(false);
     pauseTooltip.setZIndex(60);
@@ -112,8 +112,8 @@ public class PauseButton extends UIComponent {
   /** Updates button and tooltip position when window is resized */
   private void updatePosition() {
     if (pauseButtonComponent != null) {
-      float x = stage.getWidth() - BUTTON_SIZE - 20f; // 20f padding from right
-      float y = stage.getHeight() - BUTTON_SIZE - 20f; // 20f padding from top
+      float x = stage.getWidth() - BUTTON_SIZE - 20f;
+      float y = stage.getHeight() - BUTTON_SIZE - 20f;
       pauseButtonComponent.setPosition(x, y);
 
       // Update tooltip position relative to button

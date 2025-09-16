@@ -58,7 +58,6 @@ public class DialogComponent extends UIComponent {
 
   /** Creates the dialog window with appropriate styling based on the dialog type. */
   private void createDialog() {
-    // Create window without title (we'll add it manually)
     dialog = new Window("", skin);
     dialog.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     dialog.setMovable(false);
@@ -67,15 +66,10 @@ public class DialogComponent extends UIComponent {
     // Apply type-specific styling
     applyDialogTypeStyling();
 
-    // Create content table
+    // Create content table & title label
     Table contentTable = new Table();
     contentTable.pad(20f);
-
-    // Add title label (centered and bigger)
     Color titleColor = getTextColor();
-    logger.debug("Setting title color to: {}", titleColor);
-
-    // Create custom label style with the title color
     Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     titleStyle.fontColor = titleColor;
     Label titleLabel = new Label(title, titleStyle);
@@ -83,13 +77,12 @@ public class DialogComponent extends UIComponent {
     titleLabel.setFontScale(1.3f);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
 
-    // Add message label (always white)
+    // Add message label
     Label.LabelStyle messageStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
     messageStyle.fontColor = Color.WHITE;
     Label messageLabel = new Label(message, messageStyle);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
-    logger.debug("Setting message color to: WHITE");
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
 
     // Add buttons based on dialog type
@@ -120,7 +113,8 @@ public class DialogComponent extends UIComponent {
         windowStyle.background = dialogDrawable;
       }
     } catch (Exception e) {
-      logger.warn("Could not load dialog.png background image: {}", e.getMessage());
+      logger.warn(
+          "[DialogComponent] Could not load dialog.png background image: {}", e.getMessage());
     }
     dialog.setStyle(windowStyle);
   }
@@ -230,7 +224,7 @@ public class DialogComponent extends UIComponent {
       return;
     }
 
-    logger.debug("Showing {} dialog: {}", dialogType, title);
+    logger.debug("[DialogComponent] Showing {} dialog: {}", dialogType, title);
     isVisible = true;
     dialog.setVisible(true);
 
@@ -245,7 +239,7 @@ public class DialogComponent extends UIComponent {
       return;
     }
 
-    logger.debug("Hiding {} dialog: {}", dialogType, title);
+    logger.debug("[DialogComponent] Hiding {} dialog: {}", dialogType, title);
     isVisible = false;
 
     // Fade out animation

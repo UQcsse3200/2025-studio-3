@@ -26,8 +26,6 @@ public class InventoryDisplay extends UIComponent {
   private static final int GRID_COLUMNS = 5;
   private Map<String, BaseItemConfig> inventoryItems;
   private final GdxGame game;
-
-  // Root table that holds all UI elements for this screen
   private Table rootTable;
 
   /**
@@ -69,9 +67,6 @@ public class InventoryDisplay extends UIComponent {
    * @return a ScrollPane containing the inventory grid
    */
   private ScrollPane makeInventoryGrid() {
-    // Get player's inventory items
-
-    // Create grid table
     Table gridTable = new Table();
 
     if (inventoryItems.isEmpty()) {
@@ -112,11 +107,9 @@ public class InventoryDisplay extends UIComponent {
     Table slot = new Table();
     BaseItemConfig itemConfig = inventoryItems.get(itemKey);
 
-    // Find the corresponding asset path for this item
+    // Load and display item texture
     String assetPath = itemConfig.getAssetPath();
-
     if (assetPath != null) {
-      // Load and display item texture
       Texture itemTexture = ServiceLocator.getResourceService().getAsset(assetPath, Texture.class);
 
       Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
@@ -124,9 +117,13 @@ public class InventoryDisplay extends UIComponent {
 
       slot.add(itemImage).size(ITEM_SIZE, ITEM_SIZE);
     } else {
-      // Fallback if no texture found
-      Label itemLabel = new Label("?", skin);
-      slot.add(itemLabel).size(ITEM_SIZE, ITEM_SIZE);
+      Texture itemTexture =
+          ServiceLocator.getGlobalResourceService()
+              .getAsset("images/placeholder.png", Texture.class);
+
+      Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
+      itemImage.setSize(ITEM_SIZE, ITEM_SIZE);
+      slot.add(itemImage).size(ITEM_SIZE, ITEM_SIZE);
     }
 
     // Add item name below the image
@@ -149,26 +146,22 @@ public class InventoryDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    // Create close button using close-icon.png
     ImageButton closeButton =
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
                     .getAsset("images/close-icon.png", Texture.class)));
 
-    // Position in top left with 20f padding
+    // Position in top left
     closeButton.setSize(60f, 60f);
-    closeButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
 
     // Add listener for the close button
     closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
+            logger.debug("[InventoryDisplay] Close button clicked");
             backMenu();
           }
         });
@@ -184,13 +177,12 @@ public class InventoryDisplay extends UIComponent {
   private void showItemDialog(BaseItemConfig itemConfig) {
     String title = itemConfig.getName();
     String description = itemConfig.getDescription();
-
-    // Use DialogService to create an info dialog
     ServiceLocator.getDialogService().info(title, description);
   }
 
   /** Handles navigation back to the World Map. */
   private void backMenu() {
+    logger.debug("[InventoryDisplay] Back menu clicked");
     game.setScreen(ScreenType.WORLD_MAP);
   }
 

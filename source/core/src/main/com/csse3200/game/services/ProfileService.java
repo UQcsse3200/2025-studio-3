@@ -67,6 +67,7 @@ public class ProfileService {
     Pair<Profile, Integer> pair = Persistence.create(profileName, slot);
     this.profile = pair.getKey();
     this.currentSlot = pair.getValue();
+    this.isActive = true;
   }
 
   /**
@@ -79,6 +80,7 @@ public class ProfileService {
     Pair<Profile, Integer> pair = Persistence.load(savefile);
     this.profile = pair.getKey();
     this.currentSlot = savefile.getSlot();
+    this.isActive = true;
   }
 
   /**
@@ -104,6 +106,9 @@ public class ProfileService {
   public void saveProfileToSlot(int slot) {
     if (!isActive) {
       throw new IllegalStateException("No profile loaded to save");
+    }
+    if (slot < 1 || slot > 3) {
+      throw new IllegalArgumentException("Slot must be between 1 and 3, got: " + slot);
     }
     logger.info("[ProfileService] Saving current profile to slot {}", slot);
     Persistence.save(slot, profile);

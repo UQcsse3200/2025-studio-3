@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class PersistenceTest {
 
   @Test
-  void testProfile() {
+  void testLoad() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       Profile testProfile = new Profile();
       mockFileLoader
@@ -30,15 +30,16 @@ class PersistenceTest {
           .thenReturn(testProfile);
 
       Savefile savefile = new Savefile("testProfile", 1234567890L, 1);
-      Persistence.load(savefile);
+      var result = Persistence.load(savefile);
 
-      assertNotNull(Persistence.profile());
-      assertEquals(testProfile, Persistence.profile());
+      assertNotNull(result);
+      assertEquals(testProfile, result.getKey());
+      assertEquals(1, result.getValue());
     }
   }
 
   @Test
-  void testLoad() {
+  void testLoadWithPath() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       Profile expectedProfile = new Profile();
       String expectedPath =
@@ -54,11 +55,12 @@ class PersistenceTest {
           .thenReturn(expectedProfile);
 
       Savefile savefile = new Savefile("testProfile", 1234567890L, 1);
-      Persistence.load(savefile);
+      var result = Persistence.load(savefile);
 
       mockFileLoader.verify(
           () -> FileLoader.readClass(Profile.class, expectedPath, FileLoader.Location.EXTERNAL));
-      assertEquals(expectedProfile, Persistence.profile());
+      assertEquals(expectedProfile, result.getKey());
+      assertEquals(1, result.getValue());
     }
   }
 
@@ -66,12 +68,13 @@ class PersistenceTest {
   void testSave() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       // Create a new profile
-      Persistence.create("testProfile", 1);
+      var result = Persistence.create("testProfile", 1);
+      Profile profile = result.getKey();
 
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  eq(Persistence.profile()),
+                  eq(profile),
                   matches(".*testProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)));
     }
@@ -121,15 +124,16 @@ class PersistenceTest {
   @Test
   void testCreate() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      Persistence.create("testProfile", 2);
+      var result = Persistence.create("testProfile", 2);
+      Profile profile = result.getKey();
 
-      assertNotNull(Persistence.profile());
-      assertEquals("testProfile", Persistence.profile().getName());
+      assertNotNull(profile);
+      assertEquals("testProfile", profile.getName());
 
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  eq(Persistence.profile()),
+                  eq(profile),
                   matches(".*testProfile\\$\\d+\\$2\\.json"),
                   eq(FileLoader.Location.EXTERNAL)));
     }
@@ -138,48 +142,45 @@ class PersistenceTest {
   @Test
   void testCreateWithNullName() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      Persistence.create(null, 1);
+      var result = Persistence.create(null, 1);
+      Profile profile = result.getKey();
 
-      assertNotNull(Persistence.profile());
-      assertNotNull(Persistence.profile().getName()); // Should have default name
+      assertNotNull(profile);
+      assertNotNull(profile.getName()); // Should have default name
 
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  eq(Persistence.profile()),
+                  eq(profile), matches(".*\\$\\d+\\$1\\.json"), eq(FileLoader.Location.EXTERNAL)));
+    }
+  }
+
+  @Test
+  void testSaveWithProfile() {
+    try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
+      Profile testProfile = new Profile();
+      Persistence.save(1, testProfile);
+
+      mockFileLoader.verify(
+          () ->
+              FileLoader.writeClass(
+                  eq(testProfile),
                   matches(".*\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)));
     }
   }
 
   @Test
-  void testSaveWithNullProfile() {
-    // Reset static state
-    try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      // Don't create a profile first
-      Persistence.save(1);
-
-      // Should not call writeClass when profile is null
-      mockFileLoader.verifyNoInteractions();
-    }
-  }
-
-  @Test
   void testSaveInvalidSlot() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      Persistence.create("testProfile", 1);
+      Profile testProfile = new Profile();
 
-      // Test invalid slots
-      Persistence.save(0);
-      Persistence.save(4);
+      // Test invalid slots - should not call writeClass for invalid slots
+      Persistence.save(0, testProfile);
+      Persistence.save(4, testProfile);
 
       // Should not call writeClass for invalid slots
-      mockFileLoader.verify(
-          () ->
-              FileLoader.writeClass(
-                  eq(Persistence.profile()),
-                  matches(".*testProfile\\$\\d+\\$1\\.json"),
-                  eq(FileLoader.Location.EXTERNAL)));
+      mockFileLoader.verifyNoInteractions();
     }
   }
 
@@ -300,21 +301,15 @@ class PersistenceTest {
     when(mockRootDir.list(".json")).thenReturn(new FileHandle[] {mockExistingFile});
 
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      Persistence.create("newProfile", 1);
+      var result = Persistence.create("newProfile", 1);
+      Profile profile = result.getKey();
 
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  eq(Persistence.profile()),
+                  eq(profile),
                   matches(".*newProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)));
     }
-  }
-
-  @Test
-  void testProfileWhenNull() {
-    // This test is not reliable due to static state, but we can test the method exists
-    // The actual null check is covered in other tests
-    assertTrue(true); // Placeholder - the method exists and works
   }
 }

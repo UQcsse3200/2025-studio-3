@@ -36,31 +36,31 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Swaps to the Profile screen. */
   private void onSettings() {
-    logger.info("Entering settings screen");
+    logger.info("[MainMapNavigationMenuActions] Entering settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 
   /** Swaps to the Inventory screen. */
   private void onInventory() {
-    logger.info("Opening inventory");
+    logger.info("[MainMapNavigationMenuActions] Opening inventory");
     game.setScreen(GdxGame.ScreenType.INVENTORY);
   }
 
   /** Swaps to the Achievements screen. */
   private void onAchievements() {
-    logger.info("Opening achievements");
+    logger.info("[MainMapNavigationMenuActions] Opening achievements");
     game.setScreen(GdxGame.ScreenType.ACHIEVEMENTS);
   }
 
   /** Swaps to the Statistics screen. */
   private void onStats() {
-    logger.info("Opening statistics");
+    logger.info("[MainMapNavigationMenuActions] Opening statistics");
     game.setScreen(GdxGame.ScreenType.STATISTICS);
   }
 
   /** Exits the game without saving. */
   private void onMainMenu() {
-    logger.info("Returning to main menu");
+    logger.info("[MainMapNavigationMenuActions] Returning to main menu");
     ServiceLocator.getDialogService()
         .warning(
             "Return to Main Menu",
@@ -74,7 +74,7 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Exits the game. */
   private void onExit() {
-    logger.info("Exiting game");
+    logger.info("[MainMapNavigationMenuActions] Exiting game");
     ServiceLocator.getDialogService()
         .warning(
             "Exit Game",
@@ -85,7 +85,7 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Saves the game. */
   private void onSave() {
-    logger.info("Opening save game screen");
+    logger.info("[MainMapNavigationMenuActions] Opening save game screen");
     game.setScreen(GdxGame.ScreenType.SAVE_GAME);
   }
 
@@ -96,14 +96,14 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Quicksaves the game. */
   private void onQuicksave() {
-    logger.info("Quicksaving game");
+    logger.info("[MainMapNavigationMenuActions] Quicksaving game");
     ServiceLocator.getProfileService().saveCurrentProfile();
     ServiceLocator.getDialogService().info("Quicksaved", "Game has been saved.");
   }
 
   /** Opens the load game screen. */
   private void onLoad() {
-    logger.info("Opening load game screen");
+    logger.info("[MainMapNavigationMenuActions] Opening load game screen");
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 }

@@ -1,293 +1,103 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.entities.configs.BaseAchievementConfig;
-import com.csse3200.game.progression.statistics.Statistics;
-import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.components.achievements.AchievementsDisplay;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The game screen containing the achievements menu. Displays all achievements organized by tier
- * with unlock status and progress.
+ * The AchievementsScreen is a game screen containing the player's achievements.
+ *
+ * <p>It sets up the rendering, input and services for the UI to function and manages an
+ * AchievementsDisplay component that displays the actual achievements.
  */
 public class AchievementsScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(AchievementsScreen.class);
   private final GdxGame game;
-  private Stage stage;
-  private Table rootTable;
-  private Skin skin;
-  private Label.LabelStyle headerStyle;
-  private Label.LabelStyle textStyle;
-  private Window.WindowStyle windowStyle;
+  private final Renderer renderer;
+  private AchievementsDisplay achievementsDisplay;
 
-  public AchievementsScreen(GdxGame game) {
-    this.game = game;
-    logger.debug("Created achievements screen");
-  }
+  /**
+   * Creates a new AchievementsScreen and registers the services required, creates the renderer, and
+   * initialises the Achievements UI.
+   *
+   * @param gdxGame current game instance
+   */
+  public AchievementsScreen(GdxGame gdxGame) {
+    this.game = gdxGame;
 
-  @Override
-  public void show() {
-    stage = new Stage(new ScreenViewport());
-    Gdx.input.setInputProcessor(stage);
+    logger.debug("Initialising achievements screen services");
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+    ServiceLocator.registerTimeSource(new GameTime());
 
-    // Initialize skin
-    skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+    renderer = RenderFactory.createRenderer();
+    renderer.getCamera().getEntity().setPosition(5f, 5f);
 
-    headerStyle =
-        skin.has("title", Label.LabelStyle.class)
-            ? skin.get("title", Label.LabelStyle.class)
-            : new Label.LabelStyle(new BitmapFont(), Color.DARK_GRAY);
-
-    textStyle = skin.get(Label.LabelStyle.class);
-    windowStyle = skin.get(Window.WindowStyle.class);
-
-    // Root table
-    rootTable = new Table();
-    rootTable.setFillParent(true);
-    stage.addActor(rootTable);
-
-    // Header
-    Label header = new Label("Achievements", headerStyle);
-    header.setFontScale(2f);
-
-    rootTable.top().padTop(20);
-    rootTable.add(header).center().row();
-
-    // Create achievement display
-    createAchievementDisplay();
-
-    // Back button positioned at top-left with close icon
-    ImageButton backButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
-    backButton.setSize(60f, 60f);
-    backButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
-
-    backButton.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-          }
-        });
-
-    stage.addActor(backButton);
-  }
-
-  /** Creates the achievement display with achievements organized by tier. */
-  private void createAchievementDisplay() {
-    ConfigService configService = ServiceLocator.getConfigService();
-    if (configService == null) {
-      Label errorLabel = new Label("Config service not available", textStyle);
-      errorLabel.setColor(Color.RED);
-      rootTable.row().padTop(20);
-      rootTable.add(errorLabel).center().row();
-      return;
-    }
-
-    Statistics statistics = ServiceLocator.getProfileService().getProfile().getStatistics();
-    Map<String, BaseAchievementConfig> achievementConfigs = configService.getAchievementConfigs();
-
-    if (achievementConfigs == null || achievementConfigs.isEmpty()) {
-      Label errorLabel = new Label("No achievements configured", textStyle);
-      errorLabel.setColor(Color.RED);
-      rootTable.row().padTop(20);
-      rootTable.add(errorLabel).center().row();
-      return;
-    }
-
-    Table[] tables = populateTable(achievementConfigs, statistics);
-    Table t1Table = tables[0];
-    Table t2Table = tables[1];
-    Table t3Table = tables[2];
-
-    // Stack tables vertically
-    Table allTables = new Table();
-
-    allTables.add(new Label("Tier 1", headerStyle)).center().row();
-    allTables.add(t1Table).left().padBottom(20).row();
-
-    allTables.add(new Label("Tier 2", headerStyle)).center().row();
-    allTables.add(t2Table).left().padBottom(20).row();
-
-    allTables.add(new Label("Tier 3", headerStyle)).center().row();
-    allTables.add(t3Table).left().padBottom(20).row();
-
-    ScrollPane scrollPane = new ScrollPane(allTables, skin);
-    scrollPane.setFadeScrollBars(false);
-
-    rootTable.row().padTop(20);
-    rootTable.add(scrollPane).expand().fill().row();
+    createUI();
   }
 
   /**
-   * Populates the table with achievements organized by tier.
+   * Updates entities and renders current frame.
    *
-   * @param achievementConfigs the achievement configs
-   * @param statistics the statistics
-   * @return the tables
+   * @param delta time elapsed since last frame
    */
-  private Table[] populateTable(
-      Map<String, BaseAchievementConfig> achievementConfigs, Statistics statistics) {
-    // Separate achievements by tier
-    Table t1Table = new Table();
-    Table t2Table = new Table();
-    Table t3Table = new Table();
-
-    int colCountT1 = 0;
-    int colCountT2 = 0;
-    int colCountT3 = 0;
-
-    for (Map.Entry<String, BaseAchievementConfig> entry : achievementConfigs.entrySet()) {
-      String achievementKey = entry.getKey();
-      BaseAchievementConfig config = entry.getValue();
-      boolean isUnlocked = statistics.isAchievementUnlocked(achievementKey);
-
-      TextButton achButton =
-          createAchievementButton(
-              config, isUnlocked, statistics.getStatistic(config.getStatistic()));
-
-      // Place in correct tier table based on tier string
-      String tier = config.getTier();
-      if ("T1".equals(tier)) {
-        t1Table.add(achButton).pad(5).width(150).height(60);
-        colCountT1++;
-        if (colCountT1 % 7 == 0) t1Table.row();
-      } else if ("T2".equals(tier)) {
-        t2Table.add(achButton).pad(5).width(150).height(60);
-        colCountT2++;
-        if (colCountT2 % 7 == 0) t2Table.row();
-      } else if ("T3".equals(tier)) {
-        t3Table.add(achButton).pad(5).width(150).height(60);
-        colCountT3++;
-        if (colCountT3 % 7 == 0) t3Table.row();
-      }
-    }
-    return new Table[] {t1Table, t2Table, t3Table};
-  }
-
-  /**
-   * Creates a button for displaying an achievement.
-   *
-   * @param config the achievement config to create a button for
-   * @param isUnlocked whether the achievement is unlocked
-   * @param currentProgress current progress towards the achievement
-   * @return the created button
-   */
-  private TextButton createAchievementButton(
-      BaseAchievementConfig config, boolean isUnlocked, int currentProgress) {
-    TextButton achButton = new TextButton(config.getName(), skin);
-
-    // Set color based on unlock status
-    if (isUnlocked) {
-      achButton.getLabel().setColor(Color.GREEN);
-    } else {
-      achButton.getLabel().setColor(Color.RED);
-    }
-
-    achButton.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            showAchievementPopup(config, isUnlocked, currentProgress);
-          }
-        });
-
-    return achButton;
-  }
-
-  /**
-   * Opens a popup showing achievement details.
-   *
-   * @param config the achievement config to show details for
-   * @param isUnlocked whether the achievement is unlocked
-   * @param currentProgress current progress towards the achievement
-   */
-  private void showAchievementPopup(
-      BaseAchievementConfig config, boolean isUnlocked, int currentProgress) {
-    Window popup = new Window("Achievement Details", windowStyle);
-
-    Label name = new Label(config.getName(), headerStyle);
-    if (isUnlocked) {
-      name.setColor(Color.GREEN);
-    } else {
-      name.setColor(Color.RED);
-    }
-
-    Label description = new Label(config.getDescription(), textStyle);
-    Label points = new Label("Points: " + config.getSkillPoints(), textStyle);
-    Label progress = new Label("Progress: " + currentProgress + "/" + config.getQuota(), textStyle);
-    Label tier = new Label("Tier: " + config.getTier(), textStyle);
-    Label statistic = new Label("Tracks: " + config.getStatistic(), textStyle);
-
-    name.setFontScale(1.5f);
-
-    TextButton closeBtn = new TextButton("Close", skin);
-    closeBtn.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            popup.remove();
-          }
-        });
-
-    popup.add(name).pad(10).row();
-    popup.add(description).pad(10).row();
-    popup.add(tier).pad(10).row();
-    popup.add(statistic).pad(10).row();
-    popup.add(points).pad(10).row();
-    popup.add(progress).pad(10).row();
-    popup.add(closeBtn).pad(10).row();
-
-    popup.pack();
-    popup.setModal(true);
-    popup.setMovable(false);
-    popup.setPosition(
-        (stage.getWidth() - popup.getWidth()) / 2, (stage.getHeight() - popup.getHeight()) / 2);
-
-    stage.addActor(popup);
-  }
-
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    ServiceLocator.getEntityService().update();
+    renderer.render();
+  }
 
-    stage.act(delta);
-    stage.draw();
-
-    if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+  /**
+   * Adjusts the screen when window is resized.
+   *
+   * @param width new screen width
+   * @param height new screen height
+   */
+  @Override
+  public void resize(int width, int height) {
+    renderer.resize(width, height);
+    // Notify DialogService to resize any active dialogs
+    ServiceLocator.getDialogService().resize();
+    // Update close button position
+    if (achievementsDisplay != null) {
+      achievementsDisplay.updateOnResize();
     }
   }
 
+  /** Disposes of this screen's resources. */
   @Override
   public void dispose() {
-    if (stage != null) {
-      stage.dispose();
-    }
-    if (skin != null) {
-      skin.dispose();
-    }
+    renderer.dispose();
+    ServiceLocator.getRenderService().dispose();
+    ServiceLocator.getEntityService().dispose();
+    ServiceLocator.clear();
+  }
+
+  /**
+   * Creates the AchievementsScreen's UI including components for rendering UI elements to the
+   * screen and capturing and handling UI input.
+   */
+  private void createUI() {
+    logger.debug("Creating ui");
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    achievementsDisplay = new AchievementsDisplay(game);
+    Entity ui = new Entity();
+    ui.addComponent(achievementsDisplay).addComponent(new InputDecorator(stage, 10));
+    ServiceLocator.getEntityService().register(ui);
   }
 }

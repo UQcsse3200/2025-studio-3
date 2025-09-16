@@ -30,7 +30,7 @@ public class PauseMenuActions extends Component {
 
   /** Opens the settings screen */
   private void onSettings() {
-    logger.info("Opening settings from pause menu");
+    logger.info("[PauseMenuActions] Opening settings from pause menu");
     entity.getEvents().trigger("hide_pause_menu");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
