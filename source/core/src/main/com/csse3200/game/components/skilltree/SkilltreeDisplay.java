@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
+import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
@@ -30,6 +31,8 @@ public class SkilltreeDisplay extends UIComponent {
   /** Sound effect for successful skill unlocks. */
   private final Sound unlockSound =
       Gdx.audio.newSound(Gdx.files.internal("sounds/button_unlock_skill.mp3"));
+
+
 
   /** Creates a new SkilltreeDisplay and applies the default skin's window style. */
   public SkilltreeDisplay() {
@@ -129,6 +132,13 @@ public class SkilltreeDisplay extends UIComponent {
               popup.remove();
             } else {
               errorSound.play();
+              DialogService dialogService = ServiceLocator.getDialogService();
+              // display corresponding error message
+              if (cost > points) {
+                  dialogService.info("Error", "Not enough skill points for this purchase");
+              } else if (!skillSet.isUnlockable(skill.getName())) {
+                  dialogService.info("Error", "Previous skills for this stat must be unlocked first.");
+              }
             }
           }
         });
