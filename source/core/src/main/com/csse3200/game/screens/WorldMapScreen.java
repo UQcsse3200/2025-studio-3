@@ -13,23 +13,26 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
 import com.csse3200.game.components.hud.MainMapNavigationMenu;
 import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.input.InputService;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.rendering.RenderService;
 
 public class WorldMapScreen implements Screen {
   private final GdxGame game;
   private SpriteBatch batch;
   private OrthographicCamera camera;
+  private final Renderer renderer;
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
   private Texture worldMap;
   private Texture nodeCompleted;
@@ -50,6 +53,7 @@ public class WorldMapScreen implements Screen {
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
+    renderer = RenderFactory.createRenderer();
     createUI();
   }
 
@@ -125,6 +129,12 @@ public class WorldMapScreen implements Screen {
 
     batch.end();
 
+    // Update and render only the stage (UI components) without clearing the screen
+    ServiceLocator.getEntityService().update();
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    stage.act();
+    stage.draw();
+
     handleInput(delta);
   }
 
@@ -172,6 +182,7 @@ public class WorldMapScreen implements Screen {
 
   @Override
   public void dispose() {
+    renderer.dispose();
     batch.dispose();
     worldMap.dispose();
     nodeCompleted.dispose();
@@ -181,9 +192,12 @@ public class WorldMapScreen implements Screen {
     shopTexture.dispose();
     playerTex.dispose();
     font.dispose();
+    ServiceLocator.getRenderService().dispose();
+    ServiceLocator.getEntityService().dispose();
+    ServiceLocator.clear();
   }
 
-    /**
+  /**
    * Creates the StatisticsScreen's UI including components for rendering UI elements to the screen
    * and capturing and handling UI input.
    */

@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
   private static final float Z_INDEX = 2f;
-  
+
   private Table table;
   private final GdxGame game;
   private final SkillSet skillSet;
@@ -62,16 +62,18 @@ public class SkilltreeButtons extends UIComponent {
   /** Creates a "Back" button that navigates back to the profile screen. */
   private void createBackButton() {
     // Create close button using close-icon.png
-    ImageButton closeButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
-    
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -88,7 +90,7 @@ public class SkilltreeButtons extends UIComponent {
 
   /**
    * Creates a skill button with click handling for unlocking skills.
-   * 
+   *
    * @param skillName the name of the skill
    * @param labelText the label text shown under the button
    * @param lockedTexture texture displayed when skill is locked
@@ -234,13 +236,7 @@ public class SkilltreeButtons extends UIComponent {
 
     // Intermediate Skills
     createSkillButton(
-        "Attack Intermediate",
-        "",
-        intLocked,
-        intUnlocked,
-        0.06f * width,
-        0.25f * height,
-        display);
+        "Attack Intermediate", "", intLocked, intUnlocked, 0.06f * width, 0.25f * height, display);
     createSkillButton(
         "Firing Speed Intermediate",
         "",
@@ -250,13 +246,7 @@ public class SkilltreeButtons extends UIComponent {
         0.27f * height,
         display);
     createSkillButton(
-        "Health Intermediate",
-        "",
-        intLocked,
-        intUnlocked,
-        0.46f * width,
-        0.26f * height,
-        display);
+        "Health Intermediate", "", intLocked, intUnlocked, 0.46f * width, 0.26f * height, display);
     createSkillButton(
         "Currency Intermediate",
         "",
@@ -266,13 +256,7 @@ public class SkilltreeButtons extends UIComponent {
         0.25f * height,
         display);
     createSkillButton(
-        "Crit Intermediate",
-        "",
-        intLocked,
-        intUnlocked,
-        0.875f * width,
-        0.25f * height,
-        display);
+        "Crit Intermediate", "", intLocked, intUnlocked, 0.875f * width, 0.25f * height, display);
 
     // Advanced Skills
     createSkillButton(
@@ -375,9 +359,7 @@ public class SkilltreeButtons extends UIComponent {
     return attackLabel;
   }
 
-  /**
-   * Adds the skill point image icon to the stage.
-   */
+  /** Adds the skill point image icon to the stage. */
   private void addSkillImage() {
     Texture texture = new Texture(Gdx.files.internal("images/skillpoints.png"));
     Image image = new Image(texture);

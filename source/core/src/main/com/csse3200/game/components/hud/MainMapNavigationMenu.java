@@ -47,7 +47,7 @@ public class MainMapNavigationMenu extends UIComponent {
     if (stage == null) {
       return;
     }
-    
+
     // Create the plaque background
     Texture plaqueTexture =
         ServiceLocator.getGlobalResourceService().getAsset("images/plaque.png", Texture.class);
@@ -105,7 +105,8 @@ public class MainMapNavigationMenu extends UIComponent {
   private void createButtons(float plaqueX, float plaqueY) {
     // Create settings button
     Texture settingsTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/settings-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/settings-icon.png", Texture.class);
     settingsButton = new ImageButton(new TextureRegionDrawable(settingsTexture));
     settingsButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     settingsButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
@@ -232,7 +233,8 @@ public class MainMapNavigationMenu extends UIComponent {
   public void updateDisplay() {
     try {
       // Get values from profile wallet
-      int skillPoints = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
+      int skillPoints =
+          ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
       int coins = ServiceLocator.getProfileService().getProfile().getWallet().getCoins();
       skillPointsLabel.setText((skillPoints > 999) ? "99+" : String.valueOf(skillPoints));
       coinsLabel.setText((coins > 9999) ? "9999+" : String.valueOf(coins));
@@ -264,12 +266,12 @@ public class MainMapNavigationMenu extends UIComponent {
   @Override
   public void update() {
     super.update();
-    
+
     // Initialize actors if stage is now available
     if (stage != null && plaqueBackground == null) {
       addActors();
     }
-    
+
     updateDisplay();
     updatePlaquePosition();
   }

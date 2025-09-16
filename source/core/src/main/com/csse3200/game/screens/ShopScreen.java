@@ -3,6 +3,10 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
+import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
@@ -120,7 +124,12 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new ShopDisplay()).addComponent(new InputDecorator(stage, 10));
+    ui.addComponent(new ShopDisplay())
+        .addComponent(new ShopActions(this.game))
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu());
     ServiceLocator.getEntityService().register(ui);
   }
 }

@@ -16,9 +16,7 @@ public class MainGameActions extends Component {
   private MainGameScreen mainGameScreen;
   private com.csse3200.game.components.hud.PauseButton pauseButton;
 
-  /**
-   * Constructor for the MainGameActions class.
-   */
+  /** Constructor for the MainGameActions class. */
   public MainGameActions() {
     // Do nothing
   }

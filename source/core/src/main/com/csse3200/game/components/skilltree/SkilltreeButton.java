@@ -32,16 +32,18 @@ public class SkilltreeButton extends UIComponent {
 
   private void addActors() {
     // Create close button using close-icon.png
-    ImageButton closeButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
-    
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
 
     // Triggers an event when the button is pressed.
     closeButton.addListener(

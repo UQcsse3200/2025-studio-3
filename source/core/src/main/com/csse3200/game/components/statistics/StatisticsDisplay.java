@@ -45,7 +45,6 @@ public class StatisticsDisplay extends UIComponent {
   private void addActors() {
     Label title = new Label("Statistics", skin, "title");
     Table statisticsTable = makeStatisticsTable();
-    Table backBtn = makeBackBtn();
 
     rootTable = new Table();
     rootTable.setFillParent(true);
@@ -56,7 +55,7 @@ public class StatisticsDisplay extends UIComponent {
     rootTable.add(statisticsTable).expandX().expandY();
 
     stage.addActor(rootTable);
-    stage.addActor(backBtn);
+    createCloseButton();
   }
 
   /**
@@ -176,44 +175,38 @@ public class StatisticsDisplay extends UIComponent {
     return table;
   }
 
-  /**
-   * Builds a table containing exit button.
-   *
-   * @return table with exit button
-   */
-  private Table makeBackBtn() {
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
     // Create close button using close-icon.png
-    ImageButton closeButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
-    
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
 
-    // Add listener for the back button
+    // Add listener for the close button
     closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             backMenu();
           }
         });
 
-    // Place button in a table
-    Table table = new Table();
-    table.setFillParent(true);
-    table.add(closeButton).top().right().pad(20f);
-    return table;
+    stage.addActor(closeButton);
   }
 
-  /** Handles navigation back to the Profile Screen. */
+  /** Handles navigation back to the World Map. */
   private void backMenu() {
-    game.setScreen(ScreenType.MAIN_GAME);
+    game.setScreen(ScreenType.WORLD_MAP);
   }
 
   @Override

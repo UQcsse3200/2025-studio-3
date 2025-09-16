@@ -61,23 +61,25 @@ public class CombatStatsComponent extends Component {
     if (entity != null) {
       if (this.health == 0) {
         // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
-        int extraCoins = 3; 
-        
+        int extraCoins = 3;
+
         // 2) Progression stats (HudDisplay / coins.png reads this)
         ProfileService profileService = ServiceLocator.getProfileService();
         if (profileService != null && profileService.isActive()) {
           int before = profileService.getProfile().getWallet().getCoins();
           profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
           profileService.getProfile().getWallet().addCoins(extraCoins);
-          profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", extraCoins);
+          profileService
+              .getProfile()
+              .getStatistics()
+              .incrementStatistic("coinsCollected", extraCoins);
           logger.info(
               "[Death] wallet: {} + {} -> {}",
               before,
               extraCoins,
               profileService.getProfile().getWallet().getCoins());
         } else {
-          logger.warn(
-              "[Death] ProfileService is null; cannot update progression wallet/stats");
+          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
         // 3) Gameplay currency service (SunlightHudDisplay reads this)

@@ -52,14 +52,16 @@ public class SaveGameMenuDisplay extends UIComponent {
     table.setFillParent(true);
 
     // Back button positioned at top-left with close icon
-    ImageButton backBtn = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    ImageButton backBtn =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
     backBtn.setSize(60f, 60f);
     backBtn.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
     backBtn.addListener(
         new ChangeListener() {
           @Override

@@ -4,7 +4,6 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +15,7 @@ public class SaveGameMenuActions extends Component {
 
   /**
    * Constructor for the SaveGameMenuActions class.
+   *
    * @param game the game instance
    */
   public SaveGameMenuActions(GdxGame game) {
@@ -53,7 +53,8 @@ public class SaveGameMenuActions extends Component {
   private void handleSaveGame(String saveName) {
     logger.info("Saving game with save name: {} in slot: {}", saveName, selectedSlot);
     ProfileService profileService = ServiceLocator.getProfileService();
-    if (profileService.getProfile() != null && !profileService.getProfile().getName().equals(saveName)) {
+    if (profileService.getProfile() != null
+        && !profileService.getProfile().getName().equals(saveName)) {
       profileService.getProfile().setName(saveName);
     }
     profileService.saveProfileToSlot(selectedSlot);

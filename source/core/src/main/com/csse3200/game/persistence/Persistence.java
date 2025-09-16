@@ -3,12 +3,12 @@ package com.csse3200.game.persistence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.csse3200.game.progression.Profile;
-import net.dermetfan.utils.Pair;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +23,7 @@ public class Persistence {
   private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})(?:\\$(\\d+))?\\.json$";
   private static final String FILE_EXTENSION = ".json";
 
-  /**
-   * Private constructor to prevent instantiation.
-   */
+  /** Private constructor to prevent instantiation. */
   private Persistence() {
     throw new IllegalStateException("Instantiating static util class");
   }
@@ -67,7 +65,7 @@ public class Persistence {
     Profile profile = new Profile();
     if (profileName != null) {
       profile.setName(profileName);
-    }    
+    }
     save(slot, profile);
     return new Pair<>(profile, slot);
   }

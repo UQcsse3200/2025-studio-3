@@ -19,9 +19,9 @@ public class ShopActions extends Component {
     entity.getEvents().addListener("back", this::onBack);
   }
 
-  /** Return to the main game. */
+  /** Return to the world map. */
   private void onBack() {
-    logger.info("Returning to main game");
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    logger.info("Returning to world map");
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 }

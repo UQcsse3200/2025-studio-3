@@ -67,7 +67,6 @@ public class NewGameScreen extends ScreenAdapter {
     renderer.dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-    ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.clear();
   }
 

@@ -15,8 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A simple loading screen that displays a background image and "Loading..." text.
- * This screen is shown while the game initializes and loads assets.
+ * A simple loading screen that displays a background image and "Loading..." text. This screen is
+ * shown while the game initializes and loads assets.
  */
 public class LoadingScreen implements Screen {
   private static final Logger logger = LoggerFactory.getLogger(LoadingScreen.class);
@@ -61,10 +61,8 @@ public class LoadingScreen implements Screen {
     float labelWidth = loadingLabel.getPrefWidth();
     float labelHeight = loadingLabel.getPrefHeight();
     loadingLabel.setPosition(
-        (Gdx.graphics.getWidth() - labelWidth) / 2f,
-        (Gdx.graphics.getHeight() - labelHeight) / 2f
-    );
-    
+        (Gdx.graphics.getWidth() - labelWidth) / 2f, (Gdx.graphics.getHeight() - labelHeight) / 2f);
+
     stage.addActor(loadingLabel);
   }
 
@@ -76,24 +74,24 @@ public class LoadingScreen implements Screen {
   @Override
   public void render(float delta) {
     loadingTime += delta;
-    
+
     // Update camera
     camera.update();
     batch.setProjectionMatrix(camera.combined);
 
     Gdx.gl.glClearColor(0f, 0f, 0f, 1);
-    
+
     batch.begin();
     if (backgroundTexture != null) {
       batch.draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
-    
+
     batch.end();
-    
+
     // Draw UI
     stage.act(delta);
     stage.draw();
-    
+
     // Check if minimum loading time has passed
     if (loadingTime >= MIN_LOADING_TIME) {
       logger.debug("Loading complete, transitioning to main menu");
@@ -111,15 +109,12 @@ public class LoadingScreen implements Screen {
   public void resize(int width, int height) {
     camera.setToOrtho(false, width, height);
     stage.getViewport().update(width, height, true);
-    
+
     // Update label position
     if (loadingLabel != null) {
       float labelWidth = loadingLabel.getPrefWidth();
       float labelHeight = loadingLabel.getPrefHeight();
-      loadingLabel.setPosition(
-          (width - labelWidth) / 2f,
-          (height - labelHeight) / 2f
-      );
+      loadingLabel.setPosition((width - labelWidth) / 2f, (height - labelHeight) / 2f);
     }
   }
 
@@ -141,7 +136,7 @@ public class LoadingScreen implements Screen {
   @Override
   public void dispose() {
     logger.debug("Disposing loading screen");
-    
+
     if (batch != null) {
       batch.dispose();
     }

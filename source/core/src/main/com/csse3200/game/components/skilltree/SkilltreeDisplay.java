@@ -106,14 +106,16 @@ public class SkilltreeDisplay extends UIComponent {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
             int cost = skill.getCost();
-            int points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
+            int points =
+                ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
             boolean locked = !skillSet.checkIfUnlocked(skill.getName());
 
             // unlock skill conditions which removes skill points and replaces button if successful
             if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
               skillSet.addSkill(skill);
               ServiceLocator.getProfileService().getProfile().getWallet().unlockSkill(cost);
-              points = ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
+              points =
+                  ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
               skillPointLabel.setText("Skill Points: " + points);
 
               // Replace button with unlocked image

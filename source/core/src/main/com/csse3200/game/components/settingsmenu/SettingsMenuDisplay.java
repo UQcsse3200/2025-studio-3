@@ -167,14 +167,16 @@ public class SettingsMenuDisplay extends UIComponent {
 
   private Table makeMenuBtns() {
     // Back button positioned at top-left with close icon
-    ImageButton exitBtn = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    ImageButton exitBtn =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
     exitBtn.setSize(60f, 60f);
     exitBtn.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -197,7 +199,7 @@ public class SettingsMenuDisplay extends UIComponent {
 
     // Add back button directly to stage
     stage.addActor(exitBtn);
-    
+
     // Create table for apply button only
     Table table = new Table();
     table.setFillParent(true);
@@ -221,9 +223,7 @@ public class SettingsMenuDisplay extends UIComponent {
     UserSettings.set(settings, true);
   }
 
-  /**
-   * Exits the menu.
-   */
+  /** Exits the menu. */
   private void exitMenu() {
     if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);

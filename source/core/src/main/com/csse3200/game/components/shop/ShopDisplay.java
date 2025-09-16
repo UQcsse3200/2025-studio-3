@@ -8,8 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -28,17 +26,16 @@ public class ShopDisplay extends UIComponent {
   private static final float Z_INDEX = 2f;
   private static final int ITEM_SIZE = 160;
   private static final int COIN_ICON_SIZE = 40;
-  private Window.WindowStyle windowStyle;
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
   private Label timerLabel;
   private Table mainTable;
+  private ImageButton closeButton;
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
     super();
     initializeShopItems();
-    this.windowStyle = skin.get(Window.WindowStyle.class);
   }
 
   @Override
@@ -59,23 +56,49 @@ public class ShopDisplay extends UIComponent {
     // Create main table with fixed dimensions
     mainTable = new Table();
     mainTable.setSize(778f, 564f);
-    mainTable.setPosition(
-        (stage.getWidth() - 778f) / 2f, 
-        (stage.getHeight() - 564f) / 2f
-    );
-    
+    mainTable.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
+
     // Set shop-popup.png as background with fixed size
-    Image backgroundImage = new Image(
-        ServiceLocator.getGlobalResourceService().getAsset("images/shop-popup.png", Texture.class));
+    Image backgroundImage =
+        new Image(
+            ServiceLocator.getGlobalResourceService()
+                .getAsset("images/shop-popup.png", Texture.class));
     backgroundImage.setSize(778f, 564f);
-    backgroundImage.setPosition(
-        (stage.getWidth() - 778f) / 2f, 
-        (stage.getHeight() - 564f) / 2f
-    );
+    backgroundImage.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
     stage.addActor(backgroundImage);
-    
+
+    createCloseButton();
     createShopUI();
     stage.addActor(mainTable);
+  }
+
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
+    // Create close button using close-icon.png
+    closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
+
+    // Add listener for the close button
+    closeButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Close button clicked");
+            entity.getEvents().trigger("back");
+          }
+        });
+
+    stage.addActor(closeButton);
   }
 
   /**
@@ -100,42 +123,50 @@ public class ShopDisplay extends UIComponent {
     mainTable.add(timerLabel).colspan(3).center().padBottom(30f).row();
     createItemSlots();
   }
-  
+
   /** Creates and displays the reset timer. */
   private void createTimerDisplay() {
     timerLabel = new Label("", skin);
     whiten(timerLabel);
     updateTimer();
   }
-  
+
   /** Updates the countdown timer display. */
   private void updateTimer() {
     if (timerLabel == null) return;
-    
+
     LocalDateTime now = LocalDateTime.now();
     LocalDateTime nextHour = now.truncatedTo(ChronoUnit.HOURS).plusHours(1);
     long minutesLeft = ChronoUnit.MINUTES.between(now, nextHour);
     long secondsLeft = ChronoUnit.SECONDS.between(now, nextHour) % 60;
-    
+
     timerLabel.setText(String.format("Shop resets in: %02d:%02d", minutesLeft, secondsLeft));
   }
-  
+
   /** Recenters the table and background to ensure they stay centered on screen. */
   private void recenterTable() {
     if (mainTable == null) return;
-    
+
     // Calculate center position for the fixed 778x564 dimensions
     float centerX = (stage.getWidth() - 778f) / 2f;
     float centerY = (stage.getHeight() - 564f) / 2f;
-    
+
     // Recenter the main table
     mainTable.setPosition(centerX, centerY);
-    
+
+    // Update close button position
+    if (closeButton != null) {
+      closeButton.setPosition(
+          20f, // 20f padding from left
+          stage.getHeight() - 60f - 20f // 20f padding from top
+          );
+    }
+
     // Recenter the background image if it exists
     for (Actor actor : stage.getActors()) {
       if (actor instanceof Image image && image.getWidth() == 778f && image.getHeight() == 564f) {
-          image.setPosition(centerX, centerY);
-          break;
+        image.setPosition(centerX, centerY);
+        break;
       }
     }
   }
@@ -150,7 +181,10 @@ public class ShopDisplay extends UIComponent {
     String[] allItemKeys = configService.getItemKeys();
     int[] itemIndexes =
         ShopRandomizer.getShopItemIndexes(
-            ServiceLocator.getProfileService().getProfile().getName(), 0, allItemKeys.length - 1, LocalDateTime.now());
+            ServiceLocator.getProfileService().getProfile().getName(),
+            0,
+            allItemKeys.length - 1,
+            LocalDateTime.now());
     this.itemKeys =
         new String[] {
           allItemKeys[itemIndexes[0]], allItemKeys[itemIndexes[1]], allItemKeys[itemIndexes[2]]
@@ -160,20 +194,22 @@ public class ShopDisplay extends UIComponent {
   /** Creates the item slots with prices and coin icons. */
   private void createItemSlots() {
     Table itemTable = new Table();
-    
+
     for (int i = 0; i < 3; i++) {
       BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKeys[i]);
-      
+
       // Create item column
       Table itemColumn = new Table();
-      
+
       // Item image button
       createItemSlot(i, itemConfig, itemColumn);
-      
+
       Table priceTable = new Table();
 
-      Image coinIcon = new Image(
-          ServiceLocator.getGlobalResourceService().getAsset("images/coins.png", Texture.class));
+      Image coinIcon =
+          new Image(
+              ServiceLocator.getGlobalResourceService()
+                  .getAsset("images/coins.png", Texture.class));
       coinIcon.setSize(COIN_ICON_SIZE, COIN_ICON_SIZE);
       priceTable.add(coinIcon).size(COIN_ICON_SIZE).padRight(8f);
 
@@ -181,13 +217,13 @@ public class ShopDisplay extends UIComponent {
       whiten(priceLabel);
       priceLabel.setFontScale(1.2f);
       priceTable.add(priceLabel);
-      
+
       itemColumn.add(priceTable).padTop(25f);
-      
+
       // Add to main item table
       itemTable.add(itemColumn).padLeft(30f).padRight(30f);
     }
-    
+
     mainTable.add(itemTable).center();
   }
 
@@ -200,7 +236,8 @@ public class ShopDisplay extends UIComponent {
    */
   private void createItemSlot(int slotIndex, BaseItemConfig itemConfig, Table container) {
     // Load the item texture
-    Texture itemTex = ServiceLocator.getResourceService().getAsset(itemConfig.getAssetPath(), Texture.class);
+    Texture itemTex =
+        ServiceLocator.getResourceService().getAsset(itemConfig.getAssetPath(), Texture.class);
 
     // Create ImageButton with the item texture
     ImageButton slot = new ImageButton(new TextureRegionDrawable(itemTex));
@@ -234,86 +271,77 @@ public class ShopDisplay extends UIComponent {
   }
 
   /**
-   * Shows the shop item pop up.
+   * Shows the shop item dialog using DialogService.
    *
    * @param itemKey The key of the item.
    */
   private void showShopItemPopUp(String itemKey) {
     BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
-    Window popup = new Window("Item Details", windowStyle);
-    popup.setModal(true);
-    popup.setMovable(false);
-
-    // Create main content table
-    Table contentTable = new Table();
-    contentTable.pad(20f);
-
-    // Item name label
-    Label nameLabel = new Label(itemConfig.getName(), skin, "title");
-    nameLabel.setColor(Color.WHITE);
-    contentTable.add(nameLabel).colspan(2).center().padBottom(10f).row();
-
-    // Item description
-    Label descriptionLabel = new Label(itemConfig.getDescription(), skin);
-    descriptionLabel.setColor(Color.LIGHT_GRAY);
-    descriptionLabel.setWrap(true);
-    contentTable.add(descriptionLabel).colspan(2).width(300f).center().padBottom(15f).row();
-
-    // Price label
-    Label priceLabel = new Label("Price: $" + itemConfig.getCost(), skin);
-    priceLabel.setColor(Color.GOLD);
-    contentTable.add(priceLabel).colspan(2).center().padBottom(20f).row();
-
-    // Buttons table
-    Table buttonTable = new Table();
-
-    // Purchase button
-    TextButton purchaseButton = new TextButton("Purchase", skin);
-    purchaseButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Purchase button clicked for item: {}", itemConfig.getName());
-            onPurchaseClicked(itemKey);
-            popup.remove();
-          }
-        });
-
-    // Close button
-    TextButton closeButton = new TextButton("Close", skin);
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            popup.remove();
-          }
-        });
-
-    buttonTable.add(purchaseButton).padRight(10f);
-    buttonTable.add(closeButton);
-    contentTable.add(buttonTable).colspan(2).center();
-    popup.add(contentTable);
-    popup.pack();
-    popup.setPosition(
-        (stage.getWidth() - popup.getWidth()) / 2f, (stage.getHeight() - popup.getHeight()) / 2f);
-    stage.addActor(popup);
+    int itemCost = itemConfig.getCost();
+    String title = itemConfig.getName();
+    String message =
+        String.format(
+            "%s%n%nPrice: $%d%n%nDo you want to purchase this item?",
+            itemConfig.getDescription(), itemCost);
+    ServiceLocator.getDialogService()
+        .warning(
+            title,
+            message,
+            dialog -> onPurchaseClicked(itemKey), // onConfirm callback
+            null // onCancel callback (no action needed)
+            );
   }
 
   /**
-   * Handles the purchase event for an item.
+   * Handles the purchase event for an item. This method is called when the user confirms the
+   * purchase in the dialog.
    *
    * @param itemKey The key of the item.
    */
   private void onPurchaseClicked(String itemKey) {
+
     BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
-    if (ServiceLocator.getProfileService().getProfile().getWallet().purchaseShopItem(itemConfig.getCost())) {
-      ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
-      logger.info("Successfully purchased: {}", itemConfig.getName());
-      entity.getEvents().trigger("purchased");
-    } else {
-      logger.warn("Insufficient funds to purchase: {}", itemConfig.getName());
+    if (ServiceLocator.getProfileService().getProfile().getWallet().getCoins()
+        < itemConfig.getCost()) {
+      String title = "Insufficient Funds";
+      String message =
+          String.format(
+              "You need $%d to purchase %s, but you only have $%d.",
+              itemConfig.getCost(),
+              itemConfig.getName(),
+              ServiceLocator.getProfileService().getProfile().getWallet().getCoins());
+      ServiceLocator.getDialogService().error(title, message);
+      return;
     }
+
+    // Purchase the item
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getWallet()
+        .purchaseShopItem(itemConfig.getCost());
+    ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
+
+    // Update statistics
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("purchasesMade");
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("itemsCollected");
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("coinsSpent", itemConfig.getCost());
+
+    logger.info("Successfully purchased: {}", itemConfig.getName());
+
+    // Show success message
+    ServiceLocator.getDialogService()
+        .info(
+            "Purchase Successful",
+            String.format("You have successfully purchased %s!", itemConfig.getName()));
   }
 
   @Override

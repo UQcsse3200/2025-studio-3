@@ -196,7 +196,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
 
-    for (String itemKey : ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
+    for (String itemKey :
+        ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
       if (itemKey.equals("grenade")) {
         placeDeckUnit(ItemFactory::createGrenade, "images/items/grenade.png");
       }
@@ -442,7 +443,10 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // Where entity to be spawned is an Item and the player has such item in their inventory
     ItemComponent item = newEntity.getComponent(ItemComponent.class);
     if (item != null
-        && !ServiceLocator.getProfileService().getProfile().getInventory().contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
+        && !ServiceLocator.getProfileService()
+            .getProfile()
+            .getInventory()
+            .contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
       logger.info(

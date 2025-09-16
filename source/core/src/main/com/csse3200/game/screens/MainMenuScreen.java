@@ -78,7 +78,6 @@ public class MainMenuScreen extends ScreenAdapter {
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-    ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.clear();
   }
 

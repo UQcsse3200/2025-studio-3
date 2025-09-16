@@ -44,6 +44,10 @@ public class AchievementsScreen extends ScreenAdapter {
   public void show() {
     stage = new Stage(new ScreenViewport());
     Gdx.input.setInputProcessor(stage);
+
+    // Initialize skin
+    skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+
     headerStyle =
         skin.has("title", Label.LabelStyle.class)
             ? skin.get("title", Label.LabelStyle.class)
@@ -68,20 +72,22 @@ public class AchievementsScreen extends ScreenAdapter {
     createAchievementDisplay();
 
     // Back button positioned at top-left with close icon
-    ImageButton backButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
+    ImageButton backButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
     backButton.setSize(60f, 60f);
     backButton.setPosition(
-        20f,  // 20f padding from left
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
 
     backButton.addListener(
         new ClickListener() {
           @Override
           public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
           }
         });
 
@@ -114,7 +120,7 @@ public class AchievementsScreen extends ScreenAdapter {
     Table t1Table = tables[0];
     Table t2Table = tables[1];
     Table t3Table = tables[2];
-    
+
     // Stack tables vertically
     Table allTables = new Table();
 
@@ -136,12 +142,13 @@ public class AchievementsScreen extends ScreenAdapter {
 
   /**
    * Populates the table with achievements organized by tier.
-   * 
+   *
    * @param achievementConfigs the achievement configs
    * @param statistics the statistics
    * @return the tables
    */
-  private Table[] populateTable(Map<String, BaseAchievementConfig> achievementConfigs, Statistics statistics) {
+  private Table[] populateTable(
+      Map<String, BaseAchievementConfig> achievementConfigs, Statistics statistics) {
     // Separate achievements by tier
     Table t1Table = new Table();
     Table t2Table = new Table();
@@ -178,7 +185,6 @@ public class AchievementsScreen extends ScreenAdapter {
     }
     return new Table[] {t1Table, t2Table, t3Table};
   }
-  
 
   /**
    * Creates a button for displaying an achievement.
@@ -264,14 +270,14 @@ public class AchievementsScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    Gdx.gl.glClearColor(248f / 255f, 249f / 255f, 178 / 255f, 1);
+    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
     stage.act(delta);
     stage.draw();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-      game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+      game.setScreen(GdxGame.ScreenType.WORLD_MAP);
     }
   }
 

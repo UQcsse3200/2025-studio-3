@@ -3,17 +3,17 @@ package com.csse3200.game.services;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.Profile;
-import net.dermetfan.utils.Pair;
 import java.util.List;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Service for managing user profiles.
- * 
- * <p>This service provides a centralized way to manage profile operations including
- * creating, loading, saving, and deleting profiles. It acts as a wrapper around
- * the existing Persistence class to provide a service-based interface.
+ *
+ * <p>This service provides a centralized way to manage profile operations including creating,
+ * loading, saving, and deleting profiles. It acts as a wrapper around the existing Persistence
+ * class to provide a service-based interface.
  */
 public class ProfileService {
   private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
@@ -21,9 +21,7 @@ public class ProfileService {
   private boolean isActive;
   private int currentSlot;
 
-  /**
-   * Creates a new ProfileService instance.
-   */
+  /** Creates a new ProfileService instance. */
   public ProfileService() {
     this.profile = new Profile(); // Initialize with a dummy profile
     this.isActive = false;
@@ -140,9 +138,7 @@ public class ProfileService {
     return null;
   }
 
-  /**
-   * Clears the current profile.
-   */
+  /** Clears the current profile. */
   public void clear() {
     logger.info("Clearing current profile.");
     this.profile = new Profile();

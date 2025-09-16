@@ -206,7 +206,7 @@ public class ServiceLocator {
 
   /**
    * Registers the global resource service.
-   * 
+   *
    * @param source the global resource service
    */
   public static void registerGlobalResourceService(ResourceService source) {
@@ -214,9 +214,7 @@ public class ServiceLocator {
     globalResourceService = source;
   }
 
-  /**
-   * Deregisters the global resource service.
-   */
+  /** Deregisters the global resource service. */
   public static void deregisterGlobalResourceService() {
     logger.debug("Removing global resource service");
     globalResourceService = null;
@@ -242,9 +240,7 @@ public class ServiceLocator {
     menuSpriteService = source;
   }
 
-  /**
-   * Deregisters the menu sprite service.
-   */
+  /** Deregisters the menu sprite service. */
   public static void deregisterMenuSpriteService() {
     logger.debug("Removing menu sprite service");
     menuSpriteService = null;
@@ -286,9 +282,7 @@ public class ServiceLocator {
     itemEffectsService = source;
   }
 
-  /**
-   * Deregisters the dialog service.
-   */
+  /** Deregisters the dialog service. */
   public static void deregisterDialogService() {
     logger.debug("Removing dialog service");
     dialogService = null;
@@ -304,9 +298,7 @@ public class ServiceLocator {
     profileService = source;
   }
 
-  /**
-   * Deregisters the profile service.
-   */
+  /** Deregisters the profile service. */
   public static void deregisterProfileService() {
     logger.debug("Removing profile service");
     profileService = null;

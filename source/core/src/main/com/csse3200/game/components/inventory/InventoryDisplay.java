@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
@@ -37,7 +38,8 @@ public class InventoryDisplay extends UIComponent {
   public InventoryDisplay(GdxGame game) {
     super();
     this.game = game;
-    this.inventoryItems = ServiceLocator.getProfileService().getProfile().getInventory().getInventoryItems();
+    this.inventoryItems =
+        ServiceLocator.getProfileService().getProfile().getInventory().getInventoryItems();
   }
 
   @Override
@@ -50,15 +52,15 @@ public class InventoryDisplay extends UIComponent {
   private void addActors() {
     Label title = new Label("Inventory", skin, "title");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
-    Table menuBtns = makeBackBtn();
+
     rootTable = new Table();
     rootTable.setFillParent(true);
     rootTable.add(title).expandX().top().padTop(20f);
     rootTable.row().padTop(30f);
     rootTable.add(inventoryScrollPane).expandX().expandY().pad(20f);
-    rootTable.row();
-    rootTable.add(menuBtns).fillX();
+
     stage.addActor(rootTable);
+    createCloseButton();
   }
 
   /**
@@ -108,9 +110,10 @@ public class InventoryDisplay extends UIComponent {
    */
   private Table createItemSlot(String itemKey) {
     Table slot = new Table();
+    BaseItemConfig itemConfig = inventoryItems.get(itemKey);
 
     // Find the corresponding asset path for this item
-    String assetPath = inventoryItems.get(itemKey).getAssetPath();
+    String assetPath = itemConfig.getAssetPath();
 
     if (assetPath != null) {
       // Load and display item texture
@@ -128,50 +131,67 @@ public class InventoryDisplay extends UIComponent {
 
     // Add item name below the image
     slot.row();
-    Label nameLabel = new Label(inventoryItems.get(itemKey).getName(), skin);
+    Label nameLabel = new Label(itemConfig.getName(), skin);
     nameLabel.setFontScale(0.8f);
     slot.add(nameLabel).center().padTop(5f);
+
+    // Add click listener to show item details dialog
+    slot.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+            showItemDialog(itemConfig);
+          }
+        });
 
     return slot;
   }
 
-  /**
-   * Builds a table containing exit button.
-   *
-   * @return table with exit button
-   */
-  private Table makeBackBtn() {
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
     // Create close button using close-icon.png
-    ImageButton closeButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService().getAsset("images/close-icon.png", Texture.class)));
-    
-    // Position in top left 
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, 
-        stage.getHeight() - 60f - 20f  // 20f padding from top
-    );
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
 
-    // Add listener for the back button
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
+
+    // Add listener for the close button
     closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             backMenu();
           }
         });
 
-    // Place button in a table
-    Table table = new Table();
-    table.setFillParent(true);
-    table.add(closeButton).top().right().pad(20f);
-    return table;
+    stage.addActor(closeButton);
   }
 
-  /** Handles navigation back to the Profile Screen. */
+  /**
+   * Shows a dialog with item details when an item is clicked.
+   *
+   * @param itemConfig the item configuration
+   */
+  private void showItemDialog(BaseItemConfig itemConfig) {
+    String title = itemConfig.getName();
+    String description = itemConfig.getDescription();
+
+    // Use DialogService to create an info dialog
+    ServiceLocator.getDialogService().info(title, description);
+  }
+
+  /** Handles navigation back to the World Map. */
   private void backMenu() {
-    game.setScreen(ScreenType.MAIN_GAME);
+    game.setScreen(ScreenType.WORLD_MAP);
   }
 
   @Override

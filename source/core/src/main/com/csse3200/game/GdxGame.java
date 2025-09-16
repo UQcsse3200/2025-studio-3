@@ -24,33 +24,35 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The main game class.
- */
+/** The main game class. */
 public class GdxGame extends Game {
   private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
   private static final String[] GLOBAL_ASSETS = {
-    "images/dialog.png", "images/shop-popup.png", "images/coins.png", 
-    "images/close-icon.png", "images/plaque.png", "images/skillpoints.png", "images/settings-icon.png",
-    "images/menu-icon.png", "images/achievement.png", "images/pause-icon.png"
+    "images/dialog.png",
+    "images/shop-popup.png",
+    "images/coins.png",
+    "images/close-icon.png",
+    "images/plaque.png",
+    "images/skillpoints.png",
+    "images/settings-icon.png",
+    "images/menu-icon.png",
+    "images/achievement.png",
+    "images/pause-icon.png"
   };
 
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
-    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
-
-    // Show loading screen first
     setScreen(new LoadingScreen(this));
   }
 
   /**
-   * Initializes the game after loading screen is complete.
-   * This method is called by the LoadingScreen when loading is finished.
+   * Initializes the game after loading screen is complete. This method is called by the
+   * LoadingScreen when loading is finished.
    */
   public void initializeGame() {
     logger.info("[GdxGame] Initializing game after loading screen");
-    
+
     //  Game-dependent services
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
@@ -63,6 +65,7 @@ public class GdxGame extends Game {
     loadSettings();
     loadScreens();
 
+    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
     setScreen(ScreenType.MAIN_MENU);
   }
 
@@ -182,6 +185,7 @@ public class GdxGame extends Game {
     ServiceLocator.deregisterMenuSpriteService();
     ServiceLocator.deregisterConfigService();
     ServiceLocator.deregisterProfileService();
+    ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.deregisterDialogService();
     app.exit();
   }
