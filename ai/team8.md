@@ -18,3 +18,8 @@ code coverage was missing and how to fix it.
 
 - Generative AI was used to generate tests for the SkillSet and Skill classes.
 - Generative AI was used to generate javadocs for same.
+
+## Bianca
+
+- Generative AI was used to understand and help implement ItemEffectsService tests.
+- Generative AI was used to generate sprite sheets and associated atlases for the item effect animations.
