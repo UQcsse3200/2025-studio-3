@@ -16,6 +16,8 @@ public class ObstacleManager {
     public final Random random;
     private float spawnTimer;
     private int obstaclesDodged = 0;
+    private float elapsedTime=0f;
+    private static final float SPEED_GROWTH=100f;
 
     public int getObstaclesDodged() {
         return obstaclesDodged;
@@ -40,6 +42,7 @@ public class ObstacleManager {
 
     public void update(float deltaTime) {
         spawnTimer += deltaTime;
+        elapsedTime += deltaTime/1.5f;
         if (spawnTimer >= LaneConfig.OBSTACLE_SPAWN_INTERVAL && obstacles.size() < LaneConfig.OBSTACLE_MAX_COUNT) {
             spawnObstacle();
             spawnTimer = 0f;
@@ -63,7 +66,8 @@ public class ObstacleManager {
         }
     }
     private void moveObstacleDown(ObstacleImage obstacle, float deltaTime) {
-        float newY = obstacle.image.getY() - (obstacle.speed * deltaTime*100);
+        float currentSpeed = obstacle.speed+(elapsedTime*SPEED_GROWTH);
+        float newY = obstacle.image.getY() - (currentSpeed* deltaTime);
         obstacle.image.setPosition(obstacle.image.getX(), newY);
     }
     private void spawnObstacle() {
