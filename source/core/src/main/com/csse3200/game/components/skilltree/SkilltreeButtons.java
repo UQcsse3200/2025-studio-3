@@ -175,11 +175,8 @@ public class SkilltreeButtons extends UIComponent {
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
-    closeButton.setPosition(
-        20f,
-        stage.getHeight() - 60f - 20f
-        );
-    closeButton.setZIndex(0); 
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
+    closeButton.setZIndex(0);
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -223,8 +220,7 @@ public class SkilltreeButtons extends UIComponent {
     skillButton.setZIndex(0); // Set z-index lower than navigation menu (3f)
 
     skillButton.addListener(
-        new SkilltreeActions(
-            skillName, skillSet, unlockedTexture, skillButton, stage, display));
+        new SkilltreeActions(skillName, skillSet, unlockedTexture, skillButton, stage, display));
 
     stage.addActor(skillButton);
     stage.addActor(createLabel(labelText, skillButton));

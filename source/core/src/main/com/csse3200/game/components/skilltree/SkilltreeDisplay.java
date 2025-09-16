@@ -66,11 +66,7 @@ public class SkilltreeDisplay extends UIComponent {
    * @param stage the stage to which the popup will be added
    */
   public void unlockedPopUp(
-      Skill skill,
-      SkillSet skillSet,
-      Texture unlockedTexture,
-      Button skillButton,
-      Stage stage) {
+      Skill skill, SkillSet skillSet, Texture unlockedTexture, Button skillButton, Stage stage) {
     Window popup = new Window(skill.getStatType().name(), windowStyle);
     popup.setModal(true);
     popup.setMovable(false);
