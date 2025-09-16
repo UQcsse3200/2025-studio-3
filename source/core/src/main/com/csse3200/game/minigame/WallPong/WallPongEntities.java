@@ -38,4 +38,13 @@ public class WallPongEntities {
         ServiceLocator.getRenderService().register(paddleRender);
         return paddle;
     }
+
+    public static Entity createBall(){
+        Entity ball = new Entity();
+
+
+
+
+        return ball;
+    }
 }
