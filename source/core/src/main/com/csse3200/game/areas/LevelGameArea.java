@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
@@ -19,7 +20,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-
 import java.util.ArrayList;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -40,16 +40,12 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
     "images/forge_1.png",
-          "images/sling_projectile.png",
+    "images/sling_projectile.png",
     "images/sling_projectile_pad.png"
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas",
-    "images/forge.atlas"
+    "images/sling_shooter.atlas", "images/robot_placeholder.atlas", "images/forge.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -119,7 +115,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     displayUI();
 
     spawnMap();
-    spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
@@ -174,21 +169,19 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   }
 
   /** Determines inventory units to spawn for the level and calls method to place them. */
-
-
   private void spawnDeck() {
     deckUnitCount = 0;
-    placeDeckUnit(
-        () -> DefenceFactory.createSlingShooter(),
-        "images/sling_shooter_front.png");
+    placeDeckUnit(() -> DefenceFactory.createFurnace(), "images/forge_1.png");
+    placeDeckUnit(() -> DefenceFactory.createSlingShooter(), "images/sling_shooter_front.png");
   }
 
-  private void spawnSun() {
-    Entity sunSpawner = new Entity();
+  private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+    Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
-    sunSpawner.addComponent(currencyGenerator);
-    spawnEntity(sunSpawner);
+        new CurrencyGeneratorComponent(
+            spawnInterval, scrapValue, "images/scrap_metal.png", targetPos);
+    scrapSpawner.addComponent(currencyGenerator);
+    spawnEntity(scrapSpawner);
   }
 
   /**
@@ -345,8 +338,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize/2f);
-    //projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
+    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+    // projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
     // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
     // projectile.addComponent(render); // <- your projectile image
 
@@ -355,9 +348,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
-    projectile.getEvents().addListener("despawnSlingshot", (Entity e) -> {
-      requestDespawn(e);
-    });
+    projectile
+        .getEvents()
+        .addListener(
+            "despawnSlingshot",
+            (Entity e) -> {
+              requestDespawn(e);
+            });
     spawnEntity(projectile); // adds to area and entity service
     return projectile;
   }
@@ -413,7 +410,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     Vector2 entityPos = new Vector2(tileX, tileY);
 
     Supplier<Entity> entitySupplier =
-            selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
+        selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
     Entity newEntity = entitySupplier.get();
     if (newEntity == null) {
       logger.error("Entity fetched was NULL");
@@ -431,10 +428,17 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
 
+    // if entity is a furnace, trigger currency generation at that point
+    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
+      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+      spawnScrap(entityPos, spawnInterval, scrapValue);
+    }
+
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
-    //newEntity.getEvents().trigger("attackStart");
+    // newEntity.getEvents().trigger("attackStart");
     newEntity
         .getEvents()
         .addListener(
@@ -445,23 +449,23 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             });
     logger.info("Unit spawned at position {}", position);
     newEntity
-            .getEvents()
-            .addListener(
-                    "fire",
-                    () -> {
-                      Vector2 spawnPos = newEntity.getCenterPosition();
-                      spawnProjectile(entityPos, 3f, 0f);
-                      newEntity.getEvents().trigger("attackStart");
-                      newEntity
-                              .getEvents()
-                              .addListener(
-                                      "entityDeath",
-                                      () -> {
-                                        requestDespawn(newEntity);
-                                        robots.remove(newEntity);
-                                      });
-                      logger.info("Unit spawned at position {}", position);
-                    });
+        .getEvents()
+        .addListener(
+            "fire",
+            () -> {
+              Vector2 spawnPos = newEntity.getCenterPosition();
+              spawnProjectile(entityPos, 3f, 0f);
+              newEntity.getEvents().trigger("attackStart");
+              newEntity
+                  .getEvents()
+                  .addListener(
+                      "entityDeath",
+                      () -> {
+                        requestDespawn(newEntity);
+                        robots.remove(newEntity);
+                      });
+              logger.info("Unit spawned at position {}", position);
+            });
   }
 
   /**

@@ -57,7 +57,7 @@ public class ForestGameArea extends GameArea {
     "images/sling_shooter.atlas",
     GRASS_TEXTURE,
     "images/robot_placeholder.png",
-    "images/normal_sunlight.png",
+    "images/scrap_metal.png",
     "images/sling_shooter.png"
   };
 
@@ -283,12 +283,12 @@ public class ForestGameArea extends GameArea {
   }
 
   private void spawnSun() {
-    Entity sunSpawner = new Entity();
-
-    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
-
-    sunSpawner.addComponent(currencyGenerator);
-    spawnEntity(sunSpawner);
+    //    Entity sunSpawner = new Entity();
+    //
+    //    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png",);
+    //
+    //    sunSpawner.addComponent(currencyGenerator);
+    //    spawnEntity(sunSpawner);
   }
 
   @Override

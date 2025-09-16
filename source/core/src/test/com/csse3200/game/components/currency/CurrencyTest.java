@@ -13,63 +13,63 @@ class CurrencyTest {
   @Test
   void constructor_shouldSetInitialAndMax() {
     Currency c1 = new Currency(); // default 0, Integer.MAX_VALUE
-    assertEquals(0, c1.getSunlight());
+    assertEquals(0, c1.getScrap());
 
     Currency c2 = new Currency(50);
-    assertEquals(50, c2.getSunlight());
+    assertEquals(50, c2.getScrap());
 
     Currency c3 = new Currency(10, 123);
-    assertEquals(10, c3.getSunlight());
-    c3.addSunshine(1000);
-    assertEquals(123, c3.getSunlight());
+    assertEquals(10, c3.getScrap());
+    c3.addScrap(1000);
+    assertEquals(123, c3.getScrap());
   }
 
   @Test
   void setSunlight_shouldClampToZeroWhenNegative() {
     Currency c = new Currency(50, 9999);
-    c.setSunlight(-10);
-    assertEquals(0, c.getSunlight());
+    c.setScrap(-10);
+    assertEquals(0, c.getScrap());
   }
 
   @Test
   void addSunshine_shouldClampToMaxAndIgnoreNonPositive() {
     Currency c = new Currency(95, 100);
-    c.addSunshine(10);
-    assertEquals(100, c.getSunlight());
+    c.addScrap(10);
+    assertEquals(100, c.getScrap());
 
-    c.addSunshine(0);
-    assertEquals(100, c.getSunlight());
+    c.addScrap(0);
+    assertEquals(100, c.getScrap());
 
-    c.addSunshine(-5);
-    assertEquals(100, c.getSunlight());
+    c.addScrap(-5);
+    assertEquals(100, c.getScrap());
   }
 
   @Test
   void canAffordSunshine_shouldReflectBalance() {
     Currency c = new Currency(50, 100);
-    assertTrue(c.canAffordSunshine(50));
-    assertTrue(c.canAffordSunshine(1));
-    assertFalse(c.canAffordSunshine(51));
+    assertTrue(c.canAffordScrap(50));
+    assertTrue(c.canAffordScrap(1));
+    assertFalse(c.canAffordScrap(51));
   }
 
   @Test
   void spendSunshine_shouldDeductAndReturnTrue_whenEnough() {
     Currency c = new Currency(60, 100);
-    boolean ok = c.spendSunshine(25);
+    boolean ok = c.spendScrap(25);
     assertTrue(ok);
-    assertEquals(35, c.getSunlight());
+    assertEquals(35, c.getScrap());
   }
 
   @Test
   void spendSunshine_shouldNotChangeAndReturnFalse_whenInsufficientOrInvalid() {
     Currency c = new Currency(10, 100);
-    assertFalse(c.spendSunshine(25));
-    assertEquals(10, c.getSunlight());
+    assertFalse(c.spendScrap(25));
+    assertEquals(10, c.getScrap());
 
-    assertFalse(c.spendSunshine(0));
-    assertEquals(10, c.getSunlight());
+    assertFalse(c.spendScrap(0));
+    assertEquals(10, c.getScrap());
 
-    assertFalse(c.spendSunshine(-3));
-    assertEquals(10, c.getSunlight());
+    assertFalse(c.spendScrap(-3));
+    assertEquals(10, c.getScrap());
   }
 }

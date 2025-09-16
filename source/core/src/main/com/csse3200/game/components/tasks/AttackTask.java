@@ -1,9 +1,6 @@
 package com.csse3200.game.components.tasks;
 
-import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.DefenceStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +15,9 @@ public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
   private final float attackRange;
 
-    // cooldown fields
-    private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
-    private float timeSinceLastFire = 0f;
+  // cooldown fields
+  private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+  private float timeSinceLastFire = 0f;
 
   /**
    * Creates an attack task
@@ -53,13 +50,13 @@ public class AttackTask extends TargetDetectionTasks {
     }
 
     if (getDistanceToTarget() <= attackRange) {
-        timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
+      timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
-        if (timeSinceLastFire >= fireCooldown) {
-            // tell listeners (LevelGameArea) to spawn a projectile
-            owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
-            timeSinceLastFire = 0f;
-        }
+      if (timeSinceLastFire >= fireCooldown) {
+        // tell listeners (LevelGameArea) to spawn a projectile
+        owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
+        timeSinceLastFire = 0f;
+      }
     }
   }
 
@@ -78,7 +75,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1; // stop task if no target
     }
-    if (dst > attackRange ) {
+    if (dst > attackRange) {
       return -1; // stop task when target not visible or out of range
     }
     return 1;
@@ -93,7 +90,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1;
     }
-      if (dst <= attackRange) {
+    if (dst <= attackRange) {
       return 1; // start task if target is visible and in range
     }
     return -1;

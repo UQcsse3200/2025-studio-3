@@ -1,26 +1,26 @@
 package com.csse3200.game.entities.configs;
 
 /** Defines the properties stored in defences.json to be loaded by the NPC Factory. */
-public class BaseDefenceConfig extends BaseEntityConfig {
+public class BaseDefenderConfig extends BaseEntityConfig {
   /** Creates a new BaseDefenceConfig with default values. */
-  public BaseDefenceConfig() {
+  public BaseDefenderConfig() {
     // Default constructor with default field values
   }
 
   /** Defence type identifier */
-  public int rangeType;
+  private int rangeType;
 
   /** Attack range of the defence */
-  public int range;
+  private int range;
 
   /** Current state of the defence */
-  public int state;
+  private int state;
 
   /** Attack speed of the defence */
-  public int attackSpeed;
+  private int attackSpeed;
 
   /** Critical hit chance percentage */
-  public int critChance;
+  private int critChance;
 
   /**
    * Gets the attack value for this entity.

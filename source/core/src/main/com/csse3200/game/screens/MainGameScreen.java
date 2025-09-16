@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.currency.SunlightHudDisplay;
+import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.HudDisplay;
 import com.csse3200.game.components.maingame.MainGameActions;
@@ -42,7 +42,7 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {
-    "images/normal_sunlight.png", "images/heart.png", "images/coins.png", "images/profile.png"
+    "images/scrap_metal.png", "images/heart.png", "images/coins.png", "images/profile.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
@@ -82,7 +82,7 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
     ServiceLocator.getEntityService().register(uiHud);
 
     logger.debug("Initialising main game screen entities");

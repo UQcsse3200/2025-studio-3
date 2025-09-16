@@ -11,8 +11,6 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +43,9 @@ class AttackTaskTest {
           }
 
           @Override
-          protected Entity getNearestVisibleTarget() {return target;}
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
         };
 
     // Set up defender entity and attach AI task component
@@ -70,12 +70,13 @@ class AttackTaskTest {
   void noAttackWhenOutOfRange() {
     float attackRange = 5f;
     float targetDistance = 10f;
-    AttackTask attackTask = new AttackTask(attackRange) {
-      @Override
-      protected Entity getNearestVisibleTarget() {
-        return target;
-      }
-    };
+    AttackTask attackTask =
+        new AttackTask(attackRange) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
+        };
 
     int priority = attackTask.getActivePriority(targetDistance, target);
     assertEquals(-1, priority, "Attack task should stop when target is out of range");

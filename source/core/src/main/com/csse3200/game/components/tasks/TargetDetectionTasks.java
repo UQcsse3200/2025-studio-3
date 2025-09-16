@@ -124,8 +124,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       }
 
       float distance = from.dst(targetPos);
-//      boolean visible = isTargetVisible(target);
-//      if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in range
+      //      boolean visible = isTargetVisible(target);
+      //      if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in
+      // range
       if (distance <= attackRange) { // if target visible and in range
         if (distance < closestDist) {
           closestDist = distance;
