@@ -40,6 +40,7 @@ public class Entity {
   private Vector2 position = Vector2.Zero.cpy();
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
+  private boolean disposed = false;
 
   private final int coins = 5; // number of coins to add when enemy is killed
 
@@ -223,6 +224,7 @@ public class Entity {
 
   /** Dispose of the entity. This will dispose of all components on this entity. */
   public void dispose() {
+    disposed = true;
     for (Component component : createdComponents) {
       component.dispose();
     }
@@ -268,7 +270,8 @@ public class Entity {
     if (!enabled) {
       return;
     }
-    for (Component component : createdComponents) {
+    for (int i = 0; i < createdComponents.size; i++) {
+      Component component = createdComponents.get(i);
       component.triggerUpdate();
     }
   }
