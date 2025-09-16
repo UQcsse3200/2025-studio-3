@@ -174,6 +174,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     placeDeckUnit(
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()),
         "images/sling_shooter_front.png");
+    placeDeckUnit(
+      () -> DefenceFactory.createFurnace(), "images/forge_1.png");
   }
 
   private void spawnSun(Vector2 targetPos, int spawnInterval) {
