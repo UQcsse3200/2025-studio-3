@@ -11,10 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
+import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.files.UserSettings;
+import com.csse3200.game.files.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
@@ -47,24 +49,48 @@ public class SettingsMenuDisplay extends UIComponent {
     addActors();
   }
 
-  private void addActors() {
-    Label title = new Label("Settings", skin, "title");
-    Table settingsTable = makeSettingsTable();
-    Table menuBtns = makeMenuBtns();
+    private void addActors() {
+        rootTable = new Table();
+        rootTable.setFillParent(true);
 
-    rootTable = new Table();
-    rootTable.setFillParent(true);
+        // Create buttons and title
+        TextButton exitBtn = new TextButton("Exit", skin);
+        TextButton applyBtn = new TextButton("Apply", skin);
+        Label title = new Label("Settings", skin, "title");
 
-    rootTable.add(title).expandX().top().padTop(20f);
+        // Listeners
+        exitBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                exitMenu();
+            }
+        });
 
-    rootTable.row().padTop(30f);
-    rootTable.add(settingsTable).expandX().expandY();
+        applyBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                applyChanges();
+            }
+        });
 
-    rootTable.row();
-    rootTable.add(menuBtns).fillX();
+        // Top row table
+        Table topRow = new Table();
+        topRow.add(applyBtn).top().left().padRight(10f).padTop(10f);
+        topRow.add().expandX();                  // empty space
+        topRow.add(title).center();              // title centered in remaining space
+        topRow.add().expandX();                  // empty space
+        topRow.add(exitBtn).top().right().padLeft(10f).padTop(10f);
 
-    stage.addActor(rootTable);
-  }
+        rootTable.add(topRow).expandX().fillX().top();
+
+        // Next row: settings table
+        rootTable.row().padTop(30f);
+        rootTable.add(makeSettingsTable()).expandX().expandY();
+
+        stage.addActor(rootTable);
+    }
+
+
 
   private Table makeSettingsTable() {
     // Get current values
@@ -90,6 +116,7 @@ public class SettingsMenuDisplay extends UIComponent {
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
     whiten(uiScaleLabel);
+    whiten(uiScaleValue);
 
     Label displayModeLabel = new Label("Resolution:", skin);
     displayModeSelect = new SelectBox<>(skin);
@@ -164,35 +191,34 @@ public class SettingsMenuDisplay extends UIComponent {
     return displayMode.width + "x" + displayMode.height + ", " + displayMode.refreshRate + "hz";
   }
 
-  private Table makeMenuBtns() {
-    TextButton exitBtn = new TextButton("Back", skin);
-    TextButton applyBtn = new TextButton("Apply", skin);
 
-    exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Exit button clicked");
-            exitMenu();
-          }
+    private Table makeMenuBtns() {
+        TextButton exitBtn = new TextButton("Exit", skin);
+        TextButton applyBtn = new TextButton("Apply", skin);
+
+        exitBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                exitMenu();
+            }
         });
 
-    applyBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Apply button clicked");
-            applyChanges();
-          }
+        applyBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                applyChanges();
+            }
         });
 
-    Table table = new Table();
-    table.add(exitBtn).expandX().left().pad(0f, 15f, 15f, 0f);
-    table.add(applyBtn).expandX().right().pad(0f, 0f, 15f, 15f);
-    return table;
-  }
+        Table table = new Table();
+        table.add(exitBtn).left().padLeft(15f);
+        table.add().expandX();  // empty space for separation
+        table.add(applyBtn).right().padRight(15f);
 
-  private void applyChanges() {
+        return table;
+    }
+
+    private void applyChanges() {
     UserSettings.Settings settings = UserSettings.get();
 
     Integer fpsVal = parseOrNull(fpsText.getText());
