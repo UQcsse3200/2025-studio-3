@@ -17,10 +17,7 @@ import com.csse3200.game.minigame.CollisionComponent;
 import com.csse3200.game.minigame.PaddleComponent;
 import com.csse3200.game.minigame.PaddleInputComponent;
 
-/*import com.csse3200.game.minigame.BallComponent;
-import com.csse3200.game.minigame.CollisionComponent;
-import com.csse3200.game.minigame.PaddleComponent;
-import com.csse3200.game.minigame.PaddleInputComponent;*/
+
 
 public class PaddleGameScreen extends ScreenAdapter {
     private final GdxGame game;
@@ -36,12 +33,15 @@ public class PaddleGameScreen extends ScreenAdapter {
 
     private Label scoreLabel;
     private int score;
+    private int ballsHit;
+    private float totalTime=0f;
+    private Label timeLabel;
 
     public PaddleGameScreen(GdxGame game) {
         this.game = game;
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
-
+        ballsHit=0;
         loadAssests();
         addBackground();
         createPaddle();
@@ -52,7 +52,7 @@ public class PaddleGameScreen extends ScreenAdapter {
     private void loadAssests() {
         paddleTex=  new Texture(Gdx.files.internal("images/paddle.png"));
         ballTex = new Texture(Gdx.files.internal("images/ball.png"));
-        bgTex = new Texture(Gdx.files.internal("images/bg.png"));
+        bgTex = new Texture(Gdx.files.internal("images/wallPongbg.png"));
     }
 
     private void addBackground() {
@@ -91,10 +91,15 @@ public class PaddleGameScreen extends ScreenAdapter {
         scoreLabel = new Label("Score: 0", style);
         scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40);
         stage.addActor(scoreLabel);
+        timeLabel = new Label("Time: 0.00s", style);
+        timeLabel.setPosition(20, Gdx.graphics.getHeight() - 60);
+        stage.addActor(timeLabel);
     }
 
     @Override
     public void render(float delta) {
+        totalTime+=delta;
+        float survivalTime=totalTime;
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         paddle.getComponent(PaddleComponent.class).update();
@@ -104,12 +109,13 @@ public class PaddleGameScreen extends ScreenAdapter {
 
         score = ball.getComponent(BallComponent.class).getScore();
         scoreLabel.setText("Score: " + score);
-
+        timeLabel.setText(String.format("Time: %.2f s", survivalTime));
+        ballsHit=ball.getComponent(BallComponent.class).getBallsHit();
         stage.act(delta);
         stage.draw();
 
         if(ball.getComponent(BallComponent.class).getImage().getY()<=0){
-            game.setScreen(new MainMenuScreen(game));
+            game.setScreen(new WallPongGameOverScreen(game,score,survivalTime,ballsHit));
             dispose();
         }
     }

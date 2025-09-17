@@ -10,6 +10,7 @@ public class BallComponent extends Component {
     private float velocityY;
 
     private int score=0;
+    private int ballsHit=0;
     public BallComponent(Image ballImage,float velocityX,float velocityY) {
         this.ballImage = ballImage;
         this.velocityX = velocityX;
@@ -44,6 +45,12 @@ public class BallComponent extends Component {
     }
     public void reverseY(){
         velocityY = -velocityY;
+        ballsHit++;
+        score++;
+    }
+
+    public int getBallsHit() {
+        return ballsHit;
     }
 }
 

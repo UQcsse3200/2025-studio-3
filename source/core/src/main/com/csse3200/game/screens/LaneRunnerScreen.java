@@ -81,5 +81,4 @@ public class LaneRunnerScreen extends ScreenAdapter {
         stage.addActor(bg);
         logger.debug("shows lane runner mini game screen background");
     }
-
 }
