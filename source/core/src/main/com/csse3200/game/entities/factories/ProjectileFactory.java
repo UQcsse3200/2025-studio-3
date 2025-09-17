@@ -38,7 +38,7 @@ public class ProjectileFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, damage))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
