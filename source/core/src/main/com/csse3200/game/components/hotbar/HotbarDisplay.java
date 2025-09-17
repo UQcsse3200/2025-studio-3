@@ -71,6 +71,8 @@ public class HotbarDisplay extends UIComponent {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
               if (event.getButton() == Input.Buttons.LEFT) {
+                game.setIsCharacterSelected(true);
+                game.beginDrag(new Texture(unit.getKey()));
                 Entity tempPlaceableUnit =
                     new Entity()
                         .addComponent(new DeckInputComponent(game, unit.getValue()))
