@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
  * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class SlotMachineScreen extends ScreenAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
+  private static final Logger logger = LoggerFactory.getLogger(SlotMachineScreen.class);
   private static final String[] mainGameTextures = {
     "images/normal_sunlight.png",
     "images/heart.png",

@@ -38,10 +38,7 @@ public class SlotEngine {
     SUMMON_ENEMY(2, "SummonEnemy", 1),
     FREEZE_ENEMY(5, "FreezeEnemy", 1),
     DESTROY_ENEMY(7, "DestroyEnemy", 1),
-
-    DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 5);
-
-    //    DROP_CARD(8, "DropCard", 10);
+    DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 10);
 
     private final int id;
     private final String displayName;

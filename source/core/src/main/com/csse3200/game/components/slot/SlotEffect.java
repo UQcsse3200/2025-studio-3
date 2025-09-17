@@ -45,7 +45,6 @@ public final class SlotEffect {
     }
     switch (effect) {
       case GAIN_METALS -> gainMetals();
-      //      case GAIN_COINS -> gainCoins();
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
       case FREEZE_ENEMY -> freezeAllEnemies(10f);
@@ -61,15 +60,6 @@ public final class SlotEffect {
       logger.error("[SlotEffect] GAIN_METALS: Failed to add metal. {}", e.getMessage());
     }
   }
-
-  //  private static void gainCoins() {
-  //    try {
-  //      Persistence.profile().wallet().addCoins(50);
-  //      logger.info("[SlotEffect] GAIN_COINS: Gained 50 coins.");
-  //    } catch (Exception e) {
-  //      logger.error("[SlotEffect] GAIN_COINS: Failed to add coins. {}", e.getMessage());
-  //    }
-  //  }
 
   /**
    * Spawn a simple wave of robots (positions/types tuned to your existing map layout). You can
@@ -138,8 +128,8 @@ public final class SlotEffect {
         }
       }
       logger.info("[SlotEffect] DESTROY_ENEMY: removed {} enemies.", removed);
-    } catch (Throwable t) {
-      logger.error("[SlotEffect] DESTROY_ENEMY failed: {}", t.getMessage(), t);
+    } catch (Exception e) {
+      logger.error("[SlotEffect] DESTROY_ENEMY failed: {}", e.getMessage(), e);
     }
   }
 

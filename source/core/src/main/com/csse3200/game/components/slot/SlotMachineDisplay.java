@@ -507,7 +507,8 @@ public class SlotMachineDisplay extends UIComponent {
     Vector2 slotBottomCenter =
         reelsPane.localToStageCoordinates(new Vector2(reelsPane.getWidth() * 0.5f, 0f));
 
-    float stageW = stage.getWidth(), stageH = stage.getHeight();
+    float stageW = stage.getWidth();
+    float stageH = stage.getHeight();
     float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
 
     // 3) Create a card and limit the "target width" to 6% of the screen width and no more than "22%

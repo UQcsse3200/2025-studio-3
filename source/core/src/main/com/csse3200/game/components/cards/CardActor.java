@@ -16,7 +16,8 @@ public class CardActor extends Image {
   private float percentW = 0.12f; // 卡牌宽度占屏幕宽度比例（默认不大）
   private float posPx = 0.50f; // 中心点相对屏宽的比例
   private float posPy = 0.25f; // 中心点相对屏高的比例
-  private int lastW = -1, lastH = -1;
+  private int lastW = -1;
+  private int lastH = -1;
 
   /** 用 TextureRegion 构造（一般从 atlas region 来）。 */
   public CardActor(Stage stage, TextureRegion region) {
@@ -37,7 +38,7 @@ public class CardActor extends Image {
 
   /** 调整宽度占比（0.05~0.25 更安全）。 */
   public void setPercentWidth(float p) {
-    this.percentW = Math.max(0.05f, Math.min(0.25f, p));
+    this.percentW = Math.clamp(p, 0.05f, 0.25f);
     applyLayout();
   }
 
@@ -51,7 +52,8 @@ public class CardActor extends Image {
   private void addDrag() {
     addListener(
         new DragListener() {
-          float grabX, grabY;
+          float grabX;
+          float grabY;
 
           @Override
           public void dragStart(InputEvent event, float x, float y, int pointer) {
@@ -77,13 +79,15 @@ public class CardActor extends Image {
   @Override
   public void act(float delta) {
     super.act(delta);
-    int sw = (int) stage.getWidth(), sh = (int) stage.getHeight();
+    int sw = (int) stage.getWidth();
+    int sh = (int) stage.getHeight();
     if (sw != lastW || sh != lastH) applyLayout();
   }
 
   /** 按“百分比”计算尺寸与位置（中心点）。 */
   private void applyLayout() {
-    int sw = (int) stage.getWidth(), sh = (int) stage.getHeight();
+    int sw = (int) stage.getWidth();
+    int sh = (int) stage.getHeight();
     if (sw <= 0 || sh <= 0 || getDrawable() == null) return;
 
     float targetW = sw * percentW;
@@ -91,7 +95,8 @@ public class CardActor extends Image {
     float targetH = targetW * aspect;
     setSize(targetW, targetH);
 
-    float cx = sw * posPx, cy = sh * posPy;
+    float cx = sw * posPx;
+    float cy = sh * posPy;
     setPosition(cx - targetW / 2f, cy - targetH / 2f);
 
     lastW = sw;

@@ -324,11 +324,13 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    int bestRow = -1, bestCol = -1;
+    int bestRow = -1;
+    int bestCol = -1;
     final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
 
     for (int i = 0; i < total; i++) {
-      int row = i / LEVEL_ONE_COLS, col = i % LEVEL_ONE_COLS;
+      int row = i / LEVEL_ONE_COLS;
+      int col = i % LEVEL_ONE_COLS;
 
       float cx = xOffset + tileSize * col + tileSize * 0.5f;
       float cy = yOffset + tileSize * row + tileSize * 0.5f;
@@ -517,7 +519,6 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
       // check if robot has reached the end
       if (gridX <= 0) {
         isGameOver = true;
-        // TODO: add UI component here
         // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
       }
