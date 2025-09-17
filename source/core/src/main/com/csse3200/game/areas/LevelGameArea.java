@@ -621,11 +621,4 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       }
     }
   }
-
-  /**
-   * @return the list of robots currently in the level
-   */
-  public List<Entity> getRobots() {
-    return robots;
-  }
 }
