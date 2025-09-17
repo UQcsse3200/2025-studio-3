@@ -136,7 +136,7 @@ public class RobotFactory {
     if (config instanceof TeleportRobotConfig tcfg) {
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
-      if (laneYs != null && laneYs.length >= 2) {
+      if (laneYs.length >= 2) {
         robot.addComponent(
             new TeleportTask(
                 tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
