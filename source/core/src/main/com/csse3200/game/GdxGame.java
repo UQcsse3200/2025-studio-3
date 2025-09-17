@@ -151,12 +151,12 @@ public class GdxGame extends Game {
         return new WorldMapScreen(this);
       case SLOT_MACHINE:
         return new SlotMachineScreen(this);
-        case MINI_GAMES:
-            return new MiniGameScreen(this);
-        case PADDLE_GAME:
-                return new PaddleGameScreen(this);
-        case LANE_RUNNER:
-            return new LaneRunnerScreen(this);
+      case MINI_GAMES:
+        return new MiniGameScreen(this);
+      case PADDLE_GAME:
+        return new PaddleGameScreen(this);
+      case LANE_RUNNER:
+        return new LaneRunnerScreen(this);
 
       default:
         return null;
