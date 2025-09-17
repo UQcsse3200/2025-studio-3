@@ -96,6 +96,7 @@ public class TerrainFactory {
 
   /**
    * Takes the level number to create a terrain component using the createLevelTerrain method.
+   *
    * @param levelNum integer representing the level number of the terrain component being created.
    * @return Terrain component reflecting the level number presented, which renders the terrain.
    */
@@ -114,7 +115,9 @@ public class TerrainFactory {
 
   /**
    * Creates a terrain component according to the config passed by createTerrain.
-   * @param config containing the required number of rows, columns and filepath to the map image file.
+   *
+   * @param config containing the required number of rows, columns and filepath to the map image
+   *     file.
    * @return Terrain component reflecting the config presented, which renders the terrain.
    */
   public TerrainComponent createLevelTerrain(BaseLevelGameConfig config) {

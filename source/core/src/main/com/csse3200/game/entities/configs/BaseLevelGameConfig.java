@@ -1,12 +1,9 @@
 package com.csse3200.game.entities.configs;
 
 /**
- * Container for deserialized level information.
- * Currently stores the following information:
- * Integer representation of the level number,
- * File path to the map's image source,
- * Number of rows in the grid,
- * Number of columns in the grid.
+ * Container for deserialized level information. Currently stores the following information: Integer
+ * representation of the level number, File path to the map's image source, Number of rows in the
+ * grid, Number of columns in the grid.
  */
 public class BaseLevelGameConfig {
   private int levelNum;
@@ -14,9 +11,7 @@ public class BaseLevelGameConfig {
   private int rows;
   private int cols;
 
-  /**
-   * Creates a config with the level 1 configurations as default values.
-   */
+  /** Creates a config with the level 1 configurations as default values. */
   public BaseLevelGameConfig() {
     levelNum = 1;
     mapFilePath = "images/level-1-map-v2.png";
@@ -26,6 +21,7 @@ public class BaseLevelGameConfig {
 
   /**
    * Retrieve the level number
+   *
    * @return An integer representation of the level
    */
   public int getLevelNum() {
@@ -34,6 +30,7 @@ public class BaseLevelGameConfig {
 
   /**
    * Retrieve the file path to the map image file
+   *
    * @return String representing the file path to the level's map image file
    */
   public String getMapFilePath() {
