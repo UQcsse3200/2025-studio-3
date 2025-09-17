@@ -1,5 +1,6 @@
 package com.csse3200.game.entities;
 
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.entities.factories.WaveFactory;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
@@ -72,12 +73,12 @@ public class EntitySpawn {
   /**
    * @return uniformly random enemy type among "standard", "fast", and "tanky".
    */
-  public String getRandomRobotType() {
+  public RobotType getRandomRobotType() {
     int r = random.nextInt(3);
     return switch (r) {
-      case 0 -> "standard";
-      case 1 -> "fast";
-      default -> "tanky";
+      case 0 -> RobotType.STANDARD;
+      case 1 -> RobotType.FAST;
+      default -> RobotType.TANKY;
     };
   }
 }

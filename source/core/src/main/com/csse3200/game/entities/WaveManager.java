@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.GameTime;
 import java.util.*;
 
@@ -155,7 +156,7 @@ public class WaveManager {
       endWave();
       return;
     }
-    String robotType = entitySpawn.getRandomRobotType();
+    RobotType robotType = entitySpawn.getRandomRobotType();
     levelGameArea.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;
   }

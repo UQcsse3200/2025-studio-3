@@ -1,0 +1,56 @@
+{
+  "standardRobot": {
+    "name": "Standard Robot",
+    "atlasFilePath": "images/basic_robot.atlas",
+    "defaultSprite": "images/basic_robot_default_sprite.png",
+    "health": 60,
+    "attack": 10,
+    "movementSpeed": 20,
+    "scale": 1,
+    "description": "Just a regular old robot, not too threatening..."
+  },
+  "fastRobot": {
+    "name": "Fast Robot",
+    "atlasFilePath": "images/blue_robot.atlas",
+    "defaultSprite": "images/blue_robot_default_sprite.png",
+    "health": 40,
+    "attack": 10,
+    "movementSpeed": 50,
+    "scale": 0.75,
+    "description": "A robot optimised for speed."
+  },
+  "tankyRobot": {
+    "name": "Tanky Robot",
+    "atlasFilePath": "images/red_robot.atlas",
+    "defaultSprite": "images/red_robot_default_sprite.png",
+    "health": 100,
+    "attack": 15,
+    "movementSpeed": 10,
+    "scale": 1.25,
+    "description": "A regular old robot, just... bigger."
+  },
+  "bungeeRobot": {
+    "name": "Bungee Robot",
+    "atlasFilePath": "images/blue_robot.atlas",
+    "defaultSprite": "images/blue_robot_default_sprite.png",
+    "health": 60,
+    "attack": 10,
+    "movementSpeed": 20,
+    "scale": 1,
+    "description": "ngl no idea what this one is"
+  },
+  "teleportRobot": {
+    "name": "Teleport Robot",
+    "atlasFilePath": "images/red_robot.atlas",
+    "defaultSprite": "images/red_robot_default_sprite.png",
+    "health": 60,
+    "attack": 10,
+    "movementSpeed": 30,
+    "scale": 1,
+    "description": "A teleporting robot.",
+    "teleportCooldownSeconds": 4,
+    "teleportChance": 0.6,
+    "maxTeleports": 3,
+    "invulnerabilityMs": 200
+  }
+}

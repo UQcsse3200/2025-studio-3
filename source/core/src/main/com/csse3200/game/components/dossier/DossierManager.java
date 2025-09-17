@@ -8,19 +8,19 @@ public class DossierManager {
 
   private final EntityConfigs entityData;
   private final Texture defaultTexture;
+  private final Texture blueTexture;
+  private final Texture redTexture;
   private final DefenceConfigs defenceData;
   private final Texture humanTexture;
-  private final Texture fastRobotTexture;
-  private final Texture tankyRobotTexture;
 
   private boolean enemyMode = true;
 
   public DossierManager(
       EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
     this.defaultTexture = textures[0];
-    this.humanTexture = textures[1];
-    this.fastRobotTexture = textures[0];
-    this.tankyRobotTexture = textures[0];
+    this.redTexture = textures[1];
+    this.blueTexture = textures[2];
+    this.humanTexture = textures[3];
     this.entityData = entityConfigs;
     this.defenceData = defenceConfigs;
   }
@@ -40,8 +40,10 @@ public class DossierManager {
     if (enemyMode) {
       return switch (entityName) {
         case "standardRobot" -> new Image(defaultTexture);
-        case "fastRobot" -> new Image(fastRobotTexture);
-        case "tankyRobot" -> new Image(tankyRobotTexture);
+        case "fastRobot" -> new Image(blueTexture);
+        case "tankyRobot" -> new Image(redTexture);
+        case "bungeeRobot" -> new Image(blueTexture);
+        case "teleportRobot" -> new Image(redTexture);
         default -> new Image(defaultTexture);
       };
     }

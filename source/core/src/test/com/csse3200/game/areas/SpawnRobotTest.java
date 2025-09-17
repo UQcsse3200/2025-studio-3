@@ -4,11 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,206 +20,173 @@ import org.mockito.MockedStatic;
 @ExtendWith(GameExtension.class)
 class SpawnRobotTest {
 
-  static class TestArea extends GameArea {
-    @Override
-    public void create() {
-      // comment to please sonarqube
-    }
+  // Match LevelGameArea constants
+  private static final int ROWS = 5;
+  private static final int COLS = 10;
 
-    public Entity spawnOnCell(GridPoint2 cell, boolean cx, boolean cy) {
-      return spawnRobotAtTile(cell, cx, cy);
-    }
-
-    public Entity spawnAt(float x, float y) {
-      return spawnRobotAtFloat(x, y);
-    }
-  }
-
-  private TestArea area;
-
-  // Overlay grid constants, match GameArea implementation
+  // Fixed geometry for predictable math in tests
   private static final float X_OFFSET = 2.9f;
   private static final float Y_OFFSET = 1.45f;
   private static final float GRID_HEIGHT = 7f;
-  private static final int ROWS = 5;
-  private static final int COLS = 10;
-  private static final float CELL = GRID_HEIGHT / ROWS;
-  private static final float EPS = 1e-4f; // float comparison epsilon
+  private static final float CELL = GRID_HEIGHT / ROWS; // tileSize
+  private static final float EPS = 1e-4f;
+
+  private static void ensureRenderService() {
+    RenderService rs = mock(RenderService.class);
+    Stage stage = mock(Stage.class);
+    when(stage.getWidth()).thenReturn(1920f);
+    when(stage.getHeight()).thenReturn(1080f);
+    when(rs.getStage()).thenReturn(stage);
+    ServiceLocator.registerRenderService(rs);
+  }
 
   @BeforeEach
   void setup() {
     ServiceLocator.clear();
     ServiceLocator.registerEntityService(new EntityService());
-    area = new TestArea();
+    ensureRenderService();
+  }
+
+  private static void setPrivateField(Object target, String name, Object value) throws Exception {
+    var f = target.getClass().getDeclaredField(name);
+    f.setAccessible(true);
+    f.set(target, value);
+  }
+
+  private static Entity[] getSpawnedUnits(LevelGameArea area) throws Exception {
+    var f = LevelGameArea.class.getDeclaredField("spawnedUnits");
+    f.setAccessible(true);
+    return (Entity[]) f.get(area);
+  }
+
+  private static LevelGameArea newLevelAreaWithGeometry() throws Exception {
+    ensureRenderService();
+    var terrainFactory = mock(TerrainFactory.class);
+    LevelGameArea lvl = new LevelGameArea(terrainFactory);
+    setPrivateField(lvl, "tileSize", CELL);
+    setPrivateField(lvl, "xOffset", X_OFFSET);
+    setPrivateField(lvl, "yOffset", Y_OFFSET);
+    LevelGameGrid grid = mock(LevelGameGrid.class);
+    when(grid.getTileFromXY(anyFloat(), anyFloat()))
+        .thenReturn(new Entity()); // avoid NPE inside method
+    lvl.setGrid(grid);
+    return lvl;
+  }
+
+  private static int idx(int row, int col) {
+    return row * COLS + col;
+  }
+
+  private static float worldX(float colLike) {
+    return X_OFFSET + CELL * colLike;
+  }
+
+  private static float worldY(int row) {
+    return Y_OFFSET + CELL * row;
   }
 
   @Test
-  void spawnAtTile_noCenter_placesAtBottomLeft() {
-    try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
-        mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
+  void spawnRobot_placesAtBottomLeftOfTile_andScalesHeight() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
       Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
+      mocked.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(dummy);
 
-      GridPoint2 cell = new GridPoint2(3, 1); // col=3,row=1
-      Entity robot = area.spawnOnCell(cell, false, false);
-      assertSame(dummy, robot);
+      int col = 3, row = 1;
+      lvl.spawnRobot(col, row, RobotType.STANDARD);
 
-      float expectedX = X_OFFSET + CELL * cell.x;
-      float expectedY = Y_OFFSET + CELL * cell.y;
-      Vector2 pos = robot.getPosition();
+      assertEquals(worldX(col), dummy.getPosition().x, EPS);
+      assertEquals(worldY(row), dummy.getPosition().y, EPS);
 
-      assertEquals(expectedX, pos.x, EPS);
-      assertEquals(expectedY, pos.y, EPS);
+      assertEquals(CELL, dummy.getScale().y, EPS);
     }
   }
 
   @Test
-  void spawnAtTile_centered_alignsEntityCenterToCellCenter() {
-    try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
-        mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      Entity dummy = new Entity();
+  void spawnRobot_clampsOutOfBounds_lowAndHigh() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
+      Entity e1 = new Entity();
+      Entity e2 = new Entity();
       mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
+          .when(() -> RobotFactory.createRobotType(any()))
+          .thenReturn(e1) // first call
+          .thenReturn(e2); // second call
 
-      GridPoint2 cell = new GridPoint2(7, 3);
-      Entity robot = area.spawnOnCell(cell, true, true);
+      lvl.spawnRobot(-5, -7, RobotType.STANDARD);
+      assertEquals(worldX(0), e1.getPosition().x, EPS);
+      assertEquals(worldY(0), e1.getPosition().y, EPS);
 
-      float cellCenterX = X_OFFSET + CELL * cell.x + CELL / 2f;
-      float cellCenterY = Y_OFFSET + CELL * cell.y + CELL / 2f;
-
-      Vector2 center = robot.getCenterPosition(); // pos + (scale/2)
-      assertEquals(cellCenterX, center.x, EPS);
-      assertEquals(cellCenterY, center.y, EPS);
+      lvl.spawnRobot(999, 999, RobotType.FAST);
+      assertEquals(worldX(COLS - 1), e2.getPosition().x, EPS);
+      assertEquals(worldY(ROWS - 1), e2.getPosition().y, EPS);
     }
   }
 
   @Test
-  void spawnAtFloat_setsExactWorldPosition() {
-    try (MockedStatic<com.csse3200.game.entities.factories.RobotFactory> mocked =
-        mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
-
-      float x = 12.34f, y = 5.67f;
-      Entity robot = area.spawnAt(x, y);
-      assertSame(dummy, robot);
-      assertEquals(x, robot.getPosition().x, EPS);
-      assertEquals(y, robot.getPosition().y, EPS);
-    }
-  }
-
-  @Test
-  void centerX_only_alignsX_center_keepsY_bottomLeft() {
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
-
-      GridPoint2 cell = new GridPoint2(4, 2);
-      Entity robot = area.spawnOnCell(cell, true, false);
-
-      float tileX = X_OFFSET + CELL * cell.x;
-      float tileY = Y_OFFSET + CELL * cell.y;
-      float cellCenterX = tileX + CELL / 2f;
-
-      // X centred: entity center X equals cell center X
-      assertEquals(cellCenterX, robot.getCenterPosition().x, EPS);
-      // Y not centred: position Y equals bottom-left of the cell
-      assertEquals(tileY, robot.getPosition().y, EPS);
-    }
-  }
-
-  @Test
-  void centerY_only_alignsY_center_keepsX_bottomLeft() {
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
-
-      GridPoint2 cell = new GridPoint2(2, 3);
-      Entity robot = area.spawnOnCell(cell, false, true);
-
-      float tileX = X_OFFSET + CELL * cell.x;
-      float tileY = Y_OFFSET + CELL * cell.y;
-      float cellCenterY = tileY + CELL / 2f;
-
-      assertEquals(tileX, robot.getPosition().x, EPS); // X not centred
-      assertEquals(cellCenterY, robot.getCenterPosition().y, EPS); // Y centred
-    }
-  }
-
-  @Test
-  void registersExactlyOnce_withSameInstance() {
+  void spawnRobot_registersEntityOnce() throws Exception {
+    // fresh service so we can verify calls
     ServiceLocator.clear();
     EntityService es = mock(EntityService.class);
     ServiceLocator.registerEntityService(es);
-    area = new TestArea();
 
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    try (MockedStatic<RobotFactory> mocked = mockStatic(RobotFactory.class)) {
       Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
+      mocked.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(dummy);
 
-      Entity robot = area.spawnOnCell(new GridPoint2(0, 0), false, false);
-      assertSame(dummy, robot);
+      lvl.spawnRobot(2, 2, RobotType.STANDARD);
       verify(es, times(1)).register(same(dummy));
     }
   }
 
   @Test
-  void corners_mapCorrectly() {
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenAnswer(inv -> new Entity());
+  void spawnRobotOnDefence_noDefence_doesNothing() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
 
-      // (0,0)
-      Entity a = area.spawnOnCell(new GridPoint2(0, 0), false, false);
-      assertEquals(X_OFFSET, a.getPosition().x, EPS);
-      assertEquals(Y_OFFSET, a.getPosition().y, EPS);
-
-      // (cols-1, rows-1)
-      Entity b = area.spawnOnCell(new GridPoint2(COLS - 1, ROWS - 1), false, false);
-      assertEquals(X_OFFSET + CELL * (COLS - 1), b.getPosition().x, EPS);
-      assertEquals(Y_OFFSET + CELL * (ROWS - 1), b.getPosition().y, EPS);
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      lvl.spawnRobotOnDefence(RobotType.STANDARD);
+      rf.verify(() -> RobotFactory.createRobotType(any()), times(0));
     }
   }
 
   @Test
-  void multipleRobots_independentPositions() {
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenAnswer(inv -> new Entity());
+  void spawnRobotOnDefence_spawnsRightOfRightmostDefence_sameRow() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
 
-      Entity r1 = area.spawnOnCell(new GridPoint2(1, 1), true, true);
-      Entity r2 = area.spawnOnCell(new GridPoint2(8, 4), true, true);
+    getSpawnedUnits(lvl)[idx(2, 6)] = new Entity();
 
-      assertNotEquals(r1, r2);
-      assertEquals(X_OFFSET + CELL * 1 + CELL / 2f, r1.getCenterPosition().x, EPS);
-      assertEquals(Y_OFFSET + CELL * 1 + CELL / 2f, r1.getCenterPosition().y, EPS);
-      assertEquals(X_OFFSET + CELL * 8 + CELL / 2f, r2.getCenterPosition().x, EPS);
-      assertEquals(Y_OFFSET + CELL * 4 + CELL / 2f, r2.getCenterPosition().y, EPS);
+    Entity spawned = spy(new Entity());
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      rf.when(() -> RobotFactory.createRobotType(RobotType.STANDARD)).thenReturn(spawned);
+
+      lvl.spawnRobotOnDefence(RobotType.STANDARD);
+
+      assertEquals(worldX(6 + 0.5f), spawned.getPosition().x, EPS);
+      assertEquals(worldY(2), spawned.getPosition().y, EPS);
     }
   }
 
   @Test
-  void terrainNull_doesNotAffectOverlaySpawn() {
-    area.terrain = null; // explicit
-    try (var mocked = mockStatic(com.csse3200.game.entities.factories.RobotFactory.class)) {
-      Entity dummy = new Entity();
-      mocked
-          .when(() -> com.csse3200.game.entities.factories.RobotFactory.createRobotType(any()))
-          .thenReturn(dummy);
-      assertDoesNotThrow(() -> area.spawnOnCell(new GridPoint2(2, 2), false, false));
+  void spawnRobotOnDefence_picksRightmostAcrossRows_andClampsAtRightEdge() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    // Defences at (1,3) and (4,9) -> rightmost is (4,9)
+    getSpawnedUnits(lvl)[idx(1, 3)] = new Entity();
+    getSpawnedUnits(lvl)[idx(4, 9)] = new Entity();
+
+    Entity spawned = spy(new Entity());
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      rf.when(() -> RobotFactory.createRobotType(RobotType.FAST)).thenReturn(spawned);
+
+      lvl.spawnRobotOnDefence(RobotType.FAST);
+
+      float spawnCol = Math.min(9 + 0.5f, COLS - 0.01f);
+      assertEquals(worldX(spawnCol), spawned.getPosition().x, EPS);
+      assertEquals(worldY(4), spawned.getPosition().y, EPS);
     }
   }
 }

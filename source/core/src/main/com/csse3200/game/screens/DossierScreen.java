@@ -71,11 +71,13 @@ public class DossierScreen extends ScreenAdapter {
     ui.addComponent(
             new DossierDisplay(
                 game,
-                FileLoader.readClass(EntityConfigs.class, "configs/Enemies.json"),
+                FileLoader.readClass(EntityConfigs.class, "configs/enemies.json"),
                 FileLoader.readClass(DefenceConfigs.class, "configs/defences.json"),
                 new Texture[] {
-                  new Texture("images/default_enemy_image.png"),
-                  new Texture("images/sling_shooter_1.png")
+                  new Texture("images/basic_robot_default_sprite.png"),
+                        new Texture("images/red_robot_default_sprite.png"),
+                        new Texture("images/blue_robot_default_sprite.png"),
+                    new Texture("images/sling_shooter_1.png")
                 }))
         .addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);
