@@ -8,6 +8,7 @@ com.csse3200.game.components.achievements
 com.csse3200.game.components.cards
 com.csse3200.game.components.currency
 com.csse3200.game.components.dialog
+com.csse3200.game.components.dossier
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.gameover
 com.csse3200.game.components.hud
@@ -18,6 +19,7 @@ com.csse3200.game.components.mainmenu
 com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
+com.csse3200.game.components.profile
 com.csse3200.game.components.proximityinfodisplay
 com.csse3200.game.components.settingsmenu
 com.csse3200.game.components.shop
