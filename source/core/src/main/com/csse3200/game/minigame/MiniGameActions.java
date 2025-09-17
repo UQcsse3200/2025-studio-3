@@ -27,14 +27,12 @@ public class MiniGameActions extends Component {
      */
     private void onLaneRunner() {
         logger.info("Lane Runner Mini game");
-        Persistence.load();
-        game.loadMenus();
+
         game.setScreen(GdxGame.ScreenType.LANE_RUNNER);
     }
     private void onWallPong() {
         logger.info("Brick Breaker Mini game");
-        Persistence.load();
-        game.loadMenus();
+
         game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
     }
     /**

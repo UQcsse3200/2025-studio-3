@@ -30,14 +30,11 @@ public class MainMenuActions extends Component {
    */
   private void onStart() {
     logger.info("Start game");
-    Persistence.load();
-    game.loadMenus();
     game.setScreen(GdxGame.ScreenType.MAIN_GAME);
   }
     private void onMiniGame() {
         logger.info("MiniGames");
-        Persistence.load();
-        game.loadMenus();
+
         game.setScreen(GdxGame.ScreenType.MINI_GAMES);
     }
   /**
