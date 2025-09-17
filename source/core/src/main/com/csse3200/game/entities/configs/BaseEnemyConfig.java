@@ -28,6 +28,8 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   /** The enemy's movement speed */
   public float movementSpeed = 1f;
 
+  public String description = "Default Description";
+
   /**
    * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
    * tile height.

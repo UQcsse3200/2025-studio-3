@@ -96,7 +96,6 @@ public class WorldMapScreen implements Screen {
     batch.begin();
 
     batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
     for (Node node : nodes) {
       Texture nodeTex;
       if (SHOP_NODE_ID.equals(node.id)) {
@@ -164,6 +163,9 @@ public class WorldMapScreen implements Screen {
       } else if (nearbyNode.level == 1) {
         logger.info("Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+      } else if (nearbyNode.level == 3) {
+        logger.info("Starting Slot Machine Level!");
+        game.setScreen(GdxGame.ScreenType.SLOT_MACHINE);
       } else {
         logger.info("Checkpoint reached at Level {}", nearbyNode.level);
         nearbyNode.unlocked = true;
