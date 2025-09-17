@@ -128,18 +128,18 @@ class TileStorageComponentTest {
 
   @Test
   void shouldGetArea() {
-      Entity tile = grid.getTile(0, 0);
-      TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-      AreaAPI area = tileStorageComponent.getArea();
-      assertEquals(area, levelGameArea);
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    AreaAPI area = tileStorageComponent.getArea();
+    assertEquals(area, levelGameArea);
   }
 
   @Test
   void shouldGetPosition() {
-      Entity tile = grid.getTile(0, 0);
-      TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-      int pos = tileStorageComponent.getPosition();
-      assertEquals(0, pos);
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    int pos = tileStorageComponent.getPosition();
+    assertEquals(0, pos);
   }
 
   @Test

@@ -126,62 +126,62 @@ class TileHitboxComponentTest {
 
   @Test
   void shouldGetMinX() {
-      Entity tile = createValidTile();
-      float minX = tile.getComponent(TileHitboxComponent.class).getMinPosX();
-      assertEquals(0, minX);
+    Entity tile = createValidTile();
+    float minX = tile.getComponent(TileHitboxComponent.class).getMinPosX();
+    assertEquals(0, minX);
   }
 
   @Test
   void shouldGetMinY() {
-      Entity tile = createValidTile();
-      float minY = tile.getComponent(TileHitboxComponent.class).getMinPosY();
-      assertEquals(0, minY);
+    Entity tile = createValidTile();
+    float minY = tile.getComponent(TileHitboxComponent.class).getMinPosY();
+    assertEquals(0, minY);
   }
 
   @Test
   void shouldGetMaxX() {
-      Entity tile = createValidTile();
-      float maxX = tile.getComponent(TileHitboxComponent.class).getMaxPosX();
-      assertEquals(5, maxX);
+    Entity tile = createValidTile();
+    float maxX = tile.getComponent(TileHitboxComponent.class).getMaxPosX();
+    assertEquals(5, maxX);
   }
 
   @Test
   void shouldGetMaxY() {
-      Entity tile = createValidTile();
-      float maxY = tile.getComponent(TileHitboxComponent.class).getMaxPosY();
-      assertEquals(5, maxY);
+    Entity tile = createValidTile();
+    float maxY = tile.getComponent(TileHitboxComponent.class).getMaxPosY();
+    assertEquals(5, maxY);
   }
 
   @Test
   void shouldSetMinX() {
-      Entity tile = createValidTile();
-      tile.getComponent(TileHitboxComponent.class).setMinPosX(1);
-      float minX = tile.getComponent(TileHitboxComponent.class).getMinPosX();
-      assertEquals(1, minX);
+    Entity tile = createValidTile();
+    tile.getComponent(TileHitboxComponent.class).setMinPosX(1);
+    float minX = tile.getComponent(TileHitboxComponent.class).getMinPosX();
+    assertEquals(1, minX);
   }
 
   @Test
   void shouldSetMinY() {
-      Entity tile = createValidTile();
-      tile.getComponent(TileHitboxComponent.class).setMinPosY(2);
-      float minY = tile.getComponent(TileHitboxComponent.class).getMinPosY();
-      assertEquals(2, minY);
+    Entity tile = createValidTile();
+    tile.getComponent(TileHitboxComponent.class).setMinPosY(2);
+    float minY = tile.getComponent(TileHitboxComponent.class).getMinPosY();
+    assertEquals(2, minY);
   }
 
   @Test
   void shouldSetMaxX() {
-      Entity tile = createValidTile();
-      tile.getComponent(TileHitboxComponent.class).setMaxPosX(6);
-      float maxX = tile.getComponent(TileHitboxComponent.class).getMaxPosX();
-      assertEquals(6, maxX);
+    Entity tile = createValidTile();
+    tile.getComponent(TileHitboxComponent.class).setMaxPosX(6);
+    float maxX = tile.getComponent(TileHitboxComponent.class).getMaxPosX();
+    assertEquals(6, maxX);
   }
 
   @Test
   void shouldSetMaxY() {
-      Entity tile = createValidTile();
-      tile.getComponent(TileHitboxComponent.class).setMaxPosY(7);
-      float maxY = tile.getComponent(TileHitboxComponent.class).getMaxPosY();
-      assertEquals(7, maxY);
+    Entity tile = createValidTile();
+    tile.getComponent(TileHitboxComponent.class).setMaxPosY(7);
+    float maxY = tile.getComponent(TileHitboxComponent.class).getMaxPosY();
+    assertEquals(7, maxY);
   }
 
   @Test

@@ -29,7 +29,11 @@ public class HotbarDisplay extends UIComponent {
   private float cellWidth;
   private Group layered;
 
-  public HotbarDisplay(LevelGameArea game, Float scaling, Map<String, Supplier<Entity>> unitList, Map<String, Supplier<Entity>> itemList) {
+  public HotbarDisplay(
+      LevelGameArea game,
+      Float scaling,
+      Map<String, Supplier<Entity>> unitList,
+      Map<String, Supplier<Entity>> itemList) {
     this.scaling = scaling;
     this.game = game;
     this.unitList = unitList;
@@ -45,7 +49,7 @@ public class HotbarDisplay extends UIComponent {
   /**
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
-private void addActors() {
+  private void addActors() {
     layered = new Group();
 
     // create hotbar image
@@ -62,60 +66,60 @@ private void addActors() {
 
     // creates unit images and places in slots
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
-        Image tempUnit = new Image(new Texture(unit.getKey()));
-        tempUnit.setSize(scaling, scaling);
+      Image tempUnit = new Image(new Texture(unit.getKey()));
+      tempUnit.setSize(scaling, scaling);
 
-        slotImages.add(tempUnit);
+      slotImages.add(tempUnit);
 
-        // listener for selection/use
-        tempUnit.addListener(
-            new ClickListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    if (event.getButton() == Input.Buttons.LEFT) {
-                        game.setIsCharacterSelected(true);
-                        game.beginDrag(new Texture(unit.getKey()));
-                        Entity tempPlaceableUnit =
-                            new Entity()
-                                .addComponent(new DeckInputComponent(game, unit.getValue()))
-                                .addComponent(new TextureRenderComponent(unit.getKey()));
-                        game.setSelectedUnit(tempPlaceableUnit);
-                    } else if (event.getButton() == Input.Buttons.RIGHT) {
-                        game.setSelectedUnit(null);
-                    }
-                    return false;
-                }
-            });
-        layered.addActor(tempUnit);
+      // listener for selection/use
+      tempUnit.addListener(
+          new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+              if (event.getButton() == Input.Buttons.LEFT) {
+                game.setIsCharacterSelected(true);
+                game.beginDrag(new Texture(unit.getKey()));
+                Entity tempPlaceableUnit =
+                    new Entity()
+                        .addComponent(new DeckInputComponent(game, unit.getValue()))
+                        .addComponent(new TextureRenderComponent(unit.getKey()));
+                game.setSelectedUnit(tempPlaceableUnit);
+              } else if (event.getButton() == Input.Buttons.RIGHT) {
+                game.setSelectedUnit(null);
+              }
+              return false;
+            }
+          });
+      layered.addActor(tempUnit);
     }
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
-        Image tempUnit = new Image(new Texture(item.getKey()));
-        tempUnit.setSize(scaling, scaling);
+      Image tempUnit = new Image(new Texture(item.getKey()));
+      tempUnit.setSize(scaling, scaling);
 
-        slotImages.add(tempUnit);
+      slotImages.add(tempUnit);
 
-        // listener for selection/use
-        tempUnit.addListener(
-            new ClickListener() {
-                @Override
-                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                    if (event.getButton() == Input.Buttons.LEFT) {
-                        game.setIsCharacterSelected(true);
-                            game.beginDrag(new Texture(item.getKey()));
-                            Entity tempPlaceableUnit =
-                                new Entity()
-                                        .addComponent(new DeckInputComponent(game, item.getValue()))
-                                        .addComponent(new TextureRenderComponent(item.getKey()));
-                            game.setSelectedUnit(tempPlaceableUnit);
-                            remove(tempUnit);
-                    } else if (event.getButton() == Input.Buttons.RIGHT) {
-                        game.setSelectedUnit(null);
-                    }
-                    return false;
-                }
-            });
+      // listener for selection/use
+      tempUnit.addListener(
+          new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+              if (event.getButton() == Input.Buttons.LEFT) {
+                game.setIsCharacterSelected(true);
+                game.beginDrag(new Texture(item.getKey()));
+                Entity tempPlaceableUnit =
+                    new Entity()
+                        .addComponent(new DeckInputComponent(game, item.getValue()))
+                        .addComponent(new TextureRenderComponent(item.getKey()));
+                game.setSelectedUnit(tempPlaceableUnit);
+                remove(tempUnit);
+              } else if (event.getButton() == Input.Buttons.RIGHT) {
+                game.setSelectedUnit(null);
+              }
+              return false;
+            }
+          });
 
-        layered.addActor(tempUnit);
+      layered.addActor(tempUnit);
     }
 
     layoutUnits(startX, y, cellWidth);
@@ -137,21 +141,21 @@ private void addActors() {
 
     stage.addActor(hotbarTable);
     hotbarTable.toBack();
-}
+  }
 
-public void remove(Image usedUnit) {
+  public void remove(Image usedUnit) {
     slotImages.removeValue(usedUnit, true);
     usedUnit.remove();
     layoutUnits(cellWidth / 4, 30, layered.getWidth() / 6);
-}
+  }
 
-private void layoutUnits(float startX, float y, float cellWidth) {
+  private void layoutUnits(float startX, float y, float cellWidth) {
     float x = startX;
     for (Image img : slotImages) {
-        img.setPosition(x, y);
-        x += cellWidth;
+      img.setPosition(x, y);
+      x += cellWidth;
     }
-}
+  }
 
   @Override
   protected void draw(SpriteBatch batch) {
