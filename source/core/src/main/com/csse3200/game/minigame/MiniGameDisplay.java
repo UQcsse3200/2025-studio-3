@@ -29,7 +29,7 @@ public class MiniGameDisplay extends UIComponent {
         table.setFillParent(true);
 
         TextButton LaneRunnerBtn = new TextButton("Lane Runner", skin);
-        TextButton BrickBreakerBtn = new TextButton("Brick Breaker", skin);
+        TextButton WallPongBtn = new TextButton("Wall Pong", skin);
         TextButton BackBtn = new TextButton("Back", skin);
         // Triggers an event when the button is pressed
         LaneRunnerBtn.addListener(
@@ -40,12 +40,12 @@ public class MiniGameDisplay extends UIComponent {
                         entity.getEvents().trigger("lanerunner");
                     }
                 });
-        BrickBreakerBtn.addListener(
+        WallPongBtn.addListener(
                 new ChangeListener() {
                     @Override
                     public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("Brick Breaker button clicked");
-                        entity.getEvents().trigger("brickbreaker");
+                        logger.debug("Wall Pong button clicked");
+                        entity.getEvents().trigger("wallpong");
                     }
                 });
         BackBtn.addListener(
@@ -59,7 +59,7 @@ public class MiniGameDisplay extends UIComponent {
 
         table.add(LaneRunnerBtn).padTop(30f);
         table.row();
-        table.add(BrickBreakerBtn).padTop(30f);
+        table.add(WallPongBtn).padTop(30f);
         table.row();
         table.add(BackBtn).padTop(15f);
         table.row();
