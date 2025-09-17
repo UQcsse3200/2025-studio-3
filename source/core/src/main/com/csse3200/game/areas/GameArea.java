@@ -100,16 +100,6 @@ public abstract class GameArea implements Disposable {
     return areaEntities;
   }
 
-  //    public Entity spawnRobotAtTile(GridPoint2 tilePos, boolean centerX, boolean centerY) {
-  //        BaseEntityConfig cfg = new BaseEntityConfig();
-  //        cfg.health = 10;
-  //        cfg.baseAttack = 2;
-  //
-  //        Entity robot = RobotFactory.createRobot(cfg);
-  //        spawnEntityAt(robot, tilePos, centerX, centerY);
-  //        return robot;
-  //    }
-
   // If no robot type given, spawns a standard robot
   public Entity spawnRobotAtTile(GridPoint2 cell, boolean centerX, boolean centerY) {
     return spawnRobotAtTile(cell, centerX, centerY, "standard");
