@@ -4,11 +4,16 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.IntMap;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.ComponentPriority;
 import com.csse3200.game.components.ComponentType;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -244,6 +249,7 @@ public class Entity {
       return;
     }
     createdComponents = components.values().toArray();
+    createdComponents.sort(Comparator.comparing(c -> Optional.ofNullable(c.getPriority()).orElse(ComponentPriority.LOW).getValue()));
     for (Component component : createdComponents) {
       component.create();
     }
