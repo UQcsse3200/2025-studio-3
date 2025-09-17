@@ -219,7 +219,7 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Avoid robot factory static
-    doNothing().when(area).spawnRobot(anyInt(), anyInt(), anyString());
+    doNothing().when(area).spawnRobot(anyInt(), anyInt(), any());
 
     var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);

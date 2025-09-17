@@ -124,8 +124,15 @@ public class DefenceFactory {
    */
   public static Entity createBaseDefender() {
 
+    ColliderComponent solid =
+        new ColliderComponent()
+            .setCollisionFilter(
+                PhysicsLayer.NPC,
+                (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY));
+
     Entity npc =
         new Entity()
+            .addComponent(solid)
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
             .addComponent(new ColliderComponent())

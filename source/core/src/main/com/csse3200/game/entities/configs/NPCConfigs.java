@@ -10,6 +10,7 @@ public class NPCConfigs {
   public final GhostKingConfig ghostKing = new GhostKingConfig();
   public final BaseDefenderConfig slingshooter = new BaseDefenderConfig();
 
+  public TeleportRobotConfig teleportRobot = new TeleportRobotConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();
