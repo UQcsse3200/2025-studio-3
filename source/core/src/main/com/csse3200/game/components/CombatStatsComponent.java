@@ -1,7 +1,5 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.services.ProfileService;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,34 +58,6 @@ public class CombatStatsComponent extends Component {
 
     if (entity != null) {
       if (this.health == 0) {
-        // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
-        int extraCoins = 3;
-
-        // 2) Progression stats (HudDisplay / coins.png reads this)
-        ProfileService profileService = ServiceLocator.getProfileService();
-        if (profileService != null && profileService.isActive()) {
-          int before = profileService.getProfile().getWallet().getCoins();
-          profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
-          profileService.getProfile().getWallet().addCoins(extraCoins);
-          profileService
-              .getProfile()
-              .getStatistics()
-              .incrementStatistic("coinsCollected", extraCoins);
-          logger.info(
-              "[Death] wallet: {} + {} -> {}",
-              before,
-              extraCoins,
-              profileService.getProfile().getWallet().getCoins());
-        } else {
-          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
-        }
-
-        // 3) Gameplay currency service (SunlightHudDisplay reads this)
-        if (ServiceLocator.getCurrencyService() != null) {
-          ServiceLocator.getCurrencyService().add(extraCoins);
-          logger.info("[Death] CurrencyService +{}", extraCoins);
-        }
-
         // 4) Now despawn
         entity.getEvents().trigger("despawnRobot", entity);
       }

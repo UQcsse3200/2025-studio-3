@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
@@ -89,5 +90,14 @@ public abstract class GameArea implements Disposable {
    */
   public List<Entity> getEntities() {
     return areaEntities;
+  }
+
+  public void increaseScore(int amount) {
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService != null && profileService.isActive()) {
+      profileService.getProfile().getWallet().addCoins(amount);
+      profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+      profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", amount);
+    }
   }
 }

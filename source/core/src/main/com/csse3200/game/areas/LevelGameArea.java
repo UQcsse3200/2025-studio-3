@@ -344,7 +344,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "entityDeath",
             () -> {
               requestDespawn(unit);
-              // Persistence.addCoins(3); //commented out since broken
+              increaseScore(10);
               robots.remove(unit);
             });
     logger.info("Unit spawned at position {} {}", col, row);
@@ -554,7 +554,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
             "entityDeath",
             () -> {
               requestDespawn(newEntity);
-              robots.remove(newEntity);
+              increaseScore(10);
             });
     logger.info("Unit spawned at position {}", position);
   }
