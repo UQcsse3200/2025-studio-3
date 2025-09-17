@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -123,6 +124,22 @@ class TileStorageComponentTest {
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.removeTileUnit();
     assertNull(tileStorageComponent.getTileUnit());
+  }
+
+  @Test
+  void shouldGetArea() {
+      Entity tile = grid.getTile(0, 0);
+      TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+      AreaAPI area = tileStorageComponent.getArea();
+      assertEquals(area, levelGameArea);
+  }
+
+  @Test
+  void shouldGetPosition() {
+      Entity tile = grid.getTile(0, 0);
+      TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+      int pos = tileStorageComponent.getPosition();
+      assertEquals(0, pos);
   }
 
   @Test
