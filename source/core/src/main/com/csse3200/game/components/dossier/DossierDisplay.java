@@ -28,6 +28,7 @@ public class DossierDisplay extends UIComponent {
   private Label entityInfoLabel;
   private Label entityNameLabel;
   private Image entitySpriteImage;
+  private final String changeType = "change_type";
 
   /** Constructor to display the dossier. */
   public DossierDisplay(
@@ -84,7 +85,6 @@ public class DossierDisplay extends UIComponent {
 
   /** A listener to change the type of entity shown */
   private void changeTypeListener() {
-    String changeType = "change_type";
     entity
         .getEvents()
         .addListener(
@@ -118,7 +118,7 @@ public class DossierDisplay extends UIComponent {
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (robotsBtn.isChecked()) {
               logger.info("Selected robot type button");
-              entity.getEvents().trigger("change_type", true);
+              entity.getEvents().trigger(changeType, true);
             }
           }
         });
@@ -130,7 +130,7 @@ public class DossierDisplay extends UIComponent {
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (humansBtn.isChecked()) {
               logger.info("Selected human type button");
-              entity.getEvents().trigger("change_type", false);
+              entity.getEvents().trigger(changeType, false);
             }
           }
         });

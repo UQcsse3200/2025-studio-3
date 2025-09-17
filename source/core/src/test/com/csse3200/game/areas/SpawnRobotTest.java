@@ -19,7 +19,9 @@ class SpawnRobotTest {
 
   static class TestArea extends GameArea {
     @Override
-    public void create() {}
+    public void create() {
+      // comment to please sonarqube
+    }
 
     public Entity spawnOnCell(GridPoint2 cell, boolean cx, boolean cy) {
       return spawnRobotAtTile(cell, cx, cy);

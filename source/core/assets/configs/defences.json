@@ -2,8 +2,8 @@
   "slingshooter": {
     "name": "Slingshooter",
     "description": "Slingshots do a surprising amount of damage, even to metal robots.",
-    "health": 50,
-    "baseAttack": 1,
+    "defenceHealth": 50,
+    "defenceAttack": 1,
     "type": 1,
     "range": 5,
     "state": 0,

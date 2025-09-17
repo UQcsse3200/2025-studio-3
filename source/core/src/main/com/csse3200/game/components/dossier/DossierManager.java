@@ -63,9 +63,9 @@ public class DossierManager {
       return " "
           + config.description
           + "\n Attack: "
-          + config.baseAttack
+          + config.defenceAttack
           + "\n Health: "
-          + config.health;
+          + config.defenceHealth;
     }
   }
 

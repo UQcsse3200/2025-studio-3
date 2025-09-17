@@ -7,23 +7,10 @@ public class BaseDefenceConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  /*
-  public enum Type {
-      LONG_RANGE,
-      RANGED,
-      MELEE
-  };
-
-  public enum State {
-      IDLE,
-      ATTACKING
-  };
-  */
-
   public String name = "Name";
   public String description = "Description";
-  public int health = 1;
-  public int baseAttack = 1;
+  public int defenceHealth = 1;
+  public int defenceAttack = 1;
 
   /** Defence type identifier */
   public int type = 1;
