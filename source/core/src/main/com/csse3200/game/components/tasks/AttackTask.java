@@ -15,7 +15,7 @@ public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   // cooldown fields
-  private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+  private static final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
 
   /**

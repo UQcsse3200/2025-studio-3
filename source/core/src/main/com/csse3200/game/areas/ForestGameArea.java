@@ -31,6 +31,7 @@ public class ForestGameArea extends GameArea {
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String GRASS_TEXTURE = "images/iso_grass_3.png";
+  private static final String SLING_SHOOTER = "images/sling_shooter.png";
   private static final String[] FOREST_SOUNDS = {"sounds/Impact4.ogg"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] FOREST_MUSIC = {BACKGROUND_MUSIC};
@@ -48,7 +49,7 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     GRASS_TEXTURE,
-    "images/sling_shooter.png",
+    SLING_SHOOTER,
     "images/items/grenade.png",
     "images/items/coffee.png",
     "images/items/emp.png",
@@ -74,9 +75,8 @@ public class ForestGameArea extends GameArea {
     GRASS_TEXTURE,
     "images/robot_placeholder.png",
     "images/scrap_metal.png",
-    "images/sling_shooter.png",
     "images/normal_sunlight.png",
-    "images/sling_shooter.png",
+    SLING_SHOOTER,
     "images/grenade.atlas",
     "images/coffee.atlas",
     "images/emp.atlas",
@@ -85,7 +85,6 @@ public class ForestGameArea extends GameArea {
   };
 
   private final TerrainFactory terrainFactory;
-  private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
 
@@ -115,7 +114,6 @@ public class ForestGameArea extends GameArea {
     spawnGhostKing();
 
     spawnRobots();
-    spawnSun();
     spawnDefences();
 
     playMusic();
@@ -303,15 +301,6 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(FOREST_SOUNDS);
     resourceService.unloadAssets(FOREST_MUSIC);
-  }
-
-  private void spawnSun() {
-    //    Entity sunSpawner = new Entity();
-    //
-    //    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/scrap_metal.png",);
-    //
-    //    sunSpawner.addComponent(currencyGenerator);
-    //    spawnEntity(sunSpawner);
   }
 
   @Override

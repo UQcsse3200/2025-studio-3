@@ -60,7 +60,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     "images/emp.png",
     "images/buff.png",
     "images/nuke.png",
-    "images/sling_shooter_front.png",
     "images/forge_1.png",
     "images/sling_projectile.png",
     "images/sling_projectile_pad.png"
@@ -69,7 +68,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final String[] levelTextureAtlases = {
     "images/ghost.atlas",
     "images/ghostKing.atlas",
-    "images/sling_shooter.atlas",
     "images/robot_placeholder.atlas",
     "images/grenade.atlas",
     "images/coffee.atlas",
@@ -231,8 +229,8 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         placeDeckUnit(ItemFactory::createNuke, "images/items/nuke.png");
       }
     }
-    placeDeckUnit(() -> DefenceFactory.createFurnace(), "images/forge_1.png");
-    placeDeckUnit(() -> DefenceFactory.createSlingShooter(), "images/sling_shooter_front.png");
+    placeDeckUnit(DefenceFactory::createFurnace, "images/forge_1.png");
+    placeDeckUnit(DefenceFactory::createSlingShooter, "images/sling_shooter_front.png");
   }
 
   private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
