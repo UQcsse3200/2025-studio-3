@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  * inventory allowing the player to add units to the grid.
  */
-public class LevelGameArea extends GameArea implements AreaAPI {
+public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private static final int LEVEL_ONE_ROWS = 5;
   private static final int LEVEL_ONE_COLS = 10;

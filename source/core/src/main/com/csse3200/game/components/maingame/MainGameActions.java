@@ -3,6 +3,7 @@ package com.csse3200.game.components.maingame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.screens.MainGameScreen;
+import com.csse3200.game.screens.SlotMachineScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ public class MainGameActions extends Component {
   private static final Logger logger = LoggerFactory.getLogger(MainGameActions.class);
   private PauseMenu pauseMenu;
   private MainGameScreen mainGameScreen;
+  private SlotMachineScreen slotMachineScreen;
   private com.csse3200.game.components.hud.PauseButton pauseButton;
 
   /** Constructor for the MainGameActions class. */
@@ -47,12 +49,32 @@ public class MainGameActions extends Component {
   }
 
   /**
+   * Sets the slot machine screen reference.
+   *
+   * @param slotMachineScreen The slot machine screen to set.
+   */
+  public void setSlotMachineScreen(SlotMachineScreen slotMachineScreen) {
+    this.slotMachineScreen = slotMachineScreen;
+  }
+
+  /**
    * Gets the main game screen reference.
    *
    * @return The main game screen reference.
    */
   public MainGameScreen getMainGameScreen() {
     return mainGameScreen;
+  }
+
+  /** Sets paused state on whichever screen is active (main game or slot). */
+  private void setPausedOnActiveScreen(boolean paused) {
+    if (mainGameScreen != null) {
+      mainGameScreen.setPaused(paused);
+    } else if (slotMachineScreen != null) {
+      slotMachineScreen.setPaused(paused);
+    } else {
+      logger.warn("No screen set in MainGameActions when trying to set paused={}", paused);
+    }
   }
 
   /**
@@ -67,16 +89,16 @@ public class MainGameActions extends Component {
   /** Handles the pause game event */
   private void onPauseGame() {
     logger.info("Pause game event triggered");
-    if (pauseMenu != null && mainGameScreen != null) {
+    if (pauseMenu != null && (mainGameScreen != null || slotMachineScreen != null)) {
       if (pauseMenu.isVisible()) {
         pauseMenu.hide();
-        mainGameScreen.setPaused(false);
+        setPausedOnActiveScreen(false);
         if (pauseButton != null) {
           pauseButton.setPaused(false);
         }
       } else {
         pauseMenu.show();
-        mainGameScreen.setPaused(true);
+        setPausedOnActiveScreen(true);
         if (pauseButton != null) {
           pauseButton.setPaused(true);
         }
@@ -89,9 +111,9 @@ public class MainGameActions extends Component {
   /** Handles the resume game event */
   private void onResumeGame() {
     logger.info("Resume game event triggered");
-    if (pauseMenu != null && mainGameScreen != null) {
+    if (pauseMenu != null && (mainGameScreen != null || slotMachineScreen != null)) {
       pauseMenu.hide();
-      mainGameScreen.setPaused(false);
+      setPausedOnActiveScreen(false);
       if (pauseButton != null) {
         pauseButton.setPaused(false);
       }
