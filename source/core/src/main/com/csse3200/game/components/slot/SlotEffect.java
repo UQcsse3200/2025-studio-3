@@ -3,7 +3,6 @@ package com.csse3200.game.components.slot;
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -45,7 +44,7 @@ public final class SlotEffect {
     }
     switch (effect) {
       case GAIN_METALS -> gainMetals();
-      case GAIN_COINS -> gainCoins();
+      //      case GAIN_COINS -> gainCoins();
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
       case FREEZE_ENEMY -> freezeAllEnemies(10f);
@@ -62,14 +61,14 @@ public final class SlotEffect {
     }
   }
 
-  private static void gainCoins() {
-    try {
-      Persistence.profile().wallet().addCoins(50);
-      logger.info("[SlotEffect] GAIN_COINS: Gained 50 coins.");
-    } catch (Exception e) {
-      logger.error("[SlotEffect] GAIN_COINS: Failed to add coins. {}", e.getMessage());
-    }
-  }
+  //  private static void gainCoins() {
+  //    try {
+  //      Persistence.profile().wallet().addCoins(50);
+  //      logger.info("[SlotEffect] GAIN_COINS: Gained 50 coins.");
+  //    } catch (Exception e) {
+  //      logger.error("[SlotEffect] GAIN_COINS: Failed to add coins. {}", e.getMessage());
+  //    }
+  //  }
 
   /**
    * Spawn a simple wave of robots (positions/types tuned to your existing map layout). You can

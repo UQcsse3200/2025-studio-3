@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
  */
 public class StatisticsScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(StatisticsScreen.class);
-
   private final GdxGame game;
   private final Renderer renderer;
 
@@ -79,7 +78,6 @@ public class StatisticsScreen extends ScreenAdapter {
     renderer.dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 

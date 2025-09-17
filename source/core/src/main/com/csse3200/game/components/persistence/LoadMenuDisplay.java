@@ -1,13 +1,17 @@
 package com.csse3200.game.components.persistence;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -23,21 +27,26 @@ public class LoadMenuDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-    loadSaveFiles();
+    saveFiles = Persistence.fetch();
     addActors();
   }
 
-  private void loadSaveFiles() {
-    saveFiles = Persistence.fetch();
-    logger.debug("Loaded {} save files", saveFiles.size());
-  }
-
+  /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
 
-    // Back button positioned at top-left
-    TextButton backBtn = new TextButton("Back", skin);
+    // Back button positioned at top-left with close icon
+    ImageButton backBtn =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+    backBtn.setSize(60f, 60f);
+    backBtn.setPosition(
+        20f, // 20f padding from left
+        stage.getHeight() - 60f - 20f // 20f padding from top
+        );
     backBtn.addListener(
         new ChangeListener() {
           @Override
@@ -53,7 +62,7 @@ public class LoadMenuDisplay extends UIComponent {
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
     for (int i = 0; i < 3; i++) {
-      if (i < saveFiles.size()) {
+      if (saveFiles.get(i) != null) {
         // Active save slot
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
@@ -76,12 +85,6 @@ public class LoadMenuDisplay extends UIComponent {
       }
     }
 
-    // Layout: Back button in separate table for positioning
-    Table backTable = new Table();
-    backTable.setFillParent(true);
-    backTable.top().left();
-    backTable.add(backBtn).pad(30f);
-
     // Main content table
     Table contentTable = new Table();
     contentTable.setFillParent(true);
@@ -97,7 +100,7 @@ public class LoadMenuDisplay extends UIComponent {
     }
 
     // Add both tables to stage
-    stage.addActor(backTable);
+    stage.addActor(backBtn);
     stage.addActor(contentTable);
   }
 

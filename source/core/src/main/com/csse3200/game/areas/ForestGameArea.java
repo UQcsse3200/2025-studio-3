@@ -49,17 +49,38 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     GRASS_TEXTURE,
-    "images/sling_shooter.png"
+    "images/sling_shooter.png",
+    "images/items/grenade.png",
+    "images/items/coffee.png",
+    "images/items/emp.png",
+    "images/items/buff.png",
+    "images/items/nuke.png",
+    "images/items/shield.png",
+    "images/items/charmHack.png",
+    "images/items/scrapper.png",
+    "images/items/conscriptionOrder.png",
+    "images/items/doomHack.png",
+    "images/grenade.png",
+    "images/coffee.png",
+    "images/emp.png",
+    "images/buff.png",
+    "images/nuke.png",
   };
   private static final String[] forestTextureAtlases = {
     "images/terrain_iso_grass.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
+    "images/grenade.atlas",
     GRASS_TEXTURE,
     "images/robot_placeholder.png",
     "images/normal_sunlight.png",
-    "images/sling_shooter.png"
+    "images/sling_shooter.png",
+    "images/grenade.atlas",
+    "images/coffee.atlas",
+    "images/emp.atlas",
+    "images/buff.atlas",
+    "images/nuke.atlas"
   };
 
   private final TerrainFactory terrainFactory;

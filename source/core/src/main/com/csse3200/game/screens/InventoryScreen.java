@@ -9,9 +9,9 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -49,11 +49,6 @@ public class InventoryScreen extends ScreenAdapter {
     createUI();
   }
 
-  /**
-   * Updates entities and renders current frame.
-   *
-   * @param delta time elapsed since last frame
-   */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
@@ -63,26 +58,24 @@ public class InventoryScreen extends ScreenAdapter {
   /** Loads the shop screen's assets. */
   private void loadAssets() {
     logger.debug("Loading inventory assets");
-    String[] itemTextures = new String[ItemRegistry.ITEMS.length];
-    for (int i = 0; i < ItemRegistry.ITEMS.length; i++) {
-      itemTextures[i] = ItemRegistry.ITEMS[i].assetPath();
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return;
+    }
+    String[] itemTextures = new String[configService.getItemConfigs().length];
+    for (int i = 0; i < configService.getItemConfigs().length; i++) {
+      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /**
-   * Adjusts the screen when window is resized.
-   *
-   * @param width new screen width
-   * @param height new screen height
-   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
   }
 
-  /** Disposes of this screen's resources. */
   @Override
   public void dispose() {
     renderer.dispose();

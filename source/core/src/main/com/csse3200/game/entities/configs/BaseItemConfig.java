@@ -8,6 +8,7 @@ public class BaseItemConfig {
   private String name;
   private String description;
   private String eventName;
+  private String assetPath;
   private int cost;
 
   /** Creates a new BaseItemConfig. */
@@ -40,6 +41,15 @@ public class BaseItemConfig {
    */
   public String getEventName() {
     return eventName;
+  }
+
+  /**
+   * Gets the asset path of the item.
+   *
+   * @return the asset path of the item
+   */
+  public String getAssetPath() {
+    return assetPath;
   }
 
   /**

@@ -16,7 +16,7 @@ class InputServiceTest {
   void shouldRegisterInputHandler() {
     int keycode = 1;
     InputComponent inputComponent = spy(InputComponent.class);
-    when(inputComponent.getPriority()).thenReturn(1);
+    when(inputComponent.getInputPriority()).thenReturn(1);
 
     InputService inputService = new InputService();
     inputService.register(inputComponent);
@@ -29,7 +29,7 @@ class InputServiceTest {
   void shouldUnregisterInputHandler() {
     int keycode = 1;
     InputComponent inputComponent = spy(InputComponent.class);
-    when(inputComponent.getPriority()).thenReturn(1);
+    when(inputComponent.getInputPriority()).thenReturn(1);
 
     InputService inputService = new InputService();
     inputService.register(inputComponent);
@@ -218,9 +218,9 @@ class InputServiceTest {
     InputComponent inputComponent2 = spy(InputComponent.class);
     InputComponent inputComponent3 = spy(InputComponent.class);
 
-    when(inputComponent1.getPriority()).thenReturn(100);
-    when(inputComponent2.getPriority()).thenReturn(1);
-    when(inputComponent3.getPriority()).thenReturn(10);
+    when(inputComponent1.getInputPriority()).thenReturn(100);
+    when(inputComponent2.getInputPriority()).thenReturn(1);
+    when(inputComponent3.getInputPriority()).thenReturn(10);
 
     when(method.invoke(inputComponent1, args)).thenReturn(false);
     when(method.invoke(inputComponent2, args)).thenReturn(true);
