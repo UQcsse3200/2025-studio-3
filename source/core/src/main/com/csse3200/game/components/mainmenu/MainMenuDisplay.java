@@ -12,108 +12,110 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A ui component for displaying the Main menu. */
+/** A UI component for displaying the Main menu (functional version). */
 public class MainMenuDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
-  private static final float Z_INDEX = 2f;
-  private Table table;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
+    private static final float Z_INDEX = 2f;
+    private Table mainTable;
+    private Table topRightTable;
 
-  @Override
-  public void create() {
-    super.create();
-    addActors();
-  }
+    @Override
+    public void create() {
+        super.create();
+        addActors();
+    }
 
-  private void addActors() {
-    table = new Table();
-    table.setFillParent(true);
-    Image title =
-        new Image(
-            ServiceLocator.getResourceService()
-                .getAsset("images/box_boy_title.png", Texture.class));
+    private void addActors() {
+        // --- Main Table (center UI for Start + Load) ---
+        mainTable = new Table();
+        mainTable.setFillParent(true);
 
-    TextButton startBtn = new TextButton("Start", skin);
-    TextButton loadBtn = new TextButton("Load", skin);
-    TextButton worldMapBtn = new TextButton("World Map", skin);
-    TextButton settingsBtn = new TextButton("Settings", skin);
-    TextButton exitBtn = new TextButton("Exit", skin);
+        // Title at the top (Vida will replace with logo later)
+        Image title =
+                new Image(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/box_boy_title.png", Texture.class));
+        mainTable.add(title).padTop(40f).center();
+        mainTable.row();
 
-    // Triggers an event when the button is pressed
-    startBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Start button clicked");
-            entity.getEvents().trigger("start");
-          }
-        });
+        // Start + Load buttons
+        TextButton startBtn = new TextButton("Start Game", skin);
+        TextButton loadBtn = new TextButton("Load Game", skin);
 
-    loadBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Load button clicked");
-            entity.getEvents().trigger("load");
-          }
-        });
+        startBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Start button clicked");
+                        entity.getEvents().trigger("start");
+                    }
+                });
 
-    settingsBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Settings button clicked");
-            entity.getEvents().trigger("settings");
-          }
-        });
+        loadBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Load button clicked");
+                        entity.getEvents().trigger("load");
+                    }
+                });
 
-    worldMapBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("World Map button clicked");
-            entity.getEvents().trigger("worldMap");
-          }
-        });
+        mainTable.add(startBtn).padTop(30f).center();
+        mainTable.row();
+        mainTable.add(loadBtn).padTop(15f).center();
 
-    exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+        // --- Top-right Table (Exit + Settings gear) ---
+        topRightTable = new Table();
+        topRightTable.top().right();
 
-            logger.debug("Exit button clicked");
-            entity.getEvents().trigger("exit");
-          }
-        });
+        // Exit button
+        TextButton exitBtn = new TextButton("Exit", skin);
+        exitBtn.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Exit button clicked");
+                        entity.getEvents().trigger("exit");
+                    }
+                });
 
-    table.add(title);
+        // Settings gear icon
+        Image settingsIcon =
+                new Image(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/settings_icon.png", Texture.class));
+        settingsIcon.addListener(
+                new ChangeListener() {
+                    @Override
+                    public void changed(ChangeEvent changeEvent, Actor actor) {
+                        logger.debug("Settings icon clicked");
+                        entity.getEvents().trigger("settings");
+                    }
+                });
 
-    table.row();
-    table.add(startBtn).padTop(30f);
-    table.row();
-    table.add(loadBtn).padTop(15f);
-    table.row();
-    table.add(settingsBtn).padTop(15f);
-    table.row();
-    table.add(worldMapBtn).padTop(15f);
-    table.row();
-    table.add(exitBtn).padTop(15f);
+        // Add both to the same row in top-right
+        topRightTable.add(settingsIcon).pad(20f).size(48f, 48f);
+        topRightTable.add(exitBtn).pad(20f);
 
-    stage.addActor(table);
-  }
+        // Add tables to stage
+        stage.addActor(mainTable);
+        stage.addActor(topRightTable);
+    }
 
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
+    @Override
+    public void draw(SpriteBatch batch) {
+        // draw is handled by the stage
+    }
 
-  @Override
-  public float getZIndex() {
-    return Z_INDEX;
-  }
+    @Override
+    public float getZIndex() {
+        return Z_INDEX;
+    }
 
-  @Override
-  public void dispose() {
-    table.clear();
-    super.dispose();
-  }
+    @Override
+    public void dispose() {
+        mainTable.clear();
+        topRightTable.clear();
+        super.dispose();
+    }
 }
