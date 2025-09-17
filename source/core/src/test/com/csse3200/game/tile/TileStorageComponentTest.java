@@ -74,9 +74,8 @@ class TileStorageComponentTest {
     Entity selected =
         new Entity()
             .addComponent(new TextureRenderComponent(mock(Texture.class)))
-            .addComponent(
-                new DeckInputComponent(levelGameArea, Entity::new)); // or whatever ctor you use
-    levelGameArea.setSelectedUnit(selected); // setter or reflection
+            .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
+    levelGameArea.setSelectedUnit(selected);
   }
 
   @Test
