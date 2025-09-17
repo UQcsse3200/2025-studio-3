@@ -437,6 +437,7 @@ public class WaveManager implements WaveConfigProvider {
     configs.put("fast", wave.fast);
     configs.put("tanky", wave.tanky);
     configs.put("bungee", wave.bungee);
+    configs.put("teleport", wave.teleport);
 
     return configs;
   }

@@ -36,4 +36,5 @@ public class BaseWaveConfig {
   public EnemySpawnConfig fast = new EnemySpawnConfig();
   public EnemySpawnConfig tanky = new EnemySpawnConfig();
   public EnemySpawnConfig bungee = new EnemySpawnConfig();
+  public EnemySpawnConfig teleport = new EnemySpawnConfig();
 }

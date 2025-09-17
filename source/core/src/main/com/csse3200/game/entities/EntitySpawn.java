@@ -1,7 +1,6 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
-import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
@@ -10,7 +9,6 @@ public class EntitySpawn {
 
   private final int robotWeight;
   private int spawnCount = 0;
-  private final java.util.Random random = new java.util.Random();
   private final Deque<String> spawnQueue = new ArrayDeque<>();
 
   /** Creates a new instance with a default per-enemy weight cost. */
@@ -84,18 +82,6 @@ public class EntitySpawn {
       robotSpawn = minCount;
     }
     spawnCount = robotSpawn;
-  }
-
-  /**
-   * @return uniformly random enemy type among "standard", "fast", and "tanky".
-   */
-  public RobotType getRandomRobotType() {
-    int r = random.nextInt(3);
-    return switch (r) {
-      case 0 -> RobotType.STANDARD;
-      case 1 -> RobotType.FAST;
-      default -> RobotType.TANKY;
-    };
   }
 
   /**
