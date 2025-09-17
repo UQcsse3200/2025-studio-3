@@ -43,6 +43,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelTextures = {
     "images/level-1-map-v2.png",
+    "images/level-2-map-v1.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
