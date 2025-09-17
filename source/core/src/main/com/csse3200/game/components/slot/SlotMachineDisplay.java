@@ -1,9 +1,11 @@
 package com.csse3200.game.components.slot;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -18,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.components.cards.CardActor;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
@@ -143,6 +146,18 @@ public class SlotMachineDisplay extends UIComponent {
 
   /** Ordered list of symbol regions forming one cycle. */
   private List<TextureAtlas.AtlasRegion> symbolRegions;
+
+  private static final String CARDS_ATLAS_PATH = "images/ui_cards.atlas";
+  private TextureAtlas cardsAtlas;
+  private boolean ownsCardsAtlas = false;
+
+  // Card target size/animation parameters
+  private static final float CARD_SCREEN_W_RATIO = 0.06f;
+  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float DROP_FADE_SEC = 0.15f;
+  private static final float DROP_MOVE_SEC = 0.35f;
+  private static final float DROP_PADDING_PCT = 0.02f;
+  private static final float DROP_PADDING_MIN = 8f;
 
   // ---------- Constructors ---------
 
@@ -457,6 +472,82 @@ public class SlotMachineDisplay extends UIComponent {
     }
   }
 
+  private void spawnSlingShooterCard() {
+    // 1) Get atlas (try resource service first, if that doesn't work, open it from assets as a
+    // fallback)
+    if (cardsAtlas == null) {
+      try {
+        cardsAtlas =
+            ServiceLocator.getResourceService().getAsset(CARDS_ATLAS_PATH, TextureAtlas.class);
+      } catch (Exception ignore) {
+        cardsAtlas = null;
+      }
+      if (cardsAtlas == null) {
+        if (!Gdx.files.internal(CARDS_ATLAS_PATH).exists()) {
+          logger.error("Card atlas not found: {}", CARDS_ATLAS_PATH);
+          return;
+        }
+        cardsAtlas = new TextureAtlas(Gdx.files.internal(CARDS_ATLAS_PATH));
+        ownsCardsAtlas = true;
+      }
+    }
+    if (cardsAtlas.findRegion("Card_SlingShooter") == null) {
+      logger.error("Region 'Card_SlingShooter' not found in {}", CARDS_ATLAS_PATH);
+      return;
+    }
+
+    // 2) Calculate the start/end points based on the reels pane (using stage coordinates)
+    if (reelsPane == null) {
+      logger.error("reelsPane is null");
+      return;
+    }
+    Vector2 slotTopCenter =
+        reelsPane.localToStageCoordinates(
+            new Vector2(reelsPane.getWidth() * 0.5f, reelsPane.getHeight()));
+    Vector2 slotBottomCenter =
+        reelsPane.localToStageCoordinates(new Vector2(reelsPane.getWidth() * 0.5f, 0f));
+
+    float stageW = stage.getWidth(), stageH = stage.getHeight();
+    float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
+
+    // 3) Create a card and limit the "target width" to 6% of the screen width and no more than "22%
+    // of the slot machine window width"
+    CardActor card = CardActor.fromAtlas(stage, cardsAtlas, "Card_SlingShooter");
+    float desiredWpx =
+        Math.min(stageW * CARD_SCREEN_W_RATIO, reelsPane.getWidth() * CARD_SLOT_W_RATIO);
+    card.setPercentWidth(desiredWpx / stageW);
+    card.act(0f);
+
+    // 4) Drop start/end point (center coordinates)
+    float startCx = slotTopCenter.x;
+    float startCy = slotTopCenter.y + card.getHeight() / 2f + padding;
+    float targetCx = slotBottomCenter.x;
+    float targetCy =
+        Math.max(slotBottomCenter.y - card.getHeight() / 2f - padding, card.getHeight() / 2f + 4f);
+
+    // Place the starting point in pixels (pixel coordinates during animation), and solidify to
+    // percentages after the animation is complete
+    card.setPosition(startCx - card.getWidth() / 2f, startCy - card.getHeight() / 2f);
+    card.getColor().a = 0f;
+    stage.addActor(card);
+    card.toFront();
+
+    float targetX = targetCx - card.getWidth() / 2f;
+    float targetY = targetCy - card.getHeight() / 2f;
+
+    card.addAction(
+        Actions.sequence(
+            Actions.parallel(
+                Actions.fadeIn(DROP_FADE_SEC),
+                Actions.moveTo(targetX, targetY, DROP_MOVE_SEC, Interpolation.sine)),
+            Actions.run(
+                () -> {
+                  float px = targetCx / stageW;
+                  float py = targetCy / stageH;
+                  card.setPercentPosition(px, py);
+                })));
+  }
+
   /**
    * Smoothly stops a given column at its target index, avoiding large bounce-back by optionally
    * advancing to the next equivalent lap when over half a symbol height.
@@ -525,7 +616,12 @@ public class SlotMachineDisplay extends UIComponent {
       logger.info("All reels stopped.");
       if (pendingResult != null) {
         if (pendingResult.isEffectTriggered()) {
-          slotEngine.applyEffect(pendingResult);
+          SlotEngine.Effect eff = pendingResult.getEffect().orElse(null);
+          if (eff == SlotEngine.Effect.DROP_SLINGSHOOTER_CARD) {
+            spawnSlingShooterCard();
+          } else {
+            slotEngine.applyEffect(pendingResult);
+          }
         } else {
           logger.info("No effect triggered.");
         }
@@ -556,6 +652,10 @@ public class SlotMachineDisplay extends UIComponent {
   public void dispose() {
     super.dispose();
     if (barGroup != null) barGroup.remove();
+    if (ownsCardsAtlas && cardsAtlas != null) {
+      cardsAtlas.dispose();
+      cardsAtlas = null;
+    }
   }
 
   /** Image with precise hit test limited to actually drawn (scaled & aligned) rectangle. */
