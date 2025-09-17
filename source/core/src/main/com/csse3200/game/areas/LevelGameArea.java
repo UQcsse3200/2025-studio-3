@@ -44,6 +44,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelTextures = {
     "images/level-1-map-v2.png",
+    "images/level-2-map-v1.png",
     "images/selected_star.png",
     "images/sling_shooter_1.png",
     "images/sling_shooter_front.png",
@@ -222,6 +223,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Use MapFactory for single-entry map creation
     MapFactory mapFactory = new MapFactory(terrainFactory);
     Entity mapEntity = mapFactory.createLevelMap(level);
+    // Create the background terrain (single image map)
+    terrain = terrainFactory.createTerrain(1);
 
     if (mapEntity != null) {
       spawnEntity(mapEntity);

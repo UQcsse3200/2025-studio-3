@@ -211,7 +211,6 @@ class LevelGameAreaTest {
     assertFalse(area.spawned.isEmpty());
   }
 
-
   @Test
   void dispose_stopsMusicAndUnloadsAssets() {
     CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
