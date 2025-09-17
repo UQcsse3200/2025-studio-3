@@ -25,7 +25,8 @@ public class HotbarDisplay extends UIComponent {
   private final LevelGameArea game;
   private final Map<String, Supplier<Entity>> unitList;
   private final Map<String, Supplier<Entity>> itemList;
-  private Array<Image> slotImages = new Array<>();
+  // a list of all the images for the slots
+  private final Array<Image> slotImages = new Array<>();
   private float cellWidth;
   private Group layered;
 
@@ -77,6 +78,7 @@ public class HotbarDisplay extends UIComponent {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
               if (event.getButton() == Input.Buttons.LEFT) {
+                // sets the drag image to the unit image and selects it
                 game.setIsCharacterSelected(true);
                 game.beginDrag(new Texture(unit.getKey()));
                 Entity tempPlaceableUnit =
@@ -93,17 +95,18 @@ public class HotbarDisplay extends UIComponent {
       layered.addActor(tempUnit);
     }
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
-      Image tempUnit = new Image(new Texture(item.getKey()));
-      tempUnit.setSize(scaling, scaling);
+      Image tempItem = new Image(new Texture(item.getKey()));
+      tempItem.setSize(scaling, scaling);
 
-      slotImages.add(tempUnit);
+      slotImages.add(tempItem);
 
       // listener for selection/use
-      tempUnit.addListener(
+      tempItem.addListener(
           new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
               if (event.getButton() == Input.Buttons.LEFT) {
+                // sets the drag image to the item image and selects it
                 game.setIsCharacterSelected(true);
                 game.beginDrag(new Texture(item.getKey()));
                 Entity tempPlaceableUnit =
@@ -111,7 +114,8 @@ public class HotbarDisplay extends UIComponent {
                         .addComponent(new DeckInputComponent(game, item.getValue()))
                         .addComponent(new TextureRenderComponent(item.getKey()));
                 game.setSelectedUnit(tempPlaceableUnit);
-                remove(tempUnit);
+                // removes the item after use
+                remove(tempItem);
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);
               }
@@ -119,7 +123,7 @@ public class HotbarDisplay extends UIComponent {
             }
           });
 
-      layered.addActor(tempUnit);
+      layered.addActor(tempItem);
     }
 
     layoutUnits(startX, y, cellWidth);
@@ -143,12 +147,26 @@ public class HotbarDisplay extends UIComponent {
     hotbarTable.toBack();
   }
 
+    /**
+     * This method removes an image from a slot
+     * this is used to remove items after they are used
+     * @param usedUnit is an image of the item to be removed
+     */
   public void remove(Image usedUnit) {
     slotImages.removeValue(usedUnit, true);
     usedUnit.remove();
+    // reformats the layout of the slots so there isn't gaps
     layoutUnits(cellWidth / 4, 30, layered.getWidth() / 6);
   }
 
+
+    /**
+     * Takes all the items and units to be placed in the hotbar
+     * and puts them into the slots of the hotbar
+     * @param startX the starting x value of the hotbar
+     * @param y the y value of the hotbar
+     * @param cellWidth the width of the cells to increment the x value
+     */
   private void layoutUnits(float startX, float y, float cellWidth) {
     float x = startX;
     for (Image img : slotImages) {
