@@ -173,34 +173,44 @@ class LevelGameAreaTest {
 
   @Test
   void createLoadsAssetsSpawnsThingsAndStartsMusic() {
+    // Use a spy so we can verify calls to spawn methods
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Avoid robot factory static
     doNothing().when(area).spawnRobot(anyInt(), anyInt(), any());
 
+    // Mock the TerrainComponent returned by the TerrainFactory
     var terrain = mock(TerrainComponent.class);
+
+    // Only mark as lenient if you expect it might not be called
     lenient().when(terrain.getTileSize()).thenReturn(64f);
     lenient().when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
 
-//    when(terrain.getTileSize()).thenReturn(64f);
-//    when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
-//    when(terrainFactory.createTerrain(any())).thenReturn(terrain);
-//    // 2 values to ensure coverage within loading loop
-//    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
-//    when(resourceService.getProgress()).thenReturn(1);
+    // Ensure the TerrainFactory returns the mock terrain
+    when(terrainFactory.createTerrain(any())).thenReturn(terrain);
 
+    // Simulate resource service loading
+    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
+    when(resourceService.getProgress()).thenReturn(1);
+
+    // Run the create() method
     area.create();
 
+    // Verify assets loaded
     verify(resourceService).loadTextures(any(String[].class));
     verify(resourceService).loadTextureAtlases(any(String[].class));
     verify(resourceService).loadSounds(any(String[].class));
     verify(resourceService).loadMusic(any(String[].class));
+
+    // Verify music started
     verify(music).setLooping(true);
     verify(music).setVolume(0.3f);
     verify(music).play();
 
+    // Ensure entities were spawned
     assertFalse(area.spawned.isEmpty());
   }
+
 
   @Test
   void dispose_stopsMusicAndUnloadsAssets() {
