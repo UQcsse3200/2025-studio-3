@@ -19,7 +19,11 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
   }
 
   public void setInterval(int interval) {
-    this.interval = interval;
+    if (interval < 0) {
+      this.interval = 0;
+    } else {
+      this.interval = interval;
+    }
   }
 
   public int getScrapValue() {
@@ -27,6 +31,10 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
   }
 
   public void setScrapValue(int scrapValue) {
-    this.scrapValue = scrapValue;
+    if (scrapValue < 0) {
+      this.scrapValue = 0;
+    } else {
+      this.scrapValue = scrapValue;
+    }
   }
 }
