@@ -10,9 +10,9 @@ public class BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  int health;
+  public int health;
 
-  int baseAttack;
+  public int baseAttack;
 
   float movementSpeed;
 

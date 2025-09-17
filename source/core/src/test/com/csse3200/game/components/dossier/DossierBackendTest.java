@@ -30,8 +30,8 @@ class DossierBackendTest {
     defenceConfigs.slingshooter = new BaseDefenceConfig();
     defenceConfigs.slingshooter.name = "Slingshooter";
     defenceConfigs.slingshooter.description = "A basic defense.";
-    defenceConfigs.slingshooter.health = 50;
-    defenceConfigs.slingshooter.baseAttack = 1;
+    defenceConfigs.slingshooter.defenceHealth = 50;
+    defenceConfigs.slingshooter.defenceAttack = 1;
 
     mockDefaultTexture = mock(Texture.class);
     mockHumanTexture = mock(Texture.class);
