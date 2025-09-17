@@ -18,11 +18,12 @@ public class MiniGameActions extends Component {
     @Override
     public void create() {
         entity.getEvents().addListener("lanerunner", this::onLaneRunner);
+        entity.getEvents().addListener("brickbreaker", this::onBrickBreaker);
         entity.getEvents().addListener("back", this::onBack);
     }
 
     /**
-     * Swaps to the Lane Runner Game screen.
+     * Swaps to the Main Game screen.
      */
     private void onLaneRunner() {
         logger.info("Lane Runner Mini game");
@@ -30,7 +31,12 @@ public class MiniGameActions extends Component {
         game.loadMenus();
         game.setScreen(GdxGame.ScreenType.LANE_RUNNER);
     }
-
+    private void onBrickBreaker() {
+        logger.info("Brick Breaker Mini game");
+        Persistence.load();
+        game.loadMenus();
+        game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
+    }
     /**
      * Swaps to the Main Menu screen.
      */
