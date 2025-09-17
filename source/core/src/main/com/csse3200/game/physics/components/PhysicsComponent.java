@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.ComponentPriority;
 import com.csse3200.game.physics.BodyUserData;
 import com.csse3200.game.physics.PhysicsContactListener;
 import com.csse3200.game.physics.PhysicsEngine;
@@ -33,6 +34,8 @@ public class PhysicsComponent extends Component {
    * @param engine The physics engine to attach the component to
    */
   public PhysicsComponent(PhysicsEngine engine) {
+    super(ComponentPriority.HIGH); // sets physics component to have high priority
+
     this.physics = engine;
 
     BodyDef bodyDef = new BodyDef();

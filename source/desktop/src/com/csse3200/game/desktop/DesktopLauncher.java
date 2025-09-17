@@ -8,6 +8,10 @@ import com.csse3200.game.GdxGame;
 public class DesktopLauncher {
   public static void main(String[] arg) {
     Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+
+    config.setWindowIcon("app.png");
+    config.setTitle("The Day We Fought Back");
+
     new Lwjgl3Application(new GdxGame(), config);
   }
 }

@@ -1,5 +1,7 @@
 package com.csse3200.game.progression.skilltree;
 
+import java.util.Locale;
+
 /**
  * Represents a skill in the game's skill tree Each skill has a name, a type of stat it affects, a
  * percentage bonus, a cost and is either un/locked.
@@ -21,7 +23,7 @@ public class Skill {
     /** Increases the player's critical hit chance. */
     CRIT_CHANCE,
     /** Increases the player's defense. */
-    ARMOUR
+    CURRENCY_GEN
   }
 
   public Skill() {}
@@ -75,5 +77,24 @@ public class Skill {
    */
   public float getPercentage() {
     return percentage;
+  }
+
+  /**
+   * Returns a brief description of a Skill based on its other attributes
+   *
+   * @return a string describing the skill
+   */
+  public String getDescription() {
+    int amount = (int) ((getPercentage() - 1) * 100);
+    if (getStatType() == StatType.CRIT_CHANCE) {
+      amount = (int) (getPercentage() * 100);
+    }
+    String description = "";
+    description += "Unlocking this skill will permanently increase ";
+    description += statType.name().toLowerCase(Locale.ROOT).replace('_', ' ');
+    description += " by ";
+    description += amount;
+    description += "%";
+    return description;
   }
 }
