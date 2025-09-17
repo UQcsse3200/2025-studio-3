@@ -20,6 +20,11 @@ public class BaseDefenceConfig extends BaseEntityConfig {
   };
   */
 
+  public String name = "Name";
+  public String description = "Description";
+  public int health = 1;
+  public int baseAttack = 1;
+
   /** Defence type identifier */
   public int type = 1;
 

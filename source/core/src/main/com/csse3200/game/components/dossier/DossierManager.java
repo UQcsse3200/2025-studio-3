@@ -2,6 +2,7 @@ package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.csse3200.game.entities.configs.BaseDefenceConfig;
 
 public class DossierManager {
 
@@ -58,7 +59,7 @@ public class DossierManager {
           + "\n Health: "
           + config.health;
     } else {
-      DefenceDataConfig config = getDefence(entityName);
+      BaseDefenceConfig config = getDefence(entityName);
       return " "
           + config.description
           + "\n Attack: "
@@ -82,10 +83,10 @@ public class DossierManager {
     };
   }
 
-  private DefenceDataConfig getDefence(String entityName) {
+  private BaseDefenceConfig getDefence(String entityName) {
     return switch (entityName) {
       case "slingshooter" -> defenceData.slingshooter;
-      //Currently this is bad style, but more defences will be added later
+      // Currently this is bad style, but more defences will be added later
       default -> defenceData.slingshooter;
     };
   }

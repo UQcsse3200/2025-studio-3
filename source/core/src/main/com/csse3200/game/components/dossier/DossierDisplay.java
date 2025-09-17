@@ -84,7 +84,7 @@ public class DossierDisplay extends UIComponent {
 
   /** A listener to change the type of entity shown */
   private void changeTypeListener() {
-    String changeType = "charge_type";
+    String changeType = "change_type";
     entity
         .getEvents()
         .addListener(
