@@ -133,12 +133,10 @@ public class CombatStatsComponent extends Component {
     handleDeath();
   }
 
-    /**
-     * Triggers death event handlers if a hit causes an entity to die.
-     */
+  /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
     if (isDead() || getHealth() < 0) {
-        //checks for components unique to defenders
+      // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
