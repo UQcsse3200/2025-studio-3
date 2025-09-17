@@ -9,6 +9,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
+import com.csse3200.game.components.tasks.TeleportTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.persistence.FileLoader;
@@ -39,7 +40,8 @@ public class RobotFactory {
     STANDARD,
     FAST,
     TANKY,
-    BUNGEE
+    BUNGEE,
+    TELEPORT
   }
 
   private static final NPCConfigs configs =
@@ -60,12 +62,28 @@ public class RobotFactory {
       case TANKY -> config = configs.tankyRobot;
       case BUNGEE -> config = configs.bungeeRobot;
       case STANDARD -> config = configs.standardRobot;
+      case TELEPORT -> config = configs.teleportRobot;
     }
     return createBaseRobot(config);
   }
 
   /**
-   * Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
+   * Creates a Teleport Robot with teleport behaviour attached.
+   *
+   * @param cfg Teleport robot config (stats and teleport params)
+   * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
+   * @return Entity with base robot components plus TeleportTask
+   */
+  public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
+    Entity robot = createBaseRobot(cfg);
+    robot.addComponent(
+        new TeleportTask(
+            cfg.teleportCooldownSeconds, cfg.teleportChance, cfg.maxTeleports, laneYs));
+    return robot;
+  }
+
+  /**
+   * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
    * robots.
    *
@@ -115,6 +133,16 @@ public class RobotFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
+    if (config instanceof TeleportRobotConfig tcfg) {
+      float[] laneYs = discoverLaneYsFromTiles();
+      // Only attach if we found at least two distinct lanes
+      if (laneYs != null && laneYs.length >= 2) {
+        robot.addComponent(
+            new TeleportTask(
+                tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
+      }
+    }
+
     // Scales
     animator.scaleEntity();
     animator.startAnimation("default"); // start an animation
@@ -128,5 +156,30 @@ public class RobotFactory {
     // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
     // I don't think we need that but I'm putting it here for reference
+  }
+
+  private static float[] discoverLaneYsFromTiles() {
+    var es = com.csse3200.game.services.ServiceLocator.getEntityService();
+    if (es == null) return null;
+
+    // Collect unique tile Y positions from tile entities
+    java.util.Set<Integer> yInts = new java.util.TreeSet<>();
+    for (com.csse3200.game.entities.Entity e : es.getEntities()) {
+      if (e == null) continue;
+      // Tiles have a TileStorageComponent
+      if (e.getComponent(com.csse3200.game.components.tile.TileStorageComponent.class) == null)
+        continue;
+      var p = e.getPosition();
+      if (p == null) continue;
+      // quantize to avoid float jitter
+      yInts.add(Math.round(p.y * 1000f));
+    }
+
+    if (yInts.size() < 2) return null;
+
+    float[] ys = new float[yInts.size()];
+    int i = 0;
+    for (Integer yi : yInts) ys[i++] = yi / 1000f;
+    return ys;
   }
 }
