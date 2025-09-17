@@ -130,9 +130,22 @@ public class CombatStatsComponent extends Component {
     int newHealth = getHealth() - attacker.getBaseAttack();
 
     setHealth(newHealth);
+    handleDeath();
+  }
 
+    /**
+     * Triggers death event handlers if a hit causes an entity to die.
+     */
+  public void handleDeath() {
     if (isDead() || getHealth() < 0) {
-      entity.getEvents().trigger("entityDeath");
+        //checks for components unique to defenders
+      if (entity.getComponent(DefenderStatsComponent.class) != null
+          || entity.getComponent(GeneratorStatsComponent.class) != null) {
+        entity.getEvents().trigger("defenceDeath");
+        System.out.println("Human has died!");
+      } else {
+        entity.getEvents().trigger("entityDeath");
+      }
     }
   }
 }

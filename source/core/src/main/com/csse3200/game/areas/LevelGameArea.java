@@ -576,6 +576,15 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     newEntity
         .getEvents()
         .addListener(
+            "defenceDeath",
+            () -> {
+              requestDespawn(newEntity);
+              spawnedUnits[position] = null; // remove from listed spawned units
+              selectedTile.getComponent(TileStorageComponent.class).removeTileUnit(); //remove instance from tile unit
+            });
+    newEntity
+        .getEvents()
+        .addListener(
             "entityDeath",
             () -> {
               requestDespawn(newEntity);
