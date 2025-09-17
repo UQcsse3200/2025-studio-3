@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DossierScreen extends ScreenAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(InventoryScreen.class);
+  private static final Logger logger = LoggerFactory.getLogger(DossierScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] dossierTextures = {"images/robot_placeholder.png"};

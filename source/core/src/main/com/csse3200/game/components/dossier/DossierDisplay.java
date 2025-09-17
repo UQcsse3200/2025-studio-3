@@ -84,11 +84,12 @@ public class DossierDisplay extends UIComponent {
 
   /** A listener to change the type of entity shown */
   private void changeTypeListener() {
+    String changeType = "charge_type";
     entity
         .getEvents()
         .addListener(
-            "change_type",
-            (input) -> {
+            changeType,
+            input -> {
               boolean value = (boolean) input;
               if (value == type) {
                 return;
@@ -153,7 +154,7 @@ public class DossierDisplay extends UIComponent {
         .getEvents()
         .addListener(
             "change_info",
-            (index) -> {
+            index -> {
               if (entities.length == 0) {
                 entityNameLabel.setText("No entries");
                 entityInfoLabel.setText("");
@@ -247,7 +248,6 @@ public class DossierDisplay extends UIComponent {
     // Wrap in outer table for positioning
     Table outerTable = new Table();
     outerTable.add(stack).size(targetWidth, targetHeight).center();
-    ;
 
     return outerTable;
   }

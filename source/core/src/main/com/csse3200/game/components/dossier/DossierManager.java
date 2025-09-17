@@ -9,6 +9,8 @@ public class DossierManager {
   private final Texture defaultTexture;
   private final DefenceConfigs defenceData;
   private final Texture humanTexture;
+  private final Texture fastRobotTexture;
+  private final Texture tankyRobotTexture;
 
   private boolean enemyMode = true;
 
@@ -16,6 +18,8 @@ public class DossierManager {
       EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
     this.defaultTexture = textures[0];
     this.humanTexture = textures[1];
+    this.fastRobotTexture = textures[0];
+    this.tankyRobotTexture = textures[0];
     this.entityData = entityConfigs;
     this.defenceData = defenceConfigs;
   }
@@ -33,7 +37,12 @@ public class DossierManager {
 
   public Image getSprite(String entityName) {
     if (enemyMode) {
-      return new Image(defaultTexture);
+      return switch (entityName) {
+        case "standardRobot" -> new Image(defaultTexture);
+        case "fastRobot" -> new Image(fastRobotTexture);
+        case "tankyRobot" -> new Image(tankyRobotTexture);
+        default -> new Image(defaultTexture);
+      };
     }
     return new Image(humanTexture);
   }
@@ -76,6 +85,7 @@ public class DossierManager {
   private DefenceDataConfig getDefence(String entityName) {
     return switch (entityName) {
       case "slingshooter" -> defenceData.slingshooter;
+      //Currently this is bad style, but more defences will be added later
       default -> defenceData.slingshooter;
     };
   }
