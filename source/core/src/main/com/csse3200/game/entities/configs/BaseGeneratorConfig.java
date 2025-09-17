@@ -1,6 +1,6 @@
 package com.csse3200.game.entities.configs;
 
-/** Defines the properties stored in defences.json to be loaded by the NPC Factory. */
+/** Defines the properties stored in Defences.json to be loaded by the NPC Factory. */
 public class BaseGeneratorConfig extends BaseEntityConfig {
 
   /** Creates a new BaseGeneratorConfig with default values. */
