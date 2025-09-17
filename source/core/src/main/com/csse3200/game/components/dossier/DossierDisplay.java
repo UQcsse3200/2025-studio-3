@@ -310,7 +310,7 @@ public class DossierDisplay extends UIComponent {
 
   /** Handles navigation back to the Profile Screen. */
   private void backMenu() {
-    game.setScreen(GdxGame.ScreenType.PROFILE);
+    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
   }
 
   @Override
