@@ -8,14 +8,14 @@ import com.badlogic.gdx.Screen;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
+import com.csse3200.game.screens.LoadingScreen;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
 import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
-import com.csse3200.game.services.CutsceneService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,23 +36,11 @@ public class GdxGame extends Game {
     "images/placeholder.png"
   };
 
-    @Override
-    public void create() {
-        logger.info("Creating game");
-        loadMenus();
-
-        ServiceLocator.registerCutsceneService(new CutsceneService());
-
-
-    loadMenus();
-
-    // Sets background to light yellow
-    Gdx.gl.glClearColor(248f/255f, 249/255f, 178/255f, 1);
-        // Sets background to light yellow
-        Gdx.gl.glClearColor(248f/255f, 249f/255f, 178f/255f, 1);
-
-        setScreen(ScreenType.MAIN_MENU);
-    }
+  @Override
+  public void create() {
+    logger.info("[GdxGame] Initialising core game services.");
+    setScreen(new LoadingScreen(this));
+  }
 
   /**
    * Initializes the game after loading screen is complete. This method is called by the
@@ -67,6 +55,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
     ServiceLocator.registerConfigService(new ConfigService());
+    ServiceLocator.registerCutsceneService(new CutsceneService());
 
     // Game-dependent data
     loadGlobalAssets();

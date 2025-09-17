@@ -25,6 +25,11 @@ public class ServiceLocator {
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
   private static MenuSpriteService menuSpriteService;
+  private static ConfigService configService;
+  private static DialogService dialogService;
+  private static ResourceService globalResourceService;
+  private static ProfileService profileService;
+  private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
 
   /**
@@ -99,10 +104,59 @@ public class ServiceLocator {
     return menuSpriteService;
   }
 
+  /**
+   * Gets the config service.
+   *
+   * @return the config service
+   */
+  public static ConfigService getConfigService() {
+    return configService;
+  }
+
+  /**
+   * Gets the dialog service.
+   *
+   * @return the dialog service
+   */
+  public static DialogService getDialogService() {
+    return dialogService;
+  }
+
+  /**
+   * Gets the global resource service.
+   *
+   * @return the global resource service
+   */
+  public static ResourceService getGlobalResourceService() {
+    return globalResourceService;
+  }
+
+  /**
+   * Gets the profile service.
+   *
+   * @return the profile service
+   */
+  public static ProfileService getProfileService() {
+    return profileService;
+  }
+
+  /** Registers the item effects service. */
+  public static ItemEffectsService getItemEffectsService() {
+    return itemEffectsService;
+  }
+
+  /**
+   * Gets the cutscene service
+   */
   public static CutsceneService getCutsceneService() {
     return cutsceneService;
   }
 
+  /**
+   * Registers the entity service.
+   *
+   * @param service the entity service
+   */
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
@@ -194,11 +248,79 @@ public class ServiceLocator {
     menuSpriteService = source;
   }
 
+  /** Deregisters the menu sprite service. */
+  public static void deregisterMenuSpriteService() {
+    logger.debug("Removing menu sprite service");
+    menuSpriteService = null;
+  }
+
+  /**
+   * Registers the config service.
+   *
+   * @param source the config service
+   */
+  public static void registerConfigService(ConfigService source) {
+    logger.debug("Registering config service {}", source);
+    configService = source;
+  }
+
+  /** Deregisters the config service. */
+  public static void deregisterConfigService() {
+    logger.debug("Removing config service");
+    configService = null;
+  }
+
+  /**
+   * Registers the dialog service.
+   *
+   * @param source the dialog service
+   */
+  public static void registerDialogService(DialogService source) {
+    logger.debug("Registering dialog service {}", source);
+    dialogService = source;
+  }
+
+  /**
+   * Registers the item effects service.
+   *
+   * @param source the item effects service
+   */
+  public static void registerItemEffectsService(ItemEffectsService source) {
+    logger.debug("Registering item effects service {}", source);
+    itemEffectsService = source;
+  }
+
+  /** Deregisters the dialog service. */
+  public static void deregisterDialogService() {
+    logger.debug("Removing dialog service");
+    dialogService = null;
+  }
+
+  /**
+   * Registers the profile service.
+   *
+   * @param source the profile service
+   */
+  public static void registerProfileService(ProfileService source) {
+    logger.debug("Registering profile service {}", source);
+    profileService = source;
+  }
+
+  /** Deregisters the profile service. */
+  public static void deregisterProfileService() {
+    logger.debug("Removing profile service");
+    profileService = null;
+  }
+
+  /**
+   * Registers cutscene service
+   */
   public static void registerCutsceneService(CutsceneService source) {
     logger.debug("Registering cutscene service {}", source);
     cutsceneService = source;
   }
 
+  /** Clears all transient services. */
   public static void clear() {
     entityService = null;
     renderService = null;

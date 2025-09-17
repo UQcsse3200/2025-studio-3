@@ -19,8 +19,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
   private boolean running;
   private boolean paused;
 
-  private List<ActionState> queue;
-  private List<ActionState> active;
+  private List<ActionState> queue = new ArrayList<>();
+  private List<ActionState> active = new ArrayList<>();
   private boolean beatStarted;
 
   /**
@@ -127,9 +127,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
       beatStarted = false;
 
       if (!beats.hasNext()) {
-        //                this.running = false;
         ServiceLocator.getCutsceneService().end();
-        System.out.println("sfdagjhklfsdgkhjsfgdhjklfgjkhl");
       } else {
         beatIdx = beats.next();
       }

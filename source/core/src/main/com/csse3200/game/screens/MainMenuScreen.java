@@ -19,6 +19,7 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.CutsceneService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -47,17 +48,10 @@ public class MainMenuScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
     renderer = RenderFactory.createRenderer();
 
-      CutsceneLoader cutsceneLoader = new CutsceneLoader();
-      CutsceneValidator cutsceneValidator = new CutsceneValidator();
-      CutsceneCompiler cutsceneCompiler = new CutsceneCompiler();
-      CutscenePipeline cutscenePipeline = new CutscenePipeline(cutsceneLoader, cutsceneValidator, cutsceneCompiler);
-
-      Cutscene cutscene = cutscenePipeline.fromFile("dialogue");
-
     loadAssets();
     createUI();
 
-      CutsceneUI.play(cutscene);
+    ServiceLocator.getCutsceneService().playCutscene("dialogueshort");
   }
 
   @Override
