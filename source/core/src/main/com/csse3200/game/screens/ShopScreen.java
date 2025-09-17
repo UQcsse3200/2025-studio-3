@@ -1,132 +1,135 @@
 package com.csse3200.game.screens;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
-import com.csse3200.game.components.shop.ShopButtons;
+import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ShopScreen extends ScreenAdapter {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
-  private final GdxGame game;
+public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
+  private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final Renderer renderer;
-  private static final String[] shopTextures = { "images/shopbackground.jpg", "images/coins.png" };
+  private final GdxGame game;
+  private String[] shopTextures = {
+    "images/shop-popup.png", "images/coins.png", "images/dialog.png"
+  };
+  private String[] itemTextures;
 
   /**
    * Initialises the shop screen.
-   * 
+   *
    * @param game the game instance
    */
   public ShopScreen(GdxGame game) {
     this.game = game;
-
     logger.debug("Initialising shop screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-
     renderer = RenderFactory.createRenderer();
-
     loadAssets();
     createUI();
   }
 
-  /**
-   * Renders the shop screen.
-   */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
-  /**
-   * Handles resizing of the shop screen.
-   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
     logger.trace("Resized renderer: ({} x {})", width, height);
   }
 
-  /**
-   * Pauses the shop screen. Overridden to do nothing.
-   */
   @Override
   public void pause() {
+    // Do nothing
   }
 
-  /**
-   * Resumes the shop screen. Overridden to do nothing.
-   */
   @Override
   public void resume() {
+    // Do nothing
   }
 
-  /**
-   * Disposes of the shop screen's resources.
-   */
   @Override
   public void dispose() {
     logger.debug("Disposing shop screen");
-
     renderer.dispose();
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 
-  /**
-   * Loads the shop screen's assets.
-   */
+  /** Loads the shop screen's assets. */
   private void loadAssets() {
-    logger.debug("Loading shop assets");
     ServiceLocator.getResourceService().loadTextures(shopTextures);
-    String[] itemTextures = new String[ItemRegistry.ITEMS.length];
-    for (int i = 0; i < ItemRegistry.ITEMS.length; i++) {
-      itemTextures[i] = ItemRegistry.ITEMS[i].assetPath();
+    logger.debug("Loading shop assets");
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return;
+    }
+    itemTextures = new String[configService.getItemConfigs().length];
+    for (int i = 0; i < configService.getItemConfigs().length; i++) {
+      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /**
-   * Unloads the shop screen's assets from the resource manager.
-   */
+  /** Unloads the shop screen's assets from the resource manager. */
   private void unloadAssets() {
     logger.debug("Unloading shop assets");
     ServiceLocator.getResourceService().unloadAssets(shopTextures);
+    ServiceLocator.getResourceService().unloadAssets(itemTextures);
+  }
+
+  @Override
+  public void register(MenuSpriteData menuSpriteData) {
+    menuSpriteData
+        .edit(this)
+        .position(50, 50)
+        .name("Shop")
+        .description("Shop")
+        .sprite("images/shopsprite.png")
+        .locked(false)
+        .apply();
   }
 
   /**
-   * Creates the shop screen's ui including components for rendering ui elements
-   * to the screen and capturing and handling ui input.
+   * Creates the shop screen's ui including components for rendering ui elements to the screen and
+   * capturing and handling ui input.
    */
   private void createUI() {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
     ui.addComponent(new ShopDisplay())
+        .addComponent(new ShopActions(this.game))
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new ShopButtons())
-        .addComponent(new ShopActions(game));
-
+        .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu());
     ServiceLocator.getEntityService().register(ui);
   }
 }

@@ -1,18 +1,19 @@
 package com.csse3200.game.components.skilltree;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Displays a button to exit the Main Game screen to the Main Menu screen.
- */
+/** Displays a button to exit the Main Game screen to the Main Menu screen. */
 public class SkilltreeButton extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButton.class);
   private static final float Z_INDEX = 2f;
@@ -30,29 +31,33 @@ public class SkilltreeButton extends UIComponent {
   }
 
   private void addActors() {
-    table = new Table();
-    table.top().right();
-    table.setFillParent(true);
+    // Create close button using close-icon.png
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
 
-    TextButton backButton = new TextButton("Back", skin);
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
 
     // Triggers an event when the button is pressed.
-    backButton.addListener(
-      new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
-          logger.debug("Back button clicked");
-          game.setScreen(GdxGame.ScreenType.PROFILE);
-        }
-      });
+    closeButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Back button clicked");
+            game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+          }
+        });
 
-    table.add(backButton).padTop(10f).padRight(10f);
-
-    stage.addActor(table);
+    stage.addActor(closeButton);
   }
 
   @Override
   public void draw(SpriteBatch batch) {
+    // Do nothing, handled by the stage
   }
 
   @Override

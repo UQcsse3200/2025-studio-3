@@ -1,150 +1,191 @@
 package com.csse3200.game.tile;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
-import com.csse3200.game.components.tile.TileStatusComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-
-import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
-public class TileTest {
-    @Mock Texture texture;
-    LevelGameArea levelGameArea;
+class TileTest {
+  @Mock Texture texture;
+  LevelGameGrid grid;
+  LevelGameArea levelGameArea;
 
-    @BeforeEach
-    void beforeEach() {
-        TerrainFactory factory = mock(TerrainFactory.class);
+  @BeforeEach
+  void beforeEach() {
+    ServiceLocator.registerEntityService(new EntityService());
 
-        levelGameArea =
-                new LevelGameArea(factory) {
-                    @Override
-                    public void create() {}
-                };
+    // creates mock stage and render service
+    com.badlogic.gdx.scenes.scene2d.Stage stage = mock(com.badlogic.gdx.scenes.scene2d.Stage.class);
+    com.csse3200.game.rendering.RenderService renderService =
+        mock(com.csse3200.game.rendering.RenderService.class);
+    when(renderService.getStage()).thenReturn(stage);
+    ServiceLocator.registerRenderService(renderService);
 
-        ServiceLocator.registerEntityService(new EntityService());
-    }
+    // creates mock resource service
+    com.csse3200.game.services.ResourceService resourceService =
+        mock(com.csse3200.game.services.ResourceService.class);
+    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+    ServiceLocator.registerResourceService(resourceService);
 
-    @Test
-    public void shouldAddUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        Entity unit = mock(Entity.class);
-        tileStorageComponent.addTileUnit(unit);
-        assert(tileStorageComponent.getTileUnit() == unit);
-    }
+    // creates mock input service
+    com.csse3200.game.input.InputService inputService =
+        mock(com.csse3200.game.input.InputService.class);
+    lenient().doNothing().when(inputService).register(any());
+    lenient().doNothing().when(inputService).unregister(any());
+    ServiceLocator.registerInputService(inputService);
 
-    @Test
-    public void shouldntAddUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        Entity firstUnit = mock(Entity.class);
-        Entity secondUnit = mock(Entity.class);
-        tileStorageComponent.addTileUnit(firstUnit);
-        tileStorageComponent.addTileUnit(secondUnit);
-        assert(tileStorageComponent.getTileUnit() == firstUnit);
-        assert(tileStorageComponent.getTileUnit() != secondUnit);
-    }
+    TerrainFactory factory = mock(TerrainFactory.class);
 
-    @Test
-    public void shouldRemoveUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        Entity unit = mock(Entity.class);
-        tileStorageComponent.addTileUnit(unit);
-        tileStorageComponent.removeTileUnit();
-        assert(tileStorageComponent.getTileUnit() == null);
-    }
+    levelGameArea =
+        new LevelGameArea(factory) {
+          @Override
+          public void create() {
+            // default implementation ignored
+          }
+        };
 
-    @Test
-    public void shouldBeNullUnitByDefault() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        assert(tileStorageComponent.getTileUnit() == null);
-    }
+    // creates a grid
+    grid = new LevelGameGrid(1, 1);
+    Entity tile = createValidTile();
+    grid.addTile(0, tile);
+    levelGameArea.setGrid(grid);
 
-    @Test
-    public void removeNullUnit() {
-        Entity tile = createValidTile();
-        TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-        tileStorageComponent.removeTileUnit();
-        assert(tileStorageComponent.getTileUnit() == null);
-    }
+    Entity selected =
+        new Entity()
+            .addComponent(new TextureRenderComponent(mock(Texture.class)))
+            .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
+    levelGameArea.setSelectedUnit(selected);
+  }
 
-    @Test
-    public void shouldBeInHitboxOne() {
-        Entity tile = createValidTile();
-        TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-        GridPoint2 testPoint = new GridPoint2(1, 1);
-        assert(tileStorageComponent.inTileHitbox(testPoint));
-    }
+  @Test
+  void shouldntAddUnit() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    tileStorageComponent.triggerSpawnUnit();
 
-    @Test
-    public void shouldBeInHitboxTwo() {
-        Entity tile = createValidTile();
-        TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-        GridPoint2 testPoint = new GridPoint2(0, 0);
-        assert(tileStorageComponent.inTileHitbox(testPoint));
-    }
+    int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
+    tileStorageComponent.triggerSpawnUnit();
+    int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
 
-    @Test
-    public void shouldntBeInHitboxOne() {
-        Entity tile = createValidTile();
-        TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-        GridPoint2 testPoint = new GridPoint2(8, 8);
-        assert(!tileStorageComponent.inTileHitbox(testPoint));
-    }
+    // checks if the tile unit has not been replaced with new unit if there was already a unit
+    // placed
+    assert (beforeSecondTriggerId == afterSecondTriggerId);
+  }
 
-    @Test
-    public void shouldntBeInHitboxTwo() {
-        Entity tile = createValidTile();
-        TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-        GridPoint2 testPoint = new GridPoint2(0, 6);
-        assert(!tileStorageComponent.inTileHitbox(testPoint));
-    }
+  @Test
+  void shouldAddUnit() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    tileStorageComponent.triggerSpawnUnit();
+    assertTrue(tileStorageComponent.hasUnit());
+  }
 
-    @Test
-    public void createInvalidHitboxComponent() {
-        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new TileHitboxComponent(3, 3, 5, 5);
-        });
-        assertEquals("The max x and y values must be bigger than the min x and y values", ex.getMessage());
-    }
+  @Test
+  void shouldRemoveUnit() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    tileStorageComponent.triggerSpawnUnit();
+    tileStorageComponent.removeTileUnit();
+    assertFalse(tileStorageComponent.hasUnit());
+  }
 
-    @Test
-    public void shouldBeValidTile() {
-        Entity tile = createValidTile();
-        assertNotNull(tile);
-        assert(tile.getComponent(TileStorageComponent.class) != null);
-        assert(tile.getComponent(TileHitboxComponent.class) != null);
-        assert(tile.getComponent(TileStatusComponent.class) != null);
-        assert(tile.getComponent(TileInputComponent.class) != null);
-    }
+  @Test
+  void shouldBeNullUnitByDefault() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    assertNull(tileStorageComponent.getTileUnit());
+  }
 
-    private Entity createValidTile() {
-        //same as GridFactory but needs to be separate otherwise error with TextureRenderComponent
-        return new Entity()
-                .addComponent(new TextureRenderComponent(texture))
-                .addComponent(new TileHitboxComponent(5, 5, 0, 0))
-                .addComponent(new TileStorageComponent())
-                .addComponent(new TileInputComponent())
-                .addComponent(new TileStatusComponent(levelGameArea));
-    }
+  @Test
+  void removeNullUnit() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    tileStorageComponent.removeTileUnit();
+    assertNull(tileStorageComponent.getTileUnit());
+  }
+
+  @Test
+  void shouldBeInHitboxOne() {
+    Entity tile = createValidTile();
+    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
+    GridPoint2 testPoint = new GridPoint2(1, 1);
+    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
+  }
+
+  @Test
+  void shouldBeInHitboxTwo() {
+    Entity tile = createValidTile();
+    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
+    GridPoint2 testPoint = new GridPoint2(0, 0);
+    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
+  }
+
+  @Test
+  void shouldntBeInHitboxOne() {
+    Entity tile = createValidTile();
+    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
+    GridPoint2 testPoint = new GridPoint2(8, 8);
+    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
+  }
+
+  @Test
+  void shouldntBeInHitboxTwo() {
+    Entity tile = createValidTile();
+    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
+    GridPoint2 testPoint = new GridPoint2(0, 6);
+    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
+  }
+
+  @Test
+  void createInvalidHitboxComponent() {
+    IllegalArgumentException ex =
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+              new TileHitboxComponent(3, 3, 5, 5);
+            });
+    assertEquals(
+        "The max x and y values must be bigger than the min x and y values", ex.getMessage());
+  }
+
+  @Test
+  void shouldBeValidTile() {
+    Entity tile = createValidTile();
+    assertNotNull(tile);
+    assertNotNull(tile.getComponent(TileStorageComponent.class));
+    assertNotNull(tile.getComponent(TileHitboxComponent.class));
+    assertNotNull(tile.getComponent(TileInputComponent.class));
+  }
+
+  private Entity createValidTile() {
+    // same as GridFactory but needs to be separate otherwise error with TextureRenderComponent
+    Entity tile =
+        new Entity()
+            .addComponent(new TextureRenderComponent(texture))
+            .addComponent(new TileHitboxComponent(5, 5, 0, 0))
+            .addComponent(new TileStorageComponent(levelGameArea))
+            .addComponent(new TileInputComponent(levelGameArea));
+    tile.getComponent(TileStorageComponent.class).setPosition(0);
+    return tile;
+  }
 }

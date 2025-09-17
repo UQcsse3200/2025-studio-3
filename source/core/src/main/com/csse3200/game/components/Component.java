@@ -11,8 +11,26 @@ import org.slf4j.LoggerFactory;
  */
 public class Component {
   private static final Logger logger = LoggerFactory.getLogger(Component.class);
+
+  /** The entity this component belongs to */
   protected Entity entity;
+
+  /** Whether this component is enabled */
   protected boolean enabled = true;
+
+  /**
+   * Priority of the component - affects how components are loaded/created in {@link Entity}
+   * create() method.
+   */
+  private ComponentPriority priority = ComponentPriority.LOW;
+
+  /** Creates a new component with default settings. */
+  public Component() {}
+
+  /** Creates a component with a specific priority */
+  public Component(ComponentPriority priority) {
+    this.priority = priority;
+  }
 
   /**
    * Called when the entity is created and registered. Initial logic such as calls to GetComponent
@@ -56,10 +74,20 @@ public class Component {
 
   /**
    * Get the entity to which this component belongs.
+   *
    * @return entity
    */
   public Entity getEntity() {
     return entity;
+  }
+
+  /**
+   * Get the priority of the component.
+   *
+   * @return ComponentPriority
+   */
+  public ComponentPriority getPriority() {
+    return priority;
   }
 
   /**

@@ -1,13 +1,17 @@
 package com.csse3200.game;
 
+import static com.badlogic.gdx.Gdx.app;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.data.MenuSpriteData;
+import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.screens.MainMenuScreen;
+import com.csse3200.game.screens.NewGameScreen;
+import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.CutsceneService;
@@ -15,10 +19,22 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.badlogic.gdx.Gdx.app;
-
+/** The main game class. */
 public class GdxGame extends Game {
-    private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+  private static final Logger logger = LoggerFactory.getLogger(GdxGame.class);
+  private static final String[] GLOBAL_ASSETS = {
+    "images/dialog.png",
+    "images/shop-popup.png",
+    "images/coins.png",
+    "images/close-icon.png",
+    "images/plaque.png",
+    "images/skillpoints.png",
+    "images/settings-icon.png",
+    "images/menu-icon.png",
+    "images/achievement.png",
+    "images/pause-icon.png",
+    "images/placeholder.png"
+  };
 
     @Override
     public void create() {
@@ -39,52 +55,78 @@ public class GdxGame extends Game {
     }
 
   /**
-   * Runs the appropriate register function to register screen sprites.
+   * Initializes the game after loading screen is complete. This method is called by the
+   * LoadingScreen when loading is finished.
    */
-  public void loadMenus() {
-    for (RegisteredScreens screenType : RegisteredScreens.values()) {
-      if (!contains(ScreenType.values(), screenType.name())) {
-        return;
-      }
-      ScreenType type = ScreenType.valueOf(screenType.name());
-      Screen screen = newScreen(type);
+  public void initializeGame() {
+    logger.info("[GdxGame] Initializing game after loading screen");
+
+    //  Game-dependent services
+    ServiceLocator.registerProfileService(new ProfileService());
+    ServiceLocator.registerGlobalResourceService(new ResourceService());
+    ServiceLocator.registerDialogService(new DialogService());
+    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
+    ServiceLocator.registerConfigService(new ConfigService());
+
+    // Game-dependent data
+    loadGlobalAssets();
+    loadSettings();
+    loadScreens();
+
+    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
+    setScreen(ScreenType.MAIN_MENU);
+  }
+
+  /** Runs the appropriate register function to register screen sprites. */
+  private void loadScreens() {
+    for (ScreenType screenType : ScreenType.values()) {
+      Screen screen = newScreen(screenType);
       if (screen != null) {
         if (MenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          MenuSpriteData menuSpriteData = new MenuSpriteData(type);
+          MenuSpriteData menuSpriteData = new MenuSpriteData(screenType);
           ((MenuSpriteScreen) screen).register(menuSpriteData);
         } else if (DynamicMenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          ((DynamicMenuSpriteScreen<?>) screen).register(type);
+          ((DynamicMenuSpriteScreen<?>) screen).register(screenType);
+        } else {
+          screen.dispose();
         }
       }
     }
   }
 
-  /**
-   * Loads the game's settings.
-   */
+  /** Loads the game's global assets. */
+  private void loadGlobalAssets() {
+    logger.debug("[GdxGame] Loading global assets");
+    ServiceLocator.getGlobalResourceService().loadTextures(GLOBAL_ASSETS);
+    ServiceLocator.getGlobalResourceService().loadAll();
+  }
+
+  /** Loads the game's settings. */
   private void loadSettings() {
-    logger.debug("Loading game settings");
+    logger.debug("[GdxGame] Loading game settings");
     UserSettings.Settings settings = UserSettings.get();
     UserSettings.applySettings(settings);
   }
 
-public void setScreen(ScreenType screenType) {
-    logger.info("Setting game screen to {}", screenType);
+  /** Sets the game screen to the provided type. */
+  public void setScreen(ScreenType screenType) {
+    logger.info("[GdxGame] Setting game screen to {}", screenType);
     Screen currentScreen = getScreen();
     if (currentScreen != null) {
-        currentScreen.dispose();
+      currentScreen.dispose();
     }
     setScreen(newScreen(screenType));
-}
+  }
 
-    @Override
-    public void dispose() {
-        logger.debug("Disposing of current screen");
-        getScreen().dispose();
-    }
+  @Override
+  public void dispose() {
+    logger.debug("[GdxGame] Disposing of current screen");
+    getScreen().dispose();
+  }
 
   /**
    * Create a new screen of the provided type.
+   *
    * @param screenType screen type
    * @return new screen
    */
@@ -98,44 +140,63 @@ public void setScreen(ScreenType screenType) {
         return new SettingsScreen(this);
       case SKILLTREE:
         return new SkillTreeScreen(this);
-      case PROFILE:
-        return new ProfileScreen(this);
       case LOAD_GAME:
         return new LoadGameScreen(this);
+      case NEW_GAME:
+        return new NewGameScreen(this);
+      case SAVE_GAME:
+        return new SaveGameScreen(this);
       case STATISTICS:
-         return new StatisticsScreen(this);
+        return new StatisticsScreen(this);
       case ACHIEVEMENTS:
         return new AchievementsScreen(this);
       case SHOP:
         return new ShopScreen(this);
       case INVENTORY:
         return new InventoryScreen(this);
-        case WORLD_MAP:
-            return new WorldMapScreen(this);
+      case WORLD_MAP:
+        return new WorldMapScreen(this);
       default:
         return null;
     }
   }
 
-  public enum RegisteredScreens  {
-  }
-
+  /** Enum for all screens. */
   public enum ScreenType {
-    MAIN_MENU, MAIN_GAME, SETTINGS, SKILLTREE, PROFILE, LOAD_GAME, STATISTICS, ACHIEVEMENTS, SHOP, INVENTORY, WORLD_MAP
+    /** Main menu screen. */
+    MAIN_MENU,
+    /** Main game screen. */
+    MAIN_GAME,
+    /** Settings screen. */
+    SETTINGS,
+    /** Skill tree screen. */
+    SKILLTREE,
+    /** Load game screen. */
+    LOAD_GAME,
+    /** New game screen. */
+    NEW_GAME,
+    /** Save game screen. */
+    SAVE_GAME,
+    /** Statistics screen. */
+    STATISTICS,
+    /** Achievements screen. */
+    ACHIEVEMENTS,
+    /** Shop screen. */
+    SHOP,
+    /** Inventory screen. */
+    INVENTORY,
+    /** World map screen. */
+    WORLD_MAP
   }
 
-  /**
-   * Helper method to check if an enum value exists in another enum type
-   */
-  private boolean contains(ScreenType[] values, String name) {
-    for (ScreenType type : values) {
-      if (type.name().equals(name)) {
-        return true;
-      }
-    }
-    return false;
+  /** Exits the game. */
+  public void exit() {
+    ServiceLocator.deregisterGlobalResourceService();
+    ServiceLocator.deregisterMenuSpriteService();
+    ServiceLocator.deregisterConfigService();
+    ServiceLocator.deregisterProfileService();
+    ServiceLocator.getDialogService().hideAllDialogs();
+    ServiceLocator.deregisterDialogService();
+    app.exit();
   }
-    public void exit() {
-        app.exit();
-    }
 }

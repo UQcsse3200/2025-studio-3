@@ -1,26 +1,69 @@
 package com.csse3200.game.entities.configs;
 
-
-/**
- * Defines the properties stored in defences.json to be loaded by the NPC Factory.
- */
+/** Defines the properties stored in defences.json to be loaded by the NPC Factory. */
 public class BaseDefenceConfig extends BaseEntityConfig {
-    /* 
-    public enum Type {
-        LONG_RANGE,
-        RANGED,
-        MELEE
-    };
+  /** Creates a new BaseDefenceConfig with default values. */
+  public BaseDefenceConfig() {
+    // Default constructor with default field values
+  }
 
-    public enum State {
-        IDLE,
-        ATTACKING
-    };
-    */
+  /** Defence type identifier */
+  public int rangeType;
 
-    public int type = 1;
-    public int range = 1;
-    public int state = 1;
-    public int attackSpeed = 1;
-    public int critChance = 0;
+  /** Attack range of the defence */
+  public int range;
+
+  /** Current state of the defence */
+  public int state;
+
+  /** Attack speed of the defence */
+  public int attackSpeed;
+
+  /** Critical hit chance percentage */
+  public int critChance;
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRangeType() {
+    return rangeType;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getRange() {
+    return range;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackState() {
+    return state;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getAttackSpeed() {
+    return attackSpeed;
+  }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public int getCritChance() {
+    return critChance;
+  }
 }

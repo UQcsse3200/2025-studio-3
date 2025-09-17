@@ -1,12 +1,13 @@
 package com.csse3200.game.components;
 
+import com.csse3200.game.progression.skilltree.Skill;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
- * 
- * This component stores additional combat-related stats beyond health
- * and base attack, such as range, attack speed, and critical hit chance.
- * 
+ *
+ * <p>This component stores additional combat-related stats beyond health and base attack, such as
+ * range, attack speed, and critical hit chance.
  */
 public class DefenceStatsComponent extends CombatStatsComponent {
 
@@ -25,21 +26,44 @@ public class DefenceStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private int critChance;
 
+  // Initialises multiplier values to be applied to base stats from having unlocked skills
+  private static final float ATTACK_UPGRADE =
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getSkillset()
+          .getUpgradeValue(Skill.StatType.ATTACK_DAMAGE);
+  private static final float HEALTH_UPGRADE =
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getSkillset()
+          .getUpgradeValue(Skill.StatType.HEALTH);
+  private static final float SPEED_UPGRADE =
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getSkillset()
+          .getUpgradeValue(Skill.StatType.FIRING_SPEED);
+  private static final float CRIT_UPGRADE =
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getSkillset()
+          .getUpgradeValue(Skill.StatType.CRIT_CHANCE);
+
   /**
    * Creates a new DefenceStatsComponent with the given stats.
    *
-   * @param health       the maximum health of the defender
-   * @param baseAttack   the base attack damage
-   * @param type         the type identifier of this defender
-   * @param range        the maximum attack range
-   * @param state        the current combat/behavioural state
-   * @param attackSpeed  the speed of attacks
-   * @param critChance   the critical hit chance
+   * @param health the maximum health of the defender
+   * @param baseAttack the base attack damage
+   * @param type the type identifier of this defender
+   * @param range the maximum attack range
+   * @param state the current combat/behavioural state
+   * @param attackSpeed the speed of attacks
+   * @param critChance the critical hit chance
    */
-  public DefenceStatsComponent(int health, int baseAttack, int type,
-      int range, int state, int attackSpeed, int critChance) {
+  public DefenceStatsComponent(
+      int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
-    super(health, baseAttack);
+    // Initialises health and attack stats with consideration of skill upgrades
+    super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
     setType(type);
@@ -54,7 +78,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.type = type;
   }
 
-  /** @return the defender type identifier */
+  /**
+   * @return the defender type identifier
+   */
   public int getType() {
     return type;
   }
@@ -64,7 +90,9 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.range = range;
   }
 
-  /** @return the defender's maximum attack range */
+  /**
+   * @return the defender's maximum attack range
+   */
   public int getRange() {
     return range;
   }
@@ -74,27 +102,33 @@ public class DefenceStatsComponent extends CombatStatsComponent {
     this.state = state;
   }
 
-  /** @return the defender's current state */
+  /**
+   * @return the defender's current state
+   */
   public int getState() {
     return state;
   }
 
   /** Sets the defender's attack speed. */
   public void setAttackSpeed(int attackSpeed) {
-    this.attackSpeed = attackSpeed;
+    this.attackSpeed = (int) Math.ceil(attackSpeed * SPEED_UPGRADE);
   }
 
-  /** @return the defender's attack speed */
+  /**
+   * @return the defender's attack speed
+   */
   public int getAttackSpeed() {
     return attackSpeed;
   }
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(int critChance) {
-    this.critChance = critChance;
+    this.critChance = (int) (critChance + CRIT_UPGRADE);
   }
 
-  /** @return the defender's critical hit chance (percentage) */
+  /**
+   * @return the defender's critical hit chance (percentage)
+   */
   public int getCritChance() {
     return critChance;
   }

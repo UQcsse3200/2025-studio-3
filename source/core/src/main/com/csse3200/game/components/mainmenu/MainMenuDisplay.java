@@ -12,9 +12,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * A ui component for displaying the Main menu.
- */
+/** A ui component for displaying the Main menu. */
 public class MainMenuDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
   private static final float Z_INDEX = 2f;
@@ -34,11 +32,11 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/box_boy_title.png", Texture.class));
 
-        TextButton startBtn = new TextButton("Start", skin);
-        TextButton loadBtn = new TextButton("Load", skin);
-        TextButton worldMapBtn = new TextButton("World Map", skin);
-        TextButton settingsBtn = new TextButton("Settings", skin);
-        TextButton exitBtn = new TextButton("Exit", skin);
+    TextButton startBtn = new TextButton("New Game", skin);
+    TextButton loadBtn = new TextButton("Load Game", skin);
+    TextButton worldMapBtn = new TextButton("World Map", skin);
+    TextButton settingsBtn = new TextButton("Settings", skin);
+    TextButton exitBtn = new TextButton("Exit", skin);
 
     // Triggers an event when the button is pressed
     startBtn.addListener(
@@ -68,53 +66,54 @@ public class MainMenuDisplay extends UIComponent {
           }
         });
 
-        worldMapBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                logger.debug("World Map button clicked");
-                entity.getEvents().trigger("worldMap");
-            }
+    worldMapBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("World Map button clicked");
+            entity.getEvents().trigger("worldMap");
+          }
         });
 
-        exitBtn.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
+    exitBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
 
             logger.debug("Exit button clicked");
             entity.getEvents().trigger("exit");
           }
         });
 
-        table.add(title);
+    table.add(title);
 
-        table.row();
-        table.add(startBtn).padTop(30f);
-        table.row();
-        table.add(loadBtn).padTop(15f);
-        table.row();
-        table.add(settingsBtn).padTop(15f);
-        table.row();
-        table.add(worldMapBtn).padTop(15f);
-        table.row();
-        table.add(exitBtn).padTop(15f);
+    table.row();
+    table.add(startBtn).padTop(30f);
+    table.row();
+    table.add(loadBtn).padTop(15f);
+    table.row();
+    table.add(settingsBtn).padTop(15f);
+    table.row();
+    table.add(worldMapBtn).padTop(15f);
+    table.row();
+    table.add(exitBtn).padTop(15f);
 
-        stage.addActor(table);
-    }
+    stage.addActor(table);
+  }
 
-    @Override
-    public void draw(SpriteBatch batch) {
-        // draw is handled by the stage
-    }
+  @Override
+  public void draw(SpriteBatch batch) {
+    // draw is handled by the stage
+  }
 
-    @Override
-    public float getZIndex() {
-        return Z_INDEX;
-    }
+  @Override
+  public float getZIndex() {
+    return Z_INDEX;
+  }
 
-    @Override
-    public void dispose() {
-        table.clear();
-        super.dispose();
-    }
+  @Override
+  public void dispose() {
+    table.clear();
+    super.dispose();
+  }
 }

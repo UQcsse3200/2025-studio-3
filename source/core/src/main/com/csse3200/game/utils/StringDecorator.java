@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 /**
  * Apply a custom toString() for a class without overriding the class, using a decorator.
+ *
  * @param <T> Class to decorate
  */
 public class StringDecorator<T> {
@@ -12,6 +13,7 @@ public class StringDecorator<T> {
 
   /**
    * Create a string-decorated object.
+   *
    * @param object Object to decorate.
    * @param printFn Function which takes the object and returns the desired string representation.
    */

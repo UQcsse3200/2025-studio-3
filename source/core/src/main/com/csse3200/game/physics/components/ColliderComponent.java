@@ -20,6 +20,7 @@ public class ColliderComponent extends Component {
   private final FixtureDef fixtureDef;
   private Fixture fixture;
 
+  /** Creates a new collider component with default fixture settings. */
   public ColliderComponent() {
     fixtureDef = new FixtureDef();
   }
@@ -174,13 +175,16 @@ public class ColliderComponent extends Component {
     return this;
   }
 
-  /** @return Physics fixture of this collider. Null before created() */
+  /**
+   * @return Physics fixture of this collider. Null before created()
+   */
   public Fixture getFixture() {
     return fixture;
   }
 
   /**
    * Set the collider layer, used in collision logic
+   *
    * @param layerMask Bitmask of {@link PhysicsLayer} this collider belongs to
    * @return self
    */
@@ -216,8 +220,21 @@ public class ColliderComponent extends Component {
 
   private Shape makeBoundingBox() {
     PolygonShape bbox = new PolygonShape();
-    Vector2 center = entity.getScale().scl(0.5f);
+    Vector2 center = entity.getScale().scl(0.25f);
     bbox.setAsBox(center.x, center.y, center, 0f);
     return bbox;
+  }
+
+  public ColliderComponent setCollisionFilter(short categoryBits, short maskBits) {
+    if (fixture == null) {
+      fixtureDef.filter.categoryBits = categoryBits;
+      fixtureDef.filter.maskBits = maskBits;
+    } else {
+      Filter filter = fixture.getFilterData();
+      filter.categoryBits = categoryBits;
+      filter.maskBits = maskBits;
+      fixture.setFilterData(filter);
+    }
+    return this;
   }
 }

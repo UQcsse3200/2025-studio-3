@@ -9,9 +9,9 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.progression.inventory.ItemRegistry;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -21,9 +21,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The InventoryScreen is a game screen containing the player's inventory.
  *
- * It sets up the rendering, input and services for the UI to function and
- * manages an InventoryDisplay component that
- * displays the actual inventory items.
+ * <p>It sets up the rendering, input and services for the UI to function and manages an
+ * InventoryDisplay component that displays the actual inventory items.
  */
 public class InventoryScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(InventoryScreen.class);
@@ -31,9 +30,8 @@ public class InventoryScreen extends ScreenAdapter {
   private final Renderer renderer;
 
   /**
-   * Creates a new InventoryScreen and registers the services required, creates
-   * the renderer, and initialises the
-   * Inventory UI.
+   * Creates a new InventoryScreen and registers the services required, creates the renderer, and
+   * initialises the Inventory UI.
    *
    * @param gdxGame current game instance
    */
@@ -51,44 +49,33 @@ public class InventoryScreen extends ScreenAdapter {
     createUI();
   }
 
-  /**
-   * Updates entities and renders current frame.
-   *
-   * @param delta time elapsed since last frame
-   */
   @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
   }
 
-  /**
-   * Loads the shop screen's assets.
-   */
+  /** Loads the shop screen's assets. */
   private void loadAssets() {
     logger.debug("Loading inventory assets");
-    String[] itemTextures = new String[ItemRegistry.ITEMS.length];
-    for (int i = 0; i < ItemRegistry.ITEMS.length; i++) {
-      itemTextures[i] = ItemRegistry.ITEMS[i].assetPath();
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      logger.warn("ConfigService is null");
+      return;
+    }
+    String[] itemTextures = new String[configService.getItemConfigs().length];
+    for (int i = 0; i < configService.getItemConfigs().length; i++) {
+      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /**
-   * Adjusts the screen when window is resized.
-   *
-   * @param width  new screen width
-   * @param height new screen height
-   */
   @Override
   public void resize(int width, int height) {
     renderer.resize(width, height);
   }
 
-  /**
-   * Disposes of this screen's resources.
-   */
   @Override
   public void dispose() {
     renderer.dispose();
@@ -98,8 +85,7 @@ public class InventoryScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the InventoryScreen's UI including components for rendering UI
-   * elements to the screen
+   * Creates the InventoryScreen's UI including components for rendering UI elements to the screen
    * and capturing and handling UI input.
    */
   private void createUI() {

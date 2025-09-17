@@ -1,174 +1,103 @@
 package com.csse3200.game.screens;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
+
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.persistence.Persistence;
-import com.csse3200.game.progression.achievements.Achievement;
+import com.csse3200.game.components.achievements.AchievementsDisplay;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The game screen containing the achievements menu.
+ * The AchievementsScreen is a game screen containing the player's achievements.
+ *
+ * <p>It sets up the rendering, input and services for the UI to function and manages an
+ * AchievementsDisplay component that displays the actual achievements.
  */
 public class AchievementsScreen extends ScreenAdapter {
-    private final GdxGame game;
-    private Stage stage;
-    private Table rootTable;
+  private static final Logger logger = LoggerFactory.getLogger(AchievementsScreen.class);
+  private final GdxGame game;
+  private final Renderer renderer;
+  private AchievementsDisplay achievementsDisplay;
 
-    // Styles
-    private Skin skin;
-    private Label.LabelStyle headerStyle;
-    private Label.LabelStyle textStyle;
-    private Window.WindowStyle windowStyle;
+  /**
+   * Creates a new AchievementsScreen and registers the services required, creates the renderer, and
+   * initialises the Achievements UI.
+   *
+   * @param gdxGame current game instance
+   */
+  public AchievementsScreen(GdxGame gdxGame) {
+    this.game = gdxGame;
 
-    public AchievementsScreen(GdxGame game) {
-        this.game = game;
+    logger.debug("Initialising achievements screen services");
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+    ServiceLocator.registerTimeSource(new GameTime());
+
+    renderer = RenderFactory.createRenderer();
+    renderer.getCamera().getEntity().setPosition(5f, 5f);
+
+    createUI();
+  }
+
+  /**
+   * Updates entities and renders current frame.
+   *
+   * @param delta time elapsed since last frame
+   */
+  @Override
+  public void render(float delta) {
+    ServiceLocator.getEntityService().update();
+    renderer.render();
+  }
+
+  /**
+   * Adjusts the screen when window is resized.
+   *
+   * @param width new screen width
+   * @param height new screen height
+   */
+  @Override
+  public void resize(int width, int height) {
+    renderer.resize(width, height);
+    // Notify DialogService to resize any active dialogs
+    ServiceLocator.getDialogService().resize();
+    // Update close button position
+    if (achievementsDisplay != null) {
+      achievementsDisplay.updateOnResize();
     }
+  }
 
-    @Override
-    public void show() {
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+  /** Disposes of this screen's resources. */
+  @Override
+  public void dispose() {
+    renderer.dispose();
+    ServiceLocator.getRenderService().dispose();
+    ServiceLocator.getEntityService().dispose();
+    ServiceLocator.clear();
+  }
 
-        // === Load skin ===
-        skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
-
-        // === Styles from skin ===
-        headerStyle = skin.has("title", Label.LabelStyle.class) ?
-                skin.get("title", Label.LabelStyle.class) :
-                new Label.LabelStyle(new BitmapFont(), Color.DARK_GRAY);
-
-        textStyle = skin.get(Label.LabelStyle.class); // default
-        windowStyle = skin.get(Window.WindowStyle.class); // default
-
-        // === Root table ===
-        rootTable = new Table();
-        rootTable.setFillParent(true);
-        stage.addActor(rootTable);
-
-        // === Header ===
-        Label header = new Label("Achievements", headerStyle);
-        header.setFontScale(2f);
-
-        rootTable.top().padTop(20);
-        rootTable.add(header).center().row();
-
-        Table achievementTable = new Table();
-        int colCount = 0;
-        for (Achievement a : Persistence.profile().achievements().getAllAchievements()) {
-            TextButton achButton = new TextButton(a.getName(), skin);
-
-            if (a.isUnlocked()) {
-                achButton.getLabel().setColor(Color.GREEN);
-            } else {
-                achButton.getLabel().setColor(Color.RED);
-            }
-
-            achButton.addListener(new ClickListener() {
-                @Override
-                public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                    showAchievementPopup(a);
-                }
-            });
-
-            achievementTable.add(achButton).pad(5).width(150).height(60);
-
-
-            colCount++;
-            if (colCount % 7 == 0) {
-                // new row after every 7 buttons
-                achievementTable.row();
-            }
-
-        }
-
-
-        ScrollPane scrollPane = new ScrollPane(achievementTable, skin);
-        scrollPane.setFadeScrollBars(false);
-
-        rootTable.row().padTop(20);
-        rootTable.add(scrollPane).expand().fill().row();
-
-        // === Back button ===
-        TextButton backButton = new TextButton("Back", skin);
-        backButton.getLabel().setFontScale(2f);
-        backButton.pad(20, 60, 20, 60);
-
-        backButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                game.setScreen(GdxGame.ScreenType.PROFILE);
-            }
-        });
-
-        rootTable.row().padBottom(40);
-        rootTable.add(backButton).center().expandX();
-    }
-
-    /**
-     * Opens a popup showing achievement details
-     */
-    private void showAchievementPopup(Achievement a) {
-        Window popup = new Window("Achievement Details", windowStyle);
-
-        Label name = new Label(a.getName(), headerStyle);
-        // Change color depending on locked/unlocked
-        if (a.isUnlocked()) {
-            name.setColor(Color.GREEN);
-        } else {
-            name.setColor(Color.RED);
-        }
-        Label description = new Label(a.getDescription(), textStyle);
-        Label points = new Label("Points: " + a.getSkillPoint(), textStyle);
-
-        name.setFontScale(1.5f);
-
-        TextButton closeBtn = new TextButton("Close", skin);
-        closeBtn.addListener(new ClickListener() {
-            @Override
-            public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-                popup.remove();
-            }
-        });
-
-        popup.add(name).pad(10).row();
-        popup.add(description).pad(10).row();
-        popup.add(points).pad(10).row();
-        popup.add(closeBtn).pad(10).row();
-
-        popup.pack();
-        popup.setModal(true);
-        popup.setMovable(false);
-        popup.setPosition(
-                (stage.getWidth() - popup.getWidth()) / 2,
-                (stage.getHeight() - popup.getHeight()) / 2
-        );
-
-        stage.addActor(popup);
-    }
-
-    @Override
-    public void render(float delta) {
-        Gdx.gl.glClearColor(248f/255f, 249f/255f, 178/255f, 1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        stage.act(delta);
-        stage.draw();
-
-        if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(GdxGame.ScreenType.MAIN_MENU);
-        }
-    }
-
-    @Override
-    public void dispose() {
-        stage.dispose();
-        skin.dispose();
-    }
+  /**
+   * Creates the AchievementsScreen's UI including components for rendering UI elements to the
+   * screen and capturing and handling UI input.
+   */
+  private void createUI() {
+    logger.debug("Creating ui");
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    achievementsDisplay = new AchievementsDisplay(game);
+    Entity ui = new Entity();
+    ui.addComponent(achievementsDisplay).addComponent(new InputDecorator(stage, 10));
+    ServiceLocator.getEntityService().register(ui);
+  }
 }

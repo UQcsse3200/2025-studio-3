@@ -1,9 +1,10 @@
 package com.csse3200.game.progression.skilltree;
 
+import java.util.Locale;
+
 /**
- * Represents a skill in the game's skill tree
- * Each skill has a name, a type of stat it affects, a percentage bonus, a cost
- * and is either un/locked.
+ * Represents a skill in the game's skill tree Each skill has a name, a type of stat it affects, a
+ * percentage bonus, a cost and is either un/locked.
  */
 public class Skill {
   private String name;
@@ -11,9 +12,7 @@ public class Skill {
   private int cost;
   private float percentage;
 
-  /**
-   * Enumeration of all possible stats that a skill can modify.
-   */
+  /** Enumeration of all possible stats that a skill can modify. */
   public enum StatType {
     /** Increases the player's health. */
     HEALTH,
@@ -24,19 +23,18 @@ public class Skill {
     /** Increases the player's critical hit chance. */
     CRIT_CHANCE,
     /** Increases the player's defense. */
-    ARMOUR
+    CURRENCY_GEN
   }
 
-  public Skill() {
-  }
+  public Skill() {}
 
   /**
    * Constructs a new Skill with the specified parameters.
-   * 
-   * @param name       the name of the skill
-   * @param statType   the type of stat the skill affects
+   *
+   * @param name the name of the skill
+   * @param statType the type of stat the skill affects
    * @param percentage the percentage bonus the skill provides
-   * @param cost       the cost to unlock the skill
+   * @param cost the cost to unlock the skill
    */
   public Skill(String name, StatType statType, float percentage, int cost) {
     this.name = name;
@@ -47,7 +45,7 @@ public class Skill {
 
   /**
    * Returns the name of the skill.
-   * 
+   *
    * @return the skill name
    */
   public String getName() {
@@ -56,7 +54,7 @@ public class Skill {
 
   /**
    * Returns the type of stat this skill affects.
-   * 
+   *
    * @return the stat type
    */
   public StatType getStatType() {
@@ -65,7 +63,7 @@ public class Skill {
 
   /**
    * Returns the cost required to unlock this skill.
-   * 
+   *
    * @return the skill cost
    */
   public int getCost() {
@@ -74,10 +72,29 @@ public class Skill {
 
   /**
    * Returns the percentage bonus this skill provides.
-   * 
+   *
    * @return the bonus percentage
    */
   public float getPercentage() {
     return percentage;
+  }
+
+  /**
+   * Returns a brief description of a Skill based on its other attributes
+   *
+   * @return a string describing the skill
+   */
+  public String getDescription() {
+    int amount = (int) ((getPercentage() - 1) * 100);
+    if (getStatType() == StatType.CRIT_CHANCE) {
+      amount = (int) (getPercentage() * 100);
+    }
+    String description = "";
+    description += "Unlocking this skill will permanently increase ";
+    description += statType.name().toLowerCase(Locale.ROOT).replace('_', ' ');
+    description += " by ";
+    description += amount;
+    description += "%";
+    return description;
   }
 }

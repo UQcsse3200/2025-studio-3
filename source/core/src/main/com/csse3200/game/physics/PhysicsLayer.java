@@ -8,11 +8,13 @@ public class PhysicsLayer {
   public static final short OBSTACLE = (1 << 2);
   // Projectile collision boundaries
   public static final short PROJECTILE = (1 << 4);
-    // NPC (Non-Playable Character) colliders
+  // NPC (Non-Playable Character) colliders
   public static final short NPC = (1 << 3);
   public static final short ALL = ~0;
-  //Enemy Collison box
-    public static final short ENEMY = (1 << 2);
+  // Enemy Collison box
+  public static final short ENEMY = (1 << 5);
+
+  // public static final short DEFENSE = (1 << 6);
 
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;
