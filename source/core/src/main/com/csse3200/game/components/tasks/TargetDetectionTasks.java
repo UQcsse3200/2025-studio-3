@@ -21,7 +21,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   protected final DebugRenderer debugRenderer;
   protected final RaycastHit hit = new RaycastHit();
 
-  public TargetDetectionTasks(float attackRange) {
+  protected TargetDetectionTasks(float attackRange) {
     this.attackRange = attackRange;
     physics = ServiceLocator.getPhysicsService().getPhysics();
     debugRenderer = ServiceLocator.getRenderService().getDebug();
@@ -124,10 +124,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       }
 
       float distance = from.dst(targetPos);
-      //      boolean visible = isTargetVisible(target);
-      //      if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in
-      // range
-      if (distance <= attackRange) { // if target visible and in range
+      if (distance <= attackRange) { // if target in range
         if (distance < closestDist) {
           closestDist = distance;
           closestTarget = target;

@@ -9,6 +9,7 @@ import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -72,6 +73,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // May have to use a List<Entity> instead if we need to know what entities are at what position
   // But for now it doesn't matter
   private int deckUnitCount;
+
+  // Initialising an Entity
+  private Entity gameOverEntity;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -145,6 +149,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     // add components here for additional UI Elements
     ui.addComponent(new GameAreaDisplay("Level One"));
     spawnEntity(ui);
+
+    // Creates a game over entity to handle the game over window UI
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
@@ -339,22 +348,13 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
     projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    // projectile.setPosition(spawnPos.x, spawnPos.y - tileSize / 2f);
-    // TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
-    // projectile.addComponent(render); // <- your projectile image
 
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
-    projectile
-        .getEvents()
-        .addListener(
-            "despawnSlingshot",
-            (Entity e) -> {
-              requestDespawn(e);
-            });
+    projectile.getEvents().addListener("despawnSlingshot", (Entity e) -> requestDespawn(e));
     spawnEntity(projectile); // adds to area and entity service
     return projectile;
   }
@@ -438,7 +438,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
-    // newEntity.getEvents().trigger("attackStart");
     newEntity
         .getEvents()
         .addListener(
@@ -453,7 +452,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         .addListener(
             "fire",
             () -> {
-              Vector2 spawnPos = newEntity.getCenterPosition();
               spawnProjectile(entityPos, 3f, 0f);
               newEntity.getEvents().trigger("attackStart");
               newEntity
@@ -535,11 +533,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
-        // TODO: add UI component here
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        // Window activation trigger
+        gameOverEntity.getEvents().trigger("gameOver");
       }
     }
   }

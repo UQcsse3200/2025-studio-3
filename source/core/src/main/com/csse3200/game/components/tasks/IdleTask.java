@@ -11,7 +11,6 @@ import com.csse3200.game.entities.Entity;
  * remains idle. Otherwise, this task becomes inactive and another task (attack task) takes over.
  */
 public class IdleTask extends TargetDetectionTasks {
-  private final float attackRange;
 
   /**
    * Creates an IdleTask
@@ -20,7 +19,6 @@ public class IdleTask extends TargetDetectionTasks {
    */
   public IdleTask(float attackRange) {
     super(attackRange);
-    this.attackRange = attackRange;
   }
 
   @Override
