@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
-  private final float attackRange;
 
   // cooldown fields
   private final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
@@ -26,7 +25,6 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(float attackRange) {
     super(attackRange);
-    this.attackRange = attackRange;
   }
 
   /**
