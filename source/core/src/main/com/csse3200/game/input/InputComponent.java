@@ -16,7 +16,7 @@ import com.csse3200.game.services.ServiceLocator;
 public abstract class InputComponent extends Component
     implements InputProcessor, GestureDetector.GestureListener {
   /** The priority that the input handler is visited in by InputService. */
-  protected int priority;
+  protected int inputPriority;
 
   /** Sets priority to the default value; */
   protected InputComponent() {
@@ -26,10 +26,10 @@ public abstract class InputComponent extends Component
   /**
    * Sets input handler priority to a given value.
    *
-   * @param priority input handler's priority
+   * @param inputPriority input handler's priority
    */
-  protected InputComponent(int priority) {
-    this.priority = priority;
+  protected InputComponent(int inputPriority) {
+    this.inputPriority = inputPriority;
   }
 
   @Override
@@ -37,12 +37,12 @@ public abstract class InputComponent extends Component
     ServiceLocator.getInputService().register(this);
   }
 
-  public void setPriority(int priority) {
-    this.priority = priority;
+  public void setInputPriority(int priority) {
+    this.inputPriority = priority;
   }
 
-  public int getPriority() {
-    return priority;
+  public int getInputPriority() {
+    return inputPriority;
   }
 
   @Override
