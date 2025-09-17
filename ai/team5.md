@@ -1,0 +1,2 @@
+## Louisa
+- Generative AI was used to assist in learning how to place an image as a background for the dossier display. However, major modifications were made to the dossier to follow better design styles. 
