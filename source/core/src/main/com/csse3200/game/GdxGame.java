@@ -114,7 +114,10 @@ public void setScreen(ScreenType screenType) {
             return new WorldMapScreen(this);
         case PADDLE_GAME:
             return new PaddleGameScreen(this);
-      default:
+        case LANE_RUNNER:
+            return new LaneRunnerScreen(this);
+
+        default:
         return null;
     }
   }
