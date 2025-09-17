@@ -101,4 +101,21 @@ public class BallComponentTest {
         assertEquals(initialBallsHit,ball.getBallsHit());
     }
 
+    @Test
+    public void reverseY() {
+        Image ballImage = new Image();
+        ballImage.setSize(40,40);
+        ballImage.setPosition(100,100);
+        BallComponent ball= new BallComponent(ballImage, 50f, 50f);
+        int initialScore= ball.getScore();
+        int initialBallsHit= ball.getBallsHit();
+        float initialVelocityY= ball.getVelocityY();
+
+        ball.reverseY();
+
+        assertEquals(-initialVelocityY, ball.getVelocityY(), 0.01f);
+        assertEquals(initialBallsHit+1,ball.getBallsHit());
+        assertEquals(initialScore+1, ball.getScore());
+    }
+
 }
