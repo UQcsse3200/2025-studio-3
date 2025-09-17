@@ -205,9 +205,7 @@ public class MainGameScreen extends ScreenAdapter {
     return new LevelGameArea(terrainFactory);
   }
 
-  /**
-   * Hook for configuring main game actions. Subclasses can override to bind themselves instead.
-   */
+  /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
   protected void configureMainGameActions(MainGameActions mainGameActions) {
     mainGameActions.setMainGameScreen(this);
   }

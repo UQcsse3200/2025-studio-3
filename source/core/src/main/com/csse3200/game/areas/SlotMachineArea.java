@@ -8,76 +8,64 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Represents a dedicated game area for the slot machine level.
- * Handles loading and unloading of slot machine-specific assets,
- * sets up the user interface (HUD), and manages display elements
+ * Represents a dedicated game area for the slot machine level. Handles loading and unloading of
+ * slot machine-specific assets, sets up the user interface (HUD), and manages display elements
  * relevant to the slot machine gameplay.
  */
 public class SlotMachineArea extends LevelGameArea {
-    private static final String[] SLOT_TEXTURE_ATLASES = {
-            "images/slot_frame.atlas",
-            "images/slot_reels.atlas",
-    };
-    private static final String[] SLOT_TEXTURES = {
-            "images/slot_reels_background.png",
-    };
+  private static final String[] SLOT_TEXTURE_ATLASES = {
+    "images/slot_frame.atlas", "images/slot_reels.atlas",
+  };
+  private static final String[] SLOT_TEXTURES = {
+    "images/slot_reels_background.png",
+  };
 
-    /**
-     * Creates a new SlotMachineArea with the given TerrainFactory.
-     *
-     * @param terrainFactory The factory used to generate terrain for this area.
-     */
-    public SlotMachineArea(TerrainFactory terrainFactory) {
-        super(terrainFactory);
-    }
+  /**
+   * Creates a new SlotMachineArea with the given TerrainFactory.
+   *
+   * @param terrainFactory The factory used to generate terrain for this area.
+   */
+  public SlotMachineArea(TerrainFactory terrainFactory) {
+    super(terrainFactory);
+  }
 
-    /**
-     * Initializes the slot machine area by loading assets and adding the HUD.
-     */
-    @Override
-    public void create() {
-        super.create();
-        loadSlotAssets();
-        addSlotHudTopBar();
-    }
+  /** Initializes the slot machine area by loading assets and adding the HUD. */
+  @Override
+  public void create() {
+    super.create();
+    loadSlotAssets();
+    addSlotHudTopBar();
+  }
 
-    /**
-     * Unloads slot machine assets and disposes of the area.
-     */
-    @Override
-    public void dispose() {
-        unloadSlotAssets();
-        super.dispose();
-    }
+  /** Unloads slot machine assets and disposes of the area. */
+  @Override
+  public void dispose() {
+    unloadSlotAssets();
+    super.dispose();
+  }
 
-    /**
-     * Adds the slot machine HUD and display elements to the top bar.
-     */
-    private void addSlotHudTopBar() {
-        Entity ui = new Entity();
-        ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
-        ui.addComponent(new SlotMachineDisplay(this));
-        spawnEntity(ui);
-    }
+  /** Adds the slot machine HUD and display elements to the top bar. */
+  private void addSlotHudTopBar() {
+    Entity ui = new Entity();
+    ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
+    ui.addComponent(new SlotMachineDisplay(this));
+    spawnEntity(ui);
+  }
 
-    /**
-     * Loads all textures and atlases required for the slot machine.
-     */
-    private void loadSlotAssets() {
-        ResourceService rs = ServiceLocator.getResourceService();
-        rs.loadTextureAtlases(SLOT_TEXTURE_ATLASES);
-        rs.loadTextures(SLOT_TEXTURES);
-        rs.loadAll();
-    }
+  /** Loads all textures and atlases required for the slot machine. */
+  private void loadSlotAssets() {
+    ResourceService rs = ServiceLocator.getResourceService();
+    rs.loadTextureAtlases(SLOT_TEXTURE_ATLASES);
+    rs.loadTextures(SLOT_TEXTURES);
+    rs.loadAll();
+  }
 
-    /**
-     * Unloads all slot machine textures and atlases to free memory.
-     */
-    private void unloadSlotAssets() {
-        ResourceService rs = ServiceLocator.getResourceService();
-        if (rs != null) {
-            rs.unloadAssets(SLOT_TEXTURE_ATLASES);
-            rs.unloadAssets(SLOT_TEXTURES);
-        }
+  /** Unloads all slot machine textures and atlases to free memory. */
+  private void unloadSlotAssets() {
+    ResourceService rs = ServiceLocator.getResourceService();
+    if (rs != null) {
+      rs.unloadAssets(SLOT_TEXTURE_ATLASES);
+      rs.unloadAssets(SLOT_TEXTURES);
     }
+  }
 }
