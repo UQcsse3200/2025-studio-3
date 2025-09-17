@@ -37,7 +37,7 @@ public class SlotEngine {
     GAIN_COINS(1, "GainCoins", 2),
     SUMMON_ENEMY(2, "SummonEnemy", 1),
     FREEZE_ENEMY(5, "FreezeEnemy", 0),
-    DESTROY_ENEMY(7, "DestroyEnemy", 100),
+    DESTROY_ENEMY(7, "DestroyEnemy", 1),
     DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 10);
 
     private final int id;
