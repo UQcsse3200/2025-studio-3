@@ -60,7 +60,7 @@ public class TouchAttackComponent extends Component {
     }
 
     Object userData = other.getBody().getUserData();
-    if (!(userData instanceof BodyUserData bud) || bud.entity == null) {
+    if (userData == null || !(userData instanceof BodyUserData bud) || bud.entity == null) {
       return; // No valid entity to attack
     }
     Entity target = bud.entity;
