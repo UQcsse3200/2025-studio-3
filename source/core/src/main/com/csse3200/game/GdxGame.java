@@ -151,7 +151,7 @@ public class GdxGame extends Game {
         return new WorldMapScreen(this);
       case SLOT_MACHINE:
         return new SlotMachineScreen(this);
-        case MINI_GAME:
+        case MINI_GAMES:
             return new MiniGameScreen(this);
         case PADDLE_GAME:
                 return new PaddleGameScreen(this);
@@ -192,7 +192,7 @@ public class GdxGame extends Game {
     /** Slot machine level */
     SLOT_MACHINE,
     /** Mini game screen */
-    MINI_GAME,
+    MINI_GAMES,
     /** Paddle game screen */
     PADDLE_GAME,
     /** Lane runner game screen */
