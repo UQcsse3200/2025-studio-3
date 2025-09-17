@@ -5,7 +5,7 @@ import org.junit.Test;
 
 public class LaneRunnerPlayerFactoryTest {
 
-    // Test-only version of createPlayer that skips TextureRenderComponent
+
     private Entity createTestPlayer(LaneManager laneManager) {
         Entity player = new Entity();
         // Only add logic component, skip texture
