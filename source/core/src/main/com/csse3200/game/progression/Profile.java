@@ -1,7 +1,7 @@
 package com.csse3200.game.progression;
 
 import com.csse3200.game.persistence.Savefile;
-import com.csse3200.game.progression.achievements.AchievementManager;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
@@ -10,16 +10,15 @@ import com.csse3200.game.progression.wallet.Wallet;
 /**
  * Represents a user profile in the game. Allows customization of player attributes and tracking of
  * progress.
- *
- * <p>Later we can add an arsenal of unlocked defences, and a way to track overall level progress.
  */
 public class Profile {
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
   private SkillSet skillset; // The player's skills / skill tree
-  private AchievementManager achievements; // The player's achievements
-  private Statistics statistics; // The player's statistics
+  private Statistics statistics; // The player's statistics (includes achievements)
+  private Arsenal arsenal; // The player's arsenal of unlocked defences
+  private String currentLevel; // The player's current level
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -27,8 +26,9 @@ public class Profile {
     this.wallet = new Wallet();
     this.inventory = new Inventory();
     this.skillset = new SkillSet();
-    this.achievements = new AchievementManager();
     this.statistics = new Statistics();
+    this.arsenal = new Arsenal();
+    this.currentLevel = "level1"; // Default level, will be updated when levels are loaded
   }
 
   /** Initialise a profile with the provided values. */
@@ -37,14 +37,16 @@ public class Profile {
       Wallet wallet,
       Inventory inventory,
       SkillSet skillset,
-      AchievementManager achievements,
-      Statistics statistics) {
+      Statistics statistics,
+      Arsenal arsenal,
+      String currentLevel) {
     this.name = name;
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
-    this.achievements = achievements;
-    this.statistics = statistics;
+    this.statistics = statistics != null ? statistics : new Statistics();
+    this.arsenal = arsenal;
+    this.currentLevel = currentLevel;
   }
 
   /**
@@ -66,11 +68,29 @@ public class Profile {
   }
 
   /**
+   * Get the current level of the profile.
+   *
+   * @return the current level of the profile.
+   */
+  public String getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * Set the current level of the profile.
+   *
+   * @param currentLevel the new current level of the profile.
+   */
+  public void setCurrentLevel(String currentLevel) {
+    this.currentLevel = currentLevel;
+  }
+
+  /**
    * Get the wallet associated with the profile.
    *
    * @return the wallet of the profile.
    */
-  public Wallet wallet() {
+  public Wallet getWallet() {
     return wallet;
   }
 
@@ -79,8 +99,17 @@ public class Profile {
    *
    * @return the inventory of the profile.
    */
-  public Inventory inventory() {
+  public Inventory getInventory() {
     return inventory;
+  }
+
+  /**
+   * Get the arsenal associated with the profile.
+   *
+   * @return the arsenal of the profile.
+   */
+  public Arsenal getArsenal() {
+    return arsenal;
   }
 
   /**
@@ -88,17 +117,8 @@ public class Profile {
    *
    * @return the skillset of the profile.
    */
-  public SkillSet skillset() {
+  public SkillSet getSkillset() {
     return skillset;
-  }
-
-  /**
-   * Get the achievements associated with the profile.
-   *
-   * @return the achievements of the profile.
-   */
-  public AchievementManager achievements() {
-    return achievements;
   }
 
   /**
@@ -106,7 +126,7 @@ public class Profile {
    *
    * @return the statistics of the profile.
    */
-  public Statistics statistics() {
+  public Statistics getStatistics() {
     return statistics;
   }
 }

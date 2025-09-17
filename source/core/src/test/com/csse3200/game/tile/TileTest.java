@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
+import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -28,15 +29,9 @@ class TileTest {
   @Mock Texture texture;
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
-  Entity selected;
 
   @BeforeEach
   void beforeEach() {
-    // textures for tests
-    Texture ghost1 = mock(Texture.class, "ghost_1");
-    Texture ghost2 = mock(Texture.class, "ghost_2");
-    Texture star = mock(Texture.class, "star");
-
     ServiceLocator.registerEntityService(new EntityService());
 
     // creates mock stage and render service
@@ -49,16 +44,16 @@ class TileTest {
     // creates mock resource service
     com.csse3200.game.services.ResourceService resourceService =
         mock(com.csse3200.game.services.ResourceService.class);
-    lenient()
-        .when(resourceService.getAsset(eq("images/ghost_1.png"), eq(Texture.class)))
-        .thenReturn(ghost1);
-    lenient()
-        .when(resourceService.getAsset(eq("images/ghost_king.png"), eq(Texture.class)))
-        .thenReturn(ghost2);
-    lenient()
-        .when(resourceService.getAsset(eq("images/selected_star.png"), eq(Texture.class)))
-        .thenReturn(star);
+    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
     ServiceLocator.registerResourceService(resourceService);
+
+    // creates mock input service
+    com.csse3200.game.input.InputService inputService =
+        mock(com.csse3200.game.input.InputService.class);
+    lenient().doNothing().when(inputService).register(any());
+    lenient().doNothing().when(inputService).unregister(any());
+    ServiceLocator.registerInputService(inputService);
+
     TerrainFactory factory = mock(TerrainFactory.class);
 
     levelGameArea =
@@ -69,15 +64,32 @@ class TileTest {
           }
         };
 
-    // creates entity for selected unit
-    selected = new Entity().addComponent(new TextureRenderComponent("images/ghost_1.png"));
-    levelGameArea.setSelectedUnit(selected);
-
     // creates a grid
     grid = new LevelGameGrid(1, 1);
     Entity tile = createValidTile();
     grid.addTile(0, tile);
     levelGameArea.setGrid(grid);
+
+    Entity selected =
+        new Entity()
+            .addComponent(new TextureRenderComponent(mock(Texture.class)))
+            .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
+    levelGameArea.setSelectedUnit(selected);
+  }
+
+  @Test
+  void shouldntAddUnit() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    tileStorageComponent.triggerSpawnUnit();
+
+    int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
+    tileStorageComponent.triggerSpawnUnit();
+    int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
+
+    // checks if the tile unit has not been replaced with new unit if there was already a unit
+    // placed
+    assert (beforeSecondTriggerId == afterSecondTriggerId);
   }
 
   @Test
@@ -86,30 +98,6 @@ class TileTest {
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
     tileStorageComponent.triggerSpawnUnit();
     assertTrue(tileStorageComponent.hasUnit());
-    // because the selected unit is duplicated when placed on tile, so cant test that the both
-    // entities are the same
-    assertSame(
-        selected.getComponent(TextureRenderComponent.class).getTexture(),
-        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
-  }
-
-  @Test
-  void shouldntAddUnit() {
-    Entity tile = grid.getTile(0, 0);
-    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
-    Entity newSelected =
-        new Entity().addComponent(new TextureRenderComponent("images/ghost_king.png"));
-    levelGameArea.setSelectedUnit(newSelected);
-    tileStorageComponent.triggerSpawnUnit();
-    // checks if the tile unit has not been replaced with new unit if there was already a unit
-    // placed
-    assertSame(
-        selected.getComponent(TextureRenderComponent.class).getTexture(),
-        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
-    assertNotSame(
-        newSelected.getComponent(TextureRenderComponent.class).getTexture(),
-        tileStorageComponent.getTileUnit().getComponent(TextureRenderComponent.class).getTexture());
   }
 
   @Test

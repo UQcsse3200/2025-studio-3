@@ -4,12 +4,15 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
+import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
+import com.csse3200.game.components.tasks.RobotAttackTask;
+import com.csse3200.game.components.tasks.TeleportTask;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.entities.configs.FastRobotConfig;
-import com.csse3200.game.entities.configs.StandardRobotConfig;
-import com.csse3200.game.entities.configs.TankyRobotConfig;
+import com.csse3200.game.entities.configs.*;
+import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
@@ -29,142 +32,153 @@ import com.csse3200.game.services.ServiceLocator;
  * similar characteristics.
  */
 public class RobotFactory {
+  /**
+   * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
+   * file is missing or deserialization fails, this will be null.
+   */
+  public enum RobotType {
+    STANDARD,
+    FAST,
+    TANKY,
+    BUNGEE,
+    TELEPORT
+  }
+
+  private static final NPCConfigs configs =
+      FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
 
   /**
-   * A basic function to create a specific type of robot depending on the input TODO make this use
+   * A basic function to create a specific type of robot depending on the input. make this use
    * constants of some kind. Or EntityConfig classes If an invalid type is given, a standard robot
    * is created
    *
    * @param robotType The type of robot to create
    * @return The created robot
    */
-  public static Entity createRobotType(String robotType) {
-    if (robotType.equalsIgnoreCase("fast")) {
-      return createFastRobot();
-    } else if (robotType.equalsIgnoreCase("tanky")) {
-      return createTankyRobot();
-    } else {
-      return createStandardRobot();
+  public static Entity createRobotType(RobotType robotType) {
+    BaseEnemyConfig config = null;
+    switch (robotType) {
+      case FAST -> config = configs.fastRobot;
+      case TANKY -> config = configs.tankyRobot;
+      case BUNGEE -> config = configs.bungeeRobot;
+      case STANDARD -> config = configs.standardRobot;
+      case TELEPORT -> config = configs.teleportRobot;
     }
+    return createBaseRobot(config);
   }
 
   /**
-   * Creates a standard robot
+   * Creates a Teleport Robot with teleport behaviour attached.
    *
-   * @return the created robot entity
+   * @param cfg Teleport robot config (stats and teleport params)
+   * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
+   * @return Entity with base robot components plus TeleportTask
    */
-  public static Entity createStandardRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new StandardRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    // We could also do
-    // .addComponent(new RobotAnimationController())
-    // but that isn't really implemented
-
-    animator.scaleEntity();
-    animator.startAnimation("chill"); // start an animation
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
-
-    return robot;
-  }
-
-  public static Entity createFastRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new FastRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    animator.scaleEntity();
-    animator.startAnimation("angry"); // angry to differentiate it from the standard robot
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 3f, robot.getScale().y * 3f);
-
-    return robot;
-  }
-
-  public static Entity createTankyRobot() {
-    // Ideally this would use NPCConfigs.java but I can't figure out how.
-    BaseEntityConfig config = new TankyRobotConfig();
-
-    // This creates pretty much everything except the animation
-    Entity robot = createBaseRobot(config);
-
-    // Animation
-    final String atlasPath = "images/robot_placeholder.atlas";
-    var rs = ServiceLocator.getResourceService();
-
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
-
-    robot.addComponent(animator);
-
-    animator.scaleEntity();
-    animator.startAnimation("angry"); // angry to differentiate it from the standard robot
-    // make a bit larger
-    robot.setScale(robot.getScale().x * 4f, robot.getScale().y * 4f);
-
+  public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
+    Entity robot = createBaseRobot(cfg);
+    robot.addComponent(
+        new TeleportTask(
+            cfg.teleportCooldownSeconds, cfg.teleportChance, cfg.maxTeleports, laneYs));
     return robot;
   }
 
   /**
-   * Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
+   * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
    * robots.
    *
    * @param config A config file that contains the robot's stats.
-   * @return A robot entity. Note that it does not have an animator component.
+   * @return A robot entity.
    */
-  private static Entity createBaseRobot(BaseEntityConfig config) {
+  private static Entity createBaseRobot(BaseEnemyConfig config) {
 
     AITaskComponent aiComponent =
-        new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
+        new AITaskComponent()
+            .addTask(new MoveLeftTask(config.movementSpeed))
+            .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
 
-    return new Entity()
-        .addComponent(new PhysicsComponent())
-        .addComponent(new PhysicsMovementComponent())
-        .addComponent(new ColliderComponent())
-        .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
-        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-        .addComponent(aiComponent);
+    // Animation
+    final String atlasPath = config.atlasFilePath;
+    var rs = ServiceLocator.getResourceService();
 
-    // The original NPCFactory had:
-    // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
-    // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-    // I don't think we need that but I'm putting it here for reference
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+
+    // These are the animations that all robots should have
+    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
+
+    ColliderComponent solid =
+        new ColliderComponent()
+            .setCollisionFilter(
+                PhysicsLayer.ENEMY,
+                (short)
+                    (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE) // no ENEMY
+                )
+            .setFriction(0f);
+
+    Entity robot =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsMovementComponent())
+            .addComponent(solid)
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
+            .addComponent(new CombatStatsComponent(config.health, config.attack))
+            .addComponent(aiComponent)
+            .addComponent(new RobotAnimationController())
+            .addComponent(new HitMarkerComponent())
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
+            .addComponent(animator);
+
+    if (config instanceof TeleportRobotConfig tcfg) {
+      float[] laneYs = discoverLaneYsFromTiles();
+      // Only attach if we found at least two distinct lanes
+      if (laneYs.length >= 2) {
+        robot.addComponent(
+            new TeleportTask(
+                tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
+      }
+    }
+
+    // Scales
+    animator.scaleEntity();
+    animator.startAnimation("default"); // start an animation
+
+    // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
+    robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
+
+    return robot;
+  }
+
+  private static float[] discoverLaneYsFromTiles() {
+    var es = com.csse3200.game.services.ServiceLocator.getEntityService();
+    if (es == null) return new float[0];
+
+    java.util.Set<Integer> yInts = new java.util.TreeSet<>();
+
+    for (com.csse3200.game.entities.Entity e : es.getEntities()) {
+      boolean isTileWithPos =
+          e != null
+              && e.getComponent(com.csse3200.game.components.tile.TileStorageComponent.class)
+                  != null
+              && e.getPosition() != null;
+
+      if (!isTileWithPos) {
+        continue; // <- only one continue in the whole loop
+      }
+
+      var p = e.getPosition();
+      yInts.add(Math.round(p.y * 1000f));
+    }
+
+    if (yInts.size() < 2) return new float[0];
+
+    float[] ys = new float[yInts.size()];
+    int i = 0;
+    for (Integer yi : yInts) ys[i++] = yi / 1000f;
+    return ys;
   }
 }
