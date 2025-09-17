@@ -151,6 +151,8 @@ public class GdxGame extends Game {
         return new WorldMapScreen(this);
       case DOSSIER:
         return new DossierScreen(this);
+      case SLOT_MACHINE:
+        return new SlotMachineScreen(this);
       default:
         return null;
     }
@@ -181,7 +183,10 @@ public class GdxGame extends Game {
     /** Inventory screen. */
     INVENTORY,
     WORLD_MAP,
-    DOSSIER
+    DOSSIER,
+    /** World map screen. */
+    /** Slot machine level */
+    SLOT_MACHINE
   }
 
   /** Exits the game. */
