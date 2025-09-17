@@ -188,6 +188,7 @@ public class TerrainFactory {
     FOREST_DEMO,
     FOREST_DEMO_ISO,
     FOREST_DEMO_HEX,
-    LEVEL_ONE_MAP
+    LEVEL_ONE_MAP,
+    LEVEL_TWO_MAP,
   }
 }
