@@ -8,7 +8,7 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
 
   /**
    * Creates a new GeneratorStatsComponent with the given stats
-   * 
+   *
    * @param health the maximum health of the generator
    * @param interval the currency generation rate
    * @param scrapValue the value of the scrap generated
@@ -30,8 +30,7 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
   }
 
   /**
-   * Sets the interval value.
-   * If the provided value is negative, the interval is set to 0
+   * Sets the interval value. If the provided value is negative, the interval is set to 0
    *
    * @param interval new interval
    */
@@ -53,8 +52,7 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
   }
 
   /**
-   * Sets the scrap value.
-   * if the provided value is negative, the scrap value is set to 0
+   * Sets the scrap value. if the provided value is negative, the scrap value is set to 0
    *
    * @param scrapValue new scrap value
    */
