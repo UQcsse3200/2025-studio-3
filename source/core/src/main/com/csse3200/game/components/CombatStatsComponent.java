@@ -1,6 +1,6 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,22 +61,25 @@ public class CombatStatsComponent extends Component {
     if (entity != null) {
       if (this.health == 0) {
         // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
-        int extraCoins = 3; // TODO: replace with your real drop logic
+        int extraCoins = 3;
 
         // 2) Progression stats (HudDisplay / coins.png reads this)
-        if (Persistence.profile() != null) {
-          int before = Persistence.profile().wallet().getCoins();
-          Persistence.profile().statistics().increaseKills();
-          Persistence.profile().wallet().addCoins(extraCoins);
-          Persistence.profile().statistics().increaseTotalCoinsEarnedBySpecific(extraCoins);
+        ProfileService profileService = ServiceLocator.getProfileService();
+        if (profileService != null && profileService.isActive()) {
+          int before = profileService.getProfile().getWallet().getCoins();
+          profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+          profileService.getProfile().getWallet().addCoins(extraCoins);
+          profileService
+              .getProfile()
+              .getStatistics()
+              .incrementStatistic("coinsCollected", extraCoins);
           logger.info(
               "[Death] wallet: {} + {} -> {}",
               before,
               extraCoins,
-              Persistence.profile().wallet().getCoins());
+              profileService.getProfile().getWallet().getCoins());
         } else {
-          logger.warn(
-              "[Death] Persistence.profile() is null; cannot update progression wallet/stats");
+          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
         // 3) Gameplay currency service (ScrapHudDisplay reads this)
