@@ -8,7 +8,9 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
-import com.csse3200.game.components.hud.HudDisplay;
+import com.csse3200.game.components.hud.PauseButton;
+import com.csse3200.game.components.hud.PauseMenu;
+import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
@@ -18,19 +20,13 @@ import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
-import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.CurrencyService;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-// this file seems to have
-// been deleted
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,6 +38,17 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {
+    "images/normal_sunlight.png",
+    "images/heart.png",
+    "images/coins.png",
+    "images/plaque.png",
+    "images/skillpoints.png",
+    "images/settings-icon.png",
+    "images/menu-icon.png",
+    "images/profile.png",
+    "images/dialog.png",
+    "images/achievement.png",
+    "images/pause-icon.png",
     "images/scrap_metal.png", "images/heart.png", "images/coins.png", "images/profile.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
@@ -51,29 +58,23 @@ public class MainGameScreen extends ScreenAdapter {
   private final PhysicsEngine physicsEngine;
   private final WaveManager waveManager;
   private LevelGameArea levelGameArea;
+  private boolean isPaused = false;
+  private com.badlogic.gdx.audio.Music backgroundMusic;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
     this.waveManager = new WaveManager();
-
-    if (Persistence.profile() == null) {
-      throw new IllegalStateException("No profile loaded, cannot start game");
-    }
-
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
-
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
     physicsEngine = physicsService.getPhysics();
-
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
-
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-
     ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
+    ServiceLocator.registerItemEffectsService(new ItemEffectsService());
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -93,12 +94,20 @@ public class MainGameScreen extends ScreenAdapter {
 
     snapCameraBottomLeft();
     waveManager.initialiseNewWave();
+
+    // Get reference to background music (this is a bit hacky but will be fixed later)
+    backgroundMusic =
+        ServiceLocator.getResourceService()
+            .getAsset("sounds/BGM_03_mp3.mp3", com.badlogic.gdx.audio.Music.class);
   }
 
   @Override
   public void render(float delta) {
-    physicsEngine.update();
-    ServiceLocator.getEntityService().update();
+    if (!isPaused) {
+      physicsEngine.update();
+      ServiceLocator.getEntityService().update();
+      waveManager.update();
+    }
     renderer.render();
     waveManager.update();
     levelGameArea.checkGameOver(); // check game-over state
@@ -117,24 +126,23 @@ public class MainGameScreen extends ScreenAdapter {
   @Override
   public void pause() {
     logger.info("Game paused");
+    setPaused(true);
   }
 
   @Override
   public void resume() {
     logger.info("Game resumed");
+    setPaused(false);
   }
 
   @Override
   public void dispose() {
     logger.debug("Disposing main game screen");
-
     renderer.dispose();
     unloadAssets();
-
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getResourceService().dispose();
-
     ServiceLocator.clear();
   }
 
@@ -142,6 +150,7 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(mainGameTextures);
+    resourceService.loadTextureAtlases(new String[] {"images/grenade.atlas"});
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -161,15 +170,28 @@ public class MainGameScreen extends ScreenAdapter {
     InputComponent inputComponent =
         ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
+    // Create pause components
+    PauseButton pauseButton = new PauseButton();
+    PauseMenu pauseMenu = new PauseMenu();
+    PauseMenuActions pauseMenuActions = new PauseMenuActions(this.game);
+    MainGameActions mainGameActions = new MainGameActions();
+
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
-        .addComponent(new MainGameActions(this.game))
-        .addComponent(new HudDisplay())
+        .addComponent(mainGameActions)
+        .addComponent(pauseButton)
+        .addComponent(pauseMenu)
+        .addComponent(pauseMenuActions)
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
         .addComponent(new CurrentWaveDisplay());
+
+    // Connect the pause menu, pause button, and main game screen to the main game actions
+    mainGameActions.setPauseMenu(pauseMenu);
+    mainGameActions.setPauseButton(pauseButton);
+    mainGameActions.setMainGameScreen(this);
 
     // Connect the UI entity to the WaveManager for event triggering
     WaveManager.setGameEntity(ui);
@@ -184,5 +206,44 @@ public class MainGameScreen extends ScreenAdapter {
     float viewportHeight = cam.getCamera().viewportHeight;
 
     cam.getEntity().setPosition(viewportWidth / 2f, viewportHeight / 2f);
+  }
+
+  /** Sets the pause state of the game */
+  public void setPaused(boolean paused) {
+    this.isPaused = paused;
+    logger.info("Game paused: {}", paused);
+
+    // Pause/resume music
+    if (backgroundMusic != null) {
+      if (paused) {
+        backgroundMusic.pause();
+      } else {
+        backgroundMusic.play();
+      }
+    }
+
+    // Pause/resume sunlight generation
+    if (levelGameArea != null) {
+      levelGameArea
+          .getEntities()
+          .forEach(
+              entity -> {
+                com.csse3200.game.components.currency.CurrencyGeneratorComponent generator =
+                    entity.getComponent(
+                        com.csse3200.game.components.currency.CurrencyGeneratorComponent.class);
+                if (generator != null) {
+                  if (paused) {
+                    generator.pause();
+                  } else {
+                    generator.resume();
+                  }
+                }
+              });
+    }
+  }
+
+  /** Returns whether the game is currently paused */
+  public boolean isPaused() {
+    return isPaused;
   }
 }

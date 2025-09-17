@@ -18,9 +18,18 @@ public class Component {
   /** Whether this component is enabled */
   protected boolean enabled = true;
 
+  /**
+   * Priority of the component - affects how components are loaded/created in {@link Entity}
+   * create() method.
+   */
+  private ComponentPriority priority = ComponentPriority.LOW;
+
   /** Creates a new component with default settings. */
-  public Component() {
-    // Default constructor
+  public Component() {}
+
+  /** Creates a component with a specific priority */
+  public Component(ComponentPriority priority) {
+    this.priority = priority;
   }
 
   /**
@@ -70,6 +79,15 @@ public class Component {
    */
   public Entity getEntity() {
     return entity;
+  }
+
+  /**
+   * Get the priority of the component.
+   *
+   * @return ComponentPriority
+   */
+  public ComponentPriority getPriority() {
+    return priority;
   }
 
   /**

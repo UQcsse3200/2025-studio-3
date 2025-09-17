@@ -14,7 +14,6 @@ import org.slf4j.LoggerFactory;
  * methods when new types of resources are added to the game.
  */
 public class ResourceService implements Disposable {
-
   private static final Logger logger = LoggerFactory.getLogger(ResourceService.class);
   private final AssetManager assetManager;
 

@@ -48,6 +48,7 @@ public class CurrencyGeneratorComponent extends Component {
   private float SCRAP_LIFETIME_SEC = 20f;
 
   private transient Action generatorAction;
+  private boolean isPaused = false;
 
   /**
    * Creates a new currency generator component with the specified parameters.
@@ -143,6 +144,35 @@ public class CurrencyGeneratorComponent extends Component {
   public CurrencyGeneratorComponent setScrapSizePx(float px) {
     this.SCRAP_SIZE_PX = Math.max(8f, px);
     return this;
+  }
+
+  /** Pauses the sunlight generation */
+  public void pause() {
+    isPaused = true;
+    Stage stage =
+        ServiceLocator.getRenderService() != null
+            ? ServiceLocator.getRenderService().getStage()
+            : null;
+    if (stage != null && generatorAction != null) {
+      stage.getRoot().removeAction(generatorAction);
+      logger.debug("Paused CurrencyGenerator");
+    }
+  }
+
+  /** Resumes the sunlight generation */
+  public void resume() {
+    isPaused = false;
+    Stage stage =
+        ServiceLocator.getRenderService() != null
+            ? ServiceLocator.getRenderService().getStage()
+            : null;
+//    if (stage != null) {
+//      generatorAction =
+//          Actions.forever(
+//              Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnOneSunRandom)));
+//      stage.addAction(generatorAction);
+//      logger.debug("Resumed CurrencyGenerator");
+//    }
   }
 
   @Override
