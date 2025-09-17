@@ -5,15 +5,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
-import com.csse3200.game.components.items.Item;
-import com.csse3200.game.persistence.Persistence;
-import com.csse3200.game.progression.inventory.ItemRegistry;
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +24,8 @@ public class InventoryDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(InventoryDisplay.class);
   private static final int ITEM_SIZE = 80;
   private static final int GRID_COLUMNS = 5;
+  private Map<String, BaseItemConfig> inventoryItems;
   private final GdxGame game;
-
-  // Root table that holds all UI elements for this screen
   private Table rootTable;
 
   /**
@@ -38,6 +36,8 @@ public class InventoryDisplay extends UIComponent {
   public InventoryDisplay(GdxGame game) {
     super();
     this.game = game;
+    this.inventoryItems =
+        ServiceLocator.getProfileService().getProfile().getInventory().getInventoryItems();
   }
 
   @Override
@@ -50,20 +50,15 @@ public class InventoryDisplay extends UIComponent {
   private void addActors() {
     Label title = new Label("Inventory", skin, "title");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
-    Table menuBtns = makeBackBtn();
 
     rootTable = new Table();
     rootTable.setFillParent(true);
-
     rootTable.add(title).expandX().top().padTop(20f);
-
     rootTable.row().padTop(30f);
     rootTable.add(inventoryScrollPane).expandX().expandY().pad(20f);
 
-    rootTable.row();
-    rootTable.add(menuBtns).fillX();
-
     stage.addActor(rootTable);
+    createCloseButton();
   }
 
   /**
@@ -72,10 +67,6 @@ public class InventoryDisplay extends UIComponent {
    * @return a ScrollPane containing the inventory grid
    */
   private ScrollPane makeInventoryGrid() {
-    // Get player's inventory items
-    List<Item> inventoryItems = Persistence.profile().inventory().get();
-
-    // Create grid table
     Table gridTable = new Table();
 
     if (inventoryItems.isEmpty()) {
@@ -84,14 +75,14 @@ public class InventoryDisplay extends UIComponent {
     } else {
       int itemCount = 0;
 
-      for (Item item : inventoryItems) {
+      for (String itemKey : inventoryItems.keySet()) {
         // Start new row every GRID_COLUMNS items
         if (itemCount % GRID_COLUMNS == 0 && itemCount > 0) {
           gridTable.row().padTop(10f);
         }
 
         // Create item slot
-        Table itemSlot = createItemSlot(item);
+        Table itemSlot = createItemSlot(itemKey);
         gridTable.add(itemSlot).pad(5f);
 
         itemCount++;
@@ -109,17 +100,16 @@ public class InventoryDisplay extends UIComponent {
   /**
    * Creates a visual slot for an inventory item
    *
-   * @param item the item to display
+   * @param itemKey the key of the item to display
    * @return a Table containing the item's visual representation
    */
-  private Table createItemSlot(Item item) {
+  private Table createItemSlot(String itemKey) {
     Table slot = new Table();
+    BaseItemConfig itemConfig = inventoryItems.get(itemKey);
 
-    // Find the corresponding asset path for this item
-    String assetPath = getAssetPathForItem(item);
-
+    // Load and display item texture
+    String assetPath = itemConfig.getAssetPath();
     if (assetPath != null) {
-      // Load and display item texture
       Texture itemTexture = ServiceLocator.getResourceService().getAsset(assetPath, Texture.class);
 
       Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
@@ -127,63 +117,73 @@ public class InventoryDisplay extends UIComponent {
 
       slot.add(itemImage).size(ITEM_SIZE, ITEM_SIZE);
     } else {
-      // Fallback if no texture found
-      Label itemLabel = new Label("?", skin);
-      slot.add(itemLabel).size(ITEM_SIZE, ITEM_SIZE);
+      Texture itemTexture =
+          ServiceLocator.getGlobalResourceService()
+              .getAsset("images/placeholder.png", Texture.class);
+
+      Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
+      itemImage.setSize(ITEM_SIZE, ITEM_SIZE);
+      slot.add(itemImage).size(ITEM_SIZE, ITEM_SIZE);
     }
 
     // Add item name below the image
     slot.row();
-    Label nameLabel = new Label(item.getName(), skin);
+    Label nameLabel = new Label(itemConfig.getName(), skin);
     nameLabel.setFontScale(0.8f);
     slot.add(nameLabel).center().padTop(5f);
+
+    // Add click listener to show item details dialog
+    slot.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
+            showItemDialog(itemConfig);
+          }
+        });
 
     return slot;
   }
 
-  /**
-   * Gets the asset path for an item by looking it up in the ItemRegistry
-   *
-   * @param item the item to find the asset for
-   * @return the asset path, or null if not found
-   */
-  private String getAssetPathForItem(Item item) {
-    for (ItemRegistry.ItemEntry entry : ItemRegistry.ITEMS) {
-      // Compare item types/classes since items might be different instances
-      if (entry.item().getClass().equals(item.getClass())) {
-        return entry.assetPath();
-      }
-    }
-    return null;
-  }
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
 
-  /**
-   * Builds a table containing exit button.
-   *
-   * @return table with exit button
-   */
-  private Table makeBackBtn() {
-    TextButton backBtn = new TextButton("Back", skin);
+    // Position in top left
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
 
-    // Add listener for the back button
-    backBtn.addListener(
+    // Add listener for the close button
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("[InventoryDisplay] Close button clicked");
             backMenu();
           }
         });
 
-    // Place button in a table
-    Table table = new Table();
-    table.add(backBtn).expandX().left().pad(0f, 15f, 15f, 0f);
-    return table;
+    stage.addActor(closeButton);
   }
 
-  /** Handles navigation back to the Profile Screen. */
+  /**
+   * Shows a dialog with item details when an item is clicked.
+   *
+   * @param itemConfig the item configuration
+   */
+  private void showItemDialog(BaseItemConfig itemConfig) {
+    String title = itemConfig.getName();
+    String description = itemConfig.getDescription();
+    ServiceLocator.getDialogService().info(title, description);
+  }
+
+  /** Handles navigation back to the World Map. */
   private void backMenu() {
-    game.setScreen(ScreenType.PROFILE);
+    logger.debug("[InventoryDisplay] Back menu clicked");
+    game.setScreen(ScreenType.WORLD_MAP);
   }
 
   @Override
@@ -191,7 +191,6 @@ public class InventoryDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
-  /** Disposes of this UI component. */
   @Override
   public void dispose() {
     rootTable.clear();
