@@ -52,19 +52,21 @@ public class TouchAttackComponent extends Component {
 
   private void onCollisionStart(Fixture me, Fixture other) {
     if (hitboxComponent.getFixture() != me) {
-      // Not triggered by hitbox, ignore
-      return;
+      return; // Not triggered by hitbox
     }
 
     if (!PhysicsLayer.contains(targetLayer, other.getFilterData().categoryBits)) {
-      // Doesn't match our target layer, ignore
-      return;
+      return; // Not our target layer
     }
 
-    // Try to attack target.
-    Entity target = ((BodyUserData) other.getBody().getUserData()).entity;
-    CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
+    Object userData = other.getBody().getUserData();
+    if (!(userData instanceof BodyUserData bud) || bud.entity == null) {
+      return; // No valid entity to attack
+    }
+    Entity target = bud.entity;
 
+    // Attack logic
+    CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
     if (targetStats == null) {
       targetStats = target.getComponent(DefenceStatsComponent.class);
     }
@@ -74,7 +76,7 @@ public class TouchAttackComponent extends Component {
       target.getEvents().trigger("hitMarker", target);
     }
 
-    // Apply knockback
+    // Knockback
     PhysicsComponent physicsComponent = target.getComponent(PhysicsComponent.class);
     if (physicsComponent != null && knockbackForce > 0f) {
       Body targetBody = physicsComponent.getBody();
