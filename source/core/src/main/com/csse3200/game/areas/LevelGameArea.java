@@ -103,7 +103,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
-  
+
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
    *
