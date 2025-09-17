@@ -112,8 +112,6 @@ public void setScreen(ScreenType screenType) {
         return new InventoryScreen(this);
         case WORLD_MAP:
             return new WorldMapScreen(this);
-        case LANE_RUNNER:
-            return new LaneRunnerScreen(this);
         case PADDLE_GAME:
             return new PaddleGameScreen(this);
       default:
