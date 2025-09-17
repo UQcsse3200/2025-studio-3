@@ -14,8 +14,11 @@ import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
@@ -25,7 +28,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
@@ -35,6 +40,10 @@ class LevelGameAreaTest {
   @Mock Stage stage;
   @Mock ResourceService resourceService;
   @Mock Music music;
+  @Mock ProfileService profileService;
+
+  private MockedStatic<Persistence> persistenceMock;
+  private Profile profile;
 
   /** A class to capture spawned entities without needing a full ECS */
   static class CapturingLevelGameArea extends LevelGameArea {
@@ -54,6 +63,7 @@ class LevelGameAreaTest {
   void beforeEach() {
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
+    ServiceLocator.registerProfileService(profileService);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
@@ -66,12 +76,22 @@ class LevelGameAreaTest {
     lenient()
         .when(resourceService.getAsset(anyString(), eq(Texture.class)))
         .thenReturn(mock(Texture.class));
+
+    profile = new Profile();
+    profile.getInventory().addItem("grenade"); // so inventory not null
+    lenient().when(profileService.getProfile()).thenReturn(profile);
+
+    persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
+    // Note: Persistence.profile() no longer exists in the reworked system
   }
 
   @AfterEach
   void afterEach() {
     try {
       ServiceLocator.clear();
+      if (persistenceMock != null) {
+        persistenceMock.close();
+      }
     } catch (Throwable ignored) {
       // Ignore throwable and continue to next test
     }
@@ -199,7 +219,7 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Avoid robot factory static
-    doNothing().when(area).spawnRobot(anyInt(), anyInt(), anyString());
+    doNothing().when(area).spawnRobot(anyInt(), anyInt(), any());
 
     var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);

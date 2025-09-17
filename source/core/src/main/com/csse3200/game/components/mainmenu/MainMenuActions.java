@@ -2,7 +2,6 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.persistence.Persistence;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +22,10 @@ public class MainMenuActions extends Component {
     entity.getEvents().addListener("worldMap", this::onWorldMap);
   }
 
-  /** Swaps to the Main Game screen. */
+  /** Swaps to the New Game screen. */
   private void onStart() {
-    logger.info("Start game");
-    Persistence.load();
-    game.loadMenus();
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    logger.info("Start new game");
+    game.setScreen(GdxGame.ScreenType.NEW_GAME);
   }
 
   /** Intended for loading a saved game state. Load functionality is not actually implemented. */

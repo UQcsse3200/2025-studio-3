@@ -36,8 +36,16 @@ public class RobotFactory {
    * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
    * file is missing or deserialization fails, this will be null.
    */
+  public enum RobotType {
+    STANDARD,
+    FAST,
+    TANKY,
+    BUNGEE,
+    TELEPORT
+  }
+
   private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Enemies.json");
+      FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
 
   /**
    * A basic function to create a specific type of robot depending on the input TODO make this use
@@ -47,20 +55,14 @@ public class RobotFactory {
    * @param robotType The type of robot to create
    * @return The created robot
    */
-  public static Entity createRobotType(String robotType) {
-    BaseEnemyConfig config;
-    if (robotType.equalsIgnoreCase("fast")) {
-      config = configs.fastRobot;
-    } else if (robotType.equalsIgnoreCase("tanky")) {
-      config = configs.tankyRobot;
-    }
-    // else if (robotType.equalsIgnoreCase("bungee")) {
-    //   config = new BungeeRobotConfig();
-    // }
-    else if (robotType.equalsIgnoreCase("teleportation")) {
-      config = configs.teleportRobot;
-    } else {
-      config = configs.fastRobot;
+  public static Entity createRobotType(RobotType robotType) {
+    BaseEnemyConfig config = null;
+    switch (robotType) {
+      case FAST -> config = configs.fastRobot;
+      case TANKY -> config = configs.tankyRobot;
+      case BUNGEE -> config = configs.bungeeRobot;
+      case STANDARD -> config = configs.standardRobot;
+      case TELEPORT -> config = configs.teleportRobot;
     }
     return createBaseRobot(config);
   }
@@ -102,20 +104,27 @@ public class RobotFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
 
-    animator.addAnimation("chill", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("angry", 0.1f, Animation.PlayMode.LOOP);
+    // These are the animations that all robots should have
+    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damagedMoveLeft", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("damagedAttack", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
 
-    // We could also do
-    // .addComponent(new RobotAnimationController())
-    // but that isn't really implemented
+    ColliderComponent solid =
+        new ColliderComponent()
+            .setCollisionFilter(
+                PhysicsLayer.ENEMY,
+                (short)
+                    (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE) // no ENEMY
+                )
+            .setFriction(0f);
 
     Entity robot =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
-            .addComponent(new ColliderComponent())
+            .addComponent(solid)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
             .addComponent(new CombatStatsComponent(config.health, config.attack))
             .addComponent(aiComponent)
@@ -136,7 +145,7 @@ public class RobotFactory {
 
     // Scales
     animator.scaleEntity();
-    animator.startAnimation("chill"); // start an animation
+    animator.startAnimation("default"); // start an animation
 
     // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
     robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);

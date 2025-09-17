@@ -1,0 +1,47 @@
+{
+  "standardRobot": {
+    "name": "Standard Robot",
+    "atlasFilePath": "images/basic_robot.atlas",
+    "defaultSprite": "images/basic_robot_default_sprite.png",
+    "health": 60,
+    "attack": 10,
+    "movementSpeed": 20,
+    "scale": 1
+  }, "fastRobot": {
+  "name": "Fast Robot",
+  "atlasFilePath": "images/basic_robot.atlas",
+  "defaultSprite": "images/basic_robot_default_sprite.png",
+  "health": 40,
+  "attack": 10,
+  "movementSpeed": 50,
+  "scale": 0.75
+  }, "tankyRobot": {
+  "name": "Tanky Robot",
+  "atlasFilePath": "images/basic_robot.atlas",
+  "defaultSprite": "images/basic_robot_default_sprite.png",
+  "health": 100,
+  "attack": 15,
+  "movementSpeed": 10,
+  "scale": 1.25
+  }, "bungeeRobot": {
+  "name": "Fast Robot",
+  "atlasFilePath": "images/basic_robot.atlas",
+  "defaultSprite": "images/basic_robot_default_sprite.png",
+  "health": 60,
+  "attack": 10,
+  "movementSpeed": 20,
+  "scale": 1
+  }, "teleportRobot": {
+  "name": "Teleport Robot",
+  "atlasFilePath": "images/basic_robot.atlas",
+  "defaultSprite": "images/basic_robot_default_sprite.png",
+  "health": 60,
+  "attack": 10,
+  "movementSpeed": 30,
+  "scale": 1.0,
+  "teleportCooldownSeconds": 4.0,
+  "teleportChance": 0.6,
+  "maxTeleports": 3,
+  "invulnerabilityMs": 200
+}
+}
