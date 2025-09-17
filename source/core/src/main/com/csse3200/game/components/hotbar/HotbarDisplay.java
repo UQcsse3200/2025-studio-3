@@ -147,11 +147,11 @@ public class HotbarDisplay extends UIComponent {
     hotbarTable.toBack();
   }
 
-    /**
-     * This method removes an image from a slot
-     * this is used to remove items after they are used
-     * @param usedUnit is an image of the item to be removed
-     */
+  /**
+   * This method removes an image from a slot this is used to remove items after they are used
+   *
+   * @param usedUnit is an image of the item to be removed
+   */
   public void remove(Image usedUnit) {
     slotImages.removeValue(usedUnit, true);
     usedUnit.remove();
@@ -159,14 +159,14 @@ public class HotbarDisplay extends UIComponent {
     layoutUnits(cellWidth / 4, 30, layered.getWidth() / 6);
   }
 
-
-    /**
-     * Takes all the items and units to be placed in the hotbar
-     * and puts them into the slots of the hotbar
-     * @param startX the starting x value of the hotbar
-     * @param y the y value of the hotbar
-     * @param cellWidth the width of the cells to increment the x value
-     */
+  /**
+   * Takes all the items and units to be placed in the hotbar and puts them into the slots of the
+   * hotbar
+   *
+   * @param startX the starting x value of the hotbar
+   * @param y the y value of the hotbar
+   * @param cellWidth the width of the cells to increment the x value
+   */
   private void layoutUnits(float startX, float y, float cellWidth) {
     float x = startX;
     for (Image img : slotImages) {
