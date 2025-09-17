@@ -4,12 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
@@ -27,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import com.badlogic.gdx.graphics.Color;
+
 
 public class LaneRunnerScreen extends ScreenAdapter {
 
@@ -130,13 +128,13 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
         scoreLabel = new Label("Score: 0", labelStyle);
         scoreLabel.setFontScale(2f);
-        scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40);
+        scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40f);
         scoreLabel.setAlignment(Align.left);
         stage.addActor(scoreLabel);
 
         timeLabel = new Label("Time: 0.0s", labelStyle);
         timeLabel.setFontScale(2f);
-        timeLabel.setPosition(Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - 40);
+        timeLabel.setPosition(Gdx.graphics.getWidth() - 200f, Gdx.graphics.getHeight() - 40f);
         timeLabel.setAlignment(Align.right);
         stage.addActor(timeLabel);
 
@@ -182,7 +180,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
         float newX = laneManager.getLaneCenter(cureentLane) - 32f; // Center the image
         playerImage.setPosition(newX, playerImage.getY());
     }
-
+@Override
     public void render(float delta) {
         // Only update game logic if not game over
         if (!gameOver) {
@@ -219,7 +217,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
         ResourceService resourceService = ServiceLocator.getResourceService();
         resourceService.unloadAssets(laneRunnerTextures);
     }
-
+@Override
     public void dispose() {
         logger.debug("Disposing lane runner mini game screen");
 

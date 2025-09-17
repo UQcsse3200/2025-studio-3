@@ -19,7 +19,7 @@ public boolean keyDown(int key) {
                 return true;
             }
             return false;
-        case Input.Keys.RIGHT:
+            case Input.Keys.RIGHT:
         case Input.Keys.D:
             if (!isGameOverScreen) {
                 entity.getEvents().trigger("moveRight");
