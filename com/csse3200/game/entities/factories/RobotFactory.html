@@ -37,7 +37,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -57,7 +57,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -102,6 +102,23 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="RobotFactory.RobotType.html" class="type-name-link" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Loads enemy config data from JSON.</div>
+</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -127,10 +144,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotType(java.lang.String)" class="member-name-link">createRobotType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotType(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">createRobotType</a><wbr>(<a href="RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A basic function to create a specific type of robot depending on the input TODO make this use
- constants of some kind.</div>
+<div class="block">A basic function to create a specific type of robot depending on the input.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTeleportRobot(com.csse3200.game.entities.configs.TeleportRobotConfig,float%5B%5D)" class="member-name-link">createTeleportRobot</a><wbr>(<a href="../configs/TeleportRobotConfig.html" title="class in com.csse3200.game.entities.configs">TeleportRobotConfig</a>&nbsp;cfg,
+ float[]&nbsp;laneYs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a Teleport Robot with teleport behaviour attached.</div>
 </div>
 </div>
 </div>
@@ -164,10 +186,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createRobotType(java.lang.String)">
+<section class="detail" id="createRobotType(com.csse3200.game.entities.factories.RobotFactory.RobotType)">
 <h3>createRobotType</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRobotType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</span></div>
-<div class="block">A basic function to create a specific type of robot depending on the input TODO make this use
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createRobotType</span><wbr><span class="parameters">(<a href="RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</span></div>
+<div class="block">A basic function to create a specific type of robot depending on the input. make this use
  constants of some kind. Or EntityConfig classes If an invalid type is given, a standard robot
  is created</div>
 <dl class="notes">
@@ -175,6 +197,21 @@ loadScripts(document, 'script');</script>
 <dd><code>robotType</code> - The type of robot to create</dd>
 <dt>Returns:</dt>
 <dd>The created robot</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createTeleportRobot(com.csse3200.game.entities.configs.TeleportRobotConfig,float[])">
+<h3>createTeleportRobot</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createTeleportRobot</span><wbr><span class="parameters">(<a href="../configs/TeleportRobotConfig.html" title="class in com.csse3200.game.entities.configs">TeleportRobotConfig</a>&nbsp;cfg,
+ float[]&nbsp;laneYs)</span></div>
+<div class="block">Creates a Teleport Robot with teleport behaviour attached.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cfg</code> - Teleport robot config (stats and teleport params)</dd>
+<dd><code>laneYs</code> - Candidate lane Y positions to teleport between (must contain at least 2)</dd>
+<dt>Returns:</dt>
+<dd>Entity with base robot components plus TeleportTask</dd>
 </dl>
 </section>
 </li>
