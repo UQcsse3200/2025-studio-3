@@ -2,8 +2,6 @@ package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.csse3200.game.persistence.FileLoader;
-import com.csse3200.game.services.ResourceService;
 
 public class DossierManager {
 
@@ -14,7 +12,8 @@ public class DossierManager {
 
   private boolean enemyMode = true;
 
-  public DossierManager(EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
+  public DossierManager(
+      EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
     this.defaultTexture = textures[0];
     this.humanTexture = textures[1];
     this.entityData = entityConfigs;

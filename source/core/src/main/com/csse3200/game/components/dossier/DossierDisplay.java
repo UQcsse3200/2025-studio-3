@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +30,11 @@ public class DossierDisplay extends UIComponent {
   private Image entitySpriteImage;
 
   /** Constructor to display the dossier. */
-  public DossierDisplay(GdxGame game, EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
+  public DossierDisplay(
+      GdxGame game,
+      EntityConfigs entityConfigs,
+      DefenceConfigs defenceConfigs,
+      Texture[] textures) {
     super();
     this.game = game;
     type = true;

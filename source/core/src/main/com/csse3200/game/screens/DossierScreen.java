@@ -40,6 +40,7 @@ public class DossierScreen extends ScreenAdapter {
     loadAssets();
     createUI();
   }
+
   /**
    * Updates entities and renders current frame.
    *
@@ -67,11 +68,16 @@ public class DossierScreen extends ScreenAdapter {
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
     // Change this later
-    ui.addComponent(new DossierDisplay(game, FileLoader.readClass(EntityConfigs.class, "configs/Enemies.json")
-            , FileLoader.readClass(DefenceConfigs.class, "configs/defences.json"),
-                    new Texture[]{new Texture("images/default_enemy_image.png"),
-                            new Texture("images/sling_shooter_1.png")}))
-            .addComponent(new InputDecorator(stage, 10));
+    ui.addComponent(
+            new DossierDisplay(
+                game,
+                FileLoader.readClass(EntityConfigs.class, "configs/Enemies.json"),
+                FileLoader.readClass(DefenceConfigs.class, "configs/defences.json"),
+                new Texture[] {
+                  new Texture("images/default_enemy_image.png"),
+                  new Texture("images/sling_shooter_1.png")
+                }))
+        .addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);
   }
 
