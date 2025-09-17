@@ -31,17 +31,19 @@ public class MainMenuScreen extends ScreenAdapter {
     "images/box_boy_title.png", "images/bg.png", "images/bg-text.png"
   };
 
+  /**
+   * Constructor for the main menu screen.
+   *
+   * @param game the game instance
+   */
   public MainMenuScreen(GdxGame game) {
     this.game = game;
-
     logger.debug("Initialising main menu screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-
     renderer = RenderFactory.createRenderer();
-
     loadAssets();
     createUI();
   }
@@ -76,7 +78,6 @@ public class MainMenuScreen extends ScreenAdapter {
     unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
-
     ServiceLocator.clear();
   }
 

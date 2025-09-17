@@ -1,0 +1,173 @@
+nuke.png
+size: 1536,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+nuke
+  rotate: false
+  xy: 0,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 0
+nuke
+  rotate: false
+  xy: 256,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 1
+nuke
+  rotate: false
+  xy: 512,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 2
+nuke
+  rotate: false
+  xy: 768,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 3
+nuke
+  rotate: false
+  xy: 1024,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 4
+nuke
+  rotate: false
+  xy: 1280,0
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 5
+nuke
+  rotate: false
+  xy: 0,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 6
+nuke
+  rotate: false
+  xy: 256,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 7
+nuke
+  rotate: false
+  xy: 512,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 8
+nuke
+  rotate: false
+  xy: 768,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 9
+nuke
+  rotate: false
+  xy: 1024,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 10
+nuke
+  rotate: false
+  xy: 1280,256
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 11
+nuke
+  rotate: false
+  xy: 0,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 12
+nuke
+  rotate: false
+  xy: 256,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 13
+nuke
+  rotate: false
+  xy: 512,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 14
+nuke
+  rotate: false
+  xy: 768,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 15
+nuke
+  rotate: false
+  xy: 1024,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 16
+nuke
+  rotate: false
+  xy: 1280,512
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 17
+nuke
+  rotate: false
+  xy: 0,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 18
+nuke
+  rotate: false
+  xy: 256,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 19
+nuke
+  rotate: false
+  xy: 512,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 20
+nuke
+  rotate: false
+  xy: 768,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 21
+nuke
+  rotate: false
+  xy: 1024,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 22
+nuke
+  rotate: false
+  xy: 1280,768
+  size: 256,256
+  orig: 256,256
+  offset: 0,0
+  index: 23
