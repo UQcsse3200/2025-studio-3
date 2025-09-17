@@ -150,7 +150,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, RobotType.TANKY);
     spawnRobot(10, 1, RobotType.STANDARD);
     spawnRobot(10, 4, RobotType.FAST);
-    spawnRobot(9, 3, RobotType.TELEPORT);
     spawnDeck();
 
     playMusic();
