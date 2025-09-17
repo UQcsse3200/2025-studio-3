@@ -19,6 +19,7 @@ public class MainMenuDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
+    private Table miniGameBtnTable;
 
   @Override
   public void create() {
@@ -99,8 +100,8 @@ public class MainMenuDisplay extends UIComponent {
         table.row();
         table.add(startBtn).padTop(30f);
       table.row();
-      table.add(miniGameBtn).padTop(30f);
-        table.row();
+//      table.add(miniGameBtn).padTop(30f);
+//        table.row();
         table.add(loadBtn).padTop(15f);
         table.row();
         table.add(settingsBtn).padTop(15f);
@@ -109,7 +110,12 @@ public class MainMenuDisplay extends UIComponent {
         table.row();
         table.add(exitBtn).padTop(15f);
 
+         miniGameBtnTable  = new Table();
+        miniGameBtnTable.bottom().left();
+        miniGameBtnTable.padBottom(20f).padLeft(20f);
+        miniGameBtnTable.add(miniGameBtn);
         stage.addActor(table);
+        stage.addActor(miniGameBtnTable);
     }
 
     @Override
@@ -125,6 +131,7 @@ public class MainMenuDisplay extends UIComponent {
     @Override
     public void dispose() {
         table.clear();
+        miniGameBtnTable.clear();
         super.dispose();
     }
 }
