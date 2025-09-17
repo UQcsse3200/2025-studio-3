@@ -1,6 +1,14 @@
 package com.csse3200.game.components.slot;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.components.cards.CardActor;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RobotFactory;
@@ -28,6 +36,38 @@ import org.slf4j.LoggerFactory;
 public final class SlotEffect {
   private static final Logger logger = LoggerFactory.getLogger(SlotEffect.class);
 
+  // --- UI context bound by SlotMachineDisplay ---
+  private static Stage uiStage;
+  private static ScrollPane uiReelsPane;
+
+  public static void bindUiContext(Stage stage, ScrollPane reelsPane) {
+    uiStage = stage;
+    uiReelsPane = reelsPane;
+  }
+
+  public static void unbindUiContext() {
+    uiReelsPane = null;
+    uiStage = null;
+    if (ownsCardsAtlas && cardsAtlas != null) {
+      cardsAtlas.dispose();
+      cardsAtlas = null;
+      ownsCardsAtlas = false;
+    }
+  }
+
+  // Card asset
+  private static final String CARDS_ATLAS_PATH = "images/ui_cards.atlas";
+  private static TextureAtlas cardsAtlas;
+  private static boolean ownsCardsAtlas = false;
+
+  // Card drop params (moved from Display)
+  private static final float CARD_SCREEN_W_RATIO = 0.06f;
+  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float DROP_FADE_SEC = 0.15f;
+  private static final float DROP_MOVE_SEC = 0.35f;
+  private static final float DROP_PADDING_PCT = 0.02f;
+  private static final float DROP_PADDING_MIN = 8f;
+
   private SlotEffect() {}
 
   /**
@@ -48,6 +88,7 @@ public final class SlotEffect {
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
       case FREEZE_ENEMY -> freezeAllEnemies(10f);
+      case DROP_SLINGSHOOTER_CARD -> dropSlingShooterCard();
       default -> logger.info("Effect {} ignored for LevelGameArea.", effect);
     }
   }
@@ -95,7 +136,6 @@ public final class SlotEffect {
       }
 
       Field fEntities = EntityService.class.getDeclaredField("entities");
-      fEntities.setAccessible(true);
       Object gdxArray = fEntities.get(es);
       if (gdxArray == null) {
         logger.info("[SlotEffect] DESTROY_ENEMY: no entities registered.");
@@ -105,8 +145,6 @@ public final class SlotEffect {
       Class<?> arrCls = gdxArray.getClass();
       Field fSize = arrCls.getDeclaredField("size");
       Field fItems = arrCls.getDeclaredField("items");
-      fSize.setAccessible(true);
-      fItems.setAccessible(true);
 
       int size = (int) fSize.get(gdxArray);
       Object[] items = (Object[]) fItems.get(gdxArray);
@@ -197,6 +235,74 @@ public final class SlotEffect {
       logger.error("[SlotEffect] FREEZE_ENEMY freeze failed: {}", ex.getMessage(), ex);
       return false;
     }
+  }
+
+  private static void dropSlingShooterCard() {
+    if (uiStage == null || uiReelsPane == null) {
+      logger.error("[SlotEffect] DROP_SLINGSHOOTER_CARD: UI context not bound");
+      return;
+    }
+    if (cardsAtlas == null) {
+      try {
+        cardsAtlas =
+            ServiceLocator.getResourceService().getAsset(CARDS_ATLAS_PATH, TextureAtlas.class);
+      } catch (Exception ignore) {
+        cardsAtlas = null;
+      }
+      if (cardsAtlas == null) {
+        if (!Gdx.files.internal(CARDS_ATLAS_PATH).exists()) {
+          logger.error("[SlotEffect] Card atlas not found: {}", CARDS_ATLAS_PATH);
+          return;
+        }
+        cardsAtlas = new TextureAtlas(Gdx.files.internal(CARDS_ATLAS_PATH));
+        ownsCardsAtlas = true;
+      }
+    }
+    if (cardsAtlas.findRegion("Card_SlingShooter") == null) {
+      logger.error("[SlotEffect] Region 'Card_SlingShooter' not found in {}", CARDS_ATLAS_PATH);
+      return;
+    }
+    Vector2 slotTopCenter =
+        uiReelsPane.localToStageCoordinates(
+            new Vector2(uiReelsPane.getWidth() * 0.5f, uiReelsPane.getHeight()));
+    Vector2 slotBottomCenter =
+        uiReelsPane.localToStageCoordinates(new Vector2(uiReelsPane.getWidth() * 0.5f, 0f));
+
+    float stageW = uiStage.getWidth();
+    float stageH = uiStage.getHeight();
+    float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
+
+    CardActor card = CardActor.fromAtlas(uiStage, cardsAtlas, "Card_SlingShooter");
+    float desiredWpx =
+        Math.min(stageW * CARD_SCREEN_W_RATIO, uiReelsPane.getWidth() * CARD_SLOT_W_RATIO);
+    card.setPercentWidth(desiredWpx / stageW);
+    card.act(0f);
+
+    float startCx = slotTopCenter.x;
+    float startCy = slotTopCenter.y + card.getHeight() / 2f + padding;
+    float targetCx = slotBottomCenter.x;
+    float targetCy =
+        Math.max(slotBottomCenter.y - card.getHeight() / 2f - padding, card.getHeight() / 2f + 4f);
+
+    card.setPosition(startCx - card.getWidth() / 2f, startCy - card.getHeight() / 2f);
+    card.getColor().a = 0f;
+    uiStage.addActor(card);
+    card.toFront();
+
+    float targetX = targetCx - card.getWidth() / 2f;
+    float targetY = targetCy - card.getHeight() / 2f;
+
+    card.addAction(
+        Actions.sequence(
+            Actions.parallel(
+                Actions.fadeIn(DROP_FADE_SEC),
+                Actions.moveTo(targetX, targetY, DROP_MOVE_SEC, Interpolation.sine)),
+            Actions.run(
+                () -> {
+                  float px = targetCx / stageW;
+                  float py = targetCy / stageH;
+                  card.setPercentPosition(px, py);
+                })));
   }
 
   private static boolean isEnemy(Entity e) {
