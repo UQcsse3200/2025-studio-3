@@ -12,6 +12,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -34,15 +35,42 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final String[] levelTextures = {
     "images/level-1-map-v2.png",
     "images/selected_star.png",
+    "images/sling_shooter_1.png",
+    "images/sling_shooter_front.png",
+    "images/items/grenade.png",
+    "images/items/coffee.png",
+    "images/items/emp.png",
+    "images/items/buff.png",
+    "images/items/nuke.png",
+    "images/items/shield.png",
+    "images/items/charmHack.png",
+    "images/items/scrapper.png",
+    "images/items/conscriptionOrder.png",
+    "images/items/doomHack.png",
+    "images/grenade.png",
+    "images/coffee.png",
+    "images/emp.png",
+    "images/buff.png",
+    "images/nuke.png",
     "images/slot_icon.png",
     "images/slot_reels_background.png",
-    "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png"
   };
 
   private static final String[] levelTextureAtlases = {
     "images/sling_shooter.atlas",
     "images/robot_placeholder.atlas",
+    "images/basic_robot.atlas",
+    "images/ghost.atlas",
+    "images/ghostKing.atlas",
+    "images/sling_shooter.atlas",
+    "images/basic_robot.atlas",
+    "images/grenade.atlas",
+    "images/coffee.atlas",
+    "images/emp.atlas",
+    "images/buff.atlas",
+    "images/nuke.atlas",
+    "images/blue_robot.atlas",
+    "images/red_robot.atlas",
     "images/slot_frame.atlas",
     "images/slot_reels.atlas"
   };
@@ -115,9 +143,9 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
 
     spawnMap();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, "tanky");
-    spawnRobot(10, 1, "standard");
-    spawnRobot(10, 4, "fast");
+    spawnRobot(7, 2, RobotType.TANKY);
+    spawnRobot(10, 1, RobotType.STANDARD);
+    spawnRobot(10, 4, RobotType.FAST);
     spawnDeck();
 
     playMusic();
@@ -256,23 +284,33 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawn a robot at a clamped grid location and scale it to the tile height. */
-  @Override
-  public void spawnRobot(int col, int row, String robotType) {
+  public void spawnRobot(int col, int row, RobotType robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);
 
-    // Clamp to grid bounds
+    // Get and set position coords
     col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
     row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
 
-    // Place at the bottom-left of the target tile
+    // place on that grid cell (bottom-left of the tile)
     float tileX = xOffset + tileSize * col;
     float tileY = yOffset + tileSize * row;
 
     unit.setPosition(tileX, tileY);
-    unit.scaleHeight(tileSize);
 
+    // Add to list of all spawned units
+
+    // set scale to render as desired
+    unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              requestDespawn(unit);
+              // Persistence.addCoins(3); //commented out since broken
+              robots.remove(unit);
+            });
     logger.info("Unit spawned at position {} {}", col, row);
   }
 
@@ -280,7 +318,7 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
    * exists, does nothing and logs a warning.
    */
-  public void spawnRobotOnDefence(String robotType) {
+  public void spawnRobotOnDefence(RobotType robotType) {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot spawn robot on defence.");
       return;

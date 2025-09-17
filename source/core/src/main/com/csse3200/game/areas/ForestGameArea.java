@@ -322,7 +322,4 @@ public class ForestGameArea extends GameArea {
     ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class).stop();
     this.unloadAssets();
   }
-
-  @Override
-  public void spawnRobot(int col, int row, String robotType) {}
 }

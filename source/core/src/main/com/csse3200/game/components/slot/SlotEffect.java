@@ -3,6 +3,7 @@ package com.csse3200.game.components.slot;
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -78,10 +79,11 @@ public final class SlotEffect {
    */
   private static void summonWave(SlotMachineArea area) {
     try {
-      area.spawnRobot(10, 1, "fast");
-      area.spawnRobot(10, 2, "fast");
-      area.spawnRobot(10, 3, "fast");
-      area.spawnRobot(10, 4, "fast");
+      area.spawnRobot(10, 1, RobotFactory.RobotType.FAST);
+      area.spawnRobot(10, 2, RobotFactory.RobotType.FAST);
+      area.spawnRobot(10, 3, RobotFactory.RobotType.FAST);
+      area.spawnRobot(10, 4, RobotFactory.RobotType.FAST);
+      area.spawnRobot(10, 5, RobotFactory.RobotType.FAST);
 
       logger.info("[SlotEffect][Level] SUMMON_ENEMY: spawned a wave of robots.");
     } catch (Exception e) {
