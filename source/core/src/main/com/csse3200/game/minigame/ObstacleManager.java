@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.CurrencyService;
 import com.csse3200.game.services.ServiceLocator;
 
 
@@ -22,6 +23,8 @@ public class ObstacleManager {
     public int getObstaclesDodged() {
         return obstaclesDodged;
     }
+
+
 
     private static class ObstacleImage{
         public Image image;
@@ -122,4 +125,13 @@ public class ObstacleManager {
         return obstacles.size();
     }
 
+    public List<Image> getObstacles() {
+        List<Image> obstacleImages = new java.util.ArrayList<>();
+        for (ObstacleImage obstacle : obstacles) {
+            if (obstacle.isAlive) {
+                obstacleImages.add(obstacle.image);
+            }
+        }
+        return obstacleImages;
+    }
 }

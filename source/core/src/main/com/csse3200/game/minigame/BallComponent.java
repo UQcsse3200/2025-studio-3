@@ -52,5 +52,12 @@ public class BallComponent extends Component {
     public int getBallsHit() {
         return ballsHit;
     }
+
+    public float getVelocityX() {
+        return velocityX;
+    }
+    public float getVelocityY() {
+        return velocityY;
+    }
 }
 
