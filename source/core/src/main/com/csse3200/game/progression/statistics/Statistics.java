@@ -1,233 +1,201 @@
 package com.csse3200.game.progression.statistics;
 
-import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.entities.configs.BaseAchievementConfig;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * The Statistics class tracks and stores global player/user statistics across the game. It records
- * cumulative data such as total kills, total shots, player level, number of plants unlocked, and
- * all-time total coins earned.
+ * The Statistics class tracks and stores player/user statistics across the game and manages
+ * achievements based on those statistics. It records cumulative data such as total kills, total
+ * shots, player level, number of plants unlocked, and all-time total coins earned.
  *
- * <p>Statistics are initialised within and linked to a particular Profile. Statistics are relevant
- * to unlocking Achievements.
+ * <p>Statistics are initialised within and linked to a particular Profile. When statistics are
+ * updated, the class checks achievement quotas and unlocks achievements automatically.
  *
- * <p>Statistics can be initialised with default or variable starting statistics.
+ * <p>Achievements are stored as a list of unlocked achievement keys, similar to how Arsenal and
+ * Inventory work.
  */
 public class Statistics {
-  int kills;
-  int shotsFired;
-  int levelsPassed;
-  int numDefencesUnlocked;
-  int totalCoinsEarned;
-  private static final String KILLS_ACHIEVEMENT = "50_KILLS";
-  private static final String SHOTS_FIRED_ACHIEVEMENT = "50_SHOTS";
-  private static final String LEVELS_PASSED_ACHIEVEMENT = "LEVEL_1_COMPLETE";
-  private static final String NUM_DEFENCES_UNLOCKED_ACHIEVEMENT = "5_DEFENSES";
-  private static final String TOTAL_COINS_EARNED_ACHIEVEMENT = "100_COINS";
-
-  // TODO: Remove once achievement progression is implemented
-  private static final Map<String, Integer> ACHIEVEMENT_QUOTAS =
-      Map.of(
-          KILLS_ACHIEVEMENT, 50,
-          SHOTS_FIRED_ACHIEVEMENT, 200,
-          LEVELS_PASSED_ACHIEVEMENT, 1,
-          NUM_DEFENCES_UNLOCKED_ACHIEVEMENT, 5,
-          TOTAL_COINS_EARNED_ACHIEVEMENT, 100);
+  private static final Logger logger = LoggerFactory.getLogger(Statistics.class);
+  private Map<String, Integer> stats;
+  private List<String> achievements;
 
   /** Default constructor for Statistics. */
   public Statistics() {
-    this.kills = 0;
-    this.shotsFired = 0;
-    this.levelsPassed = 0;
-    this.numDefencesUnlocked = 2; // default value
-    this.totalCoinsEarned = 100; // all-time total of coins earned
+    this.stats = new HashMap<>();
+    this.achievements = new ArrayList<>();
+    parseStatistics();
   }
 
   /**
-   * Creates a Statistics instance with specified starting statistics.
+   * Creates a Statistics instance with specified statistics and achievements.
    *
-   * @param kills the initial number of kills
-   * @param shotsFired the initial number of shots fired
-   * @param levelsPassed the initial number of levels passed
-   * @param numDefencesUnlocked the initial number of defences unlocked
-   * @param totalCoinsEarned the initial number of coins earned
+   * @param stats the statistics map
+   * @param achievements the list of unlocked achievement keys
    */
-  public Statistics(
-      int kills, int shotsFired, int levelsPassed, int numDefencesUnlocked, int totalCoinsEarned) {
-    this.kills = kills;
-    this.shotsFired = shotsFired;
-    this.levelsPassed = levelsPassed;
-    this.numDefencesUnlocked = numDefencesUnlocked;
-    this.totalCoinsEarned = totalCoinsEarned;
+  public Statistics(Map<String, Integer> stats, List<String> achievements) {
+    this.stats = stats != null ? new HashMap<>(stats) : new HashMap<>();
+    this.achievements = achievements != null ? new ArrayList<>(achievements) : new ArrayList<>();
+    parseStatistics();
+  }
+
+  /** Initializes default statistics if they don't exist. */
+  private void parseStatistics() {
+    stats.putIfAbsent("enemiesKilled", 0);
+    stats.putIfAbsent("shotsFired", 0);
+    stats.putIfAbsent("levelsCompleted", 0);
+    stats.putIfAbsent("levelsLost", 0);
+    stats.putIfAbsent("defencesPlanted", 0);
+    stats.putIfAbsent("defencesUnlocked", 0);
+    stats.putIfAbsent("defencesLost", 0);
+    stats.putIfAbsent("coinsCollected", 30);
+    stats.putIfAbsent("coinsSpent", 0);
+    stats.putIfAbsent("skillPointsCollected", 1);
+    stats.putIfAbsent("skillPointsSpent", 0);
+    stats.putIfAbsent("purchasesMade", 0);
+    stats.putIfAbsent("wavesCompleted", 0);
+    stats.putIfAbsent("itemsCollected", 0);
   }
 
   /**
-   * Gets the current number of kills player (through their defences) has made.
+   * Gets the value of a specific statistic.
    *
-   * @return the current number of kills
+   * @param key the name of the statistic
+   * @return the value of the statistic, or 0 if not found
    */
-  public int getKills() {
-    return kills;
+  public int getStatistic(String key) {
+    return stats.getOrDefault(key, 0);
   }
 
   /**
-   * Gets the current number of shots player (through their defences) has fired.
+   * Gets all statistics.
    *
-   * @return the current number of shots fired
+   * @return map of all statistics
    */
-  public int getShotsFired() {
-    return shotsFired;
+  public Map<String, Integer> getAllStatistics() {
+    return new HashMap<>(stats);
   }
 
   /**
-   * Gets the current number of levels player has passed.
+   * Gets the list of unlocked achievement keys.
    *
-   * @return the current number of levels passed
+   * @return list of unlocked achievement keys
    */
-  public int getLevelsPassed() {
-    return levelsPassed;
+  public List<String> getUnlockedAchievements() {
+    return new ArrayList<>(achievements);
   }
 
   /**
-   * Gets the current number of defences a player has unlocked.
+   * Checks if an achievement is unlocked.
    *
-   * @return the current number of defences unlocked
+   * @param achievementKey the achievement key
+   * @return true if unlocked, false otherwise
    */
-  public int getNumDefencesUnlocked() {
-    return numDefencesUnlocked;
+  public boolean isAchievementUnlocked(String achievementKey) {
+    return achievements.contains(achievementKey);
   }
 
   /**
-   * Gets the current all-time total coins a player has earned.
+   * Updates a statistic and checks for achievement unlocks.
    *
-   * @return the current total coins earned
+   * @param key the name of the statistic to update
+   * @param newValue the new value for the statistic
    */
-  public int getTotalCoinsEarned() {
-    return totalCoinsEarned;
-  }
-
-  /**
-   * Sets the current number of kills player (through their defences) has made.
-   *
-   * @param kills the new number of kills
-   */
-  public void setKills(int kills) {
-    if (kills >= 0) {
-      this.kills = kills;
+  public void setStatistic(String key, int newValue) {
+    if (newValue >= 0) {
+      int oldValue = stats.getOrDefault(key, 0);
+      stats.put(key, newValue);
+      if (newValue > oldValue) {
+        checkAchievements(key, newValue);
+      }
     }
   }
 
   /**
-   * Sets the current number of shots player (through their defences) has fired.
+   * Increments a statistic by 1 and checks for achievement unlocks.
    *
-   * @param shotsFired the new number of shots fired
+   * @param key the name of the statistic to increment
    */
-  public void setShotsFired(int shotsFired) {
-    if (shotsFired >= 0) {
-      this.shotsFired = shotsFired;
+  public void incrementStatistic(String key) {
+    incrementStatistic(key, 1);
+  }
+
+  /**
+   * Increments a statistic by a specific amount and checks for achievement unlocks.
+   *
+   * @param key the name of the statistic to increment
+   * @param amount the amount to increment by
+   */
+  public void incrementStatistic(String key, int amount) {
+    if (amount > 0) {
+      int currentValue = stats.getOrDefault(key, 0);
+      int newValue = currentValue + amount;
+      stats.put(key, newValue);
+      checkAchievements(key, newValue);
     }
   }
 
   /**
-   * Sets the current number of levels player has passed.
+   * Checks if any achievements should be unlocked based on the updated statistic.
    *
-   * @param levelsPassed the new number of levels passed
+   * @param key the name of the statistic that was updated
+   * @param newValue the new value of the statistic
    */
-  public void setLevelsPassed(int levelsPassed) {
-    if (levelsPassed >= 0) {
-      this.levelsPassed = levelsPassed;
+  private void checkAchievements(String key, int newValue) {
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) {
+      return;
+    }
+
+    Map<String, BaseAchievementConfig> achievementConfigs = configService.getAchievementConfigs();
+    if (achievementConfigs == null) {
+      return;
+    }
+
+    for (Map.Entry<String, BaseAchievementConfig> entry : achievementConfigs.entrySet()) {
+      String achievementKey = entry.getKey();
+      BaseAchievementConfig config = entry.getValue();
+
+      // Check if this achievement tracks the updated statistic
+      if (key.equals(config.getStatistic())
+          && !isAchievementUnlocked(achievementKey)
+          && newValue >= config.getQuota()) {
+        unlockAchievement(achievementKey, config);
+      }
     }
   }
 
   /**
-   * Sets the current number of defences player has unlocked.
+   * Unlocks an achievement and displays the popup.
    *
-   * @param numDefencesUnlocked the new number of kills
+   * @param achievementKey the key of the achievement to unlock
+   * @param config the achievement configuration
    */
-  public void setNumDefencesUnlocked(int numDefencesUnlocked) {
-    if (numDefencesUnlocked >= 0) {
-      this.numDefencesUnlocked = numDefencesUnlocked;
-    }
-  }
+  private void unlockAchievement(String achievementKey, BaseAchievementConfig config) {
+    if (!achievements.contains(achievementKey)) {
+      achievements.add(achievementKey);
+      logger.info("Achievement unlocked: {} - {}", config.getName(), config.getDescription());
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getWallet()
+          .addSkillsPoints(config.getSkillPoints());
+      incrementStatistic("skillPointsCollected", config.getSkillPoints());
 
-  /**
-   * Sets the current number of all-time total coins player has earned.
-   *
-   * @param totalCoinsEarned the new number of total coins earned
-   */
-  public void setTotalCoinsEarned(int totalCoinsEarned) {
-    if (totalCoinsEarned >= 0) {
-      this.totalCoinsEarned = totalCoinsEarned;
-    }
-  }
-
-  /** Increases kills by 1. */
-  public void increaseKills() {
-    this.kills++;
-    if (this.kills >= ACHIEVEMENT_QUOTAS.get(KILLS_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(KILLS_ACHIEVEMENT);
-    }
-  }
-
-  /** Increases kills by 1. */
-  public void increaseShotsFired() {
-    this.shotsFired++;
-    if (!Persistence.profile().achievements().isUnlocked(SHOTS_FIRED_ACHIEVEMENT)
-        && this.shotsFired >= ACHIEVEMENT_QUOTAS.get(SHOTS_FIRED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(SHOTS_FIRED_ACHIEVEMENT);
-    }
-  }
-
-  /** Increases levels passed by 1. */
-  public void increaseLevelsPassed() {
-    this.levelsPassed++;
-    if (!Persistence.profile().achievements().isUnlocked(LEVELS_PASSED_ACHIEVEMENT)
-        && this.levelsPassed >= ACHIEVEMENT_QUOTAS.get(LEVELS_PASSED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(LEVELS_PASSED_ACHIEVEMENT);
-    }
-  }
-
-  /** Increases number of defences unlocked by 1. */
-  public void increaseNumDefencesUnlocked() {
-    this.numDefencesUnlocked++;
-    if (!Persistence.profile().achievements().isUnlocked(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)
-        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT);
-    }
-  }
-
-  /**
-   * Increases number of defences unlocked by a specific number of defences.
-   *
-   * @param extraDefences additional number of defences unlocked
-   */
-  public void increaseNumDefencesUnlockedBySpecific(int extraDefences) {
-    this.numDefencesUnlocked += extraDefences;
-    if (!Persistence.profile().achievements().isUnlocked(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)
-        && this.numDefencesUnlocked >= ACHIEVEMENT_QUOTAS.get(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(NUM_DEFENCES_UNLOCKED_ACHIEVEMENT);
-    }
-  }
-
-  /** Increases all-time total coins earned by 1. */
-  public void increaseTotalCoinsEarned() {
-    this.totalCoinsEarned++;
-    if (!Persistence.profile().achievements().isUnlocked(TOTAL_COINS_EARNED_ACHIEVEMENT)
-        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get(TOTAL_COINS_EARNED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(TOTAL_COINS_EARNED_ACHIEVEMENT);
-    }
-  }
-
-  /**
-   * Increases all-time total coins earned by a specific number of coins.
-   *
-   * @param extraCoinsEarned additional number of coins earned
-   */
-  public void increaseTotalCoinsEarnedBySpecific(int extraCoinsEarned) {
-    this.totalCoinsEarned += extraCoinsEarned;
-    if (!Persistence.profile().achievements().isUnlocked(TOTAL_COINS_EARNED_ACHIEVEMENT)
-        && this.totalCoinsEarned >= ACHIEVEMENT_QUOTAS.get(TOTAL_COINS_EARNED_ACHIEVEMENT)) {
-      Persistence.profile().achievements().unlock(TOTAL_COINS_EARNED_ACHIEVEMENT);
+      // Display achievement popup
+      if (ServiceLocator.getDialogService() != null) {
+        ServiceLocator.getDialogService()
+            .achievement(
+                config.getName(),
+                config.getDescription(),
+                config.getSkillPoints(),
+                config.getTier());
+      }
     }
   }
 }

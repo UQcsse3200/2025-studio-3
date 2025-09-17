@@ -23,7 +23,7 @@ public class InputService implements InputProcessor, GestureDetector.GestureList
   private static final InputFactory.InputType inputType = InputFactory.InputType.KEYBOARD;
 
   private static final Comparator<InputComponent> comparator =
-      Collections.reverseOrder(Comparator.comparingInt(InputComponent::getPriority));
+      Collections.reverseOrder(Comparator.comparingInt(InputComponent::getInputPriority));
 
   private final List<InputComponent> inputHandlers = new ArrayList<>();
   private final InputFactory inputFactory;

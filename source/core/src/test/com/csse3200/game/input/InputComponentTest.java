@@ -17,11 +17,11 @@ class InputComponentTest {
     int newPriority = 100;
     InputComponent inputComponent = spy(InputComponent.class);
 
-    inputComponent.setPriority(newPriority);
-    verify(inputComponent).setPriority(newPriority);
+    inputComponent.setInputPriority(newPriority);
+    verify(inputComponent).setInputPriority(newPriority);
 
-    int priority = inputComponent.getPriority();
-    verify(inputComponent).getPriority();
+    int priority = inputComponent.getInputPriority();
+    verify(inputComponent).getInputPriority();
 
     assertEquals(newPriority, priority);
   }

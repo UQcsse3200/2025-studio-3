@@ -4,19 +4,18 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
-import com.csse3200.game.GdxGame.ScreenType;
-//import com.csse3200.game.files.UserSettings;
-//import com.csse3200.game.files.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
@@ -49,48 +48,19 @@ public class SettingsMenuDisplay extends UIComponent {
     addActors();
   }
 
-    private void addActors() {
-        rootTable = new Table();
-        rootTable.setFillParent(true);
+  private void addActors() {
+    rootTable = new Table();
+    rootTable.setFillParent(true);
 
-        // Create buttons and title
-        TextButton exitBtn = new TextButton("Exit", skin);
-        TextButton applyBtn = new TextButton("Apply", skin);
-        Label title = new Label("Settings", skin, "title");
+    // Add top menu row (title, exit, apply)
+    rootTable.add(makeMenuBtns()).expandX().fillX().top();
 
-        // Listeners
-        exitBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                exitMenu();
-            }
-        });
+    // Next row: settings table
+    rootTable.row().padTop(30f);
+    rootTable.add(makeSettingsTable()).expandX().expandY();
 
-        applyBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                applyChanges();
-            }
-        });
-
-        // Top row table
-        Table topRow = new Table();
-        topRow.add(applyBtn).top().left().padRight(10f).padTop(10f);
-        topRow.add().expandX();                  // empty space
-        topRow.add(title).center();              // title centered in remaining space
-        topRow.add().expandX();                  // empty space
-        topRow.add(exitBtn).top().right().padLeft(10f).padTop(10f);
-
-        rootTable.add(topRow).expandX().fillX().top();
-
-        // Next row: settings table
-        rootTable.row().padTop(30f);
-        rootTable.add(makeSettingsTable()).expandX().expandY();
-
-        stage.addActor(rootTable);
-    }
-
-
+    stage.addActor(rootTable);
+  }
 
   private Table makeSettingsTable() {
     // Get current values
@@ -111,7 +81,7 @@ public class SettingsMenuDisplay extends UIComponent {
     vsyncCheck.setChecked(settings.vsync);
     whiten(vsyncLabel);
 
-    Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
+    Label uiScaleLabel = new Label("UI Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
@@ -191,34 +161,56 @@ public class SettingsMenuDisplay extends UIComponent {
     return displayMode.width + "x" + displayMode.height + ", " + displayMode.refreshRate + "hz";
   }
 
+  private Table makeMenuBtns() {
+    // Exit button (from main branch)
+    ImageButton exitBtn =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/close-icon.png", Texture.class)));
+    exitBtn.setSize(60f, 60f);
+    exitBtn.setPosition(
+        20f, // padding from left
+        stage.getHeight() - 60f - 20f // padding from top
+    );
+    exitBtn.addListener(new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent changeEvent, Actor actor) {
+        logger.debug("Exit button clicked");
+        exitMenu();
+      }
+    });
+    stage.addActor(exitBtn);
 
-    private Table makeMenuBtns() {
-        TextButton exitBtn = new TextButton("Exit", skin);
-        TextButton applyBtn = new TextButton("Apply", skin);
+    // Apply button
+    TextButton applyBtn = new TextButton("Apply", skin);
+    applyBtn.addListener(new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent changeEvent, Actor actor) {
+        logger.debug("Apply button clicked");
+        applyChanges();
+      }
+    });
 
-        exitBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                exitMenu();
-            }
-        });
+    // Title
+    Label title = new Label("Settings", skin, "title");
 
-        applyBtn.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-                applyChanges();
-            }
-        });
+    Table table = new Table();
+    table.setFillParent(true);
+    table.top().padTop(10f).padLeft(10f).padRight(10f);
+    table.add(title).expandX().center();
 
-        Table table = new Table();
-        table.add(exitBtn).left().padLeft(15f);
-        table.add().expandX();  // empty space for separation
-        table.add(applyBtn).right().padRight(15f);
+    // Apply button bottom-right
+    Table bottomRow = new Table();
+    bottomRow.setFillParent(true);
+    bottomRow.bottom().right().pad(20f);
+    bottomRow.add(applyBtn).size(100f, 50f);
+    stage.addActor(bottomRow);
 
-        return table;
-    }
+    return table;
+  }
 
-    private void applyChanges() {
+  private void applyChanges() {
     UserSettings.Settings settings = UserSettings.get();
 
     Integer fpsVal = parseOrNull(fpsText.getText());
@@ -234,10 +226,10 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private void exitMenu() {
-    if (Persistence.profile() == null) {
+    if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
-      game.setScreen(ScreenType.PROFILE);
+      game.setScreen(ScreenType.MAIN_GAME);
     }
   }
 
@@ -265,7 +257,6 @@ public class SettingsMenuDisplay extends UIComponent {
     super.dispose();
   }
 
-  /** Sets the provided label's font color to white by cloning their style */
   private static void whiten(Label label) {
     Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
     st.fontColor = Color.WHITE;

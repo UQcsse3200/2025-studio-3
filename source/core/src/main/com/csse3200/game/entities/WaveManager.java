@@ -1,6 +1,9 @@
 package com.csse3200.game.entities;
 
+import com.csse3200.game.areas.EnemySpawner;
+import com.csse3200.game.areas.GameArea;
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.GameTime;
 import java.util.*;
 
@@ -32,7 +35,7 @@ public class WaveManager {
   private static Entity gameEntity;
   private final GameTime gameTime;
   private final EntitySpawn entitySpawn;
-  private LevelGameArea levelGameArea;
+  private EnemySpawner enemySpawner; // use the interface instead of a concrete class
 
   private List<Integer> waveLaneSequence;
   private int waveLanePointer;
@@ -93,8 +96,14 @@ public class WaveManager {
     initialiseNewWave();
   }
 
-  public void setGameArea(LevelGameArea levelGameArea) {
-    this.levelGameArea = levelGameArea;
+  /** Set the game area used for spawning enemies. Must implement EnemySpawner. */
+  public void setGameArea(GameArea area) {
+    if (area instanceof EnemySpawner spawner) {
+      this.enemySpawner = spawner;
+    } else {
+      throw new IllegalArgumentException(
+          "Provided GameArea does not implement EnemySpawner: " + area.getClass().getName());
+    }
   }
 
   public static void setGameEntity(Entity gameEntity) {
@@ -155,8 +164,8 @@ public class WaveManager {
       endWave();
       return;
     }
-    String robotType = entitySpawn.getRandomRobotType();
-    levelGameArea.spawnRobot(9, laneNumber, robotType);
+    RobotType robotType = entitySpawn.getRandomRobotType();
+    enemySpawner.spawnRobot(9, laneNumber, robotType);
     currentEnemyPos++;
   }
 }

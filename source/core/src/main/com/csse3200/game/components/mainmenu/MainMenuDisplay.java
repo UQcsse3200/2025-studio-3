@@ -68,9 +68,9 @@ public class MainMenuDisplay extends UIComponent {
                 ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
 
         TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
+        TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default"); // NEW
         TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
         TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
-        TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default"); // NEW
 
         // --- Settings gear icon ---
         Texture gearTexture =
