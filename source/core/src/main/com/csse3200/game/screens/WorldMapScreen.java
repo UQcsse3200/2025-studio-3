@@ -9,10 +9,22 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.hud.AnimatedDropdownMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenu;
+import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,22 +32,32 @@ public class WorldMapScreen implements Screen {
   private final GdxGame game;
   private SpriteBatch batch;
   private OrthographicCamera camera;
+  private final Renderer renderer;
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
+  private static final String SHOP_NODE_ID = "shop";
+  private static final String SKILLS_NODE_ID = "skills";
   private Texture worldMap;
-  private Texture nodeCompleted, nodeUnlocked;
-  private Texture lockedLevel1, lockedLevel2;
-  private Texture playerTex, backButton;
-
+  private Texture nodeCompleted;
+  private Texture nodeUnlocked;
+  private Texture lockedLevel1;
+  private Texture lockedLevel2;
+  private Texture shopTexture;
+  private Texture skillsTexture;
+  private Texture playerTex;
   private Node[] nodes;
   private Vector2 playerPos;
   private float playerSpeed = 200f;
   private Node nearbyNode = null;
-
-  private Rectangle backBtnBounds;
   private BitmapFont font;
 
   public WorldMapScreen(GdxGame game) {
     this.game = game;
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+    renderer = RenderFactory.createRenderer();
+    createUI();
   }
 
   @Override
@@ -50,8 +72,9 @@ public class WorldMapScreen implements Screen {
     nodeUnlocked = new Texture(Gdx.files.internal("images/node_unlocked.png"));
     lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
     lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
+    shopTexture = new Texture(Gdx.files.internal("images/shopsprite.png"));
+    skillsTexture = new Texture(Gdx.files.internal("images/skills.png"));
     playerTex = new Texture(Gdx.files.internal("images/character.png"));
-    backButton = new Texture(Gdx.files.internal("images/back_button.png"));
 
     FileHandle file = Gdx.files.internal("data/nodes.json");
     Json json = new Json();
@@ -59,8 +82,6 @@ public class WorldMapScreen implements Screen {
 
     playerPos =
         new Vector2(nodes[0].px * Gdx.graphics.getWidth(), nodes[0].py * Gdx.graphics.getHeight());
-
-    backBtnBounds = new Rectangle(20, Gdx.graphics.getHeight() - 140, 120, 120);
 
     font = new BitmapFont();
     font.setColor(Color.WHITE);
@@ -75,12 +96,14 @@ public class WorldMapScreen implements Screen {
     batch.begin();
 
     batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    batch.draw(
-        backButton, backBtnBounds.x, backBtnBounds.y, backBtnBounds.width, backBtnBounds.height);
 
     for (Node node : nodes) {
       Texture nodeTex;
-      if (node.completed) {
+      if (SHOP_NODE_ID.equals(node.id)) {
+        nodeTex = shopTexture;
+      } else if (SKILLS_NODE_ID.equals(node.id)) {
+        nodeTex = skillsTexture;
+      } else if (node.completed) {
         nodeTex = nodeCompleted;
       } else if (node.unlocked) {
         nodeTex = nodeUnlocked;
@@ -96,7 +119,16 @@ public class WorldMapScreen implements Screen {
 
       if (playerPos.dst(x, y) < 60) {
         nearbyNode = node;
-        String prompt = (nearbyNode.level == 1) ? "Press E to Start" : "Press E to Checkpoint";
+        String prompt;
+        if (SHOP_NODE_ID.equals(nearbyNode.id)) {
+          prompt = "Press E to Shop";
+        } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
+          prompt = "Press E to view Skills";
+        } else if (nearbyNode.level == 1) {
+          prompt = "Press E to Start";
+        } else {
+          prompt = "Press E to Checkpoint";
+        }
         font.draw(batch, prompt, x, y + 100);
       }
     }
@@ -104,6 +136,12 @@ public class WorldMapScreen implements Screen {
     batch.draw(playerTex, playerPos.x, playerPos.y, 96, 96);
 
     batch.end();
+
+    // Update and render only the stage (UI components) without clearing the screen
+    ServiceLocator.getEntityService().update();
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    stage.act();
+    stage.draw();
 
     handleInput(delta);
   }
@@ -116,21 +154,18 @@ public class WorldMapScreen implements Screen {
     if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= moveAmount;
     if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
 
-    if (Gdx.input.isButtonJustPressed(Input.Buttons.LEFT)) {
-      float mx = Gdx.input.getX();
-      float my = Gdx.graphics.getHeight() - Gdx.input.getY();
-
-      if (backBtnBounds.contains(mx, my)) {
-        game.setScreen(GdxGame.ScreenType.MAIN_MENU);
-      }
-    }
-
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if (nearbyNode.level == 1) {
-        logger.info("🚀 Starting Level 1!");
+      if (SHOP_NODE_ID.equals(nearbyNode.id)) {
+        logger.info("Opening Shop!");
+        game.setScreen(GdxGame.ScreenType.SHOP);
+      } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
+        logger.info("Opening Skills!");
+        game.setScreen(GdxGame.ScreenType.SKILLTREE);
+      } else if (nearbyNode.level == 1) {
+        logger.info("Starting Level 1!");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
       } else {
-        logger.info("✅ Checkpoint reached at Level {}", nearbyNode.level);
+        logger.info("Checkpoint reached at Level {}", nearbyNode.level);
         nearbyNode.unlocked = true;
       }
     }
@@ -158,14 +193,54 @@ public class WorldMapScreen implements Screen {
 
   @Override
   public void dispose() {
-    batch.dispose();
-    worldMap.dispose();
-    nodeCompleted.dispose();
-    nodeUnlocked.dispose();
-    lockedLevel1.dispose();
-    lockedLevel2.dispose();
-    playerTex.dispose();
-    backButton.dispose();
-    font.dispose();
+    renderer.dispose();
+    if (batch != null) {
+      batch.dispose();
+    }
+    if (worldMap != null) {
+      worldMap.dispose();
+    }
+    if (nodeCompleted != null) {
+      nodeCompleted.dispose();
+    }
+    if (nodeUnlocked != null) {
+      nodeUnlocked.dispose();
+    }
+    if (lockedLevel1 != null) {
+      lockedLevel1.dispose();
+    }
+    if (lockedLevel2 != null) {
+      lockedLevel2.dispose();
+    }
+    if (shopTexture != null) {
+      shopTexture.dispose();
+    }
+    if (skillsTexture != null) {
+      skillsTexture.dispose();
+    }
+    if (playerTex != null) {
+      playerTex.dispose();
+    }
+    if (font != null) {
+      font.dispose();
+    }
+    ServiceLocator.getRenderService().dispose();
+    ServiceLocator.getEntityService().dispose();
+    ServiceLocator.clear();
+  }
+
+  /**
+   * Creates the StatisticsScreen's UI including components for rendering UI elements to the screen
+   * and capturing and handling UI input.
+   */
+  private void createUI() {
+    logger.debug("Creating ui");
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    Entity ui = new Entity();
+    ui.addComponent(new InputDecorator(stage, 10))
+        .addComponent(new MainMapNavigationMenu())
+        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new AnimatedDropdownMenu());
+    ServiceLocator.getEntityService().register(ui);
   }
 }

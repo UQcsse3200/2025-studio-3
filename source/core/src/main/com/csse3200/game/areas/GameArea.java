@@ -90,6 +90,15 @@ public abstract class GameArea implements Disposable {
     Gdx.app.postRunnable(() -> despawnEntity(entity));
   }
 
+  /**
+   * Gets all entities in this area.
+   *
+   * @return list of entities in this area
+   */
+  public List<Entity> getEntities() {
+    return areaEntities;
+  }
+
   //    public Entity spawnRobotAtTile(GridPoint2 tilePos, boolean centerX, boolean centerY) {
   //        BaseEntityConfig cfg = new BaseEntityConfig();
   //        cfg.health = 10;
