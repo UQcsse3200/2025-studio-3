@@ -7,6 +7,7 @@ import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -100,6 +101,9 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
   // But for now it doesn't matter
   private int deckUnitCount;
 
+  // Initialising an Entity
+  private Entity gameOverEntity;
+
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
    *
@@ -173,11 +177,14 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
     ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
     ui.addComponent(new com.csse3200.game.components.slot.SlotMachineDisplay(this));
     spawnEntity(ui);
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
   private void spawnMap() {
-    logger.debug("Spawning level one map");
+    logger.debug("Spawning slot machine map");
 
     // Create the background terrain (single image map)
     terrain = terrainFactory.createTerrain(TerrainType.LEVEL_ONE_MAP);
@@ -517,10 +524,11 @@ public class SlotMachineArea extends GameArea implements AreaAPI, EnemySpawner {
       int gridX = (int) ((worldPos.x - xOffset) / tileSize);
 
       // check if robot has reached the end
-      if (gridX <= 0) {
+      if (gridX <= -1) {
         isGameOver = true;
-        // placeholder for now
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+        // Window activation trigger
+        gameOverEntity.getEvents().trigger("gameOver");
       }
     }
   }
