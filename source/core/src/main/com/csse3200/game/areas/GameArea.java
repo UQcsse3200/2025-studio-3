@@ -8,6 +8,7 @@ import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
@@ -131,7 +132,7 @@ public abstract class GameArea implements Disposable {
           "Overlay cell out of bounds: " + cell + " within (" + rows + "x" + cols + ")");
     }
 
-    Entity robot = RobotFactory.createRobotType(robotType);
+    Entity robot = RobotFactory.createRobotType(RobotType.valueOf(robotType.toUpperCase()));
 
     // Register first so getCenterPosition() is valid
     spawnEntity(robot);
@@ -159,8 +160,7 @@ public abstract class GameArea implements Disposable {
   }
 
   public Entity spawnRobotAtFloat(float x, float y, String robotType) {
-
-    Entity robot = RobotFactory.createRobotType(robotType);
+    Entity robot = RobotFactory.createRobotType(RobotType.valueOf(robotType.toUpperCase()));
     robot.setPosition(x, y);
     spawnEntity(robot);
     return robot;

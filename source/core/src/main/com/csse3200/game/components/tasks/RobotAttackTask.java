@@ -10,7 +10,7 @@ import com.csse3200.game.physics.components.HitboxComponent;
  * runs when there is a visible target within the entities range of attack
  */
 public class RobotAttackTask extends RobotTargetDetectionTasks {
-  private static final float TIME_BETWEEN_ATTACKS = 4f; // seconds
+  private static final float TIME_BETWEEN_ATTACKS = 2f; // seconds
   private float timeLeft = 0f;
 
   /**
@@ -54,6 +54,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
+    timeLeft = TIME_BETWEEN_ATTACKS;
   }
 
   /** Stops the attack */

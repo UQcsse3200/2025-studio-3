@@ -3,6 +3,7 @@ package com.csse3200.game.entities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
@@ -46,10 +47,10 @@ class EntitySpawnTest {
     EntitySpawn spawner = new EntitySpawn(2);
     boolean s = false, f = false, t = false;
     for (int i = 0; i < 100; i++) {
-      String type = spawner.getRandomRobotType();
-      if ("standard".equals(type)) s = true;
-      if ("fast".equals(type)) f = true;
-      if ("tanky".equals(type)) t = true;
+      RobotType type = spawner.getRandomRobotType();
+      if (RobotType.STANDARD.equals(type)) s = true;
+      if (RobotType.FAST.equals(type)) f = true;
+      if (RobotType.TANKY.equals(type)) t = true;
       if (s && f && t) break;
     }
     assertTrue(s && f && t, "Expected all three types to appear across trials");

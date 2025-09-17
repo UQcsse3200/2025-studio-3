@@ -17,6 +17,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -88,7 +89,10 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     levelGameArea = new LevelGameArea(terrainFactory);
-    waveManager.setEnemySpawnCallback(levelGameArea::spawnRobot);
+    waveManager.setEnemySpawnCallback(
+        (col, row, type) ->
+            levelGameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    levelGameArea.setWaveManager(waveManager);
     levelGameArea.create();
 
     snapCameraBottomLeft();
