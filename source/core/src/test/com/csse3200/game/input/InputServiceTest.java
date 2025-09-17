@@ -1,14 +1,13 @@
 package com.csse3200.game.input;
 
+import static org.mockito.Mockito.*;
+
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.extensions.GameExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class InputServiceTest {
@@ -17,7 +16,7 @@ class InputServiceTest {
   void shouldRegisterInputHandler() {
     int keycode = 1;
     InputComponent inputComponent = spy(InputComponent.class);
-    when(inputComponent.getPriority()).thenReturn(1);
+    when(inputComponent.getInputPriority()).thenReturn(1);
 
     InputService inputService = new InputService();
     inputService.register(inputComponent);
@@ -30,7 +29,7 @@ class InputServiceTest {
   void shouldUnregisterInputHandler() {
     int keycode = 1;
     InputComponent inputComponent = spy(InputComponent.class);
-    when(inputComponent.getPriority()).thenReturn(1);
+    when(inputComponent.getInputPriority()).thenReturn(1);
 
     InputService inputService = new InputService();
     inputService.register(inputComponent);
@@ -202,8 +201,9 @@ class InputServiceTest {
   }
 
   /**
-   * This is a generic method that is used to test that each of the InputService's registered input handlers are called
-   * by descending priority order. As well as, that the InputService returns as soon as the input is handled.
+   * This is a generic method that is used to test that each of the InputService's registered input
+   * handlers are called by descending priority order. As well as, that the InputService returns as
+   * soon as the input is handled.
    *
    * @param method input component method
    * @param serviceMethod input service method
@@ -218,9 +218,9 @@ class InputServiceTest {
     InputComponent inputComponent2 = spy(InputComponent.class);
     InputComponent inputComponent3 = spy(InputComponent.class);
 
-    when(inputComponent1.getPriority()).thenReturn(100);
-    when(inputComponent2.getPriority()).thenReturn(1);
-    when(inputComponent3.getPriority()).thenReturn(10);
+    when(inputComponent1.getInputPriority()).thenReturn(100);
+    when(inputComponent2.getInputPriority()).thenReturn(1);
+    when(inputComponent3.getInputPriority()).thenReturn(10);
 
     when(method.invoke(inputComponent1, args)).thenReturn(false);
     when(method.invoke(inputComponent2, args)).thenReturn(true);

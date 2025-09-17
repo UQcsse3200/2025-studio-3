@@ -1,0 +1,74 @@
+{
+  "config": {
+    "buff": {
+      "name": "Buff",
+      "description": "Temporarily doubles damage for 30s. One time use.",
+      "eventName": "buff",
+      "assetPath": "images/items/buff.png",
+      "cost": 30
+    },
+    "coffee": {
+      "name": "Coffee",
+      "description": "Temporarily boosts shooting speed for 30s. One time use.",
+      "eventName": "coffee",
+      "assetPath": "images/items/coffee.png",
+      "cost": 30
+    },
+    "emp": {
+      "name": "EMP",
+      "description": "Shocks everything within a 3x3 square area. One time use.",
+      "eventName": "emp",
+      "assetPath": "images/items/emp.png",
+      "cost": 30
+    },
+    "grenade": {
+      "name": "Grenade",
+      "description": "Destroys everything within a 3x3 square area. One time use.",
+      "eventName": "grenade",
+      "assetPath": "images/items/grenade.png",
+      "cost": 30
+    },
+    "nuke": {
+      "name": "Nuke",
+      "description": "Wipes the grid of all active enemies. One time use.",
+      "eventName": "nuke",
+      "assetPath": "images/items/nuke.png",
+      "cost": 100
+    },
+    "shield": {
+      "name": "Shield",
+      "description": "Provides placed defences with temporary invincibility for 15s. One time use.",
+      "eventName": "shield",
+      "assetPath": "images/items/shield.png",
+      "cost": 50
+    },
+    "charmHack": {
+      "name": "Charm Hack",
+      "description": "Hacks an enemy robot, turning it to your side. One time use.",
+      "eventName": "charmHack",
+      "assetPath": "images/items/charmHack.png",
+      "cost": 75
+    },
+    "scrapper": {
+      "name": "Scrapper",
+      "description": "All scrap metal recovered from destroyed enemies doubles for 30s. One time use.",
+      "eventName": "scrapper",
+      "assetPath": "images/items/scrapper.png",
+      "cost": 40
+    },
+    "conscriptionOrder": {
+      "name": "Conscription Order",
+      "description": "The next human placed is placed for free. One time use.",
+      "eventName": "conscriptionOrder",
+      "assetPath": "images/items/conscriptionOrder.png",
+      "cost": 60
+    },
+    "doomHack": {
+      "name": "Doom Hack",
+      "description": "Hacks an enemy robot, destroying it. One time use.",
+      "eventName": "doomHack",
+      "assetPath": "images/items/doomHack.png",
+      "cost": 35
+    }
+  }
+}

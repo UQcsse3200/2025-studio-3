@@ -11,6 +11,7 @@ buildscript {
 plugins {
     id "org.sonarqube" version "4.4.1.3373"
     id "jacoco"
+    id "com.diffplug.spotless" version "7.2.1"
 }
 
 sonarqube {
@@ -21,6 +22,29 @@ sonarqube {
     }
 }
 
+// formatting config
+spotless {
+    java {
+        googleJavaFormat()
+        trimTrailingWhitespace()
+        endWithNewline()
+        target '*/src/**/*.java'
+    }
+}
+
+// alias 'spotlessApply' to 'format'
+tasks.register('format') {
+    group = 'formatting'
+    description = 'Formats java code'
+    dependsOn 'spotlessApply'
+}
+
+tasks.register('formatCheck') {
+    group = 'verification'
+    description = 'Checks code formatting'
+    dependsOn 'spotlessCheck'
+}
+
 allprojects {
     apply plugin: "eclipse"
     apply plugin: "idea"
@@ -28,7 +52,7 @@ allprojects {
 
     version = '1.0'
     ext {
-        appName = "csse3200-game"
+        appName = "The Day We Fought Back"
         gdxVersion = '1.11.0'
         roboVMVersion = '2.3.16'
         box2DLightsVersion = '1.5'

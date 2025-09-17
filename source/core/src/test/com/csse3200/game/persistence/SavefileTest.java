@@ -1,10 +1,11 @@
 package com.csse3200.game.persistence;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import com.csse3200.game.extensions.GameExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.BeforeEach;
-import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(GameExtension.class)
 class SavefileTest {
@@ -14,36 +15,45 @@ class SavefileTest {
 
   @BeforeEach
   void setUp() {
-    savefile = new Savefile(name, date);
+    savefile = new Savefile(name, date, 1);
   }
 
   @Test
   void testConstructor() {
-    Savefile save = new Savefile("MySave", 1234567890L);
+    Savefile save = new Savefile("MySave", 1234567890L, 2);
     assertEquals("MySave", save.getName());
     assertEquals(1234567890L, save.getDate());
+    assertEquals(2, save.getSlot());
   }
 
   @Test
   void testFromStringValid() {
-    String saveString = "TestSave$1704067200000";
+    String saveString = "TestSave$1704067200000$1";
     Savefile result = Savefile.fromString(saveString);
     assertNotNull(result);
     assertEquals("TestSave", result.getName());
     assertEquals(1704067200000L, result.getDate());
+    assertEquals(1, result.getSlot());
+  }
+
+  @Test
+  void testFromStringInvalid() {
+    String saveString = "TestSave$1704067200000";
+    Savefile result = Savefile.fromString(saveString);
+    assertNull(result);
   }
 
   @Test
   void testToString() {
     String result = savefile.toString();
-    String expected = "TestSave$1704067200000";
+    String expected = "TestSave$1704067200000$1";
     assertEquals(expected, result);
   }
 
   @Test
   void testGetDisplayNameWithUUID() {
     String uuidString = "550e8400-e29b-41d4-a716-446655440000";
-    Savefile save = new Savefile(uuidString, date);
+    Savefile save = new Savefile(uuidString, date, 1);
     assertEquals("Autosave", save.getDisplayName());
   }
 
@@ -55,7 +65,6 @@ class SavefileTest {
   @Test
   void testGetDisplayDate() {
     String result = savefile.getDisplayDate();
-    System.out.println(result);
-    assertNotNull(result); 
+    assertNotNull(result);
   }
 }

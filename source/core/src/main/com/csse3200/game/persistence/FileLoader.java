@@ -3,10 +3,8 @@ package com.csse3200.game.persistence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Json;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,24 +52,19 @@ public class FileLoader {
 
     T object;
     try {
-        // Read and log the raw JSON content for debugging
-        String rawJson = file.readString();
-        logger.debug("Raw JSON content length: {} characters", rawJson.length());
-        logger.trace("Raw JSON content: {}", rawJson); // Use trace level for full content
-        
-        object = json.fromJson(type, file);
+      String rawJson = file.readString();
+      logger.debug("Read {} characters: {}", rawJson.length(), rawJson);
+      object = json.fromJson(type, file);
     } catch (Exception e) {
-        logger.error("Error parsing JSON from file {}: {}", filename, e.getMessage());
-        logger.error("Exception type: {}", e.getClass().getName());
-        // Print full stack trace properly
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        logger.error("Full stack trace:\n{}", sw.toString());
-        return null;
+      logger.error("Error parsing JSON from file {}: {}", filename, e.getMessage());
+      StringWriter sw = new StringWriter();
+      e.printStackTrace(new PrintWriter(sw));
+      logger.debug("Full stack trace:\n{}", sw);
+      return null;
     }
-    
     if (object == null) {
-        logger.error("Error creating {} class instance from {}", type.getSimpleName(), file.path());
+      String path = file.path();
+      logger.error("Error creating {} class instance from {}", type.getSimpleName(), path);
     }
     return object;
   }
