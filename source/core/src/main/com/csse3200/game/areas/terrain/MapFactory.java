@@ -5,9 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * MapFactory simplifies creating maps as single-image entities.
- * Internally, it uses TerrainFactory and TerrainComponent to stay compatible with the rendering system.
- * Supports multiple levels.
+ * MapFactory simplifies creating maps as single-image entities. Internally, it uses TerrainFactory
+ * and TerrainComponent to stay compatible with the rendering system. Supports multiple levels.
  */
 public class MapFactory {
   private static final Logger logger = LoggerFactory.getLogger(MapFactory.class);

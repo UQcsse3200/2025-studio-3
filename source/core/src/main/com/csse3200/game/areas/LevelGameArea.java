@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.MapFactory;
-import com.csse3200.game.areas.terrain.TerrainComponent;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -227,9 +226,6 @@ public class LevelGameArea extends GameArea implements AreaAPI {
       spawnEntity(mapEntity);
     }
   }
-
-
-
 
   private void spawnSun() {
     Entity sunSpawner = new Entity();
