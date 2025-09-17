@@ -48,7 +48,7 @@ public class RobotFactory {
       FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
 
   /**
-   * A basic function to create a specific type of robot depending on the input TODO make this use
+   * A basic function to create a specific type of robot depending on the input. make this use
    * constants of some kind. Or EntityConfig classes If an invalid type is given, a standard robot
    * is created
    *
@@ -136,7 +136,7 @@ public class RobotFactory {
     if (config instanceof TeleportRobotConfig tcfg) {
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
-      if (laneYs != null && laneYs.length >= 2) {
+      if (laneYs.length >= 2) {
         robot.addComponent(
             new TeleportTask(
                 tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
@@ -151,31 +151,30 @@ public class RobotFactory {
     robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
 
     return robot;
-
-    // The original NPCFactory had:
-    // PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
-    // and also .addComponent(new TouchAttackComponent(PhysicsLayer.PLAYER, 1.5f))
-    // I don't think we need that but I'm putting it here for reference
   }
 
   private static float[] discoverLaneYsFromTiles() {
     var es = com.csse3200.game.services.ServiceLocator.getEntityService();
-    if (es == null) return null;
+    if (es == null) return new float[0];
 
-    // Collect unique tile Y positions from tile entities
     java.util.Set<Integer> yInts = new java.util.TreeSet<>();
+
     for (com.csse3200.game.entities.Entity e : es.getEntities()) {
-      if (e == null) continue;
-      // Tiles have a TileStorageComponent
-      if (e.getComponent(com.csse3200.game.components.tile.TileStorageComponent.class) == null)
-        continue;
+      boolean isTileWithPos =
+          e != null
+              && e.getComponent(com.csse3200.game.components.tile.TileStorageComponent.class)
+                  != null
+              && e.getPosition() != null;
+
+      if (!isTileWithPos) {
+        continue; // <- only one continue in the whole loop
+      }
+
       var p = e.getPosition();
-      if (p == null) continue;
-      // quantize to avoid float jitter
       yInts.add(Math.round(p.y * 1000f));
     }
 
-    if (yInts.size() < 2) return null;
+    if (yInts.size() < 2) return new float[0];
 
     float[] ys = new float[yInts.size()];
     int i = 0;
