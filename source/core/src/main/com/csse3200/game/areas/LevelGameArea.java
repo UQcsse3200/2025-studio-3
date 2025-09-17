@@ -1,6 +1,7 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -20,6 +21,7 @@ import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.DragOverlay;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -92,6 +94,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
 
   // Initialising an Entity
   private Entity gameOverEntity;
+  // Drag and drop variables
+  private DragOverlay dragOverlay;
+  private boolean characterSelected = false;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory.
@@ -136,6 +141,11 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnRobot(7, 2, "tanky");
     spawnRobot(10, 1, "standard");
     spawnRobot(10, 4, "fast");
+
+    Entity overlayEntity = new Entity();
+    dragOverlay = new DragOverlay(this);
+    overlayEntity.addComponent(dragOverlay);
+    spawnEntity(overlayEntity);
 
     playMusic();
   }
@@ -573,5 +583,43 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         gameOverEntity.getEvents().trigger("gameOver");
       }
     }
+  }
+
+  /**
+   * Begins a drag operation with the given texture.
+   *
+   * @param texture the texture to display while dragging
+   */
+  @Override
+  public void beginDrag(Texture texture) {
+    if (dragOverlay != null && texture != null) {
+      dragOverlay.begin(texture);
+    }
+  }
+
+  /** Cancels an ongoing drag operation. */
+  @Override
+  public void cancelDrag() {
+    if (dragOverlay != null) {
+      dragOverlay.cancel();
+    }
+  }
+
+  /**
+   * Sets whether a character is currently selected.
+   *
+   * @param status true to indicate a character is selected, false otherwise
+   */
+  public void setIsCharacterSelected(boolean status) {
+    this.characterSelected = status;
+  }
+
+  /**
+   * Checks if a character is currently selected.
+   *
+   * @return true if a character is selected, false otherwise
+   */
+  public boolean isCharacterSelected() {
+    return characterSelected;
   }
 }
