@@ -4,6 +4,7 @@ import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.configs.EnemySpawnConfig;
 import com.csse3200.game.entities.configs.GameConfig;
 import com.csse3200.game.persistence.FileLoader;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,6 +108,7 @@ public class WaveManager implements WaveConfigProvider {
   public void initialiseNewWave() {
     // Don't start new waves if level is complete
     if (levelComplete) {
+      showWinDialog();
       logger.info("Level complete - no more waves will spawn");
       return;
     }
@@ -124,7 +126,6 @@ public class WaveManager implements WaveConfigProvider {
     waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
     Collections.shuffle(waveLaneSequence);
     waveLanePointer = 0;
-
     if (waveEventListener != null) {
       waveEventListener.onPreparationPhaseStarted(currentWave);
       waveEventListener.onWaveChanged(currentWave);
@@ -453,5 +454,16 @@ public class WaveManager implements WaveConfigProvider {
 
     GameConfig config = getGameConfig();
     return config.getWave(currentLevel, waveIndex);
+  }
+
+  private void showWinDialog() {
+    String title = "You Won!";
+
+    // Build the message content
+    StringBuilder messageBuilder = new StringBuilder();
+    messageBuilder.append("Congratulations! You beat the level!");
+
+    String message = messageBuilder.toString();
+    ServiceLocator.getDialogService().info(title, message);
   }
 }
