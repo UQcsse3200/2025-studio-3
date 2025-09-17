@@ -1,8 +1,8 @@
 package com.csse3200.game.services;
 
-import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.entities.configs.BaseAchievementConfig.DeserializedAchievementConfig;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig.DeserializedItemConfig;
