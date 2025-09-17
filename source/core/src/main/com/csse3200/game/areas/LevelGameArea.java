@@ -16,6 +16,7 @@ import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ResourceService;
@@ -60,15 +61,20 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   };
 
   private static final String[] levelTextureAtlases = {
+    "images/sling_shooter.atlas",
+    "images/robot_placeholder.atlas",
+    "images/basic_robot.atlas",
     "images/ghost.atlas",
     "images/ghostKing.atlas",
     "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas",
+    "images/basic_robot.atlas",
     "images/grenade.atlas",
     "images/coffee.atlas",
     "images/emp.atlas",
     "images/buff.atlas",
-    "images/nuke.atlas"
+    "images/nuke.atlas",
+    "images/blue_robot.atlas",
+    "images/red_robot.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -143,9 +149,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, "tanky");
-    spawnRobot(10, 1, "standard");
-    spawnRobot(10, 4, "fast");
+    spawnRobot(7, 2, RobotType.TANKY);
+    spawnRobot(10, 1, RobotType.STANDARD);
+    spawnRobot(10, 4, RobotType.FAST);
     spawnDeck();
 
     playMusic();
@@ -314,7 +320,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     this.grid = newGrid;
   }
 
-  public void spawnRobot(int col, int row, String robotType) {
+  public void spawnRobot(int col, int row, RobotType robotType) {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
@@ -333,6 +339,14 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     unit.scaleHeight(tileSize);
     spawnEntity(unit);
     robots.add(unit);
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              requestDespawn(unit);
+              // Persistence.addCoins(3); //commented out since broken
+              robots.remove(unit);
+            });
     logger.info("Unit spawned at position {} {}", col, row);
   }
 
@@ -340,7 +354,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
    * exists, does nothing and logs a warning.
    */
-  public void spawnRobotOnDefence(String robotType) {
+  public void spawnRobotOnDefence(RobotType robotType) {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot spawn robot on defence.");
       return;
