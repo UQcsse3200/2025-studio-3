@@ -48,8 +48,11 @@ public class TileInputComponent extends InputComponent {
       logger.info("Tile Clicked");
       return switch (button) {
         case Input.Buttons.LEFT -> {
-          if (!tileStatus.hasUnit() && selectedUnit != null) {
+          if (!tileStatus.hasUnit() && selectedUnit != null && area.isCharacterSelected()) {
             tileStatus.triggerSpawnUnit();
+            area.cancelDrag();
+            area.setIsCharacterSelected(false);
+            area.setSelectedUnit(null);
           }
           yield true;
         }
