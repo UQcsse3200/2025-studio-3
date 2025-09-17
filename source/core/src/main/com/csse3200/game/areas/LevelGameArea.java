@@ -22,9 +22,9 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -164,9 +164,9 @@ public class LevelGameArea extends GameArea implements AreaAPI {
         () -> DefenceFactory.createSlingShooter(new ArrayList<>()));
 
     for (String itemKey :
-            ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
+        ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
       if (itemKey.equals("grenade")) {
-        unitList.put( "images/items/grenade.png", ItemFactory::createGrenade);
+        unitList.put("images/items/grenade.png", ItemFactory::createGrenade);
       }
       if (itemKey.equals("coffee")) {
         unitList.put("images/items/coffee.png", ItemFactory::createCoffee);
