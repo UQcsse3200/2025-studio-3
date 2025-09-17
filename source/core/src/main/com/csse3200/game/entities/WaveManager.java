@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public class WaveManager {
   private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
 
-  private static int currentWave = 0;
+  private int currentWave = 0;
   private int currentLevel = 1;
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
@@ -76,6 +76,7 @@ public class WaveManager {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
+    resetToInitialState();
 
     Collections.shuffle(laneOrder);
   }
@@ -158,11 +159,11 @@ public class WaveManager {
     this.waveEventListener = listener;
   }
 
-  public static int getCurrentWave() {
+  public int getCurrentWave() {
     return currentWave;
   }
 
-  private static void setCurrentWave(int wave) {
+  private void setCurrentWave(int wave) {
     currentWave = wave;
   }
 
@@ -256,6 +257,27 @@ public class WaveManager {
     waveLaneSequence.clear();
     waveLanePointer = 0;
     logger.info("Level reset - ready for new level");
+  }
+
+  /**
+   * Resets the WaveManager to its initial state for a fresh game start. This should be called when
+   * starting a new game session.
+   */
+  public void resetToInitialState() {
+    currentWave = 0;
+    currentLevel = 1;
+    levelComplete = false;
+    enemiesDisposed = 0;
+    waveActive = false;
+    preparationPhaseActive = false;
+    preparationPhaseTimer = 0.0f;
+    currentEnemyPos = 0;
+    enemiesToSpawn = 0;
+    timeSinceLastSpawn = 0f;
+    waveLaneSequence.clear();
+    waveLanePointer = 0;
+    Collections.shuffle(laneOrder);
+    logger.info("WaveManager reset to initial state - ready for new game");
   }
 
   /**
