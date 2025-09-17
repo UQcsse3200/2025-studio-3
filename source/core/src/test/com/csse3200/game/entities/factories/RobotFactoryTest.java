@@ -63,8 +63,8 @@ class RobotFactoryTest {
 
     for (String name :
         new String[] {"moveLeft", "attack", "damagedMoveLeft", "damagedAttack", "default"}) {
-      when(mockAtlas.findRegions(eq(name))).thenReturn(list);
-      when(mockAtlas.findRegion(eq(name))).thenReturn(region);
+      when(mockAtlas.findRegions(name)).thenReturn(list);
+      when(mockAtlas.findRegion(name)).thenReturn(region);
     }
 
     // Fake configs
