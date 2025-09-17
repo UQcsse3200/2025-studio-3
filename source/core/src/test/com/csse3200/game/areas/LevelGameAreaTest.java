@@ -181,7 +181,7 @@ class LevelGameAreaTest {
     var terrain = mock(TerrainComponent.class);
     when(terrain.getTileSize()).thenReturn(64f);
     when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
-    when(terrainFactory.createTerrain(any())).thenReturn(terrain);
+    when(terrainFactory.createTerrain(anyInt())).thenReturn(terrain);
     // 2 values to ensure coverage within loading loop
     when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
     when(resourceService.getProgress()).thenReturn(1);
