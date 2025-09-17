@@ -41,7 +41,8 @@ public class DossierDisplay extends UIComponent {
     type = true;
     this.dossierManager = new DossierManager(entityConfigs, defenceConfigs, textures);
     // All robot entities
-    entities = new String[] {"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot"};
+    entities =
+        new String[] {"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"};
   }
 
   @Override

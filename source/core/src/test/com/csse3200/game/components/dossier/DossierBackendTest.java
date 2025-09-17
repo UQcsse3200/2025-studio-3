@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,8 @@ class DossierBackendTest {
 
   private Texture mockDefaultTexture;
   private Texture mockHumanTexture;
+  private Texture mockRedTexture;
+  private Texture mockBlueTexture;
 
   private DossierManager dossierManager;
 
@@ -20,7 +23,7 @@ class DossierBackendTest {
   void setUp() {
     // Mock data
     EntityConfigs entityConfigs = new EntityConfigs();
-    entityConfigs.standardRobot = new EntityDataConfig();
+    entityConfigs.standardRobot = new BaseEnemyConfig();
     entityConfigs.standardRobot.name = "Standard Robot";
     entityConfigs.standardRobot.description = "A standard enemy.";
     entityConfigs.standardRobot.health = 40;
@@ -34,8 +37,10 @@ class DossierBackendTest {
     defenceConfigs.slingshooter.defenceAttack = 1;
 
     mockDefaultTexture = mock(Texture.class);
+    mockRedTexture = mock(Texture.class);
+    mockBlueTexture = mock(Texture.class);
     mockHumanTexture = mock(Texture.class);
-    Texture[] textures = {mockDefaultTexture, mockHumanTexture};
+    Texture[] textures = {mockDefaultTexture, mockRedTexture, mockBlueTexture, mockHumanTexture};
 
     dossierManager = new DossierManager(entityConfigs, defenceConfigs, textures);
   }

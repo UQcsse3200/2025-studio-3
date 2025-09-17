@@ -1,5 +1,6 @@
 package com.csse3200.game.components.dossier;
 
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.TeleportRobotConfig;
 
 /**
@@ -8,9 +9,9 @@ import com.csse3200.game.entities.configs.TeleportRobotConfig;
  */
 public class EntityConfigs {
 
-  public EntityDataConfig standardRobot;
-  public EntityDataConfig fastRobot;
-  public EntityDataConfig tankyRobot;
-  public EntityDataConfig bungeeRobot;
+  public BaseEnemyConfig standardRobot;
+  public BaseEnemyConfig fastRobot;
+  public BaseEnemyConfig tankyRobot;
+  public BaseEnemyConfig bungeeRobot;
   public TeleportRobotConfig teleportRobot;
 }

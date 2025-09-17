@@ -75,9 +75,9 @@ public class DossierScreen extends ScreenAdapter {
                 FileLoader.readClass(DefenceConfigs.class, "configs/defences.json"),
                 new Texture[] {
                   new Texture("images/basic_robot_default_sprite.png"),
-                        new Texture("images/red_robot_default_sprite.png"),
-                        new Texture("images/blue_robot_default_sprite.png"),
-                    new Texture("images/sling_shooter_1.png")
+                  new Texture("images/red_robot_default_sprite.png"),
+                  new Texture("images/blue_robot_default_sprite.png"),
+                  new Texture("images/sling_shooter_1.png")
                 }))
         .addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);

@@ -3,6 +3,7 @@ package com.csse3200.game.components.dossier;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
 
 public class DossierManager {
 
@@ -53,7 +54,7 @@ public class DossierManager {
   /** Retrieves info directly from the loaded config object. */
   public String getInfo(String entityName) {
     if (enemyMode) {
-      EntityDataConfig config = getEnemy(entityName);
+      BaseEnemyConfig config = getEnemy(entityName);
       return " "
           + config.description
           + "\n Attack: "
@@ -75,12 +76,13 @@ public class DossierManager {
    * Retrieves the specific enemy data object based on its name. Expanded to include all enemy
    * types.
    */
-  private EntityDataConfig getEnemy(String entityName) {
+  private BaseEnemyConfig getEnemy(String entityName) {
     return switch (entityName) {
       case "standardRobot" -> entityData.standardRobot;
       case "fastRobot" -> entityData.fastRobot;
       case "tankyRobot" -> entityData.tankyRobot;
       case "bungeeRobot" -> entityData.bungeeRobot;
+      case "teleportRobot" -> entityData.teleportRobot;
       default -> entityData.standardRobot;
     };
   }
