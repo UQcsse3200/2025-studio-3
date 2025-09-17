@@ -1,14 +1,11 @@
 package com.csse3200.game.minigame;
 
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,10 +27,6 @@ public class MiniGameDisplay extends UIComponent {
     private void addActors() {
         table = new Table();
         table.setFillParent(true);
-//        Image title =
-//                new Image(
-//                        ServiceLocator.getResourceService()
-//                                .getAsset("images/box_boy_title.png", Texture.class));
 
         TextButton LaneRunnerBtn = new TextButton("Lane Runner", skin);
         TextButton BrickBreakerBtn = new TextButton("Brick Breaker", skin);
@@ -63,12 +56,6 @@ public class MiniGameDisplay extends UIComponent {
                         entity.getEvents().trigger("back");
                     }
                 });
-
-
-
-
-
-//        table.add(title);
 
         table.add(LaneRunnerBtn).padTop(30f);
         table.row();
