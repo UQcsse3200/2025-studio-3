@@ -17,13 +17,15 @@ public class Component {
 
   /** Whether this component is enabled */
   protected boolean enabled = true;
-  
-  /** Priority of the component - affects how components are loaded/created in {@link Entity} create() method. */
+
+  /**
+   * Priority of the component - affects how components are loaded/created in {@link Entity}
+   * create() method.
+   */
   private ComponentPriority priority = ComponentPriority.LOW;
 
   /** Creates a new component with default settings. */
-  public Component() {
-  }
+  public Component() {}
 
   /** Creates a component with a specific priority */
   public Component(ComponentPriority priority) {
@@ -81,6 +83,7 @@ public class Component {
 
   /**
    * Get the priority of the component.
+   *
    * @return ComponentPriority
    */
   public ComponentPriority getPriority() {

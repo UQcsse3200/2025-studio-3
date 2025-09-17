@@ -35,7 +35,7 @@ public class PhysicsComponent extends Component {
    */
   public PhysicsComponent(PhysicsEngine engine) {
     super(ComponentPriority.HIGH); // sets physics component to have high priority
-    
+
     this.physics = engine;
 
     BodyDef bodyDef = new BodyDef();
