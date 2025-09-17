@@ -11,7 +11,6 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.mainmenu.MainMenuActions;
 import com.csse3200.game.components.mainmenu.MainMenuDisplay;
 import com.csse3200.game.cutscene.*;
-import com.csse3200.game.cutscene.models.object.Cutscene;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -19,7 +18,6 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.CutsceneService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -51,7 +49,7 @@ public class MainMenuScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    ServiceLocator.getCutsceneService().playCutscene("dialogueshort");
+    // ServiceLocator.getCutsceneService().playCutscene("dialogueshort");
   }
 
   @Override
