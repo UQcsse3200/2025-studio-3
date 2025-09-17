@@ -61,7 +61,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack range. */
   public void setRange(int range) {
-    this.range = range;
+    if (range < 0) {
+      this.range = 0;
+    } else {
+      this.range = range;
+    }
   }
 
   /**
@@ -85,7 +89,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack speed. */
   public void setAttackSpeed(int attackSpeed) {
-    this.attackSpeed = attackSpeed;
+    if (attackSpeed < 0) {
+      this.attackSpeed = 0;
+    } else {
+      this.attackSpeed = attackSpeed;
+    }
   }
 
   /**
