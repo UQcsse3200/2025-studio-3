@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * A ui component for displaying the Main menu.
+ *  ui component for displaying the Main menu.
  */
 public class MiniGameDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(com.csse3200.game.components.mainmenu.MainMenuDisplay.class);
