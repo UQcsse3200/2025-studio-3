@@ -115,8 +115,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">MainGameActions</a><wbr>(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">MainGameActions</a>()</code></div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for the MainGameActions class.</div>
+</div>
 </div>
 </section>
 </li>
@@ -135,6 +137,26 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called when the entity is created and registered.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMainGameScreen()" class="member-name-link">getMainGameScreen</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the main game screen reference.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMainGameScreen(com.csse3200.game.screens.MainGameScreen)" class="member-name-link">setMainGameScreen</a><wbr>(<a href="../../screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a>&nbsp;mainGameScreen)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the main game screen reference.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPauseButton(com.csse3200.game.components.hud.PauseButton)" class="member-name-link">setPauseButton</a><wbr>(<a href="../hud/PauseButton.html" title="class in com.csse3200.game.components.hud">PauseButton</a>&nbsp;pauseButton)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the pause button reference</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPauseMenu(com.csse3200.game.components.hud.PauseMenu)" class="member-name-link">setPauseMenu</a><wbr>(<a href="../hud/PauseMenu.html" title="class in com.csse3200.game.components.hud">PauseMenu</a>&nbsp;pauseMenu)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the pause menu reference.</div>
 </div>
 </div>
 </div>
@@ -157,9 +179,10 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
+<section class="detail" id="&lt;init&gt;()">
 <h3>MainGameActions</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MainGameActions</span><wbr><span class="parameters">(<a href="../../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MainGameActions</span>()</div>
+<div class="block">Constructor for the MainGameActions class.</div>
 </section>
 </li>
 </ul>
@@ -180,6 +203,50 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="../Component.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="../Component.html" title="class in com.csse3200.game.components">Component</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPauseMenu(com.csse3200.game.components.hud.PauseMenu)">
+<h3>setPauseMenu</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPauseMenu</span><wbr><span class="parameters">(<a href="../hud/PauseMenu.html" title="class in com.csse3200.game.components.hud">PauseMenu</a>&nbsp;pauseMenu)</span></div>
+<div class="block">Sets the pause menu reference.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>pauseMenu</code> - The pause menu to set.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setMainGameScreen(com.csse3200.game.screens.MainGameScreen)">
+<h3>setMainGameScreen</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setMainGameScreen</span><wbr><span class="parameters">(<a href="../../screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a>&nbsp;mainGameScreen)</span></div>
+<div class="block">Sets the main game screen reference.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mainGameScreen</code> - The main game screen to set.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMainGameScreen()">
+<h3>getMainGameScreen</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></span>&nbsp;<span class="element-name">getMainGameScreen</span>()</div>
+<div class="block">Gets the main game screen reference.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The main game screen reference.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPauseButton(com.csse3200.game.components.hud.PauseButton)">
+<h3>setPauseButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPauseButton</span><wbr><span class="parameters">(<a href="../hud/PauseButton.html" title="class in com.csse3200.game.components.hud">PauseButton</a>&nbsp;pauseButton)</span></div>
+<div class="block">Sets the pause button reference</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>pauseButton</code> - The pause button to set.</dd>
 </dl>
 </section>
 </li>

@@ -92,9 +92,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Profile</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
 <div class="block">Represents a user profile in the game. Allows customization of player attributes and tracking of
- progress.
-
- <p>Later we can add an arsenal of unlocked defences, and a way to track overall level progress.</div>
+ progress.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -110,12 +108,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Creates a new profile with default values.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.achievements.AchievementManager,com.csse3200.game.progression.statistics.Statistics)" class="member-name-link">Profile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal,java.lang.String)" class="member-name-link">Profile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>&nbsp;wallet,
  <a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&nbsp;inventory,
  <a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>&nbsp;skillset,
- <a href="achievements/AchievementManager.html" title="class in com.csse3200.game.progression.achievements">AchievementManager</a>&nbsp;achievements,
- <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics)</code></div>
+ <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics,
+ <a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&nbsp;arsenal,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Initialise a profile with the provided values.</div>
 </div>
@@ -133,40 +132,50 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="achievements/AchievementManager.html" title="class in com.csse3200.game.progression.achievements">AchievementManager</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#achievements()" class="member-name-link">achievements</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getArsenal()" class="member-name-link">getArsenal</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get the achievements associated with the profile.</div>
+<div class="block">Get the arsenal associated with the profile.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentLevel()" class="member-name-link">getCurrentLevel</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the current level of the profile.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInventory()" class="member-name-link">getInventory</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the inventory associated with the profile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the name of the profile.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#inventory()" class="member-name-link">inventory</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get the inventory associated with the profile.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Change the name of the profile.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#skillset()" class="member-name-link">skillset</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSkillset()" class="member-name-link">getSkillset</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the skillset associated with the profile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#statistics()" class="member-name-link">statistics</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStatistics()" class="member-name-link">getStatistics</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the statistics associated with the profile.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#wallet()" class="member-name-link">wallet</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWallet()" class="member-name-link">getWallet</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the wallet associated with the profile.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentLevel(java.lang.String)" class="member-name-link">setCurrentLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the current level of the profile.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Change the name of the profile.</div>
 </div>
 </div>
 </div>
@@ -193,14 +202,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.achievements.AchievementManager,com.csse3200.game.progression.statistics.Statistics)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal,java.lang.String)">
 <h3>Profile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Profile</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name,
  <a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>&nbsp;wallet,
  <a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&nbsp;inventory,
  <a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>&nbsp;skillset,
- <a href="achievements/AchievementManager.html" title="class in com.csse3200.game.progression.achievements">AchievementManager</a>&nbsp;achievements,
- <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics)</span></div>
+ <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics,
+ <a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&nbsp;arsenal,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</span></div>
 <div class="block">Initialise a profile with the provided values.</div>
 </section>
 </li>
@@ -235,9 +245,31 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="wallet()">
-<h3>wallet</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></span>&nbsp;<span class="element-name">wallet</span>()</div>
+<section class="detail" id="getCurrentLevel()">
+<h3>getCurrentLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getCurrentLevel</span>()</div>
+<div class="block">Get the current level of the profile.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the current level of the profile.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setCurrentLevel(java.lang.String)">
+<h3>setCurrentLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCurrentLevel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</span></div>
+<div class="block">Set the current level of the profile.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>currentLevel</code> - the new current level of the profile.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getWallet()">
+<h3>getWallet</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></span>&nbsp;<span class="element-name">getWallet</span>()</div>
 <div class="block">Get the wallet associated with the profile.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -246,9 +278,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="inventory()">
-<h3>inventory</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></span>&nbsp;<span class="element-name">inventory</span>()</div>
+<section class="detail" id="getInventory()">
+<h3>getInventory</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></span>&nbsp;<span class="element-name">getInventory</span>()</div>
 <div class="block">Get the inventory associated with the profile.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -257,9 +289,20 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="skillset()">
-<h3>skillset</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></span>&nbsp;<span class="element-name">skillset</span>()</div>
+<section class="detail" id="getArsenal()">
+<h3>getArsenal</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></span>&nbsp;<span class="element-name">getArsenal</span>()</div>
+<div class="block">Get the arsenal associated with the profile.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the arsenal of the profile.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSkillset()">
+<h3>getSkillset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></span>&nbsp;<span class="element-name">getSkillset</span>()</div>
 <div class="block">Get the skillset associated with the profile.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -268,20 +311,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="achievements()">
-<h3>achievements</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="achievements/AchievementManager.html" title="class in com.csse3200.game.progression.achievements">AchievementManager</a></span>&nbsp;<span class="element-name">achievements</span>()</div>
-<div class="block">Get the achievements associated with the profile.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the achievements of the profile.</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="statistics()">
-<h3>statistics</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></span>&nbsp;<span class="element-name">statistics</span>()</div>
+<section class="detail" id="getStatistics()">
+<h3>getStatistics</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></span>&nbsp;<span class="element-name">getStatistics</span>()</div>
 <div class="block">Get the statistics associated with the profile.</div>
 <dl class="notes">
 <dt>Returns:</dt>

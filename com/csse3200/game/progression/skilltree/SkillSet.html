@@ -131,6 +131,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks if a skill with the given name has been unlocked.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentLevel(com.csse3200.game.progression.skilltree.Skill.StatType)" class="member-name-link">getCurrentLevel</a><wbr>(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevel(java.lang.String)" class="member-name-link">getLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;skillName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Skill.html" title="class in com.csse3200.game.progression.skilltree">Skill</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSkill(java.lang.String)" class="member-name-link">getSkill</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -146,6 +152,17 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the list of skills that have been unlocked for this instance/player.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUpgradeValue(com.csse3200.game.progression.skilltree.Skill.StatType)" class="member-name-link">getUpgradeValue</a><wbr>(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUnlockable(java.lang.String)" class="member-name-link">isUnlockable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;skillName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if a skill with the given name has been unlocked.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeSkill(com.csse3200.game.progression.skilltree.Skill.StatType)" class="member-name-link">removeSkill</a><wbr>(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -200,6 +217,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="removeSkill(com.csse3200.game.progression.skilltree.Skill.StatType)">
+<h3>removeSkill</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeSkill</span><wbr><span class="parameters">(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</span></div>
+</section>
+</li>
+<li>
 <section class="detail" id="getUnlockedSkills()">
 <h3>getUnlockedSkills</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Skill.html" title="class in com.csse3200.game.progression.skilltree">Skill</a>&gt;</span>&nbsp;<span class="element-name">getUnlockedSkills</span>()</div>
@@ -233,6 +256,56 @@ loadScripts(document, 'script');</script>
 <dd><code>name</code> - the name of the skill to search for</dd>
 <dt>Returns:</dt>
 <dd>the <a href="Skill.html" title="class in com.csse3200.game.progression.skilltree"><code>Skill</code></a> object if found; <code>null</code> otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getUpgradeValue(com.csse3200.game.progression.skilltree.Skill.StatType)">
+<h3>getUpgradeValue</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getUpgradeValue</span><wbr><span class="parameters">(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - the StatType of the skill to be checked</dd>
+<dt>Returns:</dt>
+<dd>a float that represents the percentage increase of the input stat</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getLevel(java.lang.String)">
+<h3>getLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLevel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;skillName)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>skillName</code> - the name of the skill</dd>
+<dt>Returns:</dt>
+<dd>an integer that corresponds to the level associated with the input</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCurrentLevel(com.csse3200.game.progression.skilltree.Skill.StatType)">
+<h3>getCurrentLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCurrentLevel</span><wbr><span class="parameters">(<a href="Skill.StatType.html" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a>&nbsp;type)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - the StateType of the skill</dd>
+<dt>Returns:</dt>
+<dd>an integer that corresponds to the furthest unlocked level of that skill</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isUnlockable(java.lang.String)">
+<h3>isUnlockable</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isUnlockable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;skillName)</span></div>
+<div class="block">Checks if a skill with the given name has been unlocked.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>skillName</code> - the name of the skill to check</dd>
+<dt>Returns:</dt>
+<dd>true if the skill is either Basic or previous levels with same type have been unlocked
+     and false if otherwise</dd>
 </dl>
 </section>
 </li>

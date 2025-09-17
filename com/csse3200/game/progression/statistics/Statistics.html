@@ -91,14 +91,15 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Statistics</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">The Statistics class tracks and stores global player/user statistics across the game. It records
- cumulative data such as total kills, total shots, player level, number of plants unlocked, and
- all-time total coins earned.
+<div class="block">The Statistics class tracks and stores player/user statistics across the game and manages
+ achievements based on those statistics. It records cumulative data such as total kills, total
+ shots, player level, number of plants unlocked, and all-time total coins earned.
 
- <p>Statistics are initialised within and linked to a particular Profile. Statistics are relevant
- to unlocking Achievements.
+ <p>Statistics are initialised within and linked to a particular Profile. When statistics are
+ updated, the class checks achievement quotas and unlocks achievements automatically.
 
- <p>Statistics can be initialised with default or variable starting statistics.</div>
+ <p>Achievements are stored as a list of unlocked achievement keys, similar to how Arsenal and
+ Inventory work.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,13 +115,10 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Default constructor for Statistics.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int,int,int)" class="member-name-link">Statistics</a><wbr>(int&nbsp;kills,
- int&nbsp;shotsFired,
- int&nbsp;levelsPassed,
- int&nbsp;numDefencesUnlocked,
- int&nbsp;totalCoinsEarned)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.util.Map,java.util.List)" class="member-name-link">Statistics</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;stats,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;achievements)</code></div>
 <div class="col-last odd-row-color">
-<div class="block">Creates a Statistics instance with specified starting statistics.</div>
+<div class="block">Creates a Statistics instance with specified statistics and achievements.</div>
 </div>
 </div>
 </section>
@@ -136,90 +134,42 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKills()" class="member-name-link">getKills</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllStatistics()" class="member-name-link">getAllStatistics</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current number of kills player (through their defences) has made.</div>
+<div class="block">Gets all statistics.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevelsPassed()" class="member-name-link">getLevelsPassed</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStatistic(java.lang.String)" class="member-name-link">getStatistic</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current number of levels player has passed.</div>
+<div class="block">Gets the value of a specific statistic.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNumDefencesUnlocked()" class="member-name-link">getNumDefencesUnlocked</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUnlockedAchievements()" class="member-name-link">getUnlockedAchievements</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current number of defences a player has unlocked.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShotsFired()" class="member-name-link">getShotsFired</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current number of shots player (through their defences) has fired.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTotalCoinsEarned()" class="member-name-link">getTotalCoinsEarned</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current all-time total coins a player has earned.</div>
+<div class="block">Gets the list of unlocked achievement keys.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseKills()" class="member-name-link">increaseKills</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementStatistic(java.lang.String)" class="member-name-link">incrementStatistic</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases kills by 1.</div>
+<div class="block">Increments a statistic by 1 and checks for achievement unlocks.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseLevelsPassed()" class="member-name-link">increaseLevelsPassed</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#incrementStatistic(java.lang.String,int)" class="member-name-link">incrementStatistic</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ int&nbsp;amount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases levels passed by 1.</div>
+<div class="block">Increments a statistic by a specific amount and checks for achievement unlocks.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseNumDefencesUnlocked()" class="member-name-link">increaseNumDefencesUnlocked</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isAchievementUnlocked(java.lang.String)" class="member-name-link">isAchievementUnlocked</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;achievementKey)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases number of defences unlocked by 1.</div>
+<div class="block">Checks if an achievement is unlocked.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseNumDefencesUnlockedBySpecific(int)" class="member-name-link">increaseNumDefencesUnlockedBySpecific</a><wbr>(int&nbsp;extraDefences)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStatistic(java.lang.String,int)" class="member-name-link">setStatistic</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ int&nbsp;newValue)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases number of defences unlocked by a specific number of defences.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseShotsFired()" class="member-name-link">increaseShotsFired</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases kills by 1.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseTotalCoinsEarned()" class="member-name-link">increaseTotalCoinsEarned</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases all-time total coins earned by 1.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#increaseTotalCoinsEarnedBySpecific(int)" class="member-name-link">increaseTotalCoinsEarnedBySpecific</a><wbr>(int&nbsp;extraCoinsEarned)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Increases all-time total coins earned by a specific number of coins.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setKills(int)" class="member-name-link">setKills</a><wbr>(int&nbsp;kills)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the current number of kills player (through their defences) has made.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLevelsPassed(int)" class="member-name-link">setLevelsPassed</a><wbr>(int&nbsp;levelsPassed)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the current number of levels player has passed.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setNumDefencesUnlocked(int)" class="member-name-link">setNumDefencesUnlocked</a><wbr>(int&nbsp;numDefencesUnlocked)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the current number of defences player has unlocked.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShotsFired(int)" class="member-name-link">setShotsFired</a><wbr>(int&nbsp;shotsFired)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the current number of shots player (through their defences) has fired.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTotalCoinsEarned(int)" class="member-name-link">setTotalCoinsEarned</a><wbr>(int&nbsp;totalCoinsEarned)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the current number of all-time total coins player has earned.</div>
+<div class="block">Updates a statistic and checks for achievement unlocks.</div>
 </div>
 </div>
 </div>
@@ -246,21 +196,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int,int,int)">
+<section class="detail" id="&lt;init&gt;(java.util.Map,java.util.List)">
 <h3>Statistics</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Statistics</span><wbr><span class="parameters">(int&nbsp;kills,
- int&nbsp;shotsFired,
- int&nbsp;levelsPassed,
- int&nbsp;numDefencesUnlocked,
- int&nbsp;totalCoinsEarned)</span></div>
-<div class="block">Creates a Statistics instance with specified starting statistics.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Statistics</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;stats,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;achievements)</span></div>
+<div class="block">Creates a Statistics instance with specified statistics and achievements.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>kills</code> - the initial number of kills</dd>
-<dd><code>shotsFired</code> - the initial number of shots fired</dd>
-<dd><code>levelsPassed</code> - the initial number of levels passed</dd>
-<dd><code>numDefencesUnlocked</code> - the initial number of defences unlocked</dd>
-<dd><code>totalCoinsEarned</code> - the initial number of coins earned</dd>
+<dd><code>stats</code> - the statistics map</dd>
+<dd><code>achievements</code> - the list of unlocked achievement keys</dd>
 </dl>
 </section>
 </li>
@@ -273,169 +217,87 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getKills()">
-<h3>getKills</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getKills</span>()</div>
-<div class="block">Gets the current number of kills player (through their defences) has made.</div>
+<section class="detail" id="getStatistic(java.lang.String)">
+<h3>getStatistic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getStatistic</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
+<div class="block">Gets the value of a specific statistic.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>key</code> - the name of the statistic</dd>
+<dt>Returns:</dt>
+<dd>the value of the statistic, or 0 if not found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAllStatistics()">
+<h3>getAllStatistics</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">getAllStatistics</span>()</div>
+<div class="block">Gets all statistics.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the current number of kills</dd>
+<dd>map of all statistics</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getShotsFired()">
-<h3>getShotsFired</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getShotsFired</span>()</div>
-<div class="block">Gets the current number of shots player (through their defences) has fired.</div>
+<section class="detail" id="getUnlockedAchievements()">
+<h3>getUnlockedAchievements</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getUnlockedAchievements</span>()</div>
+<div class="block">Gets the list of unlocked achievement keys.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the current number of shots fired</dd>
+<dd>list of unlocked achievement keys</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getLevelsPassed()">
-<h3>getLevelsPassed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLevelsPassed</span>()</div>
-<div class="block">Gets the current number of levels player has passed.</div>
+<section class="detail" id="isAchievementUnlocked(java.lang.String)">
+<h3>isAchievementUnlocked</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isAchievementUnlocked</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;achievementKey)</span></div>
+<div class="block">Checks if an achievement is unlocked.</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>achievementKey</code> - the achievement key</dd>
 <dt>Returns:</dt>
-<dd>the current number of levels passed</dd>
+<dd>true if unlocked, false otherwise</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getNumDefencesUnlocked()">
-<h3>getNumDefencesUnlocked</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getNumDefencesUnlocked</span>()</div>
-<div class="block">Gets the current number of defences a player has unlocked.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the current number of defences unlocked</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getTotalCoinsEarned()">
-<h3>getTotalCoinsEarned</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTotalCoinsEarned</span>()</div>
-<div class="block">Gets the current all-time total coins a player has earned.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the current total coins earned</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setKills(int)">
-<h3>setKills</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setKills</span><wbr><span class="parameters">(int&nbsp;kills)</span></div>
-<div class="block">Sets the current number of kills player (through their defences) has made.</div>
+<section class="detail" id="setStatistic(java.lang.String,int)">
+<h3>setStatistic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setStatistic</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ int&nbsp;newValue)</span></div>
+<div class="block">Updates a statistic and checks for achievement unlocks.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>kills</code> - the new number of kills</dd>
+<dd><code>key</code> - the name of the statistic to update</dd>
+<dd><code>newValue</code> - the new value for the statistic</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setShotsFired(int)">
-<h3>setShotsFired</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setShotsFired</span><wbr><span class="parameters">(int&nbsp;shotsFired)</span></div>
-<div class="block">Sets the current number of shots player (through their defences) has fired.</div>
+<section class="detail" id="incrementStatistic(java.lang.String)">
+<h3>incrementStatistic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">incrementStatistic</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
+<div class="block">Increments a statistic by 1 and checks for achievement unlocks.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>shotsFired</code> - the new number of shots fired</dd>
+<dd><code>key</code> - the name of the statistic to increment</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setLevelsPassed(int)">
-<h3>setLevelsPassed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLevelsPassed</span><wbr><span class="parameters">(int&nbsp;levelsPassed)</span></div>
-<div class="block">Sets the current number of levels player has passed.</div>
+<section class="detail" id="incrementStatistic(java.lang.String,int)">
+<h3>incrementStatistic</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">incrementStatistic</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
+ int&nbsp;amount)</span></div>
+<div class="block">Increments a statistic by a specific amount and checks for achievement unlocks.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>levelsPassed</code> - the new number of levels passed</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setNumDefencesUnlocked(int)">
-<h3>setNumDefencesUnlocked</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setNumDefencesUnlocked</span><wbr><span class="parameters">(int&nbsp;numDefencesUnlocked)</span></div>
-<div class="block">Sets the current number of defences player has unlocked.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>numDefencesUnlocked</code> - the new number of kills</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setTotalCoinsEarned(int)">
-<h3>setTotalCoinsEarned</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setTotalCoinsEarned</span><wbr><span class="parameters">(int&nbsp;totalCoinsEarned)</span></div>
-<div class="block">Sets the current number of all-time total coins player has earned.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>totalCoinsEarned</code> - the new number of total coins earned</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseKills()">
-<h3>increaseKills</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseKills</span>()</div>
-<div class="block">Increases kills by 1.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseShotsFired()">
-<h3>increaseShotsFired</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseShotsFired</span>()</div>
-<div class="block">Increases kills by 1.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseLevelsPassed()">
-<h3>increaseLevelsPassed</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseLevelsPassed</span>()</div>
-<div class="block">Increases levels passed by 1.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseNumDefencesUnlocked()">
-<h3>increaseNumDefencesUnlocked</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseNumDefencesUnlocked</span>()</div>
-<div class="block">Increases number of defences unlocked by 1.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseNumDefencesUnlockedBySpecific(int)">
-<h3>increaseNumDefencesUnlockedBySpecific</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseNumDefencesUnlockedBySpecific</span><wbr><span class="parameters">(int&nbsp;extraDefences)</span></div>
-<div class="block">Increases number of defences unlocked by a specific number of defences.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>extraDefences</code> - additional number of defences unlocked</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseTotalCoinsEarned()">
-<h3>increaseTotalCoinsEarned</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseTotalCoinsEarned</span>()</div>
-<div class="block">Increases all-time total coins earned by 1.</div>
-</section>
-</li>
-<li>
-<section class="detail" id="increaseTotalCoinsEarnedBySpecific(int)">
-<h3>increaseTotalCoinsEarnedBySpecific</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">increaseTotalCoinsEarnedBySpecific</span><wbr><span class="parameters">(int&nbsp;extraCoinsEarned)</span></div>
-<div class="block">Increases all-time total coins earned by a specific number of coins.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>extraCoinsEarned</code> - additional number of coins earned</dd>
+<dd><code>key</code> - the name of the statistic to increment</dd>
+<dd><code>amount</code> - the amount to increment by</dd>
 </dl>
 </section>
 </li>

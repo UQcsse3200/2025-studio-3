@@ -6,6 +6,7 @@ com.csse3200.game.areas.terrain
 com.csse3200.game.components
 com.csse3200.game.components.achievements
 com.csse3200.game.components.currency
+com.csse3200.game.components.dialog
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.gameover
 com.csse3200.game.components.hud
@@ -16,7 +17,6 @@ com.csse3200.game.components.mainmenu
 com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
-com.csse3200.game.components.profile
 com.csse3200.game.components.proximityinfodisplay
 com.csse3200.game.components.settingsmenu
 com.csse3200.game.components.shop
@@ -40,7 +40,7 @@ com.csse3200.game.physics.attacking_system
 com.csse3200.game.physics.components
 com.csse3200.game.physics.raycast
 com.csse3200.game.progression
-com.csse3200.game.progression.achievements
+com.csse3200.game.progression.arsenal
 com.csse3200.game.progression.inventory
 com.csse3200.game.progression.skilltree
 com.csse3200.game.progression.statistics
