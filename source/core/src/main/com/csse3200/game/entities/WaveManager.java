@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
  * request a spawn.
  */
-public class WaveManager {
+public class WaveManager implements WaveConfigProvider {
   private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
 
   private int currentWave = 0;
@@ -72,7 +72,7 @@ public class WaveManager {
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = new EntitySpawn();
-    this.entitySpawn.setWaveManager(this);
+    this.entitySpawn.setWaveConfigProvider(this);
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
@@ -92,7 +92,7 @@ public class WaveManager {
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
     this.entitySpawn = entitySpawn;
-    this.entitySpawn.setWaveManager(this);
+    this.entitySpawn.setWaveConfigProvider(this);
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;

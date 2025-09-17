@@ -5,7 +5,7 @@ import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
 public class EntitySpawn {
-  private WaveManager waveManager;
+  private WaveConfigProvider waveConfigProvider;
 
   private final int robotWeight;
   private int spawnCount = 0;
@@ -28,24 +28,24 @@ public class EntitySpawn {
   }
 
   /**
-   * Test-only constructor allowing injection of a prebuilt WaveManager to avoid LibGDX file IO in
-   * unit tests.
+   * Test-only constructor allowing injection of a prebuilt WaveConfigProvider to avoid LibGDX file
+   * IO in unit tests.
    *
-   * @param waveManager manager providing wave configuration
+   * @param waveConfigProvider provider of wave configuration
    * @param robotWeight weight cost per enemy
    */
-  public EntitySpawn(WaveManager waveManager, int robotWeight) {
-    this.waveManager = waveManager;
+  public EntitySpawn(WaveConfigProvider waveConfigProvider, int robotWeight) {
+    this.waveConfigProvider = waveConfigProvider;
     this.robotWeight = robotWeight;
   }
 
   /**
-   * Sets the WaveManager instance for this EntitySpawn.
+   * Sets the WaveConfigProvider instance for this EntitySpawn.
    *
-   * @param waveManager the WaveManager instance to use
+   * @param waveConfigProvider the WaveConfigProvider instance to use
    */
-  public void setWaveManager(WaveManager waveManager) {
-    this.waveManager = waveManager;
+  public void setWaveConfigProvider(WaveConfigProvider waveConfigProvider) {
+    this.waveConfigProvider = waveConfigProvider;
   }
 
   /**
@@ -60,12 +60,12 @@ public class EntitySpawn {
    * in JSON.
    */
   public void spawnEnemies() {
-    if (waveManager == null) {
+    if (waveConfigProvider == null) {
       spawnCount = 0;
       return;
     }
-    int waveWeight = waveManager.getWaveWeight();
-    int minCount = waveManager.getMinZombiesSpawn();
+    int waveWeight = waveConfigProvider.getWaveWeight();
+    int minCount = waveConfigProvider.getMinZombiesSpawn();
 
     if (robotWeight <= 0 || waveWeight <= 0) {
       spawnCount = 0;
@@ -111,7 +111,7 @@ public class EntitySpawn {
     List<String> types = new ArrayList<>(configs.keySet());
     Collections.sort(types);
     for (String type : types) {
-      int repeat = Math.max(1, Math.round(configs.get(type).chance));
+      int repeat = Math.max(1, Math.round(configs.get(type).getChance()));
       for (int i = 0; i < repeat; i++) {
         pattern.add(type);
       }
@@ -125,12 +125,12 @@ public class EntitySpawn {
    * by 'chance'. - Loop continues until budget runs out.
    */
   public void spawnEnemiesFromConfig() {
-    if (waveManager == null) {
+    if (waveConfigProvider == null) {
       spawnCount = 0;
       return;
     }
-    int budget = waveManager.getWaveWeight();
-    Map<String, EnemySpawnConfig> configs = waveManager.getEnemyConfigs();
+    int budget = waveConfigProvider.getWaveWeight();
+    Map<String, EnemySpawnConfig> configs = waveConfigProvider.getEnemyConfigs();
 
     spawnQueue.clear();
     spawnCount = 0;
@@ -143,10 +143,10 @@ public class EntitySpawn {
     while (budget > 0) {
       String enemy = pattern.get(i % pattern.size());
       EnemySpawnConfig cfg = configs.get(enemy);
-      if (cfg.cost > budget) break;
+      if (cfg.getCost() > budget) break;
       spawnQueue.add(enemy);
       spawnCount++;
-      budget -= cfg.cost;
+      budget -= cfg.getCost();
       i++;
     }
   }
