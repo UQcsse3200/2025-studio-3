@@ -37,7 +37,7 @@
     "attack": 10,
     "movementSpeed": 20,
     "scale": 1,
-    "description": "ngl no idea what this one is"
+    "description": "A bungee robot."
   },
   "teleportRobot": {
     "name": "Teleport Robot",
@@ -47,7 +47,7 @@
     "attack": 10,
     "movementSpeed": 30,
     "scale": 1,
-    "description": "A teleporting robot.",
+    "description": "A teleporting robot. Watch your back.",
     "teleportCooldownSeconds": 4,
     "teleportChance": 0.6,
     "maxTeleports": 3,

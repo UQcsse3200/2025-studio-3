@@ -4,26 +4,26 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.NPCConfigs;
 
 public class DossierManager {
 
-  private final EntityConfigs entityData;
+  private final NPCConfigs entityData;
   private final Texture defaultTexture;
   private final Texture blueTexture;
   private final Texture redTexture;
-  private final DefenceConfigs defenceData;
+  private final NPCConfigs defenceData;
   private final Texture humanTexture;
 
   private boolean enemyMode = true;
 
-  public DossierManager(
-      EntityConfigs entityConfigs, DefenceConfigs defenceConfigs, Texture[] textures) {
+  public DossierManager(NPCConfigs entityData, NPCConfigs defenceData, Texture[] textures) {
     this.defaultTexture = textures[0];
     this.redTexture = textures[1];
     this.blueTexture = textures[2];
     this.humanTexture = textures[3];
-    this.entityData = entityConfigs;
-    this.defenceData = defenceConfigs;
+    this.entityData = entityData;
+    this.defenceData = defenceData;
   }
 
   public void changeMode() {

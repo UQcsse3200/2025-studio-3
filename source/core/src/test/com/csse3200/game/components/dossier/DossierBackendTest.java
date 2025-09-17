@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.entities.configs.BaseDefenceConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.NPCConfigs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,14 +23,14 @@ class DossierBackendTest {
   @BeforeEach
   void setUp() {
     // Mock data
-    EntityConfigs entityConfigs = new EntityConfigs();
+    NPCConfigs entityConfigs = new NPCConfigs();
     entityConfigs.standardRobot = new BaseEnemyConfig();
     entityConfigs.standardRobot.name = "Standard Robot";
     entityConfigs.standardRobot.description = "A standard enemy.";
     entityConfigs.standardRobot.health = 40;
     entityConfigs.standardRobot.attack = 10;
 
-    DefenceConfigs defenceConfigs = new DefenceConfigs();
+    NPCConfigs defenceConfigs = new NPCConfigs();
     defenceConfigs.slingshooter = new BaseDefenceConfig();
     defenceConfigs.slingshooter.name = "Slingshooter";
     defenceConfigs.slingshooter.description = "A basic defense.";

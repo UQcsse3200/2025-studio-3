@@ -4,11 +4,10 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.dossier.DefenceConfigs;
 import com.csse3200.game.components.dossier.DossierDisplay;
-import com.csse3200.game.components.dossier.EntityConfigs;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -71,8 +70,8 @@ public class DossierScreen extends ScreenAdapter {
     ui.addComponent(
             new DossierDisplay(
                 game,
-                FileLoader.readClass(EntityConfigs.class, "configs/enemies.json"),
-                FileLoader.readClass(DefenceConfigs.class, "configs/defences.json"),
+                FileLoader.readClass(NPCConfigs.class, "configs/enemies.json"),
+                FileLoader.readClass(NPCConfigs.class, "configs/defences.json"),
                 new Texture[] {
                   new Texture("images/basic_robot_default_sprite.png"),
                   new Texture("images/red_robot_default_sprite.png"),

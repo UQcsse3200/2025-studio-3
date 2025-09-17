@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,14 +33,11 @@ public class DossierDisplay extends UIComponent {
 
   /** Constructor to display the dossier. */
   public DossierDisplay(
-      GdxGame game,
-      EntityConfigs entityConfigs,
-      DefenceConfigs defenceConfigs,
-      Texture[] textures) {
+      GdxGame game, NPCConfigs entityData, NPCConfigs defenceData, Texture[] textures) {
     super();
     this.game = game;
     type = true;
-    this.dossierManager = new DossierManager(entityConfigs, defenceConfigs, textures);
+    this.dossierManager = new DossierManager(entityData, defenceData, textures);
     // All robot entities
     entities =
         new String[] {"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"};
