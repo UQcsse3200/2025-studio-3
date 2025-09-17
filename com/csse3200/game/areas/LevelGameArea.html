@@ -92,12 +92,16 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>com.badlogic.gdx.utils.Disposable</code>, <code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dd><code>com.badlogic.gdx.utils.Disposable</code>, <code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code>, <code><a href="EnemySpawner.html" title="interface in com.csse3200.game.areas">EnemySpawner</a></code></dd>
+</dl>
+<dl class="notes">
+<dt>Direct Known Subclasses:</dt>
+<dd><code><a href="SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">LevelGameArea</span>
 <span class="extends-implements">extends <a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a>
-implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></span></div>
+implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a>, <a href="EnemySpawner.html" title="interface in com.csse3200.game.areas">EnemySpawner</a></span></div>
 <div class="block">Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  inventory allowing the player to add units to the grid.</div>
 </section>
@@ -196,7 +200,9 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
  int&nbsp;row,
  <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawn a robot at the specified grid location.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -313,6 +319,16 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnRobot</span><wbr><span class="parameters">(int&nbsp;col,
  int&nbsp;row,
  <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="EnemySpawner.html#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)">EnemySpawner</a></code></span></div>
+<div class="block">Spawn a robot at the specified grid location.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="EnemySpawner.html#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)">spawnRobot</a></code>&nbsp;in interface&nbsp;<code><a href="EnemySpawner.html" title="interface in com.csse3200.game.areas">EnemySpawner</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>col</code> - grid column</dd>
+<dd><code>row</code> - grid row</dd>
+<dd><code>robotType</code> - robot type identifier</dd>
+</dl>
 </section>
 </li>
 <li>

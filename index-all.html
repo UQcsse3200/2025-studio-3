@@ -88,6 +88,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new AchievementsScreen and registers the services required, creates the renderer, and
  initialises the Achievements UI.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html#act(float)" class="member-name-link">act(float)</a> - Method in class com.csse3200.game.components.cards.<a href="com/csse3200/game/components/cards/CardActor.html" title="class in com.csse3200.game.components.cards">CardActor</a></dt>
+<dd>
+<div class="block">每帧检查舞台尺寸变化，变化则重算尺寸与位置。</div>
+</dd>
 <dt><a href="com/csse3200/game/ui/terminal/commands/Command.html#action(java.util.ArrayList)" class="member-name-link">action(ArrayList&lt;String&gt;)</a> - Method in interface com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a></dt>
 <dd>
 <div class="block">Action a command.</div>
@@ -216,6 +220,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/data/MenuSpriteDataEditor.html#apply()" class="member-name-link">apply()</a> - Method in class com.csse3200.game.data.<a href="com/csse3200/game/data/MenuSpriteDataEditor.html" title="class in com.csse3200.game.data">MenuSpriteDataEditor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#applyEffect(com.csse3200.game.components.slot.SlotEngine.SpinResult)" class="member-name-link">applyEffect(SlotEngine.SpinResult)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/UserSettings.html#applySettings(com.csse3200.game.persistence.UserSettings.Settings)" class="member-name-link">applySettings(UserSettings.Settings)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.html" title="class in com.csse3200.game.persistence">UserSettings</a></dt>
 <dd>
 <div class="block">Apply the given settings without storing them.</div>
@@ -266,6 +272,8 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:B">B</h2>
 <dl class="index">
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#backgroundMusic" class="member-name-link">backgroundMusic</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a> - Class in <a href="com/csse3200/game/entities/configs/package-summary.html">com.csse3200.game.entities.configs</a></dt>
 <dd>
 <div class="block">Base configuration class for achievements.</div>
@@ -326,6 +334,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/physics/PhysicsContactListener.html#beginContact(com.badlogic.gdx.physics.box2d.Contact)" class="member-name-link">beginContact(Contact)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" title="class in com.csse3200.game.physics">PhysicsContactListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEffect.html#bindUiContext(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane)" class="member-name-link">bindUiContext(Stage, ScrollPane)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEffect.html" title="class in com.csse3200.game.components.slot">SlotEffect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/BodyUserData.html" class="type-name-link" title="class in com.csse3200.game.physics">BodyUserData</a> - Class in <a href="com/csse3200/game/physics/package-summary.html">com.csse3200.game.physics</a></dt>
 <dd>
 <div class="block">POJO which contains the custom data attached to each box2D entity.</div>
@@ -370,6 +380,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/currency/Currency.html#canAffordSunshine(int)" class="member-name-link">canAffordSunshine(int)</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/Currency.html" title="class in com.csse3200.game.components.currency">Currency</a></dt>
 <dd>
 <div class="block">Checks if the current sunlight amount can afford the specified cost.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html" class="type-name-link" title="class in com.csse3200.game.components.cards">CardActor</a> - Class in <a href="com/csse3200/game/components/cards/package-summary.html">com.csse3200.game.components.cards</a></dt>
+<dd>
+<div class="block">可拖拽卡牌：尺寸/位置用“百分比”记忆，窗口变化时自适应缩放但相对位置不变。</div>
+</dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html#%3Cinit%3E(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.graphics.g2d.TextureRegion)" class="member-name-link">CardActor(Stage, TextureRegion)</a> - Constructor for class com.csse3200.game.components.cards.<a href="com/csse3200/game/components/cards/CardActor.html" title="class in com.csse3200.game.components.cards">CardActor</a></dt>
+<dd>
+<div class="block">用 TextureRegion 构造（一般从 atlas region 来）。</div>
 </dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsComponent.AlignX.html#CENTER" class="member-name-link">CENTER</a> - Enum constant in enum class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignX.html" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignX</a></dt>
 <dd>&nbsp;</dd>
@@ -439,6 +457,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/achievements/package-summary.html">com.csse3200.game.components.achievements</a> - package com.csse3200.game.components.achievements</dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/cards/package-summary.html">com.csse3200.game.components.cards</a> - package com.csse3200.game.components.cards</dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/currency/package-summary.html">com.csse3200.game.components.currency</a> - package com.csse3200.game.components.currency</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/dialog/package-summary.html">com.csse3200.game.components.dialog</a> - package com.csse3200.game.components.dialog</dt>
@@ -470,6 +490,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/shop/package-summary.html">com.csse3200.game.components.shop</a> - package com.csse3200.game.components.shop</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/skilltree/package-summary.html">com.csse3200.game.components.skilltree</a> - package com.csse3200.game.components.skilltree</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a> - package com.csse3200.game.components.slot</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/statistics/package-summary.html">com.csse3200.game.components.statistics</a> - package com.csse3200.game.components.statistics</dt>
 <dd>&nbsp;</dd>
@@ -581,6 +603,12 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.DeserializedEnemyConfig.html" class="type-name-link" title="class in com.csse3200.game.services">ConfigService.DeserializedEnemyConfig</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#configureMainGameActions(com.csse3200.game.components.maingame.MainGameActions)" class="member-name-link">configureMainGameActions(MainGameActions)</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Hook for configuring main game actions.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/SlotMachineScreen.html#configureMainGameActions(com.csse3200.game.components.maingame.MainGameActions)" class="member-name-link">configureMainGameActions(MainGameActions)</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/SlotMachineScreen.html" title="class in com.csse3200.game.screens">SlotMachineScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#contains(short,short)" class="member-name-link">contains(short, short)</a> - Static method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/arsenal/Arsenal.html#contains(java.lang.String)" class="member-name-link">contains(String)</a> - Method in class com.csse3200.game.progression.arsenal.<a href="com/csse3200/game/progression/arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></dt>
@@ -610,6 +638,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/LevelGameArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
 <dd>
 <div class="block">Creates the game area by calling helper methods as required.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/SlotMachineArea.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a></dt>
+<dd>
+<div class="block">Initializes the slot machine area by loading assets and adding the HUD.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/achievements/AchievementsDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.achievements.<a href="com/csse3200/game/components/achievements/AchievementsDisplay.html" title="class in com.csse3200.game.components.achievements">AchievementsDisplay</a></dt>
 <dd>&nbsp;</dd>
@@ -702,6 +734,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeDisplay.html" title="class in com.csse3200.game.components.skilltree">SkilltreeDisplay</a></dt>
 <dd>
 <div class="block">Called when the component is created.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Initializes UI hierarchy, loads resources, computes sizes, and applies layout.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/statistics/StatisticsDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.statistics.<a href="com/csse3200/game/components/statistics/StatisticsDisplay.html" title="class in com.csse3200.game.components.statistics">StatisticsDisplay</a></dt>
 <dd>&nbsp;</dd>
@@ -804,6 +840,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/input/InputFactory.html#createFromInputType(com.csse3200.game.input.InputFactory.InputType)" class="member-name-link">createFromInputType(InputFactory.InputType)</a> - Static method in class com.csse3200.game.input.<a href="com/csse3200/game/input/InputFactory.html" title="class in com.csse3200.game.input">InputFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#createGameArea(com.csse3200.game.areas.terrain.TerrainFactory)" class="member-name-link">createGameArea(TerrainFactory)</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Factory method for creating the game area.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/SlotMachineScreen.html#createGameArea(com.csse3200.game.areas.terrain.TerrainFactory)" class="member-name-link">createGameArea(TerrainFactory)</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/SlotMachineScreen.html" title="class in com.csse3200.game.screens">SlotMachineScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/NPCFactory.html#createGhost(com.csse3200.game.entities.Entity)" class="member-name-link">createGhost(Entity)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/NPCFactory.html" title="class in com.csse3200.game.entities.factories">NPCFactory</a></dt>
 <dd>
 <div class="block">Creates a ghost entity.</div>
@@ -867,6 +909,11 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/factories/ObstacleFactory.html#createTree()" class="member-name-link">createTree()</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories">ObstacleFactory</a></dt>
 <dd>
 <div class="block">Creates a tree entity.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#createUI()" class="member-name-link">createUI()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Creates the main game's ui including components for rendering ui elements to* the screen and
+ capturing and handling ui input.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/factories/ObstacleFactory.html#createWall(float,float)" class="member-name-link">createWall(float, float)</a> - Static method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ObstacleFactory.html" title="class in com.csse3200.game.entities.factories">ObstacleFactory</a></dt>
 <dd>
@@ -1051,6 +1098,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/ForestGameArea.html#despawnRobot(com.csse3200.game.entities.Entity)" class="member-name-link">despawnRobot(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DESTROY_ENEMY" class="member-name-link">DESTROY_ENEMY</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html#destroyBody(com.badlogic.gdx.physics.box2d.Body)" class="member-name-link">destroyBody(Body)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html#destroyJoint(com.badlogic.gdx.physics.box2d.Joint)" class="member-name-link">destroyJoint(Joint)</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></dt>
@@ -1094,6 +1143,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/LevelGameArea.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
 <dd>
 <div class="block">Extends the super method to stop music and unload assets.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/SlotMachineArea.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a></dt>
+<dd>
+<div class="block">Unloads slot machine assets and disposes of the area.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainComponent.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -1156,6 +1209,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeButton.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeButton.html" title="class in com.csse3200.game.components.skilltree">SkilltreeButton</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/statistics/StatisticsDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.statistics.<a href="com/csse3200/game/components/statistics/StatisticsDisplay.html" title="class in com.csse3200.game.components.statistics">StatisticsDisplay</a></dt>
 <dd>
@@ -1295,6 +1350,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draw method for custom rendering.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Draw pass also detects stage resize and reapplies layout if needed.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/statistics/StatisticsDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.statistics.<a href="com/csse3200/game/components/statistics/StatisticsDisplay.html" title="class in com.csse3200.game.components.statistics">StatisticsDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
@@ -1333,6 +1392,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draw a rectangle</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_SLINGSHOOTER_CARD" class="member-name-link">DROP_SLINGSHOOTER_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/DynamicMenuSpriteScreen.html" class="type-name-link" title="interface in com.csse3200.game.screens">DynamicMenuSpriteScreen&lt;E&gt;</a> - Interface in <a href="com/csse3200/game/screens/package-summary.html">com.csse3200.game.screens</a></dt>
 <dd>
 <div class="block">Implements functions required for dynamic menu sprite operation.</div>
@@ -1370,6 +1431,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#ENEMY" class="member-name-link">ENEMY</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/EnemySpawner.html" class="type-name-link" title="interface in com.csse3200.game.areas">EnemySpawner</a> - Interface in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
+<dd>
+<div class="block">Minimal interface for spawning enemies.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeActions.html#enter(com.badlogic.gdx.scenes.scene2d.InputEvent,float,float,int,com.badlogic.gdx.scenes.scene2d.Actor)" class="member-name-link">enter(InputEvent, float, float, int, Actor)</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeActions.html" title="class in com.csse3200.game.components.skilltree">SkilltreeActions</a></dt>
 <dd>
 <div class="block">Called when the cursor enters the skill button area.</div>
@@ -1455,6 +1520,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">An event listener with 3 arguments</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEffect.html#executeByEffect(com.csse3200.game.components.slot.SlotEngine.Effect,com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">executeByEffect(SlotEngine.Effect, SlotMachineArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEffect.html" title="class in com.csse3200.game.components.slot">SlotEffect</a></dt>
+<dd>
+<div class="block">Execute a slot effect against a LevelGameArea.</div>
+</dd>
 <dt><a href="com/csse3200/game/GdxGame.html#exit()" class="member-name-link">exit()</a> - Method in class com.csse3200.game.<a href="com/csse3200/game/GdxGame.html" title="class in com.csse3200.game">GdxGame</a></dt>
 <dd>
 <div class="block">Exits the game.</div>
@@ -1537,6 +1606,16 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">FPS cap of the game.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#FREEZE_ENEMY" class="member-name-link">FREEZE_ENEMY</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html#fromAtlas(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String)" class="member-name-link">fromAtlas(Stage, TextureAtlas, String)</a> - Static method in class com.csse3200.game.components.cards.<a href="com/csse3200/game/components/cards/CardActor.html" title="class in com.csse3200.game.components.cards">CardActor</a></dt>
+<dd>
+<div class="block">从 atlas 的 region 创建（推荐）。</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#fromId(int)" class="member-name-link">fromId(int)</a> - Static method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>
+<div class="block">Convert an integer id to Effect enum.</div>
+</dd>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#fromString(java.lang.String)" class="member-name-link">fromString(String)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
 <dd>
 <div class="block">Creates a Savefile object from a string representation.</div>
@@ -1546,7 +1625,15 @@ loadScripts(document, 'script');</script>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#GAIN_COINS" class="member-name-link">GAIN_COINS</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#GAIN_METALS" class="member-name-link">GAIN_METALS</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#game" class="member-name-link">game</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/Renderer.html#GAME_SCREEN_WIDTH" class="member-name-link">GAME_SCREEN_WIDTH</a> - Static variable in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#gameArea" class="member-name-link">gameArea</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html" class="type-name-link" title="class in com.csse3200.game.areas">GameArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
@@ -1764,6 +1851,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/RenderService.html#getDebug()" class="member-name-link">getDebug()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#getDefaultWeight()" class="member-name-link">getDefaultWeight()</a> - Method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getDefenceConfig(java.lang.String)" class="member-name-link">getDefenceConfig(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
 <div class="block">Gets a particular defence config.</div>
@@ -1806,6 +1895,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the date of the savefile to be displayed.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
 <dd>
 <div class="block">Get the name of the savefile to be displayed.</div>
@@ -1818,6 +1909,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the distance to the nearest visible target</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#getEffect()" class="member-name-link">getEffect()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getEnemyConfig(java.lang.String)" class="member-name-link">getEnemyConfig(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
 <div class="block">Gets a particular enemy config.</div>
@@ -1902,6 +1995,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the unique ID of this component type.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#getId()" class="member-name-link">getId()</a> - Method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/data/MenuSpriteData.html#getId()" class="member-name-link">getId()</a> - Method in class com.csse3200.game.data.<a href="com/csse3200/game/data/MenuSpriteData.html" title="class in com.csse3200.game.data">MenuSpriteData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#getId()" class="member-name-link">getId()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
@@ -2173,6 +2268,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/services/GameTime.html#getRawDeltaTime()" class="member-name-link">getRawDeltaTime()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#getReels()" class="member-name-link">getReels()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getRenderService()" class="member-name-link">getRenderService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Gets the render service.</div>
@@ -2325,6 +2422,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the dialog title.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#getTriggerProbability()" class="member-name-link">getTriggerProbability()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/DefenceStatsComponent.html#getType()" class="member-name-link">getType()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DefenceStatsComponent.html" title="class in com.csse3200.game.components">DefenceStatsComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.html#getType()" class="member-name-link">getType()</a> - Method in class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a></dt>
@@ -2361,6 +2460,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/factories/WaveFactory.html#getWaveWeight()" class="member-name-link">getWaveWeight()</a> - Method in class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/WaveFactory.html" title="class in com.csse3200.game.entities.factories">WaveFactory</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#getWeights()" class="member-name-link">getWeights()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html#getWorld()" class="member-name-link">getWorld()</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/data/MenuSpriteData.html#getX()" class="member-name-link">getX()</a> - Method in class com.csse3200.game.data.<a href="com/csse3200/game/data/MenuSpriteData.html" title="class in com.csse3200.game.data">MenuSpriteData</a></dt>
@@ -2396,6 +2497,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeButton.html#getZIndex()" class="member-name-link">getZIndex()</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeButton.html" title="class in com.csse3200.game.components.skilltree">SkilltreeButton</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeButtons.html#getZIndex()" class="member-name-link">getZIndex()</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeButtons.html" title="class in com.csse3200.game.components.skilltree">SkilltreeButtons</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#getZIndex()" class="member-name-link">getZIndex()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/Renderable.html#getZIndex()" class="member-name-link">getZIndex()</a> - Method in interface com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderable.html" title="interface in com.csse3200.game.rendering">Renderable</a></dt>
 <dd>
@@ -2665,6 +2768,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the entity's has 0 health, otherwise false.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#isEffectTriggered()" class="member-name-link">isEffectTriggered()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#isFinished()" class="member-name-link">isFinished()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
 <dd>
 <div class="block">Has the playing animation finished? This will always be false for looping animations.</div>
@@ -2672,6 +2777,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/terrain/TerrainComponent.TerrainOrientation.html#ISOMETRIC" class="member-name-link">ISOMETRIC</a> - Enum constant in enum class com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainComponent.TerrainOrientation.html" title="enum class in com.csse3200.game.areas.terrain">TerrainComponent.TerrainOrientation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/terminal/Terminal.html#isOpen()" class="member-name-link">isOpen()</a> - Method in class com.csse3200.game.ui.terminal.<a href="com/csse3200/game/ui/terminal/Terminal.html" title="class in com.csse3200.game.ui.terminal">Terminal</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#isPaused" class="member-name-link">isPaused</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/MainGameScreen.html#isPaused()" class="member-name-link">isPaused()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
 <dd>
@@ -2686,6 +2793,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Determines if a target is visible by checking for obstacles in the current entities line of
  sight</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotSymbols.html#isTriple(int,int,int,int)" class="member-name-link">isTriple(int, int, int, int)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotSymbols.html" title="class in com.csse3200.game.components.slot">SlotSymbols</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#isUnlockable(java.lang.String)" class="member-name-link">isUnlockable(String)</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>
 <div class="block">Checks if a skill with the given name has been unlocked.</div>
@@ -3309,6 +3418,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/physics/PhysicsContactListener.html#%3Cinit%3E()" class="member-name-link">PhysicsContactListener()</a> - Constructor for class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" title="class in com.csse3200.game.physics">PhysicsContactListener</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#physicsEngine" class="member-name-link">physicsEngine</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html" class="type-name-link" title="class in com.csse3200.game.physics">PhysicsEngine</a> - Class in <a href="com/csse3200/game/physics/package-summary.html">com.csse3200.game.physics</a></dt>
 <dd>
 <div class="block">Process game physics using the Box2D library.</div>
@@ -3658,6 +3769,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/rendering/RenderComponent.html#%3Cinit%3E()" class="member-name-link">RenderComponent()</a> - Constructor for class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#renderer" class="member-name-link">renderer</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/Renderer.html" class="type-name-link" title="class in com.csse3200.game.rendering">Renderer</a> - Class in <a href="com/csse3200/game/rendering/package-summary.html">com.csse3200.game.rendering</a></dt>
 <dd>
 <div class="block">Core rendering system for the game.</div>
@@ -4001,8 +4114,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set friction.</div>
 </dd>
-<dt><a href="com/csse3200/game/entities/WaveManager.html#setGameArea(com.csse3200.game.areas.LevelGameArea)" class="member-name-link">setGameArea(LevelGameArea)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/WaveManager.html#setGameArea(com.csse3200.game.areas.GameArea)" class="member-name-link">setGameArea(GameArea)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></dt>
+<dd>
+<div class="block">Set the game area used for spawning enemies.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/WaveManager.html#setGameEntity(com.csse3200.game.entities.Entity)" class="member-name-link">setGameEntity(Entity)</a> - Static method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#setGold(int)" class="member-name-link">setGold(int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
@@ -4109,6 +4224,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the pause menu reference.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html#setPercentPosition(float,float)" class="member-name-link">setPercentPosition(float, float)</a> - Method in class com.csse3200.game.components.cards.<a href="com/csse3200/game/components/cards/CardActor.html" title="class in com.csse3200.game.components.cards">CardActor</a></dt>
+<dd>
+<div class="block">设置中心点的相对位置（0~1）。</div>
+</dd>
+<dt><a href="com/csse3200/game/components/cards/CardActor.html#setPercentWidth(float)" class="member-name-link">setPercentWidth(float)</a> - Method in class com.csse3200.game.components.cards.<a href="com/csse3200/game/components/cards/CardActor.html" title="class in com.csse3200.game.components.cards">CardActor</a></dt>
+<dd>
+<div class="block">调整宽度占比（0.05~0.25 更安全）。</div>
+</dd>
 <dt><a href="com/csse3200/game/components/dialog/DialogComponent.html#setPosition(float,float)" class="member-name-link">setPosition(float, float)</a> - Method in class com.csse3200.game.components.dialog.<a href="com/csse3200/game/components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></dt>
 <dd>
 <div class="block">Sets the position of the dialog.</div>
@@ -4202,6 +4325,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the current amount of skills points in the wallet.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#setSlotMachineArea(com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">setSlotMachineArea(SlotMachineArea)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/maingame/MainGameActions.html#setSlotMachineScreen(com.csse3200.game.screens.SlotMachineScreen)" class="member-name-link">setSlotMachineScreen(SlotMachineScreen)</a> - Method in class com.csse3200.game.components.maingame.<a href="com/csse3200/game/components/maingame/MainGameActions.html" title="class in com.csse3200.game.components.maingame">MainGameActions</a></dt>
+<dd>
+<div class="block">Sets the slot machine screen reference.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/tasks/MovementTask.html#setSpeed(float)" class="member-name-link">setSpeed(float)</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/MovementTask.html" title="class in com.csse3200.game.components.tasks">MovementTask</a></dt>
 <dd>
 <div class="block">Sets the speed to the given speed.</div>
@@ -4282,6 +4411,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/screens/SettingsScreen.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">SettingsScreen(GdxGame)</a> - Constructor for class com.csse3200.game.screens.<a href="com/csse3200/game/screens/SettingsScreen.html" title="class in com.csse3200.game.screens">SettingsScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#setTriggerProbability(double)" class="member-name-link">setTriggerProbability(double)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/DefenceStatsComponent.html#setType(int)" class="member-name-link">setType(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DefenceStatsComponent.html" title="class in com.csse3200.game.components">DefenceStatsComponent</a></dt>
 <dd>
 <div class="block">Sets the type of defender.</div>
@@ -4295,6 +4426,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#setWave(int)" class="member-name-link">setWave(int)</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
 <dd>
 <div class="block">Manually trigger a wave change for testing purposes.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#setWeight(com.csse3200.game.components.slot.SlotEngine.Effect,int)" class="member-name-link">setWeight(SlotEngine.Effect, int)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>
+<div class="block">Set a single weight (allows 0 to disable an effect).</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#setWeights(java.util.Map)" class="member-name-link">setWeights(Map&lt;SlotEngine.Effect, Integer&gt;)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>
+<div class="block">Bulk set weights.</div>
 </dd>
 <dt><a href="com/csse3200/game/data/MenuSpriteData.html#setX(int)" class="member-name-link">setX(int)</a> - Method in class com.csse3200.game.data.<a href="com/csse3200/game/data/MenuSpriteData.html" title="class in com.csse3200.game.data">MenuSpriteData</a></dt>
 <dd>&nbsp;</dd>
@@ -4422,6 +4561,72 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/NPCConfigs.html#slingshooter" class="member-name-link">slingshooter</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/NPCConfigs.html" title="class in com.csse3200.game.entities.configs">NPCConfigs</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotSymbols.html#SLINGSHOOTER" class="member-name-link">SLINGSHOOTER</a> - Static variable in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotSymbols.html" title="class in com.csse3200.game.components.slot">SlotSymbols</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/GdxGame.ScreenType.html#SLOT_MACHINE" class="member-name-link">SLOT_MACHINE</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
+<dd>
+<div class="block">Slot machine level</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#%3Cinit%3E()" class="member-name-link">SlotConfig()</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEffect.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotEffect</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">Slot effects that apply ONLY within LevelGameArea.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotEngine</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">Slot machine engine to generate random outcomes for UI and trigger corresponding effects.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#%3Cinit%3E()" class="member-name-link">SlotEngine()</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>
+<div class="block">Construct with default config and RNG.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#%3Cinit%3E(com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">SlotEngine(SlotMachineArea)</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#%3Cinit%3E(com.csse3200.game.components.slot.SlotEngine.SlotConfig,java.util.Random)" class="member-name-link">SlotEngine(SlotEngine.SlotConfig, Random)</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>
+<div class="block">Construct with injected config and RNG.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" class="type-name-link" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a> - Enum Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">Enumeration of all possible effects.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">Configuration for SlotEngine.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">Immutable object representing the result of a spin.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/SlotMachineArea.html" class="type-name-link" title="class in com.csse3200.game.areas">SlotMachineArea</a> - Class in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
+<dd>
+<div class="block">Represents a dedicated game area for the slot machine level.</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/SlotMachineArea.html#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory)" class="member-name-link">SlotMachineArea(TerrainFactory)</a> - Constructor for class com.csse3200.game.areas.<a href="com/csse3200/game/areas/SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a></dt>
+<dd>
+<div class="block">Creates a new SlotMachineArea with the given TerrainFactory.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>
+<div class="block">A 3-reel slot machine UI that lives in the top bar.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#%3Cinit%3E()" class="member-name-link">SlotMachineDisplay()</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Creates a display with a default <a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot"><code>SlotEngine</code></a> (no area bound).</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#%3Cinit%3E(com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">SlotMachineDisplay(SlotMachineArea)</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Creates a display with a bound <a href="com/csse3200/game/areas/SlotMachineArea.html" title="class in com.csse3200.game.areas"><code>SlotMachineArea</code></a>.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/SlotMachineScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">SlotMachineScreen</a> - Class in <a href="com/csse3200/game/screens/package-summary.html">com.csse3200.game.screens</a></dt>
+<dd>
+<div class="block">The game screen containing the main game.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/SlotMachineScreen.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">SlotMachineScreen(GdxGame)</a> - Constructor for class com.csse3200.game.screens.<a href="com/csse3200/game/screens/SlotMachineScreen.html" title="class in com.csse3200.game.screens">SlotMachineScreen</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotSymbols.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotSymbols</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/utils/SortedIntMap.html" class="type-name-link" title="class in com.csse3200.game.utils">SortedIntMap&lt;V&gt;</a> - Class in <a href="com/csse3200/game/utils/package-summary.html">com.csse3200.game.utils</a></dt>
 <dd>
 <div class="block">A map sorted by the value of key with O(1) iteration.</div>
@@ -4453,12 +4658,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnLaser(com.csse3200.game.entities.Entity)" class="member-name-link">spawnLaser(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/EnemySpawner.html#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot(int, int, RobotFactory.RobotType)</a> - Method in interface com.csse3200.game.areas.<a href="com/csse3200/game/areas/EnemySpawner.html" title="interface in com.csse3200.game.areas">EnemySpawner</a></dt>
+<dd>
+<div class="block">Spawn a robot at the specified grid location.</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameArea.html#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot(int, int, RobotFactory.RobotType)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameArea.html#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence(RobotFactory.RobotType)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
 <dd>
 <div class="block">Spawns a robot directly on top of an existing defence (placed unit) on the grid.</div>
 </dd>
+<dt><a href="com/csse3200/game/areas/ForestGameArea.html#spawnRobots()" class="member-name-link">spawnRobots()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html#spawnSunAt(float,float)" class="member-name-link">spawnSunAt(float, float)</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></dt>
 <dd>
 <div class="block">Spawns a sun at the specified coordinates.</div>
@@ -4478,6 +4689,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/currency/Currency.html#spendSunshine(int)" class="member-name-link">spendSunshine(int)</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/Currency.html" title="class in com.csse3200.game.components.currency">Currency</a></dt>
 <dd>
 <div class="block">Attempts to spend the specified amount of sunlight.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#spin()" class="member-name-link">spin()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>
+<div class="block">Perform one spin: - If triggered: return triple reels and call effect.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#%3Cinit%3E(int%5B%5D,com.csse3200.game.components.slot.SlotEngine.Effect)" class="member-name-link">SpinResult(int[], SlotEngine.Effect)</a> - Constructor for class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
+<dd>
+<div class="block">Construct a spin result.</div>
 </dd>
 <dt><a href="com/csse3200/game/utils/SortedIntMap.html#spliterator()" class="member-name-link">spliterator()</a> - Method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/SortedIntMap.html" title="class in com.csse3200.game.utils">SortedIntMap</a></dt>
 <dd>&nbsp;</dd>
@@ -4600,6 +4819,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a string-decorated object.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#SUMMON_ENEMY" class="member-name-link">SUMMON_ENEMY</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/currency/SunlightComponent.html" class="type-name-link" title="class in com.csse3200.game.components.currency">SunlightComponent</a> - Class in <a href="com/csse3200/game/components/currency/package-summary.html">com.csse3200.game.components.currency</a></dt>
 <dd>
 <div class="block">Component holding the currency value granted by a single sunlight pickup.</div>
@@ -4752,6 +4973,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/Component.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/Component.html" title="class in com.csse3200.game.components">Component</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/data/MenuSpriteData.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.data.<a href="com/csse3200/game/data/MenuSpriteData.html" title="class in com.csse3200.game.data">MenuSpriteData</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></dt>
@@ -4883,6 +5106,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">ui Scale.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEffect.html#unbindUiContext()" class="member-name-link">unbindUiContext()</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEffect.html" title="class in com.csse3200.game.components.slot">SlotEffect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ResourceService.html#unloadAssets(java.lang.String%5B%5D)" class="member-name-link">unloadAssets(String[])</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ResourceService.html" title="class in com.csse3200.game.services">ResourceService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/arsenal/Arsenal.html#unlockDefence(java.lang.String)" class="member-name-link">unlockDefence(String)</a> - Method in class com.csse3200.game.progression.arsenal.<a href="com/csse3200/game/progression/arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></dt>
@@ -5049,6 +5274,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/factories/RobotFactory.RobotType.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -5102,6 +5331,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.Type.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
@@ -5209,6 +5443,8 @@ the order they are declared.</div>
 <dd>
 <div class="block">Constructor with game entity for UI integration</div>
 </dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#waveManager" class="member-name-link">waveManager</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/WaveManager.html" class="type-name-link" title="class in com.csse3200.game.entities">WaveManager</a> - Class in <a href="com/csse3200/game/entities/package-summary.html">com.csse3200.game.entities</a></dt>
 <dd>
 <div class="block">Manages the lifecycle of enemy waves and schedules spawns over time.</div>
