@@ -91,6 +91,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
   private final ArrayList<Entity> robots = new ArrayList<>();
   private Entity ui;
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
+  private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
   // Initialising an Entity
   private Entity gameOverEntity;
@@ -176,24 +177,24 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     for (String itemKey :
         ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
       if (itemKey.equals("grenade")) {
-        unitList.put("images/items/grenade.png", ItemFactory::createGrenade);
+        itemList.put("images/items/grenade.png", ItemFactory::createGrenade);
       }
       if (itemKey.equals("coffee")) {
-        unitList.put("images/items/coffee.png", ItemFactory::createCoffee);
+        itemList.put("images/items/coffee.png", ItemFactory::createCoffee);
       }
       if (itemKey.equals("buff")) {
-        unitList.put("images/items/buff.png", ItemFactory::createBuff);
+        itemList.put("images/items/buff.png", ItemFactory::createBuff);
       }
       if (itemKey.equals("emp")) {
-        unitList.put("images/items/emp.png", ItemFactory::createEmp);
+        itemList.put("images/items/emp.png", ItemFactory::createEmp);
       }
       if (itemKey.equals("nuke")) {
-        unitList.put("images/items/nuke.png", ItemFactory::createNuke);
+        itemList.put("images/items/nuke.png", ItemFactory::createNuke);
       }
     }
 
     ui.addComponent(new GameAreaDisplay("Level One"))
-        .addComponent(new HotbarDisplay(this, tileSize, unitList));
+        .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
 
     spawnEntity(ui);
 

@@ -11,9 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.DeckInputComponent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+
+import java.io.Console;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -23,11 +28,13 @@ public class HotbarDisplay extends UIComponent {
   private final float scaling;
   private final LevelGameArea game;
   private final Map<String, Supplier<Entity>> unitList;
+    private final Map<String, Supplier<Entity>> itemList;
 
-  public HotbarDisplay(LevelGameArea game, Float scaling, Map<String, Supplier<Entity>> unitList) {
+  public HotbarDisplay(LevelGameArea game, Float scaling, Map<String, Supplier<Entity>> unitList, Map<String, Supplier<Entity>> itemList) {
     this.scaling = scaling;
     this.game = game;
     this.unitList = unitList;
+    this.itemList = itemList;
   }
 
   @Override
@@ -98,15 +105,78 @@ public class HotbarDisplay extends UIComponent {
     float scale = targetWidth / layered.getWidth();
 
     layered.setScale(scale);
-
-    // makes only the images touchable
-    hotbarTable.setTouchable(Touchable.childrenOnly);
+    layered.toBack();
 
     // changes size to fit screen
     hotbarTable.add(layered).size(layered.getWidth() * scale, layered.getHeight() * scale);
 
+    hotbarTable.row();
+    Group layeredItem = new Group();
+
+    // create hotbar image
+    Image itemHotbar = new Image(new Texture("images/hotbar.png"));
+    layeredItem.addActor(itemHotbar);
+
+    layeredItem.setSize(itemHotbar.getPrefWidth(), itemHotbar.getPrefHeight());
+
+    x = cellWidth / 4;
+    y = 30;
+    Image downArrow = new Image(new Texture("images/down_arrow_hotbar.png"));
+    downArrow.setSize(scaling, (float) (0.5 * scaling));
+    downArrow.setPosition((float) (0.45 * hotbarWidth), -15);
+
+    for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
+        Image tempUnit = new Image(new Texture(item.getKey()));
+        tempUnit.setSize(scaling, scaling);
+        tempUnit.setPosition(x, y);
+        // creates listener that allows for selection and unselection of units
+        tempUnit.addListener(
+                new ClickListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        if (event.getButton() == Input.Buttons.LEFT) {
+                            game.setIsCharacterSelected(true);
+                            game.beginDrag(new Texture(item.getKey()));
+                            Entity tempPlaceableUnit =
+                                    new Entity()
+                                            .addComponent(new DeckInputComponent(game, item.getValue()))
+                                            .addComponent(new TextureRenderComponent(item.getKey()));
+                            game.setSelectedUnit(tempPlaceableUnit);
+                        } else if (event.getButton() == Input.Buttons.RIGHT) {
+                            game.setSelectedUnit(null);
+                        }
+                        return false;
+                    }
+                });
+        layeredItem.addActor(tempUnit);
+        x += cellWidth;
+    }
+
+    final boolean[] isUp = {false};
+    downArrow.addListener(new ClickListener() {
+        @Override
+        public void clicked(InputEvent event, float x, float y) {
+            float distance = itemHotbar.getPrefHeight();
+
+            if (!isUp[0]) {
+                // Move up
+                layeredItem.addAction(Actions.moveBy(0, distance, 0.5f));
+                isUp[0] = true;
+            } else {
+                // Move down
+                layeredItem.addAction(Actions.moveBy(0, -distance, 0.5f));
+                isUp[0] = false;
+            }
+        }
+    });
+    layeredItem.addActor(downArrow);
+
+    layeredItem.setScale(scale);
+    layeredItem.toBack();
+    hotbarTable.add(layeredItem).size(layeredItem.getWidth() * scale, layeredItem.getHeight() * scale);
+    // makes only the images touchable
+    hotbarTable.setTouchable(Touchable.childrenOnly);
     stage.addActor(hotbarTable);
-    hotbarTable.toBack();
   }
 
   @Override
