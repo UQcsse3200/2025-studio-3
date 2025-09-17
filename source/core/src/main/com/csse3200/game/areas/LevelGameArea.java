@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -217,7 +216,7 @@ public class LevelGameArea extends GameArea implements AreaAPI {
     logger.debug("Spawning level one map");
 
     // Create the background terrain (single image map)
-    terrain = terrainFactory.createTerrain(TerrainType.LEVEL_ONE_MAP);
+    terrain = terrainFactory.createTerrain(1);
 
     // Wrap in an entity
     Entity mapEntity = new Entity().addComponent(terrain);
