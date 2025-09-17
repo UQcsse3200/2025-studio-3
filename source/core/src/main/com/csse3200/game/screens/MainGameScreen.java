@@ -53,13 +53,13 @@ public class MainGameScreen extends ScreenAdapter {
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
-  private final GdxGame game;
-  private final Renderer renderer;
-  private final PhysicsEngine physicsEngine;
-  private final WaveManager waveManager;
-  private LevelGameArea levelGameArea;
-  private boolean isPaused = false;
-  private com.badlogic.gdx.audio.Music backgroundMusic;
+  protected final GdxGame game;
+  protected final Renderer renderer;
+  protected final PhysicsEngine physicsEngine;
+  protected final WaveManager waveManager;
+  protected LevelGameArea gameArea;
+  protected boolean isPaused = false;
+  protected com.badlogic.gdx.audio.Music backgroundMusic;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -88,12 +88,12 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    levelGameArea = new LevelGameArea(terrainFactory);
+    gameArea = createGameArea(terrainFactory);
+    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum conversion
     waveManager.setEnemySpawnCallback(
         (col, row, type) ->
-            levelGameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
-    levelGameArea.setWaveManager(waveManager);
-    levelGameArea.create();
+            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    gameArea.create();
 
     snapCameraBottomLeft();
     waveManager.initialiseNewWave();
@@ -112,7 +112,7 @@ public class MainGameScreen extends ScreenAdapter {
       waveManager.update(delta);
     }
     renderer.render();
-    levelGameArea.checkGameOver(); // check game-over state
+    gameArea.checkGameOver(); // check game-over state
   }
 
   @Override
@@ -120,8 +120,8 @@ public class MainGameScreen extends ScreenAdapter {
     renderer.resize(width, height);
     snapCameraBottomLeft();
     logger.trace("Resized renderer: ({} x {})", width, height);
-    if (levelGameArea != null) {
-      levelGameArea.resize();
+    if (gameArea != null) {
+      gameArea.resize();
     }
   }
 
@@ -166,7 +166,7 @@ public class MainGameScreen extends ScreenAdapter {
    * Creates the main game's ui including components for rendering ui elements to* the screen and
    * capturing and handling ui input.
    */
-  private void createUI() {
+  protected void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     InputComponent inputComponent =
@@ -193,7 +193,7 @@ public class MainGameScreen extends ScreenAdapter {
     // Connect the pause menu, pause button, and main game screen to the main game actions
     mainGameActions.setPauseMenu(pauseMenu);
     mainGameActions.setPauseButton(pauseButton);
-    mainGameActions.setMainGameScreen(this);
+    configureMainGameActions(mainGameActions);
 
     // Connect the CurrentWaveDisplay to the WaveManager for event listening
     waveManager.setWaveEventListener(
@@ -215,6 +215,18 @@ public class MainGameScreen extends ScreenAdapter {
         });
 
     ServiceLocator.getEntityService().register(ui);
+  }
+
+  /**
+   * Factory method for creating the game area. Subclasses may override to provide a different area.
+   */
+  protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
+    return new LevelGameArea(terrainFactory);
+  }
+
+  /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
+  protected void configureMainGameActions(MainGameActions mainGameActions) {
+    mainGameActions.setMainGameScreen(this);
   }
 
   private void snapCameraBottomLeft() {
@@ -241,8 +253,8 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Pause/resume sunlight generation
-    if (levelGameArea != null) {
-      levelGameArea
+    if (gameArea != null) {
+      gameArea
           .getEntities()
           .forEach(
               entity -> {
