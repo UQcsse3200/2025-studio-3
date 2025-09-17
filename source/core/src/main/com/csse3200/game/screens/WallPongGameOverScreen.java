@@ -9,6 +9,7 @@ import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
+import com.csse3200.game.minigame.MiniGameInputComponent;
 import com.csse3200.game.minigame.WallPongGameOverActions;
 import com.csse3200.game.minigame.WallPongGameOverDisplay;
 import com.csse3200.game.rendering.RenderService;
@@ -65,6 +66,7 @@ public class WallPongGameOverScreen extends ScreenAdapter {
         Entity uiEntity = new Entity()
                 .addComponent(new WallPongGameOverDisplay(finalScore, survivalTime, ballsHit))
                 .addComponent(new InputDecorator(stage,10))
+                .addComponent(new MiniGameInputComponent(true))
                 .addComponent(new WallPongGameOverActions(game));
         uiEntity.create();
     }
