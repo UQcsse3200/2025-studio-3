@@ -7,50 +7,56 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MainMenuActions extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
-  private GdxGame game;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuActions.class);
+    private GdxGame game;
 
-  public MainMenuActions(GdxGame game) {
-    this.game = game;
-  }
+    public MainMenuActions(GdxGame game) {
+        this.game = game;
+    }
 
-  @Override
-  public void create() {
-    entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("load", this::onLoad);
-    entity.getEvents().addListener("exit", this::onExit);
-    entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("worldMap", this::onWorldMap);
-  }
+    @Override
+    public void create() {
+        entity.getEvents().addListener("start", this::onStart);
+        entity.getEvents().addListener("load", this::onLoad);
+        entity.getEvents().addListener("exit", this::onExit);
+        entity.getEvents().addListener("settings", this::onSettings);
+        entity.getEvents().addListener("worldMap", this::onWorldMap);
+        entity.getEvents().addListener("quickStart", this::onQuickStart); // NEW
+    }
 
-  /** Swaps to the Main Game screen. */
-  private void onStart() {
-    logger.info("Start game");
-    Persistence.load();
-    game.loadMenus();
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
-  }
+    /** Start → World Map */
+    private void onStart() {
+        logger.info("Start game -> Opening World Map");
+        Persistence.load();
+        game.loadMenus();
+        game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+    }
 
-  /** Intended for loading a saved game state. Load functionality is not actually implemented. */
-  private void onLoad() {
-    logger.info("Load game");
-    game.setScreen(GdxGame.ScreenType.LOAD_GAME);
-  }
+    /** Quick Start → Main Game directly */
+    private void onQuickStart() {
+        logger.info("Quick Start -> Directly launching Main Game");
+        Persistence.load();
+        game.loadMenus();
+        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    }
 
-  private void onWorldMap() {
-    logger.info("Launching world map screen");
-    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-  }
+    private void onLoad() {
+        logger.info("Load game");
+        game.setScreen(GdxGame.ScreenType.LOAD_GAME);
+    }
 
-  /** Exits the game. */
-  private void onExit() {
-    logger.info("Exit game");
-    game.exit();
-  }
+    private void onWorldMap() {
+        logger.info("Launching world map screen");
+        game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+    }
 
-  /** Swaps to the Settings screen. */
-  private void onSettings() {
-    logger.info("Launching settings screen");
-    game.setScreen(GdxGame.ScreenType.SETTINGS);
-  }
+    private void onExit() {
+        logger.info("Exit game");
+        game.exit();
+    }
+
+    private void onSettings() {
+        logger.info("Launching settings screen");
+        game.setScreen(GdxGame.ScreenType.SETTINGS);
+    }
 }

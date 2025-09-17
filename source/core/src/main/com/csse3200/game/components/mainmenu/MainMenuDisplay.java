@@ -3,37 +3,37 @@ package com.csse3200.game.components.mainmenu;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** A ui component for displaying the Main menu. */
 public class MainMenuDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
-  private static final float Z_INDEX = 2f;
-  private Table table;
+    private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
+    private static final float Z_INDEX = 2f;
+    private Table table;
 
     @Override
     public void create() {
         super.create();
 
-        // Load the button atlas first
-        ServiceLocator.getResourceService().loadTextureAtlases(new String[] { "images/btn-blue.atlas" });
-//        ServiceLocator.getResourceService().loadFonts(new String[] { "flat-earth/skin/fonts/pixel_32.fnt" });
-        ServiceLocator.getResourceService().loadAll(); // blocks until finished
+        // Load assets
+        ServiceLocator.getResourceService()
+                .loadTextureAtlases(new String[] {"images/btn-blue.atlas"});
+        ServiceLocator.getResourceService()
+                .loadTextures(new String[] {"images/settings_icon.png"});
+        ServiceLocator.getResourceService().loadAll();
 
         addActors();
     }
@@ -47,126 +47,122 @@ public class MainMenuDisplay extends UIComponent {
 
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
         style.up = background;
-        style.down = background;   // you can replace later with a "pressed" region
-        style.over = background;   // you can replace later with a "hover" region
-        style.font = font; // default font
+        style.down = background;
+        style.over = background;
+        style.font = font;
 
         TextButton button = new TextButton(text, style);
         button.getLabel().setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-        button.getLabel().setAlignment(com.badlogic.gdx.utils.Align.center);
         return button;
     }
-
-
 
     private void addActors() {
         table = new Table();
         table.setFillParent(true);
-        Image title =
-                new Image(
-                        ServiceLocator.getResourceService()
-                                .getAsset("images/bg-text.png", Texture.class));
 
-        logger.debug("show background title");
+        // Title
+        Image title = new Image(
+                ServiceLocator.getResourceService().getAsset("images/bg-text.png", Texture.class));
 
-        TextureAtlas buttonAtlas = ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
+        TextureAtlas buttonAtlas =
+                ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
 
         TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
         TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
-        TextButton worldMapBtn = makeTexturedButton("World Map", buttonAtlas, "default");
-        TextButton settingsBtn = makeTexturedButton("Settings", buttonAtlas, "default");
         TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
+        TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default"); // NEW
 
-    // Triggers an event when the button is pressed
-    startBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Start button clicked");
-            entity.getEvents().trigger("start");
-          }
+        // --- Settings gear icon ---
+        Texture gearTexture =
+                ServiceLocator.getResourceService().getAsset("images/settings_icon.png", Texture.class);
+        ImageButton.ImageButtonStyle gearStyle = new ImageButton.ImageButtonStyle();
+        gearStyle.imageUp = new TextureRegionDrawable(gearTexture);
+
+        ImageButton settingsIcon = new ImageButton(gearStyle);
+        settingsIcon.setSize(90f, 90f); // bigger
+        settingsIcon.setPosition(
+                Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 120f); // pulled a little lower
+
+        settingsIcon.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Settings icon clicked");
+                entity.getEvents().trigger("settings");
+            }
         });
 
-    loadBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Load button clicked");
-            entity.getEvents().trigger("load");
-          }
+        // Button listeners
+        startBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Start button clicked");
+                entity.getEvents().trigger("worldMap");
+            }
         });
 
-    settingsBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Settings button clicked");
-            entity.getEvents().trigger("settings");
-          }
+        quickStartBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Quick Start button clicked");
+                entity.getEvents().trigger("quickStart");
+            }
         });
 
-    worldMapBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("World Map button clicked");
-            entity.getEvents().trigger("worldMap");
-          }
+        loadBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Load button clicked");
+                entity.getEvents().trigger("load");
+            }
         });
 
-    exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-
-            logger.debug("Exit button clicked");
-            entity.getEvents().trigger("exit");
-          }
+        exitBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Exit button clicked");
+                entity.getEvents().trigger("exit");
+            }
         });
 
+        // Layout
         table.center();
 
-        // add title
         float xf = 0.40f;
-
         table.add(title)
-                .size(title.getWidth() * xf, title.getHeight() * xf) // scale the cell
-                .top()  // vertical alignment
-                .center() // horizontal alignment
+                .size(title.getWidth() * xf, title.getHeight() * xf)
+                .top()
+                .center()
                 .padTop(20f)
-                .padBottom(20f); // optional padding
+                .padBottom(20f);
         table.row();
 
-        // add buttons with consistent width and spacing
         float buttonWidth = 200f;
         float buttonHeight = 50f;
 
-        table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(2f);
+        table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(5f);
         table.row();
-        table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(2f);
+        table.add(quickStartBtn).size(buttonWidth, buttonHeight).padBottom(5f); // NEW
         table.row();
-        table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(2f);
+        table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
         table.row();
-        table.add(worldMapBtn).size(buttonWidth, buttonHeight).padBottom(2f);
-        table.row();
-        table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(2f);
+        table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
 
-    stage.addActor(table);
-  }
+        // Add to stage
+        stage.addActor(table);
+        stage.addActor(settingsIcon);
+    }
 
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
+    @Override
+    public void draw(SpriteBatch batch) {}
 
-  @Override
-  public float getZIndex() {
-    return Z_INDEX;
-  }
+    @Override
+    public float getZIndex() {
+        return Z_INDEX;
+    }
 
-  @Override
-  public void dispose() {
-    table.clear();
-    super.dispose();
-  }
+    @Override
+    public void dispose() {
+        table.clear();
+        super.dispose();
+    }
 }
