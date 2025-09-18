@@ -1,4 +1,4 @@
-package com.csse3200.game.components.hud;
+package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;

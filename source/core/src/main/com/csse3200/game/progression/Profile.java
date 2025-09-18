@@ -1,15 +1,13 @@
 package com.csse3200.game.progression;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
-
+import java.util.ArrayList;
+import java.util.List;
 import net.dermetfan.utils.Pair;
 
 /**
@@ -40,7 +38,7 @@ public class Profile {
 
   /** Initialise a profile with the provided values. */
   public Profile(
-    Pair<String, String> nameAndLevel,
+      Pair<String, String> nameAndLevel,
       Wallet wallet,
       Inventory inventory,
       SkillSet skillset,

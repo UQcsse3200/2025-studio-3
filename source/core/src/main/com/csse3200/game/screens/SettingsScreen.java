@@ -5,9 +5,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.settingsmenu.SettingsMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
-
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

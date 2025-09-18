@@ -1,14 +1,12 @@
-package com.csse3200.game.screens;
+package com.csse3200.game.ui;
 
 import com.csse3200.game.GdxGame;
-
 import net.dermetfan.utils.Pair;
 
-/**
- * Represents a node on the world map that can be registered dynamically.
- */
+/** Represents a node on the world map that can be registered dynamically. */
 public class WorldMapNode {
   private String label;
+  private String registrationKey;
   private Pair<Float, Float> coordinates;
   private boolean completed;
   private boolean unlocked;
@@ -18,7 +16,7 @@ public class WorldMapNode {
 
   /**
    * Creates a new world map node.
-   * 
+   *
    * @param label The label of the node
    * @param coordinates The coordinates of the node
    * @param completed Whether the node is completed
@@ -27,7 +25,14 @@ public class WorldMapNode {
    * @param nodeTexture The texture of the node
    * @param lockReason The lock reason of the node
    */
-  public WorldMapNode(String label, Pair<Float, Float> coordinates, boolean completed, boolean unlocked, GdxGame.ScreenType targetScreen, String nodeTexture, String lockReason) {
+  public WorldMapNode(
+      String label,
+      Pair<Float, Float> coordinates,
+      boolean completed,
+      boolean unlocked,
+      GdxGame.ScreenType targetScreen,
+      String nodeTexture,
+      String lockReason) {
     this.label = label;
     this.coordinates = coordinates;
     this.completed = completed;
@@ -39,7 +44,7 @@ public class WorldMapNode {
 
   /**
    * Sets the label of the node.
-   * 
+   *
    * @param label The label of the node
    */
   public void setLabel(String label) {
@@ -47,8 +52,26 @@ public class WorldMapNode {
   }
 
   /**
+   * Gets the registration key of the node.
+   *
+   * @return The registration key of the node
+   */
+  public String getRegistrationKey() {
+    return registrationKey;
+  }
+
+  /**
+   * Sets the registration key of the node.
+   *
+   * @param registrationKey The registration key of the node
+   */
+  public void setRegistrationKey(String registrationKey) {
+    this.registrationKey = registrationKey;
+  }
+
+  /**
    * Sets the position of the node.
-   * 
+   *
    * @param x The x coordinate of the node (0.0-1.0)
    * @param y The y coordinate of the node (0.0-1.0)
    */
@@ -58,7 +81,7 @@ public class WorldMapNode {
 
   /**
    * Sets the completed state of the node.
-   * 
+   *
    * @param completed Whether the node is completed
    */
   public void setCompleted(boolean completed) {
@@ -67,7 +90,7 @@ public class WorldMapNode {
 
   /**
    * Sets the unlocked state of the node.
-   * 
+   *
    * @param unlocked Whether the node is unlocked
    */
   public void setUnlocked(boolean unlocked) {
@@ -76,7 +99,7 @@ public class WorldMapNode {
 
   /**
    * Sets the target screen of the node.
-   * 
+   *
    * @param screenType The target screen of the node
    */
   public void setTargetScreen(GdxGame.ScreenType screenType) {
@@ -85,7 +108,7 @@ public class WorldMapNode {
 
   /**
    * Sets the texture of the node.
-   * 
+   *
    * @param texture The texture of the node
    */
   public void setNodeTexture(String texture) {
@@ -94,7 +117,7 @@ public class WorldMapNode {
 
   /**
    * Sets the lock reason of the node.
-   * 
+   *
    * @param reason The lock reason of the node
    */
   public void setLockReason(String reason) {
@@ -103,7 +126,7 @@ public class WorldMapNode {
 
   /**
    * Gets the label of the node.
-   * 
+   *
    * @return The label of the node
    */
   public String getLabel() {
@@ -112,7 +135,7 @@ public class WorldMapNode {
 
   /**
    * Gets the x position of the node.
-   * 
+   *
    * @return The xposition of the node
    */
   public float getPositionX() {
@@ -121,7 +144,7 @@ public class WorldMapNode {
 
   /**
    * Gets the y position of the node.
-   * 
+   *
    * @return The y position of the node
    */
   public float getPositionY() {
@@ -130,7 +153,7 @@ public class WorldMapNode {
 
   /**
    * Gets the position of the node.
-   * 
+   *
    * @return The position of the node
    */
   public Pair<Float, Float> getPosition() {
@@ -139,7 +162,7 @@ public class WorldMapNode {
 
   /**
    * Gets the completed state of the node.
-   * 
+   *
    * @return The completed state of the node
    */
   public boolean isCompleted() {
@@ -148,7 +171,7 @@ public class WorldMapNode {
 
   /**
    * Gets the unlocked state of the node.
-   * 
+   *
    * @return The unlocked state of the node
    */
   public boolean isUnlocked() {
@@ -157,7 +180,7 @@ public class WorldMapNode {
 
   /**
    * Gets the target screen of the node.
-   * 
+   *
    * @return The target screen of the node
    */
   public GdxGame.ScreenType getTargetScreen() {
@@ -166,7 +189,7 @@ public class WorldMapNode {
 
   /**
    * Gets the texture of the node.
-   * 
+   *
    * @return The texture of the node
    */
   public String getNodeTexture() {
@@ -175,7 +198,7 @@ public class WorldMapNode {
 
   /**
    * Gets the lock reason of the node.
-   * 
+   *
    * @return The lock reason of the node
    */
   public String getLockReason() {

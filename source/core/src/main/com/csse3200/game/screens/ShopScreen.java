@@ -3,12 +3,11 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
 import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
+import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
-import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -22,7 +21,7 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
+public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final Renderer renderer;
   private final GdxGame game;
@@ -102,18 +101,6 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     logger.debug("Unloading shop assets");
     ServiceLocator.getResourceService().unloadAssets(shopTextures);
     ServiceLocator.getResourceService().unloadAssets(itemTextures);
-  }
-
-  @Override
-  public void register(MenuSpriteData menuSpriteData) {
-    menuSpriteData
-        .edit(this)
-        .position(50, 50)
-        .name("Shop")
-        .description("Shop")
-        .sprite("images/shopsprite.png")
-        .locked(false)
-        .apply();
   }
 
   /**

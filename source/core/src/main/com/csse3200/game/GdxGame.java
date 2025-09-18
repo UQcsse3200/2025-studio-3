@@ -5,7 +5,6 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;
@@ -16,9 +15,9 @@ import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.*;
+import com.csse3200.game.ui.WorldMapNode;
 
 import net.dermetfan.utils.Pair;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,20 +62,20 @@ public class GdxGame extends Game {
     // Game-dependent data
     loadGlobalAssets();
     loadSettings();
-    loadScreens();
+    loadNodes();
 
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
     setScreen(ScreenType.MAIN_MENU);
   }
 
-  
-
-
-  /** Runs the appropriate register function to register screen sprites. */
-  private void loadScreens() {
+  /** Registers the nodes on the world map. */
+  private void loadNodes() {
     // Load the shop
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    worldMapService.registerNode(new WorldMapNode("Shop", new Pair<>(0.5f, 0.5f), false, true, ScreenType.SHOP, "images/shop.png", ""), "shop");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Shop", new Pair<>(0.5f, 0.5f), false, true, ScreenType.SHOP, "images/shop.png", ""),
+        "shop");
     // Load the skills village
     // Load the minigames ...
     // Load each of the levels
@@ -200,7 +199,6 @@ public class GdxGame extends Game {
   /** Exits the game. */
   public void exit() {
     ServiceLocator.deregisterGlobalResourceService();
-    ServiceLocator.deregisterMenuSpriteService();
     ServiceLocator.deregisterConfigService();
     ServiceLocator.deregisterProfileService();
     ServiceLocator.getDialogService().hideAllDialogs();

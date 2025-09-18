@@ -24,7 +24,6 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
-  private static MenuSpriteService menuSpriteService;
   private static ConfigService configService;
   private static DialogService dialogService;
   private static ResourceService globalResourceService;
@@ -94,15 +93,6 @@ public class ServiceLocator {
    */
   public static CurrencyService getCurrencyService() {
     return currencyService;
-  }
-
-  /**
-   * Gets the menu sprite service.
-   *
-   * @return the menu sprite service
-   */
-  public static MenuSpriteService getMenuSpriteService() {
-    return menuSpriteService;
   }
 
   /**
@@ -244,22 +234,6 @@ public class ServiceLocator {
   public static void registerCurrencyService(CurrencyService source) {
     logger.debug("Registering currency service {}", source);
     currencyService = source;
-  }
-
-  /**
-   * Registers the menu sprite service.
-   *
-   * @param source the menu sprite service
-   */
-  public static void registerMenuSpriteService(MenuSpriteService source) {
-    logger.debug("Registering menu sprite service {}", source);
-    menuSpriteService = source;
-  }
-
-  /** Deregisters the menu sprite service. */
-  public static void deregisterMenuSpriteService() {
-    logger.debug("Removing menu sprite service");
-    menuSpriteService = null;
   }
 
   /**

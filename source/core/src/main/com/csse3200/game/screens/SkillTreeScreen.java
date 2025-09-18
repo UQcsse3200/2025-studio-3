@@ -7,12 +7,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
 import com.csse3200.game.components.skilltree.SkilltreeButtons;
 import com.csse3200.game.components.skilltree.SkilltreeDisplay;
+import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
-import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -31,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * skill buttons, shows skill points, and handles user interaction. It integrates with game
  * services, rendering, input, and entity systems.
  */
-public class SkillTreeScreen extends ScreenAdapter implements MenuSpriteScreen {
+public class SkillTreeScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(SkillTreeScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
@@ -119,18 +118,6 @@ public class SkillTreeScreen extends ScreenAdapter implements MenuSpriteScreen {
         .addComponent(new AnimatedDropdownMenu());
 
     ServiceLocator.getEntityService().register(ui);
-  }
-
-  @Override
-  public void register(MenuSpriteData menuSpriteData) {
-    menuSpriteData
-        .edit(this)
-        .position(50, 50)
-        .name("Skills")
-        .description("Skills")
-        .sprite("images/skills.png")
-        .locked(false)
-        .apply();
   }
 
   @Override

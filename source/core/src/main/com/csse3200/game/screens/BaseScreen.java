@@ -17,15 +17,11 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Base screen class for all screens.
- */
+/** Base screen class for all screens. */
 abstract class BaseScreen extends ScreenAdapter {
   private Logger logger = LoggerFactory.getLogger(BaseScreen.class);
   protected final GdxGame game;
@@ -35,12 +31,13 @@ abstract class BaseScreen extends ScreenAdapter {
 
   /**
    * Constructor for BaseScreen.
-   * 
+   *
    * @param game the game instance
    * @param backgroundTexture the background texture
    * @param additionalTextures the additional textures
    */
-  BaseScreen(GdxGame game, Optional<String> backgroundTexture, Optional<String[]> additionalTextures) {
+  BaseScreen(
+      GdxGame game, Optional<String> backgroundTexture, Optional<String[]> additionalTextures) {
     this.game = game;
     this.backgroundTexture = backgroundTexture;
     this.additionalTextures = additionalTextures;
@@ -62,7 +59,7 @@ abstract class BaseScreen extends ScreenAdapter {
 
   /**
    * Constructs the UI entity for the base screen.
-   * 
+   *
    * @param stage the stage to create the UI screen on
    * @return the UI entity
    */
@@ -86,7 +83,6 @@ abstract class BaseScreen extends ScreenAdapter {
     logger.debug("[{}] Disposing", getClass().getSimpleName());
 
     renderer.dispose();
-    unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
 
@@ -94,15 +90,13 @@ abstract class BaseScreen extends ScreenAdapter {
     ServiceLocator.clear();
   }
 
-  /**
-   * Loads the assets for the base screen.
-   */
+  /** Loads the assets for the base screen. */
   private void loadAssets() {
     logger.debug("[{}] Loading assets", getClass().getSimpleName());
     ResourceService resourceService = ServiceLocator.getResourceService();
     if (backgroundTexture.isPresent()) {
       logger.debug("[{}] Loading background texture", getClass().getSimpleName());
-      resourceService.loadTextures(new String[] { backgroundTexture.get() });
+      resourceService.loadTextures(new String[] {backgroundTexture.get()});
     }
     if (additionalTextures.isPresent()) {
       logger.debug("[{}] Loading additional textures", getClass().getSimpleName());
@@ -111,19 +105,7 @@ abstract class BaseScreen extends ScreenAdapter {
     resourceService.loadAll();
   }
 
-  /**
-   * Unloads the assets for the base screen.
-   */
-  private void unloadAssets() {
-    logger.debug("[{}] Unloading assets", getClass().getSimpleName());
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(new String[] { backgroundTexture.get() });
-    resourceService.unloadAssets(additionalTextures.get());
-  }
-
-  /**
-   * Creates the UI for the base screen.
-   */
+  /** Creates the UI for the base screen. */
   private void createUI() {
     logger.debug("[{}] Creating UI", getClass().getSimpleName());
     Stage stage = ServiceLocator.getRenderService().getStage();
