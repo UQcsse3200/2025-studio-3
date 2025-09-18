@@ -88,6 +88,7 @@ public abstract class GameArea implements Disposable {
 
   public void requestDespawn(Entity entity) {
     if (entity == null) return;
+    this.waveManager.onEnemyDisposed();
     Gdx.app.postRunnable(() -> despawnEntity(entity));
   }
 
