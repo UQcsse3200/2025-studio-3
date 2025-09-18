@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,9 +27,9 @@ public class MiniGameDisplay extends UIComponent {
     table = new Table();
     table.setFillParent(true);
 
-    TextButton LaneRunnerBtn = new TextButton("Lane Runner", skin);
-    TextButton WallPongBtn = new TextButton("Wall Pong", skin);
-    TextButton BackBtn = new TextButton("Back", skin);
+    TextButton LaneRunnerBtn = ButtonFactory.createButton("Lane Runner");
+    TextButton WallPongBtn = ButtonFactory.createButton("Wall Pong");
+    TextButton BackBtn = ButtonFactory.createButton("Back");
     // Triggers an event when the button is pressed
     LaneRunnerBtn.addListener(
         new ChangeListener() {

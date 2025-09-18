@@ -13,6 +13,7 @@ import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -95,7 +96,7 @@ public class SkilltreeDisplay extends UIComponent {
     Table buttonTable = new Table();
 
     // Unlock button
-    TextButton unlockButton = new TextButton("Unlock", skin);
+    TextButton unlockButton = ButtonFactory.createButton("Unlock");
     unlockButton.addListener(
         new ChangeListener() {
           @Override
@@ -134,7 +135,7 @@ public class SkilltreeDisplay extends UIComponent {
         });
 
     // Close button
-    TextButton closeButton = new TextButton("Close", skin);
+    TextButton closeButton = ButtonFactory.createButton("Close");
     closeButton.addListener(
         new ChangeListener() {
           @Override

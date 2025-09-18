@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.NPCConfigs;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +114,7 @@ public class DossierDisplay extends UIComponent {
 
   /** Sets up the buttons to swap between humans and robots. */
   private Table makeSwapBtn() {
-    TextButton robotsBtn = new TextButton("Robots", skin);
+    TextButton robotsBtn = ButtonFactory.createSmallButton("Robots");
     robotsBtn.addListener(
         new ChangeListener() {
           @Override
@@ -125,7 +126,7 @@ public class DossierDisplay extends UIComponent {
           }
         });
 
-    TextButton humansBtn = new TextButton("Humans", skin);
+    TextButton humansBtn = ButtonFactory.createSmallButton("Humans");
     humansBtn.addListener(
         new ChangeListener() {
           @Override
@@ -141,10 +142,11 @@ public class DossierDisplay extends UIComponent {
     table.defaults().expandX().fillX().space(50f);
     table.padTop(50f);
 
-    float buttonWidth = stage.getWidth() * 0.2f; // 20% of screen
+    float buttonWidth = 120f; // Fixed width
+    float buttonHeight = 40f;
 
-    table.add(humansBtn).width(buttonWidth);
-    table.add(robotsBtn).width(buttonWidth);
+    table.add(humansBtn).size(buttonWidth, buttonHeight);
+    table.add(robotsBtn).size(buttonWidth, buttonHeight);
 
     table.row();
 
@@ -260,7 +262,7 @@ public class DossierDisplay extends UIComponent {
    * @return table with exit button
    */
   private Table makeBackBtn() {
-    TextButton backBtn = new TextButton("Back", skin);
+    TextButton backBtn = ButtonFactory.createSmallButton("Back");
 
     // Add listener for the back button
     backBtn.addListener(
@@ -276,7 +278,7 @@ public class DossierDisplay extends UIComponent {
     Table table = new Table();
     table.setFillParent(true);
     table.top().left().pad(15f);
-    table.add(backBtn);
+    table.add(backBtn).size(80f, 40f);
     return table;
   }
 
@@ -292,9 +294,9 @@ public class DossierDisplay extends UIComponent {
 
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
-      TextButton btn = new TextButton(dossierManager.getName(entities[i]), skin, "default");
+      TextButton btn = ButtonFactory.createSmallButton(dossierManager.getName(entities[i]));
       group.add(btn);
-      buttonRow.add(btn).pad(5);
+      buttonRow.add(btn).size(100f, 35f).pad(5);
 
       btn.addListener(
           new ChangeListener() {

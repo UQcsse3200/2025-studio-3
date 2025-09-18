@@ -17,6 +17,7 @@ import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
 import org.slf4j.Logger;
@@ -184,7 +185,7 @@ public class SettingsMenuDisplay extends UIComponent {
     stage.addActor(exitBtn);
 
     // Apply button
-    TextButton applyBtn = new TextButton("Apply", skin);
+    TextButton applyBtn = ButtonFactory.createButton("Apply");
     applyBtn.addListener(
         new ChangeListener() {
           @Override

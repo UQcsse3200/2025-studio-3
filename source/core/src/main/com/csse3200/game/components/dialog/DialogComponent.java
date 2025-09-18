@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -140,7 +141,7 @@ public class DialogComponent extends UIComponent {
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
-        TextButton okButton = new TextButton("OK", skin);
+        TextButton okButton = ButtonFactory.createSmallButton("OK");
         okButton.addListener(
             new ClickListener() {
               @Override
@@ -151,12 +152,12 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButton).pad(5f);
+        buttonTable.add(okButton).size(80f, 40f).pad(5f);
         break;
 
       // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = new TextButton("Cancel", skin);
+        TextButton cancelButton = ButtonFactory.createSmallButton("Cancel");
         cancelButton.addListener(
             new ClickListener() {
               @Override
@@ -168,7 +169,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton continueButton = new TextButton("Continue", skin);
+        TextButton continueButton = ButtonFactory.createSmallButton("Continue");
         continueButton.addListener(
             new ClickListener() {
               @Override
@@ -180,13 +181,13 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(cancelButton).pad(5f);
-        buttonTable.add(continueButton).pad(5f);
+        buttonTable.add(cancelButton).size(80f, 40f).pad(5f);
+        buttonTable.add(continueButton).size(100f, 40f).pad(5f);
         break;
 
       // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = new TextButton("OK", skin);
+        TextButton okButtonError = ButtonFactory.createSmallButton("OK");
         okButtonError.addListener(
             new ClickListener() {
               @Override
@@ -197,7 +198,7 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButtonError).pad(5f);
+        buttonTable.add(okButtonError).size(80f, 40f).pad(5f);
         break;
     }
 

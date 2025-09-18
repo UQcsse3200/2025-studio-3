@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +89,7 @@ public class ProfileDisplay extends UIComponent {
     float buttonHeight = stage.getHeight() * MAIN_BUTTON_HEIGHT_RATIO;
 
     for (int i = 0; i < buttonLabels.length; i++) {
-      TextButton button = new TextButton(buttonLabels[i], skin);
+      TextButton button = ButtonFactory.createButton(buttonLabels[i]);
       button.getLabel().setWrap(true);
 
       // Add click listener
@@ -124,7 +125,7 @@ public class ProfileDisplay extends UIComponent {
     float padding = stage.getWidth() * PADDING_RATIO;
 
     // Back button (top left)
-    TextButton backBtn = new TextButton("Back", skin);
+    TextButton backBtn = ButtonFactory.createButton("Back");
     backBtn.addListener(
         new ChangeListener() {
           @Override
@@ -135,7 +136,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Exit button (top right)
-    TextButton exitBtn = new TextButton("Exit", skin);
+    TextButton exitBtn = ButtonFactory.createButton("Exit");
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -146,7 +147,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Save button (bottom left)
-    TextButton saveBtn = new TextButton("Save", skin);
+    TextButton saveBtn = ButtonFactory.createButton("Save");
     saveBtn.addListener(
         new ChangeListener() {
           @Override
@@ -157,7 +158,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Settings button (bottom right)
-    TextButton settingsBtn = new TextButton("Settings", skin);
+    TextButton settingsBtn = ButtonFactory.createButton("Settings");
     settingsBtn.addListener(
         new ChangeListener() {
           @Override

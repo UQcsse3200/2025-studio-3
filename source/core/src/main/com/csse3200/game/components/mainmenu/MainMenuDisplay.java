@@ -1,20 +1,17 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,30 +26,10 @@ public class MainMenuDisplay extends UIComponent {
     super.create();
 
     // Load assets
-    ServiceLocator.getResourceService()
-        .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getResourceService().loadTextures(new String[] {"images/ui/settings_icon.png"});
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
-  }
-
-  private TextButton makeTexturedButton(String text, TextureAtlas atlas, String region) {
-    Drawable background = new TextureRegionDrawable(atlas.findRegion(region));
-
-    BitmapFont font = new BitmapFont();
-    font.getData().setScale(1.5f);
-    font.setColor(Color.BLACK);
-
-    TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-    style.up = background;
-    style.down = background;
-    style.over = background;
-    style.font = font;
-
-    TextButton button = new TextButton(text, style);
-    button.getLabel().setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-    return button;
   }
 
   private void addActors() {
@@ -65,16 +42,12 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextureAtlas buttonAtlas =
-        ServiceLocator.getResourceService()
-            .getAsset("images/ui/btn-blue.atlas", TextureAtlas.class);
-
-    TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
-    TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default");
-    TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
-    TextButton miniGameBtn = makeTexturedButton("MiniGames", buttonAtlas, "default");
-    TextButton cutBtn = makeTexturedButton("Cutscene", buttonAtlas, "default");
-    TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
+    TextButton startBtn = ButtonFactory.createButton("Start");
+    TextButton quickStartBtn = ButtonFactory.createButton("Quick Start");
+    TextButton loadBtn = ButtonFactory.createButton("Load");
+    TextButton miniGameBtn = ButtonFactory.createButton("MiniGames");
+    TextButton cutBtn = ButtonFactory.createButton("Cutscene");
+    TextButton exitBtn = ButtonFactory.createButton("Exit");
 
     // --- Settings gear icon ---
     Texture gearTexture =
@@ -183,7 +156,9 @@ public class MainMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    // Drawing is handled by the stage
+  }
 
   @Override
   public float getZIndex() {

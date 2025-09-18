@@ -164,7 +164,7 @@ public class AchievementsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/achievement.png", Texture.class)));
+                    .getAsset("images/ui/achievement.png", Texture.class)));
 
     achButton.setSize(200f, 72f);
     Label nameLabel = new Label(config.getName(), skin);

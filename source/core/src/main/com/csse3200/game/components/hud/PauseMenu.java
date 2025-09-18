@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.screens.MainGameScreen;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -120,7 +121,7 @@ public class PauseMenu extends UIComponent {
   /** Creates the menu buttons */
   private void createButtons() {
     // Resume button
-    resumeButton = new TextButton("Resume", skin);
+    resumeButton = ButtonFactory.createButton("Resume");
     resumeButton.addListener(
         new ClickListener() {
           @Override
@@ -131,7 +132,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Settings button
-    settingsButton = new TextButton("Settings", skin);
+    settingsButton = ButtonFactory.createButton("Settings");
     settingsButton.addListener(
         new ClickListener() {
           @Override
@@ -142,7 +143,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Quit Level button
-    quitLevelButton = new TextButton("Quit Level", skin);
+    quitLevelButton = ButtonFactory.createButton("Quit Level");
     quitLevelButton.addListener(
         new ClickListener() {
           @Override
@@ -153,7 +154,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Main Menu button
-    mainMenuButton = new TextButton("Main Menu", skin);
+    mainMenuButton = ButtonFactory.createButton("Main Menu");
     mainMenuButton.addListener(
         new ClickListener() {
           @Override
@@ -164,7 +165,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Exit Game button
-    exitGameButton = new TextButton("Exit Game", skin);
+    exitGameButton = ButtonFactory.createButton("Exit Game");
     exitGameButton.addListener(
         new ClickListener() {
           @Override

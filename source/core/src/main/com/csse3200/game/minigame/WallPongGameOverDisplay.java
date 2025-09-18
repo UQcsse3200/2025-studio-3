@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,8 +18,6 @@ public class WallPongGameOverDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(WallPongGameOverDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
-  private Label scoreLabel;
-  private Label timeLabel;
   private final int finalScore;
   private final float survivalTime;
   private final int ballsHit;
@@ -38,17 +37,18 @@ public class WallPongGameOverDisplay extends UIComponent {
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
-    Image GameOverImage =
+    Image gameOverImage =
         new Image(
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/GameOver.png", Texture.class));
-    Label scoreLabel = new Label("Final Score: " + finalScore, skin);
-    Label timeLabel = new Label(String.format("Survival Time: %.2f seconds", survivalTime), skin);
+    Label scoreLabelLocal = new Label("Final Score: " + finalScore, skin);
+    Label timeLabelLocal =
+        new Label(String.format("Survival Time: %.2f seconds", survivalTime), skin);
     Label ballsHitLabel = new Label("Balls Hit: " + ballsHit, skin);
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
-    TextButton playAgainBtn = new TextButton("Play Again", skin);
-    TextButton mainMenuBtn = new TextButton("Main Menu", skin);
+    TextButton playAgainBtn = ButtonFactory.createButton("Play Again");
+    TextButton mainMenuBtn = ButtonFactory.createButton("Main Menu");
 
     playAgainBtn.addListener(
         new ChangeListener() {
@@ -66,11 +66,11 @@ public class WallPongGameOverDisplay extends UIComponent {
             entity.getEvents().trigger("mainMenu");
           }
         });
-    table.add(GameOverImage).padBottom(30f);
+    table.add(gameOverImage).padBottom(30f);
     table.row();
-    table.add(scoreLabel).padBottom(10f);
+    table.add(scoreLabelLocal).padBottom(10f);
     table.row();
-    table.add(timeLabel).padBottom(10f);
+    table.add(timeLabelLocal).padBottom(10f);
     table.row();
     table.add(ballsHitLabel).padBottom(10f);
     table.row();
@@ -80,8 +80,8 @@ public class WallPongGameOverDisplay extends UIComponent {
     table.row();
     table.add(mainMenuBtn).width(200f).height(50f);
     table.row();
-    Label InstructionLabel = new Label("'Space' to PLayAgain & Escape to Main Menu.", skin);
-    table.add(InstructionLabel);
+    Label instructionLabel = new Label("'Space' to PLayAgain & Escape to Main Menu.", skin);
+    table.add(instructionLabel);
     stage.addActor(table);
   }
 

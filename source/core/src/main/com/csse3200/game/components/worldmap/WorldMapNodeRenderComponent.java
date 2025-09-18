@@ -1,10 +1,8 @@
 package com.csse3200.game.components.worldmap;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
@@ -15,8 +13,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private final Vector2 worldSize;
   private final float nodeSize;
   private boolean showPrompt = false;
-  private Label promptLabel;
-  private Label lockReasonLabel;
 
   /**
    * Constructor for the world map node render component.
@@ -35,17 +31,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   public void create() {
     super.create();
     ServiceLocator.getWorldMapService().registerNodeRenderComponent(this);
-
-    // Create labels and add them to the stage
-    promptLabel = new Label("Press E to Enter", skin);
-    promptLabel.setColor(Color.WHITE);
-    promptLabel.setVisible(false);
-    stage.addActor(promptLabel);
-
-    lockReasonLabel = new Label("", skin);
-    lockReasonLabel.setColor(Color.RED);
-    lockReasonLabel.setVisible(false);
-    stage.addActor(lockReasonLabel);
   }
 
   /**
@@ -58,20 +43,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         nearbyNode != null
             && this.node.getRegistrationKey().equals(nearbyNode.getRegistrationKey());
     setShowPrompt(isNearby);
-    updateLabelVisibility();
-  }
-
-  private void updateLabelVisibility() {
-    if (promptLabel != null && lockReasonLabel != null) {
-      // Show prompt if nearby and unlocked
-      promptLabel.setVisible(showPrompt && node.isUnlocked());
-
-      // Show lock reason if locked
-      lockReasonLabel.setVisible(!node.isUnlocked() && node.getLockReason() != null);
-      if (!node.isUnlocked() && node.getLockReason() != null) {
-        lockReasonLabel.setText(node.getLockReason());
-      }
-    }
   }
 
   @Override
@@ -102,14 +73,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     }
 
     batch.draw(nodeTexture, drawX, drawY, drawSize, drawSize);
-
-    // Update label positions (they're already managed by the stage for visibility)
-    if (promptLabel != null) {
-      promptLabel.setPosition(x, y + nodeSize + 20f);
-    }
-    if (lockReasonLabel != null) {
-      lockReasonLabel.setPosition(x, y - 20f);
-    }
   }
 
   public void setShowPrompt(boolean showPrompt) {

@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -37,6 +38,7 @@ public class WorldMapScreen extends BaseScreen {
   private static final float WORLD_HEIGHT = 2000f;
   private static final Vector2 WORLD_SIZE = new Vector2(WORLD_WIDTH, WORLD_HEIGHT);
   private static final float[] ZOOM_STEPS = {1.20f, 1.35f, 1.50f, 1.70f, 1.90f};
+  private static final float CAMERA_LERP_SPEED = 8.0f;
   private int zoomIdx = 0;
   private Entity playerEntity;
 
@@ -142,12 +144,21 @@ public class WorldMapScreen extends BaseScreen {
     super.render(delta);
   }
 
-  /** Updates the camera to follow the player. */
+  /** Updates the camera to follow the player with smooth interpolation. */
   private void updateCamera() {
     if (playerEntity != null) {
       Vector2 playerPos = playerEntity.getPosition();
       CameraComponent camera = renderer.getCamera();
-      camera.getEntity().setPosition(playerPos.x, playerPos.y);
+      Vector2 currentCameraPos = camera.getEntity().getPosition();
+
+      // Smoothly interpolate camera position towards player position
+      float deltaTime = Gdx.graphics.getDeltaTime();
+      float lerpFactor = 1.0f - (float) Math.pow(0.5, CAMERA_LERP_SPEED * deltaTime);
+
+      float newX = MathUtils.lerp(currentCameraPos.x, playerPos.x, lerpFactor);
+      float newY = MathUtils.lerp(currentCameraPos.y, playerPos.y, lerpFactor);
+
+      camera.getEntity().setPosition(newX, newY);
       clampCamera(camera);
     }
   }

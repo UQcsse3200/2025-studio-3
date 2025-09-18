@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -86,7 +87,7 @@ public class SaveGameMenuDisplay extends UIComponent {
         // Active save slot - show existing save info
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = new TextButton(buttonText, skin);
+        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -102,7 +103,7 @@ public class SaveGameMenuDisplay extends UIComponent {
       } else {
         // Empty save slot
         String buttonText = "Empty";
-        saveSlotButtons[i] = new TextButton(buttonText, skin);
+        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -119,7 +120,7 @@ public class SaveGameMenuDisplay extends UIComponent {
     }
 
     // Save game button
-    saveButton = new TextButton("Save Game", skin);
+    saveButton = ButtonFactory.createButton("Save Game");
     saveButton.addListener(
         new ChangeListener() {
           @Override

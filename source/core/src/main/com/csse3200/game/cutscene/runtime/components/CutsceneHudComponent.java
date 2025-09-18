@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 
 public class CutsceneHudComponent extends UIComponent {
@@ -143,9 +144,9 @@ public class CutsceneHudComponent extends UIComponent {
     choicesGroup.add(choicesCenter).fill().expand();
     choicesGroup.add(choicesRight).fill().expand();
 
-    TextButton testButton1 = new TextButton("Test", skin);
-    TextButton testButton2 = new TextButton("Test2", skin);
-    TextButton testButton3 = new TextButton("Test3", skin);
+    TextButton testButton1 = ButtonFactory.createButton("Test");
+    TextButton testButton2 = ButtonFactory.createButton("Test2");
+    TextButton testButton3 = ButtonFactory.createButton("Test3");
 
     choicesLeft.addActor(testButton1);
     choicesCenter.addActor(testButton2);

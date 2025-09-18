@@ -134,7 +134,8 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/effects/buff.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/buff.atlas", TextureAtlas.class),
             "buff",
             position,
             tileSize * 3,
@@ -154,7 +155,8 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/effects/coffee.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/coffee.atlas", TextureAtlas.class),
             "coffee",
             position,
             tileSize * 3,
@@ -174,7 +176,8 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/effects/emp.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/emp.atlas", TextureAtlas.class),
             "emp",
             position,
             tileSize * 3,
@@ -209,7 +212,8 @@ public class ItemEffectsService {
         position.x = position.x - 2 * tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/effects/nuke.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/nuke.atlas", TextureAtlas.class),
             "nuke",
             position,
             tileSize * 5,

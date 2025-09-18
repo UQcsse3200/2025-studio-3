@@ -34,7 +34,8 @@ public class GdxGame extends Game {
     "images/ui/menu-icon.png",
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
-    "images/entities/placeholder.png"
+    "images/entities/placeholder.png",
+    "images/ui/btn-blue.png"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
@@ -92,7 +93,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Arcade",
-            new Pair<>(0.60f, 0.28f),
+            new Pair<>(0.59f, 0.34f),
             false,
             true,
             ScreenType.MINI_GAMES,
@@ -102,7 +103,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 1",
-            new Pair<>(0.15f, 0.25f),
+            new Pair<>(0.18f, 0.27f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -112,7 +113,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 2",
-            new Pair<>(0.25f, 0.18f),
+            new Pair<>(0.32f, 0.24f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -122,7 +123,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 3",
-            new Pair<>(0.55f, 0.18f),
+            new Pair<>(0.45f, 0.40f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -132,7 +133,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 4",
-            new Pair<>(0.75f, 0.24f),
+            new Pair<>(0.65f, 0.60f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -142,7 +143,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 5",
-            new Pair<>(0.95f, 0.18f),
+            new Pair<>(0.85f, 0.78f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -155,6 +156,8 @@ public class GdxGame extends Game {
   private void loadGlobalAssets() {
     logger.debug("[GdxGame] Loading global assets");
     ServiceLocator.getGlobalResourceService().loadTextures(GLOBAL_ASSETS);
+    ServiceLocator.getGlobalResourceService()
+        .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
     ServiceLocator.getGlobalResourceService().loadAll();
