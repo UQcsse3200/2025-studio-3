@@ -60,43 +60,43 @@ public class TerrainFactory {
    */
   public TerrainComponent createTerrain(TerrainType terrainType) {
     ResourceService resourceService = ServiceLocator.getResourceService();
-      switch (terrainType) {
-          case FOREST_DEMO -> {
-              TextureRegion orthoGrass =
-                      new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
-              TextureRegion orthoTuft =
-                      new TextureRegion(resourceService.getAsset("images/grass_2.png", Texture.class));
-              TextureRegion orthoRocks =
-                      new TextureRegion(resourceService.getAsset("images/grass_3.png", Texture.class));
-              return createForestDemoTerrain(0.5f, orthoGrass, orthoTuft, orthoRocks);
-          }
-          case FOREST_DEMO_ISO -> {
-              TextureRegion isoGrass =
-                      new TextureRegion(resourceService.getAsset("images/iso_grass_1.png", Texture.class));
-              TextureRegion isoTuft =
-                      new TextureRegion(resourceService.getAsset("images/iso_grass_2.png", Texture.class));
-              TextureRegion isoRocks =
-                      new TextureRegion(resourceService.getAsset("images/iso_grass_3.png", Texture.class));
-              return createForestDemoTerrain(1f, isoGrass, isoTuft, isoRocks);
-          }
-          case FOREST_DEMO_HEX -> {
-              TextureRegion hexGrass =
-                      new TextureRegion(resourceService.getAsset("images/hex_grass_1.png", Texture.class));
-              TextureRegion hexTuft =
-                      new TextureRegion(resourceService.getAsset("images/hex_grass_2.png", Texture.class));
-              TextureRegion hexRocks =
-                      new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
-              return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
-          }
-          case LEVEL_ONE_MAP -> {
-              TextureRegion levelMap =
-                      new TextureRegion(resourceService.getAsset("images/level-1-map-v2.png", Texture.class));
-              return createLevelMap(levelMap);
-          }
-          default -> {
-              return null;
-          }
+    switch (terrainType) {
+      case FOREST_DEMO -> {
+        TextureRegion orthoGrass =
+            new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
+        TextureRegion orthoTuft =
+            new TextureRegion(resourceService.getAsset("images/grass_2.png", Texture.class));
+        TextureRegion orthoRocks =
+            new TextureRegion(resourceService.getAsset("images/grass_3.png", Texture.class));
+        return createForestDemoTerrain(0.5f, orthoGrass, orthoTuft, orthoRocks);
       }
+      case FOREST_DEMO_ISO -> {
+        TextureRegion isoGrass =
+            new TextureRegion(resourceService.getAsset("images/iso_grass_1.png", Texture.class));
+        TextureRegion isoTuft =
+            new TextureRegion(resourceService.getAsset("images/iso_grass_2.png", Texture.class));
+        TextureRegion isoRocks =
+            new TextureRegion(resourceService.getAsset("images/iso_grass_3.png", Texture.class));
+        return createForestDemoTerrain(1f, isoGrass, isoTuft, isoRocks);
+      }
+      case FOREST_DEMO_HEX -> {
+        TextureRegion hexGrass =
+            new TextureRegion(resourceService.getAsset("images/hex_grass_1.png", Texture.class));
+        TextureRegion hexTuft =
+            new TextureRegion(resourceService.getAsset("images/hex_grass_2.png", Texture.class));
+        TextureRegion hexRocks =
+            new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
+        return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
+      }
+      case LEVEL_ONE_MAP -> {
+        TextureRegion levelMap =
+            new TextureRegion(resourceService.getAsset("images/level-1-map-v2.png", Texture.class));
+        return createLevelMap(levelMap);
+      }
+      default -> {
+        return null;
+      }
+    }
   }
 
   /**
@@ -108,7 +108,7 @@ public class TerrainFactory {
   public TerrainComponent createTerrain(int levelNum) {
     // switch to be used once fully implemented, at this stage default branch only
     switch (levelNum) {
-        default -> {
+      default -> {
         BaseLevelGameConfig config = new BaseLevelGameConfig();
         return createLevelTerrain(config);
       }
