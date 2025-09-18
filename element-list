@@ -20,6 +20,7 @@ com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
 com.csse3200.game.components.profile
+com.csse3200.game.components.projectiles
 com.csse3200.game.components.proximityinfodisplay
 com.csse3200.game.components.settingsmenu
 com.csse3200.game.components.shop
