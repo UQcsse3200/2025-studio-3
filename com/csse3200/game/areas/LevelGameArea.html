@@ -143,6 +143,16 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beginDrag(com.badlogic.gdx.graphics.Texture)" class="member-name-link">beginDrag</a><wbr>(com.badlogic.gdx.graphics.Texture&nbsp;texture)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Begins a drag operation with the given texture.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#cancelDrag()" class="member-name-link">cancelDrag</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Cancels an ongoing drag operation.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkGameOver()" class="member-name-link">checkGameOver</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Checks the game over condition when a robot reaches the end of the grid</div>
@@ -172,19 +182,29 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Getter for tile size in world units</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCharacterSelected()" class="member-name-link">isCharacterSelected</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Remove a unit form a tile</div>
+<div class="block">Checks if a character is currently selected.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Method to reset game entity size/position on window resize.</div>
+<div class="block">Remove a unit form a tile</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Method to reset game entity size/position on window resize.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsCharacterSelected(boolean)" class="member-name-link">setIsCharacterSelected</a><wbr>(boolean&nbsp;status)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets whether a character is currently selected.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScaling()" class="member-name-link">setScaling</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -459,6 +479,56 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <h3>checkGameOver</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkGameOver</span>()</div>
 <div class="block">Checks the game over condition when a robot reaches the end of the grid</div>
+</section>
+</li>
+<li>
+<section class="detail" id="beginDrag(com.badlogic.gdx.graphics.Texture)">
+<h3>beginDrag</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">beginDrag</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.Texture&nbsp;texture)</span></div>
+<div class="block">Begins a drag operation with the given texture.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#beginDrag(com.badlogic.gdx.graphics.Texture)">beginDrag</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>texture</code> - the texture to display while dragging</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="cancelDrag()">
+<h3>cancelDrag</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cancelDrag</span>()</div>
+<div class="block">Cancels an ongoing drag operation.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#cancelDrag()">cancelDrag</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setIsCharacterSelected(boolean)">
+<h3>setIsCharacterSelected</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setIsCharacterSelected</span><wbr><span class="parameters">(boolean&nbsp;status)</span></div>
+<div class="block">Sets whether a character is currently selected.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#setIsCharacterSelected(boolean)">setIsCharacterSelected</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>status</code> - true to indicate a character is selected, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isCharacterSelected()">
+<h3>isCharacterSelected</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCharacterSelected</span>()</div>
+<div class="block">Checks if a character is currently selected.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#isCharacterSelected()">isCharacterSelected</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dt>Returns:</dt>
+<dd>true if a character is selected, false otherwise</dd>
+</dl>
 </section>
 </li>
 </ul>

@@ -11,6 +11,7 @@ com.csse3200.game.components.dialog
 com.csse3200.game.components.dossier
 com.csse3200.game.components.gamearea
 com.csse3200.game.components.gameover
+com.csse3200.game.components.hotbar
 com.csse3200.game.components.hud
 com.csse3200.game.components.inventory
 com.csse3200.game.components.items

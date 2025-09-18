@@ -101,12 +101,22 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab3" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab3', 3)" class="table-tab">Abstract Methods</button><button id="method-summary-table-tab5" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab5', 3)" class="table-tab">Default Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#beginDrag(com.badlogic.gdx.graphics.Texture)" class="member-name-link">beginDrag</a><wbr>(com.badlogic.gdx.graphics.Texture&nbsp;texture)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Begins a drag operation with the given texture.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#cancelDrag()" class="member-name-link">cancelDrag</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Cancels an ongoing drag operation.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -122,10 +132,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Gets the size of tiles in this area.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#isCharacterSelected()" class="member-name-link">isCharacterSelected</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Checks if a character is currently selected.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Removes a unit from the specified position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setIsCharacterSelected(boolean)" class="member-name-link">setIsCharacterSelected</a><wbr>(boolean&nbsp;selected)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Sets the character selection status.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setSelectedUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setSelectedUnit</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
@@ -250,6 +270,46 @@ loadScripts(document, 'script');</script>
 <dd><code>pos</code> - the world coords as GridPoint2</dd>
 <dt>Returns:</dt>
 <dd>the stage coords as GridPoint2</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="beginDrag(com.badlogic.gdx.graphics.Texture)">
+<h3>beginDrag</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">beginDrag</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.Texture&nbsp;texture)</span></div>
+<div class="block">Begins a drag operation with the given texture.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>texture</code> - the texture to show while dragging</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="cancelDrag()">
+<h3>cancelDrag</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">cancelDrag</span>()</div>
+<div class="block">Cancels an ongoing drag operation.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isCharacterSelected()">
+<h3>isCharacterSelected</h3>
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">isCharacterSelected</span>()</div>
+<div class="block">Checks if a character is currently selected.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if a character is selected, false otherwise</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setIsCharacterSelected(boolean)">
+<h3>setIsCharacterSelected</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">setIsCharacterSelected</span><wbr><span class="parameters">(boolean&nbsp;selected)</span></div>
+<div class="block">Sets the character selection status.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>selected</code> - true to indicate a character is selected, false otherwise</dd>
 </dl>
 </section>
 </li>

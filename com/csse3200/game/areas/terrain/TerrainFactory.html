@@ -144,6 +144,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createLevelTerrain(com.csse3200.game.entities.configs.BaseLevelGameConfig)" class="member-name-link">createLevelTerrain</a><wbr>(<a href="../../entities/configs/BaseLevelGameConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelGameConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates a terrain component according to the config passed by createTerrain.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createTerrain(int)" class="member-name-link">createTerrain</a><wbr>(int&nbsp;levelNum)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Takes the level number to create a terrain component using the createLevelTerrain method.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createTerrain(com.csse3200.game.areas.terrain.TerrainFactory.TerrainType)" class="member-name-link">createTerrain</a><wbr>(<a href="TerrainFactory.TerrainType.html" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a>&nbsp;terrainType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create a terrain of the given type, using the orientation of the factory.</div>
@@ -208,6 +218,33 @@ loadScripts(document, 'script');</script>
 <dd><code>terrainType</code> - Terrain to create</dd>
 <dt>Returns:</dt>
 <dd>Terrain component which renders the terrain</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createTerrain(int)">
+<h3>createTerrain</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></span>&nbsp;<span class="element-name">createTerrain</span><wbr><span class="parameters">(int&nbsp;levelNum)</span></div>
+<div class="block">Takes the level number to create a terrain component using the createLevelTerrain method.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>levelNum</code> - integer representing the level number of the terrain component being created.</dd>
+<dt>Returns:</dt>
+<dd>Terrain component reflecting the level number presented, which renders the terrain.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createLevelTerrain(com.csse3200.game.entities.configs.BaseLevelGameConfig)">
+<h3>createLevelTerrain</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></span>&nbsp;<span class="element-name">createLevelTerrain</span><wbr><span class="parameters">(<a href="../../entities/configs/BaseLevelGameConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelGameConfig</a>&nbsp;config)</span></div>
+<div class="block">Creates a terrain component according to the config passed by createTerrain.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - containing the required number of rows, columns and filepath to the map image
+     file.</dd>
+<dt>Returns:</dt>
+<dd>Terrain component reflecting the config presented, which renders the terrain.</dd>
 </dl>
 </section>
 </li>
