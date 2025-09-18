@@ -147,7 +147,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
                     () -> {
                       if (!gameOver) {
                         score += 0.5; // Increment score
-                        survivalTime += 1f; // Increment survival time
+                        survivalTime += 0.1f; // Increment survival time
                         scoreLabel.setText("Score: " + score);
                         timeLabel.setText(String.format("Time: %.1fs", survivalTime));
                       }
