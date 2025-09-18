@@ -84,6 +84,16 @@ loadScripts(document, 'script');</script>
 <li><a href="com/csse3200/game/components/tile/package-tree.html">com.csse3200.game.components.tile</a>, </li>
 <li><a href="com/csse3200/game/components/waves/package-tree.html">com.csse3200.game.components.waves</a>, </li>
 <li><a href="com/csse3200/game/concurrency/package-tree.html">com.csse3200.game.concurrency</a>, </li>
+<li><a href="com/csse3200/game/cutscene/package-tree.html">com.csse3200.game.cutscene</a>, </li>
+<li><a href="com/csse3200/game/cutscene/models/dto/package-tree.html">com.csse3200.game.cutscene.models.dto</a>, </li>
+<li><a href="com/csse3200/game/cutscene/models/object/package-tree.html">com.csse3200.game.cutscene.models.object</a>, </li>
+<li><a href="com/csse3200/game/cutscene/models/object/actiondata/package-tree.html">com.csse3200.game.cutscene.models.object.actiondata</a>, </li>
+<li><a href="com/csse3200/game/cutscene/runtime/package-tree.html">com.csse3200.game.cutscene.runtime</a>, </li>
+<li><a href="com/csse3200/game/cutscene/runtime/action/package-tree.html">com.csse3200.game.cutscene.runtime.action</a>, </li>
+<li><a href="com/csse3200/game/cutscene/runtime/components/package-tree.html">com.csse3200.game.cutscene.runtime.components</a>, </li>
+<li><a href="com/csse3200/game/cutscene/runtime/states/package-tree.html">com.csse3200.game.cutscene.runtime.states</a>, </li>
+<li><a href="com/csse3200/game/cutscene/validators/package-tree.html">com.csse3200.game.cutscene.validators</a>, </li>
+<li><a href="com/csse3200/game/cutscene/validators/actionvalidators/package-tree.html">com.csse3200.game.cutscene.validators.actionvalidators</a>, </li>
 <li><a href="com/csse3200/game/data/package-tree.html">com.csse3200.game.data</a>, </li>
 <li><a href="com/csse3200/game/entities/package-tree.html">com.csse3200.game.entities</a>, </li>
 <li><a href="com/csse3200/game/entities/configs/package-tree.html">com.csse3200.game.entities.configs</a>, </li>
@@ -118,8 +128,20 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
 <ul>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/ActionDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">ActionDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionStates.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime">ActionStates</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidatorRegistry.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators">ActionValidatorRegistry</a></li>
 <li class="circle">com.badlogic.gdx.scenes.scene2d.Actor
 <ul>
+<li class="circle">com.badlogic.gdx.scenes.scene2d.Group (implements com.badlogic.gdx.scenes.scene2d.utils.Cullable)
+<ul>
+<li class="circle">com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup (implements com.badlogic.gdx.scenes.scene2d.utils.Layout)
+<ul>
+<li class="circle">com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/PaneGroup.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.components">PaneGroup</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="circle">com.badlogic.gdx.scenes.scene2d.ui.Widget (implements com.badlogic.gdx.scenes.scene2d.utils.Layout)
 <ul>
 <li class="circle">com.badlogic.gdx.scenes.scene2d.ui.Image
@@ -132,8 +154,22 @@ loadScripts(document, 'script');</script>
 </li>
 </ul>
 </li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Advance.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Advance</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/AdvanceAutoDelayState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoDelayState</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/AdvanceAutoState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoState</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/AdvanceDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">AdvanceDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/AdvanceInputState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceInputState</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>, com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/SupportsAdvance.html" title="interface in com.csse3200.game.cutscene.runtime">SupportsAdvance</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/AdvanceSignalState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceSignalState</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
 <li class="circle">com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/AllHitCallback.html" class="type-name-link" title="class in com.csse3200.game.physics.raycast">AllHitCallback</a> (implements com.badlogic.gdx.physics.box2d.RayCastCallback)</li>
 <li class="circle">com.csse3200.game.progression.arsenal.<a href="com/csse3200/game/progression/arsenal/Arsenal.html" class="type-name-link" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/AudioPlayValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">AudioPlayValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/AudioSetValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">AudioSetValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/AudioStopValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">AudioStopValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Background.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Background</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/BackgroundDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">BackgroundDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/BackgroundSetAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">BackgroundSetAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/BackgroundSetValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">BackgroundSetValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/BackgroundState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">BackgroundState</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.DeserializedAchievementConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig.DeserializedAchievementConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEntityConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a>
@@ -153,7 +189,18 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseItemConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseItemConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseItemConfig.DeserializedItemConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseItemConfig.DeserializedItemConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseWaveConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseWaveConfig</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Beat.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Beat</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/BeatDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">BeatDTO</a></li>
 <li class="circle">com.csse3200.game.physics.<a href="com/csse3200/game/physics/BodyUserData.html" class="type-name-link" title="class in com.csse3200.game.physics">BodyUserData</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Character.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Character</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/CharacterDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">CharacterDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/CharacterEnterAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">CharacterEnterAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/CharacterEnterValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">CharacterEnterValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/CharacterExitAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">CharacterExitAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/CharacterExitValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">CharacterExitValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">CharacterState</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Choice.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Choice</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/ChoiceValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">ChoiceValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/Component.html" class="type-name-link" title="class in com.csse3200.game.components">Component</a>
 <ul>
 <li class="circle">com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/AITaskComponent.html" class="type-name-link" title="class in com.csse3200.game.ai.tasks">AITaskComponent</a> (implements com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/TaskRunner.html" title="interface in com.csse3200.game.ai.tasks">TaskRunner</a>)</li>
@@ -172,12 +219,14 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html" class="type-name-link" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/CutsceneTickComponent.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.components">CutsceneTickComponent</a></li>
 <li class="circle">com.csse3200.game.components.npc.<a href="com/csse3200/game/components/npc/DefenceAnimationController.html" class="type-name-link" title="class in com.csse3200.game.components.npc">DefenceAnimationController</a></li>
 <li class="circle">com.csse3200.game.components.npc.<a href="com/csse3200/game/components/npc/DespawnOnPlayerContactComponent.html" class="type-name-link" title="class in com.csse3200.game.components.npc">DespawnOnPlayerContactComponent</a></li>
 <li class="circle">com.csse3200.game.components.npc.<a href="com/csse3200/game/components/npc/GhostAnimationController.html" class="type-name-link" title="class in com.csse3200.game.components.npc">GhostAnimationController</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/HitMarkerComponent.html" class="type-name-link" title="class in com.csse3200.game.components">HitMarkerComponent</a></li>
 <li class="circle">com.csse3200.game.input.<a href="com/csse3200/game/input/InputComponent.html" class="type-name-link" title="class in com.csse3200.game.input">InputComponent</a> (implements com.badlogic.gdx.input.GestureDetector.GestureListener, com.badlogic.gdx.InputProcessor)
 <ul>
+<li class="circle">com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/CutsceneInputComponent.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.components">CutsceneInputComponent</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/DeckInputComponent.html" class="type-name-link" title="class in com.csse3200.game.components">DeckInputComponent</a></li>
 <li class="circle">com.csse3200.game.input.<a href="com/csse3200/game/input/InputDecorator.html" class="type-name-link" title="class in com.csse3200.game.input">InputDecorator</a></li>
 <li class="circle">com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/KeyboardPlayerInputComponent.html" class="type-name-link" title="class in com.csse3200.game.components.player">KeyboardPlayerInputComponent</a></li>
@@ -217,6 +266,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.achievements.<a href="com/csse3200/game/components/achievements/AchievementsDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.achievements">AchievementsDisplay</a></li>
 <li class="circle">com.csse3200.game.components.hud.<a href="com/csse3200/game/components/hud/AnimatedDropdownMenu.html" class="type-name-link" title="class in com.csse3200.game.components.hud">AnimatedDropdownMenu</a></li>
 <li class="circle">com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/CutsceneHudComponent.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.components">CutsceneHudComponent</a></li>
 <li class="circle">com.csse3200.game.components.dialog.<a href="com/csse3200/game/components/dialog/DialogComponent.html" class="type-name-link" title="class in com.csse3200.game.components.dialog">DialogComponent</a></li>
 <li class="circle">com.csse3200.game.components.dossier.<a href="com/csse3200/game/components/dossier/DossierDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.dossier">DossierDisplay</a></li>
 <li class="circle">com.csse3200.game.ui.<a href="com/csse3200/game/ui/DraggableCharacter.html" class="type-name-link" title="class in com.csse3200.game.ui">DraggableCharacter</a></li>
@@ -270,9 +320,19 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.DeserializedEnemyConfig.html" class="type-name-link" title="class in com.csse3200.game.services">ConfigService.DeserializedEnemyConfig</a></li>
 <li class="circle">com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/Currency.html" class="type-name-link" title="class in com.csse3200.game.components.currency">Currency</a></li>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/CurrencyService.html" class="type-name-link" title="class in com.csse3200.game.services">CurrencyService</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Cutscene.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Cutscene</a></li>
+<li class="circle">com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneCompiler.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutsceneCompiler</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/CutsceneDocDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">CutsceneDocDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/CutsceneDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">CutsceneDTO</a></li>
+<li class="circle">com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneLoader.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutsceneLoader</a></li>
+<li class="circle">com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutscenePipeline.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutscenePipeline</a></li>
+<li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/CutsceneService.html" class="type-name-link" title="class in com.csse3200.game.services">CutsceneService</a></li>
+<li class="circle">com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneUI.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutsceneUI</a></li>
+<li class="circle">com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutsceneValidator</a></li>
 <li class="circle">com.csse3200.game.physics.attacking_system.<a href="com/csse3200/game/physics/attacking_system/damageMappingSystem.html" class="type-name-link" title="class in com.csse3200.game.physics.attacking_system">damageMappingSystem</a></li>
 <li class="circle">com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/DebugCommand.html" class="type-name-link" title="class in com.csse3200.game.ui.terminal.commands">DebugCommand</a> (implements com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/Command.html" title="interface in com.csse3200.game.ui.terminal.commands">Command</a>)</li>
 <li class="circle">com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/DebugRenderer.html" class="type-name-link" title="class in com.csse3200.game.rendering">DebugRenderer</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/DefaultOrchestrator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime">DefaultOrchestrator</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a>)</li>
 <li class="circle">com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/DefaultTask.html" class="type-name-link" title="class in com.csse3200.game.ai.tasks">DefaultTask</a> (implements com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a>)
 <ul>
 <li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/ChaseTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">ChaseTask</a> (implements com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a>)</li>
@@ -294,6 +354,12 @@ loadScripts(document, 'script');</script>
 </li>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/DefenceFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">DefenceFactory</a></li>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/DialogService.html" class="type-name-link" title="class in com.csse3200.game.services">DialogService</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/DialogueChorusValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">DialogueChorusValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/DialogueHideAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">DialogueHideAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/DialogueHideValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">DialogueHideValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/DialogueShowAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">DialogueShowAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/DialogueShowValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">DialogueShowValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></li>
 <li class="circle">com.csse3200.game.components.dossier.<a href="com/csse3200/game/components/dossier/DossierManager.html" class="type-name-link" title="class in com.csse3200.game.components.dossier">DossierManager</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/EnemySpawnConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></li>
 <li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" class="type-name-link" title="class in com.csse3200.game.entities">Entity</a></li>
@@ -319,6 +385,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/GameConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">GameConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/GameConfig.LevelData.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">GameConfig.LevelData</a></li>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/GameTime.html" class="type-name-link" title="class in com.csse3200.game.services">GameTime</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/GotoValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">GotoValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/GridFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">GridFactory</a></li>
 <li class="circle">com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/GridPoint2Utils.html" class="type-name-link" title="class in com.csse3200.game.utils.math">GridPoint2Utils</a></li>
 <li class="circle">com.csse3200.game.input.<a href="com/csse3200/game/input/InputFactory.html" class="type-name-link" title="class in com.csse3200.game.input">InputFactory</a>
@@ -356,6 +423,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/NPCFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">NPCFactory</a></li>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/ObstacleFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">ObstacleFactory</a></li>
 <li class="circle">com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/ObstacleManager.html" class="type-name-link" title="class in com.csse3200.game.minigame">ObstacleManager</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/OrchestratorState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime">OrchestratorState</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.actionvalidators.<a href="com/csse3200/game/cutscene/validators/actionvalidators/ParallelValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">ParallelValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a>)</li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Persistence.html" class="type-name-link" title="class in com.csse3200.game.persistence">Persistence</a></li>
 <li class="circle">com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsContactListener.html" class="type-name-link" title="class in com.csse3200.game.physics">PhysicsContactListener</a> (implements com.badlogic.gdx.physics.box2d.ContactListener)</li>
 <li class="circle">com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" class="type-name-link" title="class in com.csse3200.game.physics">PhysicsEngine</a> (implements com.badlogic.gdx.utils.Disposable)</li>
@@ -411,6 +480,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></li>
 <li class="circle">com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotSymbols.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotSymbols</a></li>
 <li class="circle">com.csse3200.game.utils.<a href="com/csse3200/game/utils/SortedIntMap.html" class="type-name-link" title="class in com.csse3200.game.utils">SortedIntMap</a>&lt;V&gt; (implements java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;T&gt;)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Sound.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Sound</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/SoundDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">SoundDTO</a></li>
 <li class="circle">com.csse3200.game.progression.statistics.<a href="com/csse3200/game/progression/statistics/Statistics.html" class="type-name-link" title="class in com.csse3200.game.progression.statistics">Statistics</a></li>
 <li class="circle">com.csse3200.game.utils.<a href="com/csse3200/game/utils/StringDecorator.html" class="type-name-link" title="class in com.csse3200.game.utils">StringDecorator</a>&lt;T&gt;</li>
 <li class="circle">com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.html" class="type-name-link" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a></li>
@@ -419,7 +490,13 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Exception.html" class="type-name-link external-link" title="class or interface in java.lang">Exception</a>
 <ul>
+<li class="circle">com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/AuthoringError.html" class="type-name-link" title="class in com.csse3200.game.exceptions">AuthoringError</a></li>
 <li class="circle">com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/MenuSpriteNotFoundException.html" class="type-name-link" title="class in com.csse3200.game.exceptions">MenuSpriteNotFoundException</a></li>
+<li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/RuntimeException.html" class="type-name-link external-link" title="class or interface in java.lang">RuntimeException</a>
+<ul>
+<li class="circle">com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/ValidationError.html" class="type-name-link" title="class in com.csse3200.game.exceptions">ValidationError</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -427,6 +504,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings</a></li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/V1SchemaValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators">V1SchemaValidator</a> (implements com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/SchemaValidator.html" title="interface in com.csse3200.game.cutscene.validators">SchemaValidator</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ValidatorUtils.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators">ValidatorUtils</a></li>
 <li class="circle">com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" class="type-name-link" title="class in com.csse3200.game.utils.math">Vector2Utils</a></li>
 <li class="circle">com.csse3200.game.progression.wallet.<a href="com/csse3200/game/progression/wallet/Wallet.html" class="type-name-link" title="class in com.csse3200.game.progression.wallet">Wallet</a></li>
 <li class="circle">com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" class="type-name-link" title="class in com.csse3200.game.entities">WaveManager</a> (implements com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>)</li>
@@ -438,6 +517,9 @@ loadScripts(document, 'script');</script>
 <section class="hierarchy">
 <h2 title="Interface Hierarchy">Interface Hierarchy</h2>
 <ul>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ActionValidator.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.validators">ActionValidator</a></li>
 <li class="circle">com.csse3200.game.areas.<a href="com/csse3200/game/areas/AreaAPI.html" class="type-name-link" title="interface in com.csse3200.game.areas">AreaAPI</a></li>
 <li class="circle">com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/Command.html" class="type-name-link" title="interface in com.csse3200.game.ui.terminal.commands">Command</a></li>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html" class="type-name-link external-link" title="class or interface in java.lang">Comparable</a>&lt;T&gt;
@@ -445,6 +527,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderable.html" class="type-name-link" title="interface in com.csse3200.game.rendering">Renderable</a></li>
 </ul>
 </li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></li>
 <li class="circle">com.csse3200.game.areas.<a href="com/csse3200/game/areas/EnemySpawner.html" class="type-name-link" title="interface in com.csse3200.game.areas">EnemySpawner</a></li>
 <li class="circle">com.csse3200.game.events.listeners.<a href="com/csse3200/game/events/listeners/EventListener.html" class="type-name-link" title="interface in com.csse3200.game.events.listeners">EventListener</a>
 <ul>
@@ -455,12 +538,15 @@ loadScripts(document, 'script');</script>
 </ul>
 </li>
 <li class="circle">com.csse3200.game.ai.movement.<a href="com/csse3200/game/ai/movement/MovementController.html" class="type-name-link" title="interface in com.csse3200.game.ai.movement">MovementController</a></li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/SchemaValidator.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.validators">SchemaValidator</a></li>
 <li class="circle">com.badlogic.gdx.Screen
 <ul>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/DynamicMenuSpriteScreen.html" class="type-name-link" title="interface in com.csse3200.game.screens">DynamicMenuSpriteScreen</a>&lt;E&gt;</li>
 <li class="circle">com.csse3200.game.screens.<a href="com/csse3200/game/screens/MenuSpriteScreen.html" class="type-name-link" title="interface in com.csse3200.game.screens">MenuSpriteScreen</a></li>
 </ul>
 </li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/SupportsAdvance.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.runtime">SupportsAdvance</a></li>
+<li class="circle">com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/SupportsChoice.html" class="type-name-link" title="interface in com.csse3200.game.cutscene.runtime">SupportsChoice</a></li>
 <li class="circle">com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.html" class="type-name-link" title="interface in com.csse3200.game.ai.tasks">Task</a>
 <ul>
 <li class="circle">com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/PriorityTask.html" class="type-name-link" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></li>
@@ -479,6 +565,8 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Enum.html" class="type-name-link external-link" title="class or interface in java.lang">Enum</a>&lt;E&gt; (implements java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Comparable.html" title="class or interface in java.lang" class="external-link">Comparable</a>&lt;T&gt;, java.lang.constant.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/constant/Constable.html" title="class or interface in java.lang.constant" class="external-link">Constable</a>, java.io.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/Serializable.html" title="class or interface in java.io" class="external-link">Serializable</a>)
 <ul>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/AdvanceMode.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">AdvanceMode</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/AudioBus.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">AudioBus</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentPriority.html" class="type-name-link" title="enum class in com.csse3200.game.components">ComponentPriority</a></li>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/DialogService.DialogType.html" class="type-name-link" title="enum class in com.csse3200.game.services">DialogService.DialogType</a></li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/FileLoader.Location.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">FileLoader.Location</a></li>
@@ -487,12 +575,40 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" class="type-name-link" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></li>
 <li class="circle">com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignX.html" class="type-name-link" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignX</a></li>
 <li class="circle">com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignY.html" class="type-name-link" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignY</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Position.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">Position</a></li>
 <li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/RobotFactory.RobotType.html" class="type-name-link" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a></li>
 <li class="circle">com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/Skill.StatType.html" class="type-name-link" title="enum class in com.csse3200.game.progression.skilltree">Skill.StatType</a></li>
 <li class="circle">com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" class="type-name-link" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></li>
 <li class="circle">com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.Status.html" class="type-name-link" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></li>
 <li class="circle">com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainComponent.TerrainOrientation.html" class="type-name-link" title="enum class in com.csse3200.game.areas.terrain">TerrainComponent.TerrainOrientation</a></li>
 <li class="circle">com.csse3200.game.areas.terrain.<a href="com/csse3200/game/areas/terrain/TerrainFactory.TerrainType.html" class="type-name-link" title="enum class in com.csse3200.game.areas.terrain">TerrainFactory.TerrainType</a></li>
+<li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Transition.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">Transition</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+<section class="hierarchy">
+<h2 title="Record Class Hierarchy">Record Class Hierarchy</h2>
+<ul>
+<li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" class="type-name-link external-link" title="class or interface in java.lang">Object</a>
+<ul>
+<li class="circle">java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Record.html" class="type-name-link external-link" title="class or interface in java.lang">Record</a>
+<ul>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/AudioPlayData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">AudioPlayData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/AudioSetData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">AudioSetData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/AudioStopData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">AudioStopData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/BackgroundSetData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">BackgroundSetData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">CharacterEnterData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterExitData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">CharacterExitData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ChoiceData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">ChoiceData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/DialogueChorusData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">DialogueChorusData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/DialogueHideData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">DialogueHideData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/DialogueShowData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">DialogueShowData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/GotoData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">GotoData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ParallelData.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object.actiondata">ParallelData</a> (implements com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>)</li>
+<li class="circle">com.csse3200.game.cutscene.validators.<a href="com/csse3200/game/cutscene/validators/ValidationCtx.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators">ValidationCtx</a></li>
 </ul>
 </li>
 </ul>

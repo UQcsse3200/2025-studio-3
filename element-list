@@ -31,6 +31,16 @@ com.csse3200.game.components.tasks
 com.csse3200.game.components.tile
 com.csse3200.game.components.waves
 com.csse3200.game.concurrency
+com.csse3200.game.cutscene
+com.csse3200.game.cutscene.models.dto
+com.csse3200.game.cutscene.models.object
+com.csse3200.game.cutscene.models.object.actiondata
+com.csse3200.game.cutscene.runtime
+com.csse3200.game.cutscene.runtime.action
+com.csse3200.game.cutscene.runtime.components
+com.csse3200.game.cutscene.runtime.states
+com.csse3200.game.cutscene.validators
+com.csse3200.game.cutscene.validators.actionvalidators
 com.csse3200.game.data
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
