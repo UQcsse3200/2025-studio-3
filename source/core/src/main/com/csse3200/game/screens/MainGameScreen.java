@@ -69,9 +69,9 @@ public class MainGameScreen extends ScreenAdapter {
     this.game = game;
     this.waveManager = new WaveManager();
 
-   // if (Persistence.profile() == null) {
-     // throw new IllegalStateException("No profile loaded, cannot start game");
-   // }
+    // if (Persistence.profile() == null) {
+    // throw new IllegalStateException("No profile loaded, cannot start game");
+    // }
 
     logger.debug("Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
