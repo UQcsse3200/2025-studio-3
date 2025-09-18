@@ -1,54 +1,54 @@
 package com.csse3200.game.entities.configs;
 
-/** Defines the properties stored in defences.json to be loaded by the NPC Factory. */
+
+/**
+ * Defines a set of properties for all defenders.
+ */
 public class BaseDefenderConfig extends BaseEntityConfig {
+  private int cost;
+  private int rangeType; // what is this???
+  private int range;
+  private int state; // what is this???
+  private int attackSpeed;
+  private int critChance;
+  private int attack;
+
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
-    // Default constructor with default field values
+    // Default constructor
   }
 
-  public String name = "Name";
-  public String description = "Description";
-  public int defenceHealth = 1;
-  public int defenceAttack = 1;
-
-  /** Defence type identifier */
-  private int rangeType;
-
-  /** Attack range of the defence */
-  private int range;
-
-  /** Current state of the defence */
-  private int state;
-
-  /** Attack speed of the defence */
-  private int attackSpeed;
-
-  /** Critical hit chance percentage */
-  private int critChance;
+  /**
+   * Gets the cost of the defender.
+   *
+   * @return the cost of the defender
+   */
+  public int getCost() {
+    return cost;
+  }
 
   /**
-   * Gets the attack value for this entity.
+   * Gets the range type of the defender.
    *
-   * @return the attack value
+   * @return the range type value
    */
   public int getRangeType() {
     return rangeType;
   }
 
   /**
-   * Gets the attack value for this entity.
+   * Gets the range value for this entity.
    *
-   * @return the attack value
+   * @return the range value
    */
   public int getRange() {
     return range;
   }
 
   /**
-   * Gets the attack value for this entity.
+   * Gets the state value for this entity.
    *
-   * @return the attack value
+   * @return the state value
    */
   public int getAttackState() {
     return state;
@@ -64,11 +64,20 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   }
 
   /**
+   * Gets the attack speed value for this entity.
+   *
+   * @return the attack speed value
+   */
+  public int getCritChance() {
+    return critChance;
+  }
+
+  /**
    * Gets the attack value for this entity.
    *
    * @return the attack value
    */
-  public int getCritChance() {
-    return critChance;
+  public int getAttack() {
+    return attack;
   }
 }
