@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.currency.SunlightHudDisplay;
+import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
@@ -17,6 +17,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -48,17 +49,21 @@ public class MainGameScreen extends ScreenAdapter {
     "images/profile.png",
     "images/dialog.png",
     "images/achievement.png",
-    "images/pause-icon.png"
+    "images/pause-icon.png",
+    "images/scrap_metal.png",
+    "images/heart.png",
+    "images/coins.png",
+    "images/profile.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
-  private final GdxGame game;
-  private final Renderer renderer;
-  private final PhysicsEngine physicsEngine;
-  private final WaveManager waveManager;
-  private LevelGameArea levelGameArea;
-  private boolean isPaused = false;
-  private com.badlogic.gdx.audio.Music backgroundMusic;
+  protected final GdxGame game;
+  protected final Renderer renderer;
+  protected final PhysicsEngine physicsEngine;
+  protected final WaveManager waveManager;
+  protected LevelGameArea gameArea;
+  protected boolean isPaused = false;
+  protected com.badlogic.gdx.audio.Music backgroundMusic;
 
   public MainGameScreen(GdxGame game) {
     this.game = game;
@@ -82,14 +87,17 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
     ServiceLocator.getEntityService().register(uiHud);
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    levelGameArea = new LevelGameArea(terrainFactory);
-    waveManager.setGameArea(levelGameArea);
-    levelGameArea.create();
+    gameArea = createGameArea(terrainFactory);
+    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum conversion
+    waveManager.setEnemySpawnCallback(
+        (col, row, type) ->
+            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    gameArea.create();
 
     snapCameraBottomLeft();
     waveManager.initialiseNewWave();
@@ -105,11 +113,10 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      waveManager.update();
+      waveManager.update(delta);
     }
     renderer.render();
-    waveManager.update();
-    levelGameArea.checkGameOver(); // check game-over state
+    gameArea.checkGameOver(); // check game-over state
   }
 
   @Override
@@ -117,8 +124,8 @@ public class MainGameScreen extends ScreenAdapter {
     renderer.resize(width, height);
     snapCameraBottomLeft();
     logger.trace("Resized renderer: ({} x {})", width, height);
-    if (levelGameArea != null) {
-      levelGameArea.resize();
+    if (gameArea != null) {
+      gameArea.resize();
     }
   }
 
@@ -163,7 +170,7 @@ public class MainGameScreen extends ScreenAdapter {
    * Creates the main game's ui including components for rendering ui elements to* the screen and
    * capturing and handling ui input.
    */
-  private void createUI() {
+  protected void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     InputComponent inputComponent =
@@ -185,17 +192,45 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
+        .addComponent(new CurrentWaveDisplay(waveManager));
 
     // Connect the pause menu, pause button, and main game screen to the main game actions
     mainGameActions.setPauseMenu(pauseMenu);
     mainGameActions.setPauseButton(pauseButton);
-    mainGameActions.setMainGameScreen(this);
+    configureMainGameActions(mainGameActions);
 
-    // Connect the UI entity to the WaveManager for event triggering
-    WaveManager.setGameEntity(ui);
+    // Connect the CurrentWaveDisplay to the WaveManager for event listening
+    waveManager.setWaveEventListener(
+        new WaveManager.WaveEventListener() {
+          @Override
+          public void onPreparationPhaseStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+
+          @Override
+          public void onWaveChanged(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+
+          @Override
+          public void onWaveStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+        });
 
     ServiceLocator.getEntityService().register(ui);
+  }
+
+  /**
+   * Factory method for creating the game area. Subclasses may override to provide a different area.
+   */
+  protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
+    return new LevelGameArea(terrainFactory);
+  }
+
+  /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
+  protected void configureMainGameActions(MainGameActions mainGameActions) {
+    mainGameActions.setMainGameScreen(this);
   }
 
   private void snapCameraBottomLeft() {
@@ -222,8 +257,8 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Pause/resume sunlight generation
-    if (levelGameArea != null) {
-      levelGameArea
+    if (gameArea != null) {
+      gameArea
           .getEntities()
           .forEach(
               entity -> {

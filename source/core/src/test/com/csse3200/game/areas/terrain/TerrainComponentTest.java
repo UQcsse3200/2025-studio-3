@@ -30,11 +30,6 @@ class TerrainComponentTest {
     assertEquals(new Vector2(-12f, 3f), component.tileToWorldPosition(-5, -3));
   }
 
-  @Test
-  void shouldConvertPositionHexagonal() {
-    TerrainComponent component = makeComponent(TerrainOrientation.HEXAGONAL, 3f);
-  }
-
   private static TerrainComponent makeComponent(TerrainOrientation orientation, float tileSize) {
     OrthographicCamera camera = mock(OrthographicCamera.class);
     TiledMap map = mock(TiledMap.class);

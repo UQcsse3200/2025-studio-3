@@ -1,0 +1,19 @@
+{
+  "slingshooter": {
+    "health": 50,
+    "rangeType": 1,
+    "range": 500,
+    "name": "Slingshooter",
+    "description": "Slingshots do a surprising amount of damage, even to metal robots.",
+    "defenceHealth": 50,
+    "defenceAttack": 1,
+    "state": 0,
+    "attackSpeed": 3,
+    "critChance": 1
+  },
+  "furnace": {
+    "health": 100,
+    "interval": 12,
+    "scrapValue": 25
+  }
+}

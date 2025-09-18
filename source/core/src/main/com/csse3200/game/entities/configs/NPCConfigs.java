@@ -5,14 +5,15 @@ public class NPCConfigs {
   public BaseEnemyConfig fastRobot = new BaseEnemyConfig();
   public BaseEnemyConfig standardRobot = new BaseEnemyConfig();
   public BaseEnemyConfig tankyRobot = new BaseEnemyConfig();
+  public BaseEnemyConfig bungeeRobot = new BaseEnemyConfig();
   public final BaseEntityConfig ghost = new BaseEntityConfig();
   public final GhostKingConfig ghostKing = new GhostKingConfig();
-  public final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
+  public BaseDefenderConfig slingshooter = new BaseDefenderConfig();
+
   public TeleportRobotConfig teleportRobot = new TeleportRobotConfig();
-  public BaseEnemyConfig bungeeRobot = new BaseEnemyConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();
   // public BaseDefenceConfig mortar = new BaseDefenceConfig();
-  public final BaseDefenceConfig forge = new BaseDefenceConfig();
+  public final BaseGeneratorConfig furnace = new BaseGeneratorConfig();
 }
