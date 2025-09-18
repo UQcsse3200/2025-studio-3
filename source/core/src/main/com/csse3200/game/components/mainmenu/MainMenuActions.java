@@ -26,19 +26,17 @@ public class MainMenuActions extends Component {
 
     /** Start → World Map */
     private void onStart() {
-        logger.info("Start game -> Opening World Map");
-        Persistence.load();
-        game.loadMenus();
+        logger.info("Start game → Opening World Map");
         game.setScreen(GdxGame.ScreenType.WORLD_MAP);
     }
 
+
     /** Quick Start → Main Game directly */
     private void onQuickStart() {
-        logger.info("Quick Start -> Directly launching Main Game");
-        Persistence.load();
-        game.loadMenus();
+        logger.info("Quick Start → Directly Launching Main Game");
         game.setScreen(GdxGame.ScreenType.MAIN_GAME);
     }
+
 
     /** Load game (placeholder for saved states). */
     private void onLoad() {
