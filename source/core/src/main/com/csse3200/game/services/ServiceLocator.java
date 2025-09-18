@@ -145,9 +145,7 @@ public class ServiceLocator {
     return itemEffectsService;
   }
 
-  /**
-   * Gets the cutscene service
-   */
+  /** Gets the cutscene service */
   public static CutsceneService getCutsceneService() {
     return cutsceneService;
   }
@@ -312,9 +310,7 @@ public class ServiceLocator {
     profileService = null;
   }
 
-  /**
-   * Registers cutscene service
-   */
+  /** Registers cutscene service */
   public static void registerCutsceneService(CutsceneService source) {
     logger.debug("Registering cutscene service {}", source);
     cutsceneService = source;
