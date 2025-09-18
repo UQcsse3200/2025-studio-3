@@ -318,6 +318,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnRobot(int col, int row, RobotType robotType) {
+    if (robotType == RobotType.BUNGEE) {
+      spawnRobotOnDefence(robotType);
+      return;
+    }
+
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
