@@ -253,6 +253,7 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
 
     // Avoid robot factory static
+
     lenient().doNothing().when(area).spawnRobot(anyInt(), anyInt(), any());
 
     // Mock the TerrainComponent returned by the TerrainFactory

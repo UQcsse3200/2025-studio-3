@@ -145,6 +145,18 @@ public class HotbarDisplay extends UIComponent {
 
     stage.addActor(hotbarTable);
     hotbarTable.toBack();
+
+    stage.addListener(
+        new ClickListener() {
+          @Override
+          public boolean touchDown(InputEvent event, float sx, float sy, int pointer, int button) {
+            if (button == Input.Buttons.RIGHT && game.isCharacterSelected()) {
+              cancelSelection();
+              return true;
+            }
+            return false;
+          }
+        });
   }
 
   /**
@@ -187,5 +199,12 @@ public class HotbarDisplay extends UIComponent {
       hotbarTable = null;
     }
     super.dispose();
+  }
+
+  /** Cancels the current selection and drag, if any. */
+  private void cancelSelection() {
+    game.setIsCharacterSelected(false);
+    game.setSelectedUnit(null);
+    game.cancelDrag();
   }
 }
