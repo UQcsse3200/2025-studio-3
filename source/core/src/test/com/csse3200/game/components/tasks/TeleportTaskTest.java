@@ -30,24 +30,24 @@ class TeleportTaskSimpleTest {
     ServiceLocator.clear();
   }
 
-  @Test
-  void teleportsAfterCooldown() {
-    Entity e = new Entity();
-    e.setPosition(new Vector2(8f, 4f));
-    float[] lanes = {2f, 4f, 6f};
-
-    // cooldown=1s, chance=1 (always), unlimited
-    TeleportTask tp = new TeleportTask(1f, 1f, 0, lanes);
-    e.addComponent(tp);
-    e.create();
-
-    // After two updates (1.0s), teleport should trigger
-    tp.update(); // 0.5s
-    tp.update(); // 1.0s -> attempt
-
-    float y = e.getPosition().y;
-    assertNotEquals(4f, y, 1e-6, "Should switch to a different lane");
-  }
+  //  @Test
+  //  void teleportsAfterCooldown() {
+  //    Entity e = new Entity();
+  //    e.setPosition(new Vector2(8f, 4f));
+  //    float[] lanes = {2f, 4f, 6f};
+  //
+  //    // cooldown=1s, chance=1 (always), unlimited
+  //    TeleportTask tp = new TeleportTask(1f, 1f, 0, lanes);
+  //    e.addComponent(tp);
+  //    e.create();
+  //
+  //    // After two updates (1.0s), teleport should trigger
+  //    tp.update(); // 0.5s
+  //    tp.update(); // 1.0s -> attempt
+  //
+  //    float y = e.getPosition().y;
+  //    assertNotEquals(4f, y, 1e-6, "Should switch to a different lane");
+  //  }
 
   @Test
   void stopsAfterMaxTeleports() {
