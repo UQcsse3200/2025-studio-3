@@ -16,7 +16,7 @@ public class DragOverlay extends UIComponent {
   private final AreaAPI area; // Reference to the game area
   private Image image; // The image actor to display the drag texture
   private boolean active = false; // Flag to indicate if a drag is in progress
-  private float sizeScale = 0.8f; // Scale of the image
+  float sizeScale = 0.8f; // Scale of the image
 
   /**
    * Create a drag overlay for the given area.
