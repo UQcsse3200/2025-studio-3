@@ -111,11 +111,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Creates a new instance with a specified per-enemy weight cost.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.factories.WaveFactory,int)" class="member-name-link">EntitySpawn</a><wbr>(<a href="factories/WaveFactory.html" title="class in com.csse3200.game.entities.factories">WaveFactory</a>&nbsp;waveFactory,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.WaveConfigProvider,int)" class="member-name-link">EntitySpawn</a><wbr>(<a href="WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>&nbsp;waveConfigProvider,
  int&nbsp;robotWeight)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Test-only constructor allowing injection of a prebuilt WaveFactory to avoid LibGDX file IO in
- unit tests.</div>
+<div class="block">Test-only constructor allowing injection of a prebuilt WaveConfigProvider to avoid LibGDX file
+ IO in unit tests.</div>
 </div>
 </div>
 </section>
@@ -131,17 +131,28 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRandomRobotType()" class="member-name-link">getRandomRobotType</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNextRobotType()" class="member-name-link">getNextRobotType</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpawnCount()" class="member-name-link">getSpawnCount</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemies()" class="member-name-link">spawnEnemies</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWaveConfigProvider(com.csse3200.game.entities.WaveConfigProvider)" class="member-name-link">setWaveConfigProvider</a><wbr>(<a href="WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>&nbsp;waveConfigProvider)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the WaveConfigProvider instance for this EntitySpawn.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemies()" class="member-name-link">spawnEnemies</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Computes spawn count from the current wave's weight budget and minimum requirement configured
  in JSON.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemiesFromConfig()" class="member-name-link">spawnEnemiesFromConfig</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Builds a spawn queue for the current wave using the new system: - Each wave has a budget
+ (waveWeight).</div>
 </div>
 </div>
 </div>
@@ -171,7 +182,8 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(int)">
 <h3>EntitySpawn</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EntitySpawn</span><wbr><span class="parameters">(int&nbsp;robotWeight)</span></div>
-<div class="block">Creates a new instance with a specified per-enemy weight cost.</div>
+<div class="block">Creates a new instance with a specified per-enemy weight cost. Note: WaveManager must be set
+ separately using setWaveManager().</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>robotWeight</code> - weight cost of a single enemy used to derive spawn counts</dd>
@@ -179,15 +191,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.factories.WaveFactory,int)">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.WaveConfigProvider,int)">
 <h3>EntitySpawn</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EntitySpawn</span><wbr><span class="parameters">(<a href="factories/WaveFactory.html" title="class in com.csse3200.game.entities.factories">WaveFactory</a>&nbsp;waveFactory,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">EntitySpawn</span><wbr><span class="parameters">(<a href="WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>&nbsp;waveConfigProvider,
  int&nbsp;robotWeight)</span></div>
-<div class="block">Test-only constructor allowing injection of a prebuilt WaveFactory to avoid LibGDX file IO in
- unit tests.</div>
+<div class="block">Test-only constructor allowing injection of a prebuilt WaveConfigProvider to avoid LibGDX file
+ IO in unit tests.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>waveFactory</code> - factory providing wave configuration</dd>
+<dd><code>waveConfigProvider</code> - provider of wave configuration</dd>
 <dd><code>robotWeight</code> - weight cost per enemy</dd>
 </dl>
 </section>
@@ -200,6 +212,17 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="setWaveConfigProvider(com.csse3200.game.entities.WaveConfigProvider)">
+<h3>setWaveConfigProvider</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setWaveConfigProvider</span><wbr><span class="parameters">(<a href="WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>&nbsp;waveConfigProvider)</span></div>
+<div class="block">Sets the WaveConfigProvider instance for this EntitySpawn.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>waveConfigProvider</code> - the WaveConfigProvider instance to use</dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="getSpawnCount()">
 <h3>getSpawnCount</h3>
@@ -219,13 +242,22 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getRandomRobotType()">
-<h3>getRandomRobotType</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a></span>&nbsp;<span class="element-name">getRandomRobotType</span>()</div>
+<section class="detail" id="getNextRobotType()">
+<h3>getNextRobotType</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getNextRobotType</span>()</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>uniformly random enemy type among "standard", "fast", and "tanky".</dd>
+<dd>next enemy type from the spawn queue, or "standard" if empty.</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnEnemiesFromConfig()">
+<h3>spawnEnemiesFromConfig</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemiesFromConfig</span>()</div>
+<div class="block">Builds a spawn queue for the current wave using the new system: - Each wave has a budget
+ (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
+ by 'chance'. - Loop continues until budget runs out.</div>
 </section>
 </li>
 </ul>
