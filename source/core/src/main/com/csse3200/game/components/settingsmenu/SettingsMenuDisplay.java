@@ -172,25 +172,27 @@ public class SettingsMenuDisplay extends UIComponent {
     exitBtn.setPosition(
         20f, // padding from left
         stage.getHeight() - 60f - 20f // padding from top
-    );
-    exitBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Exit button clicked");
-        exitMenu();
-      }
-    });
+        );
+    exitBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Exit button clicked");
+            exitMenu();
+          }
+        });
     stage.addActor(exitBtn);
 
     // Apply button
     TextButton applyBtn = new TextButton("Apply", skin);
-    applyBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        logger.debug("Apply button clicked");
-        applyChanges();
-      }
-    });
+    applyBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Apply button clicked");
+            applyChanges();
+          }
+        });
 
     // Title
     Label title = new Label("Settings", skin, "title");

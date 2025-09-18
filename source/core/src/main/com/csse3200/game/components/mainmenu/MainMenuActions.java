@@ -17,13 +17,13 @@ public class MainMenuActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("quickStart", this::onQuickStart);   // ✅ from our branch
-    entity.getEvents().addListener("minigame", this::onMiniGame);       // ✅ from main
+    entity.getEvents().addListener("quickStart", this::onQuickStart); // ✅ from our branch
+    entity.getEvents().addListener("minigame", this::onMiniGame); // ✅ from main
     entity.getEvents().addListener("load", this::onLoad);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
     entity.getEvents().addListener("worldMap", this::onWorldMap);
-    entity.getEvents().addListener("Cutscene", this::onCutscene);       // ✅ from main
+    entity.getEvents().addListener("Cutscene", this::onCutscene); // ✅ from main
   }
 
   /** Start → World Map */

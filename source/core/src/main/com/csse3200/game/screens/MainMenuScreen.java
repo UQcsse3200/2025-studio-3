@@ -9,9 +9,7 @@ import com.csse3200.game.input.InputDecorator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The game screen containing the main menu.
- */
+/** The game screen containing the main menu. */
 public class MainMenuScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
 
@@ -20,7 +18,7 @@ public class MainMenuScreen extends BaseScreen {
     "images/bg-text.png",
     "images/btn-blue.png",
     "images/btn-blue.atlas",
-    "images/settings_icon.png"   // ✅ include the gear
+    "images/settings_icon.png" // ✅ include the gear
   };
 
   public MainMenuScreen(GdxGame game) {
