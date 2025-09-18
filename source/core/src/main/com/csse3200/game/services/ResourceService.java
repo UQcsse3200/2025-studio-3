@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Disposable;
 import org.slf4j.Logger;
@@ -143,6 +144,10 @@ public class ResourceService implements Disposable {
    */
   public void loadTextures(String[] textureNames) {
     loadAssets(textureNames, Texture.class);
+  }
+
+  public void loadFonts(String[] fontNames) {
+    loadAssets(fontNames, BitmapFont.class);
   }
 
   /**

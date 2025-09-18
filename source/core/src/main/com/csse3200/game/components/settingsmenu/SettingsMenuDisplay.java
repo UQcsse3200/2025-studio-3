@@ -49,20 +49,15 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private void addActors() {
-    Label title = new Label("Settings", skin, "title");
-    Table settingsTable = makeSettingsTable();
-    Table menuBtns = makeMenuBtns();
-
     rootTable = new Table();
     rootTable.setFillParent(true);
 
-    rootTable.add(title).expandX().top().padTop(20f);
+    // Add top menu row (title, exit, apply)
+    rootTable.add(makeMenuBtns()).expandX().fillX().top();
 
+    // Next row: settings table
     rootTable.row().padTop(30f);
-    rootTable.add(settingsTable).expandX().expandY();
-
-    rootTable.row();
-    rootTable.add(menuBtns).fillX();
+    rootTable.add(makeSettingsTable()).expandX().expandY();
 
     stage.addActor(rootTable);
   }
@@ -86,11 +81,12 @@ public class SettingsMenuDisplay extends UIComponent {
     vsyncCheck.setChecked(settings.vsync);
     whiten(vsyncLabel);
 
-    Label uiScaleLabel = new Label("ui Scale (Unused):", skin);
+    Label uiScaleLabel = new Label("UI Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
     uiScaleSlider.setValue(settings.uiScale);
     Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
     whiten(uiScaleLabel);
+    whiten(uiScaleValue);
 
     Label displayModeLabel = new Label("Resolution:", skin);
     displayModeSelect = new SelectBox<>(skin);
@@ -166,7 +162,7 @@ public class SettingsMenuDisplay extends UIComponent {
   }
 
   private Table makeMenuBtns() {
-    // Back button positioned at top-left with close icon
+    // Exit button (from main branch)
     ImageButton exitBtn =
         new ImageButton(
             new TextureRegionDrawable(
@@ -174,8 +170,8 @@ public class SettingsMenuDisplay extends UIComponent {
                     .getAsset("images/close-icon.png", Texture.class)));
     exitBtn.setSize(60f, 60f);
     exitBtn.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
+        20f, // padding from left
+        stage.getHeight() - 60f - 20f // padding from top
         );
     exitBtn.addListener(
         new ChangeListener() {
@@ -185,9 +181,10 @@ public class SettingsMenuDisplay extends UIComponent {
             exitMenu();
           }
         });
+    stage.addActor(exitBtn);
 
+    // Apply button
     TextButton applyBtn = new TextButton("Apply", skin);
-
     applyBtn.addListener(
         new ChangeListener() {
           @Override
@@ -197,14 +194,21 @@ public class SettingsMenuDisplay extends UIComponent {
           }
         });
 
-    // Add back button directly to stage
-    stage.addActor(exitBtn);
+    // Title
+    Label title = new Label("Settings", skin, "title");
 
-    // Create table for apply button only
     Table table = new Table();
     table.setFillParent(true);
-    table.top().right().pad(20f);
-    table.add(applyBtn).size(100f, 50f);
+    table.top().padTop(10f).padLeft(10f).padRight(10f);
+    table.add(title).expandX().center();
+
+    // Apply button bottom-right
+    Table bottomRow = new Table();
+    bottomRow.setFillParent(true);
+    bottomRow.bottom().right().pad(20f);
+    bottomRow.add(applyBtn).size(100f, 50f);
+    stage.addActor(bottomRow);
+
     return table;
   }
 
@@ -223,7 +227,6 @@ public class SettingsMenuDisplay extends UIComponent {
     UserSettings.set(settings, true);
   }
 
-  /** Exits the menu. */
   private void exitMenu() {
     if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
@@ -256,7 +259,6 @@ public class SettingsMenuDisplay extends UIComponent {
     super.dispose();
   }
 
-  /** Sets the provided label's font color to white by cloning their style */
   private static void whiten(Label label) {
     Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
     st.fontColor = Color.WHITE;
