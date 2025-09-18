@@ -15,12 +15,7 @@ import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DialogService;
-import com.csse3200.game.services.MenuSpriteService;
-import com.csse3200.game.services.ProfileService;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +55,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
     ServiceLocator.registerConfigService(new ConfigService());
+    ServiceLocator.registerCutsceneService(new CutsceneService());
 
     // Game-dependent data
     loadGlobalAssets();

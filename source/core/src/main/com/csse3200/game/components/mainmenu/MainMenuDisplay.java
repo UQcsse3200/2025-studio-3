@@ -39,8 +39,17 @@ public class MainMenuDisplay extends UIComponent {
     TextButton worldMapBtn = new TextButton("World Map", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
     TextButton exitBtn = new TextButton("Exit", skin);
+    TextButton cutBtn = new TextButton("Cutscene", skin);
 
     // Triggers an event when the button is pressed
+    cutBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent event, Actor actor) {
+            entity.getEvents().trigger("Cutscene");
+          }
+        });
+
     startBtn.addListener(
         new ChangeListener() {
           @Override
@@ -106,6 +115,8 @@ public class MainMenuDisplay extends UIComponent {
     table.add(worldMapBtn).padTop(15f);
     table.row();
     table.add(exitBtn).padTop(15f);
+    table.row();
+    table.add(cutBtn).padTop(15f);
 
     miniGameBtnTable = new Table();
     miniGameBtnTable.bottom().left();

@@ -2,6 +2,7 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +22,12 @@ public class MainMenuActions extends Component {
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
     entity.getEvents().addListener("worldMap", this::onWorldMap);
+    entity.getEvents().addListener("Cutscene", this::onCutscene);
+  }
+
+  /** Swaps to the New Game screen. */
+  private void onCutscene() {
+    ServiceLocator.getCutsceneService().playCutscene("dialogue");
   }
 
   /** Swaps to the Main Game screen. */
