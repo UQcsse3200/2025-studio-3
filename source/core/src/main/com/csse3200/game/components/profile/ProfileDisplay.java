@@ -5,11 +5,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -124,13 +127,17 @@ public class ProfileDisplay extends UIComponent {
     float buttonHeight = stage.getHeight() * CORNER_BUTTON_HEIGHT_RATIO;
     float padding = stage.getWidth() * PADDING_RATIO;
 
-    // Back button (top left)
-    TextButton backBtn = ButtonFactory.createButton("Back");
-    backBtn.addListener(
+    // Close button (top left)
+    ImageButton closeBtn =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
+    closeBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             entity.getEvents().trigger("profile_back");
           }
         });
@@ -168,8 +175,12 @@ public class ProfileDisplay extends UIComponent {
           }
         });
 
+    // Position close button in top left corner
+    closeBtn.setSize(60f, 60f);
+    closeBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
+    stage.addActor(closeBtn);
+
     // Position buttons in corners using the table
-    cornerTable.add(backBtn).width(buttonWidth).height(buttonHeight).pad(padding).top().left();
     cornerTable.add().expandX();
     cornerTable.add(exitBtn).width(buttonWidth).height(buttonHeight).pad(padding).top().right();
     cornerTable.row();

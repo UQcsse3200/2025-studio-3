@@ -93,7 +93,7 @@ public class NonDraggableCharacter extends UIComponent {
   public void update() {
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
       float x = Gdx.input.getX();
-      float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+      float y = Gdx.graphics.getHeight() - (float)Gdx.input.getY();
 
       if (x >= image.getX()
           && x <= image.getX() + image.getWidth()

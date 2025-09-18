@@ -1,15 +1,12 @@
 package com.csse3200.game.components.mainmenu;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
@@ -26,7 +23,6 @@ public class MainMenuDisplay extends UIComponent {
     super.create();
 
     // Load assets
-    ServiceLocator.getResourceService().loadTextures(new String[] {"images/ui/settings_icon.png"});
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
@@ -42,48 +38,18 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextButton startBtn = ButtonFactory.createButton("Start");
-    TextButton quickStartBtn = ButtonFactory.createButton("Quick Start");
-    TextButton loadBtn = ButtonFactory.createButton("Load");
-    TextButton miniGameBtn = ButtonFactory.createButton("MiniGames");
-    TextButton cutBtn = ButtonFactory.createButton("Cutscene");
-    TextButton exitBtn = ButtonFactory.createButton("Exit");
-
-    // --- Settings gear icon ---
-    Texture gearTexture =
-        ServiceLocator.getResourceService().getAsset("images/ui/settings_icon.png", Texture.class);
-    ImageButton.ImageButtonStyle gearStyle = new ImageButton.ImageButtonStyle();
-    gearStyle.imageUp = new TextureRegionDrawable(gearTexture);
-
-    ImageButton settingsIcon = new ImageButton(gearStyle);
-    settingsIcon.setSize(90f, 90f);
-    settingsIcon.setPosition(Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 120f);
-
-    settingsIcon.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Settings icon clicked");
-            entity.getEvents().trigger("settings");
-          }
-        });
+    TextButton newGameBtn = ButtonFactory.createButton("New Game");
+    TextButton loadBtn = ButtonFactory.createButton("Load Game");
+    TextButton settingsBtn = ButtonFactory.createButton("Settings");
+    TextButton exitBtn = ButtonFactory.createButton("Exit Game");
 
     // Button listeners
-    startBtn.addListener(
+    newGameBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Start button clicked");
-            entity.getEvents().trigger("worldMap");
-          }
-        });
-
-    quickStartBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Quick Start button clicked");
-            entity.getEvents().trigger("quickStart");
+            logger.debug("[MainMenuDisplay] New Game button clicked");
+            entity.getEvents().trigger("start");
           }
         });
 
@@ -91,26 +57,17 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Load button clicked");
+            logger.debug("[MainMenuDisplay] Load Game button clicked");
             entity.getEvents().trigger("load");
           }
         });
 
-    miniGameBtn.addListener(
+    settingsBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("MiniGames button clicked");
-            entity.getEvents().trigger("minigame");
-          }
-        });
-
-    cutBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Cutscene button clicked");
-            entity.getEvents().trigger("Cutscene");
+            logger.debug("[MainMenuDisplay] Settings button clicked");
+            entity.getEvents().trigger("settings");
           }
         });
 
@@ -118,7 +75,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Exit button clicked");
+            logger.debug("[MainMenuDisplay] Exit Game button clicked");
             entity.getEvents().trigger("exit");
           }
         });
@@ -138,21 +95,16 @@ public class MainMenuDisplay extends UIComponent {
     float buttonWidth = 200f;
     float buttonHeight = 50f;
 
-    table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(5f);
-    table.row();
-    table.add(quickStartBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(newGameBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
     table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
-    table.add(miniGameBtn).size(buttonWidth, buttonHeight).padBottom(5f); // moved into main flow
-    table.row();
-    table.add(cutBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
     table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
 
     // Add actors
     stage.addActor(table);
-    stage.addActor(settingsIcon);
   }
 
   @Override

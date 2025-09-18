@@ -141,7 +141,7 @@ public class DialogComponent extends UIComponent {
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
-        TextButton okButton = ButtonFactory.createSmallButton("OK");
+        TextButton okButton = ButtonFactory.createLargeButton("OK");
         okButton.addListener(
             new ClickListener() {
               @Override
@@ -152,12 +152,12 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButton).size(80f, 40f).pad(5f);
+        buttonTable.add(okButton).size(120f, 60f).pad(5f);
         break;
 
       // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = ButtonFactory.createSmallButton("Cancel");
+        TextButton cancelButton = ButtonFactory.createLargeButton("Cancel");
         cancelButton.addListener(
             new ClickListener() {
               @Override
@@ -169,7 +169,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton continueButton = ButtonFactory.createSmallButton("Continue");
+        TextButton continueButton = ButtonFactory.createLargeButton("Continue");
         continueButton.addListener(
             new ClickListener() {
               @Override
@@ -181,13 +181,13 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(cancelButton).size(80f, 40f).pad(5f);
-        buttonTable.add(continueButton).size(100f, 40f).pad(5f);
+        buttonTable.add(cancelButton).size(120f, 60f).pad(5f);
+        buttonTable.add(continueButton).size(150f, 60f).pad(5f);
         break;
 
       // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = ButtonFactory.createSmallButton("OK");
+        TextButton okButtonError = ButtonFactory.createLargeButton("OK");
         okButtonError.addListener(
             new ClickListener() {
               @Override
@@ -198,7 +198,7 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButtonError).size(80f, 40f).pad(5f);
+        buttonTable.add(okButtonError).size(120f, 60f).pad(5f);
         break;
     }
 

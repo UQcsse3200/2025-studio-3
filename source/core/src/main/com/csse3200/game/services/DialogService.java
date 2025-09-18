@@ -32,7 +32,7 @@ public class DialogService {
 
   /** Creates a new dialog service. */
   public DialogService() {
-    logger.debug("Dialog service created");
+    logger.debug("[DialogService] Dialog service created");
   }
 
   /**
@@ -111,7 +111,7 @@ public class DialogService {
 
   /** Hides all active dialogs. */
   public void hideAllDialogs() {
-    logger.debug("Hiding all active dialogs");
+    logger.debug("[DialogService] Hiding all active dialogs");
     // Create copies of the lists to avoid ConcurrentModificationException
     List<DialogComponent> dialogsCopy = new ArrayList<>(activeDialogs);
     List<AchievementDialogComponent> achievementDialogsCopy =
@@ -184,7 +184,7 @@ public class DialogService {
       Consumer<DialogComponent> onConfirm,
       Consumer<DialogComponent> onCancel,
       Consumer<DialogComponent> onClose) {
-    logger.debug("Creating {} dialog: {}", dialogType, title);
+    logger.debug("[DialogService] Creating {} dialog: {}", dialogType, title);
 
     // Create entity and add dialog component
     Entity dialogEntity = new Entity();

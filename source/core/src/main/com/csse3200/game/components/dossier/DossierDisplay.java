@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.NPCConfigs;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class DossierDisplay extends UIComponent {
   private Label entityInfoLabel;
   private Label entityNameLabel;
   private Image entitySpriteImage;
-  private final String changeType = "change_type";
+  private static final String CHANGE_TYPE = "change_type";
 
   /** Constructor to display the dossier. */
   public DossierDisplay(
@@ -55,15 +56,13 @@ public class DossierDisplay extends UIComponent {
   /** Adds all tables to the stage. */
   private void addActors() {
     Label title = new Label("Dossier", skin, "title");
-    Table backBtn = makeBackBtn();
+    createCloseButton();
 
     // create rootTable
     rootTable = new Table();
     rootTable.setFillParent(true);
     rootTable.padTop(100f);
     rootTable.padBottom(100f);
-    backBtn.padTop(100f);
-    backBtn.padLeft(75f);
 
     // title
     rootTable.add(title).expandX().top().padTop(20f);
@@ -78,9 +77,8 @@ public class DossierDisplay extends UIComponent {
 
     rootTable.add(makeEntitiesButtons()).expand().fill().row();
 
-    // add rootTable and back button to stage
+    // add rootTable to stage
     stage.addActor(rootTable);
-    stage.addActor(backBtn);
   }
 
   /** A listener to change the type of entity shown */
@@ -88,7 +86,7 @@ public class DossierDisplay extends UIComponent {
     entity
         .getEvents()
         .addListener(
-            changeType,
+            CHANGE_TYPE,
             input -> {
               boolean value = (boolean) input;
               if (value == type) {
@@ -114,26 +112,26 @@ public class DossierDisplay extends UIComponent {
 
   /** Sets up the buttons to swap between humans and robots. */
   private Table makeSwapBtn() {
-    TextButton robotsBtn = ButtonFactory.createSmallButton("Robots");
+    TextButton robotsBtn = ButtonFactory.createLargeButton("Robots");
     robotsBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (robotsBtn.isChecked()) {
               logger.info("Selected robot type button");
-              entity.getEvents().trigger(changeType, true);
+              entity.getEvents().trigger(CHANGE_TYPE, true);
             }
           }
         });
 
-    TextButton humansBtn = ButtonFactory.createSmallButton("Humans");
+    TextButton humansBtn = ButtonFactory.createLargeButton("Humans");
     humansBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (humansBtn.isChecked()) {
               logger.info("Selected human type button");
-              entity.getEvents().trigger(changeType, false);
+              entity.getEvents().trigger(CHANGE_TYPE, false);
             }
           }
         });
@@ -256,30 +254,29 @@ public class DossierDisplay extends UIComponent {
     return outerTable;
   }
 
-  /**
-   * Builds a table containing exit button.
-   *
-   * @return table with exit button
-   */
-  private Table makeBackBtn() {
-    TextButton backBtn = ButtonFactory.createSmallButton("Back");
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
-    // Add listener for the back button
-    backBtn.addListener(
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
+
+    // Add listener for the close button
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             backMenu();
           }
         });
 
-    // Place button in a table
-    Table table = new Table();
-    table.setFillParent(true);
-    table.top().left().pad(15f);
-    table.add(backBtn).size(80f, 40f);
-    return table;
+    stage.addActor(closeButton);
   }
 
   /**
@@ -294,7 +291,7 @@ public class DossierDisplay extends UIComponent {
 
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
-      TextButton btn = ButtonFactory.createSmallButton(dossierManager.getName(entities[i]));
+      TextButton btn = ButtonFactory.createLargeButton(dossierManager.getName(entities[i]));
       group.add(btn);
       buttonRow.add(btn).size(100f, 35f).pad(5);
 
@@ -312,9 +309,9 @@ public class DossierDisplay extends UIComponent {
     return buttonRow;
   }
 
-  /** Handles navigation back to the Profile Screen. */
+  /** Handles navigation back to the World Map Screen. */
   private void backMenu() {
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 
   @Override

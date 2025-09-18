@@ -66,7 +66,7 @@ public class AnimatedDropdownMenu extends UIComponent {
       button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
       // Position buttons below trigger button, initially hidden
-      float buttonX = startX - BUTTON_WIDTH + 60f;
+      float buttonX = startX - BUTTON_WIDTH + 57f;
       float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
       button.setPosition(buttonX, buttonY);
       button.setVisible(false);
@@ -211,7 +211,7 @@ public class AnimatedDropdownMenu extends UIComponent {
       for (int i = 0; i < menuButtons.length; i++) {
         TextButton button = menuButtons[i];
         if (button != null) {
-          float buttonX = startX - BUTTON_WIDTH + 60f;
+          float buttonX = startX - BUTTON_WIDTH + 57f;
           float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
           button.setPosition(buttonX, buttonY);
         }

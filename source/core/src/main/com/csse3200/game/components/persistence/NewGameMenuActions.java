@@ -46,6 +46,7 @@ public class NewGameMenuActions extends Component {
   private void handleStartGame(String saveName) {
     logger.info("Starting new game with save name: {} in slot: {}", saveName, selectedSlot);
     ServiceLocator.getProfileService().createProfile(saveName, selectedSlot);
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    ServiceLocator.getCutsceneService().playCutscene("dialogue", cutsceneName -> this.game.setScreen(GdxGame.ScreenType.WORLD_MAP)
+    );
   }
 }

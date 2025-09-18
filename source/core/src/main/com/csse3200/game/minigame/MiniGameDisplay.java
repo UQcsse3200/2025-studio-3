@@ -56,11 +56,11 @@ public class MiniGameDisplay extends UIComponent {
           }
         });
 
-    table.add(LaneRunnerBtn).padTop(30f);
+    table.add(LaneRunnerBtn).size(200f, 50f).padTop(30f);
     table.row();
-    table.add(WallPongBtn).padTop(30f);
+    table.add(WallPongBtn).size(200f, 50f).padTop(30f);
     table.row();
-    table.add(BackBtn).padTop(15f);
+    table.add(BackBtn).size(150f, 50f).padTop(15f);
     table.row();
     stage.addActor(table);
   }

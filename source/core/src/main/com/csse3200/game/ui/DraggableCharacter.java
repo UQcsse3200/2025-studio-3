@@ -15,8 +15,6 @@ import com.csse3200.game.services.ServiceLocator;
  * removed by clicking on it and pressing the 'R' key.
  */
 public class DraggableCharacter extends UIComponent {
-
-  private DragAndDrop dragAndDrop;
   private Image image; // The image representing the character
 
   // Default values for the customisable parameters
@@ -65,7 +63,7 @@ public class DraggableCharacter extends UIComponent {
    * around the screen.
    */
   private void setupDragAndDrop() {
-    dragAndDrop = new DragAndDrop();
+    DragAndDrop dragAndDrop = new DragAndDrop();
 
     dragAndDrop.addSource(
         new DragAndDrop.Source(image) {
@@ -172,7 +170,7 @@ public class DraggableCharacter extends UIComponent {
   public void update() {
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
       float x = Gdx.input.getX();
-      float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+      float y = Gdx.graphics.getHeight() - (float) Gdx.input.getY();
 
       if (x >= image.getX()
           && x <= image.getX() + image.getWidth()

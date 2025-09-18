@@ -22,16 +22,23 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The screen for the mini game.
+ */
 public class MiniGameScreen extends ScreenAdapter {
-
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.screens.MainMenuScreen.class);
+      LoggerFactory.getLogger(com.csse3200.game.screens.MiniGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] laneRunnerTextures = {
     "images/backgrounds/world_map.png", "images/entities/character.png", "images/backgrounds/bg.png"
   };
 
+  /**
+   * Constructor for the mini game screen.
+   *
+   * @param game the game instance
+   */
   public MiniGameScreen(GdxGame game) {
     this.game = game;
 
@@ -47,6 +54,7 @@ public class MiniGameScreen extends ScreenAdapter {
     createUI();
   }
 
+  @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
@@ -65,6 +73,7 @@ public class MiniGameScreen extends ScreenAdapter {
     resourceService.unloadAssets(laneRunnerTextures);
   }
 
+  @Override
   public void dispose() {
     logger.debug("Disposing mini game screen");
 

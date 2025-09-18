@@ -94,9 +94,10 @@ public class ButtonFactory {
     style.down = background;
     style.over = background;
     style.font = font;
+    style.fontColor = Color.WHITE;
+    style.overFontColor = Color.CYAN;
+    style.downFontColor = Color.CYAN;
 
-    TextButton button = new TextButton(text, style);
-    button.getLabel().setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-    return button;
+    return new TextButton(text, style);
   }
 }
