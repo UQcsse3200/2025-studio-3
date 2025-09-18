@@ -33,8 +33,8 @@
     "name": "Bungee Robot",
     "atlasFilePath": "images/blue_robot.atlas",
     "defaultSprite": "images/blue_robot_default_sprite.png",
-    "health": 60,
-    "attack": 10,
+    "health": 20,
+    "attack": 8,
     "movementSpeed": 20,
     "scale": 1,
     "description": "A bungee robot."
