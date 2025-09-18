@@ -1,25 +1,27 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class TargetDetectionTasks extends DefaultTask implements PriorityTask {
-  protected final List<Entity> targets;
   protected final float attackRange;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
   protected final RaycastHit hit = new RaycastHit();
 
-  public TargetDetectionTasks(List<Entity> targets, float attackRange) {
-    this.targets = targets;
+  protected TargetDetectionTasks(float attackRange) {
     this.attackRange = attackRange;
     physics = ServiceLocator.getPhysicsService().getPhysics();
     debugRenderer = ServiceLocator.getRenderService().getDebug();
@@ -89,7 +91,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     Vector2 to = target.getCenterPosition();
 
     // If there is an obstacle in the path to the player, not visible.
-    if (physics.raycast(from, to, PhysicsLayer.OBSTACLE, hit)) {
+    if (physics.raycast(from, to, PhysicsLayer.NPC, hit)) {
       debugRenderer.drawLine(from, hit.point);
       return false;
     }
@@ -106,11 +108,19 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     Vector2 from = owner.getEntity().getCenterPosition();
     Entity closestTarget = null;
     float closestDist = Float.MAX_VALUE;
+    List<Entity> targets = getAllTargets();
 
     for (Entity target : targets) {
       Vector2 targetPos = target.getCenterPosition();
+
+      // Skip targets that are not directly to the right of the defense - OpenAI was used to only
+      // consider targets to the right of defender
+      if (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1) {
+        continue;
+      }
+
       float distance = from.dst(targetPos);
-      if (isTargetVisible(target) && distance <= attackRange) { // if target visible and in range
+      if (distance <= attackRange) { // if target in range
         if (distance < closestDist) {
           closestDist = distance;
           closestTarget = target;
@@ -118,5 +128,20 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       }
     }
     return closestTarget;
+  }
+
+  protected List<Entity> getAllTargets() {
+    Array<Entity> allEntities = ServiceLocator.getEntityService().getEntities();
+    Array<Entity> copy = new Array<>(allEntities);
+    List<Entity> targets = new ArrayList<>();
+    for (Entity e : copy) {
+      HitboxComponent hitbox = e.getComponent(HitboxComponent.class);
+      if (hitbox != null
+          && hitbox.getLayer() == PhysicsLayer.ENEMY
+          && e.getComponent(CombatStatsComponent.class) != null) {
+        targets.add(e);
+      }
+    }
+    return targets;
   }
 }

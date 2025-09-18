@@ -9,7 +9,7 @@ import com.csse3200.game.services.ServiceLocator;
  * <p>This component stores additional combat-related stats beyond health and base attack, such as
  * range, attack speed, and critical hit chance.
  */
-public class DefenceStatsComponent extends CombatStatsComponent {
+public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Integer identifier for the type of defender (e.g., tower, trap, etc.). */
   private int type;
@@ -59,7 +59,7 @@ public class DefenceStatsComponent extends CombatStatsComponent {
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
    */
-  public DefenceStatsComponent(
+  public DefenderStatsComponent(
       int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
 
     // Initialises health and attack stats with consideration of skill upgrades
@@ -87,7 +87,11 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack range. */
   public void setRange(int range) {
-    this.range = range;
+    if (range < 0) {
+      this.range = 0;
+    } else {
+      this.range = range;
+    }
   }
 
   /**
@@ -111,7 +115,11 @@ public class DefenceStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's attack speed. */
   public void setAttackSpeed(int attackSpeed) {
-    this.attackSpeed = (int) Math.ceil(attackSpeed * SPEED_UPGRADE);
+    if (attackSpeed < 0) {
+      this.attackSpeed = 0;
+    } else {
+      this.attackSpeed = (int) Math.ceil(attackSpeed * SPEED_UPGRADE);
+    }
   }
 
   /**
