@@ -78,6 +78,13 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   protected void draw(SpriteBatch batch) {
     Texture nodeTexture =
         ServiceLocator.getResourceService().getAsset(node.getNodeTexture(), Texture.class);
+    if (node.isCompleted()) {
+      nodeTexture =
+          ServiceLocator.getResourceService().getAsset("images/nodes/completed.png", Texture.class);
+    } else if (!node.isUnlocked()) {
+      nodeTexture =
+          ServiceLocator.getResourceService().getAsset("images/nodes/locked.png", Texture.class);
+    }
 
     // Calculate position from node's world coordinates
     float x = node.getPositionX() * worldSize.x;

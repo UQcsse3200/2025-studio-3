@@ -37,6 +37,7 @@ public class GdxGame extends Game {
     "images/placeholder.png"
   };
   private static final Pair<String, String> GLOBAL_FONT = new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
+  private static final String LOCK_REASON = "You must complete the previous level to unlock this one.";
 
   @Override
   public void create() {
@@ -50,35 +51,54 @@ public class GdxGame extends Game {
    */
   public void initializeGame() {
     logger.info("[GdxGame] Initializing game after loading screen");
-
-    //  Game-dependent services
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
-
-    // Game-dependent data
     loadGlobalAssets();
     loadSettings();
     loadNodes();
-
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
     setScreen(ScreenType.MAIN_MENU);
   }
 
   /** Registers the nodes on the world map. */
   private void loadNodes() {
-    // Load the shop
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
     worldMapService.registerNode(
         new WorldMapNode(
-            "Shop", new Pair<>(0.5f, 0.5f), false, true, ScreenType.SHOP, "images/shop.png", ""),
+            "Shop", new Pair<>(0.75f, 0.40f), false, true, ScreenType.SHOP, "images/nodes/shop.png", ""),
         "shop");
-    // Load the skills village
-    // Load the minigames ...
-    // Load each of the levels
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Town", new Pair<>(0.20f, 0.80f), false, true, ScreenType.SKILLTREE, "images/nodes/skills.png", ""),
+        "skills");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Arcade", new Pair<>(0.60f, 0.28f), false, true, ScreenType.MINI_GAMES, "images/nodes/minigames.png", ""),
+        "minigames");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Level 1", new Pair<>(0.15f, 0.25f), false, false, ScreenType.MAIN_GAME, "images/nodes/level1.png", LOCK_REASON),
+        "level1");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Level 2", new Pair<>(0.25f, 0.18f), false, false, ScreenType.MAIN_GAME, "images/nodes/level2.png", LOCK_REASON),
+        "level2");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Level 3", new Pair<>(0.55f, 0.18f), false, false, ScreenType.MAIN_GAME, "images/nodes/level3.png", LOCK_REASON),
+        "level3");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Level 4", new Pair<>(0.75f, 0.24f), false, false, ScreenType.MAIN_GAME, "images/nodes/level4.png", LOCK_REASON),
+        "level4");
+    worldMapService.registerNode(
+        new WorldMapNode(
+            "Level 5", new Pair<>(0.95f, 0.18f), false, false, ScreenType.MAIN_GAME, "images/nodes/level5.png", LOCK_REASON),
+        "level5");
   }
 
   /** Loads the game's global assets. */
