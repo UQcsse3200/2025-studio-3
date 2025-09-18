@@ -44,6 +44,7 @@ class TileInputComponentTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     when(storage.hasUnit()).thenReturn(false);
     when(area.getSelectedUnit()).thenReturn(new Entity());
+    when(area.isCharacterSelected()).thenReturn(true);
 
     Entity tile = makeTileAt(10, 20, storage);
     boolean handled =
@@ -143,6 +144,7 @@ class TileInputComponentTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     when(storage.hasUnit()).thenReturn(false);
     when(area.getSelectedUnit()).thenReturn(new Entity());
+    when(area.isCharacterSelected()).thenReturn(true);
 
     Entity tile = makeTileAt(10, 20, storage);
     TileInputComponent comp = tile.getComponent(TileInputComponent.class);

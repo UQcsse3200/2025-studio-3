@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.GridPoint2;
+import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.areas.terrain.TerrainFactory;
@@ -25,7 +25,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
-class TileTest {
+class TileStorageComponentTest {
   @Mock Texture texture;
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
@@ -38,13 +38,15 @@ class TileTest {
     com.badlogic.gdx.scenes.scene2d.Stage stage = mock(com.badlogic.gdx.scenes.scene2d.Stage.class);
     com.csse3200.game.rendering.RenderService renderService =
         mock(com.csse3200.game.rendering.RenderService.class);
-    when(renderService.getStage()).thenReturn(stage);
+    lenient().when(renderService.getStage()).thenReturn(stage);
     ServiceLocator.registerRenderService(renderService);
 
     // creates mock resource service
     com.csse3200.game.services.ResourceService resourceService =
         mock(com.csse3200.game.services.ResourceService.class);
-    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
+    lenient()
+        .when(resourceService.getAsset(anyString(), eq(Texture.class)))
+        .thenReturn(mock(Texture.class));
     ServiceLocator.registerResourceService(resourceService);
 
     // creates mock input service
@@ -89,7 +91,7 @@ class TileTest {
 
     // checks if the tile unit has not been replaced with new unit if there was already a unit
     // placed
-    assert (beforeSecondTriggerId == afterSecondTriggerId);
+    assertEquals(beforeSecondTriggerId, afterSecondTriggerId);
   }
 
   @Test
@@ -125,47 +127,19 @@ class TileTest {
   }
 
   @Test
-  void shouldBeInHitboxOne() {
-    Entity tile = createValidTile();
-    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-    GridPoint2 testPoint = new GridPoint2(1, 1);
-    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
+  void shouldGetArea() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    AreaAPI area = tileStorageComponent.getArea();
+    assertEquals(area, levelGameArea);
   }
 
   @Test
-  void shouldBeInHitboxTwo() {
-    Entity tile = createValidTile();
-    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-    GridPoint2 testPoint = new GridPoint2(0, 0);
-    assertTrue(tileStorageComponent.inTileHitbox(testPoint));
-  }
-
-  @Test
-  void shouldntBeInHitboxOne() {
-    Entity tile = createValidTile();
-    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-    GridPoint2 testPoint = new GridPoint2(8, 8);
-    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
-  }
-
-  @Test
-  void shouldntBeInHitboxTwo() {
-    Entity tile = createValidTile();
-    TileHitboxComponent tileStorageComponent = tile.getComponent(TileHitboxComponent.class);
-    GridPoint2 testPoint = new GridPoint2(0, 6);
-    assertFalse(tileStorageComponent.inTileHitbox(testPoint));
-  }
-
-  @Test
-  void createInvalidHitboxComponent() {
-    IllegalArgumentException ex =
-        assertThrows(
-            IllegalArgumentException.class,
-            () -> {
-              new TileHitboxComponent(3, 3, 5, 5);
-            });
-    assertEquals(
-        "The max x and y values must be bigger than the min x and y values", ex.getMessage());
+  void shouldGetPosition() {
+    Entity tile = grid.getTile(0, 0);
+    TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
+    int pos = tileStorageComponent.getPosition();
+    assertEquals(0, pos);
   }
 
   @Test

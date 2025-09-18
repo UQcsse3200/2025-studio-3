@@ -13,6 +13,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainComponent.TerrainOrientation;
 import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.entities.configs.BaseLevelGameConfig;
+import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.RandomUtils;
@@ -25,6 +27,8 @@ public class TerrainFactory {
 
   private final OrthographicCamera camera;
   private final TerrainOrientation orientation;
+
+  private final BaseLevelGameConfig configs;
 
   /**
    * Create a terrain factory with Orthogonal orientation
@@ -44,6 +48,7 @@ public class TerrainFactory {
   public TerrainFactory(CameraComponent cameraComponent, TerrainOrientation orientation) {
     this.camera = (OrthographicCamera) cameraComponent.getCamera();
     this.orientation = orientation;
+    this.configs = FileLoader.readClass(BaseLevelGameConfig.class, "configs/levels.json");
   }
 
   /**
@@ -56,7 +61,7 @@ public class TerrainFactory {
   public TerrainComponent createTerrain(TerrainType terrainType) {
     ResourceService resourceService = ServiceLocator.getResourceService();
     switch (terrainType) {
-      case FOREST_DEMO:
+      case FOREST_DEMO -> {
         TextureRegion orthoGrass =
             new TextureRegion(resourceService.getAsset("images/grass_1.png", Texture.class));
         TextureRegion orthoTuft =
@@ -64,7 +69,8 @@ public class TerrainFactory {
         TextureRegion orthoRocks =
             new TextureRegion(resourceService.getAsset("images/grass_3.png", Texture.class));
         return createForestDemoTerrain(0.5f, orthoGrass, orthoTuft, orthoRocks);
-      case FOREST_DEMO_ISO:
+      }
+      case FOREST_DEMO_ISO -> {
         TextureRegion isoGrass =
             new TextureRegion(resourceService.getAsset("images/iso_grass_1.png", Texture.class));
         TextureRegion isoTuft =
@@ -72,7 +78,8 @@ public class TerrainFactory {
         TextureRegion isoRocks =
             new TextureRegion(resourceService.getAsset("images/iso_grass_3.png", Texture.class));
         return createForestDemoTerrain(1f, isoGrass, isoTuft, isoRocks);
-      case FOREST_DEMO_HEX:
+      }
+      case FOREST_DEMO_HEX -> {
         TextureRegion hexGrass =
             new TextureRegion(resourceService.getAsset("images/hex_grass_1.png", Texture.class));
         TextureRegion hexTuft =
@@ -80,12 +87,55 @@ public class TerrainFactory {
         TextureRegion hexRocks =
             new TextureRegion(resourceService.getAsset("images/hex_grass_3.png", Texture.class));
         return createForestDemoTerrain(1f, hexGrass, hexTuft, hexRocks);
-      case LEVEL_ONE_MAP:
+      }
+      case LEVEL_ONE_MAP -> {
         TextureRegion levelMap =
             new TextureRegion(resourceService.getAsset("images/level-1-map-v2.png", Texture.class));
         return createLevelMap(levelMap);
-      default:
+      }
+      default -> {
         return null;
+      }
+    }
+  }
+
+  /**
+   * Takes the level number to create a terrain component using the createLevelTerrain method.
+   *
+   * @param levelNum integer representing the level number of the terrain component being created.
+   * @return Terrain component reflecting the level number presented, which renders the terrain.
+   */
+  public TerrainComponent createTerrain(int levelNum) {
+    // switch to be used once fully implemented, at this stage default branch only
+    switch (levelNum) {
+      default -> {
+        BaseLevelGameConfig config = new BaseLevelGameConfig();
+        return createLevelTerrain(config);
+      }
+    }
+  }
+
+  /**
+   * Creates a terrain component according to the config passed by createTerrain.
+   *
+   * @param config containing the required number of rows, columns and filepath to the map image
+   *     file.
+   * @return Terrain component reflecting the config presented, which renders the terrain.
+   */
+  public TerrainComponent createLevelTerrain(BaseLevelGameConfig config) {
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    if (config.getLevelNum() == 1) {
+      TextureRegion levelMap =
+          new TextureRegion(resourceService.getAsset(config.getMapFilePath(), Texture.class));
+      return createLevelMap(levelMap);
+    } else if (config.getLevelNum() == 2) {
+      TextureRegion levelMap =
+          new TextureRegion(resourceService.getAsset(config.getMapFilePath(), Texture.class));
+      return createLevelMap(levelMap);
+    } else {
+      TextureRegion levelMap =
+          new TextureRegion(resourceService.getAsset(configs.getMapFilePath(), Texture.class));
+      return createLevelMap(levelMap);
     }
   }
 
@@ -188,6 +238,7 @@ public class TerrainFactory {
     FOREST_DEMO,
     FOREST_DEMO_ISO,
     FOREST_DEMO_HEX,
-    LEVEL_ONE_MAP
+    LEVEL_ONE_MAP,
+    LEVEL_TWO_MAP,
   }
 }

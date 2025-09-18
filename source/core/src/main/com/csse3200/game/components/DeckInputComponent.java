@@ -55,7 +55,15 @@ public class DeckInputComponent extends InputComponent {
       logger.info("Deck Entity clicked");
       return switch (button) {
         case Input.Buttons.LEFT -> {
+          area.setIsCharacterSelected(true);
           area.setSelectedUnit(entity);
+
+          com.badlogic.gdx.graphics.Texture temp = null;
+          var tex = entity.getComponent(com.csse3200.game.rendering.TextureRenderComponent.class);
+          if (tex != null) {
+            temp = tex.getTexture();
+          }
+          area.beginDrag(temp);
           yield true;
         }
         case Input.Buttons.RIGHT -> {
