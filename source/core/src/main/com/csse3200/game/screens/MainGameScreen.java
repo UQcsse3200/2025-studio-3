@@ -225,7 +225,9 @@ public class MainGameScreen extends ScreenAdapter {
    * Factory method for creating the game area. Subclasses may override to provide a different area.
    */
   protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
-    return new LevelGameArea(terrainFactory);
+    LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
+    levelGameArea.setWaveManager(this.waveManager);
+    return levelGameArea;
   }
 
   /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
