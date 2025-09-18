@@ -122,7 +122,7 @@ public class CutsceneHudComponent extends UIComponent {
     root.setFillParent(true);
     root.setTouchable(Touchable.enabled);
     root.toFront();
-    root.setDebug(true); // TODO: Change in PROD
+    root.setDebug(false); // TODO: Change in PROD
 
     layers.addActor(root);
 
