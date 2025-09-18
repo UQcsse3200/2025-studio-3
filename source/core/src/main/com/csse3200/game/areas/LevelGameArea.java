@@ -103,7 +103,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private Entity selectedUnit;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
-  private Entity ui;
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
@@ -178,7 +177,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Spawns the level UI */
   private void displayUI() {
-    ui = new Entity();
+    Entity ui = new Entity();
     // add components here for additional UI Elements
     unitList.put("images/sling_shooter_front.png", DefenceFactory::createSlingShooter);
 

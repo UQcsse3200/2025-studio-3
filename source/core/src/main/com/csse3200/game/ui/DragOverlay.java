@@ -90,9 +90,9 @@ public class DragOverlay extends UIComponent {
     float my = Gdx.input.getY();
 
     // Center the image on the cursor
-    float X = mx - image.getWidth() / 2f;
-    float Y = (stageH - my) - image.getHeight() / 2f;
-    image.setPosition(X, Y);
+    float x = mx - image.getWidth() / 2f;
+    float y = (stageH - my) - image.getHeight() / 2f;
+    image.setPosition(x, y);
   }
 
   /** Cancels a drag in progress. */
