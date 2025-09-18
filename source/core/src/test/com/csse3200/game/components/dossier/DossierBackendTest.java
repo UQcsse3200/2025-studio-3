@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.csse3200.game.entities.configs.BaseDefenceConfig;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class DossierBackendTest {
     entityConfigs.standardRobot.attack = 10;
 
     NPCConfigs defenceConfigs = new NPCConfigs();
-    defenceConfigs.slingshooter = new BaseDefenceConfig();
+    defenceConfigs.slingshooter = new BaseDefenderConfig();
     defenceConfigs.slingshooter.name = "Slingshooter";
     defenceConfigs.slingshooter.description = "A basic defense.";
     defenceConfigs.slingshooter.defenceHealth = 50;

@@ -2,7 +2,7 @@ package com.csse3200.game.services;
 
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.entities.configs.BaseAchievementConfig.DeserializedAchievementConfig;
-import com.csse3200.game.entities.configs.BaseDefenceConfig;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig.DeserializedItemConfig;
@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 /** Service for managing the config files and data loading of the game. */
 public class ConfigService {
   private static final Logger logger = LoggerFactory.getLogger(ConfigService.class);
-  private Map<String, BaseDefenceConfig> defenceConfigs;
+  private Map<String, BaseDefenderConfig> defenceConfigs;
   private Map<String, BaseEntityConfig> enemyConfigs;
   private Map<String, BaseItemConfig> itemConfigs;
   private Map<String, BaseAchievementConfig> achievementConfigs;
@@ -62,7 +62,7 @@ public class ConfigService {
    * @param filename the filename to load from
    * @return the defence configs
    */
-  public Map<String, BaseDefenceConfig> loadDefenceConfigs(String filename) {
+  public Map<String, BaseDefenderConfig> loadDefenceConfigs(String filename) {
     DeserializedDefenceConfig wrapper =
         FileLoader.readClass(DeserializedDefenceConfig.class, filename);
     if (wrapper == null) {
@@ -70,7 +70,7 @@ public class ConfigService {
       return new HashMap<>();
     }
 
-    Map<String, BaseDefenceConfig> configs = wrapper.getConfig();
+    Map<String, BaseDefenderConfig> configs = wrapper.getConfig();
     if (configs == null) {
       logger.warn("Defence config file {} loaded but contains no configs", filename);
       return new HashMap<>();
@@ -130,7 +130,7 @@ public class ConfigService {
    * @param key The identifier or name of the defence config to get.
    * @return The defence config for the given key.
    */
-  public BaseDefenceConfig getDefenceConfig(String key) {
+  public BaseDefenderConfig getDefenceConfig(String key) {
     return defenceConfigs.get(key);
   }
 
@@ -169,8 +169,8 @@ public class ConfigService {
    *
    * @return All the defence configs.
    */
-  public BaseDefenceConfig[] getDefenceConfigs() {
-    return defenceConfigs.values().toArray(new BaseDefenceConfig[0]);
+  public BaseDefenderConfig[] getDefenceConfigs() {
+    return defenceConfigs.values().toArray(new BaseDefenderConfig[0]);
   }
 
   /**
@@ -238,17 +238,17 @@ public class ConfigService {
 
   // TODO: Move these to the Base Config classes for tidyness.
   public static class DeserializedDefenceConfig {
-    private HashMap<String, BaseDefenceConfig> config;
+    private HashMap<String, BaseDefenderConfig> config;
 
     public DeserializedDefenceConfig() {
       this.config = new HashMap<>();
     }
 
-    public void setConfig(Map<String, BaseDefenceConfig> config) {
+    public void setConfig(Map<String, BaseDefenderConfig> config) {
       this.config = new HashMap<>(config);
     }
 
-    public Map<String, BaseDefenceConfig> getConfig() {
+    public Map<String, BaseDefenderConfig> getConfig() {
       return config;
     }
   }

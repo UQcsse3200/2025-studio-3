@@ -30,6 +30,7 @@ public class ServiceLocator {
   private static ResourceService globalResourceService;
   private static ProfileService profileService;
   private static ItemEffectsService itemEffectsService;
+  private static CutsceneService cutsceneService;
 
   /**
    * Gets the entity service.
@@ -142,6 +143,11 @@ public class ServiceLocator {
   /** Registers the item effects service. */
   public static ItemEffectsService getItemEffectsService() {
     return itemEffectsService;
+  }
+
+  /** Gets the cutscene service */
+  public static CutsceneService getCutsceneService() {
+    return cutsceneService;
   }
 
   /**
@@ -302,6 +308,12 @@ public class ServiceLocator {
   public static void deregisterProfileService() {
     logger.debug("Removing profile service");
     profileService = null;
+  }
+
+  /** Registers cutscene service */
+  public static void registerCutsceneService(CutsceneService source) {
+    logger.debug("Registering cutscene service {}", source);
+    cutsceneService = source;
   }
 
   /** Clears all transient services. */
