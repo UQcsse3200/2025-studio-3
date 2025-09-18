@@ -4,11 +4,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 
-/**
- * Utility class for generating random numbers and vectors.
- */
+/** Utility class for generating random numbers and vectors. */
 public class RandomUtils {
-  
+
   /**
    * Generates a random Vector2 between two given vectors.
    *
@@ -31,9 +29,7 @@ public class RandomUtils {
     return new GridPoint2(MathUtils.random(start.x, end.x), MathUtils.random(start.y, end.y));
   }
 
-  /**
-   * Constructor for the RandomUtils class.
-   */
+  /** Constructor for the RandomUtils class. */
   private RandomUtils() {
     throw new IllegalStateException("Instantiating static util class");
   }

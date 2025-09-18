@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -71,17 +72,12 @@ public class DialogComponent extends UIComponent {
     Table contentTable = new Table();
     contentTable.pad(20f);
     Color titleColor = getTextColor();
-    Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    titleStyle.fontColor = titleColor;
-    Label titleLabel = new Label(title, titleStyle);
+    Label titleLabel = TypographyFactory.createSubtitle(title, titleColor);
     titleLabel.setAlignment(Align.center);
-    titleLabel.setFontScale(1.3f);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
 
     // Add message label
-    Label.LabelStyle messageStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    messageStyle.fontColor = Color.WHITE;
-    Label messageLabel = new Label(message, messageStyle);
+    Label messageLabel = TypographyFactory.createParagraph(message, Color.WHITE);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
@@ -141,7 +137,7 @@ public class DialogComponent extends UIComponent {
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
-        TextButton okButton = ButtonFactory.createLargeButton("OK");
+        TextButton okButton = ButtonFactory.createDialogButton("OK");
         okButton.addListener(
             new ClickListener() {
               @Override
@@ -157,7 +153,7 @@ public class DialogComponent extends UIComponent {
 
       // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = ButtonFactory.createLargeButton("Cancel");
+        TextButton cancelButton = ButtonFactory.createDialogButton("Cancel");
         cancelButton.addListener(
             new ClickListener() {
               @Override
@@ -169,7 +165,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton continueButton = ButtonFactory.createLargeButton("Continue");
+        TextButton continueButton = ButtonFactory.createDialogButton("Continue");
         continueButton.addListener(
             new ClickListener() {
               @Override
@@ -187,7 +183,7 @@ public class DialogComponent extends UIComponent {
 
       // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = ButtonFactory.createLargeButton("OK");
+        TextButton okButtonError = ButtonFactory.createDialogButton("OK");
         okButtonError.addListener(
             new ClickListener() {
               @Override

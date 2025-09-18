@@ -13,7 +13,7 @@ public class ButtonFactory {
   private static final String BTN_ATLAS_PATH = "images/ui/btn-blue.atlas";
   private static final String BTN_REGION = "default";
 
-  // Private constructor to prevent instantiation
+  /** Private constructor to prevent instantiation */
   private ButtonFactory() {
     throw new IllegalStateException("Utility class");
   }
@@ -32,20 +32,36 @@ public class ButtonFactory {
    * Creates a small TextButton using the standard btn-blue texture atlas.
    *
    * @param text The text to display on the button
-   * @return A TextButton with smaller font styling
+   * @return A TextButton with smaller font styling and 3f left/right padding
    */
   public static TextButton createSmallButton(String text) {
-    return createButton(text, 1.0f);
+    TextButton button = createButton(text, 1.0f);
+    button.pad(0f, 3f, 0f, 3f); // top, left, bottom, right
+    return button;
   }
 
   /**
    * Creates a large TextButton using the standard btn-blue texture atlas.
    *
    * @param text The text to display on the button
-   * @return A TextButton with larger font styling
+   * @return A TextButton with larger font styling and 5f left/right padding
    */
   public static TextButton createLargeButton(String text) {
-    return createButton(text, 2.0f);
+    TextButton button = createButton(text, 2.0f);
+    button.pad(0f, 5f, 0f, 5f); // top, left, bottom, right
+    return button;
+  }
+
+  /**
+   * Creates a dialog TextButton with specific styling for dialog boxes.
+   *
+   * @param text The text to display on the button
+   * @return A TextButton styled for dialogs with wider width and 1.5f font scale
+   */
+  public static TextButton createDialogButton(String text) {
+    TextButton button = createButton(text, 1.5f);
+    button.pad(5f, 10f, 5f, 10f); // top, left, bottom, right - wider padding
+    return button;
   }
 
   /**

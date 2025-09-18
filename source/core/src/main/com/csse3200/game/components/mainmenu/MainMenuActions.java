@@ -26,7 +26,7 @@ public class MainMenuActions extends Component {
     logger.info("[MainMenuActions] Starting new game");
     game.setScreen(GdxGame.ScreenType.NEW_GAME);
   }
-  
+
   /** Load game (placeholder for saved states). */
   private void onLoad() {
     logger.info("[MainMenuActions] Loading game");

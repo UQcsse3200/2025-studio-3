@@ -13,6 +13,7 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -58,7 +59,7 @@ public class LoadMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = new Label("LOAD GAME", skin, "large");
+    Label titleLabel = TypographyFactory.createTitle("LOAD GAME");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];

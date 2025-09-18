@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -22,16 +25,14 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * The screen for the mini game.
- */
+/** The screen for the mini game. */
 public class MiniGameScreen extends ScreenAdapter {
   private static final Logger logger =
       LoggerFactory.getLogger(com.csse3200.game.screens.MiniGameScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] laneRunnerTextures = {
-    "images/backgrounds/world_map.png", "images/entities/character.png", "images/backgrounds/bg.png"
+    "images/backgrounds/bg.png", "images/entities/character.png", "images/backgrounds/bg.png"
   };
 
   /**
@@ -91,8 +92,7 @@ public class MiniGameScreen extends ScreenAdapter {
 
     // Add the background image as a Stage actor
     Texture bgTex =
-        ServiceLocator.getResourceService()
-            .getAsset("images/backgrounds/world_map.png", Texture.class);
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
     logger.debug("loads mini game screen background texture asset");
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
     bg.setFillParent(true);
@@ -103,7 +103,10 @@ public class MiniGameScreen extends ScreenAdapter {
     Entity ui = new Entity();
     ui.addComponent(new MiniGameDisplay())
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new MiniGameActions(game));
+        .addComponent(new MiniGameActions(game))
+        .addComponent(new WorldMapNavigationMenu())
+        .addComponent(new WorldMapNavigationMenuActions(game))
+        .addComponent(new AnimatedDropdownMenu());
     ServiceLocator.getEntityService().register(ui);
     logger.debug("mini game screen ui is created and registered");
   }

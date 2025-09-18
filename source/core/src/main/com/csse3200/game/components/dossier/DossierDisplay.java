@@ -14,6 +14,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.NPCConfigs;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,7 +56,7 @@ public class DossierDisplay extends UIComponent {
 
   /** Adds all tables to the stage. */
   private void addActors() {
-    Label title = new Label("Dossier", skin, "title");
+    Label title = TypographyFactory.createTitle("Dossier");
     createCloseButton();
 
     // create rootTable
@@ -214,12 +215,12 @@ public class DossierDisplay extends UIComponent {
 
     String name =
         entities.length > 0 ? dossierManager.getName(entities[currentEntity]) : "No entries";
-    entityNameLabel = new Label(name, skin, "large");
+    entityNameLabel = TypographyFactory.createSubtitle(name);
     entityNameLabel.setAlignment(Align.left);
     infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
 
     String info = entities.length > 0 ? dossierManager.getInfo(entities[currentEntity]) : "";
-    entityInfoLabel = new Label(info, skin);
+    entityInfoLabel = TypographyFactory.createParagraph(info);
     entityInfoLabel.setWrap(true);
     entityInfoLabel.setAlignment(Align.left);
     infoTable
