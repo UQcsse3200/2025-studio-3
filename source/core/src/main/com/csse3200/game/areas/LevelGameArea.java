@@ -406,6 +406,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
+    unit.getEvents()
+        .addListener(
+            "entityDeath",
+            () -> {
+              requestDespawn(unit);
+              robots.remove(unit);
+            });
+
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
