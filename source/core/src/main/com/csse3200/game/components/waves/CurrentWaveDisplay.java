@@ -1,10 +1,9 @@
 package com.csse3200.game.components.waves;
 
-import static com.csse3200.game.entities.WaveManager.getCurrentWave;
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -23,20 +22,45 @@ public class CurrentWaveDisplay extends UIComponent {
   private Label waveLabel;
   private Label waveNumberLabel;
   private int currentWave = 0;
+  private WaveManager waveManager;
+
+  /**
+   * Creates a new current wave display component.
+   *
+   * @param waveManager the WaveManager to listen to for wave events
+   */
+  public CurrentWaveDisplay(WaveManager waveManager) {
+    this.waveManager = waveManager;
+  }
 
   @Override
   public void create() {
     super.create();
     addActors();
 
-    // Listen for wave change events - expects an integer wave number
-    entity.getEvents().addListener("waveChanged", this::updateWaveDisplay);
+    // Listen directly to WaveManager events
+    if (waveManager != null) {
+      waveManager.setWaveEventListener(
+          new WaveManager.WaveEventListener() {
+            @Override
+            public void onPreparationPhaseStarted(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
 
-    // Also listen for new wave start events
-    entity.getEvents().addListener("newWaveStarted", this::updateWaveDisplay);
+            @Override
+            public void onWaveChanged(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
+
+            @Override
+            public void onWaveStarted(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
+          });
+    }
 
     // Initialize with current wave from WaveManager (starts at 0, shows "No Wave Active")
-    updateWaveDisplay(getCurrentWave());
+    updateWaveDisplay(waveManager != null ? waveManager.getCurrentWave() : 0);
   }
 
   /**

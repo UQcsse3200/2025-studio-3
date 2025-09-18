@@ -154,10 +154,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
 
-    spawnRobot(7, 2, RobotType.TANKY);
-    spawnRobot(10, 1, RobotType.STANDARD);
-    spawnRobot(10, 4, RobotType.FAST);
-
     playMusic();
   }
 
