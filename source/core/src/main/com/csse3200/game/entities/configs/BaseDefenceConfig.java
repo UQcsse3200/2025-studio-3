@@ -7,63 +7,23 @@ public class BaseDefenceConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
+  public String name = "Name";
+  public String description = "Description";
+  public int defenceHealth = 1;
+  public int defenceAttack = 1;
+
   /** Defence type identifier */
-  public int rangeType;
+  public int type = 1;
 
   /** Attack range of the defence */
-  public int range;
+  public int range = 1;
 
   /** Current state of the defence */
-  public int state;
+  public int state = 1;
 
   /** Attack speed of the defence */
-  public int attackSpeed;
+  public int attackSpeed = 1;
 
   /** Critical hit chance percentage */
-  public int critChance;
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getRangeType() {
-    return rangeType;
-  }
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getRange() {
-    return range;
-  }
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getAttackState() {
-    return state;
-  }
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getAttackSpeed() {
-    return attackSpeed;
-  }
-
-  /**
-   * Gets the attack value for this entity.
-   *
-   * @return the attack value
-   */
-  public int getCritChance() {
-    return critChance;
-  }
+  public int critChance = 0;
 }

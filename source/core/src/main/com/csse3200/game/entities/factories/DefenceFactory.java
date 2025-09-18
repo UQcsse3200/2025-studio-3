@@ -67,7 +67,7 @@ public class DefenceFactory {
             new DefenceStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.rangeType,
+                config.type,
                 config.range,
                 config.state,
                 config.attackSpeed,
@@ -75,8 +75,9 @@ public class DefenceFactory {
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
-    // Scale to tilesize
-    animator.scaleEntity();
+    // trigger the initial attack event to kick off behaviour
+    // this will be changed to idle once idle is made
+    defender.getEvents().trigger("idleStart");
 
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -104,7 +105,7 @@ public class DefenceFactory {
             new DefenceStatsComponent(
                 config.getHealth(),
                 config.getAttack(),
-                config.rangeType,
+                config.type,
                 config.range,
                 config.state,
                 config.attackSpeed,
