@@ -149,9 +149,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnMap();
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-    spawnRobot(7, 2, RobotType.TANKY);
-    spawnRobot(10, 1, RobotType.STANDARD);
-    spawnRobot(10, 4, RobotType.FAST);
     spawnDeck();
 
     playMusic();
