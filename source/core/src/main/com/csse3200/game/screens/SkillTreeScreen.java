@@ -66,7 +66,7 @@ public class SkillTreeScreen extends ScreenAdapter {
 
     // Create batch and background texture
     batch = new SpriteBatch();
-    background = new Texture(Gdx.files.internal("images/skilltree_background.png"));
+    background = new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
   }
 
   /** Loads necessary game assets */
@@ -103,7 +103,8 @@ public class SkillTreeScreen extends ScreenAdapter {
     Stage stage = ServiceLocator.getRenderService().getStage();
 
     // Set background image
-    Texture backgroundTexture = new Texture(Gdx.files.internal("images/skilltree_background.png"));
+    Texture backgroundTexture =
+        new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
         stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());

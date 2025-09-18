@@ -24,7 +24,7 @@ public class DossierScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(DossierScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private static final String[] dossierTextures = {"images/robot_placeholder.png"};
+  private static final String[] dossierTextures = {"images/entities/enemies/robot_placeholder.png"};
 
   public DossierScreen(GdxGame gdxGame) {
     this.game = gdxGame;
@@ -73,10 +73,10 @@ public class DossierScreen extends ScreenAdapter {
                 FileLoader.readClass(NPCConfigs.class, "configs/enemies.json"),
                 FileLoader.readClass(NPCConfigs.class, "configs/defences.json"),
                 new Texture[] {
-                  new Texture("images/basic_robot_default_sprite.png"),
-                  new Texture("images/red_robot_default_sprite.png"),
-                  new Texture("images/blue_robot_default_sprite.png"),
-                  new Texture("images/sling_shooter_1.png")
+                  new Texture("images/entities/enemies/basic_robot_default_sprite.png"),
+                  new Texture("images/entities/enemies/red_robot_default_sprite.png"),
+                  new Texture("images/entities/enemies/blue_robot_default_sprite.png"),
+                  new Texture("images/entities/defences/sling_shooter_1.png")
                 }))
         .addComponent(new InputDecorator(stage, 10));
     ServiceLocator.getEntityService().register(ui);

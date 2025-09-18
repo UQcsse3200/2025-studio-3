@@ -41,11 +41,10 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private Label scoreLabel;
   private Label timeLabel;
   private static final String[] laneRunnerTextures = {
-    "images/box_boy.png",
-    "images/lanes.png",
-    "images/Bomb.png",
-    "images/Background.png",
-    "images/GameOver.png"
+    "images/entities/minigames/Bomb.png",
+    "images/backgrounds/Background.png",
+    "images/backgrounds/GameOver.png",
+    "images/backgrounds/lanes.png"
   };
 
   public LaneRunnerScreen(GdxGame game) {
@@ -84,10 +83,12 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("Creating UI");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
-    addBackground("images/Background.png", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    addBackground(
+        "images/backgrounds/Background.png", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     // Create the background image
-    Texture bgTex = ServiceLocator.getResourceService().getAsset("images/lanes.png", Texture.class);
+    Texture bgTex =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/lanes.png", Texture.class);
     Image background = new Image(bgTex);
 
     // Calculate the correct width to avoid stretching, based on our lane logic
@@ -102,7 +103,8 @@ public class LaneRunnerScreen extends ScreenAdapter {
     stage.addActor(background);
 
     Texture playerTex =
-        ServiceLocator.getResourceService().getAsset("images/box_boy.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class);
     Image playerImage = new Image(playerTex);
     playerImage.setSize(64f, 64f);
     float playerX = laneManager.getLaneCenter(1) - 32f;

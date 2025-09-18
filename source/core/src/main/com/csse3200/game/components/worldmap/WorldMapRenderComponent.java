@@ -8,7 +8,7 @@ import com.csse3200.game.ui.UIComponent;
 
 /** Renders the world map background */
 public class WorldMapRenderComponent extends UIComponent {
-  private static final String WORLD_MAP_TEXTURE = "images/world_map.png";
+  private static final String WORLD_MAP_TEXTURE = "images/backgrounds/world_map.png";
   private final Vector2 worldSize;
 
   /**

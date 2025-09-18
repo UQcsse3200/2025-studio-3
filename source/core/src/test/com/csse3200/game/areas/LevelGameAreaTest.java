@@ -203,7 +203,7 @@ class LevelGameAreaTest {
                     area,
                     () ->
                         new Entity()
-                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
+                            .addComponent(new TextureRenderComponent("test/files/tree.png"))));
     area.setSelectedUnit(selected);
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
@@ -233,7 +233,7 @@ class LevelGameAreaTest {
                     area,
                     () ->
                         new Entity()
-                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
+                            .addComponent(new TextureRenderComponent("test/files/tree.png"))));
     area.setSelectedUnit(selected);
 
     LevelGameGrid grid = mock(LevelGameGrid.class);

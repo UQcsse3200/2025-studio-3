@@ -9,6 +9,9 @@ import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.ArrayList;
+import java.util.List;
+import net.dermetfan.utils.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,8 @@ class ProfileTest {
   private Statistics statistics;
   private Arsenal arsenal;
   private String currentLevel;
+  private List<String> completedNodes;
+  private Pair<String, String> nameAndLevel;
 
   @BeforeEach
   void setUp() {
@@ -35,6 +40,8 @@ class ProfileTest {
     statistics = new Statistics();
     arsenal = new Arsenal();
     currentLevel = "level1";
+    completedNodes = new ArrayList<>();
+    nameAndLevel = new Pair<>(name, currentLevel);
   }
 
   @AfterEach
@@ -54,7 +61,7 @@ class ProfileTest {
   @Test
   void testProfileParameterizedConstructor() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(name, profile.getName());
     assertEquals(30, profile.getWallet().getCoins());
     assertEquals(1, profile.getWallet().getSkillsPoints());
@@ -71,7 +78,7 @@ class ProfileTest {
   @Test
   void testGetCurrentLevel() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(currentLevel, profile.getCurrentLevel());
   }
 
@@ -86,41 +93,42 @@ class ProfileTest {
   @Test
   void testGetInventory() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(inventory, profile.getInventory());
   }
 
   @Test
   void testGetArsenal() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(arsenal, profile.getArsenal());
   }
 
   @Test
   void testGetSkillset() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(skillset, profile.getSkillset());
   }
 
   @Test
   void testGetStatistics() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(statistics, profile.getStatistics());
   }
 
   @Test
   void testGetWallet() {
     Profile profile =
-        new Profile(name, wallet, inventory, skillset, statistics, arsenal, currentLevel);
+        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal, completedNodes);
     assertEquals(wallet, profile.getWallet());
   }
 
   @Test
   void testParameterizedConstructorWithNullStatistics() {
-    Profile profile = new Profile(name, wallet, inventory, skillset, null, arsenal, currentLevel);
+    Profile profile =
+        new Profile(nameAndLevel, wallet, inventory, skillset, null, arsenal, completedNodes);
     assertNotNull(profile.getStatistics());
   }
 }

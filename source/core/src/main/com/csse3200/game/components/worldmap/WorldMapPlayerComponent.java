@@ -30,13 +30,14 @@ public class WorldMapPlayerComponent extends UIComponent {
   public void create() {
     super.create();
     playerTexture =
-        ServiceLocator.getResourceService().getAsset("images/character.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class);
   }
 
   @Override
   public void update() {
     handleMovement();
-    checkNodeProximity();
+    //checkNodeProximity();
     handleNodeInteraction();
   }
 

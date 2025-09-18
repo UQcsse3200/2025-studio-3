@@ -1,13 +1,13 @@
 {
   "LevelOne": {
     "levelNumber": 1,
-    "mapFile": "images/level-1-map-v2.png",
+    "mapFile": "images/backgrounds/level-1-map-v2.png",
     "rows": 5,
     "columns": 10
   },
   "LevelTwo": {
     "levelNumber": 2,
-    "mapFile": "images/level-2-map-v1.png",
+    "mapFile": "images/backgrounds/level-2-map-v1.png",
     "rows": 5,
     "columns": 10
   }

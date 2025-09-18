@@ -14,7 +14,7 @@ public class SettingsScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(SettingsScreen.class);
 
   public SettingsScreen(GdxGame game) {
-    super(game, Optional.of("images/bg.png"), Optional.empty());
+    super(game, Optional.of("images/backgrounds/bg.png"), Optional.empty());
   }
 
   /**

@@ -40,7 +40,8 @@ public class WallPongGameOverDisplay extends UIComponent {
     table.setFillParent(true);
     Image GameOverImage =
         new Image(
-            ServiceLocator.getResourceService().getAsset("images/GameOver.png", Texture.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/backgrounds/GameOver.png", Texture.class));
     Label scoreLabel = new Label("Final Score: " + finalScore, skin);
     Label timeLabel = new Label(String.format("Survival Time: %.2f seconds", survivalTime), skin);
     Label ballsHitLabel = new Label("Balls Hit: " + ballsHit, skin);

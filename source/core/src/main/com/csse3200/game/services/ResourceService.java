@@ -22,9 +22,7 @@ public class ResourceService implements Disposable {
   private final AssetManager assetManager;
   private final Map<String, FreeTypeFontGenerator> fontGenerators;
 
-  /**
-   * Initialise this ResourceService to use the default AssetManager.
-   */
+  /** Initialise this ResourceService to use the default AssetManager. */
   public ResourceService() {
     this(new AssetManager());
   }
@@ -191,7 +189,8 @@ public class ResourceService implements Disposable {
   public void loadFont(String fontPath, String key) {
     try {
       if (!fontGenerators.containsKey(key)) {
-        fontGenerators.put(key, new FreeTypeFontGenerator(com.badlogic.gdx.Gdx.files.internal(fontPath)));
+        fontGenerators.put(
+            key, new FreeTypeFontGenerator(com.badlogic.gdx.Gdx.files.internal(fontPath)));
         logger.debug("[ResourceService] Loaded FreeType font generator: {}", fontPath);
       }
     } catch (Exception e) {
@@ -278,7 +277,8 @@ public class ResourceService implements Disposable {
         entry.getValue().dispose();
         logger.debug("[ResourceService] Disposed FreeType font generator: {}", entry.getKey());
       } catch (Exception e) {
-        logger.error("[ResourceService] Failed to dispose FreeType font generator: {}", entry.getKey(), e);
+        logger.error(
+            "[ResourceService] Failed to dispose FreeType font generator: {}", entry.getKey(), e);
       }
     }
     fontGenerators.clear();

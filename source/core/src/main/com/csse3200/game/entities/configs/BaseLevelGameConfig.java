@@ -14,7 +14,7 @@ public class BaseLevelGameConfig {
   /** Creates a config with the level 1 configurations as default values. */
   public BaseLevelGameConfig() {
     levelNum = 1;
-    mapFilePath = "images/level-1-map-v2.png";
+    mapFilePath = "images/backgrounds/level-1-map-v2.png";
     rows = 5;
     cols = 10;
   }

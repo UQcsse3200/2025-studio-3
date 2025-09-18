@@ -167,7 +167,7 @@ public class SettingsMenuDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
     exitBtn.setSize(60f, 60f);
     exitBtn.setPosition(
         20f, // padding from left

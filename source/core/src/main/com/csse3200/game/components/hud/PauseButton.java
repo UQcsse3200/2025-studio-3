@@ -31,7 +31,8 @@ public class PauseButton extends UIComponent {
   private void addActors() {
     // Create pause button
     Texture pauseTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/pause-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/pause-icon.png", Texture.class);
     pauseButtonComponent =
         new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseTexture)));
     pauseButtonComponent.setSize(BUTTON_SIZE, BUTTON_SIZE);

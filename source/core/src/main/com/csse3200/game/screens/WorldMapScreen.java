@@ -28,7 +28,10 @@ import org.slf4j.LoggerFactory;
 public class WorldMapScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
   private static final String[] ADDITIONAL_TEXTURES = {
-    "images/world_map.png", "images/character.png", "images/node_completed.png",
+    "images/backgrounds/world_map.png",
+    "images/entities/character.png",
+    "images/nodes/completed.png",
+    "images/nodes/locked.png"
   };
   private static final float WORLD_WIDTH = 3000f;
   private static final float WORLD_HEIGHT = 2000f;

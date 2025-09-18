@@ -182,7 +182,7 @@ public class StatisticsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);

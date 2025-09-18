@@ -41,7 +41,6 @@ public class AttackTask extends TargetDetectionTasks {
   /** Updates the task each game frame */
   @Override
   public void update() {
-    logger.info("AttackTask priority: {}", getPriority());
     Entity target = getNearestVisibleTarget();
     if (target == null) {
       return;

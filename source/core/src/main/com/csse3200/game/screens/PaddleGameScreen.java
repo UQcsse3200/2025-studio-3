@@ -48,9 +48,9 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void loadAssests() {
-    paddleTex = new Texture(Gdx.files.internal("images/paddle.png"));
-    ballTex = new Texture(Gdx.files.internal("images/ball.png"));
-    bgTex = new Texture(Gdx.files.internal("images/WallPongbg.png"));
+    paddleTex = new Texture(Gdx.files.internal("images/entities/minigames/paddle.png"));
+    ballTex = new Texture(Gdx.files.internal("images/entities/minigames/ball.png"));
+    bgTex = new Texture(Gdx.files.internal("images/backgrounds/WallPongbg.png"));
   }
 
   private void addBackground() {

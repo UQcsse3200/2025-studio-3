@@ -111,7 +111,7 @@ public class AnimatedDropdownMenu extends UIComponent {
   private TextButton createCustomButton(String text) {
     // Start with the default skin style and modify only the font
     TextButton.TextButtonStyle buttonStyle;
-    
+
     if (skin != null) {
       try {
         // Copy the existing TextButton style from the skin
@@ -124,7 +124,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     } else {
       buttonStyle = new TextButton.TextButtonStyle();
     }
-    
+
     // Override only the font to use our custom FreeType font
     buttonStyle.font = customFont;
     // Keep the original colors but ensure text is visible
@@ -137,7 +137,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     if (buttonStyle.overFontColor == null) {
       buttonStyle.overFontColor = Color.YELLOW;
     }
-    
+
     return new TextButton(text, buttonStyle);
   }
 
@@ -294,10 +294,10 @@ public class AnimatedDropdownMenu extends UIComponent {
       }
       menuButtons = null;
     }
-    
+
     // Note: Don't dispose customFont here as it's managed by GlobalResourceService
     customFont = null;
-    
+
     super.dispose();
   }
 }

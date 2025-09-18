@@ -16,6 +16,11 @@ public class TerrainTile implements TiledMapTile {
   private float offsetX;
   private float offsetY;
 
+  /**
+   * Creates a new terrain tile with the given texture region.
+   *
+   * @param textureRegion the texture region of the tile
+   */
   public TerrainTile(TextureRegion textureRegion) {
     this.textureRegion = textureRegion;
   }

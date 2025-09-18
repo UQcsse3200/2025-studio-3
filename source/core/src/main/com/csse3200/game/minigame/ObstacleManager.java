@@ -77,7 +77,8 @@ public class ObstacleManager {
     float x = laneManager.getLaneCenter(LaneIndex) - 32f;
     float y = Gdx.graphics.getHeight();
     Texture obstacleTexture =
-        ServiceLocator.getResourceService().getAsset("images/Bomb.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/minigames/Bomb.png", Texture.class);
     Image obstacleImage = new Image(obstacleTexture);
     obstacleImage.setSize(64f, 64f);
     obstacleImage.setPosition(x, y);

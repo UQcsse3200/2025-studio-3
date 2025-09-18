@@ -54,7 +54,7 @@ public class AchievementDialogComponent extends UIComponent {
     try {
       Texture achievementTexture =
           ServiceLocator.getGlobalResourceService()
-              .getAsset("images/achievement.png", Texture.class);
+              .getAsset("images/ui/achievement.png", Texture.class);
       if (achievementTexture != null) {
         TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
         achievementBackground.setMinWidth(400f);
@@ -123,7 +123,7 @@ public class AchievementDialogComponent extends UIComponent {
       try {
         Texture skillPointTexture =
             ServiceLocator.getGlobalResourceService()
-                .getAsset("images/skillpoints.png", Texture.class);
+                .getAsset("images/entities/currency/skillpoints.png", Texture.class);
         if (skillPointTexture != null) {
           Drawable skillPointDrawable = new TextureRegionDrawable(skillPointTexture);
           Image skillPointIcon = new Image(skillPointDrawable);

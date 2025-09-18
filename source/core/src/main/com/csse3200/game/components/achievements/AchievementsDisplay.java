@@ -230,7 +230,7 @@ public class AchievementsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     closeButton.setSize(60f, 60f);
     updateCloseButtonPosition();

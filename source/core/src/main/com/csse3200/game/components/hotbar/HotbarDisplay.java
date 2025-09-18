@@ -54,7 +54,7 @@ public class HotbarDisplay extends UIComponent {
     layered = new Group();
 
     // create hotbar image
-    Image hotbar = new Image(new Texture("images/hotbar.png"));
+    Image hotbar = new Image(new Texture("images/ui/hotbar.png"));
     layered.addActor(hotbar);
 
     layered.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());

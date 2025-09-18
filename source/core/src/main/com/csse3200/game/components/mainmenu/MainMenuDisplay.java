@@ -29,8 +29,9 @@ public class MainMenuDisplay extends UIComponent {
     super.create();
 
     // Load assets
-    ServiceLocator.getResourceService().loadTextureAtlases(new String[] {"images/btn-blue.atlas"});
-    ServiceLocator.getResourceService().loadTextures(new String[] {"images/settings_icon.png"});
+    ServiceLocator.getResourceService()
+        .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
+    ServiceLocator.getResourceService().loadTextures(new String[] {"images/ui/settings_icon.png"});
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
@@ -61,10 +62,12 @@ public class MainMenuDisplay extends UIComponent {
     // Title
     Image title =
         new Image(
-            ServiceLocator.getResourceService().getAsset("images/bg-text.png", Texture.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
     TextureAtlas buttonAtlas =
-        ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/ui/btn-blue.atlas", TextureAtlas.class);
 
     TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
     TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default");
@@ -75,7 +78,7 @@ public class MainMenuDisplay extends UIComponent {
 
     // --- Settings gear icon ---
     Texture gearTexture =
-        ServiceLocator.getResourceService().getAsset("images/settings_icon.png", Texture.class);
+        ServiceLocator.getResourceService().getAsset("images/ui/settings_icon.png", Texture.class);
     ImageButton.ImageButtonStyle gearStyle = new ImageButton.ImageButtonStyle();
     gearStyle.imageUp = new TextureRegionDrawable(gearTexture);
 

@@ -56,7 +56,7 @@ public class NewGameMenuDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
     backBtn.setSize(60f, 60f);
     backBtn.setPosition(
         20f, // 20f padding from left

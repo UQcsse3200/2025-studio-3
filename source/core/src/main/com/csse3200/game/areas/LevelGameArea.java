@@ -46,45 +46,43 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final int LEVEL_ONE_COLS = 10;
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] levelTextures = {
-    "images/level-1-map-v2.png",
-    "images/level-2-map-v1.png",
-    "images/selected_star.png",
-    "images/sling_shooter_1.png",
-    "images/sling_shooter_front.png",
-    "images/items/grenade.png",
-    "images/items/coffee.png",
-    "images/items/emp.png",
-    "images/items/buff.png",
-    "images/items/nuke.png",
-    "images/items/shield.png",
-    "images/items/charmHack.png",
-    "images/items/scrapper.png",
-    "images/items/conscriptionOrder.png",
-    "images/items/doomHack.png",
-    "images/grenade.png",
-    "images/coffee.png",
-    "images/emp.png",
-    "images/buff.png",
-    "images/nuke.png",
-    "images/forge_1.png",
-    "images/sling_projectile.png",
-    "images/sling_projectile_pad.png"
+    "images/backgrounds/level-1-map-v2.png",
+    "images/backgrounds/level-2-map-v1.png",
+    "images/entities/minigames/selected_star.png",
+    "images/entities/defences/sling_shooter_1.png",
+    "images/entities/defences/sling_shooter_front.png",
+    "images/entities/items/grenade.png",
+    "images/entities/items/coffee.png",
+    "images/entities/items/emp.png",
+    "images/entities/items/buff.png",
+    "images/entities/items/nuke.png",
+    "images/entities/items/shield.png",
+    "images/entities/items/charmHack.png",
+    "images/entities/items/scrapper.png",
+    "images/entities/items/conscriptionOrder.png",
+    "images/entities/items/doomHack.png",
+    "images/effects/grenade.png",
+    "images/effects/coffee.png",
+    "images/effects/emp.png",
+    "images/effects/buff.png",
+    "images/effects/nuke.png",
+    "images/entities/defences/forge_1.png",
+    "images/effects/sling_projectile.png",
+    "images/effects/sling_projectile_pad.png"
   };
 
   private static final String[] levelTextureAtlases = {
-    "images/sling_shooter.atlas",
-    "images/robot_placeholder.atlas",
-    "images/basic_robot.atlas",
-    "images/ghost.atlas",
-    "images/ghostKing.atlas",
-    "images/grenade.atlas",
-    "images/coffee.atlas",
-    "images/emp.atlas",
-    "images/buff.atlas",
-    "images/forge.atlas",
-    "images/nuke.atlas",
-    "images/blue_robot.atlas",
-    "images/red_robot.atlas"
+    "images/entities/defences/sling_shooter.atlas",
+    "images/entities/enemies/robot_placeholder.atlas",
+    "images/entities/enemies/basic_robot.atlas",
+    "images/effects/grenade.atlas",
+    "images/effects/coffee.atlas",
+    "images/effects/emp.atlas",
+    "images/effects/buff.atlas",
+    "images/entities/defences/forge.atlas",
+    "images/effects/nuke.atlas",
+    "images/entities/enemies/blue_robot.atlas",
+    "images/entities/enemies/red_robot.atlas"
   };
 
   private static final String[] levelSounds = {"sounds/Impact4.ogg"};
@@ -179,26 +177,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void displayUI() {
     Entity ui = new Entity();
     // add components here for additional UI Elements
-    unitList.put("images/sling_shooter_front.png", DefenceFactory::createSlingShooter);
+    unitList.put(
+        "images/entities/defences/sling_shooter_front.png", DefenceFactory::createSlingShooter);
 
-    unitList.put("images/forge_1.png", DefenceFactory::createFurnace);
+    unitList.put("images/entities/defences/forge_1.png", DefenceFactory::createFurnace);
 
     for (String itemKey :
         ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
       if (itemKey.equals("grenade")) {
-        itemList.put("images/items/grenade.png", ItemFactory::createGrenade);
+        itemList.put("images/entities/items/grenade.png", ItemFactory::createGrenade);
       }
       if (itemKey.equals("coffee")) {
-        itemList.put("images/items/coffee.png", ItemFactory::createCoffee);
+        itemList.put("images/entities/items/coffee.png", ItemFactory::createCoffee);
       }
       if (itemKey.equals("buff")) {
-        itemList.put("images/items/buff.png", ItemFactory::createBuff);
+        itemList.put("images/entities/items/buff.png", ItemFactory::createBuff);
       }
       if (itemKey.equals("emp")) {
-        itemList.put("images/items/emp.png", ItemFactory::createEmp);
+        itemList.put("images/entities/items/emp.png", ItemFactory::createEmp);
       }
       if (itemKey.equals("nuke")) {
-        itemList.put("images/items/nuke.png", ItemFactory::createNuke);
+        itemList.put("images/entities/items/nuke.png", ItemFactory::createNuke);
       }
     }
 
@@ -233,7 +232,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
         new CurrencyGeneratorComponent(
-            spawnInterval, scrapValue, "images/scrap_metal.png", targetPos);
+            spawnInterval, scrapValue, "images/entities/currency/scrap_metal.png", targetPos);
     scrapSpawner.addComponent(currencyGenerator);
     spawnEntity(scrapSpawner);
   }

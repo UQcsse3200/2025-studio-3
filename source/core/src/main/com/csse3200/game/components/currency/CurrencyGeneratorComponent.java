@@ -29,25 +29,18 @@ public class CurrencyGeneratorComponent extends Component {
   private final String scrapTexturePath;
 
   private final float targetX;
-
   private final float targetY;
 
-  /**
-   * FALL_FRAC_PER_SEC: Fraction of screen height per second used as falling speed. e.g. 0.25 ->
-   * scrap falls 25% of the screen height each second
-   */
-  private float FALL_FRAC_PER_SEC = 0.1f;
-
-  /** Rotation speed in degrees per second. */
-  private float ROT_SPEED_DPS = 100f;
-
   /** Scrap visual size in pixels */
-  private float SCRAP_SIZE_PX = 64f;
+  private float scrapSizePx = 64f;
 
-  /** Scrap lifetime in second */
-  private float SCRAP_LIFETIME_SEC = 20f;
+  /** Scrap lifetime in seconds */
+  private static final float SCRAP_LIFETIME_SEC = 20f;
 
-  private transient Action generatorAction;
+  /** Generator action */
+  private Action generatorAction;
+
+  /** Whether the generator is paused */
   private boolean isPaused = false;
 
   /**
@@ -109,8 +102,8 @@ public class CurrencyGeneratorComponent extends Component {
     }
 
     CurrencyInteraction scrap = new CurrencyInteraction(tex, scrapValue);
-    scrap.setSize(SCRAP_SIZE_PX, SCRAP_SIZE_PX);
-    scrap.setOrigin(SCRAP_SIZE_PX / 2f, SCRAP_SIZE_PX / 2f);
+    scrap.setSize(scrapSizePx, scrapSizePx);
+    scrap.setOrigin(scrapSizePx / 2f, scrapSizePx / 2f);
 
     stage.addActor(scrap);
 
@@ -142,7 +135,7 @@ public class CurrencyGeneratorComponent extends Component {
    * @return this component for method chaining
    */
   public CurrencyGeneratorComponent setScrapSizePx(float px) {
-    this.SCRAP_SIZE_PX = Math.max(8f, px);
+    this.scrapSizePx = Math.max(8f, px);
     return this;
   }
 
@@ -174,6 +167,15 @@ public class CurrencyGeneratorComponent extends Component {
     //      stage.addAction(generatorAction);
     //      logger.debug("Resumed CurrencyGenerator");
     //    }
+  }
+
+  /**
+   * Checks if the generator is paused.
+   *
+   * @return true if the generator is paused, false otherwise
+   */
+  public boolean isPaused() {
+    return isPaused;
   }
 
   @Override

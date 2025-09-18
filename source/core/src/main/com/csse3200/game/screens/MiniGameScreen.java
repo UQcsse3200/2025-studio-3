@@ -29,7 +29,7 @@ public class MiniGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] laneRunnerTextures = {
-    "images/world_map.png", "images/box_boy_title.png", "images/bg.png"
+    "images/backgrounds/world_map.png", "images/entities/character.png", "images/backgrounds/bg.png"
   };
 
   public MiniGameScreen(GdxGame game) {
@@ -82,7 +82,8 @@ public class MiniGameScreen extends ScreenAdapter {
 
     // Add the background image as a Stage actor
     Texture bgTex =
-        ServiceLocator.getResourceService().getAsset("images/world_map.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/backgrounds/world_map.png", Texture.class);
     logger.debug("loads mini game screen background texture asset");
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
     bg.setFillParent(true);

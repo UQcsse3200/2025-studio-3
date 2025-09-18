@@ -222,7 +222,7 @@ class ItemEffectsServiceTest {
     assertEquals(tile * 3f, e.getScale().x);
     assertEquals(tile * 3f, e.getScale().y);
 
-    assertEquals(List.of("images/buff.atlas"), paths);
+    assertEquals(List.of("images/effects/buff.atlas"), paths);
     assertTrue(e.getComponent(AnimationRenderComponent.class).hasAnimation("buff"));
   }
 
@@ -253,7 +253,7 @@ class ItemEffectsServiceTest {
     }
 
     // Verify the correct asset path was requested
-    assertEquals(List.of("images/emp.atlas"), paths);
+    assertEquals(List.of("images/effects/emp.atlas"), paths);
     assertTrue(emp.getComponent(AnimationRenderComponent.class).hasAnimation("emp"));
   }
 }

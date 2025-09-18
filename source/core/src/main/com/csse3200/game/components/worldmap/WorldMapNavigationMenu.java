@@ -50,7 +50,7 @@ public class WorldMapNavigationMenu extends UIComponent {
 
     // Create the plaque background
     Texture plaqueTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/plaque.png", Texture.class);
+        ServiceLocator.getGlobalResourceService().getAsset("images/ui/plaque.png", Texture.class);
     plaqueBackground = new Image(plaqueTexture);
     plaqueBackground.setSize(PLAQUE_WIDTH, PLAQUE_HEIGHT);
 
@@ -67,13 +67,15 @@ public class WorldMapNavigationMenu extends UIComponent {
 
     // Create skill points icon
     Texture skillPointsTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/skillpoints.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/entities/currency/skillpoints.png", Texture.class);
     Image skillPointsIcon = new Image(skillPointsTexture);
     skillPointsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
     // Create coins icon
     Texture coinsTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/coins.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/entities/currency/coins.png", Texture.class);
     Image coinsIcon = new Image(coinsTexture);
     coinsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
@@ -106,7 +108,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     // Create settings button
     Texture settingsTexture =
         ServiceLocator.getGlobalResourceService()
-            .getAsset("images/settings-icon.png", Texture.class);
+            .getAsset("images/ui/settings-icon.png", Texture.class);
     settingsButton = new ImageButton(new TextureRegionDrawable(settingsTexture));
     settingsButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     settingsButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
@@ -120,7 +122,8 @@ public class WorldMapNavigationMenu extends UIComponent {
 
     // Create menu button
     Texture menuTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/menu-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/menu-icon.png", Texture.class);
     menuButton = new ImageButton(new TextureRegionDrawable(menuTexture));
     menuButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
     menuButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);

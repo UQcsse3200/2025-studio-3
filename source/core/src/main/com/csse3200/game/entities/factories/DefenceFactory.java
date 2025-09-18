@@ -33,7 +33,7 @@ public class DefenceFactory {
    * If the file is missing or deserialization fails, this will be null.
    */
   private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
+      FileLoader.readClass(NPCConfigs.class, "configs/Defences4.json");
 
   /**
    * Creates a fully configured Sling Shooter defence entity.
@@ -59,7 +59,7 @@ public class DefenceFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
-                .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
+                .getAsset("images/entities/defences/sling_shooter.atlas", TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
@@ -96,7 +96,8 @@ public class DefenceFactory {
     // animation component
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
-            ServiceLocator.getResourceService().getAsset("images/forge.atlas", TextureAtlas.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/entities/defences/forge.atlas", TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);

@@ -69,10 +69,10 @@ class RobotFactoryTest {
 
     // Fake configs
     NPCConfigs fake = new NPCConfigs();
-    fake.standardRobot = cfg(20, 5, 1.5f, "images/robot_placeholder.atlas", 1.0f);
-    fake.fastRobot = cfg(15, 4, 3.0f, "images/robot_placeholder.atlas", 1.0f);
-    fake.tankyRobot = cfg(40, 7, 0.9f, "images/robot_placeholder.atlas", 1.0f);
-    fake.bungeeRobot = cfg(25, 6, 1.2f, "images/robot_placeholder.atlas", 1.0f);
+    fake.standardRobot = cfg(20, 5, 1.5f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
+    fake.fastRobot = cfg(15, 4, 3.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
+    fake.tankyRobot = cfg(40, 7, 0.9f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
+    fake.bungeeRobot = cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
 
     fileLoaderMock = mockStatic(FileLoader.class);
     fileLoaderMock

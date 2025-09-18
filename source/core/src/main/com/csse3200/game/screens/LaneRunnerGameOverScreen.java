@@ -27,7 +27,7 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
   private final float survivalTime;
   private final int obstaclesDodged;
   private static final String[] laneRunnerGameOverTextures = {
-    "images/GameOver.png", "images/Background.png",
+    "images/backgrounds/GameOver.png", "images/backgrounds/Background.png",
   };
 
   public LaneRunnerGameOverScreen(

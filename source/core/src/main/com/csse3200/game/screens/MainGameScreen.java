@@ -39,21 +39,16 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private static final String[] mainGameTextures = {
-    "images/normal_sunlight.png",
-    "images/heart.png",
-    "images/coins.png",
-    "images/plaque.png",
-    "images/skillpoints.png",
-    "images/settings-icon.png",
-    "images/menu-icon.png",
-    "images/profile.png",
-    "images/dialog.png",
-    "images/achievement.png",
-    "images/pause-icon.png",
-    "images/scrap_metal.png",
-    "images/heart.png",
-    "images/coins.png",
-    "images/profile.png"
+    "images/entities/currency/normal_sunlight.png",
+    "images/entities/currency/coins.png",
+    "images/ui/plaque.png",
+    "images/entities/currency/skillpoints.png",
+    "images/ui/settings-icon.png",
+    "images/ui/menu-icon.png",
+    "images/ui/dialog.png",
+    "images/ui/achievement.png",
+    "images/ui/pause-icon.png",
+    "images/entities/currency/scrap_metal.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
@@ -157,7 +152,7 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(mainGameTextures);
-    resourceService.loadTextureAtlases(new String[] {"images/grenade.atlas"});
+    resourceService.loadTextureAtlases(new String[] {"images/effects/grenade.atlas"});
     ServiceLocator.getResourceService().loadAll();
   }
 

@@ -131,12 +131,20 @@ public class ServiceLocator {
     return profileService;
   }
 
-  /** Registers the item effects service. */
+  /**
+   * Gets the item effects service.
+   *
+   * @return the item effects service
+   */
   public static ItemEffectsService getItemEffectsService() {
     return itemEffectsService;
   }
 
-  /** Gets the cutscene service */
+  /**
+   * Gets the cutscene service.
+   *
+   * @return the cutscene service
+   */
   public static CutsceneService getCutsceneService() {
     return cutsceneService;
   }

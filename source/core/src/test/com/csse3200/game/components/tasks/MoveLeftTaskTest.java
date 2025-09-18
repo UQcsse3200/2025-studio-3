@@ -101,7 +101,7 @@ class MoveLeftTaskTest {
   // test to see iff entity stops at a object (tree)
 
   @Test
-  public void testCollision() {
+  void testCollision() {
     // create a object/tree for the testing environment
     // TODO: will need to replace tree with an defence object once implemented
 

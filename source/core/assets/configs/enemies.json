@@ -1,8 +1,8 @@
 {
   "standardRobot": {
     "name": "Standard Robot",
-    "atlasFilePath": "images/basic_robot.atlas",
-    "defaultSprite": "images/basic_robot_default_sprite.png",
+    "atlasFilePath": "images/entities/enemies/basic_robot.atlas",
+    "defaultSprite": "images/entities/enemies/basic_robot_default_sprite.png",
     "health": 60,
     "attack": 10,
     "movementSpeed": 20,
@@ -11,8 +11,8 @@
   },
   "fastRobot": {
     "name": "Fast Robot",
-    "atlasFilePath": "images/blue_robot.atlas",
-    "defaultSprite": "images/blue_robot_default_sprite.png",
+    "atlasFilePath": "images/entities/enemies/blue_robot.atlas",
+    "defaultSprite": "images/entities/enemies/blue_robot_default_sprite.png",
     "health": 40,
     "attack": 10,
     "movementSpeed": 50,
@@ -21,8 +21,8 @@
   },
   "tankyRobot": {
     "name": "Tanky Robot",
-    "atlasFilePath": "images/red_robot.atlas",
-    "defaultSprite": "images/red_robot_default_sprite.png",
+    "atlasFilePath": "images/entities/enemies/red_robot.atlas",
+    "defaultSprite": "images/entities/enemies/red_robot_default_sprite.png",
     "health": 100,
     "attack": 15,
     "movementSpeed": 10,
@@ -31,8 +31,8 @@
   },
   "bungeeRobot": {
     "name": "Bungee Robot",
-    "atlasFilePath": "images/blue_robot.atlas",
-    "defaultSprite": "images/blue_robot_default_sprite.png",
+    "atlasFilePath": "images/entities/enemies/blue_robot.atlas",
+    "defaultSprite": "images/entities/enemies/blue_robot_default_sprite.png",
     "health": 60,
     "attack": 10,
     "movementSpeed": 20,
@@ -41,8 +41,8 @@
   },
   "teleportRobot": {
     "name": "Teleport Robot",
-    "atlasFilePath": "images/red_robot.atlas",
-    "defaultSprite": "images/red_robot_default_sprite.png",
+    "atlasFilePath": "images/entities/enemies/red_robot.atlas",
+    "defaultSprite": "images/entities/enemies/red_robot_default_sprite.png",
     "health": 60,
     "attack": 10,
     "movementSpeed": 30,

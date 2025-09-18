@@ -26,7 +26,7 @@ public class ShopScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final GdxGame game;
   private String[] shopTextures = {
-    "images/shop-popup.png", "images/coins.png", "images/dialog.png"
+    "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
   };
   private String[] itemTextures;
 

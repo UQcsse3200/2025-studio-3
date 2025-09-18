@@ -76,7 +76,7 @@ class LaneRunnerPlayerFactoryTest {
 
     verify(mockLaneManager).getLaneCenter(1);
 
-    verify(mockedResourceService).getAsset("images/box_boy.png", Texture.class);
+    verify(mockedResourceService).getAsset("images/entities/character.png", Texture.class);
   }
 
   @Test
