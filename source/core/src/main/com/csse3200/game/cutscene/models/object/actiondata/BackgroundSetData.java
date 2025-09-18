@@ -6,7 +6,7 @@ import com.csse3200.game.cutscene.models.object.Transition;
 /**
  * Stores data for the background.set event
  *
- * @param background The background object containing background info (image & id)
+ * @param background The background object containing background info (image &amp; id)
  * @param transition How the background will transition into existence (Transition enum)
  * @param duration How long the transition will take
  * @param await Wait for transition to complete before continuing
