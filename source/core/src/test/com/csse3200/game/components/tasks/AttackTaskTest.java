@@ -1,8 +1,8 @@
 package com.csse3200.game.components.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -13,11 +13,10 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class AttackTaskTest {
   private Entity target;
@@ -90,129 +89,131 @@ class AttackTaskTest {
     assertEquals(-1, priorityStart, "Attack task should not start when target is out of range");
   }
 
-    @Test
-    void startTriggersAttackStartAndFire() {
-        float attackRange = 5f;
-        AttackTask attackTask = new AttackTask(attackRange);
+  @Test
+  void startTriggersAttackStartAndFire() {
+    float attackRange = 5f;
+    AttackTask attackTask = new AttackTask(attackRange);
 
-        Entity attacker = new Entity();
-        AITaskComponent aiTaskComponent = new AITaskComponent();
-        aiTaskComponent.addTask(attackTask);
-        attacker.addComponent(aiTaskComponent);
-        aiTaskComponent.create();
+    Entity attacker = new Entity();
+    AITaskComponent aiTaskComponent = new AITaskComponent();
+    aiTaskComponent.addTask(attackTask);
+    attacker.addComponent(aiTaskComponent);
+    aiTaskComponent.create();
 
-        AtomicBoolean attackStarted = new AtomicBoolean(false);
-        AtomicBoolean fired = new AtomicBoolean(false);
-        attacker.getEvents().addListener("attackStart", () -> attackStarted.set(true));
-        attacker.getEvents().addListener("fire", () -> fired.set(true));
+    AtomicBoolean attackStarted = new AtomicBoolean(false);
+    AtomicBoolean fired = new AtomicBoolean(false);
+    attacker.getEvents().addListener("attackStart", () -> attackStarted.set(true));
+    attacker.getEvents().addListener("fire", () -> fired.set(true));
 
-        attackTask.start();
+    attackTask.start();
 
-        assertTrue(attackStarted.get(), "attackStart should be triggered on start()");
-        assertTrue(fired.get(), "fire should be triggered on start()");
-    }
+    assertTrue(attackStarted.get(), "attackStart should be triggered on start()");
+    assertTrue(fired.get(), "fire should be triggered on start()");
+  }
 
-    @Test
-    void updateDoesNothingWithoutTarget() {
-        AttackTask attackTask =
-                new AttackTask(5f) {
-                    @Override
-                    protected Entity getNearestVisibleTarget() {
-                        return null; // no target
-                    }
-                };
-
-        Entity attacker = new Entity();
-        AITaskComponent aiTaskComponent = new AITaskComponent();
-        aiTaskComponent.addTask(attackTask);
-        attacker.addComponent(aiTaskComponent);
-        aiTaskComponent.create();
-
-        AtomicBoolean fired = new AtomicBoolean(false);
-        attacker.getEvents().addListener("fire", () -> fired.set(true));
-
-        attackTask.update();
-
-        assertFalse(fired.get(), "update() should not fire when no target is present");
-    }
-
-    @Test
-    void firesAfterCooldown() {
-        // Track number of times "fire" is triggered
-        AtomicInteger fireCount = new AtomicInteger(0);
-
-        // Mock and register GameTime
-        GameTime gameTime = mock(GameTime.class);
-        when(gameTime.getDeltaTime()).thenReturn(0f); // start with 0 delta
-        ServiceLocator.registerTimeSource(gameTime);
-
-        float attackRange = 5f;
-        AttackTask attackTask = new AttackTask(attackRange) {
-            @Override
-            protected Entity getNearestVisibleTarget() {
-                return target;
-            }
-
-            @Override
-            protected float getDistanceToTarget() {
-                return 0f; // always in range
-            }
+  @Test
+  void updateDoesNothingWithoutTarget() {
+    AttackTask attackTask =
+        new AttackTask(5f) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return null; // no target
+          }
         };
 
-        Entity defender = new Entity();
-        AITaskComponent aiTaskComponent = new AITaskComponent();
-        aiTaskComponent.addTask(attackTask);
-        defender.addComponent(aiTaskComponent);
-        aiTaskComponent.create();
+    Entity attacker = new Entity();
+    AITaskComponent aiTaskComponent = new AITaskComponent();
+    aiTaskComponent.addTask(attackTask);
+    attacker.addComponent(aiTaskComponent);
+    aiTaskComponent.create();
 
-        // Listen to "fire" events
-        defender.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
+    AtomicBoolean fired = new AtomicBoolean(false);
+    attacker.getEvents().addListener("fire", () -> fired.set(true));
 
-        // Trigger start -> should fire immediately
-        attackTask.start();
-        assertEquals(1, fireCount.get(), "Should fire immediately on start");
+    attackTask.update();
 
-        // Update with delta < cooldown -> should NOT fire
-        when(gameTime.getDeltaTime()).thenReturn(0.5f);
-        attackTask.update();
-        assertEquals(1, fireCount.get(), "Should not fire before cooldown");
+    assertFalse(fired.get(), "update() should not fire when no target is present");
+  }
 
-        // Update with delta >= cooldown -> should fire
-        when(gameTime.getDeltaTime()).thenReturn(1f);
-        attackTask.update();
-        assertEquals(2, fireCount.get(), "Should fire after cooldown");
+  @Test
+  void firesAfterCooldown() {
+    // Track number of times "fire" is triggered
+    AtomicInteger fireCount = new AtomicInteger(0);
+
+    // Mock and register GameTime
+    GameTime gameTime = mock(GameTime.class);
+    when(gameTime.getDeltaTime()).thenReturn(0f); // start with 0 delta
+    ServiceLocator.registerTimeSource(gameTime);
+
+    float attackRange = 5f;
+    AttackTask attackTask =
+        new AttackTask(attackRange) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
+
+          @Override
+          protected float getDistanceToTarget() {
+            return 0f; // always in range
+          }
+        };
+
+    Entity defender = new Entity();
+    AITaskComponent aiTaskComponent = new AITaskComponent();
+    aiTaskComponent.addTask(attackTask);
+    defender.addComponent(aiTaskComponent);
+    aiTaskComponent.create();
+
+    // Listen to "fire" events
+    defender.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
+
+    // Trigger start -> should fire immediately
+    attackTask.start();
+    assertEquals(1, fireCount.get(), "Should fire immediately on start");
+
+    // Update with delta < cooldown -> should NOT fire
+    when(gameTime.getDeltaTime()).thenReturn(0.5f);
+    attackTask.update();
+    assertEquals(1, fireCount.get(), "Should not fire before cooldown");
+
+    // Update with delta >= cooldown -> should fire
+    when(gameTime.getDeltaTime()).thenReturn(1f);
+    attackTask.update();
+    assertEquals(2, fireCount.get(), "Should fire after cooldown");
+  }
+
+  @Test
+  void firesMultipleTimesOverTime() {
+    when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
+
+    AttackTask attackTask =
+        new AttackTask(5f) {
+          @Override
+          protected Entity getNearestVisibleTarget() {
+            return target;
+          }
+
+          @Override
+          protected float getDistanceToTarget() {
+            return 1f; // within range
+          }
+        };
+
+    Entity attacker = new Entity();
+    AITaskComponent aiTaskComponent = new AITaskComponent();
+    aiTaskComponent.addTask(attackTask);
+    attacker.addComponent(aiTaskComponent);
+    aiTaskComponent.create();
+
+    AtomicInteger fireCount = new AtomicInteger(0);
+    attacker.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
+
+    // Simulate 5 seconds (should fire ~5 times since cooldown is ~1 sec)
+    for (int i = 0; i < 5; i++) {
+      attackTask.update();
     }
 
-    @Test
-    void firesMultipleTimesOverTime() {
-        when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
-
-        AttackTask attackTask =
-                new AttackTask(5f) {
-                    @Override
-                    protected Entity getNearestVisibleTarget() {
-                        return target;
-                    }
-                    @Override
-                    protected float getDistanceToTarget() {
-                        return 1f; // within range
-                    }
-                };
-
-        Entity attacker = new Entity();
-        AITaskComponent aiTaskComponent = new AITaskComponent();
-        aiTaskComponent.addTask(attackTask);
-        attacker.addComponent(aiTaskComponent);
-        aiTaskComponent.create();
-
-        AtomicInteger fireCount = new AtomicInteger(0);
-        attacker.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
-
-        // Simulate 5 seconds (should fire ~5 times since cooldown is ~1 sec)
-        for (int i = 0; i < 5; i++) {
-            attackTask.update();
-        }
-
-        assertTrue(fireCount.get() >= 4, "Should have fired multiple times over time");
-    }
+    assertTrue(fireCount.get() >= 4, "Should have fired multiple times over time");
+  }
 }
