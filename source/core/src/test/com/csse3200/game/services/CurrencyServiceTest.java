@@ -62,7 +62,7 @@ class CurrencyServiceTest {
     CurrencyService svc = new CurrencyService(5, 10);
     Currency model = svc.getCurrency();
     assertNotNull(model);
-    model.addSunshine(3);
+    model.addScrap(3);
     assertEquals(8, svc.get());
   }
 }

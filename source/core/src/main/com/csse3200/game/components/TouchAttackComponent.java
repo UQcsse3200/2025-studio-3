@@ -68,7 +68,7 @@ public class TouchAttackComponent extends Component {
     // Attack logic
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
     if (targetStats == null) {
-      targetStats = target.getComponent(DefenceStatsComponent.class);
+      targetStats = target.getComponent(DefenderStatsComponent.class);
     }
 
     if (targetStats != null) {
@@ -84,5 +84,6 @@ public class TouchAttackComponent extends Component {
       Vector2 impulse = direction.setLength(knockbackForce);
       targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
     }
+    entity.getEvents().trigger("despawnSlingshot", entity);
   }
 }
