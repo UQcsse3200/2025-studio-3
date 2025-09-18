@@ -17,6 +17,7 @@ public class MainMenuDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
+  private Table miniGameBtnTable;
 
   @Override
   public void create() {
@@ -33,6 +34,7 @@ public class MainMenuDisplay extends UIComponent {
                 .getAsset("images/box_boy_title.png", Texture.class));
 
     TextButton startBtn = new TextButton("New Game", skin);
+    TextButton miniGameBtn = new TextButton("MiniGames", skin);
     TextButton loadBtn = new TextButton("Load Game", skin);
     TextButton worldMapBtn = new TextButton("World Map", skin);
     TextButton settingsBtn = new TextButton("Settings", skin);
@@ -56,7 +58,14 @@ public class MainMenuDisplay extends UIComponent {
             entity.getEvents().trigger("start");
           }
         });
-
+    miniGameBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("MiniGame button clicked");
+            entity.getEvents().trigger("minigame");
+          }
+        });
     loadBtn.addListener(
         new ChangeListener() {
           @Override
@@ -109,7 +118,12 @@ public class MainMenuDisplay extends UIComponent {
     table.row();
     table.add(cutBtn).padTop(15f);
 
+    miniGameBtnTable = new Table();
+    miniGameBtnTable.bottom().left();
+    miniGameBtnTable.padBottom(20f).padLeft(20f);
+    miniGameBtnTable.add(miniGameBtn);
     stage.addActor(table);
+    stage.addActor(miniGameBtnTable);
   }
 
   @Override
@@ -125,6 +139,7 @@ public class MainMenuDisplay extends UIComponent {
   @Override
   public void dispose() {
     table.clear();
+    miniGameBtnTable.clear();
     super.dispose();
   }
 }
