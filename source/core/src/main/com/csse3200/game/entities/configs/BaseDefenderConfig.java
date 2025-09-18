@@ -7,6 +7,11 @@ public class BaseDefenderConfig extends BaseEntityConfig {
     // Default constructor with default field values
   }
 
+  public String name = "Name";
+  public String description = "Description";
+  public int defenceHealth = 1;
+  public int defenceAttack = 1;
+
   /** Defence type identifier */
   private int rangeType;
 
