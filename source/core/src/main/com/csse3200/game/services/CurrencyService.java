@@ -35,7 +35,7 @@ public class CurrencyService {
    * @return the current amount
    */
   public int get() {
-    return currency.getSunlight();
+    return currency.getScrap();
   }
 
   /**
@@ -44,7 +44,7 @@ public class CurrencyService {
    * @param amount the new amount
    */
   public void set(int amount) {
-    currency.setSunlight(amount);
+    currency.setScrap(amount);
   }
 
   /**
@@ -53,7 +53,7 @@ public class CurrencyService {
    * @param amount the amount to add
    */
   public void add(int amount) {
-    currency.addSunshine(amount);
+    currency.addScrap(amount);
   }
 
   /**
@@ -63,7 +63,7 @@ public class CurrencyService {
    * @return true if successful, false if insufficient funds
    */
   public boolean spend(int amount) {
-    return currency.spendSunshine(amount);
+    return currency.spendScrap(amount);
   }
 
   /**
@@ -73,6 +73,6 @@ public class CurrencyService {
    * @return true if affordable, false otherwise
    */
   public boolean canAfford(int amount) {
-    return currency.canAffordSunshine(amount);
+    return currency.canAffordScrap(amount);
   }
 }

@@ -19,7 +19,8 @@ public class MainMenuScreen extends BaseScreen {
     "images/bg.png",
     "images/bg-text.png",
     "images/btn-blue.png",
-    "images/btn-blue.atlas"
+    "images/btn-blue.atlas",
+    "images/settings_icon.png"   // ✅ include the gear
   };
 
   public MainMenuScreen(GdxGame game) {
@@ -27,12 +28,12 @@ public class MainMenuScreen extends BaseScreen {
   }
 
   /**
-   * Creates the main menu's ui including components for rendering ui elements to the screen and
+   * Creates the main menu's UI including components for rendering ui elements to the screen and
    * capturing and handling ui input.
    */
   @Override
   protected Entity createUIScreen(Stage stage) {
-    logger.debug("Main menu screen ui is created");
+    logger.debug("Main menu screen UI is created");
     return new Entity()
         .addComponent(new MainMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))

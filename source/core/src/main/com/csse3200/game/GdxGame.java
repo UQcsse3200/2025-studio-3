@@ -15,12 +15,7 @@ import com.csse3200.game.screens.NewGameScreen;
 import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DialogService;
-import com.csse3200.game.services.MenuSpriteService;
-import com.csse3200.game.services.ProfileService;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,6 +55,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
     ServiceLocator.registerConfigService(new ConfigService());
+    ServiceLocator.registerCutsceneService(new CutsceneService());
 
     // Game-dependent data
     loadGlobalAssets();
@@ -149,8 +145,17 @@ public class GdxGame extends Game {
         return new InventoryScreen(this);
       case WORLD_MAP:
         return new WorldMapScreen(this);
+      case DOSSIER:
+        return new DossierScreen(this);
       case SLOT_MACHINE:
         return new SlotMachineScreen(this);
+      case MINI_GAMES:
+        return new MiniGameScreen(this);
+      case PADDLE_GAME:
+        return new PaddleGameScreen(this);
+      case LANE_RUNNER:
+        return new LaneRunnerScreen(this);
+
       default:
         return null;
     }
@@ -180,10 +185,17 @@ public class GdxGame extends Game {
     SHOP,
     /** Inventory screen. */
     INVENTORY,
-    /** World map screen. */
     WORLD_MAP,
+    DOSSIER,
+    /** World map screen. */
     /** Slot machine level */
-    SLOT_MACHINE
+    SLOT_MACHINE,
+    /** Mini game screen */
+    MINI_GAMES,
+    /** Paddle game screen */
+    PADDLE_GAME,
+    /** Lane runner game screen */
+    LANE_RUNNER
   }
 
   /** Exits the game. */

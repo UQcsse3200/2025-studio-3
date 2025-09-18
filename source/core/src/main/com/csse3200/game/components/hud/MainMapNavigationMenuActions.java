@@ -92,6 +92,7 @@ public class MainMapNavigationMenuActions extends Component {
   /** Opens the dossier. */
   private void onDossier() {
     logger.info("Opening dossier");
+    game.setScreen(GdxGame.ScreenType.DOSSIER);
   }
 
   /** Quicksaves the game. */

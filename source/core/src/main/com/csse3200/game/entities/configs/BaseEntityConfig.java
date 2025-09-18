@@ -10,9 +10,11 @@ public class BaseEntityConfig {
     // Default constructor with default field values
   }
 
-  int health;
+  public int health;
 
-  int baseAttack;
+  public int baseAttack;
+
+  float movementSpeed;
 
   /**
    * Gets the health value for this entity.
@@ -30,5 +32,9 @@ public class BaseEntityConfig {
    */
   public int getAttack() {
     return baseAttack;
+  }
+
+  public float getMovementSpeed() {
+    return movementSpeed;
   }
 }

@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
-import com.csse3200.game.components.currency.SunlightHudDisplay;
+import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
@@ -17,6 +17,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
@@ -48,7 +49,11 @@ public class MainGameScreen extends ScreenAdapter {
     "images/profile.png",
     "images/dialog.png",
     "images/achievement.png",
-    "images/pause-icon.png"
+    "images/pause-icon.png",
+    "images/scrap_metal.png",
+    "images/heart.png",
+    "images/coins.png",
+    "images/profile.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
@@ -83,13 +88,16 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new SunlightHudDisplay());
+    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
     ServiceLocator.getEntityService().register(uiHud);
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     gameArea = createGameArea(terrainFactory);
-    waveManager.setGameArea(gameArea);
+    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum conversion
+    waveManager.setEnemySpawnCallback(
+        (col, row, type) ->
+            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
@@ -106,10 +114,9 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      waveManager.update();
+      waveManager.update(delta);
     }
     renderer.render();
-    waveManager.update();
     gameArea.checkGameOver(); // check game-over state
   }
 
@@ -186,15 +193,31 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
+        .addComponent(new CurrentWaveDisplay(waveManager));
 
     // Connect the pause menu, pause button, and main game screen to the main game actions
     mainGameActions.setPauseMenu(pauseMenu);
     mainGameActions.setPauseButton(pauseButton);
     configureMainGameActions(mainGameActions);
 
-    // Connect the UI entity to the WaveManager for event triggering
-    WaveManager.setGameEntity(ui);
+    // Connect the CurrentWaveDisplay to the WaveManager for event listening
+    waveManager.setWaveEventListener(
+        new WaveManager.WaveEventListener() {
+          @Override
+          public void onPreparationPhaseStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+
+          @Override
+          public void onWaveChanged(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+
+          @Override
+          public void onWaveStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+        });
 
     ServiceLocator.getEntityService().register(ui);
   }

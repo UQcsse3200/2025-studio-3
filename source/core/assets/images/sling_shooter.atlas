@@ -51,6 +51,10 @@ idle
 idle
   bounds: 0, 714, 68, 102
 attack
+  bounds: 136, 1428, 68, 102
+attack
+  bounds: 0, 1530, 68, 102
+attack
   bounds: 68, 714, 68, 102
 attack
   bounds: 136, 714, 68, 102
@@ -94,7 +98,3 @@ attack
   bounds: 0, 1428, 68, 102
 attack
   bounds: 68, 1428, 68, 102
-attack
-  bounds: 136, 1428, 68, 102
-attack
-  bounds: 0, 1530, 68, 102

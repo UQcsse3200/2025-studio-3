@@ -23,6 +23,7 @@ public class MainMenuDisplay extends UIComponent {
     private static final Logger logger = LoggerFactory.getLogger(MainMenuDisplay.class);
     private static final float Z_INDEX = 2f;
     private Table table;
+    private Table miniGameBtnTable;
 
     @Override
     public void create() {
@@ -68,9 +69,11 @@ public class MainMenuDisplay extends UIComponent {
                 ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
 
         TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
-        TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default"); // NEW
+        TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default");
         TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
         TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
+        TextButton miniGameBtn = makeTexturedButton("MiniGames", buttonAtlas, "default");
+        TextButton cutBtn = makeTexturedButton("Cutscene", buttonAtlas, "default");
 
         // --- Settings gear icon ---
         Texture gearTexture =
@@ -79,9 +82,8 @@ public class MainMenuDisplay extends UIComponent {
         gearStyle.imageUp = new TextureRegionDrawable(gearTexture);
 
         ImageButton settingsIcon = new ImageButton(gearStyle);
-        settingsIcon.setSize(90f, 90f); // bigger
-        settingsIcon.setPosition(
-                Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 120f); // pulled a little lower
+        settingsIcon.setSize(90f, 90f);
+        settingsIcon.setPosition(Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 120f);
 
         settingsIcon.addListener(new ChangeListener() {
             @Override
@@ -116,6 +118,22 @@ public class MainMenuDisplay extends UIComponent {
             }
         });
 
+        miniGameBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("MiniGames button clicked");
+                entity.getEvents().trigger("minigame");
+            }
+        });
+
+        cutBtn.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug("Cutscene button clicked");
+                entity.getEvents().trigger("Cutscene");
+            }
+        });
+
         exitBtn.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -126,7 +144,6 @@ public class MainMenuDisplay extends UIComponent {
 
         // Layout
         table.center();
-
         float xf = 0.40f;
         table.add(title)
                 .size(title.getWidth() * xf, title.getHeight() * xf)
@@ -141,15 +158,24 @@ public class MainMenuDisplay extends UIComponent {
 
         table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(5f);
         table.row();
-        table.add(quickStartBtn).size(buttonWidth, buttonHeight).padBottom(5f); // NEW
+        table.add(quickStartBtn).size(buttonWidth, buttonHeight).padBottom(5f);
         table.row();
         table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
         table.row();
         table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+        table.row();
+        table.add(cutBtn).size(buttonWidth, buttonHeight).padBottom(5f);
 
-        // Add to stage
+        // MiniGame button bottom-left
+        miniGameBtnTable = new Table();
+        miniGameBtnTable.bottom().left();
+        miniGameBtnTable.padBottom(20f).padLeft(20f);
+        miniGameBtnTable.add(miniGameBtn);
+
+        // Add actors
         stage.addActor(table);
         stage.addActor(settingsIcon);
+        stage.addActor(miniGameBtnTable);
     }
 
     @Override
@@ -163,6 +189,7 @@ public class MainMenuDisplay extends UIComponent {
     @Override
     public void dispose() {
         table.clear();
+        miniGameBtnTable.clear();
         super.dispose();
     }
 }

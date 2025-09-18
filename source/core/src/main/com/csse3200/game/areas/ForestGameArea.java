@@ -6,7 +6,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory.TerrainType;
-import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -19,7 +18,6 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.GridPoint2Utils;
 import com.csse3200.game.utils.math.RandomUtils;
-import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,6 +30,7 @@ public class ForestGameArea extends GameArea {
   private static final GridPoint2 PLAYER_SPAWN = new GridPoint2(10, 10);
   private static final float WALL_WIDTH = 0.1f;
   private static final String GRASS_TEXTURE = "images/iso_grass_3.png";
+  private static final String SLING_SHOOTER = "images/sling_shooter.png";
   private static final String[] FOREST_SOUNDS = {"sounds/Impact4.ogg"};
   private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
   private static final String[] FOREST_MUSIC = {BACKGROUND_MUSIC};
@@ -49,7 +48,7 @@ public class ForestGameArea extends GameArea {
     "images/iso_grass_1.png",
     "images/iso_grass_2.png",
     GRASS_TEXTURE,
-    "images/sling_shooter.png",
+    SLING_SHOOTER,
     "images/items/grenade.png",
     "images/items/coffee.png",
     "images/items/emp.png",
@@ -74,8 +73,9 @@ public class ForestGameArea extends GameArea {
     "images/grenade.atlas",
     GRASS_TEXTURE,
     "images/robot_placeholder.png",
+    "images/scrap_metal.png",
     "images/normal_sunlight.png",
-    "images/sling_shooter.png",
+    SLING_SHOOTER,
     "images/grenade.atlas",
     "images/coffee.atlas",
     "images/emp.atlas",
@@ -84,10 +84,8 @@ public class ForestGameArea extends GameArea {
   };
 
   private final TerrainFactory terrainFactory;
-  private CurrencyGeneratorComponent currencyGenerator;
 
   private Entity player;
-  private final ArrayList<Entity> robots = new ArrayList<>();
 
   /**
    * Initialise this ForestGameArea to use the provided TerrainFactory.
@@ -111,12 +109,11 @@ public class ForestGameArea extends GameArea {
     spawnTrees();
     player = spawnPlayer();
 
-    spawnDefences();
     spawnGhosts();
     spawnGhostKing();
 
     spawnRobots();
-    spawnSun();
+    spawnDefences();
 
     playMusic();
   }
@@ -126,7 +123,7 @@ public class ForestGameArea extends GameArea {
     GridPoint2 maxPos = terrain.getMapBounds(0).sub(2, 2);
 
     GridPoint2 randomPos = RandomUtils.random(minPos, maxPos);
-    Entity slingShooter = DefenceFactory.createSlingShooter(robots);
+    Entity slingShooter = DefenceFactory.createSlingShooter();
 
     spawnEntityAt(slingShooter, randomPos, true, true);
     slingShooter.getEvents().addListener("entityDeath", (Entity e) -> requestDespawn(e));
@@ -255,7 +252,6 @@ public class ForestGameArea extends GameArea {
       Entity robot = NPCFactory.createRobot(player);
       spawnEntityAt(robot, randomPos, true, true);
       robot.getEvents().addListener("despawnRobot", (Entity e) -> requestDespawn(e));
-      robots.add(robot);
     }
   }
 
@@ -273,7 +269,6 @@ public class ForestGameArea extends GameArea {
   }
 
   public void despawnRobot(Entity robot) {
-    robots.remove(robot);
     despawnEntity(robot);
   }
 
@@ -305,15 +300,6 @@ public class ForestGameArea extends GameArea {
     resourceService.unloadAssets(forestTextureAtlases);
     resourceService.unloadAssets(FOREST_SOUNDS);
     resourceService.unloadAssets(FOREST_MUSIC);
-  }
-
-  private void spawnSun() {
-    Entity sunSpawner = new Entity();
-
-    currencyGenerator = new CurrencyGeneratorComponent(5f, 25, "images/normal_sunlight.png");
-
-    sunSpawner.addComponent(currencyGenerator);
-    spawnEntity(sunSpawner);
   }
 
   @Override
