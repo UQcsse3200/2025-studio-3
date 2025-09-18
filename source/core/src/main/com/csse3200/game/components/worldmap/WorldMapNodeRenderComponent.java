@@ -15,6 +15,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private final Vector2 worldSize;
   private final float nodeSize;
   private boolean showPrompt = false;
+  private Label promptLabel;
+  private Label lockReasonLabel;
 
   /**
    * Constructor for the world map node render component.
@@ -27,6 +29,49 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     this.node = node;
     this.worldSize = worldSize;
     this.nodeSize = nodeSize;
+  }
+
+  @Override
+  public void create() {
+    super.create();
+    ServiceLocator.getWorldMapService().registerNodeRenderComponent(this);
+
+    // Create labels and add them to the stage
+    promptLabel = new Label("Press E to Enter", skin);
+    promptLabel.setColor(Color.WHITE);
+    promptLabel.setVisible(false);
+    stage.addActor(promptLabel);
+
+    lockReasonLabel = new Label("", skin);
+    lockReasonLabel.setColor(Color.RED);
+    lockReasonLabel.setVisible(false);
+    stage.addActor(lockReasonLabel);
+  }
+
+  /**
+   * Updates the proximity state for this node.
+   *
+   * @param nearbyNode the node the player is currently near, or null if none
+   */
+  public void updateProximityState(WorldMapNode nearbyNode) {
+    boolean isNearby =
+        nearbyNode != null
+            && this.node.getRegistrationKey().equals(nearbyNode.getRegistrationKey());
+    setShowPrompt(isNearby);
+    updateLabelVisibility();
+  }
+
+  private void updateLabelVisibility() {
+    if (promptLabel != null && lockReasonLabel != null) {
+      // Show prompt if nearby and unlocked
+      promptLabel.setVisible(showPrompt && node.isUnlocked());
+
+      // Show lock reason if locked
+      lockReasonLabel.setVisible(!node.isUnlocked() && node.getLockReason() != null);
+      if (!node.isUnlocked() && node.getLockReason() != null) {
+        lockReasonLabel.setText(node.getLockReason());
+      }
+    }
   }
 
   @Override
@@ -51,19 +96,12 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
     batch.draw(nodeTexture, drawX, drawY, drawSize, drawSize);
 
-    // Draw prompt text if nearby
-    if (showPrompt && node.isUnlocked()) {
-      String prompt = "Press E to Enter";
-      Label promptLabel = new Label(prompt, skin);
+    // Update label positions (they're already managed by the stage for visibility)
+    if (promptLabel != null) {
       promptLabel.setPosition(x, y + nodeSize + 20f);
-      promptLabel.setColor(Color.WHITE);
     }
-
-    // Draw lock reason if locked
-    if (!node.isUnlocked() && node.getLockReason() != null) {
-      Label lockReasonLabel = new Label(node.getLockReason(), skin);
+    if (lockReasonLabel != null) {
       lockReasonLabel.setPosition(x, y - 20f);
-      lockReasonLabel.setColor(Color.WHITE);
     }
   }
 

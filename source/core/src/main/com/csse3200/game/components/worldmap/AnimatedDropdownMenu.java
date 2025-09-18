@@ -1,9 +1,12 @@
 package com.csse3200.game.components.worldmap;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,7 @@ public class AnimatedDropdownMenu extends UIComponent {
   private boolean isOpen = false;
   private float startX;
   private float startY;
+  private BitmapFont customFont;
 
   @Override
   public void create() {
@@ -58,10 +62,13 @@ public class AnimatedDropdownMenu extends UIComponent {
       "Exit Game"
     };
 
+    // Get the custom font from GlobalResourceService
+    createCustomFont();
+
     menuButtons = new TextButton[buttonTexts.length];
 
     for (int i = 0; i < buttonTexts.length; i++) {
-      TextButton button = new TextButton(buttonTexts[i], skin);
+      TextButton button = createCustomButton(buttonTexts[i]);
       button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
       // Position buttons below trigger button, initially hidden
@@ -83,6 +90,55 @@ public class AnimatedDropdownMenu extends UIComponent {
       menuButtons[i] = button;
       stage.addActor(button);
     }
+  }
+
+  /** Creates the custom font from the GlobalResourceService */
+  private void createCustomFont() {
+    try {
+      // Generate the font with appropriate size for the dropdown menu
+      customFont = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
+      if (customFont == null) {
+        logger.warn("Failed to load custom font, falling back to default");
+        customFont = new BitmapFont(); // Fallback to default font
+      }
+    } catch (Exception e) {
+      logger.error("Error creating custom font", e);
+      customFont = new BitmapFont(); // Fallback to default font
+    }
+  }
+
+  /** Creates a custom TextButton with the loaded FreeType font */
+  private TextButton createCustomButton(String text) {
+    // Start with the default skin style and modify only the font
+    TextButton.TextButtonStyle buttonStyle;
+    
+    if (skin != null) {
+      try {
+        // Copy the existing TextButton style from the skin
+        buttonStyle = new TextButton.TextButtonStyle(skin.get(TextButton.TextButtonStyle.class));
+        logger.debug("Using skin's default TextButton style as base");
+      } catch (Exception e) {
+        logger.debug("Default TextButton style not found in skin, creating new style");
+        buttonStyle = new TextButton.TextButtonStyle();
+      }
+    } else {
+      buttonStyle = new TextButton.TextButtonStyle();
+    }
+    
+    // Override only the font to use our custom FreeType font
+    buttonStyle.font = customFont;
+    // Keep the original colors but ensure text is visible
+    if (buttonStyle.fontColor == null) {
+      buttonStyle.fontColor = Color.WHITE;
+    }
+    if (buttonStyle.downFontColor == null) {
+      buttonStyle.downFontColor = Color.LIGHT_GRAY;
+    }
+    if (buttonStyle.overFontColor == null) {
+      buttonStyle.overFontColor = Color.YELLOW;
+    }
+    
+    return new TextButton(text, buttonStyle);
   }
 
   /** Toggles the dropdown menu */
@@ -238,6 +294,10 @@ public class AnimatedDropdownMenu extends UIComponent {
       }
       menuButtons = null;
     }
+    
+    // Note: Don't dispose customFont here as it's managed by GlobalResourceService
+    customFont = null;
+    
     super.dispose();
   }
 }

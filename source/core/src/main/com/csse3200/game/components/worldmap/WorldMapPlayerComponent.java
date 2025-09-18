@@ -9,7 +9,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
-
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +29,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   @Override
   public void create() {
     super.create();
-    playerTexture = ServiceLocator.getResourceService().getAsset("images/character.png", Texture.class);
+    playerTexture =
+        ServiceLocator.getResourceService().getAsset("images/character.png", Texture.class);
   }
 
   @Override
@@ -40,6 +40,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     handleNodeInteraction();
   }
 
+  /** Handles the player movement. */
   private void handleMovement() {
     float moveAmount = PLAYER_SPEED * Gdx.graphics.getDeltaTime();
     Vector2 position = entity.getPosition();
@@ -64,6 +65,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     entity.setPosition(position);
   }
 
+  /** Checks the proximity of the player to the nodes. */
   private void checkNodeProximity() {
     Vector2 playerPos = entity.getPosition();
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
@@ -86,62 +88,56 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     // Update node render components for prompt display
     if (previousNearby != nearbyNode) {
-      // This would require entity references to update render components
-      // For now, we'll use events or a different approach
-      updateNodePrompts();
+      ServiceLocator.getWorldMapService().updateNodeProximity(nearbyNode);
     }
   }
 
-  private void updateNodePrompts() {
-    // Trigger event to update UI or use another mechanism
-    // to communicate with render components
-    if (nearbyNode != null) {
-      entity.getEvents().trigger("nodeNearby", nearbyNode);
-    } else {
-      entity.getEvents().trigger("nodeLeft");
-    }
-  }
-
+  /** Handles the interaction with the nodes. */
   private void handleNodeInteraction() {
     if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       if (nearbyNode.isUnlocked() && !nearbyNode.isCompleted()) {
-        // Show warning dialog for unlocked nodes
         String message = "Do you want to enter " + nearbyNode.getLabel() + "?";
-        ServiceLocator.getDialogService().warning(
-          nearbyNode.getLabel(),
-          message,
-          // onConfirm callback - enter the node
-          dialog -> {
-            logger.info("Entering node: {}", nearbyNode.getLabel());
-            // Mark as completed and unlock dependencies
-            ServiceLocator.getWorldMapService().completeNode(nearbyNode.getRegistrationKey());
-            // Trigger screen transition
-            entity.getEvents().trigger("enterNode", nearbyNode);
-          },
-          // onCancel callback - do nothing
-          dialog -> logger.info("Node entry cancelled for: {}", nearbyNode.getLabel())
-        );
+        ServiceLocator.getDialogService()
+            .warning(
+                nearbyNode.getLabel(),
+                message,
+                dialog -> {
+                  logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
+                  entity.getEvents().trigger("enterNode", nearbyNode);
+                },
+                null);
       } else {
-        // Show error dialog for locked or completed nodes
-        String message = nearbyNode.getLockReason() != null ? nearbyNode.getLockReason() : "This node is not available.";
-        ServiceLocator.getDialogService().error(
-          nearbyNode.getLabel(),
-          message
-        );
-        logger.info("Node '{}' is not accessible: {}", nearbyNode.getLabel(), message);
+        String message =
+            nearbyNode.getLockReason() != null
+                ? nearbyNode.getLockReason()
+                : "This node is not available.";
+        ServiceLocator.getDialogService().error(nearbyNode.getLabel(), message);
+        logger.info(
+            "[WorldMapPlayerComponent] Node '{}' is not accessible: {}",
+            nearbyNode.getLabel(),
+            message);
       }
     }
   }
 
+  /**
+   * Gets the nearby node.
+   *
+   * @return the nearby node
+   */
   public WorldMapNode getNearbyNode() {
     return nearbyNode;
   }
 
+  /**
+   * Draws the player texture at the world coordinates with appropriate size.
+   *
+   * @param batch the sprite batch
+   */
   @Override
   protected void draw(SpriteBatch batch) {
     if (playerTexture != null) {
       Vector2 position = entity.getPosition();
-      // Draw player texture at world coordinates with appropriate size
       batch.draw(playerTexture, position.x, position.y, 96f, 96f);
     }
   }

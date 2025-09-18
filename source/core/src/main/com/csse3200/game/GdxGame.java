@@ -16,7 +16,6 @@ import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.*;
 import com.csse3200.game.ui.WorldMapNode;
-
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +36,7 @@ public class GdxGame extends Game {
     "images/pause-icon.png",
     "images/placeholder.png"
   };
+  private static final Pair<String, String> GLOBAL_FONT = new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
 
   @Override
   public void create() {
@@ -85,6 +85,7 @@ public class GdxGame extends Game {
   private void loadGlobalAssets() {
     logger.debug("[GdxGame] Loading global assets");
     ServiceLocator.getGlobalResourceService().loadTextures(GLOBAL_ASSETS);
+    ServiceLocator.getGlobalResourceService().loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 

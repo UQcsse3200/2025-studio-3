@@ -46,7 +46,7 @@ public class EntityService {
   public void update() {
     Array<Entity> entitiesSnapshot = new Array<>(entities);
     for (Entity entity : entitiesSnapshot) {
-      if (entities.contains(entity, true)) { 
+      if (entities.contains(entity, true)) {
         entity.earlyUpdate();
         entity.update();
       }

@@ -14,10 +14,10 @@ import com.csse3200.game.components.worldmap.WorldMapPlayerComponent;
 import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 /** World map screen */
 public class WorldMapScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
-
   private static final String[] ADDITIONAL_TEXTURES = {
     "images/world_map.png", "images/character.png", "images/node_completed.png",
   };
@@ -111,12 +110,15 @@ public class WorldMapScreen extends BaseScreen {
 
     // Get existing nodes and mark completed ones
     List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    if (ServiceLocator.getProfileService() != null) {
-      List<String> completedNodes =
-          ServiceLocator.getProfileService().getProfile().getCompletedNodes();
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService != null) {
+      List<String> completedNodes = profileService.getProfile().getCompletedNodes();
       for (String nodeId : completedNodes) {
         worldMapService.completeNode(nodeId);
+        worldMapService.lockNode(nodeId, "This level has already been completed.");
       }
+      String currentLevel = profileService.getProfile().getCurrentLevel();
+      worldMapService.unlockNode(currentLevel);
     }
 
     // Create render entities for each node
@@ -173,6 +175,7 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(newX, newY);
   }
 
+  /** Handles the zoom input. */
   private void handleZoomInput() {
     CameraComponent camera = renderer.getCamera();
 
@@ -195,6 +198,11 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
+  /**
+   * Handles the event when the player enters a node.
+   *
+   * @param node the node the player entered
+   */
   private void onNodeEnter(WorldMapNode node) {
     logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
     game.setScreen(node.getTargetScreen());
