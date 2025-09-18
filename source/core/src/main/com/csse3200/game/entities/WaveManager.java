@@ -215,7 +215,7 @@ public class WaveManager implements WaveConfigProvider {
         logger.info("All waves completed for level {}! Level complete!", currentLevel);
         levelComplete = true;
         waveActive = false; // Just stop the wave, don't call endWave()
-        return; // Don't start a new wave
+        // Don't start a new wave - levelComplete will be handled in initialiseNewWave()
       }
 
       endWave(); // Only call endWave() for non-final waves
