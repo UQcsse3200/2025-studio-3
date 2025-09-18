@@ -5,6 +5,9 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.settingsmenu.SettingsMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,7 +16,7 @@ public class SettingsScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(SettingsScreen.class);
 
   public SettingsScreen(GdxGame game) {
-    super(game, "images/bg.png");
+    super(game, Optional.of("images/bg.png"), Optional.empty());
   }
 
   /**
@@ -21,7 +24,7 @@ public class SettingsScreen extends BaseScreen {
    * and capturing and handling ui input.
    */
   @Override
-  protected Entity createUIScreen(Stage stage) {
+  protected Entity constructEntity(Stage stage) {
     logger.debug("settings screen ui is created");
     return new Entity()
         .addComponent(new SettingsMenuDisplay(game))

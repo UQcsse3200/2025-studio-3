@@ -16,6 +16,9 @@ import com.csse3200.game.screens.SaveGameScreen;
 import com.csse3200.game.screens.SettingsScreen;
 import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.*;
+
+import net.dermetfan.utils.Pair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +56,9 @@ public class GdxGame extends Game {
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
     ServiceLocator.registerDialogService(new DialogService());
-    ServiceLocator.registerMenuSpriteService(new MenuSpriteService());
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
+    ServiceLocator.registerWorldMapService(new WorldMapService());
 
     // Game-dependent data
     loadGlobalAssets();
@@ -66,21 +69,17 @@ public class GdxGame extends Game {
     setScreen(ScreenType.MAIN_MENU);
   }
 
+  
+
+
   /** Runs the appropriate register function to register screen sprites. */
   private void loadScreens() {
-    for (ScreenType screenType : ScreenType.values()) {
-      Screen screen = newScreen(screenType);
-      if (screen != null) {
-        if (MenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          MenuSpriteData menuSpriteData = new MenuSpriteData(screenType);
-          ((MenuSpriteScreen) screen).register(menuSpriteData);
-        } else if (DynamicMenuSpriteScreen.class.isAssignableFrom(screen.getClass())) {
-          ((DynamicMenuSpriteScreen<?>) screen).register(screenType);
-        } else {
-          screen.dispose();
-        }
-      }
-    }
+    // Load the shop
+    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+    worldMapService.registerNode(new WorldMapNode("Shop", new Pair<>(0.5f, 0.5f), false, true, ScreenType.SHOP, "images/shop.png", ""), "shop");
+    // Load the skills village
+    // Load the minigames ...
+    // Load each of the levels
   }
 
   /** Loads the game's global assets. */
@@ -155,7 +154,6 @@ public class GdxGame extends Game {
         return new PaddleGameScreen(this);
       case LANE_RUNNER:
         return new LaneRunnerScreen(this);
-
       default:
         return null;
     }
@@ -185,9 +183,10 @@ public class GdxGame extends Game {
     SHOP,
     /** Inventory screen. */
     INVENTORY,
-    WORLD_MAP,
-    DOSSIER,
     /** World map screen. */
+    WORLD_MAP,
+    /** Dossier screen. */
+    DOSSIER,
     /** Slot machine level */
     SLOT_MACHINE,
     /** Mini game screen */

@@ -1,4 +1,4 @@
-package com.csse3200.game.components.hud;
+package com.csse3200.game.components.worldmap;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
@@ -7,16 +7,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** Handles actions for the main map navigation menu. */
-public class MainMapNavigationMenuActions extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(MainMapNavigationMenuActions.class);
+public class WorldMapNavigationMenuActions extends Component {
+  private static final Logger logger = LoggerFactory.getLogger(WorldMapNavigationMenuActions.class);
   private GdxGame game;
 
   /**
-   * Constructor for the MainMapNavigationMenuActions class.
+   * Constructor for the WorldMapNavigationMenuActions class.
    *
    * @param game The game instance.
    */
-  public MainMapNavigationMenuActions(GdxGame game) {
+  public WorldMapNavigationMenuActions(GdxGame game) {
     this.game = game;
   }
 
@@ -36,31 +36,31 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Swaps to the Profile screen. */
   private void onSettings() {
-    logger.info("[MainMapNavigationMenuActions] Entering settings screen");
+    logger.info("[WorldMapNavigationMenuActions] Entering settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 
   /** Swaps to the Inventory screen. */
   private void onInventory() {
-    logger.info("[MainMapNavigationMenuActions] Opening inventory");
+    logger.info("[WorldMapNavigationMenuActions] Opening inventory");
     game.setScreen(GdxGame.ScreenType.INVENTORY);
   }
 
   /** Swaps to the Achievements screen. */
   private void onAchievements() {
-    logger.info("[MainMapNavigationMenuActions] Opening achievements");
+    logger.info("[WorldMapNavigationMenuActions] Opening achievements");
     game.setScreen(GdxGame.ScreenType.ACHIEVEMENTS);
   }
 
   /** Swaps to the Statistics screen. */
   private void onStats() {
-    logger.info("[MainMapNavigationMenuActions] Opening statistics");
+    logger.info("[WorldMapNavigationMenuActions] Opening statistics");
     game.setScreen(GdxGame.ScreenType.STATISTICS);
   }
 
   /** Exits the game without saving. */
   private void onMainMenu() {
-    logger.info("[MainMapNavigationMenuActions] Returning to main menu");
+    logger.info("[WorldMapNavigationMenuActions] Returning to main menu");
     ServiceLocator.getDialogService()
         .warning(
             "Return to Main Menu",
@@ -74,7 +74,7 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Exits the game. */
   private void onExit() {
-    logger.info("[MainMapNavigationMenuActions] Exiting game");
+    logger.info("[WorldMapNavigationMenuActions] Exiting game");
     ServiceLocator.getDialogService()
         .warning(
             "Exit Game",
@@ -85,7 +85,7 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Saves the game. */
   private void onSave() {
-    logger.info("[MainMapNavigationMenuActions] Opening save game screen");
+    logger.info("[WorldMapNavigationMenuActions] Opening save game screen");
     game.setScreen(GdxGame.ScreenType.SAVE_GAME);
   }
 
@@ -97,14 +97,14 @@ public class MainMapNavigationMenuActions extends Component {
 
   /** Quicksaves the game. */
   private void onQuicksave() {
-    logger.info("[MainMapNavigationMenuActions] Quicksaving game");
+    logger.info("[WorldMapNavigationMenuActions] Quicksaving game");
     ServiceLocator.getProfileService().saveCurrentProfile();
     ServiceLocator.getDialogService().info("Quicksaved", "Game has been saved.");
   }
 
   /** Opens the load game screen. */
   private void onLoad() {
-    logger.info("[MainMapNavigationMenuActions] Opening load game screen");
+    logger.info("[WorldMapNavigationMenuActions] Opening load game screen");
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 }

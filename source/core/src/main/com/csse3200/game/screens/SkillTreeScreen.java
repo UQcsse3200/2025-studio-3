@@ -8,10 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.hud.AnimatedDropdownMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.skilltree.SkilltreeButtons;
 import com.csse3200.game.components.skilltree.SkilltreeDisplay;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.data.MenuSpriteData;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -114,8 +114,8 @@ public class SkillTreeScreen extends ScreenAdapter implements MenuSpriteScreen {
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
-        .addComponent(new MainMapNavigationMenu())
-        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new WorldMapNavigationMenu())
+        .addComponent(new WorldMapNavigationMenuActions(this.game))
         .addComponent(new AnimatedDropdownMenu());
 
     ServiceLocator.getEntityService().register(ui);

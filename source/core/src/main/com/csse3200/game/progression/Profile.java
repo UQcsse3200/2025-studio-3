@@ -1,11 +1,16 @@
 package com.csse3200.game.progression;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
+
+import net.dermetfan.utils.Pair;
 
 /**
  * Represents a user profile in the game. Allows customization of player attributes and tracking of
@@ -19,6 +24,7 @@ public class Profile {
   private Statistics statistics; // The player's statistics (includes achievements)
   private Arsenal arsenal; // The player's arsenal of unlocked defences
   private String currentLevel; // The player's current level
+  private List<String> completedNodes; // The player's completed nodes
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -28,25 +34,27 @@ public class Profile {
     this.skillset = new SkillSet();
     this.statistics = new Statistics();
     this.arsenal = new Arsenal();
-    this.currentLevel = "level1"; // Default level, will be updated when levels are loaded
+    this.currentLevel = "level1";
+    this.completedNodes = new ArrayList<>();
   }
 
   /** Initialise a profile with the provided values. */
   public Profile(
-      String name,
+    Pair<String, String> nameAndLevel,
       Wallet wallet,
       Inventory inventory,
       SkillSet skillset,
       Statistics statistics,
       Arsenal arsenal,
-      String currentLevel) {
-    this.name = name;
+      List<String> completedNodes) {
+    this.name = nameAndLevel.getKey();
+    this.currentLevel = nameAndLevel.getValue();
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
-    this.statistics = statistics != null ? statistics : new Statistics();
+    this.statistics = statistics;
     this.arsenal = arsenal;
-    this.currentLevel = currentLevel;
+    this.completedNodes = completedNodes;
   }
 
   /**
@@ -128,5 +136,32 @@ public class Profile {
    */
   public Statistics getStatistics() {
     return statistics;
+  }
+
+  /**
+   * Get the completed nodes associated with the profile.
+   *
+   * @return the completed nodes of the profile.
+   */
+  public List<String> getCompletedNodes() {
+    return completedNodes;
+  }
+
+  /**
+   * Set the completed nodes associated with the profile.
+   *
+   * @param completedNodes the new completed nodes of the profile.
+   */
+  public void setCompletedNodes(List<String> completedNodes) {
+    this.completedNodes = completedNodes;
+  }
+
+  /**
+   * Add a completed node to the profile.
+   *
+   * @param node the node to add to the profile.
+   */
+  public void addCompletedNode(String node) {
+    this.completedNodes.add(node);
   }
 }

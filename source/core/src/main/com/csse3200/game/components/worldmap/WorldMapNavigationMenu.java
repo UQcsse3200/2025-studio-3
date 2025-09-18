@@ -1,4 +1,4 @@
-package com.csse3200.game.components.hud;
+package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,8 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /** A UI component for displaying a plaque with skill points and coins in the top right corner. */
-public class MainMapNavigationMenu extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(MainMapNavigationMenu.class);
+public class WorldMapNavigationMenu extends UIComponent {
+  private static final Logger logger = LoggerFactory.getLogger(WorldMapNavigationMenu.class);
   private static final float Z_INDEX = 10f;
   private static final int ICON_SIZE = 32;
   private static final int PLAQUE_WIDTH = 240;
@@ -240,7 +240,7 @@ public class MainMapNavigationMenu extends UIComponent {
       coinsLabel.setText((coins > 9999) ? "9999+" : String.valueOf(coins));
     } catch (Exception e) {
       logger.warn(
-          "[MainMapNavigationMenu] Could not get wallet data from profile: {}", e.getMessage());
+          "[WorldMapNavigationMenu] Could not get wallet data from profile: {}", e.getMessage());
       skillPointsLabel.setText("0");
       coinsLabel.setText("0");
     }
