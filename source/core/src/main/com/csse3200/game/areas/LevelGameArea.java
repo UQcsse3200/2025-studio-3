@@ -4,6 +4,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.areas.terrain.MapFactory;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -144,7 +145,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     displayUI();
 
-    spawnMap();
+    spawnMap(1);
     spawnSun();
     spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
 
@@ -168,6 +169,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     resourceService.loadTextureAtlases(levelTextureAtlases);
     resourceService.loadSounds(levelSounds);
     resourceService.loadMusic(levelMusic);
+    resourceService.loadAll();
 
     while (!resourceService.loadForMillis(10)) {
       // This could be upgraded to a loading screen
@@ -214,24 +216,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
-  private void spawnMap() {
+  /** Creates the map as a single image using MapFactory and spawns it in the correct position. */
+  private void spawnMap(int level) {
     logger.debug("Spawning level one map");
 
+    // Use MapFactory for single-entry map creation
+    MapFactory mapFactory = new MapFactory(terrainFactory);
+    Entity mapEntity = mapFactory.createLevelMap(level);
     // Create the background terrain (single image map)
     terrain = terrainFactory.createTerrain(1);
 
-    // Wrap in an entity
-    Entity mapEntity = new Entity().addComponent(terrain);
-
-    // Compute world size
-    float tileWidth = terrain.getTileSize();
-    float tileHeight = terrain.getTileSize();
-    GridPoint2 bounds = terrain.getMapBounds(0);
-    float worldWidth = bounds.x * tileWidth;
-    float worldHeight = bounds.y * tileHeight;
-    mapEntity.setPosition(worldWidth / 2f, worldHeight / 2f);
-
-    spawnEntity(mapEntity);
+    if (mapEntity != null) {
+      spawnEntity(mapEntity);
+    }
   }
 
   private void spawnSun() {
