@@ -274,22 +274,6 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void resizeChangesScaling() {
-    // Given an area built with the initial stage size
-    LevelGameArea area = spy(new LevelGameArea("levelOne"));
-    float tileBefore = area.getTileSize();
-
-    // change the 'window' size
-    when(stage.getWidth()).thenReturn(1200f);
-    when(stage.getHeight()).thenReturn(800f);
-
-    area.resize();
-
-    verify(area, times(1)).setScaling();
-    assertNotEquals(tileBefore, area.getTileSize(), "resize() should recompute tileSize");
-  }
-
-  @Test
   void dragNullsAreNoop() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 

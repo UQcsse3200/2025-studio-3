@@ -8,6 +8,7 @@ import com.csse3200.game.entities.Entity;
 public class LevelGameGrid {
   private final Entity[] gridData;
   private final int cols;
+  private final int rows;
 
   /**
    * Class constructor for LevelGameGrid.
@@ -17,6 +18,7 @@ public class LevelGameGrid {
    */
   public LevelGameGrid(int rows, int cols) {
     this.cols = cols;
+    this.rows = rows;
     int numTiles = rows * cols;
     this.gridData = new Entity[numTiles];
   }
@@ -40,6 +42,16 @@ public class LevelGameGrid {
    */
   public Entity getTile(int row, int col) {
     return gridData[col * cols + row];
+  }
+
+  /**
+   * Getter method for retrieving the tile entity instance at a given index.
+   *
+   * @param index the tile to get from a linear index
+   * @return the tile
+   */
+  public Entity getTile(int index) {
+    return gridData[index];
   }
 
   /**

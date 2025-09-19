@@ -72,6 +72,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+  private float lastTileSize;
+  private float lastXOffset;
+  private float lastYOffset;
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory for a specific level.
@@ -83,6 +86,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
+    rememberLayoutForResize();
     selectedUnit = null;
     spawnedUnits = new Entity[levelRows * levelCols];
   }
@@ -135,6 +139,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     tileSize = viewportHeight / MAP_HEIGHT_TILES;
     xOffset = X_MARGIN_TILES * tileSize;
     yOffset = Y_MARGIN_TILES * tileSize;
+  }
+
+  private void rememberLayoutForResize() {
+    lastTileSize = tileSize;
+    lastXOffset = xOffset;
+    lastYOffset = yOffset;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -213,8 +223,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(this.gameOverEntity);
   }
 
-  /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
-  /** Creates the map as a single image using MapFactory and spawns it in the correct position. */
+  /** Creates the game map and renders it */
   private void spawnMap(String levelKey) {
     // Compute world height (viewport height)
     float viewportHeight = stageHeight * stageToWorldRatio;
@@ -622,7 +631,51 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Method to reset game entity size/position on window resize. */
   public void resize() {
-    setScaling();
+    float oldTile = tileSize;
+    float oldX = xOffset;
+    float oldY = yOffset;
+
+    setScaling(); // recompute sizes from renderer/stage
+    relayoutAfterScaling(oldTile, oldX, oldY);
+    rememberLayoutForResize(); // prepare for next resize
+  }
+
+  private void relayoutAfterScaling(float oldTile, float oldX, float oldY) {
+    // 1) Move all tiles to their new positions
+    for (int i = 0; i < levelRows * levelCols; i++) {
+      int col = i % levelCols;
+      int row = i / levelCols;
+      float tileX = xOffset + tileSize * col;
+      float tileY = yOffset + tileSize * row;
+
+      // Assuming LevelGameGrid exposes getTile(i). If not, add it.
+      Entity tile = grid.getTile(i);
+      if (tile != null) {
+        tile.setPosition(tileX, tileY);
+      }
+    }
+
+    // Move all placed units to their tile’s new position and re-scale
+    for (int i = 0; i < spawnedUnits.length; i++) {
+      Entity unit = spawnedUnits[i];
+      if (unit == null) continue;
+      int col = i % levelCols;
+      int row = i / levelCols;
+      float tileX = xOffset + tileSize * col;
+      float tileY = yOffset + tileSize * row;
+      unit.setPosition(tileX, tileY);
+      unit.scaleHeight(tileSize);
+    }
+
+    // Continuously positioned robots: scale & offset from old → new
+    float s = tileSize / oldTile;
+    for (Entity r : robots) {
+      Vector2 p = r.getPosition();
+      float nx = (p.x - oldX) * s + xOffset;
+      float ny = (p.y - oldY) * s + yOffset;
+      r.setPosition(nx, ny);
+      r.scaleHeight(tileSize);
+    }
   }
 
   /** Checks the game over condition when a robot reaches the end of the grid */
