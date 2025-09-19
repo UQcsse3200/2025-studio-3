@@ -62,7 +62,7 @@ class SpawnRobotTest {
   private static LevelGameArea newLevelAreaWithGeometry() throws Exception {
     ensureRenderService();
     var terrainFactory = mock(TerrainFactory.class);
-    LevelGameArea lvl = new LevelGameArea(terrainFactory);
+    LevelGameArea lvl = new LevelGameArea(terrainFactory, "levelOne");
     setPrivateField(lvl, "tileSize", CELL);
     setPrivateField(lvl, "xOffset", X_OFFSET);
     setPrivateField(lvl, "yOffset", Y_OFFSET);

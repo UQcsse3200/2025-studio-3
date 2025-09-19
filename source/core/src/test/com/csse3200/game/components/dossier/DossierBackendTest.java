@@ -3,46 +3,45 @@ package com.csse3200.game.components.dossier;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-import com.badlogic.gdx.graphics.Texture;
+import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(GameExtension.class)
 class DossierBackendTest {
-
-  private Texture mockDefaultTexture;
-  private Texture mockHumanTexture;
-  private Texture mockRedTexture;
-  private Texture mockBlueTexture;
-
   private DossierManager dossierManager;
 
   @BeforeEach
   void setUp() {
-    // Mock data
-    NPCConfigs entityConfigs = new NPCConfigs();
-    entityConfigs.standardRobot = new BaseEnemyConfig();
-    entityConfigs.standardRobot.name = "Standard Robot";
-    entityConfigs.standardRobot.description = "A standard enemy.";
-    entityConfigs.standardRobot.health = 40;
-    entityConfigs.standardRobot.attack = 10;
+    // Create mock config maps
+    Map<String, BaseEnemyConfig> enemyConfigs = new HashMap<>();
+    Map<String, BaseDefenderConfig> defenderConfigs = new HashMap<>();
+    Map<String, BaseGeneratorConfig> generatorConfigs = new HashMap<>();
 
-    NPCConfigs defenceConfigs = new NPCConfigs();
-    defenceConfigs.slingshooter = new BaseDefenderConfig();
-    defenceConfigs.slingshooter.name = "Slingshooter";
-    defenceConfigs.slingshooter.description = "A basic defense.";
-    defenceConfigs.slingshooter.defenceHealth = 50;
-    defenceConfigs.slingshooter.defenceAttack = 1;
+    // Create mock configs - since config fields are private, we'll use mocks
+    BaseEnemyConfig enemyConfig = mock(BaseEnemyConfig.class);
+    when(enemyConfig.getName()).thenReturn("Standard Robot");
+    when(enemyConfig.getDescription()).thenReturn("A standard enemy.");
+    when(enemyConfig.getHealth()).thenReturn(40);
+    when(enemyConfig.getAttack()).thenReturn(10);
+    enemyConfigs.put("standardRobot", enemyConfig);
 
-    mockDefaultTexture = mock(Texture.class);
-    mockRedTexture = mock(Texture.class);
-    mockBlueTexture = mock(Texture.class);
-    mockHumanTexture = mock(Texture.class);
-    Texture[] textures = {mockDefaultTexture, mockRedTexture, mockBlueTexture, mockHumanTexture};
+    BaseDefenderConfig defenderConfig = mock(BaseDefenderConfig.class);
+    when(defenderConfig.getName()).thenReturn("Slingshooter");
+    when(defenderConfig.getDescription()).thenReturn("A basic defense.");
+    when(defenderConfig.getHealth()).thenReturn(50);
+    when(defenderConfig.getAttack()).thenReturn(1);
+    defenderConfigs.put("slingshooter", defenderConfig);
 
-    dossierManager = new DossierManager(entityConfigs, defenceConfigs, textures);
+    dossierManager = new DossierManager(enemyConfigs, defenderConfigs, generatorConfigs);
   }
 
   @Test

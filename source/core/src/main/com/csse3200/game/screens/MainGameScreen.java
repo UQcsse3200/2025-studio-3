@@ -46,6 +46,7 @@ import org.slf4j.LoggerFactory;
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private Music music;
+  private List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
     "images/backgrounds/level-2-map-v1.png",
@@ -175,15 +176,17 @@ public class MainGameScreen extends ScreenAdapter {
       textures.add(item.getAssetPath());
     }
 
-    // Load Enemy Textures
+    // Load Enemy Textures and Atlases
     for (BaseEnemyConfig enemy : ServiceLocator.getConfigService().getEnemyConfigValues()) {
       textures.add(enemy.getAssetPath());
+      textureAtlases.add(enemy.getAtlasPath());
     }
 
-    // Load Defender Textures
+    // Load Defender Textures and Atlases
     for (BaseDefenderConfig defender :
         ServiceLocator.getConfigService().getDefenderConfigValues()) {
       textures.add(defender.getAssetPath());
+      textureAtlases.add(defender.getAtlasPath());
     }
 
     // Load Generator Textures
@@ -200,6 +203,7 @@ public class MainGameScreen extends ScreenAdapter {
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
     resourceService.loadTextures(textures.toArray(new String[0]));
     resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
+    resourceService.loadTextureAtlases(textureAtlases.toArray(new String[0]));
     ServiceLocator.getResourceService().loadAll();
     music = ServiceLocator.getResourceService().getAsset("sounds/BGM_03_mp3.mp3", Music.class);
     music.setLooping(true);

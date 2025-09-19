@@ -174,7 +174,4 @@ class MoveLeftTaskTest {
     // clear all services after every test
     ServiceLocator.clear();
   }
-
-  // TODO add a task testing the speed
-
 }

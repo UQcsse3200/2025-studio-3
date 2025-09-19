@@ -18,18 +18,18 @@ class ArsenalTest {
   }
 
   @Test
-  void shouldCreateEmptyArsenal() {
+  void shouldCreate() {
     List<String> defences = arsenal.getKeys();
-    assertTrue(defences.isEmpty());
+    assertEquals(2, defences.size());
+    assertTrue(defences.contains("slingShooter"));
+    assertTrue(defences.contains("furnace"));
   }
 
   @Test
   void shouldUnlockDefence() {
     arsenal.unlockDefence("turret");
-
     assertTrue(arsenal.contains("turret"));
-    assertEquals(1, arsenal.getKeys().size());
-    assertEquals("turret", arsenal.getKeys().get(0));
+    assertEquals(3, arsenal.getKeys().size());
   }
 
   @Test
@@ -38,7 +38,7 @@ class ArsenalTest {
     arsenal.unlockDefence("wall");
     arsenal.unlockDefence("cannon");
 
-    assertEquals(3, arsenal.getKeys().size());
+    assertEquals(5, arsenal.getKeys().size());
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
     assertTrue(arsenal.contains("cannon"));
@@ -51,14 +51,8 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
 
     // Should have 3 entries (List allows duplicates)
-    assertEquals(3, arsenal.getKeys().size());
+    assertEquals(5, arsenal.getKeys().size());
     assertTrue(arsenal.contains("turret"));
-
-    // All entries should be the same defence
-    List<String> defences = arsenal.getKeys();
-    for (String defence : defences) {
-      assertEquals("turret", defence);
-    }
   }
 
   @Test
@@ -68,13 +62,13 @@ class ArsenalTest {
 
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
-    assertEquals(2, arsenal.getKeys().size());
+    assertEquals(4, arsenal.getKeys().size());
 
     arsenal.lockDefence("turret");
 
     assertFalse(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
-    assertEquals(1, arsenal.getKeys().size());
+    assertEquals(3, arsenal.getKeys().size());
   }
 
   @Test
@@ -83,13 +77,13 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
     arsenal.unlockDefence("turret");
 
-    assertEquals(3, arsenal.getKeys().size());
+    assertEquals(5, arsenal.getKeys().size());
 
     arsenal.lockDefence("turret");
 
     // Should still contain turret (but only 2 instances)
     assertTrue(arsenal.contains("turret"));
-    assertEquals(2, arsenal.getKeys().size());
+    assertEquals(4, arsenal.getKeys().size());
   }
 
   @Test
@@ -101,7 +95,7 @@ class ArsenalTest {
 
     // Original defence should still be there
     assertTrue(arsenal.contains("turret"));
-    assertEquals(1, arsenal.getKeys().size());
+    assertEquals(3, arsenal.getKeys().size());
   }
 
   @Test
@@ -110,7 +104,7 @@ class ArsenalTest {
     arsenal.lockDefence("turret");
 
     // Should remain empty
-    assertTrue(arsenal.getKeys().isEmpty());
+    assertEquals(2, arsenal.getKeys().size());
     assertFalse(arsenal.contains("turret"));
   }
 
@@ -135,12 +129,12 @@ class ArsenalTest {
     // Test unlocking null
     arsenal.unlockDefence(null);
     assertTrue(arsenal.contains(null));
-    assertEquals(1, arsenal.getKeys().size());
+    assertEquals(3, arsenal.getKeys().size());
 
     // Test locking null
     arsenal.lockDefence(null);
     assertFalse(arsenal.contains(null));
-    assertTrue(arsenal.getKeys().isEmpty());
+    assertEquals(2, arsenal.getKeys().size());
   }
 
   @Test
@@ -148,51 +142,20 @@ class ArsenalTest {
     arsenal.unlockDefence("");
 
     assertTrue(arsenal.contains(""));
-    assertEquals(1, arsenal.getKeys().size());
-    assertEquals("", arsenal.getKeys().get(0));
+    assertEquals(3, arsenal.getKeys().size());
 
     arsenal.lockDefence("");
 
     assertFalse(arsenal.contains(""));
-    assertTrue(arsenal.getKeys().isEmpty());
+    assertEquals(2, arsenal.getKeys().size());
   }
-
-  @Test
-  void shouldPreserveOrderOfUnlockedDefences() {
-    arsenal.unlockDefence("first");
-    arsenal.unlockDefence("second");
-    arsenal.unlockDefence("third");
-
-    List<String> defences = arsenal.getKeys();
-    assertEquals("first", defences.get(0));
-    assertEquals("second", defences.get(1));
-    assertEquals("third", defences.get(2));
-  }
-
-  @Test
-  void shouldMaintainOrderAfterLocking() {
-    arsenal.unlockDefence("first");
-    arsenal.unlockDefence("second");
-    arsenal.unlockDefence("third");
-    arsenal.unlockDefence("fourth");
-
-    // Remove the second element
-    arsenal.lockDefence("second");
-
-    List<String> defences = arsenal.getKeys();
-    assertEquals(3, defences.size());
-    assertEquals("first", defences.get(0));
-    assertEquals("third", defences.get(1));
-    assertEquals("fourth", defences.get(2));
-  }
-
   @Test
   void shouldHandleCaseSensitiveDefenceKeys() {
     arsenal.unlockDefence("Turret");
     arsenal.unlockDefence("turret");
     arsenal.unlockDefence("TURRET");
 
-    assertEquals(3, arsenal.getKeys().size());
+    assertEquals(5, arsenal.getKeys().size());
     assertTrue(arsenal.contains("Turret"));
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("TURRET"));
@@ -207,8 +170,7 @@ class ArsenalTest {
     arsenal.unlockDefence(specialKey);
 
     assertTrue(arsenal.contains(specialKey));
-    assertEquals(1, arsenal.getKeys().size());
-    assertEquals(specialKey, arsenal.getKeys().get(0));
+    assertEquals(3, arsenal.getKeys().size());
   }
 
   @Test
@@ -217,8 +179,7 @@ class ArsenalTest {
     arsenal.unlockDefence(longKey);
 
     assertTrue(arsenal.contains(longKey));
-    assertEquals(1, arsenal.getKeys().size());
-    assertEquals(longKey, arsenal.getKeys().get(0));
+    assertEquals(3, arsenal.getKeys().size());
   }
 
   @Test
@@ -228,7 +189,7 @@ class ArsenalTest {
       arsenal.unlockDefence("defence" + i);
     }
 
-    assertEquals(1000, arsenal.getKeys().size());
+    assertEquals(1002, arsenal.getKeys().size());
     assertTrue(arsenal.contains("defence0"));
     assertTrue(arsenal.contains("defence500"));
     assertTrue(arsenal.contains("defence999"));

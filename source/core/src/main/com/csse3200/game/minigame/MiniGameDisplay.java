@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /** ui component for displaying the Main menu. */
 public class MiniGameDisplay extends UIComponent {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.components.mainmenu.MainMenuDisplay.class);
+      LoggerFactory.getLogger(com.csse3200.game.minigame.MiniGameDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
 
@@ -31,11 +31,11 @@ public class MiniGameDisplay extends UIComponent {
     table = new Table();
     table.setFillParent(true);
 
-    TextButton LaneRunnerBtn = ButtonFactory.createButton("Lane Runner");
-    TextButton WallPongBtn = ButtonFactory.createButton("Wall Pong");
+    TextButton laneRunnerBtn = ButtonFactory.createButton("Lane Runner");
+    TextButton wallPongBtn = ButtonFactory.createButton("Wall Pong");
 
     // Triggers an event when the button is pressed
-    LaneRunnerBtn.addListener(
+    laneRunnerBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -43,7 +43,7 @@ public class MiniGameDisplay extends UIComponent {
             entity.getEvents().trigger("lanerunner");
           }
         });
-    WallPongBtn.addListener(
+    wallPongBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -52,9 +52,9 @@ public class MiniGameDisplay extends UIComponent {
           }
         });
 
-    table.add(LaneRunnerBtn).size(200f, 50f).padTop(30f);
+    table.add(laneRunnerBtn).size(200f, 50f).padTop(30f);
     table.row();
-    table.add(WallPongBtn).size(200f, 50f).padTop(30f);
+    table.add(wallPongBtn).size(200f, 50f).padTop(30f);
     table.row();
     stage.addActor(table);
 

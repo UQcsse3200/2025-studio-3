@@ -56,7 +56,7 @@ public class DefenceFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
-                .getAsset("images/entities/defences/sling_shooter.atlas", TextureAtlas.class));
+                .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);

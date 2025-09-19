@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -82,7 +83,7 @@ class HitMarkerComponentTest {
     Entity entity = new Entity().addComponent(new HitMarkerComponent());
     entity.create();
     // No exceptions should be thrown and entity will not flash
-    entity.getEvents().trigger("hitMarker", entity);
+    assertDoesNotThrow(() -> entity.getEvents().trigger("hitMarker", entity));
   }
 
   Entity createTarget() {
