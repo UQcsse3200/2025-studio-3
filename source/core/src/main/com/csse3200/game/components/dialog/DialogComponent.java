@@ -217,7 +217,7 @@ public class DialogComponent extends UIComponent {
 
   /** Shows the dialog with a fade-in animation. */
   public void show() {
-    if (isVisible) {
+    if (isVisible || dialog == null) {
       return;
     }
 
@@ -232,7 +232,7 @@ public class DialogComponent extends UIComponent {
 
   /** Hides the dialog with a fade-out animation. */
   public void hide() {
-    if (!isVisible) {
+    if (!isVisible || dialog == null) {
       return;
     }
 
@@ -261,7 +261,9 @@ public class DialogComponent extends UIComponent {
    * @param y the y coordinate
    */
   public void setPosition(float x, float y) {
-    dialog.setPosition(x, y);
+    if (dialog != null) {
+      dialog.setPosition(x, y);
+    }
   }
 
   /**
@@ -271,7 +273,9 @@ public class DialogComponent extends UIComponent {
    * @param height the height
    */
   public void setSize(float width, float height) {
-    dialog.setSize(width, height);
+    if (dialog != null) {
+      dialog.setSize(width, height);
+    }
   }
 
   /**

@@ -40,13 +40,25 @@ public class ConfigService {
         loadDefenceConfigs(DEFENCE_CONFIG_FILE);
     this.defendersConfigs = defenceConfigs.getKey();
     this.generatorsConfigs = defenceConfigs.getValue();
+    logger.info("[ConfigService] Loaded {} defenders, {} generators", 
+        this.defendersConfigs.size(), this.generatorsConfigs.size());
+    
     this.enemyConfigs = loadEnemyConfigs(ENEMY_CONFIG_FILE);
+    logger.info("[ConfigService] Loaded {} enemies", this.enemyConfigs.size());
+    
     this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
+    logger.info("[ConfigService] Loaded {} items", this.itemConfigs.size());
+    
     this.achievementConfigs = loadAchievementConfigs(ACHIEVEMENT_CONFIG_FILE);
+    logger.info("[ConfigService] Loaded {} achievements", this.achievementConfigs.size());
+    
     this.levelConfigs = loadLevelConfigs(LEVEL_CONFIG_FILE);
+    logger.info("[ConfigService] Loaded {} levels", this.levelConfigs.size());
+    
     logger.info(
-        "[ConfigService] ConfigService initialization complete. Level configs loaded: {}",
-        levelConfigs != null ? levelConfigs.size() : 0);
+        "[ConfigService] ConfigService initialization complete. Total configs - Enemies: {}, Defenders: {}, Generators: {}, Items: {}, Achievements: {}, Levels: {}",
+        this.enemyConfigs.size(), this.defendersConfigs.size(), this.generatorsConfigs.size(),
+        this.itemConfigs.size(), this.achievementConfigs.size(), this.levelConfigs.size());
   }
 
   /**
@@ -157,38 +169,22 @@ public class ConfigService {
    * @return the level configs
    */
   public Map<String, BaseLevelConfig> loadLevelConfigs(String filename) {
-    logger.info("[ConfigService] Starting to load level configs from: {}", filename);
-    try {
-      DeserializedLevelConfig wrapper =
-          FileLoader.readClass(DeserializedLevelConfig.class, filename);
-      if (wrapper == null) {
-        logger.error(
-            "[ConfigService] FileLoader returned null for level config file: {}", filename);
-        return new HashMap<>();
-      }
-
-      logger.info("[ConfigService] Successfully parsed JSON wrapper for: {}", filename);
-      Map<String, BaseLevelConfig> configs = wrapper.getConfig();
-      if (configs == null) {
-        logger.error(
-            "[ConfigService] Level config file {} loaded but wrapper.getConfig() returned null",
-            filename);
-        return new HashMap<>();
-      }
-
-      logger.info(
-          "[ConfigService] Successfully loaded {} level configurations: {}",
-          configs.size(),
-          configs.keySet());
-      return configs;
-    } catch (Exception e) {
+    DeserializedLevelConfig wrapper =
+        FileLoader.readClass(DeserializedLevelConfig.class, filename);
+    if (wrapper == null) {
       logger.error(
-          "[ConfigService] Exception while loading level configs from {}: {}",
-          filename,
-          e.getMessage(),
-          e);
+          "[ConfigService] FileLoader returned null for level config file: {}", filename);
       return new HashMap<>();
     }
+
+      Map<String, BaseLevelConfig> configs = wrapper.getConfig();
+      if (configs == null) {
+        logger.warn(
+          "[ConfigService] Achievement config file {} loaded but contains no configs", filename);
+        return new HashMap<>();
+      }
+
+      return configs;
   }
 
   /**

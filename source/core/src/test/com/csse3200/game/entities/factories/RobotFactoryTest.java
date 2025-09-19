@@ -71,15 +71,15 @@ class RobotFactoryTest {
     ServiceLocator.registerConfigService(mockConfigService);
 
     // Set up fake configs for each robot type
-    when(mockConfigService.getEnemyConfig("standard"))
+    when(mockConfigService.getEnemyConfig("standardRobot"))
         .thenReturn(cfg(20, 5, 1.5f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
-    when(mockConfigService.getEnemyConfig("fast"))
+    when(mockConfigService.getEnemyConfig("fastRobot"))
         .thenReturn(cfg(15, 4, 3.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
-    when(mockConfigService.getEnemyConfig("tanky"))
+    when(mockConfigService.getEnemyConfig("tankyRobot"))
         .thenReturn(cfg(40, 7, 0.9f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
-    when(mockConfigService.getEnemyConfig("bungee"))
+    when(mockConfigService.getEnemyConfig("bungeeRobot"))
         .thenReturn(cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
-    when(mockConfigService.getEnemyConfig("teleport"))
+    when(mockConfigService.getEnemyConfig("teleportRobot"))
         .thenReturn(cfg(30, 5, 1.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
   }
 
