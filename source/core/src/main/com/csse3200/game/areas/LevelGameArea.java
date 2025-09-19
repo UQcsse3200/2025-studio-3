@@ -3,8 +3,6 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.areas.terrain.MapFactory;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -27,6 +25,7 @@ import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
@@ -46,8 +45,10 @@ import org.slf4j.LoggerFactory;
  * inventory allowing the player to add units to the grid.
  */
 public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
+  private static final float X_MARGIN_TILES = 2f;
+  private static final float Y_MARGIN_TILES = 1f;
+  private static final float MAP_HEIGHT_TILES = 8f;
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
-  private final TerrainFactory terrainFactory;
   private float xOffset;
   private float yOffset;
   private float tileSize;
@@ -69,24 +70,20 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
+  private float worldWidth; // background map world width
+  private String mapFilePath; // from level config
 
   /**
    * Initialise this LevelGameArea to use the provided TerrainFactory for a specific level.
    *
-   * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
    * @param levelKey the level key to load
    */
-  public LevelGameArea(TerrainFactory terrainFactory, String levelKey) {
+  public LevelGameArea(String levelKey) {
     super();
-    this.terrainFactory = terrainFactory;
     this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
-
-    // Load level configuration
-    loadLevelConfiguration();
-
+    loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
-
-    selectedUnit = null; // None selected at level load
+    selectedUnit = null;
     spawnedUnits = new Entity[levelRows * levelCols];
   }
 
@@ -106,6 +103,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (levelConfig != null) {
       levelRows = levelConfig.getRows();
       levelCols = levelConfig.getCols();
+      mapFilePath = levelConfig.getMapFile(); // add this
+      if (mapFilePath == null || mapFilePath.isEmpty()) {
+        mapFilePath = "images/backgrounds/level-1-map-v2.png";
+      }
       logger.info(
           "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
           currentLevelKey,
@@ -129,10 +130,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
     stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
 
-    float gridHeight = (stageHeight * stageToWorldRatio) / 8f * levelRows;
-    tileSize = gridHeight / levelRows;
-    xOffset = 2f * tileSize;
-    yOffset = tileSize;
+    // Camera viewport height in world units:
+    float viewportHeight = stageHeight * stageToWorldRatio;
+    tileSize = viewportHeight / MAP_HEIGHT_TILES;
+    xOffset = X_MARGIN_TILES * tileSize;
+    yOffset = Y_MARGIN_TILES * tileSize;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -214,16 +216,28 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
   /** Creates the map as a single image using MapFactory and spawns it in the correct position. */
   private void spawnMap(String levelKey) {
-    logger.debug("Spawning map for level {}", levelKey);
+    // Compute world height (viewport height)
+    float viewportHeight = stageHeight * stageToWorldRatio;
 
-    // Use MapFactory for single-entry map creation
-    MapFactory mapFactory = new MapFactory(terrainFactory);
-    Entity mapEntity = mapFactory.createLevelMap(levelKey);
-    terrain = terrainFactory.createTerrain(levelKey);
-
-    if (mapEntity != null) {
-      spawnEntity(mapEntity);
+    // Load texture from level config
+    Texture tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
+    if (tex == null) {
+      // Ensure it’s loaded via MainGameScreen (already loaded backgrounds) or load on demand
+      ServiceLocator.getResourceService().loadTextures(new String[] {mapFilePath});
+      ServiceLocator.getResourceService().loadAll();
+      tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
     }
+
+    // Create background entity
+    Entity map = new Entity();
+    BackgroundMapComponent bg = new BackgroundMapComponent(tex, viewportHeight);
+    map.addComponent(bg);
+    map.setPosition(0f, 0f); // left-aligned world
+
+    // Let LevelGameArea expose world width for clamping/panning
+    this.worldWidth = bg.getWorldWidth();
+
+    spawnEntity(map);
   }
 
   private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
@@ -668,5 +682,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   public boolean isCharacterSelected() {
     return characterSelected;
+  }
+
+  public float getWorldWidth() {
+    return worldWidth;
   }
 }

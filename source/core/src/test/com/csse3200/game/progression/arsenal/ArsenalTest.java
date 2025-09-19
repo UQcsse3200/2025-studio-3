@@ -149,6 +149,7 @@ class ArsenalTest {
     assertFalse(arsenal.contains(""));
     assertEquals(2, arsenal.getKeys().size());
   }
+
   @Test
   void shouldHandleCaseSensitiveDefenceKeys() {
     arsenal.unlockDefence("Turret");

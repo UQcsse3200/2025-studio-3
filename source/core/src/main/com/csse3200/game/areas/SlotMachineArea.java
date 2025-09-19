@@ -1,6 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
@@ -23,11 +22,10 @@ public class SlotMachineArea extends LevelGameArea {
   /**
    * Creates a new SlotMachineArea with the given TerrainFactory and level key.
    *
-   * @param terrainFactory The factory used to generate terrain for this area.
    * @param levelKey The level key for this slot machine area.
    */
-  public SlotMachineArea(TerrainFactory terrainFactory, String levelKey) {
-    super(terrainFactory, levelKey);
+  public SlotMachineArea(String levelKey) {
+    super(levelKey);
   }
 
   /** Initializes the slot machine area by loading assets and adding the HUD. */

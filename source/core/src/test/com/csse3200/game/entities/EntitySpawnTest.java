@@ -4,8 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
@@ -24,7 +24,7 @@ class EntitySpawnTest {
     // Mock ConfigService
     ConfigService mockConfigService = mock(ConfigService.class);
     ServiceLocator.registerConfigService(mockConfigService);
-    
+
     // Mock level config
     BaseLevelConfig mockLevelConfig = mock(BaseLevelConfig.class);
     when(mockConfigService.getLevelConfig("levelOne")).thenReturn(mockLevelConfig);
@@ -37,7 +37,7 @@ class EntitySpawnTest {
 
   @Test
   void spawnEnemiesCheckWeightAndMinimum() {
-    // Create a mock WaveManager for testing  
+    // Create a mock WaveManager for testing
     WaveManager mockWaveManager =
         new WaveManager("levelOne") {
           @Override
@@ -53,28 +53,28 @@ class EntitySpawnTest {
           @Override
           public Map<String, BaseSpawnConfig> getEnemyConfigs() {
             Map<String, BaseSpawnConfig> configs = new HashMap<>();
-            
+
             // Create mock configs since BaseSpawnConfig fields are private
             BaseSpawnConfig standardConfig = mock(BaseSpawnConfig.class);
             when(standardConfig.getCost()).thenReturn(2);
             when(standardConfig.getChance()).thenReturn(1.0f);
             configs.put("standard", standardConfig);
-            
+
             BaseSpawnConfig fastConfig = mock(BaseSpawnConfig.class);
             when(fastConfig.getCost()).thenReturn(2);
             when(fastConfig.getChance()).thenReturn(0.0f);
             configs.put("fast", fastConfig);
-            
+
             BaseSpawnConfig tankyConfig = mock(BaseSpawnConfig.class);
             when(tankyConfig.getCost()).thenReturn(2);
             when(tankyConfig.getChance()).thenReturn(0.0f);
             configs.put("tanky", tankyConfig);
-            
+
             BaseSpawnConfig bungeeConfig = mock(BaseSpawnConfig.class);
             when(bungeeConfig.getCost()).thenReturn(2);
             when(bungeeConfig.getChance()).thenReturn(0.0f);
             configs.put("bungee", bungeeConfig);
-            
+
             return configs;
           }
         };

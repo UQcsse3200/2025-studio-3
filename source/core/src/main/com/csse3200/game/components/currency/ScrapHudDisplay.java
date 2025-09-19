@@ -20,7 +20,9 @@ public class ScrapHudDisplay extends UIComponent {
   public void create() {
     super.create();
 
-    Texture sunTex = ServiceLocator.getResourceService().getAsset("images/entities/currency/scrap_metal.png", Texture.class);
+    Texture sunTex =
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/currency/scrap_metal.png", Texture.class);
     Image sunIcon = new Image(sunTex);
     sunIcon.setSize(22f, 22f);
 

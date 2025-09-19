@@ -26,7 +26,9 @@ public class DialogService {
     WARNING,
     /** Error dialog type, typically used for error messages with a single "OK" button. */
     ERROR,
-    /** Skill dialog type, typically used for skill information with "Unlock" and "Close" buttons. */
+    /**
+     * Skill dialog type, typically used for skill information with "Unlock" and "Close" buttons.
+     */
     SKILL
   }
 

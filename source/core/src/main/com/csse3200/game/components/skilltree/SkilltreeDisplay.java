@@ -61,10 +61,10 @@ public class SkilltreeDisplay extends UIComponent {
   public void unlockedPopUp(
       Skill skill, SkillSet skillSet, Texture unlockedTexture, Button skillButton, Stage stage) {
     DialogService dialogService = ServiceLocator.getDialogService();
-    
+
     // Create the skill description message
     String message = skill.getDescription() + "\n\nCost: " + skill.getCost() + " points";
-    
+
     // Create skill dialog with callbacks
     dialogService.skill(
         skill.getName(),
@@ -96,8 +96,7 @@ public class SkilltreeDisplay extends UIComponent {
             if (cost > points) {
               dialogService.error("Error", "Not enough skill points for this purchase");
             } else if (!skillSet.isUnlockable(skill.getName())) {
-              dialogService.error(
-                  "Error", "Previous skills for this stat must be unlocked first.");
+              dialogService.error("Error", "Previous skills for this stat must be unlocked first.");
             }
           }
         },

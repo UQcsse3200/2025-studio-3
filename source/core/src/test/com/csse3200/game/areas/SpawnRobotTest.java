@@ -5,7 +5,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RobotFactory;
@@ -61,8 +60,7 @@ class SpawnRobotTest {
 
   private static LevelGameArea newLevelAreaWithGeometry() throws Exception {
     ensureRenderService();
-    var terrainFactory = mock(TerrainFactory.class);
-    LevelGameArea lvl = new LevelGameArea(terrainFactory, "levelOne");
+    LevelGameArea lvl = new LevelGameArea("levelOne");
     setPrivateField(lvl, "tileSize", CELL);
     setPrivateField(lvl, "xOffset", X_OFFSET);
     setPrivateField(lvl, "yOffset", Y_OFFSET);

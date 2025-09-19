@@ -63,7 +63,8 @@ class TerminalTest {
   void shouldProcessMessageNoArgs() {
     Terminal terminal = new Terminal();
     @SuppressWarnings("unchecked")
-    ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
+    ArgumentCaptor<ArrayList<String>> captor =
+        ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
 
     terminal.addCommand("test1", command);
 
@@ -79,7 +80,8 @@ class TerminalTest {
     Terminal terminal = new Terminal();
 
     @SuppressWarnings("unchecked")
-    ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
+    ArgumentCaptor<ArrayList<String>> captor =
+        ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
 
     terminal.addCommand("test1", command);
 

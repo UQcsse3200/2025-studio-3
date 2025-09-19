@@ -37,7 +37,7 @@ public class DossierDisplay extends UIComponent {
   private boolean enemyMode = true;
   private static final String CHANGE_TYPE = "change_type";
   private static final String CHANGE_INFO = "change_info";
-  
+
   // Information display constants
   private static final String HEALTH_LABEL = "\n Health: ";
   private static final String ATTACK_LABEL = "\n Attack: ";
@@ -48,13 +48,12 @@ public class DossierDisplay extends UIComponent {
   /**
    * Constructor to display the dossier.
    *
-   * @param game             the game instance
-   * @param enemyConfigs     the enemy configs
-   * @param defenderConfigs  the defender configs
+   * @param game the game instance
+   * @param enemyConfigs the enemy configs
+   * @param defenderConfigs the defender configs
    * @param generatorConfigs the generator configs
    */
-  public DossierDisplay(
-      GdxGame game) {
+  public DossierDisplay(GdxGame game) {
     this.game = game;
     this.enemyConfigs = ServiceLocator.getConfigService().getEnemyConfigs();
     this.defenderConfigs = ServiceLocator.getConfigService().getDefenderConfigs();
@@ -112,10 +111,14 @@ public class DossierDisplay extends UIComponent {
               }
               type = value;
               enemyMode = value;
-              logger.info("[DossierDisplay] Mode changed - type: {}, enemyMode: {}", type, enemyMode);
+              logger.info(
+                  "[DossierDisplay] Mode changed - type: {}, enemyMode: {}", type, enemyMode);
               if (type) {
                 entities = enemyConfigs.keySet().toArray(new String[0]);
-                logger.info("[DossierDisplay] Enemy mode - entities count: {}, entities: {}", entities.length, java.util.Arrays.toString(entities));
+                logger.info(
+                    "[DossierDisplay] Enemy mode - entities count: {}, entities: {}",
+                    entities.length,
+                    java.util.Arrays.toString(entities));
               } else {
                 // Combine defenders and generators
                 String[] defenderKeys = defenderConfigs.keySet().toArray(new String[0]);
@@ -124,9 +127,14 @@ public class DossierDisplay extends UIComponent {
                 System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
                 System.arraycopy(
                     generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
-                logger.info("[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}", 
-                    defenderKeys.length, generatorKeys.length, entities.length);
-                logger.debug("[DossierDisplay] Human mode entities: {}", java.util.Arrays.toString(entities));
+                logger.info(
+                    "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
+                    defenderKeys.length,
+                    generatorKeys.length,
+                    entities.length);
+                logger.debug(
+                    "[DossierDisplay] Human mode entities: {}",
+                    java.util.Arrays.toString(entities));
               }
               currentEntity = 0;
               // Rebuild UI for the new type
@@ -196,7 +204,7 @@ public class DossierDisplay extends UIComponent {
               currentEntity = (int) index;
               String currentEntityKey = entities[currentEntity];
               logger.debug("Updating dossier info for entity key: {}", currentEntityKey);
-              
+
               nameLabel.setText(getEntityName(currentEntityKey));
               infoLabel.setText(getEntityInfo(currentEntityKey));
               spriteImage.setDrawable(getEntitySprite(currentEntityKey).getDrawable());
@@ -204,8 +212,7 @@ public class DossierDisplay extends UIComponent {
   }
 
   /**
-   * Creates the main Dossier table that displays entity information over a
-   * book-style background.
+   * Creates the main Dossier table that displays entity information over a book-style background.
    *
    * @return a Table containing the book background and entity information table
    */
@@ -233,8 +240,11 @@ public class DossierDisplay extends UIComponent {
 
     // 1st column for Entity Image
     String currentEntityKey = entities.length > 0 ? entities[currentEntity] : "";
-    logger.debug("[DossierDisplay] makeDossierTable - entities.length: {}, currentEntity: {}, currentEntityKey: '{}'", 
-        entities.length, currentEntity, currentEntityKey);
+    logger.debug(
+        "[DossierDisplay] makeDossierTable - entities.length: {}, currentEntity: {}, currentEntityKey: '{}'",
+        entities.length,
+        currentEntity,
+        currentEntityKey);
     Image entitySpriteImage = getEntitySprite(currentEntityKey);
     entitySpriteImage.setScaling(Scaling.fit);
     Table imageFrame = new Table(skin);
@@ -293,10 +303,11 @@ public class DossierDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    ImageButton closeButton = new ImageButton(
-        new TextureRegionDrawable(
-            ServiceLocator.getGlobalResourceService()
-                .getAsset("images/ui/close-icon.png", Texture.class)));
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
@@ -316,8 +327,7 @@ public class DossierDisplay extends UIComponent {
   }
 
   /**
-   * Builds a table containing buttons to access different entities within either
-   * 'Human' or
+   * Builds a table containing buttons to access different entities within either 'Human' or
    * 'Robots' sections.
    *
    * @return table with exit button
@@ -339,7 +349,8 @@ public class DossierDisplay extends UIComponent {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
               if (btn.isChecked()) {
-                logger.info("Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
+                logger.info(
+                    "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
                 entity.getEvents().trigger(CHANGE_INFO, index);
               }
             }
@@ -375,12 +386,14 @@ public class DossierDisplay extends UIComponent {
       // Check defenders first, then generators
       BaseDefenderConfig defenderConfig = defenderConfigs.get(entityKey);
       if (defenderConfig != null) {
-        logger.debug("Defender mode - key: '{}' -> name: '{}'", entityKey, defenderConfig.getName());
+        logger.debug(
+            "Defender mode - key: '{}' -> name: '{}'", entityKey, defenderConfig.getName());
         return defenderConfig.getName();
       }
       BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);
       if (generatorConfig != null) {
-        logger.debug("Generator mode - key: '{}' -> name: '{}'", entityKey, generatorConfig.getName());
+        logger.debug(
+            "Generator mode - key: '{}' -> name: '{}'", entityKey, generatorConfig.getName());
         return generatorConfig.getName();
       }
       logger.warn("No config found for entity key: '{}' in defender/generator mode", entityKey);
@@ -443,27 +456,39 @@ public class DossierDisplay extends UIComponent {
     if (enemyMode) {
       BaseEnemyConfig config = enemyConfigs.get(entityKey);
       if (config != null) {
-        return " " + config.getDescription()
-            + HEALTH_LABEL + config.getHealth()
-            + ATTACK_LABEL + config.getAttack();
+        return " "
+            + config.getDescription()
+            + HEALTH_LABEL
+            + config.getHealth()
+            + ATTACK_LABEL
+            + config.getAttack();
       }
       return "No information available";
     } else {
       // Check defenders first, then generators
       BaseDefenderConfig defenderConfig = defenderConfigs.get(entityKey);
       if (defenderConfig != null) {
-        return " " + defenderConfig.getDescription()
-            + HEALTH_LABEL + defenderConfig.getHealth()
-            + ATTACK_LABEL + defenderConfig.getAttack();
+        return " "
+            + defenderConfig.getDescription()
+            + HEALTH_LABEL
+            + defenderConfig.getHealth()
+            + ATTACK_LABEL
+            + defenderConfig.getAttack();
       }
 
       BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);
       if (generatorConfig != null) {
-        return " " + generatorConfig.getDescription()
-            + HEALTH_LABEL + generatorConfig.getHealth()
-            + COST_LABEL + generatorConfig.getCost()
-            + SCRAP_LABEL + generatorConfig.getScrapValue()
-            + INTERVAL_LABEL + generatorConfig.getInterval() + "s";
+        return " "
+            + generatorConfig.getDescription()
+            + HEALTH_LABEL
+            + generatorConfig.getHealth()
+            + COST_LABEL
+            + generatorConfig.getCost()
+            + SCRAP_LABEL
+            + generatorConfig.getScrapValue()
+            + INTERVAL_LABEL
+            + generatorConfig.getInterval()
+            + "s";
       }
 
       return "No information available";

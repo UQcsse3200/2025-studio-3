@@ -46,7 +46,7 @@ public class DossierScreen extends ScreenAdapter {
    */
   public DossierScreen(GdxGame gdxGame) {
     this.game = gdxGame;
-    
+
     logger.debug("[DossierScreen] Initialising services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
@@ -60,28 +60,35 @@ public class DossierScreen extends ScreenAdapter {
 
     // Load configs first
     loadConfigs();
-    
+
     // Load assets second
     loadAssets();
-    
+
     // Create UI last
     createUI();
   }
-  
+
   /** Loads the configs for the dossier screen. */
   private void loadConfigs() {
     ConfigService configService = ServiceLocator.getConfigService();
-    logger.info("[DossierScreen] ConfigService retrieved: {}", configService != null ? "not null" : "null");
-    
+    logger.info(
+        "[DossierScreen] ConfigService retrieved: {}", configService != null ? "not null" : "null");
+
     if (configService != null) {
       this.enemyConfigs = configService.getEnemyConfigs();
-      logger.info("[DossierScreen] Enemy configs loaded: {}", this.enemyConfigs != null ? this.enemyConfigs.size() : "null");
-      
+      logger.info(
+          "[DossierScreen] Enemy configs loaded: {}",
+          this.enemyConfigs != null ? this.enemyConfigs.size() : "null");
+
       this.defenderConfigs = configService.getDefenderConfigs();
-      logger.info("[DossierScreen] Defender configs loaded: {}", this.defenderConfigs != null ? this.defenderConfigs.size() : "null");
-      
+      logger.info(
+          "[DossierScreen] Defender configs loaded: {}",
+          this.defenderConfigs != null ? this.defenderConfigs.size() : "null");
+
       this.generatorConfigs = configService.getGeneratorConfigs();
-      logger.info("[DossierScreen] Generator configs loaded: {}", this.generatorConfigs != null ? this.generatorConfigs.size() : "null");
+      logger.info(
+          "[DossierScreen] Generator configs loaded: {}",
+          this.generatorConfigs != null ? this.generatorConfigs.size() : "null");
     } else {
       logger.error("[DossierScreen] ConfigService is null! Cannot load configs.");
       this.enemyConfigs = new HashMap<>();
@@ -94,34 +101,32 @@ public class DossierScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("[DossierScreen] Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
-    
+
     List<String> assets = new ArrayList<>();
     assets.add("images/backgrounds/bg.png");
     assets.add("images/entities/placeholder.png");
-    
+
     for (Map.Entry<String, BaseEnemyConfig> entry : enemyConfigs.entrySet()) {
       BaseEnemyConfig config = entry.getValue();
       if (config != null && config.getAssetPath() != null) {
         assets.add(config.getAssetPath());
       }
     }
-  
-    
+
     for (Map.Entry<String, BaseDefenderConfig> entry : defenderConfigs.entrySet()) {
       BaseDefenderConfig config = entry.getValue();
       if (config != null && config.getAssetPath() != null) {
         assets.add(config.getAssetPath());
       }
     }
-    
-    
+
     for (Map.Entry<String, BaseGeneratorConfig> entry : generatorConfigs.entrySet()) {
       BaseGeneratorConfig config = entry.getValue();
       if (config != null && config.getAssetPath() != null) {
         assets.add(config.getAssetPath());
       }
     }
-    
+
     logger.info("[DossierScreen] Loading {} assets for dossier screen", assets.size());
     if (!assets.isEmpty()) {
       resourceService.loadTextures(assets.toArray(new String[0]));
@@ -135,17 +140,19 @@ public class DossierScreen extends ScreenAdapter {
     Stage stage = ServiceLocator.getRenderService().getStage();
 
     // Add the background image
-    Texture bgTexture = ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
+    Texture bgTexture =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
     Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTexture)));
     bg.setFillParent(true);
     bg.setScaling(Scaling.fill);
     stage.addActor(bg);
 
     // Create the dossier display with configs
-    Entity ui = new Entity()
-        .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new DossierDisplay(game));
-    
+    Entity ui =
+        new Entity()
+            .addComponent(new InputDecorator(stage, 10))
+            .addComponent(new DossierDisplay(game));
+
     ServiceLocator.getEntityService().register(ui);
     logger.debug("[DossierScreen] Registered and created");
   }

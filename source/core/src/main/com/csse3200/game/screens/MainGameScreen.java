@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
@@ -85,6 +84,10 @@ public class MainGameScreen extends ScreenAdapter {
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
   private String level;
+  private boolean doIntroPan = true;
+  private float panElapsed = 0f;
+  private float panDuration = 2.0f;
+  private float panStartX, panTargetX;
 
   /**
    * Constructor for the main game screen.
@@ -122,8 +125,7 @@ public class MainGameScreen extends ScreenAdapter {
     createUI();
 
     logger.debug("Initialising main game screen entities");
-    TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
-    gameArea = createGameArea(terrainFactory);
+    gameArea = createGameArea();
     // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
     waveManager.setEnemySpawnCallback(
@@ -132,6 +134,13 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea.create();
 
     snapCameraBottomLeft();
+    var camComp = renderer.getCamera();
+    float halfVW = camComp.getCamera().viewportWidth / 2f;
+    float worldWidth = gameArea.getWorldWidth();
+    panStartX = halfVW; // current
+    panTargetX =
+        Math.max(halfVW, Math.min(worldWidth - halfVW, halfVW + (worldWidth - halfVW) * 0.35f));
+
     waveManager.initialiseNewWave();
   }
 
@@ -142,6 +151,16 @@ public class MainGameScreen extends ScreenAdapter {
       ServiceLocator.getEntityService().update();
       waveManager.update(delta);
     }
+    if (doIntroPan) {
+      panElapsed += delta;
+      float t = Math.min(1f, panElapsed / panDuration);
+      float x = com.badlogic.gdx.math.Interpolation.smoother.apply(panStartX, panTargetX, t);
+      var cam = renderer.getCamera().getCamera();
+      cam.position.x = x;
+      cam.update();
+      if (t >= 1f) doIntroPan = false;
+    }
+
     renderer.render();
     gameArea.checkGameOver(); // check game-over state
   }
@@ -267,21 +286,17 @@ public class MainGameScreen extends ScreenAdapter {
    * Factory method for creating the game area. Automatically detects whether to create a regular
    * level or slot machine area based on the level configuration.
    */
-  protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
+  protected LevelGameArea createGameArea() {
     String levelKey = convertProfileLevelToConfigKey(level);
-
-    // Check if this level is a slot machine level
-    BaseLevelConfig levelConfig = ServiceLocator.getConfigService().getLevelConfig(levelKey);
-    if (levelConfig != null && levelConfig.isSlotMachine()) {
-      logger.info("Creating slot machine area for level {}", levelKey);
-      SlotMachineArea slotMachineArea = new SlotMachineArea(terrainFactory, levelKey);
-      slotMachineArea.setWaveManager(this.waveManager);
-      return slotMachineArea;
+    BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(levelKey);
+    if (cfg != null && cfg.isSlotMachine()) {
+      var slot = new SlotMachineArea(levelKey);
+      slot.setWaveManager(this.waveManager);
+      return slot;
     } else {
-      logger.info("Creating regular level area for level {}", levelKey);
-      LevelGameArea levelGameArea = new LevelGameArea(terrainFactory, levelKey);
-      levelGameArea.setWaveManager(this.waveManager);
-      return levelGameArea;
+      var area = new LevelGameArea(levelKey);
+      area.setWaveManager(this.waveManager);
+      return area;
     }
   }
 
