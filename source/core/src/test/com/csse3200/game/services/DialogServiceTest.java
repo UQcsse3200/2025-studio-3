@@ -24,10 +24,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Test class for DialogService. */
 @ExtendWith(GameExtension.class)
 class DialogServiceTest {
+  private static final Logger logger = LoggerFactory.getLogger(DialogServiceTest.class);
   @Mock private GL20 mockGL20;
   @Mock private Stage mockStage;
   @Mock private EntityService mockEntityService;
@@ -64,13 +67,19 @@ class DialogServiceTest {
     ServiceLocator.clear();
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
+    ServiceLocator.registerGlobalResourceService(resourceService);
     ServiceLocator.registerEntityService(mockEntityService);
 
     // Mock entity registration to call create() on entities
     doAnswer(
             invocation -> {
               Entity entity = invocation.getArgument(0);
-              entity.create();
+              try {
+                entity.create();
+              } catch (Exception e) {
+                logger.error("Error creating entity: {}", e.getMessage(), e);
+                throw e;
+              }
               return null;
             })
         .when(mockEntityService)

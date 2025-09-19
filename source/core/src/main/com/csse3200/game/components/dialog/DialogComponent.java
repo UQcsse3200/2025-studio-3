@@ -98,16 +98,21 @@ public class DialogComponent extends UIComponent {
 
   /** Applies styling specific to the dialog type. */
   private void applyDialogTypeStyling() {
-    Window.WindowStyle windowStyle = new Window.WindowStyle(skin.get(Window.WindowStyle.class));
+    Window.WindowStyle defaultStyle = skin.get(Window.WindowStyle.class);
+    Window.WindowStyle windowStyle =
+        defaultStyle != null ? new Window.WindowStyle(defaultStyle) : new Window.WindowStyle();
 
     // Set the dialog background image
     try {
-      Texture dialogTexture =
-          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog.png", Texture.class);
-      if (dialogTexture != null) {
-        TextureRegion dialogRegion = new TextureRegion(dialogTexture);
-        Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
-        windowStyle.background = dialogDrawable;
+      if (ServiceLocator.getGlobalResourceService() != null) {
+        Texture dialogTexture =
+            ServiceLocator.getGlobalResourceService()
+                .getAsset("images/ui/dialog.png", Texture.class);
+        if (dialogTexture != null) {
+          TextureRegion dialogRegion = new TextureRegion(dialogTexture);
+          Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
+          windowStyle.background = dialogDrawable;
+        }
       }
     } catch (Exception e) {
       logger.warn(

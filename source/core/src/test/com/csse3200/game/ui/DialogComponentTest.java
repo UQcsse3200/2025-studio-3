@@ -63,6 +63,7 @@ class DialogComponentTest {
     // Register services with ServiceLocator
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
+    ServiceLocator.registerGlobalResourceService(resourceService);
 
     // Create test entity (but don't add dialog component yet)
     testEntity = new Entity();

@@ -9,9 +9,17 @@ import com.csse3200.game.services.ServiceLocator;
 /** A generic component for rendering onto the ui. */
 public abstract class UIComponent extends RenderComponent {
   private static final int UI_LAYER = 2;
-  protected static final Skin skin =
-      new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+  protected static final Skin skin = createSkin();
   protected Stage stage;
+
+  private static Skin createSkin() {
+    try {
+      return new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+    } catch (Exception e) {
+      // Fallback to default skin for testing
+      return new Skin();
+    }
+  }
 
   @Override
   public void create() {

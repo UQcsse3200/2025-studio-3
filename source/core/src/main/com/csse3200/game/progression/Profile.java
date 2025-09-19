@@ -50,7 +50,7 @@ public class Profile {
     this.wallet = wallet;
     this.inventory = inventory;
     this.skillset = skillset;
-    this.statistics = statistics;
+    this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
     this.completedNodes = completedNodes;
   }
