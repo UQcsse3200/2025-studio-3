@@ -33,7 +33,7 @@ public class BaseEntityConfig {
   public String getDescription() {
     return description;
   }
-  
+
   /**
    * Gets the health of the entity.
    *
@@ -51,7 +51,7 @@ public class BaseEntityConfig {
   public String getAssetPath() {
     return assetPath;
   }
-  
+
   /**
    * Gets the atlas path of the entity.
    *

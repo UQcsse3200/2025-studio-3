@@ -4,15 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * DeserializedDefencesConfig is a wrapper class for the BaseDefenderConfig and BaseGeneratorConfig classes.
+ * DeserializedDefencesConfig is a wrapper class for the BaseDefenderConfig and BaseGeneratorConfig
+ * classes.
  */
 public class DeserializedDefencesConfig {
   private Map<String, BaseDefenderConfig> defenders;
   private Map<String, BaseGeneratorConfig> generators;
 
-  /**
-   * Creates a new DeserializedDefencesConfig.
-   */
+  /** Creates a new DeserializedDefencesConfig. */
   public DeserializedDefencesConfig() {
     this.defenders = new HashMap<>();
     this.generators = new HashMap<>();
@@ -24,7 +23,8 @@ public class DeserializedDefencesConfig {
    * @param defenders the config map for the defenders
    * @param generators the config map for the generators
    */
-  public void setConfig(Map<String, BaseDefenderConfig> defenders, Map<String, BaseGeneratorConfig> generators) {
+  public void setConfig(
+      Map<String, BaseDefenderConfig> defenders, Map<String, BaseGeneratorConfig> generators) {
     this.defenders = new HashMap<>(defenders);
     this.generators = new HashMap<>(generators);
   }

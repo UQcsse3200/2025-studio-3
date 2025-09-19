@@ -12,7 +12,7 @@ public class TypographyFactory {
   // Font sizes for different typography levels
   private static final int TITLE_SIZE = 48;
   private static final int SUBTITLE_SIZE = 32;
-  private static final int PARAGRAPH_SIZE = 18;
+  private static final int PARAGRAPH_SIZE = 24;
 
   // Default colors
   private static final Color DEFAULT_TITLE_COLOR = Color.WHITE;

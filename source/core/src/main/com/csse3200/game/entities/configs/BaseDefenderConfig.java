@@ -1,9 +1,6 @@
 package com.csse3200.game.entities.configs;
 
-
-/**
- * Defines a set of properties for all defenders.
- */
+/** Defines a set of properties for all defenders. */
 public class BaseDefenderConfig extends BaseEntityConfig {
   private int cost;
   private int rangeType; // what is this???

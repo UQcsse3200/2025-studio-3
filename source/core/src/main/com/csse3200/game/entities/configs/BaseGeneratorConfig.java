@@ -1,13 +1,13 @@
 package com.csse3200.game.entities.configs;
 
-/**
- * Defines a set of properties for all generators.
- */
+/** Defines a set of properties for all generators. */
 public class BaseGeneratorConfig extends BaseEntityConfig {
   /** Time between currency being spawned */
   private int interval;
-    /** Amount of currency the generator will give */
+
+  /** Amount of currency the generator will give */
   private int scrapValue;
+
   private int cost;
 
   /** Creates a new BaseGeneratorConfig with default values. */

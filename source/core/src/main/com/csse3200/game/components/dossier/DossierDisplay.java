@@ -11,50 +11,64 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.entities.configs.NPCConfigs;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * DossierDisplay is a class that displays the dossier of the game.
+ */
 public class DossierDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
   private final GdxGame game;
   private Table rootTable;
   // Where true is robots, false is humans
   private boolean type;
+  private Map<String, BaseEnemyConfig> enemyConfigs;
+  private Map<String, BaseDefenderConfig> defenderConfigs;
+  private Map<String, BaseGeneratorConfig> generatorConfigs;
   private String[] entities;
   private DossierManager dossierManager;
   private int currentEntity = 0;
-
-  private Label entityInfoLabel;
-  private Label entityNameLabel;
-  private Image entitySpriteImage;
   private static final String CHANGE_TYPE = "change_type";
 
-  /** Constructor to display the dossier. */
-  public DossierDisplay(
-      GdxGame game, NPCConfigs entityData, NPCConfigs defenceData, Texture[] textures) {
-    super();
+  /**
+   * Constructor to display the dossier.
+   * 
+   * @param game the game instance
+   * @param enemyConfigs the enemy configs
+   * @param defenderConfigs the defender configs
+   * @param generatorConfigs the generator configs
+   */
+  public DossierDisplay(GdxGame game, Map<String, BaseEnemyConfig> enemyConfigs, 
+                       Map<String, BaseDefenderConfig> defenderConfigs, 
+                       Map<String, BaseGeneratorConfig> generatorConfigs) {
     this.game = game;
+    this.enemyConfigs = enemyConfigs;
+    this.defenderConfigs = defenderConfigs;
+    this.generatorConfigs = generatorConfigs;
     type = true;
-    this.dossierManager = new DossierManager(entityData, defenceData, textures);
-    // All robot entities
-    entities =
-        new String[] {"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"};
+    this.dossierManager = new DossierManager(enemyConfigs, defenderConfigs, generatorConfigs);
+    entities = enemyConfigs.keySet().toArray(new String[0]);
   }
 
   @Override
   public void create() {
     super.create();
-    updateDossierInfoListener();
     changeTypeListener();
     addActors();
   }
 
-  /** Adds all tables to the stage. */
+  /**
+   * Adds all tables to the stage.
+   */
   private void addActors() {
     Label title = TypographyFactory.createTitle("Dossier");
     createCloseButton();
@@ -96,13 +110,15 @@ public class DossierDisplay extends UIComponent {
               type = value;
               if (type) {
                 dossierManager.changeMode();
-                entities =
-                    new String[] {
-                      "standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"
-                    };
+                entities = enemyConfigs.keySet().toArray(new String[0]);
               } else {
                 dossierManager.changeMode();
-                entities = new String[] {"slingshot"};
+                // Combine defenders and generators
+                String[] defenderKeys = defenderConfigs.keySet().toArray(new String[0]);
+                String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
+                entities = new String[defenderKeys.length + generatorKeys.length];
+                System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
+                System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
               }
               currentEntity = 0;
               // Rebuild UI for the new type
@@ -152,22 +168,22 @@ public class DossierDisplay extends UIComponent {
     return table;
   }
 
-  private void updateDossierInfoListener() {
+  private void updateDossierInfoListener(Label nameLabel, Label infoLabel, Image spriteImage) {
     entity
         .getEvents()
         .addListener(
             "change_info",
             index -> {
               if (entities.length == 0) {
-                entityNameLabel.setText("No entries");
-                entityInfoLabel.setText("");
-                entitySpriteImage.setDrawable(null); // Or a placeholder drawable
+                nameLabel.setText("No entries");
+                infoLabel.setText("");
+                spriteImage.setDrawable(null);
                 return;
               }
               String currentEntityName = entities[(int) index];
-              entityNameLabel.setText(dossierManager.getName(currentEntityName));
-              entityInfoLabel.setText(dossierManager.getInfo(currentEntityName));
-              entitySpriteImage.setDrawable(
+              nameLabel.setText(dossierManager.getName(currentEntityName));
+              infoLabel.setText(dossierManager.getInfo(currentEntityName));
+              spriteImage.setDrawable(
                   dossierManager.getSprite(currentEntityName).getDrawable());
             });
   }
@@ -200,7 +216,7 @@ public class DossierDisplay extends UIComponent {
     contentTable.defaults().pad(10);
 
     // 1st column for Entity Image
-    entitySpriteImage =
+    Image entitySpriteImage =
         dossierManager.getSprite(entities.length > 0 ? entities[currentEntity] : "");
     entitySpriteImage.setScaling(Scaling.fit);
     Table imageFrame = new Table(skin);
@@ -215,12 +231,12 @@ public class DossierDisplay extends UIComponent {
 
     String name =
         entities.length > 0 ? dossierManager.getName(entities[currentEntity]) : "No entries";
-    entityNameLabel = TypographyFactory.createSubtitle(name);
+    Label entityNameLabel = TypographyFactory.createSubtitle(name);
     entityNameLabel.setAlignment(Align.left);
     infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
 
     String info = entities.length > 0 ? dossierManager.getInfo(entities[currentEntity]) : "";
-    entityInfoLabel = TypographyFactory.createParagraph(info);
+    Label entityInfoLabel = TypographyFactory.createParagraph(info);
     entityInfoLabel.setWrap(true);
     entityInfoLabel.setAlignment(Align.left);
     infoTable
@@ -231,6 +247,9 @@ public class DossierDisplay extends UIComponent {
         .padRight(stageWidth * 0.09f)
         .padTop(stageHeight * 0.03f)
         .row();
+
+    // Set up listener with these UI components
+    updateDossierInfoListener(entityNameLabel, entityInfoLabel, entitySpriteImage);
 
     // Add columns to contentTable
     contentTable.add(imageFrame).fillY();

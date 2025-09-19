@@ -1,40 +1,54 @@
 package com.csse3200.game.entities.configs;
 
-/** Defines a basic set of properties stored in wave config files to be loaded by Wave Factories. */
-@SuppressWarnings("java:S1104") // Public fields are intentional for JSON deserialization
+import java.util.Map;
+
+/**
+ * BaseWaveConfig is a class that represents a wave configuration.
+ */
 public class BaseWaveConfig {
+  private int waveWeight;
+  private int minZombiesSpawn;
+  private Map<String, BaseSpawnConfig> spawnConfigs;
+
   /** Creates a new BaseWaveConfig with default values. */
   public BaseWaveConfig() {
-    // Default constructor with default field values
+    // Default constructor
   }
 
   /**
-   * Constructor with parameters
-   *
-   * @param waveWeight the weight budget for this wave
-   * @param expGained experience gained for completing this wave
-   * @param minZombiesSpawn minimum number of enemies to spawn
+   * Get the wave weight
+   * 
+   * @return the wave weight
    */
-  public BaseWaveConfig(int waveWeight, int expGained, int minZombiesSpawn) {
-    this.waveWeight = waveWeight;
-    this.expGained = expGained;
-    this.minZombiesSpawn = minZombiesSpawn;
+  public int getWaveWeight() {
+    return waveWeight;
   }
 
-  /** Weight/difficulty of this wave */
-  public int waveWeight = 10;
+  /**
+   * Get the minimum number of zombies to spawn
+   * 
+   * @return the minimum number of zombies to spawn
+   */
+  public int getMinZombiesSpawn() {
+    return minZombiesSpawn;
+  }
 
-  /** Experience points gained from this wave */
-  public int expGained = 10;
+  /**
+   * Get the spawn configurations
+   * 
+   * @return the spawn configurations
+   */
+  public Map<String, BaseSpawnConfig> getSpawnConfigs() {
+    return spawnConfigs;
+  }
 
-  /** Minimum number of zombies to spawn in this wave */
-  public int minZombiesSpawn = 10;
-
-  /** Enemy definitions - individual fields for JSON compatibility */
-  public EnemySpawnConfig standard = new EnemySpawnConfig();
-
-  public EnemySpawnConfig fast = new EnemySpawnConfig();
-  public EnemySpawnConfig tanky = new EnemySpawnConfig();
-  public EnemySpawnConfig bungee = new EnemySpawnConfig();
-  public EnemySpawnConfig teleport = new EnemySpawnConfig();
+  /**
+   * Get the spawn configuration for a given enemy type
+   * 
+   * @param enemyType the enemy type
+   * @return the spawn configuration for the given enemy type
+   */
+  public BaseSpawnConfig getSpawnConfig(String enemyType) {
+    return spawnConfigs.get(enemyType);
+  }
 }

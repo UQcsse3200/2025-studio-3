@@ -70,46 +70,70 @@ public class StatisticsDisplay extends UIComponent {
 
     // Create components
     Label killsLabel = TypographyFactory.createSubtitle("Total Kills:");
-    Label kills = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("enemiesKilled")));
+    Label kills =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("enemiesKilled")));
 
     Label shotsLabel = TypographyFactory.createSubtitle("Shots Fired:");
-    Label shots = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("shotsFired")));
+    Label shots =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("shotsFired")));
 
     Label levelsLabel = TypographyFactory.createSubtitle("Levels Passed:");
-    Label levels = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("levelsCompleted")));
+    Label levels =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("levelsCompleted")));
 
     Label lostLevelsLabel = TypographyFactory.createSubtitle("Levels Lost:");
-    Label lostLevels = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("levelsLost")));
+    Label lostLevels =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("levelsLost")));
 
     Label defencesPlantedLabel = TypographyFactory.createSubtitle("Defences Planted:");
-    Label defencesPlanted = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("defencesPlanted")));
+    Label defencesPlanted =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("defencesPlanted")));
 
     Label defencesUnlockedLabel = TypographyFactory.createSubtitle("Defences Unlocked:");
-    Label defencesUnlocked = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("defencesUnlocked")));
+    Label defencesUnlocked =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("defencesUnlocked")));
 
     Label defencesLostLabel = TypographyFactory.createSubtitle("Defences Lost:");
-    Label defencesLost = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("defencesLost")));
+    Label defencesLost =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("defencesLost")));
 
     Label coinsLabel = TypographyFactory.createSubtitle("Total Coins Earned:");
-    Label coins = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("coinsCollected")));
+    Label coins =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("coinsCollected")));
 
     Label coinsSpentLabel = TypographyFactory.createSubtitle("Total Coins Spent:");
-    Label coinsSpent = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("coinsSpent")));
+    Label coinsSpent =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("coinsSpent")));
 
     Label skillPointsLabel = TypographyFactory.createSubtitle("Skill Points Collected:");
-    Label skillPoints = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("skillPointsCollected")));
+    Label skillPoints =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("skillPointsCollected")));
 
     Label skillPointsSpentLabel = TypographyFactory.createSubtitle("Skill Points Spent:");
-    Label skillPointsSpent = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("skillPointsSpent")));
+    Label skillPointsSpent =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("skillPointsSpent")));
 
     Label purchasesLabel = TypographyFactory.createSubtitle("Purchases Made:");
-    Label purchases = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("purchasesMade")));
+    Label purchases =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("purchasesMade")));
 
     Label wavesLabel = TypographyFactory.createSubtitle("Waves Completed:");
-    Label waves = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("wavesCompleted")));
+    Label waves =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("wavesCompleted")));
 
     Label itemsLabel = TypographyFactory.createSubtitle("Items Collected:");
-    Label items = TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("itemsCollected")));
+    Label items =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("itemsCollected")));
 
     // Position Components on table
     Table table = new Table();

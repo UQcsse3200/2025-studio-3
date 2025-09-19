@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 public class CutsceneCompiler {
-  private String id;
   private List<Character> characters;
   private List<Background> backgrounds;
   private List<Sound> sounds;
@@ -23,7 +22,7 @@ public class CutsceneCompiler {
    * @return A {@link Cutscene} with all the information filled out.
    */
   public Cutscene compile(CutsceneDocDTO cutsceneDocDTO) {
-    id = cutsceneDocDTO.cutscene.id;
+    String id = cutsceneDocDTO.cutscene.id;
     characters = new ArrayList<>();
     backgrounds = new ArrayList<>();
     sounds = new ArrayList<>();
@@ -42,7 +41,7 @@ public class CutsceneCompiler {
     }
 
     for (BeatDTO beatDTO : cutsceneDocDTO.cutscene.beats) {
-      String id = beatDTO.id;
+      String beatId = beatDTO.id;
       Advance advance =
           switch (beatDTO.advance.mode) {
             case "auto" -> Advance.auto();
@@ -53,7 +52,7 @@ public class CutsceneCompiler {
           };
       List<ActionData> actions = getActions(beatDTO.actions);
 
-      beats.add(new Beat(id, advance, actions));
+      beats.add(new Beat(beatId, advance, actions));
     }
 
     return new Cutscene(id, characters, backgrounds, sounds, beats);
@@ -207,7 +206,13 @@ public class CutsceneCompiler {
     return actions;
   }
 
-  private Background getBackground(String id) {
+  /**
+   * Gets a background by its id.
+   *
+   * @param id the id of the background
+   * @return the background
+   */
+  public Background getBackground(String id) {
     for (Background background : backgrounds) {
       if (background.getId().equals(id)) {
         return background;
@@ -217,7 +222,13 @@ public class CutsceneCompiler {
     return null;
   }
 
-  private Character getCharacter(String id) {
+  /**
+   * Gets a character by its id.
+   *
+   * @param id the id of the character
+   * @return the character
+   */
+  public Character getCharacter(String id) {
     for (Character character : characters) {
       if (character.getId().equals(id)) {
         return character;
@@ -227,7 +238,13 @@ public class CutsceneCompiler {
     return null;
   }
 
-  private Sound getSound(String id) {
+  /**
+   * Gets a sound by its id.
+   *
+   * @param id the id of the sound
+   * @return the sound
+   */
+  public Sound getSound(String id) {
     for (Sound sound : sounds) {
       if (sound.getId().equals(id)) {
         return sound;
@@ -237,7 +254,13 @@ public class CutsceneCompiler {
     return null;
   }
 
-  private Beat getBeat(String id) {
+  /**
+   * Gets a beat by its id.
+   *
+   * @param id the id of the beat
+   * @return the beat
+   */
+  public Beat getBeat(String id) {
     for (Beat beat : beats) {
       if (beat.getId().equals(id)) {
         return beat;

@@ -1,7 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.BaseWaveConfig;
-import com.csse3200.game.entities.configs.EnemySpawnConfig;
+import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.GameConfig;
 import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.services.ServiceLocator;
@@ -425,7 +425,7 @@ public class WaveManager implements WaveConfigProvider {
   /**
    * @return the enemy spawn attributes (cost + chance) for the current wave.
    */
-  public Map<String, EnemySpawnConfig> getEnemyConfigs() {
+  public Map<String, BaseSpawnConfig> getEnemyConfigs() {
     BaseWaveConfig wave = getCurrentWaveConfig();
 
     if (wave == null) {
@@ -433,7 +433,7 @@ public class WaveManager implements WaveConfigProvider {
     }
 
     // Construct Map from individual fields for backward compatibility
-    Map<String, EnemySpawnConfig> configs = new java.util.HashMap<>();
+    Map<String, BaseSpawnConfig> configs = new java.util.HashMap<>();
     configs.put("standard", wave.standard);
     configs.put("fast", wave.fast);
     configs.put("tanky", wave.tanky);

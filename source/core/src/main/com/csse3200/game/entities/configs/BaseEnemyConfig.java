@@ -21,7 +21,6 @@ public class BaseEnemyConfig extends BaseEntityConfig {
    */
   private float scale; // so why is this here??
 
-
   /** Creates a new BaseEntityConfig with default values. */
   public BaseEnemyConfig() {
     // Default constructor
@@ -99,15 +98,11 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     return scale;
   }
 
-  /**
-   * DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class.
-   */
+  /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */
   public static class DeserializedEnemyConfig {
     private HashMap<String, BaseEnemyConfig> config;
 
-    /**
-     * Creates a new DeserializedEnemyConfig.
-     */
+    /** Creates a new DeserializedEnemyConfig. */
     public DeserializedEnemyConfig() {
       this.config = new HashMap<>();
     }

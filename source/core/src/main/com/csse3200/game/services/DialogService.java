@@ -23,7 +23,7 @@ public class DialogService {
     /** Info dialog type, typically used for informational messages with a single "OK" button. */
     INFO,
     /**
-     * Warning dialog type, typically used for warning messages with "Confirm" and "Cancel" buttons.
+     * Warning dialog type, typically used for warning msgs w/ "Confirm" and "Cancel" btns.
      */
     WARNING,
     /** Error dialog type, typically used for error messages with a single "OK" button. */

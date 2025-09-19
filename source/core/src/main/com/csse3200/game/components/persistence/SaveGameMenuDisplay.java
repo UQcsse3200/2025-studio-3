@@ -79,10 +79,12 @@ public class SaveGameMenuDisplay extends UIComponent {
 
     // Name input field (initially hidden)
     nameLabel = TypographyFactory.createSubtitle("Enter Save Name:");
-    
+
     // Create TextField with custom font
-    TextField.TextFieldStyle textFieldStyle = new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
-    BitmapFont customFont = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
+    TextField.TextFieldStyle textFieldStyle =
+        new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+    BitmapFont customFont =
+        ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
     if (customFont != null) {
       textFieldStyle.font = customFont;
     }

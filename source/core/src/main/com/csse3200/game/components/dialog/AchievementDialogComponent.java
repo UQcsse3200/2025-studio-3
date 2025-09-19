@@ -124,7 +124,8 @@ public class AchievementDialogComponent extends UIComponent {
         // Continue without icon
       }
 
-      Label pointsLabel = TypographyFactory.createCustomSize("+" + skillPoints + " Skill Points", 12, Color.CYAN);
+      Label pointsLabel =
+          TypographyFactory.createCustomSize("+" + skillPoints + " Skill Points", 12, Color.CYAN);
       pointsLabel.setAlignment(Align.left);
       skillPointTable.add(pointsLabel);
       textTable.add(skillPointTable).left().padTop(2f).row();

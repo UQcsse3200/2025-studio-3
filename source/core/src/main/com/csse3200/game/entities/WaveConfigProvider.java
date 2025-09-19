@@ -1,6 +1,6 @@
 package com.csse3200.game.entities;
 
-import com.csse3200.game.entities.configs.EnemySpawnConfig;
+import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import java.util.Map;
 
 /**
@@ -34,5 +34,5 @@ public interface WaveConfigProvider {
    *
    * @return map of enemy type to spawn configuration
    */
-  Map<String, EnemySpawnConfig> getEnemyConfigs();
+  Map<String, BaseSpawnConfig> getEnemyConfigs();
 }
