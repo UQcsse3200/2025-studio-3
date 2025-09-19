@@ -125,6 +125,8 @@ public class DialogComponent extends UIComponent {
         return Color.ORANGE;
       case ERROR:
         return Color.RED;
+      case SKILL:
+        return Color.GOLD;
       default:
         return Color.WHITE;
     }
@@ -195,6 +197,36 @@ public class DialogComponent extends UIComponent {
               }
             });
         buttonTable.add(okButtonError).size(120f, 60f).pad(5f);
+        break;
+
+      // Skill dialog buttons
+      case SKILL:
+        TextButton closeButton = ButtonFactory.createDialogButton("Close");
+        closeButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onClose != null) {
+                  onClose.accept(DialogComponent.this);
+                }
+              }
+            });
+
+        TextButton unlockButton = ButtonFactory.createDialogButton("Unlock");
+        unlockButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                if (onConfirm != null) {
+                  onConfirm.accept(DialogComponent.this);
+                }
+                // Note: Dialog hiding is handled by the callback
+              }
+            });
+
+        buttonTable.add(closeButton).size(120f, 60f).pad(5f);
+        buttonTable.add(unlockButton).size(120f, 60f).pad(5f);
         break;
     }
 

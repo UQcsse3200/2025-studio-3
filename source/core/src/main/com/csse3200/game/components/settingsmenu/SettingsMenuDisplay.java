@@ -237,7 +237,7 @@ public class SettingsMenuDisplay extends UIComponent {
     if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
-      game.setScreen(ScreenType.MAIN_GAME);
+      game.setScreen(ScreenType.WORLD_MAP);
     }
   }
 
