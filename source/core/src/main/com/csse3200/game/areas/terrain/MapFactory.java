@@ -23,14 +23,14 @@ public class MapFactory {
    * @param level the game level (1, 2, etc.)
    * @return Entity containing the map, or null if creation fails
    */
-  public Entity createLevelMap(int level) {
+  public Entity createLevelMap(String level) {
     TerrainFactory.TerrainType terrainType;
 
     switch (level) {
-      case 1:
+      case "levelOne":
         terrainType = TerrainFactory.TerrainType.LEVEL_ONE_MAP;
         break;
-      case 2:
+      case "levelTwo":
         terrainType = TerrainFactory.TerrainType.LEVEL_TWO_MAP;
         break;
       default:

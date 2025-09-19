@@ -221,7 +221,7 @@ public class GdxGame extends Game {
       case DOSSIER:
         return new DossierScreen(this);
       case SLOT_MACHINE:
-        return new SlotMachineScreen(this);
+        return new MainGameScreen(this);
       case MINI_GAMES:
         return new MiniGameScreen(this);
       case PADDLE_GAME:

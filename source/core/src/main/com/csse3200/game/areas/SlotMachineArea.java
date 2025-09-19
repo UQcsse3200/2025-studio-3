@@ -21,12 +21,13 @@ public class SlotMachineArea extends LevelGameArea {
   };
 
   /**
-   * Creates a new SlotMachineArea with the given TerrainFactory.
+   * Creates a new SlotMachineArea with the given TerrainFactory and level key.
    *
    * @param terrainFactory The factory used to generate terrain for this area.
+   * @param levelKey The level key for this slot machine area.
    */
-  public SlotMachineArea(TerrainFactory terrainFactory) {
-    super(terrainFactory);
+  public SlotMachineArea(TerrainFactory terrainFactory, String levelKey) {
+    super(terrainFactory, levelKey);
   }
 
   /** Initializes the slot machine area by loading assets and adding the HUD. */

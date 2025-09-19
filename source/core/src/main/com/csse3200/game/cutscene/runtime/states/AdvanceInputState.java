@@ -19,7 +19,7 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
 
   /**
    * Checks if the action is blocking till completion (false if async)
-   * 
+   *
    * @return True if the action is blocking till completion (false if async)
    */
   @Override
@@ -29,7 +29,7 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
 
   /**
    * Checks if the action is completed (can be disposed of)
-   * 
+   *
    * @return True if the action is completed (can be disposed of)
    */
   @Override
@@ -37,9 +37,7 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
     return open;
   }
 
-  /**
-   * Advances the {@link ActionState} from an external code source
-   */
+  /** Advances the {@link ActionState} from an external code source */
   @Override
   public void advance() {
     open = true;

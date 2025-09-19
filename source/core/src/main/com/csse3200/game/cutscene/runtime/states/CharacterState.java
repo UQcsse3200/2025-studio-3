@@ -4,9 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.csse3200.game.cutscene.models.object.Character;
 import com.csse3200.game.cutscene.models.object.Position;
 
-/**
- * Character state.
- */
+/** Character state. */
 public class CharacterState {
   private Character character;
   private float xOffset; // in percentage of sprite width
@@ -20,7 +18,7 @@ public class CharacterState {
 
   /**
    * Creates a new character state.
-   * 
+   *
    * @param character the character
    */
   public CharacterState(Character character) {
@@ -29,7 +27,7 @@ public class CharacterState {
 
   /**
    * Gets the character.
-   * 
+   *
    * @return the character
    */
   public Character getCharacter() {
@@ -38,7 +36,7 @@ public class CharacterState {
 
   /**
    * Sets the character.
-   * 
+   *
    * @param character the character
    */
   public void setCharacter(Character character) {
@@ -47,7 +45,7 @@ public class CharacterState {
 
   /**
    * Gets the x offset.
-   * 
+   *
    * @return the x offset
    */
   public float getxOffset() {
@@ -56,7 +54,7 @@ public class CharacterState {
 
   /**
    * Sets the x offset.
-   * 
+   *
    * @param xOffset the x offset
    */
   public void setxOffset(float xOffset) {
@@ -65,7 +63,7 @@ public class CharacterState {
 
   /**
    * Gets the y offset.
-   * 
+   *
    * @return the y offset
    */
   public float getyOffset() {
@@ -74,7 +72,7 @@ public class CharacterState {
 
   /**
    * Sets the y offset.
-   * 
+   *
    * @param yOffset the y offset
    */
   public void setyOffset(float yOffset) {
@@ -83,7 +81,7 @@ public class CharacterState {
 
   /**
    * Gets the scale.
-   * 
+   *
    * @return the scale
    */
   public float getScale() {
@@ -92,7 +90,7 @@ public class CharacterState {
 
   /**
    * Sets the scale.
-   * 
+   *
    * @param scale the scale
    */
   public void setScale(float scale) {
@@ -101,7 +99,7 @@ public class CharacterState {
 
   /**
    * Gets the on screen.
-   * 
+   *
    * @return the on screen
    */
   public boolean isOnScreen() {
@@ -110,7 +108,7 @@ public class CharacterState {
 
   /**
    * Sets the on screen.
-   * 
+   *
    * @param onScreen the on screen
    */
   public void setOnScreen(boolean onScreen) {
@@ -119,7 +117,7 @@ public class CharacterState {
 
   /**
    * Gets the texture.
-   * 
+   *
    * @return the texture
    */
   public SpriteDrawable getTexture() {
@@ -128,7 +126,7 @@ public class CharacterState {
 
   /**
    * Sets the texture.
-   * 
+   *
    * @param texture the texture
    */
   public void setTexture(SpriteDrawable texture) {
@@ -137,7 +135,7 @@ public class CharacterState {
 
   /**
    * Gets the rotation.
-   * 
+   *
    * @return the rotation
    */
   public float getRotation() {
@@ -146,7 +144,7 @@ public class CharacterState {
 
   /**
    * Sets the rotation.
-   * 
+   *
    * @param rotation the rotation
    */
   public void setRotation(float rotation) {
@@ -155,7 +153,7 @@ public class CharacterState {
 
   /**
    * Gets the opacity.
-   * 
+   *
    * @return the opacity
    */
   public float getOpacity() {
@@ -164,7 +162,7 @@ public class CharacterState {
 
   /**
    * Sets the opacity.
-   * 
+   *
    * @param opacity the opacity
    */
   public void setOpacity(float opacity) {
@@ -173,7 +171,7 @@ public class CharacterState {
 
   /**
    * Gets the position.
-   * 
+   *
    * @return the position
    */
   public Position getPosition() {
@@ -182,7 +180,7 @@ public class CharacterState {
 
   /**
    * Sets the position.
-   * 
+   *
    * @param position the position
    */
   public void setPosition(Position position) {

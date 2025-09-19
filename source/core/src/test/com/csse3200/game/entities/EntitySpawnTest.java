@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import java.util.HashMap;
 import java.util.Map;

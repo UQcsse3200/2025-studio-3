@@ -18,9 +18,12 @@ import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.RandomUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Factory for creating game terrains. */
 public class TerrainFactory {
+  private static final Logger logger = LoggerFactory.getLogger(TerrainFactory.class);
   private static final GridPoint2 MAP_SIZE = new GridPoint2(30, 30);
   private static final int TUFT_TILE_COUNT = 30;
   private static final int ROCK_TILE_COUNT = 30;
@@ -105,18 +108,30 @@ public class TerrainFactory {
   }
 
   /**
-   * Takes the level number to create a terrain component using the createLevelTerrain method.
+   * Takes the level key to create a terrain component using the createLevelTerrain method.
    *
-   * @param levelNum integer representing the level number of the terrain component being created.
-   * @return Terrain component reflecting the level number presented, which renders the terrain.
+   * @param levelKey string representing the level key of the terrain component being created.
+   * @return Terrain component reflecting the level key presented, which renders the terrain.
    */
-  public TerrainComponent createTerrain(int levelNum) {
+  public TerrainComponent createTerrain(String levelKey) {
     // Get the level config from ConfigService
-    BaseLevelConfig config = configService.getLevelConfig("level" + levelNum);
-    if (config == null) {
-      // Fallback to level 1 if specific level not found
-      config = configService.getLevelConfig("level1");
+    BaseLevelConfig config = null;
+    if (configService != null) {
+      config = configService.getLevelConfig(levelKey);
+      if (config == null) {
+        // Fallback to level 1 if specific level not found
+        config = configService.getLevelConfig("levelOne");
+      }
     }
+
+    if (config == null) {
+      // If ConfigService is unavailable or config not found, fall back to legacy behavior
+      logger.warn(
+          "Could not load level config for '{}', falling back to default terrain creation",
+          levelKey);
+      return createTerrain(TerrainType.LEVEL_ONE_MAP);
+    }
+
     return createLevelTerrain(config);
   }
 
@@ -135,8 +150,9 @@ public class TerrainFactory {
       // Fallback to default map if not specified
       mapFilePath = "images/backgrounds/level-1-map-v2.png";
     }
-    
-    TextureRegion levelMap = new TextureRegion(resourceService.getAsset(mapFilePath, Texture.class));
+
+    TextureRegion levelMap =
+        new TextureRegion(resourceService.getAsset(mapFilePath, Texture.class));
     return createLevelMap(levelMap);
   }
 

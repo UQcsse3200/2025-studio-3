@@ -10,6 +10,17 @@ public class BaseLevelConfig {
   private int rows;
   private int cols;
   private List<BaseWaveConfig> waves;
+  private String nextLevel;
+  private boolean isSlotMachine;
+
+  /**
+   * Get the is slot machine
+   *
+   * @return the is slot machine
+   */
+  public boolean isSlotMachine() {
+    return isSlotMachine;
+  }
 
   /** Default constructor */
   public BaseLevelConfig() {
@@ -18,7 +29,7 @@ public class BaseLevelConfig {
 
   /**
    * Get the level number
-   * 
+   *
    * @return the level number
    */
   public int getLevelNumber() {
@@ -27,16 +38,16 @@ public class BaseLevelConfig {
 
   /**
    * Get the map file
-   * 
+   *
    * @return the map file
    */
   public String getMapFile() {
     return mapFile;
-  } 
+  }
 
   /**
    * Get the number of rows
-   * 
+   *
    * @return the number of rows
    */
   public int getRows() {
@@ -45,7 +56,7 @@ public class BaseLevelConfig {
 
   /**
    * Get the number of columns
-   * 
+   *
    * @return the number of columns
    */
   public int getCols() {
@@ -54,7 +65,7 @@ public class BaseLevelConfig {
 
   /**
    * Get the waves
-   * 
+   *
    * @return the waves
    */
   public List<BaseWaveConfig> getWaves() {
@@ -62,30 +73,35 @@ public class BaseLevelConfig {
   }
 
   /**
-   * DeserializedLevelConfig is a wrapper class for the BaseLevelConfig class.
+   * Get the next level
+   *
+   * @return the next level
    */
-  public static class DeserializedLevelConfig {
-    private Map<String, BaseLevelConfig> config;
+  public String getNextLevel() {
+    return nextLevel;
+  }
 
-    /**
-     * Creates a new DeserializedLevelConfig.
-     */
+  /** DeserializedLevelConfig is a wrapper class for the BaseLevelConfig class. */
+  public static class DeserializedLevelConfig {
+    private HashMap<String, BaseLevelConfig> config;
+
+    /** Creates a new DeserializedLevelConfig. */
     public DeserializedLevelConfig() {
       this.config = new HashMap<>();
     }
 
     /**
      * Set the config
-     * 
+     *
      * @param config the config
      */
     public void setConfig(Map<String, BaseLevelConfig> config) {
-      this.config = new HashMap<>(config);
+      this.config = config != null ? new HashMap<>(config) : new HashMap<>();
     }
 
     /**
      * Get the config
-     * 
+     *
      * @return the config
      */
     public Map<String, BaseLevelConfig> getConfig() {

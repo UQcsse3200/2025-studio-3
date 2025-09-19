@@ -16,7 +16,7 @@ public class AdvanceAutoState implements ActionState {
 
   /**
    * Checks if the action is blocking till completion (false if async)
-   * 
+   *
    * @return True if the action is blocking till completion (false if async)
    */
   @Override
@@ -26,7 +26,7 @@ public class AdvanceAutoState implements ActionState {
 
   /**
    * Checks if the action is completed (can be disposed of)
-   * 
+   *
    * @return True if the action is completed (can be disposed of)
    */
   @Override

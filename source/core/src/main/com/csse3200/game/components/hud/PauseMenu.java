@@ -44,6 +44,9 @@ public class PauseMenu extends UIComponent {
     createDimBackground();
     createMenuTable();
     setVisible(false);
+
+    // Listen for pause events to show the menu
+    entity.getEvents().addListener("pause", this::handlePause);
   }
 
   /** Creates the dimmed background overlay */
@@ -113,7 +116,8 @@ public class PauseMenu extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("[PauseMenu] Resume button clicked");
-            entity.getEvents().trigger("resume_game");
+            entity.getEvents().trigger("resume");
+            setVisible(false);
           }
         });
 
@@ -187,6 +191,12 @@ public class PauseMenu extends UIComponent {
     dimBackground.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
     menuTable.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
     logger.info("[PauseMenu] Pause menu hidden");
+  }
+
+  /** Handles pause events to show the menu */
+  private void handlePause() {
+    logger.info("[PauseMenu] Pause event received");
+    setVisible(true);
   }
 
   /**

@@ -4,12 +4,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.dossier.DossierDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.input.InputDecorator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +17,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * DossierScreen is a screen that displays the dossier of the game.
- */
+/** DossierScreen is a screen that displays the dossier of the game. */
 public class DossierScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(DossierScreen.class);
   private Map<String, BaseEnemyConfig> enemyConfigs;
@@ -28,7 +26,7 @@ public class DossierScreen extends BaseScreen {
 
   /**
    * Constructor for the DossierScreen.
-   * 
+   *
    * @param gdxGame The GdxGame instance.
    */
   public DossierScreen(GdxGame gdxGame) {
@@ -40,9 +38,7 @@ public class DossierScreen extends BaseScreen {
     loadAssets();
   }
 
-  /**
-   * Loads the assets for the dossier screen.
-   */
+  /** Loads the assets for the dossier screen. */
   private void loadAssets() {
     List<String> assets = new ArrayList<>();
     for (String enemyKey : enemyConfigs.keySet()) {
@@ -61,9 +57,8 @@ public class DossierScreen extends BaseScreen {
   @Override
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating dossier screen UI");
-    return new Entity().addComponent(new InputDecorator(stage, 10))
-        .addComponent(
-            new DossierDisplay(game, enemyConfigs, defenderConfigs, generatorConfigs)
-        );
+    return new Entity()
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new DossierDisplay(game, enemyConfigs, defenderConfigs, generatorConfigs));
   }
 }

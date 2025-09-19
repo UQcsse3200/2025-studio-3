@@ -23,13 +23,6 @@ public interface WaveConfigProvider {
   int getMinZombiesSpawn();
 
   /**
-   * Gets the experience points gained for completing the current wave.
-   *
-   * @return the experience points
-   */
-  int getExpGained();
-
-  /**
    * Gets the enemy configuration map for the current wave.
    *
    * @return map of enemy type to spawn configuration

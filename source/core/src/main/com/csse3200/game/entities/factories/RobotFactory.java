@@ -12,13 +12,13 @@ import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -44,9 +44,7 @@ public class RobotFactory {
     TELEPORT
   }
 
-  /**
-   * Gets the config service for accessing enemy configurations.
-   */
+  /** Gets the config service for accessing enemy configurations. */
   private static ConfigService getConfigService() {
     return ServiceLocator.getConfigService();
   }
@@ -63,11 +61,11 @@ public class RobotFactory {
     ConfigService configService = getConfigService();
     BaseEnemyConfig config = null;
     switch (robotType) {
-      case FAST -> config = configService.getEnemyConfig("fast");
-      case TANKY -> config = configService.getEnemyConfig("tanky");
-      case BUNGEE -> config = configService.getEnemyConfig("bungee");
-      case STANDARD -> config = configService.getEnemyConfig("standard");
-      case TELEPORT -> config = configService.getEnemyConfig("teleport");
+      case FAST -> config = configService.getEnemyConfig("fastRobot");
+      case TANKY -> config = configService.getEnemyConfig("tankyRobot");
+      case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
+      case STANDARD -> config = configService.getEnemyConfig("standardRobot");
+      case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
     }
     return createBaseRobot(config);
   }
@@ -84,7 +82,10 @@ public class RobotFactory {
     if (cfg.isTeleportRobot()) {
       robot.addComponent(
           new TeleportTask(
-              cfg.getTeleportCooldownSeconds(), cfg.getTeleportChance(), cfg.getMaxTeleports(), laneYs));
+              cfg.getTeleportCooldownSeconds(),
+              cfg.getTeleportChance(),
+              cfg.getMaxTeleports(),
+              laneYs));
     }
     return robot;
   }
@@ -98,6 +99,9 @@ public class RobotFactory {
    * @return A robot entity.
    */
   private static Entity createBaseRobot(BaseEnemyConfig config) {
+    if (config == null) {
+      throw new IllegalArgumentException("BaseEnemyConfig cannot be null when creating robot");
+    }
 
     AITaskComponent aiComponent =
         new AITaskComponent()
@@ -146,7 +150,10 @@ public class RobotFactory {
       if (laneYs.length >= 2) {
         robot.addComponent(
             new TeleportTask(
-                config.getTeleportCooldownSeconds(), config.getTeleportChance(), config.getMaxTeleports(), laneYs));
+                config.getTeleportCooldownSeconds(),
+                config.getTeleportChance(),
+                config.getMaxTeleports(),
+                laneYs));
       }
     }
 

@@ -13,13 +13,13 @@ import com.csse3200.game.components.tasks.IdleTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
-import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -27,9 +27,7 @@ import com.csse3200.game.services.ServiceLocator;
  * instantiated — all methods and configuration are static utilities.
  */
 public class DefenceFactory {
-  /**
-   * Gets the config service for accessing defence configurations.
-   */
+  /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
     return ServiceLocator.getConfigService();
   }

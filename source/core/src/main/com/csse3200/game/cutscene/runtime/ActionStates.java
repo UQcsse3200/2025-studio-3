@@ -6,13 +6,9 @@ import com.csse3200.game.cutscene.runtime.states.AdvanceAutoState;
 import com.csse3200.game.cutscene.runtime.states.AdvanceInputState;
 import com.csse3200.game.cutscene.runtime.states.AdvanceSignalState;
 
-/**
- * Utility class for creating action states.
- */
+/** Utility class for creating action states. */
 public class ActionStates {
-  /**
-   * Private constructor to prevent instantiation.
-   */
+  /** Private constructor to prevent instantiation. */
   private ActionStates() {
     throw new IllegalStateException("Utility class");
   }

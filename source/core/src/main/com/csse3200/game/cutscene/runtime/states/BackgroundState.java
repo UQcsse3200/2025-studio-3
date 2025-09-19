@@ -2,9 +2,7 @@ package com.csse3200.game.cutscene.runtime.states;
 
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-/**
- * Background state.
- */
+/** Background state. */
 public class BackgroundState {
   private Drawable image;
   private Drawable oldImage;
@@ -13,7 +11,7 @@ public class BackgroundState {
 
   /**
    * Gets the image.
-   * 
+   *
    * @return the image
    */
   public Drawable getImage() {
@@ -22,7 +20,7 @@ public class BackgroundState {
 
   /**
    * Gets the old image.
-   * 
+   *
    * @return the old image
    */
   public Drawable getOldImage() {
@@ -31,7 +29,7 @@ public class BackgroundState {
 
   /**
    * Gets the image opacity.
-   * 
+   *
    * @return the image opacity
    */
   public float getImageOpacity() {
@@ -40,7 +38,7 @@ public class BackgroundState {
 
   /**
    * Gets the old image opacity.
-   * 
+   *
    * @return the old image opacity
    */
   public float getOldImageOpacity() {
@@ -49,7 +47,7 @@ public class BackgroundState {
 
   /**
    * Sets the image.
-   * 
+   *
    * @param newImage the new image
    */
   public void setImage(Drawable newImage) {
@@ -59,7 +57,7 @@ public class BackgroundState {
 
   /**
    * Sets the image opacity.
-   * 
+   *
    * @param imageOpacity the new image opacity
    */
   public void setImageOpacity(float imageOpacity) {
@@ -68,7 +66,7 @@ public class BackgroundState {
 
   /**
    * Sets the old image opacity.
-   * 
+   *
    * @param oldImageOpacity the new old image opacity
    */
   public void setOldImageOpacity(float oldImageOpacity) {

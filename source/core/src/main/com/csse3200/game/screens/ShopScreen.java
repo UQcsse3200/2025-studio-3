@@ -88,9 +88,9 @@ public class ShopScreen extends ScreenAdapter {
       logger.warn("ConfigService is null");
       return;
     }
-    itemTextures = new String[configService.getItemConfigs().length];
-    for (int i = 0; i < configService.getItemConfigs().length; i++) {
-      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
+    itemTextures = new String[configService.getItemConfigs().size()];
+    for (int i = 0; i < configService.getItemConfigs().size(); i++) {
+      itemTextures[i] = configService.getItemConfigValues()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();

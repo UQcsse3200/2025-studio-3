@@ -10,9 +10,7 @@ import com.csse3200.game.cutscene.runtime.components.CutsceneTickComponent;
 import com.csse3200.game.entities.Entity;
 import java.util.function.Consumer;
 
-/**
- * Service for managing cutscenes throughout the game.
- */
+/** Service for managing cutscenes throughout the game. */
 public class CutsceneService {
   private final CutsceneLoader cutsceneLoader = new CutsceneLoader();
   private final CutsceneValidator cutsceneValidator = new CutsceneValidator();
@@ -21,9 +19,7 @@ public class CutsceneService {
   private final CutsceneOrchestrator orchestrator;
   private Entity cutsceneEntity;
 
-  /**
-   * Constructor for the CutsceneService class.
-   */
+  /** Constructor for the CutsceneService class. */
   public CutsceneService() {
     this.cutscenePipeline =
         new CutscenePipeline(cutsceneLoader, cutsceneValidator, cutsceneCompiler);

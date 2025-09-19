@@ -6,10 +6,13 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.Input;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.EventHandler;
+import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public class MiniGameInputComponentTest {
+@ExtendWith(GameExtension.class)
+class MiniGameInputComponentTest {
 
   private Entity mockEntity;
   private EventHandler mockEventHandler;

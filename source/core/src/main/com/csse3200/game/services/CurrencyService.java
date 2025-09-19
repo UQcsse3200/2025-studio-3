@@ -3,9 +3,7 @@ package com.csse3200.game.services;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** 
- * Service for managing in-level currency.
- * */
+/** Service for managing in-level currency. */
 public class CurrencyService {
   private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
   private int amount;

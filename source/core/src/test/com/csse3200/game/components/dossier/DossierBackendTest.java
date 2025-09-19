@@ -7,7 +7,6 @@ import static org.mockito.Mockito.mock;
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
-import com.csse3200.game.entities.configs.NPCConfigs;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,23 +1,22 @@
 package com.csse3200.game.entities.configs;
 
+import java.util.HashMap;
 import java.util.Map;
 
-/**
- * BaseWaveConfig is a class that represents a wave configuration.
- */
+/** BaseWaveConfig is a class that represents a wave configuration. */
 public class BaseWaveConfig {
   private int waveWeight;
   private int minZombiesSpawn;
-  private Map<String, BaseSpawnConfig> spawnConfigs;
+  private HashMap<String, BaseSpawnConfig> spawnConfigs;
 
   /** Creates a new BaseWaveConfig with default values. */
   public BaseWaveConfig() {
-    // Default constructor
+    this.spawnConfigs = new HashMap<>();
   }
 
   /**
    * Get the wave weight
-   * 
+   *
    * @return the wave weight
    */
   public int getWaveWeight() {
@@ -26,7 +25,7 @@ public class BaseWaveConfig {
 
   /**
    * Get the minimum number of zombies to spawn
-   * 
+   *
    * @return the minimum number of zombies to spawn
    */
   public int getMinZombiesSpawn() {
@@ -35,7 +34,7 @@ public class BaseWaveConfig {
 
   /**
    * Get the spawn configurations
-   * 
+   *
    * @return the spawn configurations
    */
   public Map<String, BaseSpawnConfig> getSpawnConfigs() {
@@ -44,11 +43,11 @@ public class BaseWaveConfig {
 
   /**
    * Get the spawn configuration for a given enemy type
-   * 
+   *
    * @param enemyType the enemy type
    * @return the spawn configuration for the given enemy type
    */
   public BaseSpawnConfig getSpawnConfig(String enemyType) {
-    return spawnConfigs.get(enemyType);
+    return spawnConfigs != null ? spawnConfigs.get(enemyType) : null;
   }
 }

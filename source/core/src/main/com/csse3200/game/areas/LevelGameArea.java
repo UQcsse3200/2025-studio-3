@@ -1,6 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -16,14 +15,20 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.ItemFactory;
 import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import java.util.ArrayList;
@@ -49,43 +54,83 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
-  private final Entity[] spawnedUnits;
+  private Entity[] spawnedUnits;
   private Entity selectedUnit;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
-
   private Entity gameOverEntity;
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
 
+  // Level configuration
+  private String currentLevelKey;
+  private int levelRows = 5; // Default fallback
+  private int levelCols = 10; // Default fallback
+
   /**
-   * Initialise this LevelGameArea to use the provided TerrainFactory.
+   * Initialise this LevelGameArea to use the provided TerrainFactory for a specific level.
    *
    * @param terrainFactory TerrainFactory used to create the terrain for the GameArea.
+   * @param levelKey the level key to load
    */
-  public LevelGameArea(TerrainFactory terrainFactory) {
+  public LevelGameArea(TerrainFactory terrainFactory, String levelKey) {
     super();
+    this.terrainFactory = terrainFactory;
+    this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
+
+    // Load level configuration
+    loadLevelConfiguration();
+
     setScaling();
 
-    this.terrainFactory = terrainFactory;
     selectedUnit = null; // None selected at level load
-    spawnedUnits = new Entity[LEVEL_ONE_ROWS * LEVEL_ONE_COLS];
+    spawnedUnits = new Entity[levelRows * levelCols];
+  }
+
+  /** Loads level configuration from ConfigService. */
+  private void loadLevelConfiguration() {
+    logger.debug(
+        "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
+    ConfigService configService = ServiceLocator.getConfigService();
+
+    if (configService == null) {
+      logger.error("[LevelGameArea] ConfigService is null!");
+      return;
+    }
+
+    BaseLevelConfig levelConfig = configService.getLevelConfig(currentLevelKey);
+
+    if (levelConfig != null) {
+      levelRows = levelConfig.getRows();
+      levelCols = levelConfig.getCols();
+      logger.info(
+          "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
+          currentLevelKey,
+          levelRows,
+          levelCols);
+    } else {
+      logger.warn(
+          "[LevelGameArea] Could not load configuration for level {}, using defaults: {}x{}",
+          currentLevelKey,
+          levelRows,
+          levelCols);
+    }
   }
 
   /**
-   * Uses stage height and width (screen resolution from {@link RenderService}) to set variables relating to tile, grid and
-   * character sizing and placement.
+   * Uses stage height and width (screen resolution from {@link RenderService}) to set variables
+   * relating to tile, grid and character sizing and placement.
    */
   public void setScaling() {
     stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
     float stageWidth = ServiceLocator.getRenderService().getStage().getWidth();
     stageToWorldRatio = Renderer.GAME_SCREEN_WIDTH / stageWidth;
 
-    float gridHeight = (stageHeight * stageToWorldRatio) / 8f * LEVEL_ONE_ROWS;
-    tileSize = gridHeight / LEVEL_ONE_ROWS;
+    float gridHeight = (stageHeight * stageToWorldRatio) / 8f * levelRows;
+    tileSize = gridHeight / levelRows;
     xOffset = 2f * tileSize;
     yOffset = tileSize;
   }
@@ -93,46 +138,65 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
-    loadAssets();
-
     displayUI();
-    spawnMap(1);
-    spawnGrid(LEVEL_ONE_ROWS, LEVEL_ONE_COLS);
-
+    spawnMap(currentLevelKey);
+    spawnGrid(levelRows, levelCols);
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
-
-    playMusic();
   }
-
 
   /** Spawns the level UI */
   private void displayUI() {
     Entity ui = new Entity();
-    // add components here for additional UI Elements
-    unitList.put(
-        "images/entities/defences/sling_shooter_front.png", DefenceFactory::createSlingShooter);
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    ConfigService configService = ServiceLocator.getConfigService();
 
-    unitList.put("images/entities/defences/forge_1.png", DefenceFactory::createFurnace);
+    for (String defenceKey : profile.getArsenal().getKeys()) {
+      if (defenceKey.equals("slingshooter")) {
+        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
+        if (defenderConfig != null) {
+          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createSlingShooter);
+        }
+      }
+      if (defenceKey.equals("furnace")) {
+        BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
+        if (generatorConfig != null) {
+          unitList.put(generatorConfig.getAssetPath(), DefenceFactory::createFurnace);
+        }
+      }
+    }
 
-    for (String itemKey :
-        ServiceLocator.getProfileService().getProfile().getInventory().getKeys()) {
-      if (itemKey.equals("grenade")) {
-        itemList.put("images/entities/items/grenade.png", ItemFactory::createGrenade);
+    Inventory inventory = profile.getInventory();
+    if (inventory.contains("grenade")) {
+      BaseItemConfig grenadeConfig = configService.getItemConfig("grenade");
+      if (grenadeConfig != null) {
+        itemList.put(grenadeConfig.getAssetPath(), ItemFactory::createGrenade);
       }
-      if (itemKey.equals("coffee")) {
-        itemList.put("images/entities/items/coffee.png", ItemFactory::createCoffee);
+    }
+    if (inventory.contains("coffee")) {
+      BaseItemConfig coffeeConfig = configService.getItemConfig("coffee");
+      if (coffeeConfig != null) {
+        itemList.put(coffeeConfig.getAssetPath(), ItemFactory::createCoffee);
       }
-      if (itemKey.equals("buff")) {
-        itemList.put("images/entities/items/buff.png", ItemFactory::createBuff);
+    }
+    if (inventory.contains("buff")) {
+      BaseItemConfig buffConfig = configService.getItemConfig("buff");
+      if (buffConfig != null) {
+        itemList.put(buffConfig.getAssetPath(), ItemFactory::createBuff);
       }
-      if (itemKey.equals("emp")) {
-        itemList.put("images/entities/items/emp.png", ItemFactory::createEmp);
+    }
+    if (inventory.contains("emp")) {
+      BaseItemConfig empConfig = configService.getItemConfig("emp");
+      if (empConfig != null) {
+        itemList.put(empConfig.getAssetPath(), ItemFactory::createEmp);
       }
-      if (itemKey.equals("nuke")) {
-        itemList.put("images/entities/items/nuke.png", ItemFactory::createNuke);
+    }
+    if (inventory.contains("nuke")) {
+      BaseItemConfig nukeConfig = configService.getItemConfig("nuke");
+      if (nukeConfig != null) {
+        itemList.put(nukeConfig.getAssetPath(), ItemFactory::createNuke);
       }
     }
 
@@ -149,14 +213,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Creates the map in the {@link TerrainFactory} and spawns it in the correct position. */
   /** Creates the map as a single image using MapFactory and spawns it in the correct position. */
-  private void spawnMap(int level) {
-    logger.debug("Spawning level one map");
+  private void spawnMap(String levelKey) {
+    logger.debug("Spawning map for level {}", levelKey);
 
     // Use MapFactory for single-entry map creation
     MapFactory mapFactory = new MapFactory(terrainFactory);
-    Entity mapEntity = mapFactory.createLevelMap(level);
-    // Create the background terrain (single image map)
-    terrain = terrainFactory.createTerrain(1);
+    Entity mapEntity = mapFactory.createLevelMap(levelKey);
+    terrain = terrainFactory.createTerrain(levelKey);
 
     if (mapEntity != null) {
       spawnEntity(mapEntity);
@@ -195,32 +258,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /** Unloads the level assets form the {@link ResourceService} */
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(levelTextures);
-    resourceService.unloadAssets(levelTextureAtlases);
-    resourceService.unloadAssets(levelSounds);
-    resourceService.unloadAssets(levelMusic);
-  }
-
-  /** Extends the super method to stop music and unload assets. */
-  @Override
-  public void dispose() {
-    super.dispose();
-    ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class).stop();
-    this.unloadAssets();
-  }
-
-  /** Starts the music */
-  private void playMusic() {
-    Music music = ServiceLocator.getResourceService().getAsset(BACKGROUND_MUSIC, Music.class);
-    music.setLooping(true);
-    music.setVolume(0.3f);
-    music.play();
-  }
-
   /**
    * Getter for grid
    *
@@ -243,8 +280,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
-    col = Math.clamp(col, 0, LEVEL_ONE_COLS - 1);
-    row = Math.clamp(row, 0, LEVEL_ONE_ROWS - 1);
+    col = Math.clamp(col, 0, levelCols - 1);
+    row = Math.clamp(row, 0, levelRows - 1);
 
     // place on that grid cell (bottom-left of the tile)
     float tileX = xOffset + tileSize * col;
@@ -282,11 +319,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     int bestRow = -1;
     int bestCol = -1;
 
-    final int total = LEVEL_ONE_ROWS * LEVEL_ONE_COLS;
+    final int total = levelRows * levelCols;
 
     for (int i = 0; i < total; i++) {
-      int row = i / LEVEL_ONE_COLS;
-      int col = i % LEVEL_ONE_COLS;
+      int row = i / levelCols;
+      int col = i % levelCols;
 
       float cx = xOffset + tileSize * col + tileSize * 0.5f;
       float cy = yOffset + tileSize * row + tileSize * 0.5f;
@@ -309,7 +346,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    float spawnCol = Math.min(bestCol + 0.5f, LEVEL_ONE_COLS - 0.01f); // avoid going off-map
+    float spawnCol = Math.min(bestCol + 0.5f, levelCols - 0.01f); // avoid going off-map
     Entity unit = RobotFactory.createRobotType(robotType);
 
     float worldX = xOffset + tileSize * spawnCol;
@@ -373,8 +410,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   @Override
   public void spawnUnit(int position) {
     // Get and set position coords
-    float tileX = xOffset + tileSize * (position % LEVEL_ONE_COLS);
-    int row = position / LEVEL_ONE_COLS; // line required to make Sonarqube happy
+    float tileX = xOffset + tileSize * (position % levelCols);
+    int row = position / levelCols; // line required to make Sonarqube happy
     float tileY = yOffset + tileSize * row;
     Vector2 entityPos = new Vector2(tileX, tileY);
 
@@ -390,7 +427,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTileFromXY(tileX, tileY);
 
-    // Where entity to be spawned is an Item and the player has such item in their inventory
+    // Where entity to be spawned is an Item and the player has such item in their
+    // inventory
     ItemComponent item = newEntity.getComponent(ItemComponent.class);
     if (item != null
         && !ServiceLocator.getProfileService()
@@ -420,8 +458,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               spawnPosition,
               (int) tileSize,
               new Vector2(
-                  (float) (xOffset * 0.25 + LEVEL_ONE_COLS * tileSize),
-                  (float) (tileSize * -0.75)));
+                  (float) (xOffset * 0.25 + levelCols * tileSize), (float) (tileSize * -0.75)));
 
       // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
       Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");

@@ -22,9 +22,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * DossierDisplay is a class that displays the dossier of the game.
- */
+/** DossierDisplay is a class that displays the dossier of the game. */
 public class DossierDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
   private final GdxGame game;
@@ -41,15 +39,17 @@ public class DossierDisplay extends UIComponent {
 
   /**
    * Constructor to display the dossier.
-   * 
+   *
    * @param game the game instance
    * @param enemyConfigs the enemy configs
    * @param defenderConfigs the defender configs
    * @param generatorConfigs the generator configs
    */
-  public DossierDisplay(GdxGame game, Map<String, BaseEnemyConfig> enemyConfigs, 
-                       Map<String, BaseDefenderConfig> defenderConfigs, 
-                       Map<String, BaseGeneratorConfig> generatorConfigs) {
+  public DossierDisplay(
+      GdxGame game,
+      Map<String, BaseEnemyConfig> enemyConfigs,
+      Map<String, BaseDefenderConfig> defenderConfigs,
+      Map<String, BaseGeneratorConfig> generatorConfigs) {
     this.game = game;
     this.enemyConfigs = enemyConfigs;
     this.defenderConfigs = defenderConfigs;
@@ -66,9 +66,7 @@ public class DossierDisplay extends UIComponent {
     addActors();
   }
 
-  /**
-   * Adds all tables to the stage.
-   */
+  /** Adds all tables to the stage. */
   private void addActors() {
     Label title = TypographyFactory.createTitle("Dossier");
     createCloseButton();
@@ -118,7 +116,8 @@ public class DossierDisplay extends UIComponent {
                 String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
                 entities = new String[defenderKeys.length + generatorKeys.length];
                 System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
-                System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
+                System.arraycopy(
+                    generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
               }
               currentEntity = 0;
               // Rebuild UI for the new type
@@ -183,8 +182,7 @@ public class DossierDisplay extends UIComponent {
               String currentEntityName = entities[(int) index];
               nameLabel.setText(dossierManager.getName(currentEntityName));
               infoLabel.setText(dossierManager.getInfo(currentEntityName));
-              spriteImage.setDrawable(
-                  dossierManager.getSprite(currentEntityName).getDrawable());
+              spriteImage.setDrawable(dossierManager.getSprite(currentEntityName).getDrawable());
             });
   }
 

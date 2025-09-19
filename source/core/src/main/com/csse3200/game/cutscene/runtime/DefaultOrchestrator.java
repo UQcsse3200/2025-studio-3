@@ -101,9 +101,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
       beatStarted = true;
     }
 
-    active.forEach(
-        actionState -> actionState.tick(dtMs)
-        );
+    active.forEach(actionState -> actionState.tick(dtMs));
 
     if (!active.isEmpty() && active.getFirst().done()) {
       active.removeFirst();

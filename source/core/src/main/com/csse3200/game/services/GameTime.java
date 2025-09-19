@@ -11,9 +11,7 @@ public class GameTime {
   private final long startTime;
   private float timeScale = 1f;
 
-  /**
-   * Constructor for the GameTime class.
-   */
+  /** Constructor for the GameTime class. */
   public GameTime() {
     startTime = TimeUtils.millis();
     logger.debug("Setting game start time to {}", startTime);
@@ -21,7 +19,7 @@ public class GameTime {
 
   /**
    * Set the speed of time passing. This affects getDeltaTime()
-   * 
+   *
    * @param timeScale Time scale, where normal speed is 1.0, no time passing is 0.0
    */
   public void setTimeScale(float timeScale) {
@@ -31,7 +29,7 @@ public class GameTime {
 
   /**
    * Get the time since the last frame in seconds, scaled by time scale
-   * 
+   *
    * @return time passed since the last frame in seconds, scaled by time scale.
    */
   public float getDeltaTime() {
@@ -40,7 +38,7 @@ public class GameTime {
 
   /**
    * Get the raw time since the last frame in seconds
-   * 
+   *
    * @return time passed since the last frame in seconds, not affected by time scale.
    */
   public float getRawDeltaTime() {
@@ -49,7 +47,7 @@ public class GameTime {
 
   /**
    * Get the time since the game started in milliseconds
-   * 
+   *
    * @return time passed since the game started in milliseconds
    */
   public long getTime() {
@@ -58,7 +56,7 @@ public class GameTime {
 
   /**
    * Get the time since the last time in milliseconds
-   * 
+   *
    * @param lastTime the time to get the time since
    * @return the time since the last time
    */

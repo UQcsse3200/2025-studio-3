@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Cutscene compiler.
- */
+/** Cutscene compiler. */
 public class CutsceneCompiler {
   // String constants for commonly used field names
   private static final String AWAIT_FIELD = "await";
@@ -81,7 +79,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates an action data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the action data object
    */
@@ -105,7 +103,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates an audio play data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the audio play data object
    */
@@ -113,13 +111,14 @@ public class CutsceneCompiler {
     AudioBus bus = AudioBus.fromString((String) action.fields.get("bus"));
     Sound sound = getSound((String) action.fields.get("soundId"));
     Float volume = ((Double) action.fields.get("volume")).floatValue();
-    
-    Float pitch = action.fields.get("pitch") != null 
-        ? ((Double) action.fields.get("pitch")).floatValue() : null;
-    Float pan = action.fields.get("pan") != null 
-        ? ((Double) action.fields.get("pan")).floatValue() : null;
-    boolean loop = action.fields.get("loop") != null 
-        && (boolean) action.fields.get("loop");
+
+    Float pitch =
+        action.fields.get("pitch") != null
+            ? ((Double) action.fields.get("pitch")).floatValue()
+            : null;
+    Float pan =
+        action.fields.get("pan") != null ? ((Double) action.fields.get("pan")).floatValue() : null;
+    boolean loop = action.fields.get("loop") != null && (boolean) action.fields.get("loop");
     boolean await = (boolean) action.fields.get(AWAIT_FIELD);
 
     return new AudioPlayData(bus, sound, volume, pitch, pan, loop, await);
@@ -127,7 +126,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates an audio set data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the audio set data object
    */
@@ -139,7 +138,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates an audio stop data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the audio stop data object
    */
@@ -152,7 +151,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a background set data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the background set data object
    */
@@ -166,7 +165,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a character enter data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the character enter data object
    */
@@ -182,7 +181,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a character exit data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the character exit data object
    */
@@ -196,7 +195,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a choice data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the choice data object
    */
@@ -207,12 +206,12 @@ public class CutsceneCompiler {
     for (Object choiceObject : (List<?>) action.fields.get("choices")) {
       @SuppressWarnings("unchecked")
       Map<String, Object> choiceData = (Map<String, Object>) choiceObject;
-      
+
       String type = (String) choiceData.get("type");
       String line = (String) choiceData.get("line");
       String cutsceneId = (String) choiceData.get("cutsceneId");
       String entryBetId = (String) choiceData.get("entryBeatId");
-      
+
       choices.add(new Choice(type, line, cutsceneId, entryBetId));
     }
 
@@ -221,7 +220,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a dialogue chorus data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the dialogue chorus data object
    */
@@ -239,7 +238,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a dialogue show data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the dialogue show data object
    */
@@ -252,7 +251,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a dialogue hide data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the dialogue hide data object
    */
@@ -263,7 +262,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a goto data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the goto data object
    */
@@ -275,7 +274,7 @@ public class CutsceneCompiler {
 
   /**
    * Creates a parallel data object from an action DTO.
-   * 
+   *
    * @param action the action DTO
    * @return the parallel data object
    */

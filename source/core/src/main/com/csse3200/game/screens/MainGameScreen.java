@@ -1,17 +1,18 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
+import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
-import com.csse3200.game.components.maingame.MainGameActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -23,33 +24,28 @@ import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
-import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
-import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The game screen containing the main game.
  *
- * <p>
- * Details on libGDX screens:
- * https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
+  private Music music;
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
     "images/backgrounds/level-2-map-v1.png",
@@ -80,30 +76,30 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/enemies/red_robot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
-
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
   protected final WaveManager waveManager;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
-  protected com.badlogic.gdx.audio.Music backgroundMusic;
-  private String levelId;
   private List<String> textures = new ArrayList<>();
+  private String level;
 
   /**
    * Constructor for the main game screen.
-   * 
+   *
    * @param game the game instance
    */
   public MainGameScreen(GdxGame game) {
     this.game = game;
-    Profile profile = ServiceLocator.getProfileService().getProfile();
-    levelId = profile.getCurrentLevel();
-    // arsenal = profile.getArsenal(); - add elsewhere
-
     logger.debug("[MainGameScreen] Initialising main game screen");
-    this.waveManager = new WaveManager();
+    level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
+    logger.debug("[MainGameScreen] Profile current level: '{}'", level);
+
+    // Convert profile level format to config key format if needed
+    String levelKey = convertProfileLevelToConfigKey(level);
+    logger.debug("[MainGameScreen] Converted to level key: '{}'", levelKey);
+    this.waveManager = new WaveManager(levelKey);
 
     logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
@@ -130,7 +126,8 @@ public class MainGameScreen extends ScreenAdapter {
     // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
     waveManager.setEnemySpawnCallback(
-        (col, row, type) -> gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+        (col, row, type) ->
+            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
@@ -159,18 +156,6 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   @Override
-  public void pause() {
-    logger.info("Game paused");
-    setPaused(true);
-  }
-
-  @Override
-  public void resume() {
-    logger.info("Game resumed");
-    setPaused(false);
-  }
-
-  @Override
   public void dispose() {
     logger.debug("Disposing main game screen");
     renderer.dispose();
@@ -196,29 +181,30 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Load Defender Textures
-    for (BaseDefenderConfig defender : ServiceLocator.getConfigService().getDefenderConfigValues()) {
+    for (BaseDefenderConfig defender :
+        ServiceLocator.getConfigService().getDefenderConfigValues()) {
       textures.add(defender.getAssetPath());
     }
 
     // Load Generator Textures
-    for (BaseGeneratorConfig generator : ServiceLocator.getConfigService().getGeneratorConfigValues()) {
+    for (BaseGeneratorConfig generator :
+        ServiceLocator.getConfigService().getGeneratorConfigValues()) {
       textures.add(generator.getAssetPath());
     }
 
-    // // Load Level Textures
-    // for (BaseLevelConfig level : ServiceLocator.getConfigService().getLevelConfigValues()) {
-    //   textures.add(level.getMapFile());
-    // }
-
     // Load Music & Sounds
-    resourceService.loadMusic(new String[] { "sounds/BGM_03_mp3.mp3" });
-    resourceService.loadSounds(new String[] { "sounds/Impact4.ogg" });
+    resourceService.loadMusic(new String[] {"sounds/BGM_03_mp3.mp3"});
+    resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
 
     // Load Textures
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
     resourceService.loadTextures(textures.toArray(new String[0]));
     resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
     ServiceLocator.getResourceService().loadAll();
+    music = ServiceLocator.getResourceService().getAsset("sounds/BGM_03_mp3.mp3", Music.class);
+    music.setLooping(true);
+    music.setVolume(0.3f);
+    music.play();
   }
 
   private void unloadAssets() {
@@ -228,40 +214,28 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Creates the main game's ui including components for rendering ui elements to*
-   * the screen and
+   * Creates the main game's ui including components for rendering ui elements to* the screen and
    * capturing and handling ui input.
    */
   protected void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
-    InputComponent inputComponent = ServiceLocator.getInputService().getInputFactory().createForTerminal();
-
-    // Create pause components
-    PauseButton pauseButton = new PauseButton();
-    PauseMenu pauseMenu = new PauseMenu();
-    PauseMenuActions pauseMenuActions = new PauseMenuActions(this.game);
-    MainGameActions mainGameActions = new MainGameActions();
 
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
-        .addComponent(mainGameActions)
-        .addComponent(pauseButton)
-        .addComponent(pauseMenu)
-        .addComponent(pauseMenuActions)
+        .addComponent(new PauseButton())
+        .addComponent(new PauseMenu())
+        .addComponent(new PauseMenuActions(this.game))
         .addComponent(new Terminal())
-        .addComponent(inputComponent)
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
         .addComponent(new CurrentWaveDisplay(waveManager))
         .addComponent(new ScrapHudDisplay());
 
-
-    // Connect the pause menu, pause button, and main game screen to the main game
-    // actions
-    mainGameActions.setPauseMenu(pauseMenu);
-    mainGameActions.setPauseButton(pauseButton);
-    configureMainGameActions(mainGameActions);
+    // Add event listeners for pause/resume to the UI entity
+    ui.getEvents().addListener("pause", this::handlePause);
+    ui.getEvents().addListener("resume", this::handleResume);
 
     // Connect the CurrentWaveDisplay to the WaveManager for event listening
     waveManager.setWaveEventListener(
@@ -286,23 +260,28 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Factory method for creating the game area. Subclasses may override to provide
-   * a different area.
+   * Factory method for creating the game area. Automatically detects whether to create a regular
+   * level or slot machine area based on the level configuration.
    */
   protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
-    LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
-    levelGameArea.setWaveManager(this.waveManager);
-    return levelGameArea;
+    String levelKey = convertProfileLevelToConfigKey(level);
+
+    // Check if this level is a slot machine level
+    BaseLevelConfig levelConfig = ServiceLocator.getConfigService().getLevelConfig(levelKey);
+    if (levelConfig != null && levelConfig.isSlotMachine()) {
+      logger.info("Creating slot machine area for level {}", levelKey);
+      SlotMachineArea slotMachineArea = new SlotMachineArea(terrainFactory, levelKey);
+      slotMachineArea.setWaveManager(this.waveManager);
+      return slotMachineArea;
+    } else {
+      logger.info("Creating regular level area for level {}", levelKey);
+      LevelGameArea levelGameArea = new LevelGameArea(terrainFactory, levelKey);
+      levelGameArea.setWaveManager(this.waveManager);
+      return levelGameArea;
+    }
   }
 
-  /**
-   * Hook for configuring main game actions. Subclasses can override to bind
-   * themselves instead.
-   */
-  protected void configureMainGameActions(MainGameActions mainGameActions) {
-    mainGameActions.setMainGameScreen(this);
-  }
-
+  /** Snaps the camera to the bottom left of the screen */
   private void snapCameraBottomLeft() {
     var cam = renderer.getCamera();
 
@@ -312,41 +291,57 @@ public class MainGameScreen extends ScreenAdapter {
     cam.getEntity().setPosition(viewportWidth / 2f, viewportHeight / 2f);
   }
 
-  /** Sets the pause state of the game */
-  public void setPaused(boolean paused) {
-    this.isPaused = paused;
-    logger.info("Game paused: {}", paused);
+  /** Event handler for pause events */
+  private void handlePause() {
+    logger.info("[MainGameScreen] Game paused");
+    music.pause();
+    // Pause currency generation, pause wave manager, pause generators.
+  }
 
-    // Pause/resume music
-    if (backgroundMusic != null) {
-      if (paused) {
-        backgroundMusic.pause();
-      } else {
-        backgroundMusic.play();
+  /** Event handler for resume events */
+  private void handleResume() {
+    logger.info("[MainGameScreen] Game resumed");
+    music.play();
+    // Resume currency generation, resume wave manager, resume generators.
+  }
+
+  /**
+   * Converts profile level string to configuration key format.
+   *
+   * @param levelString the level string from profile (e.g., "level1", "level2")
+   * @return the configuration key (e.g., "levelOne", "levelTwo")
+   */
+  private String convertProfileLevelToConfigKey(String levelString) {
+    if (levelString == null) {
+      return "levelOne"; // Default to level 1
+    }
+
+    // Handle formats like "level1", "level2", etc.
+    if (levelString.toLowerCase().startsWith("level")) {
+      try {
+        String numberPart = levelString.substring(5); // Remove "level" prefix
+        int levelNumber = Integer.parseInt(numberPart);
+        switch (levelNumber) {
+          case 1:
+            return "levelOne";
+          case 2:
+            return "levelTwo";
+          default:
+            logger.warn("Unsupported level number {}, defaulting to levelOne", levelNumber);
+            return "levelOne";
+        }
+      } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
+        logger.warn("Unable to parse level number from '{}', defaulting to levelOne", levelString);
+        return "levelOne";
       }
     }
 
-    // Pause/resume sunlight generation
-    if (gameArea != null) {
-      gameArea
-          .getEntities()
-          .forEach(
-              entity -> {
-                com.csse3200.game.components.currency.CurrencyGeneratorComponent generator = entity.getComponent(
-                    com.csse3200.game.components.currency.CurrencyGeneratorComponent.class);
-                if (generator != null) {
-                  if (paused) {
-                    generator.pause();
-                  } else {
-                    generator.resume();
-                  }
-                }
-              });
+    // If it's already in the right format, return as-is
+    if (levelString.equals("levelOne") || levelString.equals("levelTwo")) {
+      return levelString;
     }
-  }
 
-  /** Returns whether the game is currently paused */
-  public boolean isPaused() {
-    return isPaused;
+    logger.warn("Unknown level format '{}', defaulting to levelOne", levelString);
+    return "levelOne";
   }
 }

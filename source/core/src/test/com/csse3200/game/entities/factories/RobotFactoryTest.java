@@ -15,7 +15,6 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
-import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -24,6 +23,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
@@ -69,7 +69,7 @@ class RobotFactoryTest {
     // Mock ConfigService
     mockConfigService = mock(ConfigService.class);
     ServiceLocator.registerConfigService(mockConfigService);
-    
+
     // Set up fake configs for each robot type
     when(mockConfigService.getEnemyConfig("standard"))
         .thenReturn(cfg(20, 5, 1.5f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
@@ -97,19 +97,19 @@ class RobotFactoryTest {
       java.lang.reflect.Field healthField = BaseEntityConfig.class.getDeclaredField("health");
       healthField.setAccessible(true);
       healthField.set(c, health);
-      
+
       java.lang.reflect.Field attackField = BaseEnemyConfig.class.getDeclaredField("attack");
       attackField.setAccessible(true);
       attackField.set(c, attack);
-      
+
       java.lang.reflect.Field speedField = BaseEnemyConfig.class.getDeclaredField("movementSpeed");
       speedField.setAccessible(true);
       speedField.set(c, speed);
-      
+
       java.lang.reflect.Field atlasField = BaseEntityConfig.class.getDeclaredField("atlasPath");
       atlasField.setAccessible(true);
       atlasField.set(c, atlas);
-      
+
       java.lang.reflect.Field scaleField = BaseEnemyConfig.class.getDeclaredField("scale");
       scaleField.setAccessible(true);
       scaleField.set(c, scale);

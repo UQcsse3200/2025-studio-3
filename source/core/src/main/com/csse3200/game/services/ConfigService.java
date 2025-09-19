@@ -7,8 +7,8 @@ import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig.DeserializedEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
-import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig.DeserializedItemConfig;
+import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig.DeserializedLevelConfig;
 import com.csse3200.game.entities.configs.DeserializedDefencesConfig;
 import com.csse3200.game.persistence.FileLoader;
@@ -35,6 +35,7 @@ public class ConfigService {
 
   /** On registration, the config service will use the FileLoader to load all config files. */
   public ConfigService() {
+    logger.info("[ConfigService] Initializing ConfigService and loading all config files...");
     Pair<Map<String, BaseDefenderConfig>, Map<String, BaseGeneratorConfig>> defenceConfigs =
         loadDefenceConfigs(DEFENCE_CONFIG_FILE);
     this.defendersConfigs = defenceConfigs.getKey();
@@ -43,6 +44,9 @@ public class ConfigService {
     this.itemConfigs = loadItemConfigs(ITEM_CONFIG_FILE);
     this.achievementConfigs = loadAchievementConfigs(ACHIEVEMENT_CONFIG_FILE);
     this.levelConfigs = loadLevelConfigs(LEVEL_CONFIG_FILE);
+    logger.info(
+        "[ConfigService] ConfigService initialization complete. Level configs loaded: {}",
+        levelConfigs != null ? levelConfigs.size() : 0);
   }
 
   /**
@@ -85,13 +89,15 @@ public class ConfigService {
 
     Map<String, BaseGeneratorConfig> generators = wrapper.getGenerators();
     if (generators == null) {
-      logger.warn("[ConfigService] Defence config file {} loaded but contains no generators", filename);
+      logger.warn(
+          "[ConfigService] Defence config file {} loaded but contains no generators", filename);
       generators = new HashMap<>();
     }
 
     Map<String, BaseDefenderConfig> defenders = wrapper.getDefenders();
     if (defenders == null) {
-      logger.warn("[ConfigService] Defence config file {} loaded but contains no configs", filename);
+      logger.warn(
+          "[ConfigService] Defence config file {} loaded but contains no configs", filename);
       defenders = new HashMap<>();
     }
 
@@ -136,7 +142,8 @@ public class ConfigService {
 
     Map<String, BaseAchievementConfig> configs = wrapper.getConfig();
     if (configs == null) {
-      logger.warn("[ConfigService] Achievement config file {} loaded but contains no configs", filename);
+      logger.warn(
+          "[ConfigService] Achievement config file {} loaded but contains no configs", filename);
       return new HashMap<>();
     }
 
@@ -145,24 +152,43 @@ public class ConfigService {
 
   /**
    * Loads level configs from a file.
-   * 
+   *
    * @param filename the filename to load from
    * @return the level configs
    */
   public Map<String, BaseLevelConfig> loadLevelConfigs(String filename) {
-    DeserializedLevelConfig wrapper = FileLoader.readClass(DeserializedLevelConfig.class, filename);
-    if (wrapper == null) {
-      logger.warn("[ConfigService] Failed to load level config file: {}", filename);
-      return new HashMap<>();
-    }
-  
-    Map<String, BaseLevelConfig> configs = wrapper.getConfig();
-    if (configs == null) {
-      logger.warn("[ConfigService] Level config file {} loaded but contains no configs", filename);
-      return new HashMap<>();
-    }
+    logger.info("[ConfigService] Starting to load level configs from: {}", filename);
+    try {
+      DeserializedLevelConfig wrapper =
+          FileLoader.readClass(DeserializedLevelConfig.class, filename);
+      if (wrapper == null) {
+        logger.error(
+            "[ConfigService] FileLoader returned null for level config file: {}", filename);
+        return new HashMap<>();
+      }
 
-    return configs;
+      logger.info("[ConfigService] Successfully parsed JSON wrapper for: {}", filename);
+      Map<String, BaseLevelConfig> configs = wrapper.getConfig();
+      if (configs == null) {
+        logger.error(
+            "[ConfigService] Level config file {} loaded but wrapper.getConfig() returned null",
+            filename);
+        return new HashMap<>();
+      }
+
+      logger.info(
+          "[ConfigService] Successfully loaded {} level configurations: {}",
+          configs.size(),
+          configs.keySet());
+      return configs;
+    } catch (Exception e) {
+      logger.error(
+          "[ConfigService] Exception while loading level configs from {}: {}",
+          filename,
+          e.getMessage(),
+          e);
+      return new HashMap<>();
+    }
   }
 
   /**
@@ -212,7 +238,15 @@ public class ConfigService {
    * @return The level config for the given key.
    */
   public BaseLevelConfig getLevelConfig(String key) {
-    return levelConfigs.get(key);
+    logger.debug(
+        "[ConfigService] Requesting level config for key: '{}', available keys: {}",
+        key,
+        levelConfigs.keySet());
+    BaseLevelConfig config = levelConfigs.get(key);
+    if (config == null) {
+      logger.warn("[ConfigService] No level config found for key: '{}'", key);
+    }
+    return config;
   }
 
   /**

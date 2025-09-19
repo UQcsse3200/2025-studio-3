@@ -59,7 +59,7 @@ class TileHitboxComponentTest {
     TerrainFactory factory = mock(TerrainFactory.class);
 
     levelGameArea =
-        new LevelGameArea(factory) {
+        new LevelGameArea(factory, "levelOne") {
           @Override
           public void create() {
             // default implementation ignored

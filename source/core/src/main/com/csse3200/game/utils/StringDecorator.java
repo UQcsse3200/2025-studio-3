@@ -29,7 +29,7 @@ public class StringDecorator<T> {
 
   /**
    * Get the object.
-   * 
+   *
    * @return the object
    */
   public T getObject() {
@@ -38,7 +38,7 @@ public class StringDecorator<T> {
 
   /**
    * Get the print function.
-   * 
+   *
    * @return the print function
    */
   public Function<T, String> getPrintFn() {

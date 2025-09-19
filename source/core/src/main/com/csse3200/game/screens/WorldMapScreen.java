@@ -19,7 +19,6 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
