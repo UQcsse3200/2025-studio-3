@@ -16,6 +16,11 @@ import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.WaveManager;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputComponent;
@@ -23,32 +28,56 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
 import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>
+ * Details on libGDX screens:
+ * https://happycoding.io/tutorials/libgdx/game-screens
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private static final String[] mainGameTextures = {
-    "images/entities/currency/normal_sunlight.png",
-    "images/entities/currency/coins.png",
-    "images/ui/plaque.png",
-    "images/entities/currency/skillpoints.png",
-    "images/ui/settings-icon.png",
-    "images/ui/menu-icon.png",
-    "images/ui/dialog.png",
-    "images/ui/achievement.png",
-    "images/ui/pause-icon.png",
+  private static final String[] MAIN_GAME_TEXTURES = {
+    "images/backgrounds/level-1-map-v2.png",
+    "images/backgrounds/level-2-map-v1.png",
+    "images/entities/minigames/selected_star.png",
+    "images/entities/defences/sling_shooter_1.png",
+    "images/entities/defences/sling_shooter_front.png",
+    "images/effects/grenade.png",
+    "images/effects/coffee.png",
+    "images/effects/emp.png",
+    "images/effects/buff.png",
+    "images/effects/nuke.png",
+    "images/entities/defences/forge_1.png",
+    "images/effects/sling_projectile.png",
+    "images/effects/sling_projectile_pad.png",
     "images/entities/currency/scrap_metal.png"
+  };
+  private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
+    "images/entities/defences/sling_shooter.atlas",
+    "images/entities/enemies/robot_placeholder.atlas",
+    "images/entities/enemies/basic_robot.atlas",
+    "images/effects/grenade.atlas",
+    "images/effects/coffee.atlas",
+    "images/effects/emp.atlas",
+    "images/effects/buff.atlas",
+    "images/entities/defences/forge.atlas",
+    "images/effects/nuke.atlas",
+    "images/entities/enemies/blue_robot.atlas",
+    "images/entities/enemies/red_robot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
 
@@ -59,12 +88,24 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
   protected com.badlogic.gdx.audio.Music backgroundMusic;
+  private String levelId;
+  private List<String> textures = new ArrayList<>();
 
+  /**
+   * Constructor for the main game screen.
+   * 
+   * @param game the game instance
+   */
   public MainGameScreen(GdxGame game) {
     this.game = game;
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    levelId = profile.getCurrentLevel();
+    // arsenal = profile.getArsenal(); - add elsewhere
+
+    logger.debug("[MainGameScreen] Initialising main game screen");
     this.waveManager = new WaveManager();
 
-    logger.debug("Initialising main game screen services");
+    logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
@@ -73,7 +114,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerCurrencyService(new CurrencyService(50, Integer.MAX_VALUE));
+    ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
 
     renderer = RenderFactory.createRenderer();
@@ -83,25 +124,17 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
-    ServiceLocator.getEntityService().register(uiHud);
-
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
     gameArea = createGameArea(terrainFactory);
-    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum conversion
+    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
+    // conversion
     waveManager.setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+        (col, row, type) -> gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
     waveManager.initialiseNewWave();
-
-    // Get reference to background music (this is a bit hacky but will be fixed later)
-    backgroundMusic =
-        ServiceLocator.getResourceService()
-            .getAsset("sounds/BGM_03_mp3.mp3", com.badlogic.gdx.audio.Music.class);
   }
 
   @Override
@@ -151,26 +184,58 @@ public class MainGameScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(mainGameTextures);
-    resourceService.loadTextureAtlases(new String[] {"images/effects/grenade.atlas"});
+
+    // Load Item Textures
+    for (BaseItemConfig item : ServiceLocator.getConfigService().getItemConfigValues()) {
+      textures.add(item.getAssetPath());
+    }
+
+    // Load Enemy Textures
+    for (BaseEnemyConfig enemy : ServiceLocator.getConfigService().getEnemyConfigValues()) {
+      textures.add(enemy.getAssetPath());
+    }
+
+    // Load Defender Textures
+    for (BaseDefenderConfig defender : ServiceLocator.getConfigService().getDefenderConfigValues()) {
+      textures.add(defender.getAssetPath());
+    }
+
+    // Load Generator Textures
+    for (BaseGeneratorConfig generator : ServiceLocator.getConfigService().getGeneratorConfigValues()) {
+      textures.add(generator.getAssetPath());
+    }
+
+    // // Load Level Textures
+    // for (BaseLevelConfig level : ServiceLocator.getConfigService().getLevelConfigValues()) {
+    //   textures.add(level.getMapFile());
+    // }
+
+    // Load Music & Sounds
+    resourceService.loadMusic(new String[] { "sounds/BGM_03_mp3.mp3" });
+    resourceService.loadSounds(new String[] { "sounds/Impact4.ogg" });
+
+    // Load Textures
+    resourceService.loadTextures(MAIN_GAME_TEXTURES);
+    resourceService.loadTextures(textures.toArray(new String[0]));
+    resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
     ServiceLocator.getResourceService().loadAll();
   }
 
   private void unloadAssets() {
     logger.debug("Unloading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(mainGameTextures);
+    resourceService.unloadAssets(MAIN_GAME_TEXTURES);
   }
 
   /**
-   * Creates the main game's ui including components for rendering ui elements to* the screen and
+   * Creates the main game's ui including components for rendering ui elements to*
+   * the screen and
    * capturing and handling ui input.
    */
   protected void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
-    InputComponent inputComponent =
-        ServiceLocator.getInputService().getInputFactory().createForTerminal();
+    InputComponent inputComponent = ServiceLocator.getInputService().getInputFactory().createForTerminal();
 
     // Create pause components
     PauseButton pauseButton = new PauseButton();
@@ -188,9 +253,12 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(inputComponent)
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay(waveManager));
+        .addComponent(new CurrentWaveDisplay(waveManager))
+        .addComponent(new ScrapHudDisplay());
 
-    // Connect the pause menu, pause button, and main game screen to the main game actions
+
+    // Connect the pause menu, pause button, and main game screen to the main game
+    // actions
     mainGameActions.setPauseMenu(pauseMenu);
     mainGameActions.setPauseButton(pauseButton);
     configureMainGameActions(mainGameActions);
@@ -218,7 +286,8 @@ public class MainGameScreen extends ScreenAdapter {
   }
 
   /**
-   * Factory method for creating the game area. Subclasses may override to provide a different area.
+   * Factory method for creating the game area. Subclasses may override to provide
+   * a different area.
    */
   protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
     LevelGameArea levelGameArea = new LevelGameArea(terrainFactory);
@@ -226,7 +295,10 @@ public class MainGameScreen extends ScreenAdapter {
     return levelGameArea;
   }
 
-  /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
+  /**
+   * Hook for configuring main game actions. Subclasses can override to bind
+   * themselves instead.
+   */
   protected void configureMainGameActions(MainGameActions mainGameActions) {
     mainGameActions.setMainGameScreen(this);
   }
@@ -260,9 +332,8 @@ public class MainGameScreen extends ScreenAdapter {
           .getEntities()
           .forEach(
               entity -> {
-                com.csse3200.game.components.currency.CurrencyGeneratorComponent generator =
-                    entity.getComponent(
-                        com.csse3200.game.components.currency.CurrencyGeneratorComponent.class);
+                com.csse3200.game.components.currency.CurrencyGeneratorComponent generator = entity.getComponent(
+                    com.csse3200.game.components.currency.CurrencyGeneratorComponent.class);
                 if (generator != null) {
                   if (paused) {
                     generator.pause();

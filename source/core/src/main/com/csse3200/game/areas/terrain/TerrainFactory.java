@@ -13,8 +13,8 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.terrain.TerrainComponent.TerrainOrientation;
 import com.csse3200.game.components.CameraComponent;
-import com.csse3200.game.entities.configs.BaseLevelGameConfig;
-import com.csse3200.game.persistence.FileLoader;
+import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.math.RandomUtils;
@@ -24,11 +24,9 @@ public class TerrainFactory {
   private static final GridPoint2 MAP_SIZE = new GridPoint2(30, 30);
   private static final int TUFT_TILE_COUNT = 30;
   private static final int ROCK_TILE_COUNT = 30;
-
   private final OrthographicCamera camera;
   private final TerrainOrientation orientation;
-
-  private final BaseLevelGameConfig configs;
+  private final ConfigService configService;
 
   /**
    * Create a terrain factory with Orthogonal orientation
@@ -48,7 +46,7 @@ public class TerrainFactory {
   public TerrainFactory(CameraComponent cameraComponent, TerrainOrientation orientation) {
     this.camera = (OrthographicCamera) cameraComponent.getCamera();
     this.orientation = orientation;
-    this.configs = FileLoader.readClass(BaseLevelGameConfig.class, "configs/levels.json");
+    this.configService = ServiceLocator.getConfigService();
   }
 
   /**
@@ -113,13 +111,13 @@ public class TerrainFactory {
    * @return Terrain component reflecting the level number presented, which renders the terrain.
    */
   public TerrainComponent createTerrain(int levelNum) {
-    // switch to be used once fully implemented, at this stage default branch only
-    switch (levelNum) {
-      default -> {
-        BaseLevelGameConfig config = new BaseLevelGameConfig();
-        return createLevelTerrain(config);
-      }
+    // Get the level config from ConfigService
+    BaseLevelConfig config = configService.getLevelConfig("level" + levelNum);
+    if (config == null) {
+      // Fallback to level 1 if specific level not found
+      config = configService.getLevelConfig("level1");
     }
+    return createLevelTerrain(config);
   }
 
   /**
@@ -129,21 +127,17 @@ public class TerrainFactory {
    *     file.
    * @return Terrain component reflecting the config presented, which renders the terrain.
    */
-  public TerrainComponent createLevelTerrain(BaseLevelGameConfig config) {
+  public TerrainComponent createLevelTerrain(BaseLevelConfig config) {
     ResourceService resourceService = ServiceLocator.getResourceService();
-    if (config.getLevelNum() == 1) {
-      TextureRegion levelMap =
-          new TextureRegion(resourceService.getAsset(config.getMapFilePath(), Texture.class));
-      return createLevelMap(levelMap);
-    } else if (config.getLevelNum() == 2) {
-      TextureRegion levelMap =
-          new TextureRegion(resourceService.getAsset(config.getMapFilePath(), Texture.class));
-      return createLevelMap(levelMap);
-    } else {
-      TextureRegion levelMap =
-          new TextureRegion(resourceService.getAsset(configs.getMapFilePath(), Texture.class));
-      return createLevelMap(levelMap);
+    // Use the map file from the config
+    String mapFilePath = config.getMapFile();
+    if (mapFilePath == null || mapFilePath.isEmpty()) {
+      // Fallback to default map if not specified
+      mapFilePath = "images/backgrounds/level-1-map-v2.png";
     }
+    
+    TextureRegion levelMap = new TextureRegion(resourceService.getAsset(mapFilePath, Texture.class));
+    return createLevelMap(levelMap);
   }
 
   /**

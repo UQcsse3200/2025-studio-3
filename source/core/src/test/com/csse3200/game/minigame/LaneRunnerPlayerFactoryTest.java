@@ -2,7 +2,6 @@ package com.csse3200.game.minigame;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
 import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -13,6 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+/**
+ * Test class for LaneRunnerPlayerFactory.
+ */
 class LaneRunnerPlayerFactoryTest {
 
   private MockedStatic<ServiceLocator> mockedServiceLocator;

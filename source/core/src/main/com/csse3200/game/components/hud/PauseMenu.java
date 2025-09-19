@@ -14,8 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.maingame.MainGameActions;
-import com.csse3200.game.screens.MainGameScreen;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -35,7 +33,6 @@ public class PauseMenu extends UIComponent {
   private Image dimBackground;
   private Table menuTable;
   private TextButton resumeButton;
-  private TextButton settingsButton;
   private TextButton quitLevelButton;
   private TextButton mainMenuButton;
   private TextButton exitGameButton;
@@ -47,16 +44,6 @@ public class PauseMenu extends UIComponent {
     createDimBackground();
     createMenuTable();
     setVisible(false);
-
-    // Check if the game is already paused (e.g., returning from settings)
-    // This doesn't seem to be working currently.
-    if (entity.getComponent(MainGameActions.class) != null) {
-      MainGameScreen mainGameScreen =
-          entity.getComponent(MainGameActions.class).getMainGameScreen();
-      if (mainGameScreen != null && mainGameScreen.isPaused()) {
-        show();
-      }
-    }
   }
 
   /** Creates the dimmed background overlay */
@@ -105,7 +92,6 @@ public class PauseMenu extends UIComponent {
 
     // Add buttons to table
     menuTable.add(resumeButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
-    menuTable.add(settingsButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
     menuTable
         .add(quitLevelButton)
         .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -128,17 +114,6 @@ public class PauseMenu extends UIComponent {
           public void clicked(InputEvent event, float x, float y) {
             logger.info("[PauseMenu] Resume button clicked");
             entity.getEvents().trigger("resume_game");
-          }
-        });
-
-    // Settings button
-    settingsButton = ButtonFactory.createButton("Settings");
-    settingsButton.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            logger.info("[PauseMenu] Settings button clicked");
-            entity.getEvents().trigger("settings");
           }
         });
 

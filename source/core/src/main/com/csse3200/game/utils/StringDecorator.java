@@ -26,4 +26,22 @@ public class StringDecorator<T> {
   public String toString() {
     return printFn.apply(object);
   }
+
+  /**
+   * Get the object.
+   * 
+   * @return the object
+   */
+  public T getObject() {
+    return object;
+  }
+
+  /**
+   * Get the print function.
+   * 
+   * @return the print function
+   */
+  public Function<T, String> getPrintFn() {
+    return printFn;
+  }
 }

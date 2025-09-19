@@ -19,6 +19,7 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +42,7 @@ public class WorldMapScreen extends BaseScreen {
   private static final float CAMERA_LERP_SPEED = 8.0f;
   private int zoomIdx = 0;
   private Entity playerEntity;
+  private List<String> textures = new ArrayList<>();
 
   /**
    * Constructor for the world map screen.
@@ -101,7 +103,6 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Loads the textures for the nodes. */
   private void loadTextures() {
-    List<String> textures = new ArrayList<>();
     for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
       textures.add(node.getNodeTexture());
     }

@@ -11,6 +11,7 @@
       "description": "Just a regular old robot, not too threatening...",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
+      "coinsRewarded": 1,
       "maxTeleports": 0,
       "invulnerabilityMs": 0
     },
@@ -25,6 +26,7 @@
       "description": "A robot optimised for speed.",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
+      "coinsRewarded": 2,
       "maxTeleports": 0,
       "invulnerabilityMs": 0
     },
@@ -39,6 +41,7 @@
       "description": "A regular old robot, just... bigger.",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
+      "coinsRewarded": 3,
       "maxTeleports": 0,
       "invulnerabilityMs": 0
     },
@@ -53,6 +56,7 @@
       "description": "A bungee robot. Yeehaw!",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
+      "coinsRewarded": 2,
       "maxTeleports": 0,
       "invulnerabilityMs": 0
     },
@@ -67,6 +71,7 @@
       "description": "A teleporting robot. Watch your back.",
       "teleportCooldownSeconds": 4,
       "teleportChance": 0.6,
+      "coinsRewarded": 2,
       "maxTeleports": 3,
       "invulnerabilityMs": 200
     }

@@ -13,8 +13,7 @@ import com.csse3200.game.components.tasks.IdleTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
-import com.csse3200.game.entities.configs.NPCConfigs;
-import com.csse3200.game.persistence.FileLoader;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -29,11 +28,11 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class DefenceFactory {
   /**
-   * Loads defence configuration data from JSON. The configs object is populated at class-load time.
-   * If the file is missing or deserialization fails, this will be null.
+   * Gets the config service for accessing defence configurations.
    */
-  private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Defences4.json");
+  private static ConfigService getConfigService() {
+    return ServiceLocator.getConfigService();
+  }
 
   /**
    * Creates a fully configured Sling Shooter defence entity.
@@ -44,7 +43,7 @@ public class DefenceFactory {
    * @return entity representing the slingshooter
    */
   public static Entity createSlingShooter() {
-    BaseDefenderConfig config = configs.slingshooter;
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("slingshooter");
     Entity defender = createBaseDefender();
 
     // start with a base defender (physics + collider)
@@ -88,7 +87,7 @@ public class DefenceFactory {
   }
 
   public static Entity createFurnace() {
-    BaseGeneratorConfig config = configs.furnace;
+    BaseGeneratorConfig config = getConfigService().getGeneratorConfig("furnace");
 
     // start with a base defender (physics + collider)
     Entity generator = createBaseDefender();

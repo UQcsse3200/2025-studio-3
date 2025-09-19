@@ -42,55 +42,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
-  private static final int LEVEL_ONE_ROWS = 5;
-  private static final int LEVEL_ONE_COLS = 10;
-  private static final String BACKGROUND_MUSIC = "sounds/BGM_03_mp3.mp3";
-  private static final String[] levelTextures = {
-    "images/backgrounds/level-1-map-v2.png",
-    "images/backgrounds/level-2-map-v1.png",
-    "images/entities/minigames/selected_star.png",
-    "images/entities/defences/sling_shooter_1.png",
-    "images/entities/defences/sling_shooter_front.png",
-    "images/entities/items/grenade.png",
-    "images/entities/items/coffee.png",
-    "images/entities/items/emp.png",
-    "images/entities/items/buff.png",
-    "images/entities/items/nuke.png",
-    "images/entities/items/shield.png",
-    "images/entities/items/charmHack.png",
-    "images/entities/items/scrapper.png",
-    "images/entities/items/conscriptionOrder.png",
-    "images/entities/items/doomHack.png",
-    "images/effects/grenade.png",
-    "images/effects/coffee.png",
-    "images/effects/emp.png",
-    "images/effects/buff.png",
-    "images/effects/nuke.png",
-    "images/entities/defences/forge_1.png",
-    "images/effects/sling_projectile.png",
-    "images/effects/sling_projectile_pad.png"
-  };
-
-  private static final String[] levelTextureAtlases = {
-    "images/entities/defences/sling_shooter.atlas",
-    "images/entities/enemies/robot_placeholder.atlas",
-    "images/entities/enemies/basic_robot.atlas",
-    "images/effects/grenade.atlas",
-    "images/effects/coffee.atlas",
-    "images/effects/emp.atlas",
-    "images/effects/buff.atlas",
-    "images/entities/defences/forge.atlas",
-    "images/effects/nuke.atlas",
-    "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
-  };
-
-  private static final String[] levelSounds = {"sounds/Impact4.ogg"};
-  private static final String[] levelMusic = {BACKGROUND_MUSIC};
-
   private final TerrainFactory terrainFactory;
-
-  // Offset values
   private float xOffset;
   private float yOffset;
   private float tileSize;
@@ -104,7 +56,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
-  // Initialising an Entity
   private Entity gameOverEntity;
   // Drag and drop variables
   private DragOverlay dragOverlay;
@@ -125,8 +76,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Uses stage height and width (screen resolution from {@link
-   * com.csse3200.game.rendering.RenderService}) to set variables relating to tile, grid and
+   * Uses stage height and width (screen resolution from {@link RenderService}) to set variables relating to tile, grid and
    * character sizing and placement.
    */
   public void setScaling() {
@@ -157,21 +107,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     playMusic();
   }
 
-  /** Uses the {@link ResourceService} to load the assets for the level. */
-  private void loadAssets() {
-    logger.debug("Loading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.loadTextures(levelTextures);
-    resourceService.loadTextureAtlases(levelTextureAtlases);
-    resourceService.loadSounds(levelSounds);
-    resourceService.loadMusic(levelMusic);
-    resourceService.loadAll();
-
-    while (!resourceService.loadForMillis(10)) {
-      // This could be upgraded to a loading screen
-      logger.info("Loading... {}%", resourceService.getProgress());
-    }
-  }
 
   /** Spawns the level UI */
   private void displayUI() {

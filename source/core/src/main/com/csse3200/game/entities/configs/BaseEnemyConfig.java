@@ -14,6 +14,7 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   private float teleportChance;
   private int maxTeleports;
   private int invulnerabilityMs;
+  private int coinsRewarded;
 
   /**
    * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
@@ -96,6 +97,15 @@ public class BaseEnemyConfig extends BaseEntityConfig {
    */
   public float getScale() {
     return scale;
+  }
+
+  /**
+   * Gets the coins rewarded value for this entity.
+   *
+   * @return the coins rewarded value
+   */
+  public int getCoinsRewarded() {
+    return coinsRewarded;
   }
 
   /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */

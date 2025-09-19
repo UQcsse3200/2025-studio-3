@@ -137,7 +137,7 @@ public class SettingsMenuDisplay extends UIComponent {
     DisplayMode active = Gdx.graphics.getDisplayMode();
 
     for (StringDecorator<DisplayMode> stringMode : modes) {
-      DisplayMode mode = stringMode.object;
+      DisplayMode mode = stringMode.getObject();
       if (active.width == mode.width
           && active.height == mode.height
           && active.refreshRate == mode.refreshRate) {
@@ -222,7 +222,7 @@ public class SettingsMenuDisplay extends UIComponent {
     }
     settings.fullscreen = fullScreenCheck.isChecked();
     settings.uiScale = uiScaleSlider.getValue();
-    settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().object);
+    settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().getObject());
     settings.vsync = vsyncCheck.isChecked();
 
     UserSettings.set(settings, true);

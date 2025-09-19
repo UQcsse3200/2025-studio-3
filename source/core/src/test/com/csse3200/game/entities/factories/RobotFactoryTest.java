@@ -14,8 +14,8 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
-import com.csse3200.game.entities.configs.NPCConfigs;
-import com.csse3200.game.persistence.FileLoader;
+import com.csse3200.game.entities.configs.BaseEntityConfig;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -30,11 +30,10 @@ import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 
 class RobotFactoryTest {
 
-  private MockedStatic<FileLoader> fileLoaderMock;
+  private ConfigService mockConfigService;
 
   @BeforeEach
   void setUp() {
@@ -67,32 +66,56 @@ class RobotFactoryTest {
       when(mockAtlas.findRegion(name)).thenReturn(region);
     }
 
-    // Fake configs
-    NPCConfigs fake = new NPCConfigs();
-    fake.standardRobot = cfg(20, 5, 1.5f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
-    fake.fastRobot = cfg(15, 4, 3.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
-    fake.tankyRobot = cfg(40, 7, 0.9f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
-    fake.bungeeRobot = cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f);
-
-    fileLoaderMock = mockStatic(FileLoader.class);
-    fileLoaderMock
-        .when(() -> FileLoader.readClass(eq(NPCConfigs.class), anyString()))
-        .thenReturn(fake);
+    // Mock ConfigService
+    mockConfigService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(mockConfigService);
+    
+    // Set up fake configs for each robot type
+    when(mockConfigService.getEnemyConfig("standard"))
+        .thenReturn(cfg(20, 5, 1.5f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
+    when(mockConfigService.getEnemyConfig("fast"))
+        .thenReturn(cfg(15, 4, 3.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
+    when(mockConfigService.getEnemyConfig("tanky"))
+        .thenReturn(cfg(40, 7, 0.9f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
+    when(mockConfigService.getEnemyConfig("bungee"))
+        .thenReturn(cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
+    when(mockConfigService.getEnemyConfig("teleport"))
+        .thenReturn(cfg(30, 5, 1.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
   }
 
   @AfterEach
   void tearDown() {
-    if (fileLoaderMock != null) fileLoaderMock.close();
+    ServiceLocator.clear();
   }
 
   private static BaseEnemyConfig cfg(
       int health, int attack, float speed, String atlas, float scale) {
+    // Create a BaseEnemyConfig with reflection since fields are private
     BaseEnemyConfig c = new BaseEnemyConfig();
-    c.health = health;
-    c.attack = attack;
-    c.movementSpeed = speed;
-    c.atlasFilePath = atlas;
-    c.scale = scale;
+    try {
+      // Use reflection to set private fields for testing
+      java.lang.reflect.Field healthField = BaseEntityConfig.class.getDeclaredField("health");
+      healthField.setAccessible(true);
+      healthField.set(c, health);
+      
+      java.lang.reflect.Field attackField = BaseEnemyConfig.class.getDeclaredField("attack");
+      attackField.setAccessible(true);
+      attackField.set(c, attack);
+      
+      java.lang.reflect.Field speedField = BaseEnemyConfig.class.getDeclaredField("movementSpeed");
+      speedField.setAccessible(true);
+      speedField.set(c, speed);
+      
+      java.lang.reflect.Field atlasField = BaseEntityConfig.class.getDeclaredField("atlasPath");
+      atlasField.setAccessible(true);
+      atlasField.set(c, atlas);
+      
+      java.lang.reflect.Field scaleField = BaseEnemyConfig.class.getDeclaredField("scale");
+      scaleField.setAccessible(true);
+      scaleField.set(c, scale);
+    } catch (Exception e) {
+      throw new RuntimeException("Failed to create test config", e);
+    }
     return c;
   }
 
