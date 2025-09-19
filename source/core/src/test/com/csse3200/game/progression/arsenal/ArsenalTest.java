@@ -21,7 +21,7 @@ class ArsenalTest {
   void shouldCreate() {
     List<String> defences = arsenal.getKeys();
     assertEquals(2, defences.size());
-    assertTrue(defences.contains("slingShooter"));
+    assertTrue(defences.contains("slingshooter"));
     assertTrue(defences.contains("furnace"));
   }
 
