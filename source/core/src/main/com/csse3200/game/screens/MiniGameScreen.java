@@ -32,7 +32,7 @@ public class MiniGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private static final String[] laneRunnerTextures = {
-    "images/backgrounds/bg.png", "images/entities/character.png", "images/backgrounds/bg.png"
+    "images/backgrounds/bg.png", "images/entities/character.png"
   };
 
   /**
