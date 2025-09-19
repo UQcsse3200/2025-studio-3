@@ -84,10 +84,6 @@ public class MainGameScreen extends ScreenAdapter {
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
   private String level;
-  private boolean doIntroPan = true;
-  private float panElapsed = 0f;
-  private float panDuration = 2.0f;
-  private float panStartX, panTargetX;
 
   /**
    * Constructor for the main game screen.
@@ -134,13 +130,6 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea.create();
 
     snapCameraBottomLeft();
-    var camComp = renderer.getCamera();
-    float halfVW = camComp.getCamera().viewportWidth / 2f;
-    float worldWidth = gameArea.getWorldWidth();
-    panStartX = halfVW; // current
-    panTargetX =
-        Math.max(halfVW, Math.min(worldWidth - halfVW, halfVW + (worldWidth - halfVW) * 0.35f));
-
     waveManager.initialiseNewWave();
   }
 
@@ -150,15 +139,6 @@ public class MainGameScreen extends ScreenAdapter {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
       waveManager.update(delta);
-    }
-    if (doIntroPan) {
-      panElapsed += delta;
-      float t = Math.min(1f, panElapsed / panDuration);
-      float x = com.badlogic.gdx.math.Interpolation.smoother.apply(panStartX, panTargetX, t);
-      var cam = renderer.getCamera().getCamera();
-      cam.position.x = x;
-      cam.update();
-      if (t >= 1f) doIntroPan = false;
     }
 
     renderer.render();
