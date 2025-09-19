@@ -76,10 +76,11 @@ class DialogComponentTest {
 
   @Test
   void testDialogTypeEnum() {
-    assertEquals(3, DialogType.values().length);
+    assertEquals(4, DialogType.values().length);
     assertNotNull(DialogType.INFO);
     assertNotNull(DialogType.WARNING);
     assertNotNull(DialogType.ERROR);
+    assertNotNull(DialogType.SKILL);
   }
 
   @Test
