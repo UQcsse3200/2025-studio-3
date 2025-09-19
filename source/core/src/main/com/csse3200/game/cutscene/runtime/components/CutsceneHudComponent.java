@@ -181,7 +181,9 @@ public class CutsceneHudComponent extends UIComponent {
    * @param batch Batch to render to.
    */
   @Override
-  protected void draw(SpriteBatch batch) {}
+  protected void draw(SpriteBatch batch) {
+    // No drawing needed
+  }
 
   @Override
   public void update() {

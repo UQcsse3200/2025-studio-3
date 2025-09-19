@@ -118,8 +118,7 @@ class DialogServiceTest {
 
   @Test
   void testInfoDialog_WithCallback() {
-    @SuppressWarnings("unchecked")
-    Consumer<DialogComponent> callback = mock(Consumer.class);
+    Consumer<DialogComponent> callback = mock();
 
     DialogComponent dialog = dialogService.info("Test", "Test", callback);
     assertNotNull(dialog);
@@ -145,10 +144,8 @@ class DialogServiceTest {
 
   @Test
   void testWarningDialog_WithCallbacks() {
-    @SuppressWarnings("unchecked")
-    Consumer<DialogComponent> onConfirm = mock(Consumer.class);
-    @SuppressWarnings("unchecked")
-    Consumer<DialogComponent> onCancel = mock(Consumer.class);
+    Consumer<DialogComponent> onConfirm = mock();
+    Consumer<DialogComponent> onCancel = mock();
 
     DialogComponent dialog =
         dialogService.warning("Warning", "Warning Message", onConfirm, onCancel);
@@ -175,8 +172,7 @@ class DialogServiceTest {
 
   @Test
   void testErrorDialog_WithCallback() {
-    @SuppressWarnings("unchecked")
-    Consumer<DialogComponent> callback = mock(Consumer.class);
+    Consumer<DialogComponent> callback = mock();
 
     DialogComponent dialog = dialogService.error("Error", "Error Message", callback);
     assertNotNull(dialog);

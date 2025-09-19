@@ -2,8 +2,6 @@ package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 // TODO : integrate with attack system team
 
@@ -12,10 +10,8 @@ import org.slf4j.LoggerFactory;
  * runs when there is a target within the entities range of attack
  */
 public class AttackTask extends TargetDetectionTasks {
-  private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
-
   // cooldown fields
-  private static final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+  private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
 
   /**
@@ -49,18 +45,12 @@ public class AttackTask extends TargetDetectionTasks {
     if (getDistanceToTarget() <= attackRange) {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
-      if (timeSinceLastFire >= fireCooldown) {
+      if (timeSinceLastFire >= FIRE_COOLDOWN) {
         // tell listeners (LevelGameArea) to spawn a projectile
         owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
         timeSinceLastFire = 0f;
       }
     }
-  }
-
-  /** Stops the attack */
-  @Override
-  public void stop() {
-    super.stop();
   }
 
   /**

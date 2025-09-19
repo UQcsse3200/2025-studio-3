@@ -155,18 +155,6 @@ public class CurrencyGeneratorComponent extends Component {
   /** Resumes the sunlight generation */
   public void resume() {
     isPaused = false;
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    //    if (stage != null) {
-    //      generatorAction =
-    //          Actions.forever(
-    //              Actions.sequence(Actions.delay(intervalSec),
-    // Actions.run(this::spawnOneSunRandom)));
-    //      stage.addAction(generatorAction);
-    //      logger.debug("Resumed CurrencyGenerator");
-    //    }
   }
 
   /**
