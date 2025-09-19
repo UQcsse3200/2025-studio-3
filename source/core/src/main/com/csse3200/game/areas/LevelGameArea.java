@@ -72,12 +72,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
-  private float lastTileSize;
-  private float lastXOffset;
-  private float lastYOffset;
 
   /**
-   * Initialise this LevelGameArea to use the provided TerrainFactory for a specific level.
+   * Initialise this LevelGameArea for a specific level.
    *
    * @param levelKey the level key to load
    */
@@ -86,7 +83,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
-    rememberLayoutForResize();
     selectedUnit = null;
     spawnedUnits = new Entity[levelRows * levelCols];
   }
@@ -139,12 +135,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     tileSize = viewportHeight / MAP_HEIGHT_TILES;
     xOffset = X_MARGIN_TILES * tileSize;
     yOffset = Y_MARGIN_TILES * tileSize;
-  }
-
-  private void rememberLayoutForResize() {
-    lastTileSize = tileSize;
-    lastXOffset = xOffset;
-    lastYOffset = yOffset;
   }
 
   /** Creates the game area by calling helper methods as required. */
@@ -637,7 +627,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     setScaling(); // recompute sizes from renderer/stage
     relayoutAfterScaling(oldTile, oldX, oldY);
-    rememberLayoutForResize(); // prepare for next resize
   }
 
   private void relayoutAfterScaling(float oldTile, float oldX, float oldY) {

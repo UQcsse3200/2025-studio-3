@@ -20,7 +20,7 @@ public class SlotMachineArea extends LevelGameArea {
   };
 
   /**
-   * Creates a new SlotMachineArea with the given TerrainFactory and level key.
+   * Creates a new SlotMachineArea with the level key.
    *
    * @param levelKey The level key for this slot machine area.
    */
