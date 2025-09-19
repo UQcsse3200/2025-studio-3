@@ -9,6 +9,7 @@ public class LevelGameGrid {
   private final Entity[] gridData;
   private final int cols;
   private final int rows;
+  private final Entity[] occupants;
 
   /**
    * Class constructor for LevelGameGrid.
@@ -21,6 +22,117 @@ public class LevelGameGrid {
     this.rows = rows;
     int numTiles = rows * cols;
     this.gridData = new Entity[numTiles];
+    this.occupants = new Entity[numTiles];
+  }
+
+  /**
+   * Getter for cols
+   *
+   * @return the number of cols in the grid
+   */
+  public int getCols() {
+    return cols;
+  }
+
+  /**
+   * Getter for rows
+   *
+   * @return the number of cols in the grid
+   */
+  public int getRows() {
+    return rows;
+  }
+
+  /**
+   * Helper to convert a row and column value in the grid to the linear array index
+   *
+   * @param row the row
+   * @param col the column
+   * @return the array index
+   */
+  private int idx(int row, int col) {
+    return row * cols + col;
+  }
+
+  // -------- OCCUPANCY API --------
+  public boolean isOccupied(int row, int col) {
+    return occupants[idx(row, col)] != null;
+  }
+
+  public boolean isOccupiedIndex(int index) {
+    return occupants[index] != null;
+  }
+
+  public Entity getOccupant(int row, int col) {
+    return occupants[idx(row, col)];
+  }
+
+  public Entity getOccupantIndex(int index) {
+    return occupants[index];
+  }
+
+  /**
+   * Place a unit if the tile is empty from its x, y grid position
+   *
+   * @param row the row for placement
+   * @param col the col for placement
+   * @param unit the unit to place
+   * @return true if successful otherwise false
+   */
+  public boolean placeOccupant(int row, int col, Entity unit) {
+    int i = idx(row, col);
+    if (occupants[i] != null) return false;
+    occupants[i] = unit;
+    return true;
+  }
+
+  /**
+   * Place a unit if the tile is empty from array index
+   *
+   * @param index the spot in array
+   * @param unit the unit to place
+   * @return true if successful otherwise false
+   */
+  public boolean placeOccupant(int index, Entity unit) {
+    if (occupants[index] != null) return false;
+    occupants[index] = unit;
+    return true;
+  }
+
+  /**
+   * Removes an occupant from the grid if it exists This is now Null pointer safe
+   *
+   * @param row the row for removal
+   * @param col the col for removal
+   * @param unit the unit to remove
+   * @return true if successful, otherwise false
+   */
+  public boolean removeOccupantIfMatch(int row, int col, Entity unit) {
+    int i = idx(row, col);
+    if (occupants[i] == unit) {
+      occupants[i] = null;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Clears a grid tile without a check from tile x, y
+   *
+   * @param row the row for removal
+   * @param col the col for removal
+   */
+  public void clearOccupant(int row, int col) {
+    occupants[idx(row, col)] = null;
+  }
+
+  /**
+   * Clears a grid tile without a check from tile x, y
+   *
+   * @param index the array position for removal
+   */
+  public void clearOccupantIndex(int index) {
+    occupants[index] = null;
   }
 
   /**
