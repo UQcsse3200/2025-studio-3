@@ -513,6 +513,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
       // Clear Item from tile storage
       selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+      // Clear drag/selection after using an item
+      setIsCharacterSelected(false);
+      setSelectedUnit(null);
+      cancelDrag();
       return;
     }
 
@@ -587,6 +591,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);
+    cancelDrag();
   }
 
   /**
