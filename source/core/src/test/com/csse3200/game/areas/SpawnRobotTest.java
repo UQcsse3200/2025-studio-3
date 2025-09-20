@@ -5,6 +5,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.csse3200.game.components.tile.TileHitboxComponent;
+import com.csse3200.game.components.tile.TileInputComponent;
+import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RobotFactory;
@@ -52,21 +55,25 @@ class SpawnRobotTest {
     f.set(target, value);
   }
 
-  private static Entity[] getSpawnedUnits(LevelGameArea area) throws Exception {
-    var f = LevelGameArea.class.getDeclaredField("spawnedUnits");
-    f.setAccessible(true);
-    return (Entity[]) f.get(area);
-  }
-
   private static LevelGameArea newLevelAreaWithGeometry() throws Exception {
     ensureRenderService();
     LevelGameArea lvl = new LevelGameArea("levelOne");
     setPrivateField(lvl, "tileSize", CELL);
     setPrivateField(lvl, "xOffset", X_OFFSET);
     setPrivateField(lvl, "yOffset", Y_OFFSET);
-    LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat()))
-        .thenReturn(new Entity()); // avoid NPE inside method
+    LevelGameGrid grid = new LevelGameGrid(ROWS, COLS);
+    // Give the grid real tiles that have TileStorageComponent (delegates to grid)
+    for (int r = 0; r < ROWS; r++) {
+      for (int c = 0; c < COLS; c++) {
+        Entity tile =
+            new Entity()
+                .addComponent(new TileStorageComponent(lvl))
+                .addComponent(new TileHitboxComponent(5, 5, 0, 0))
+                .addComponent(new TileInputComponent(lvl));
+        tile.getComponent(TileStorageComponent.class).setPosition(r * COLS + c);
+        grid.addTile(r * COLS + c, tile);
+      }
+    }
     lvl.setGrid(grid);
     return lvl;
   }
@@ -155,7 +162,7 @@ class SpawnRobotTest {
   void spawnRobotOnDefence_spawnsRightOfRightmostDefence_sameRow() throws Exception {
     LevelGameArea lvl = newLevelAreaWithGeometry();
 
-    getSpawnedUnits(lvl)[idx(2, 6)] = new Entity();
+    lvl.getGrid().placeOccupantIndex(idx(2, 6), new Entity());
 
     Entity spawned = spy(new Entity());
     try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
@@ -173,8 +180,8 @@ class SpawnRobotTest {
     LevelGameArea lvl = newLevelAreaWithGeometry();
 
     // Defences at (1,3) and (4,9) -> rightmost is (4,9)
-    getSpawnedUnits(lvl)[idx(1, 3)] = new Entity();
-    getSpawnedUnits(lvl)[idx(4, 9)] = new Entity();
+    lvl.getGrid().placeOccupantIndex(idx(1, 3), new Entity());
+    lvl.getGrid().placeOccupantIndex(idx(4, 9), new Entity());
 
     Entity spawned = spy(new Entity());
     try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {

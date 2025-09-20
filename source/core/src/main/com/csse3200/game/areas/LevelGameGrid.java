@@ -93,7 +93,7 @@ public class LevelGameGrid {
    * @param unit the unit to place
    * @return true if successful otherwise false
    */
-  public boolean placeOccupant(int index, Entity unit) {
+  public boolean placeOccupantIndex(int index, Entity unit) {
     if (occupants[index] != null) return false;
     occupants[index] = unit;
     return true;
@@ -111,6 +111,21 @@ public class LevelGameGrid {
     int i = idx(row, col);
     if (occupants[i] == unit) {
       occupants[i] = null;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Removes an occupant from the grid if it exists This is now Null pointer safe
+   *
+   * @param index the array position of the tile
+   * @param unit the unit to remove
+   * @return true if successful, otherwise false
+   */
+  public boolean removeOccupantIfMatchIndex(int index, Entity unit) {
+    if (occupants[index] == unit) {
+      occupants[index] = null;
       return true;
     }
     return false;
@@ -153,7 +168,7 @@ public class LevelGameGrid {
    * @return the tile entity found at the given (row, col) position on the grid.
    */
   public Entity getTile(int row, int col) {
-    return gridData[col * cols + row];
+    return gridData[idx(row, col)];
   }
 
   /**

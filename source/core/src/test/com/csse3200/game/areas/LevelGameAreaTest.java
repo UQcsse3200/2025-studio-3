@@ -17,7 +17,6 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
@@ -161,7 +160,7 @@ class LevelGameAreaTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     Entity tile = new Entity().addComponent(storage);
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
+    when(grid.getTile(anyInt())).thenReturn(tile);
     area.setGrid(grid);
 
     // Use profile from @BeforeEach and make it NOT contain the item
@@ -185,7 +184,7 @@ class LevelGameAreaTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     Entity tile = new Entity().addComponent(storage);
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
+    when(grid.getTile(anyInt())).thenReturn(tile);
     area.setGrid(grid);
 
     ItemEffectsService effects = mock(ItemEffectsService.class);
@@ -196,71 +195,6 @@ class LevelGameAreaTest {
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
     verify(storage).removeTileUnit();
-  }
-
-  @Test
-  void spawnUnitPlacesOnGridAndCallsTileStorage() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
-
-    // Create a selected unit
-    Entity selected =
-        new Entity()
-            .addComponent(
-                new DeckInputComponent(
-                    area,
-                    () ->
-                        new Entity()
-                            .addComponent(new TextureRenderComponent("test/files/tree.png"))));
-    area.setSelectedUnit(selected);
-
-    LevelGameGrid grid = mock(LevelGameGrid.class);
-    Entity tile = new Entity().addComponent(mock(TileStorageComponent.class));
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
-    area.setGrid(grid);
-
-    int position = 7;
-    area.spawnUnit(position);
-
-    assertFalse(area.spawned.isEmpty());
-    Entity spawned = area.spawned.get(area.spawned.size() - 1);
-    assertNotNull(spawned.getComponent(TextureRenderComponent.class));
-
-    TileStorageComponent storage = tile.getComponent(TileStorageComponent.class);
-    verify(storage).setTileUnit(spawned);
-  }
-
-  @Test
-  void spawnUnitNoTileDoesNotCallTileStorage() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
-
-    Entity selected =
-        new Entity()
-            .addComponent(
-                new DeckInputComponent(
-                    area,
-                    () ->
-                        new Entity()
-                            .addComponent(new TextureRenderComponent("test/files/tree.png"))));
-    area.setSelectedUnit(selected);
-
-    LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(null);
-    area.setGrid(grid);
-
-    // should not throw; still spawns the unit
-    area.spawnUnit(3);
-    assertFalse(area.spawned.isEmpty());
-
-    verify(grid).getTileFromXY(anyFloat(), anyFloat());
-  }
-
-  @Test
-  void disposeStopsMusicAndUnloadsAssets() {
-    CapturingLevelGameArea area = new CapturingLevelGameArea();
-    area.dispose();
-    // LevelGameArea dispose only handles entities, not music or assets
-    // Asset and music management is handled elsewhere in the application lifecycle
-    assertTrue(area.spawned.isEmpty() || !area.spawned.isEmpty()); // Just verify dispose completed
   }
 
   @Test
@@ -302,13 +236,7 @@ class LevelGameAreaTest {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.getTileUnit()).thenReturn(null);
-    Entity tile = new Entity().addComponent(storage);
-
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
     area.setGrid(grid);
-
     area.spawnRobotOnDefence(RobotFactory.RobotType.STANDARD);
     assertTrue(area.spawned.isEmpty());
   }

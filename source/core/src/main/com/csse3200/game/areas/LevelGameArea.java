@@ -55,7 +55,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float stageHeight;
   private float stageToWorldRatio;
   private LevelGameGrid grid;
-  private Entity[] spawnedUnits;
   private Entity selectedUnit;
   private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
@@ -84,7 +83,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
     selectedUnit = null;
-    spawnedUnits = new Entity[levelRows * levelCols];
   }
 
   /** Loads level configuration from ConfigService. */
@@ -122,8 +120,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Uses stage height and width (screen resolution from {@link RenderService}) to set variables
-   * relating to tile, grid and character sizing and placement.
+   * Uses stage height and width to set variables relating to tile, grid and character sizing and
+   * placement.
    */
   public void setScaling() {
     stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
@@ -301,72 +299,72 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     float tileY = yOffset + tileSize * row;
 
     unit.setPosition(tileX, tileY);
-
-    // Add to list of all spawned units
-
-    // set scale to render as desired
     unit.scaleHeight(tileSize);
+
     spawnEntity(unit);
     robots.add(unit);
+
     unit.getEvents()
         .addListener(
             "entityDeath",
             () -> {
               requestDespawn(unit);
-              // Persistence.addCoins(3); //commented out since broken
               robots.remove(unit);
             });
-    logger.info("Unit spawned at position {} {}", col, row);
+    logger.info("Robot {} spawned at position {} {}", robotType, col, row);
   }
 
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
    * exists, does nothing and logs a warning.
    */
-  public void spawnRobotOnDefence(RobotType robotType) {
+  public void spawnRobotOnDefence(RobotFactory.RobotType robotType) {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot spawn robot on defence.");
       return;
     }
 
+    final int rows = grid.getRows();
+    final int cols = grid.getCols();
+    final int total = rows * cols;
+
     int bestRow = -1;
     int bestCol = -1;
 
-    final int total = levelRows * levelCols;
-
+    // Find the RIGHT-MOST occupied cell (a placed defence)
     for (int i = 0; i < total; i++) {
-      int row = i / levelCols;
-      int col = i % levelCols;
+      Entity occ = grid.getOccupantIndex(i);
+      if (occ == null) continue;
 
-      float cx = xOffset + tileSize * col + tileSize * 0.5f;
-      float cy = yOffset + tileSize * row + tileSize * 0.5f;
-      Entity tile = grid.getTileFromXY(cx, cy);
-
-      boolean hasDefence =
-          (tile != null
-                  && tile.getComponent(TileStorageComponent.class) != null
-                  && tile.getComponent(TileStorageComponent.class).getTileUnit() != null)
-              || (i < spawnedUnits.length && spawnedUnits[i] != null);
-
-      if (hasDefence && col > bestCol) {
+      int row = i / cols;
+      int col = i % cols;
+      if (col > bestCol) {
         bestCol = col;
         bestRow = row;
       }
     }
 
+    // No defences found -> do nothing (test expects no robot to be created)
     if (bestCol < 0) {
       logger.info("No defence tiles found to spawn {} robot on.", robotType);
       return;
     }
 
-    float spawnCol = Math.min(bestCol + 0.5f, levelCols - 0.01f); // avoid going off-map
+    // Create the robot and place it slightly to the right of the right-most defence
     Entity unit = RobotFactory.createRobotType(robotType);
+    if (unit == null) {
+      logger.error("spawnRobotOnDefence: RobotFactory returned null for {}", robotType);
+      return;
+    }
 
+    // Clamp just inside the right edge to avoid spawning off-map
+    float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);
     float worldX = xOffset + tileSize * spawnCol;
-    float worldY = yOffset + tileSize * bestRow; // same row as the defence
+    float worldY = yOffset + tileSize * bestRow;
 
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
+
     spawnEntity(unit);
     robots.add(unit);
 
@@ -377,6 +375,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               requestDespawn(unit);
               robots.remove(unit);
             });
+    unit.getEvents().addListener("despawned", () -> robots.remove(unit));
 
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
@@ -422,11 +421,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
-    // Get and set position coords
-    float tileX = xOffset + tileSize * (position % levelCols);
-    int row = position / levelCols; // line required to make Sonarqube happy
-    float tileY = yOffset + tileSize * row;
-    Vector2 entityPos = new Vector2(tileX, tileY);
+    // Resolve world position from tile index
+    final int col = position % levelCols;
+    final int row = position / levelCols;
+    final float tileX = xOffset + tileSize * col;
+    final float tileY = yOffset + tileSize * row;
+    final Vector2 entityPos = new Vector2(tileX, tileY);
 
     Supplier<Entity> entitySupplier =
         selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
@@ -438,10 +438,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     newEntity.setPosition(entityPos);
 
     // Get the tile at the spawn coordinates
-    Entity selectedTile = grid.getTileFromXY(tileX, tileY);
+    Entity selectedTile = grid.getTile(position);
 
-    // Where entity to be spawned is an Item and the player has such item in their
-    // inventory
+    if (selectedTile == null) {
+      logger.warn("No tile entity found at index {}", position);
+      return;
+    }
+
+    // ---------- ITEM PATH  (to be moved to a different method in future) ----------
+
+    // Where entity to be spawned is an Item and the player has such item in their inventory
     ItemComponent item = newEntity.getComponent(ItemComponent.class);
     if (item != null
         && !ServiceLocator.getProfileService()
@@ -510,13 +516,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
+    // ---------- DEFENCE/UNIT PATH (single source of truth = GRID) ----------
+
+    if (grid.isOccupiedIndex(position)) {
+      logger.info("Tile {} already occupied", position);
+      return;
+    }
+
     // Add entity to tile unless it is an Item
     if (selectedTile != null) {
       selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
     }
 
-    // Add to list of all spawned units
-    spawnedUnits[position] = newEntity;
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
 
@@ -530,17 +541,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
     newEntity.getEvents().trigger("idleStart");
+
+    // Ensure grid slot frees when unit leaves
+    Runnable clearTile =
+        () -> {
+          grid.removeOccupantIfMatchIndex(position, newEntity);
+          if (selectedTile != null) {
+            selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+          }
+        };
+
     newEntity
         .getEvents()
         .addListener(
             "defenceDeath",
             () -> {
               requestDespawn(newEntity);
-              spawnedUnits[position] = null; // remove from listed spawned units
-              selectedTile
-                  .getComponent(TileStorageComponent.class)
-                  .removeTileUnit(); // remove instance from tile unit
+              clearTile.run();
             });
+    newEntity.getEvents().addListener("despawned", clearTile::run);
+
     newEntity
         .getEvents()
         .addListener(
@@ -549,7 +569,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               requestDespawn(newEntity);
               robots.remove(newEntity);
             });
-    logger.info("Unit spawned at position {}", position);
+
+    logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
+
     newEntity
         .getEvents()
         .addListener(
@@ -567,6 +589,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                       });
               logger.info("Unit spawned at position {}", position);
             });
+    setIsCharacterSelected(false);
+    setSelectedUnit(null);
   }
 
   /**
@@ -576,9 +600,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void removeUnit(int position) {
-    spawnedUnits[position].dispose();
-    spawnedUnits[position] = null;
-
+    Entity occ = grid.getOccupantIndex(position);
+    if (occ == null) {
+      logger.info("No unit at position {}", position);
+      return;
+    }
+    requestDespawn(occ);
+    grid.clearOccupantIndex(position);
+    // Also clear the tile component (delegates to grid, stays in sync)
+    Entity tile = grid.getTile(position);
+    if (tile != null) {
+      tile.getComponent(TileStorageComponent.class).removeTileUnit();
+    }
     logger.info("Unit deleted at position {}", position);
   }
 
@@ -645,15 +678,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     // Move all placed units to their tile’s new position and re-scale
-    for (int i = 0; i < spawnedUnits.length; i++) {
-      Entity unit = spawnedUnits[i];
-      if (unit == null) continue;
+    for (int i = 0; i < levelRows * levelCols; i++) {
+      Entity u = grid.getOccupantIndex(i);
+      if (u == null) continue;
+
       int col = i % levelCols;
       int row = i / levelCols;
-      float tileX = xOffset + tileSize * col;
-      float tileY = yOffset + tileSize * row;
-      unit.setPosition(tileX, tileY);
-      unit.scaleHeight(tileSize);
+      float nx = xOffset + tileSize * col;
+      float ny = yOffset + tileSize * row;
+
+      u.setPosition(nx, ny);
+      u.scaleHeight(tileSize);
     }
 
     // Continuously positioned robots: scale & offset from old → new
