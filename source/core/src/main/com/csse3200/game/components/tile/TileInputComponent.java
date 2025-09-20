@@ -5,13 +5,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.input.InputComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Input handler for tiles for mouse input. This input handler uses touch input. */
 public class TileInputComponent extends InputComponent {
-
-  private static final Logger logger = LoggerFactory.getLogger(TileInputComponent.class);
 
   private final AreaAPI area;
 
