@@ -48,6 +48,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float X_MARGIN_TILES = 2f;
   private static final float Y_MARGIN_TILES = 1f;
   private static final float MAP_HEIGHT_TILES = 8f;
+  private static final String ENTITY_DEATH_EVENT = "entityDeath";
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private float xOffset;
   private float yOffset;
@@ -139,7 +140,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   @Override
   public void create() {
     displayUI();
-    spawnMap(currentLevelKey);
+    spawnMap();
     spawnGrid(levelRows, levelCols);
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
@@ -212,7 +213,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Creates the game map and renders it */
-  private void spawnMap(String levelKey) {
+  private void spawnMap() {
     // Compute world height (viewport height)
     float viewportHeight = stageHeight * stageToWorldRatio;
 
@@ -306,7 +307,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     unit.getEvents()
         .addListener(
-            "entityDeath",
+            ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
               robots.remove(unit);
@@ -370,7 +371,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     unit.getEvents()
         .addListener(
-            "entityDeath",
+            ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
               robots.remove(unit);
@@ -380,7 +381,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public Entity spawnProjectile(Vector2 spawnPos, float velocityX, float velocityY) {
+  public void spawnProjectile(Vector2 spawnPos) {
     Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
     projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
 
@@ -389,9 +390,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveRightComponent()); // pass velocity
-    projectile.getEvents().addListener("despawnSlingshot", (Entity e) -> requestDespawn(e));
+    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
-    return projectile;
   }
 
   /**
@@ -460,7 +460,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("Not spawning item {} since none in player's inventory", itemType);
       return;
     }
-    if (item != null && selectedTile != null) {
+    if (item != null) {
       String itemType = item.getType().toString();
       logger.info("Spawning item {}", itemType);
       String key = item.getType().toString().toLowerCase(Locale.ROOT);
@@ -524,9 +524,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     // Add entity to tile unless it is an Item
-    if (selectedTile != null) {
-      selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
-    }
+    selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
 
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
@@ -546,9 +544,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Runnable clearTile =
         () -> {
           grid.removeOccupantIfMatchIndex(position, newEntity);
-          if (selectedTile != null) {
-            selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-          }
+          selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
         };
 
     newEntity
@@ -564,7 +560,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     newEntity
         .getEvents()
         .addListener(
-            "entityDeath",
+            ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(newEntity);
               robots.remove(newEntity);
@@ -577,12 +573,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             () -> {
-              spawnProjectile(entityPos, 3f, 0f);
+              spawnProjectile(entityPos);
               newEntity.getEvents().trigger("attackStart");
               newEntity
                   .getEvents()
                   .addListener(
-                      "entityDeath",
+                      ENTITY_DEATH_EVENT,
                       () -> {
                         requestDespawn(newEntity);
                         robots.remove(newEntity);
