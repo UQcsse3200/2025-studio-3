@@ -48,13 +48,17 @@ public class DefenceFactory {
     Entity defender = createBaseDefender();
 
     // start with a base defender (physics + collider)
+    AttackTask attackTask = new AttackTask(config.getRange());
+    IdleTask idleTask = new IdleTask(config.getRange());
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange()))
-            .addTask(new IdleTask(config.getRange()));
+            .addTask(attackTask)
+            .addTask(idleTask);
 
     defender.addComponent(enemyDetectionTasks);
+    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
+    defender.getEvents().addListener("resetFireRate", attackTask::resetFireRate);
     // animation component
     AnimationRenderComponent animator =
         new AnimationRenderComponent(

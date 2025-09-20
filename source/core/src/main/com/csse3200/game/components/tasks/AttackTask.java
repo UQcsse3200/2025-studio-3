@@ -15,7 +15,9 @@ public class AttackTask extends TargetDetectionTasks {
   private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   // cooldown fields
-  private static final float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+  private static final float BASE_FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+
+  private float fireCooldown = BASE_FIRE_COOLDOWN;
   private float timeSinceLastFire = 0f;
 
   /**
@@ -25,6 +27,17 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(float attackRange) {
     super(attackRange);
+  }
+
+  public void enableDoubleFireRate() {
+  fireCooldown = BASE_FIRE_COOLDOWN / 2f;
+    owner.getEntity().getEvents().trigger("doubleAttackStart");
+  }
+
+  public void resetFireRate() {
+    fireCooldown = BASE_FIRE_COOLDOWN;
+    owner.getEntity().getEvents().trigger("attackStart");
+    // or maybe "idleStart" then "attackStart", depending on how your DefenceAnimationController is wired
   }
 
   /**

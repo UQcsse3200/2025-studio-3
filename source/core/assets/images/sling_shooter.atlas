@@ -98,3 +98,51 @@ attack
   bounds: 0, 1428, 68, 102
 attack
   bounds: 68, 1428, 68, 102
+doubleattack
+  bounds: 136, 1428, 68, 102
+doubleattack
+  bounds: 0, 1530, 68, 102
+doubleattack
+  bounds: 68, 714, 68, 102
+doubleattack
+  bounds: 136, 714, 68, 102
+doubleattack
+  bounds: 0, 816, 68, 102
+doubleattack
+  bounds: 68, 816, 68, 102
+doubleattack
+  bounds: 136, 816, 68, 102
+doubleattack
+  bounds: 0, 918, 68, 102
+doubleattack
+  bounds: 68, 918, 68, 102
+doubleattack
+  bounds: 136, 918, 68, 102
+doubleattack
+  bounds: 0, 1020, 68, 102
+doubleattack
+  bounds: 68, 1020, 68, 102
+doubleattack
+  bounds: 136, 1020, 68, 102
+doubleattack
+  bounds: 0, 1122, 68, 102
+doubleattack
+  bounds: 68, 1122, 68, 102
+doubleattack
+  bounds: 136, 1122, 68, 102
+doubleattack
+  bounds: 0, 1224, 68, 102
+doubleattack
+  bounds: 68, 1224, 68, 102
+doubleattack
+  bounds: 136, 1224, 68, 102
+doubleattack
+  bounds: 0, 1326, 68, 102
+doubleattack
+  bounds: 68, 1326, 68, 102
+doubleattack
+  bounds: 136, 1326, 68, 102
+doubleattack
+  bounds: 0, 1428, 68, 102
+doubleattack
+  bounds: 68, 1428, 68, 102
