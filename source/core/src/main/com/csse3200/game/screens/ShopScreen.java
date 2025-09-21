@@ -30,6 +30,7 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     "images/shop-popup.png", "images/coins.png", "images/dialog.png"
   };
   private String[] itemTextures;
+  private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
 
   /**
    * Initialises the shop screen.
@@ -83,6 +84,7 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
   /** Loads the shop screen's assets. */
   private void loadAssets() {
     ServiceLocator.getResourceService().loadTextures(shopTextures);
+    ServiceLocator.getResourceService().loadSounds(SHOP_SOUNDS);
     logger.debug("Loading shop assets");
     ConfigService configService = ServiceLocator.getConfigService();
     if (configService == null) {
