@@ -78,22 +78,62 @@ public class UserSettings {
   /** Stores game settings, can be serialised/deserialised. */
   public static class Settings {
     /** FPS cap of the game. Independant of screen FPS. */
-    public int fps = 60;
+    private int fps = 60;
 
-    public boolean fullscreen = true;
-    public boolean vsync = true;
+    private boolean fullscreen = true;
+    private boolean vsync = true;
 
     /** ui Scale. Currently unused, but can be implemented. */
-    public float uiScale = 1f;
+    private float uiScale = 1f;
 
-    public DisplaySettings displayMode = null;
+    private DisplaySettings displayMode = null;
+
+    public int getFps() {
+      return fps;
+    }
+
+    public boolean isFullscreen() {
+      return fullscreen;
+    }
+
+    public boolean isVsync() {
+      return vsync;
+    }
+
+    public float getUiScale() {
+      return uiScale;
+    }
+
+    public DisplaySettings getDisplayMode() {
+      return displayMode;
+    }
+
+    public void setFps(int fps) {
+      this.fps = fps;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+      this.fullscreen = fullscreen;
+    }
+
+    public void setVsync(boolean vsync) {
+      this.vsync = vsync;
+    }
+
+    public void setUiScale(float uiScale) {
+      this.uiScale = uiScale;
+    }
+
+    public void setDisplayMode(DisplaySettings displayMode) {
+      this.displayMode = displayMode;
+    }
   }
 
   /** Stores chosen display settings. Can be serialised/deserialised. */
   public static class DisplaySettings {
-    public int width;
-    public int height;
-    public int refreshRate;
+    private int width;
+    private int height;
+    private int refreshRate;
 
     public DisplaySettings() {}
 
@@ -101,6 +141,30 @@ public class UserSettings {
       this.width = displayMode.width;
       this.height = displayMode.height;
       this.refreshRate = displayMode.refreshRate;
+    }
+
+    public int getWidth() {
+      return width;
+    }
+
+    public int getHeight() {
+      return height;
+    }
+
+    public int getRefreshRate() {
+      return refreshRate;
+    }
+
+    public void setWidth(int width) {
+      this.width = width;
+    }
+
+    public void setHeight(int height) {
+      this.height = height;
+    }
+
+    public void setRefreshRate(int refreshRate) {
+      this.refreshRate = refreshRate;
     }
   }
 

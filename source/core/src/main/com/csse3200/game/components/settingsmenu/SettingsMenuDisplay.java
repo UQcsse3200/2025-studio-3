@@ -69,23 +69,23 @@ public class SettingsMenuDisplay extends UIComponent {
 
     // Create components
     Label fpsLabel = new Label("FPS Cap:", skin);
-    fpsText = new TextField(Integer.toString(settings.fps), skin);
+    fpsText = new TextField(Integer.toString(settings.getFps()), skin);
     whiten(fpsLabel);
 
     Label fullScreenLabel = new Label("Fullscreen:", skin);
     fullScreenCheck = new CheckBox("", skin);
-    fullScreenCheck.setChecked(settings.fullscreen);
+    fullScreenCheck.setChecked(settings.isFullscreen());
     whiten(fullScreenLabel);
 
     Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
-    vsyncCheck.setChecked(settings.vsync);
+    vsyncCheck.setChecked(settings.isVsync());
     whiten(vsyncLabel);
 
     Label uiScaleLabel = new Label("UI Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
-    uiScaleSlider.setValue(settings.uiScale);
-    Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+    uiScaleSlider.setValue(settings.getUiScale());
+    Label uiScaleValue = new Label(String.format("%.2fx", settings.getUiScale()), skin);
     whiten(uiScaleLabel);
     whiten(uiScaleValue);
 
@@ -223,12 +223,12 @@ public class SettingsMenuDisplay extends UIComponent {
 
     Integer fpsVal = parseOrNull(fpsText.getText());
     if (fpsVal != null) {
-      settings.fps = fpsVal;
+      settings.setFps(fpsVal);
     }
-    settings.fullscreen = fullScreenCheck.isChecked();
-    settings.uiScale = uiScaleSlider.getValue();
-    settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().getObject());
-    settings.vsync = vsyncCheck.isChecked();
+    settings.setFullscreen(fullScreenCheck.isChecked());
+    settings.setUiScale(uiScaleSlider.getValue());
+    settings.setDisplayMode(new DisplaySettings(displayModeSelect.getSelected().getObject()));
+    settings.setVsync(vsyncCheck.isChecked());
 
     UserSettings.set(settings, true);
   }

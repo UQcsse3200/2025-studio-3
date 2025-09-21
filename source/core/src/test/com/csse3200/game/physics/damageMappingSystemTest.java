@@ -6,7 +6,7 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.attacking_system.damageMappingSystem;
+import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +19,7 @@ class DamageMappingSystemTest {
   private CombatStatsComponent defenderStats;
   private Fixture attackerFixture;
   private Fixture defenderFixture;
-  private damageMappingSystem damageSystem;
+  private DamageMappingSystem damageSystem;
 
   @BeforeEach
   void setUp() {
@@ -36,19 +36,19 @@ class DamageMappingSystemTest {
     defender.addComponent(mock(ColliderComponent.class));
     defender.create();
 
-    damageSystem = new damageMappingSystem(attacker);
+    damageSystem = new DamageMappingSystem(attacker);
 
     attackerFixture = mock(Fixture.class);
     var attackerBody = mock(com.badlogic.gdx.physics.box2d.Body.class);
     BodyUserData attackerData = new BodyUserData();
-    attackerData.entity = attacker;
+    attackerData.setEntity(attacker);
     when(attackerFixture.getBody()).thenReturn(attackerBody);
     when(attackerBody.getUserData()).thenReturn(attackerData);
 
     defenderFixture = mock(Fixture.class);
     var defenderBody = mock(com.badlogic.gdx.physics.box2d.Body.class);
     BodyUserData defenderData = new BodyUserData();
-    defenderData.entity = defender;
+    defenderData.setEntity(defender);
     when(defenderFixture.getBody()).thenReturn(defenderBody);
     when(defenderBody.getUserData()).thenReturn(defenderData);
   }
@@ -76,7 +76,7 @@ class DamageMappingSystemTest {
     Fixture tempFixture = mock(Fixture.class);
     var tempBody = mock(com.badlogic.gdx.physics.box2d.Body.class);
     BodyUserData tempData = new BodyUserData();
-    tempData.entity = temp;
+    tempData.setEntity(temp);
     when(tempFixture.getBody()).thenReturn(tempBody);
     when(tempBody.getUserData()).thenReturn(tempData);
     damageSystem.onCollisionStart(attackerFixture, tempFixture);

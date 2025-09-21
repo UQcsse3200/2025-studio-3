@@ -9,14 +9,14 @@ import com.csse3200.game.physics.BodyUserData;
  * the damage mapping system handles damage interactions between entities. It listens to
  * collisionStart event and applies the damage logic.
  */
-public class damageMappingSystem {
+public class DamageMappingSystem {
 
   /**
    * Creates a new damage mapping system for the specified entity.
    *
    * @param entity the entity to attach the damage system to
    */
-  public damageMappingSystem(Entity entity) {
+  public DamageMappingSystem(Entity entity) {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
   }
 
@@ -28,20 +28,20 @@ public class damageMappingSystem {
    */
   public void onCollisionStart(Fixture fixtureA, Fixture fixtureB) {
 
-    Entity entityA = ((BodyUserData) fixtureA.getBody().getUserData()).entity;
-    Entity entityB = ((BodyUserData) fixtureB.getBody().getUserData()).entity;
+    Entity entityA = ((BodyUserData) fixtureA.getBody().getUserData()).getEntity();
+    Entity entityB = ((BodyUserData) fixtureB.getBody().getUserData()).getEntity();
     if (entityA == null || entityB == null) return;
 
     Boolean isProjectile = (Boolean) entityA.getProperty("isProjectile");
     if (isProjectile == null || !isProjectile) return;
     CombatStatsComponent attackerStats =
-        (CombatStatsComponent) entityA.getComponent(CombatStatsComponent.class);
+         entityA.getComponent(CombatStatsComponent.class);
     CombatStatsComponent victimStats =
-        (CombatStatsComponent) entityB.getComponent(CombatStatsComponent.class);
+        entityB.getComponent(CombatStatsComponent.class);
 
     if (attackerStats != null && victimStats != null) {
       victimStats.hit(attackerStats);
-      if (isProjectile == true) {
+      if (isProjectile) {
         entityA.getEvents().trigger("destroy");
       }
     }

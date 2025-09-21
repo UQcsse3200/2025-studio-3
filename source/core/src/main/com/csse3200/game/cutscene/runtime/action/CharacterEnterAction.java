@@ -55,6 +55,9 @@ public class CharacterEnterAction implements ActionState {
         case FADE -> {
           characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
         }
+        default -> {
+          // do nothing
+        }
       }
     } else {
       characterState.setxOffset(0);

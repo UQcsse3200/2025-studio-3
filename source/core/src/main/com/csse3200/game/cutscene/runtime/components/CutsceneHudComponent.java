@@ -152,7 +152,7 @@ public class CutsceneHudComponent extends UIComponent {
     choicesCenter.addActor(testButton2);
     choicesRight.addActor(testButton3);
 
-    //        root.add(choicesGroup).growX().fillX().row();
+    // TODO: root.add(choicesGroup).growX().fillX().row();
 
     // Make dialogue panel
     dialogueBox = new Table();
