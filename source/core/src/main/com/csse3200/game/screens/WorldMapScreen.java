@@ -296,7 +296,7 @@ public class WorldMapScreen implements Screen {
       } else if (nearbyNode.level == 3 && isLevelCompleted(2)) {
         logger.info("🚀 Starting Level 3!");
         nearbyNode.completed = true;
-        startMainGameNextFrame();
+        startSlotMachineGameNextFrame();
         return;
 
       } else {
@@ -322,6 +322,17 @@ public class WorldMapScreen implements Screen {
         });
   }
 
+  private void startSlotMachineGameNextFrame() {
+    Gdx.app.postRunnable(
+        () -> {
+          try {
+            game.setScreen(GdxGame.ScreenType.SLOT_MACHINE);
+          } catch (Throwable t) {
+            logger.error("SLOT_MACHINE crashed; staying on world map.", t);
+          }
+        });
+  }
+
   private boolean isMouseOverNode(Vector2 mouseWorld, float nodeX, float nodeY, float size) {
     return mouseWorld.x >= nodeX
         && mouseWorld.x <= nodeX + size
@@ -330,6 +341,8 @@ public class WorldMapScreen implements Screen {
   }
 
   private boolean isLevelCompleted(int level) {
+    // Test Only
+    if (level == 2) return true;
     for (Node n : nodes) if (n.level == level) return n.completed;
     return false;
   }

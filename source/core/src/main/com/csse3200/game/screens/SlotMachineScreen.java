@@ -19,7 +19,9 @@ public class SlotMachineScreen extends MainGameScreen {
 
   @Override
   protected LevelGameArea createGameArea(TerrainFactory terrainFactory) {
-    return new SlotMachineArea(terrainFactory);
+    SlotMachineArea area = new SlotMachineArea(terrainFactory);
+    area.setWaveManager(this.waveManager);
+    return area;
   }
 
   @Override
