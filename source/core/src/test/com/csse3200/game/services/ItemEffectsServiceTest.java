@@ -101,7 +101,13 @@ class ItemEffectsServiceTest {
     Vector2 pos = new Vector2(10, 20);
 
     ItemEffectsService.spawnEffect(
-        atlas, "grenade", pos, 3, 0.1f, Animation.PlayMode.NORMAL, false, new Vector2(0, 0), 1.5f);
+        atlas,
+        "grenade",
+        new Vector2[] {pos, new Vector2(0, 0)},
+        3,
+        new float[] {0.1f, 1.5f},
+        Animation.PlayMode.NORMAL,
+        false);
 
     Entity e = captureRegisteredEntity();
     assertEquals(10f, e.getPosition().x);
@@ -119,14 +125,11 @@ class ItemEffectsServiceTest {
     ItemEffectsService.spawnEffect(
         null,
         "emp",
-        new Vector2(0, 0),
+        new Vector2[] {new Vector2(0, 0), new Vector2(0, 0)},
         1,
-        0.1f,
+        new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false,
-        new Vector2(0, 0),
-        1.5f);
-
+        false);
     verify(entities, never()).register(any());
     verifyNoInteractions(app); // no disposal posted either
   }
@@ -136,13 +139,11 @@ class ItemEffectsServiceTest {
     ItemEffectsService.spawnEffect(
         atlasWithFramesFor("emp"),
         "emp",
-        new Vector2(5, 5),
+        new Vector2[] {new Vector2(5, 5), new Vector2(0, 0)},
         1,
-        0.1f,
+        new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false,
-        new Vector2(0, 0),
-        1.5f);
+        false);
 
     Entity e = captureRegisteredEntity();
 
@@ -168,13 +169,11 @@ class ItemEffectsServiceTest {
     ItemEffectsService.spawnEffect(
         atlasWithFramesFor("coffee"),
         "coffee",
-        start,
+        new Vector2[] {start, end},
         1,
-        0.1f,
+        new float[] {0.1f, 5f},
         Animation.PlayMode.NORMAL,
-        true,
-        end,
-        5f);
+        true);
 
     Entity e = captureRegisteredEntity();
 
