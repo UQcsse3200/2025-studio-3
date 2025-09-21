@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 public class LaneRunnerGameOverDisplay extends UIComponent {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.minigame.LaneRunnerGameOverDisplay.class);
+      LoggerFactory.getLogger(LaneRunnerGameOverDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
   private final int finalScore;
@@ -41,15 +41,15 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
 
     Image gameOverImage =
         new Image(
-            ServiceLocator.getResourceService().getAsset("images/GameOver.png", Texture.class));
-    Label ScoreLabel = new Label("Final Score: " + finalScore, skin);
-    Label TimeLabel =
+            ServiceLocator.getResourceService().getAsset("images/backgrounds/GameOver.png", Texture.class));
+    Label scoreLabel = new Label("Final Score: " + finalScore, skin);
+    Label timeLabel =
         new Label("Survival Time: " + String.format("%.2f", survivalTime) + "s", skin);
-    Label ObstaclesLabel = new Label("Obstacles Dodged: " + obstaclesDodged, skin);
+    Label obstaclesLabel = new Label("Obstacles Dodged: " + obstaclesDodged, skin);
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
     TextButton playagainbtn = ButtonFactory.createButton("Play Again");
-    TextButton mainmenubtn = ButtonFactory.createButton("Main Menu");
+    TextButton returnToArcadeBtn = ButtonFactory.createButton("Return to Arcade");
 
     playagainbtn.addListener(
         new ChangeListener() {
@@ -59,30 +59,30 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
             entity.getEvents().trigger("playAgain");
           }
         });
-    mainmenubtn.addListener(
+    returnToArcadeBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("main menu button pressed");
-            entity.getEvents().trigger("mainMenu");
+            logger.debug("return to arcade button pressed");
+            entity.getEvents().trigger("returnToArcade");
           }
         });
     table.add(gameOverImage).padBottom(30f);
     table.row();
-    table.add(ScoreLabel).padBottom(10f);
+    table.add(scoreLabel).padBottom(10f);
     table.row();
-    table.add(TimeLabel).padBottom(10f);
+    table.add(timeLabel).padBottom(10f);
     table.row();
-    table.add(ObstaclesLabel).padBottom(20f);
+    table.add(obstaclesLabel).padBottom(20f);
     table.row();
     table.add(performanceLabel).padBottom(20f);
     table.row();
-    table.add(playagainbtn).padBottom(10f);
+    table.add(playagainbtn).padBottom(10f).width(200f).height(50f);
     table.row();
-    table.add(mainmenubtn);
+    table.add(returnToArcadeBtn).width(200f).height(50f);
     table.row();
-    Label InstructionLabel = new Label(" 'Space' to PLayAgain & 'Escape' to Main Menu", skin);
-    table.add(InstructionLabel);
+    Label instructionLabel = new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
+    table.add(instructionLabel);
     stage.addActor(table);
   }
 

@@ -62,18 +62,18 @@ class MiniGameInputComponentTest {
   }
 
   @Test
-  void testEscapeKeyTriggersMainMenuInGameOverScreen() {
+  void testEscapeKeyTriggersReturnToArcadeInGameOverScreen() {
     MiniGameInputComponent input = new MiniGameInputComponent(true);
     input.setEntity(mockEntity);
 
     boolean handled = input.keyDown(Input.Keys.ESCAPE);
 
     assertTrue(handled, "ESCAPE should be handled in game over mode");
-    verify(mockEventHandler).trigger("mainMenu");
+    verify(mockEventHandler).trigger("returnToArcade");
   }
 
   @Test
-  void testSpaceKeyTriggersMainMenuInGameOverScreen() {
+  void testSpaceKeyTriggersPlayAgainInGameOverScreen() {
     MiniGameInputComponent input = new MiniGameInputComponent(true);
     input.setEntity(mockEntity);
 
@@ -91,7 +91,7 @@ class MiniGameInputComponentTest {
     boolean handled = input.keyDown(Input.Keys.ESCAPE);
 
     assertFalse(handled, "ESCAPE should not be handled during gameplay");
-    verify(mockEventHandler, never()).trigger("mainMenu");
+    verify(mockEventHandler, never()).trigger("returnToArcade");
   }
 
   @Test

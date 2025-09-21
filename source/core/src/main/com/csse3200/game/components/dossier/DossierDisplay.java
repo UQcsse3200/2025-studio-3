@@ -498,8 +498,10 @@ public class DossierDisplay extends UIComponent {
   /** Disposes of this UI component. */
   @Override
   public void dispose() {
-    rootTable.clear();
-    stage.dispose();
+    if (rootTable != null) {
+      rootTable.clear();
+      rootTable.remove();
+    }
     super.dispose();
   }
 }

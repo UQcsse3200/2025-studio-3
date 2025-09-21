@@ -48,7 +48,7 @@ public class WallPongGameOverDisplay extends UIComponent {
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
     TextButton playAgainBtn = ButtonFactory.createButton("Play Again");
-    TextButton mainMenuBtn = ButtonFactory.createButton("Main Menu");
+    TextButton returnToArcadeBtn = ButtonFactory.createButton("Return to Arcade");
 
     playAgainBtn.addListener(
         new ChangeListener() {
@@ -59,11 +59,11 @@ public class WallPongGameOverDisplay extends UIComponent {
           }
         });
 
-    mainMenuBtn.addListener(
+    returnToArcadeBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent event, Actor actor) {
-            entity.getEvents().trigger("mainMenu");
+            entity.getEvents().trigger("returnToArcade");
           }
         });
     table.add(gameOverImage).padBottom(30f);
@@ -78,9 +78,9 @@ public class WallPongGameOverDisplay extends UIComponent {
     table.row();
     table.add(playAgainBtn).padBottom(10f).width(200f).height(50f);
     table.row();
-    table.add(mainMenuBtn).width(200f).height(50f);
+    table.add(returnToArcadeBtn).width(200f).height(50f);
     table.row();
-    Label instructionLabel = new Label("'Space' to PLayAgain & Escape to Main Menu.", skin);
+    Label instructionLabel = new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
     table.add(instructionLabel);
     stage.addActor(table);
   }

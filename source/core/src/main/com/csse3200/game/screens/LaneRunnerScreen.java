@@ -44,7 +44,8 @@ public class LaneRunnerScreen extends ScreenAdapter {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/Background.png",
     "images/backgrounds/GameOver.png",
-    "images/backgrounds/lanes.png"
+    "images/backgrounds/lanes.png",
+    "images/entities/character.png"
   };
 
   public LaneRunnerScreen(GdxGame game) {
@@ -105,13 +106,13 @@ public class LaneRunnerScreen extends ScreenAdapter {
     Texture playerTex =
         ServiceLocator.getResourceService()
             .getAsset("images/entities/character.png", Texture.class);
-    Image playerImage = new Image(playerTex);
-    playerImage.setSize(64f, 64f);
+    Image playerImg = new Image(playerTex);
+    playerImg.setSize(64f, 64f);
     float playerX = laneManager.getLaneCenter(1) - 32f;
     float playerY = 2f;
-    playerImage.setPosition(playerX, playerY);
-    stage.addActor(playerImage);
-    this.playerImage = playerImage;
+    playerImg.setPosition(playerX, playerY);
+    stage.addActor(playerImg);
+    this.playerImage = playerImg;
     this.cureentLane = 1;
 
     createScoreUI(stage);
@@ -165,7 +166,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     if (cureentLane < laneManager.getNumLanes() - 1) {
       cureentLane++;
       updatePlayerPosition();
-      System.out.println("Moved Right to lane: " + cureentLane);
+      logger.info("Moved Right to lane: {}", cureentLane);
     }
   }
 
@@ -178,7 +179,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     if (cureentLane > 0) {
       cureentLane--;
       updatePlayerPosition();
-      System.out.println("Moved Left to lane: " + cureentLane);
+      logger.info("Moved Left to lane: {}", cureentLane);
     }
   }
 

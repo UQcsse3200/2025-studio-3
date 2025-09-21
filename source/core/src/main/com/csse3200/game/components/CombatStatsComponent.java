@@ -56,7 +56,6 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-    //    logger.info(String.valueOf(this.health));
 
     if (entity != null) {
       if (this.health == 0) {
@@ -135,12 +134,13 @@ public class CombatStatsComponent extends Component {
 
   /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
-    if (isDead() || getHealth() < 0) {
+    boolean isDead = isDead();
+    if (isDead || getHealth() < 0) {
       // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
-        System.out.println("Human has died!");
+        logger.info("Human has died!");
       } else {
         entity.getEvents().trigger("entityDeath");
       }

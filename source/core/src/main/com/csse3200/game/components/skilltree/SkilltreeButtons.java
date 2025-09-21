@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  */
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
-  private static final float Z_INDEX = 2f;
+  private static final float Z_INDEX = 1f;
   private final GdxGame game;
   private final SkillSet skillSet;
   private final SkilltreeDisplay display;
@@ -177,7 +177,7 @@ public class SkilltreeButtons extends UIComponent {
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-    closeButton.setZIndex(0);
+    closeButton.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -218,7 +218,7 @@ public class SkilltreeButtons extends UIComponent {
     Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
     setButtonSize(skillButton, skillName);
     skillButton.setPosition(x, y);
-    skillButton.setZIndex(0); // Set z-index lower than navigation menu (3f)
+    skillButton.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
 
     skillButton.addListener(
         new SkilltreeActions(skillName, skillSet, unlockedTexture, skillButton, stage, display));
@@ -266,7 +266,7 @@ public class SkilltreeButtons extends UIComponent {
     attackLabel.setColor(Color.WHITE);
     attackLabel.setPosition(
         button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
-    attackLabel.setZIndex(0); // Set z-index lower than navigation menu (3f)
+    attackLabel.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
     return attackLabel;
   }
 
