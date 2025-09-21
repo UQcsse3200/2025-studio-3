@@ -94,7 +94,7 @@ public class MainGameScreen extends ScreenAdapter {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
-    logger.debug("[MainGameScreen] Profile current level: '{}'", level);  
+    logger.debug("[MainGameScreen] Profile current level: '{}'", level);
     logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
     this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");

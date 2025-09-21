@@ -24,7 +24,7 @@ public class WallPongGameOverActions extends Component {
     game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
   }
 
-    private void onReturnToArcade() {
+  private void onReturnToArcade() {
     logger.debug("Return to Arcade event triggered");
     game.setScreen(GdxGame.ScreenType.MINI_GAMES);
   }

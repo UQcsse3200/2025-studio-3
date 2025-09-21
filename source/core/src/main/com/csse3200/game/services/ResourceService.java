@@ -129,7 +129,11 @@ public class ResourceService implements Disposable {
     try {
       assetManager.load(assetName, type);
     } catch (Exception e) {
-      logger.error("[ResourceService] Could not load {}: {} - {}", type.getSimpleName(), assetName, e.getMessage());
+      logger.error(
+          "[ResourceService] Could not load {}: {} - {}",
+          type.getSimpleName(),
+          assetName,
+          e.getMessage());
     }
   }
 

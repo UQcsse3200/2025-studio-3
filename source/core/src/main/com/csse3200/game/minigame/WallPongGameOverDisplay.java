@@ -80,7 +80,8 @@ public class WallPongGameOverDisplay extends UIComponent {
     table.row();
     table.add(returnToArcadeBtn).width(200f).height(50f);
     table.row();
-    Label instructionLabel = new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
+    Label instructionLabel =
+        new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
     table.add(instructionLabel);
     stage.addActor(table);
   }

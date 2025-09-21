@@ -15,8 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LaneRunnerGameOverDisplay extends UIComponent {
-  private static final Logger logger =
-      LoggerFactory.getLogger(LaneRunnerGameOverDisplay.class);
+  private static final Logger logger = LoggerFactory.getLogger(LaneRunnerGameOverDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
   private final int finalScore;
@@ -41,7 +40,8 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
 
     Image gameOverImage =
         new Image(
-            ServiceLocator.getResourceService().getAsset("images/backgrounds/GameOver.png", Texture.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/backgrounds/GameOver.png", Texture.class));
     Label scoreLabel = new Label("Final Score: " + finalScore, skin);
     Label timeLabel =
         new Label("Survival Time: " + String.format("%.2f", survivalTime) + "s", skin);
@@ -81,7 +81,8 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
     table.row();
     table.add(returnToArcadeBtn).width(200f).height(50f);
     table.row();
-    Label instructionLabel = new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
+    Label instructionLabel =
+        new Label("Press 'Space' to Play Again or 'Escape' to Return to Arcade", skin);
     table.add(instructionLabel);
     stage.addActor(table);
   }

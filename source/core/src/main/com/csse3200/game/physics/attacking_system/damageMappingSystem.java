@@ -34,10 +34,8 @@ public class DamageMappingSystem {
 
     Boolean isProjectile = (Boolean) entityA.getProperty("isProjectile");
     if (isProjectile == null || !isProjectile) return;
-    CombatStatsComponent attackerStats =
-         entityA.getComponent(CombatStatsComponent.class);
-    CombatStatsComponent victimStats =
-        entityB.getComponent(CombatStatsComponent.class);
+    CombatStatsComponent attackerStats = entityA.getComponent(CombatStatsComponent.class);
+    CombatStatsComponent victimStats = entityB.getComponent(CombatStatsComponent.class);
 
     if (attackerStats != null && victimStats != null) {
       victimStats.hit(attackerStats);

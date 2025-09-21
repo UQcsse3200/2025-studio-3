@@ -8,8 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
 
-/** Class to create and display a window when the game ends.
- * This should probably be changed for a custom dialog.
+/**
+ * Class to create and display a window when the game ends. This should probably be changed for a
+ * custom dialog.
  */
 public class GameOverWindow extends UIComponent {
   // Initialises the game over window.

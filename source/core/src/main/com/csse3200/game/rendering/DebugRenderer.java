@@ -148,7 +148,8 @@ public class DebugRenderer {
   private void renderRect(DrawRequest request) {
     Gdx.gl.glLineWidth(request.getLineWidth());
     shapeRenderer.setColor(request.getColor());
-    shapeRenderer.rect(request.getPos().x, request.getPos().y, request.getEnd().x, request.getEnd().y);
+    shapeRenderer.rect(
+        request.getPos().x, request.getPos().y, request.getEnd().x, request.getEnd().y);
   }
 
   /**

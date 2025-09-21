@@ -33,6 +33,7 @@ public class PaddleGameScreen extends ScreenAdapter {
 
   /**
    * Creates a new PaddleGameScreen and initializes the stage, input processor, and assets.
+   *
    * @param game
    */
   public PaddleGameScreen(GdxGame game) {

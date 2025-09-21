@@ -65,7 +65,7 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
   public float getMoveSpeed() {
     return moveSpeed;
   }
-  
+
   public MovementTask getMovementTask() {
     return movementTask;
   }

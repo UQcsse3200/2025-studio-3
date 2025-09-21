@@ -21,7 +21,7 @@ public class RaycastHit {
   public Vector2 getPoint() {
     return point;
   }
-  
+
   public Vector2 getNormal() {
     return normal;
   }
@@ -33,7 +33,7 @@ public class RaycastHit {
   public void setPoint(Vector2 point) {
     this.point = point;
   }
-  
+
   public void setNormal(Vector2 normal) {
     this.normal = normal;
   }

@@ -46,12 +46,12 @@ class InputServiceTest {
     Method keyDownMethod = InputComponent.class.getDeclaredMethod("keyDown", int.class);
     Method keyDownServiceMethod = InputService.class.getDeclaredMethod("keyDown", int.class);
     shouldCallInputHandlersInPriorityOrder(keyDownMethod, keyDownServiceMethod, 1);
-    
+
     // Test keyTyped
     Method keyTypedMethod = InputComponent.class.getDeclaredMethod("keyTyped", char.class);
     Method keyTypedServiceMethod = InputService.class.getDeclaredMethod("keyTyped", char.class);
     shouldCallInputHandlersInPriorityOrder(keyTypedMethod, keyTypedServiceMethod, 'a');
-    
+
     // Test keyUp
     Method keyUpMethod = InputComponent.class.getDeclaredMethod("keyUp", int.class);
     Method keyUpServiceMethod = InputService.class.getDeclaredMethod("keyUp", int.class);
@@ -62,18 +62,26 @@ class InputServiceTest {
   void shouldHandleMouseAndTouchInputs()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     // Test mouseMoved
-    Method mouseMovedMethod = InputComponent.class.getDeclaredMethod("mouseMoved", int.class, int.class);
-    Method mouseMovedServiceMethod = InputService.class.getDeclaredMethod("mouseMoved", int.class, int.class);
+    Method mouseMovedMethod =
+        InputComponent.class.getDeclaredMethod("mouseMoved", int.class, int.class);
+    Method mouseMovedServiceMethod =
+        InputService.class.getDeclaredMethod("mouseMoved", int.class, int.class);
     shouldCallInputHandlersInPriorityOrder(mouseMovedMethod, mouseMovedServiceMethod, 5, 6);
-    
+
     // Test scrolled
-    Method scrolledMethod = InputComponent.class.getDeclaredMethod("scrolled", float.class, float.class);
-    Method scrolledServiceMethod = InputService.class.getDeclaredMethod("scrolled", float.class, float.class);
+    Method scrolledMethod =
+        InputComponent.class.getDeclaredMethod("scrolled", float.class, float.class);
+    Method scrolledServiceMethod =
+        InputService.class.getDeclaredMethod("scrolled", float.class, float.class);
     shouldCallInputHandlersInPriorityOrder(scrolledMethod, scrolledServiceMethod, 5f, 6f);
-    
+
     // Test touchDown
-    Method touchDownMethod = InputComponent.class.getDeclaredMethod("touchDown", int.class, int.class, int.class, int.class);
-    Method touchDownServiceMethod = InputService.class.getDeclaredMethod("touchDown", int.class, int.class, int.class, int.class);
+    Method touchDownMethod =
+        InputComponent.class.getDeclaredMethod(
+            "touchDown", int.class, int.class, int.class, int.class);
+    Method touchDownServiceMethod =
+        InputService.class.getDeclaredMethod(
+            "touchDown", int.class, int.class, int.class, int.class);
     shouldCallInputHandlersInPriorityOrder(touchDownMethod, touchDownServiceMethod, 5, 6, 7, 8);
   }
 
@@ -81,18 +89,25 @@ class InputServiceTest {
   void shouldHandleTouchGestures()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     // Test touchDragged
-    Method touchDraggedMethod = InputComponent.class.getDeclaredMethod("touchDragged", int.class, int.class, int.class);
-    Method touchDraggedServiceMethod = InputService.class.getDeclaredMethod("touchDragged", int.class, int.class, int.class);
+    Method touchDraggedMethod =
+        InputComponent.class.getDeclaredMethod("touchDragged", int.class, int.class, int.class);
+    Method touchDraggedServiceMethod =
+        InputService.class.getDeclaredMethod("touchDragged", int.class, int.class, int.class);
     shouldCallInputHandlersInPriorityOrder(touchDraggedMethod, touchDraggedServiceMethod, 5, 6, 7);
-    
+
     // Test touchUp
-    Method touchUpMethod = InputComponent.class.getDeclaredMethod("touchUp", int.class, int.class, int.class, int.class);
-    Method touchUpServiceMethod = InputService.class.getDeclaredMethod("touchUp", int.class, int.class, int.class, int.class);
+    Method touchUpMethod =
+        InputComponent.class.getDeclaredMethod(
+            "touchUp", int.class, int.class, int.class, int.class);
+    Method touchUpServiceMethod =
+        InputService.class.getDeclaredMethod("touchUp", int.class, int.class, int.class, int.class);
     shouldCallInputHandlersInPriorityOrder(touchUpMethod, touchUpServiceMethod, 5, 6, 7, 8);
-    
+
     // Test fling
-    Method flingMethod = InputComponent.class.getDeclaredMethod("fling", float.class, float.class, int.class);
-    Method flingServiceMethod = InputService.class.getDeclaredMethod("fling", float.class, float.class, int.class);
+    Method flingMethod =
+        InputComponent.class.getDeclaredMethod("fling", float.class, float.class, int.class);
+    Method flingServiceMethod =
+        InputService.class.getDeclaredMethod("fling", float.class, float.class, int.class);
     shouldCallInputHandlersInPriorityOrder(flingMethod, flingServiceMethod, 5f, 6f, 7);
   }
 
@@ -100,18 +115,28 @@ class InputServiceTest {
   void shouldHandlePanGestures()
       throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
     // Test longPress
-    Method longPressMethod = InputComponent.class.getDeclaredMethod("longPress", float.class, float.class);
-    Method longPressServiceMethod = InputService.class.getDeclaredMethod("longPress", float.class, float.class);
+    Method longPressMethod =
+        InputComponent.class.getDeclaredMethod("longPress", float.class, float.class);
+    Method longPressServiceMethod =
+        InputService.class.getDeclaredMethod("longPress", float.class, float.class);
     shouldCallInputHandlersInPriorityOrder(longPressMethod, longPressServiceMethod, 5f, 6f);
-    
+
     // Test pan
-    Method panMethod = InputComponent.class.getDeclaredMethod("pan", float.class, float.class, float.class, float.class);
-    Method panServiceMethod = InputService.class.getDeclaredMethod("pan", float.class, float.class, float.class, float.class);
+    Method panMethod =
+        InputComponent.class.getDeclaredMethod(
+            "pan", float.class, float.class, float.class, float.class);
+    Method panServiceMethod =
+        InputService.class.getDeclaredMethod(
+            "pan", float.class, float.class, float.class, float.class);
     shouldCallInputHandlersInPriorityOrder(panMethod, panServiceMethod, 5f, 6f, 7f, 8f);
-    
+
     // Test panStop
-    Method panStopMethod = InputComponent.class.getDeclaredMethod("panStop", float.class, float.class, int.class, int.class);
-    Method panStopServiceMethod = InputService.class.getDeclaredMethod("panStop", float.class, float.class, int.class, int.class);
+    Method panStopMethod =
+        InputComponent.class.getDeclaredMethod(
+            "panStop", float.class, float.class, int.class, int.class);
+    Method panStopServiceMethod =
+        InputService.class.getDeclaredMethod(
+            "panStop", float.class, float.class, int.class, int.class);
     shouldCallInputHandlersInPriorityOrder(panStopMethod, panStopServiceMethod, 5f, 6f, 7, 8);
   }
 
@@ -195,5 +220,4 @@ class InputServiceTest {
     method.invoke(verify(inputComponent2, times(0)), args);
     method.invoke(verify(inputComponent3, times(1)), args);
   }
-
 }

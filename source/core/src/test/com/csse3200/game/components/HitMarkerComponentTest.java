@@ -73,7 +73,7 @@ class HitMarkerComponentTest {
     Gdx.graphics = mock(Graphics.class);
     when(Gdx.graphics.getDeltaTime()).thenReturn(0.2f);
     hitMarker.update();
-      assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.getColour());
+    assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.getColour());
     hitMarker.update();
     assertEquals(Color.WHITE, hitMarker.render.getColour());
   }
