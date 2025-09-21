@@ -6,20 +6,20 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.physics.attacking_system.DamageMappingSystem4;
+import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class DamageMappingSystemTest4 {
+class DamageMappingSystemTest {
   private Entity attacker;
   private Entity defender;
   private CombatStatsComponent attackerStats;
   private CombatStatsComponent defenderStats;
   private Fixture attackerFixture;
   private Fixture defenderFixture;
-  private DamageMappingSystem4 damageSystem;
+  private DamageMappingSystem damageSystem;
 
   @BeforeEach
   void setUp() {
@@ -36,7 +36,7 @@ class DamageMappingSystemTest4 {
     defender.addComponent(mock(ColliderComponent.class));
     defender.create();
 
-    damageSystem = new DamageMappingSystem4(attacker);
+    damageSystem = new DamageMappingSystem(attacker);
 
     attackerFixture = mock(Fixture.class);
     var attackerBody = mock(com.badlogic.gdx.physics.box2d.Body.class);

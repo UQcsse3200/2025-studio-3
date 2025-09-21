@@ -6,7 +6,7 @@ import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.attacking_system.DamageMappingSystem4;
+import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -60,7 +60,7 @@ public class ObstacleFactory {
     laser.setProperty("isProjectile", true);
     laser.getEvents().addListener("destroy", laser::dispose);
     PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
-    new DamageMappingSystem4(laser);
+    new DamageMappingSystem(laser);
     laser.getComponent(PhysicsComponent.class).setLinearVelocity(5f, 0f);
     laser.getComponent(TextureRenderComponent.class).scaleEntity();
     laser.scaleHeight(1.0f); // adjust size as needed

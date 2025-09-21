@@ -9,14 +9,14 @@ import com.csse3200.game.physics.BodyUserData;
  * the damage mapping system handles damage interactions between entities. It listens to
  * collisionStart event and applies the damage logic.
  */
-public class DamageMappingSystem4 {
+public class DamageMappingSystem {
 
   /**
    * Creates a new damage mapping system for the specified entity.
    *
    * @param entity the entity to attach the damage system to
    */
-  public DamageMappingSystem4(Entity entity) {
+  public DamageMappingSystem(Entity entity) {
     entity.getEvents().addListener("collisionStart", this::onCollisionStart);
   }
 
