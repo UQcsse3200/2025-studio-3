@@ -467,6 +467,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
       // Remove one instance of the Item from the inventory
       ServiceLocator.getProfileService().getProfile().getInventory().removeItem(key);
+      logger.info("One {} item used", key);
 
       // Spawn effect
       // Currently just effect displays, not entity itself then effect after a delay
