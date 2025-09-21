@@ -49,9 +49,6 @@ public class DossierDisplay extends UIComponent {
    * Constructor to display the dossier.
    *
    * @param game the game instance
-   * @param enemyConfigs the enemy configs
-   * @param defenderConfigs the defender configs
-   * @param generatorConfigs the generator configs
    */
   public DossierDisplay(GdxGame game) {
     this.game = game;
