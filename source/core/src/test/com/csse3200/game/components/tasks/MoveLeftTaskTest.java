@@ -102,17 +102,15 @@ class MoveLeftTaskTest {
 
   @Test
   void testCollision() {
-    // create a object/tree for the testing environment
-    // TODO: will need to replace tree with an defence object once implemented
-
-    Entity tree =
+    // create a defence for the testing environment
+    Entity defence =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.OBSTACLE));
 
-    tree.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
-    tree.setPosition(2f, 1.5f);
+    defence.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
+    defence.setPosition(2f, 1.5f);
 
     // create an entity robot near the object to collide with
     Entity robot =
@@ -144,7 +142,7 @@ class MoveLeftTaskTest {
     ServiceLocator.registerPhysicsService(new PhysicsService());
 
     // create entity for the test (robot)
-    Entity entity =
+    Entity entity2 =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent());
@@ -155,7 +153,7 @@ class MoveLeftTaskTest {
 
           @Override
           public Entity getEntity() {
-            return entity;
+            return entity2;
           }
         });
 
@@ -164,9 +162,9 @@ class MoveLeftTaskTest {
     float worldHeight = 5f;
 
     // set entity to the edge of map
-    entity.setPosition(new Vector2(worldWidth - 0.5f, worldHeight / 2f));
+    entity2.setPosition(new Vector2(worldWidth - 0.5f, worldHeight / 2f));
     wanderTask.update();
-    assertTrue(entity.getPosition().x <= worldWidth, "Entity should not move beyond boundary");
+    assertTrue(entity2.getPosition().x <= worldWidth, "Entity should not move beyond boundary");
   }
 
   @AfterEach

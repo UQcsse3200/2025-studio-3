@@ -39,7 +39,7 @@ class ProfileTest {
     skillset = new SkillSet();
     statistics = new Statistics();
     arsenal = new Arsenal();
-    currentLevel = "level1";
+    currentLevel = "levelOne";
     completedNodes = new ArrayList<>();
     nameAndLevel = new Pair<>(name, currentLevel);
   }
@@ -85,7 +85,7 @@ class ProfileTest {
   @Test
   void testSetCurrentLevel() {
     Profile profile = new Profile();
-    String newLevel = "level2";
+    String newLevel = "levelTwo";
     profile.setCurrentLevel(newLevel);
     assertEquals(newLevel, profile.getCurrentLevel());
   }

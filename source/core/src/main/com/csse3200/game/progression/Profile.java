@@ -32,7 +32,7 @@ public class Profile {
     this.skillset = new SkillSet();
     this.statistics = new Statistics();
     this.arsenal = new Arsenal();
-    this.currentLevel = "level1";
+    this.currentLevel = "levelOne";
     this.completedNodes = new ArrayList<>();
   }
 

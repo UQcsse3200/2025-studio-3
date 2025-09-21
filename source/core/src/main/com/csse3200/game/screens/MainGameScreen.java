@@ -94,13 +94,9 @@ public class MainGameScreen extends ScreenAdapter {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
-    logger.debug("[MainGameScreen] Profile current level: '{}'", level);
-
-    // Convert profile level format to config key format if needed
-    String levelKey = convertProfileLevelToConfigKey(level);
-    logger.debug("[MainGameScreen] Converted to level key: '{}'", levelKey);
-    this.waveManager = new WaveManager(levelKey);
-
+    logger.debug("[MainGameScreen] Profile current level: '{}'", level);  
+    logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
+    this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
@@ -267,14 +263,13 @@ public class MainGameScreen extends ScreenAdapter {
    * level or slot machine area based on the level configuration.
    */
   protected LevelGameArea createGameArea() {
-    String levelKey = convertProfileLevelToConfigKey(level);
-    BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(levelKey);
+    BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(level);
     if (cfg != null && cfg.isSlotMachine()) {
-      var slot = new SlotMachineArea(levelKey);
+      var slot = new SlotMachineArea(level);
       slot.setWaveManager(this.waveManager);
       return slot;
     } else {
-      var area = new LevelGameArea(levelKey);
+      var area = new LevelGameArea(level);
       area.setWaveManager(this.waveManager);
       return area;
     }
@@ -302,45 +297,5 @@ public class MainGameScreen extends ScreenAdapter {
     logger.info("[MainGameScreen] Game resumed");
     music.play();
     // Resume currency generation, resume wave manager, resume generators.
-  }
-
-  /**
-   * Converts profile level string to configuration key format.
-   *
-   * @param levelString the level string from profile (e.g., "level1", "level2")
-   * @return the configuration key (e.g., "levelOne", "levelTwo")
-   */
-  private String convertProfileLevelToConfigKey(String levelString) {
-    if (levelString == null) {
-      return "levelOne"; // Default to level 1
-    }
-
-    // Handle formats like "level1", "level2", etc.
-    if (levelString.toLowerCase().startsWith("level")) {
-      try {
-        String numberPart = levelString.substring(5); // Remove "level" prefix
-        int levelNumber = Integer.parseInt(numberPart);
-        switch (levelNumber) {
-          case 1:
-            return "levelOne";
-          case 2:
-            return "levelTwo";
-          default:
-            logger.warn("Unsupported level number {}, defaulting to levelOne", levelNumber);
-            return "levelOne";
-        }
-      } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
-        logger.warn("Unable to parse level number from '{}', defaulting to levelOne", levelString);
-        return "levelOne";
-      }
-    }
-
-    // If it's already in the right format, return as-is
-    if (levelString.equals("levelOne") || levelString.equals("levelTwo")) {
-      return levelString;
-    }
-
-    logger.warn("Unknown level format '{}', defaulting to levelOne", levelString);
-    return "levelOne";
   }
 }

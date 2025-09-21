@@ -109,7 +109,7 @@ public class GdxGame extends Game {
             ScreenType.MAIN_GAME,
             "images/nodes/level1.png",
             LOCK_REASON),
-        "level1");
+        "levelOne");
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 2",
@@ -119,7 +119,7 @@ public class GdxGame extends Game {
             ScreenType.MAIN_GAME,
             "images/nodes/level2.png",
             LOCK_REASON),
-        "level2");
+        "levelTwo");
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 3",
@@ -129,7 +129,7 @@ public class GdxGame extends Game {
             ScreenType.MAIN_GAME,
             "images/nodes/level3.png",
             LOCK_REASON),
-        "level3");
+        "levelThree");
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 4",
@@ -139,7 +139,7 @@ public class GdxGame extends Game {
             ScreenType.MAIN_GAME,
             "images/nodes/level4.png",
             LOCK_REASON),
-        "level4");
+        "levelFour");
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 5",
@@ -149,7 +149,7 @@ public class GdxGame extends Game {
             ScreenType.MAIN_GAME,
             "images/nodes/level5.png",
             LOCK_REASON),
-        "level5");
+        "levelFive");
   }
 
   /** Loads the game's global assets. */

@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LaneRunnerGameOverScreen extends ScreenAdapter {
-
   private static final Logger logger = LoggerFactory.getLogger(LaneRunnerGameOverScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
@@ -74,6 +73,7 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
     uiEntity.create();
   }
 
+  @Override
   public void dispose() {
     renderer.dispose();
     unloadAssets();
@@ -82,6 +82,7 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
     ServiceLocator.clear();
   }
 
+  @Override
   public void render(float delta) {
     ServiceLocator.getEntityService().update();
     renderer.render();
