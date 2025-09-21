@@ -111,9 +111,6 @@ public class WaveManager implements WaveConfigProvider {
   public void initialiseNewWave() {
     // Don't start new waves if level is complete
     if (levelComplete) {
-      ServiceLocator.getProfileService().getProfile().setCurrentLevel(levelConfig.getNextLevel());
-      // ServiceLocator.getDialogService().info("Level complete", "You have completed the level!",
-      // dialog -> game.setScreen(new MainGameScreen(game)));
       logger.info("Level complete - no more waves will spawn");
     }
 

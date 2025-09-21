@@ -5,16 +5,12 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.physics.components.PhysicsComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Wander around by moving a random position within a range of the starting position. Wait a little
  * bit between movements. Requires an entity with a PhysicsMovementComponent.
  */
 public class MoveLeftTask extends DefaultTask implements PriorityTask {
-  private static final Logger logger = LoggerFactory.getLogger(MoveLeftTask.class);
-
   private final float moveSpeed;
   private Vector2 startPos;
   private MovementTask movementTask;
@@ -50,11 +46,27 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
 
   // This was used to switch between moving and waiting when this was wanderTask.
   // We might use this to implement attacking.
-  private void swapTask(Task newTask) {
+  public void swapTask(Task newTask) {
     if (currentTask != null) {
       currentTask.stop();
     }
     currentTask = newTask;
     currentTask.start();
+  }
+
+  public Task getCurrentTask() {
+    return currentTask;
+  }
+
+  public Vector2 getStartPos() {
+    return startPos;
+  }
+
+  public float getMoveSpeed() {
+    return moveSpeed;
+  }
+  
+  public MovementTask getMovementTask() {
+    return movementTask;
   }
 }

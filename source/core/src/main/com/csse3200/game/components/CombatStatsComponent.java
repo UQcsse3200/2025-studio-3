@@ -59,10 +59,9 @@ public class CombatStatsComponent extends Component {
 
     if (entity != null) {
       if (this.health == 0) {
-        // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
+        // Add coins & update statistics
+        // TODO: use config passed into the entity
         int extraCoins = 3;
-
-        // 2) Progression stats (HudDisplay / coins.png reads this)
         ProfileService profileService = ServiceLocator.getProfileService();
         if (profileService != null && profileService.isActive()) {
           int before = profileService.getProfile().getWallet().getCoins();
@@ -81,13 +80,7 @@ public class CombatStatsComponent extends Component {
           logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
-        // 3) Gameplay currency service (ScrapHudDisplay reads this)
-        if (ServiceLocator.getCurrencyService() != null) {
-          ServiceLocator.getCurrencyService().add(extraCoins);
-          logger.info("[Death] CurrencyService +{}", extraCoins);
-        }
-
-        // 4) Now despawn
+        // despawn entity
         entity.getEvents().trigger("despawnRobot", entity);
       }
       entity.getEvents().trigger("updateHealth", this.health);

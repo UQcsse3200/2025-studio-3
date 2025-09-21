@@ -18,8 +18,7 @@ public class MainMenuScreen extends BaseScreen {
     "images/backgrounds/bg.png",
     "images/backgrounds/bg-text.png",
     "images/ui/btn-blue.png",
-    "images/ui/btn-blue.atlas",
-    "images/ui/settings_icon.png"
+    "images/ui/settings-icon.png"
   };
 
   public MainMenuScreen(GdxGame game) {

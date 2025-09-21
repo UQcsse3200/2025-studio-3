@@ -83,7 +83,10 @@ public class ResourceService implements Disposable {
     try {
       assetManager.finishLoading();
     } catch (Exception e) {
+      e.printStackTrace();
       logger.error("[ResourceService] Could not load all assets", e);
+      // Log more details about what failed
+      logger.error("[ResourceService] AssetManager errors: {}", assetManager.getDiagnostics());
     }
   }
 
@@ -126,7 +129,7 @@ public class ResourceService implements Disposable {
     try {
       assetManager.load(assetName, type);
     } catch (Exception e) {
-      logger.error("[ResourceService] Could not load {}: {}", type.getSimpleName(), assetName);
+      logger.error("[ResourceService] Could not load {}: {} - {}", type.getSimpleName(), assetName, e.getMessage());
     }
   }
 

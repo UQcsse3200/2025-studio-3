@@ -28,7 +28,6 @@ public class HotbarDisplay extends UIComponent {
   // a list of all the images for the slots
   private final Array<Image> slotImages = new Array<>();
   private float cellWidth;
-  private Group layered;
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -51,7 +50,7 @@ public class HotbarDisplay extends UIComponent {
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
   private void addActors() {
-    layered = new Group();
+    Group layered = new Group();
 
     // create hotbar image
     Image hotbar = new Image(new Texture("images/ui/hotbar.png"));

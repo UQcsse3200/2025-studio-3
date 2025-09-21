@@ -8,14 +8,17 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.ui.UIComponent;
 
-/** Class to create and display a window when the game ends. */
+/** Class to create and display a window when the game ends.
+ * This should probably be changed for a custom dialog.
+ */
 public class GameOverWindow extends UIComponent {
   // Initialises the game over window.
-  private Window gameOverWindow;
+  private Window window;
   // Tracks the display status of the window.
   boolean isDisplayed = false;
 
   /** Creates the game over window. */
+  @Override
   public void create() {
     super.create();
 
@@ -23,20 +26,20 @@ public class GameOverWindow extends UIComponent {
     entity.getEvents().addListener("gameOver", this::onGameOver);
 
     // Creates popup display.
-    gameOverWindow = new Window("Game over.", skin);
-    gameOverWindow.setMovable(false);
-    gameOverWindow.setSize(500, 500);
-    gameOverWindow.setPosition(
-        (Gdx.graphics.getWidth() - gameOverWindow.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - gameOverWindow.getHeight()) / 2f);
+    window = new Window("Game over.", skin);
+    window.setMovable(false);
+    window.setSize(500, 500);
+    window.setPosition(
+        (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
+        (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
     // Adds text in the popup display.
     Label message = new Label("Game over.\n Press E to go back to main menu.", skin);
-    gameOverWindow.add(message).pad(10).row();
+    window.add(message).pad(10).row();
 
     // Sets popup display to false when created.
-    gameOverWindow.setVisible(false);
-    stage.addActor(gameOverWindow);
+    window.setVisible(false);
+    stage.addActor(window);
   }
 
   /** Checks the status of the popup display */
@@ -51,7 +54,7 @@ public class GameOverWindow extends UIComponent {
     // Press 'E' to take the player back to the main menu.
     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       // Closes popup window
-      gameOverWindow.setVisible(false);
+      window.setVisible(false);
       isDisplayed = false;
 
       // Updates next frame to return to the main menu without crashing.
@@ -62,7 +65,7 @@ public class GameOverWindow extends UIComponent {
               // Gets the game.
               GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
               // Switches to main menu.
-              game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+              game.setScreen(GdxGame.ScreenType.WORLD_MAP);
             }
           });
     }
@@ -70,15 +73,15 @@ public class GameOverWindow extends UIComponent {
 
   /** Activates the popup display when game over event is listened for. */
   private void onGameOver() {
-    gameOverWindow.setVisible(true);
+    window.setVisible(true);
     isDisplayed = true;
   }
 
   /** Frees the memory. */
   @Override
   public void dispose() {
-    if (gameOverWindow != null) {
-      gameOverWindow.remove();
+    if (window != null) {
+      window.remove();
     }
 
     super.dispose();
@@ -90,5 +93,7 @@ public class GameOverWindow extends UIComponent {
    * @param batch Batch to render to.
    */
   @Override
-  protected void draw(SpriteBatch batch) {}
+  protected void draw(SpriteBatch batch) {
+    // draw is handled by the stage
+  }
 }
