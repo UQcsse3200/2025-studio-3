@@ -91,6 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CutsceneCompiler</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Cutscene compiler.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -123,6 +124,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Compiles a <a href="models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> into a <a href="models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object"><code>Cutscene</code></a> No error checking is handled in this
  method as it assumed that the <a href="models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> has already been validated.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/Background.html" title="class in com.csse3200.game.cutscene.models.object">Background</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBackground(java.lang.String)" class="member-name-link">getBackground</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a background by its id.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/Beat.html" title="class in com.csse3200.game.cutscene.models.object">Beat</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBeat(java.lang.String)" class="member-name-link">getBeat</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a beat by its id.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/Character.html" title="class in com.csse3200.game.cutscene.models.object">Character</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCharacter(java.lang.String)" class="member-name-link">getCharacter</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a character by its id.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/Sound.html" title="class in com.csse3200.game.cutscene.models.object">Sound</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSound(java.lang.String)" class="member-name-link">getSound</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a sound by its id.</div>
 </div>
 </div>
 </div>
@@ -166,6 +187,58 @@ loadScripts(document, 'script');</script>
 <dd><code>cutsceneDocDTO</code> - The <a href="models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> to be compiled</dd>
 <dt>Returns:</dt>
 <dd>A <a href="models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object"><code>Cutscene</code></a> with all the information filled out.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBackground(java.lang.String)">
+<h3>getBackground</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="models/object/Background.html" title="class in com.csse3200.game.cutscene.models.object">Background</a></span>&nbsp;<span class="element-name">getBackground</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Gets a background by its id.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the id of the background</dd>
+<dt>Returns:</dt>
+<dd>the background</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCharacter(java.lang.String)">
+<h3>getCharacter</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="models/object/Character.html" title="class in com.csse3200.game.cutscene.models.object">Character</a></span>&nbsp;<span class="element-name">getCharacter</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Gets a character by its id.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the id of the character</dd>
+<dt>Returns:</dt>
+<dd>the character</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSound(java.lang.String)">
+<h3>getSound</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="models/object/Sound.html" title="class in com.csse3200.game.cutscene.models.object">Sound</a></span>&nbsp;<span class="element-name">getSound</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Gets a sound by its id.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the id of the sound</dd>
+<dt>Returns:</dt>
+<dd>the sound</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getBeat(java.lang.String)">
+<h3>getBeat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="models/object/Beat.html" title="class in com.csse3200.game.cutscene.models.object">Beat</a></span>&nbsp;<span class="element-name">getBeat</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Gets a beat by its id.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the id of the beat</dd>
+<dt>Returns:</dt>
+<dd>the beat</dd>
 </dl>
 </section>
 </li>

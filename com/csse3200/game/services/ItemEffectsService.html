@@ -130,15 +130,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Handles call to play a particular effect and then calls to spawn effect.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2,int,float,com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean,com.badlogic.gdx.math.Vector2,float)" class="member-name-link">spawnEffect</a><wbr>(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2%5B%5D,int,float%5B%5D,com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean)" class="member-name-link">spawnEffect</a><wbr>(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName,
- com.badlogic.gdx.math.Vector2&nbsp;position,
+ com.badlogic.gdx.math.Vector2[]&nbsp;positions,
  int&nbsp;scale,
- float&nbsp;frameDuration,
+ float[]&nbsp;frameAndEffectDuration,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;playMode,
- boolean&nbsp;movingAnimation,
- com.badlogic.gdx.math.Vector2&nbsp;finalPosition,
- float&nbsp;totalEffectTime)</code></div>
+ boolean&nbsp;movingAnimation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Spawns the animation effect for the particular Item.</div>
 </div>
@@ -174,29 +172,29 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2,int,float,com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean,com.badlogic.gdx.math.Vector2,float)">
+<section class="detail" id="spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2[],int,float[],com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean)">
 <h3>spawnEffect</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEffect</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName,
- com.badlogic.gdx.math.Vector2&nbsp;position,
+ com.badlogic.gdx.math.Vector2[]&nbsp;positions,
  int&nbsp;scale,
- float&nbsp;frameDuration,
+ float[]&nbsp;frameAndEffectDuration,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;playMode,
- boolean&nbsp;movingAnimation,
- com.badlogic.gdx.math.Vector2&nbsp;finalPosition,
- float&nbsp;totalEffectTime)</span></div>
+ boolean&nbsp;movingAnimation)</span></div>
 <div class="block">Spawns the animation effect for the particular Item.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>atlas</code> - Texture atlas that contains the frames for the animation</dd>
 <dd><code>animatorName</code> - Name of the animation.</dd>
-<dd><code>position</code> - Initial world position where the effect entity is spawned</dd>
+<dd><code>positions</code> - positions[0] is initial world position where the effect entity is spawned, and
+     positions[1] is destination position when movingAnimation is true (value is ignored
+     otherwise)</dd>
 <dd><code>scale</code> - Uniform scale applied to the effect (world units)</dd>
-<dd><code>frameDuration</code> - Duration per animation frame (seconds)</dd>
+<dd><code>frameAndEffectDuration</code> - frameAndEffectDuration[0] is duration per animation frame
+     (seconds), and frameAndEffectDuration[1] is total lifetime of the effect (seconds) when
+     playMode == NORMAL</dd>
 <dd><code>playMode</code> - Animation PlayMode (eg NORMAL, LOOP etc)</dd>
 <dd><code>movingAnimation</code> - If true the effect will move from position to finalPosition</dd>
-<dd><code>finalPosition</code> - Destination position when movingAnimation is true (ignored otherwise)</dd>
-<dd><code>totalEffectTime</code> - Total lifetime of the effect (seconds) when paylMode == NORMAL</dd>
 </dl>
 </section>
 </li>

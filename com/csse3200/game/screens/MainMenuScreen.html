@@ -110,15 +110,18 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Field</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#backgroundTextures" class="member-name-link">backgroundTextures</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;</code></div>
+<div class="col-second even-row-color"><code><a href="#additionalTextures" class="member-name-link">additionalTextures</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#game" class="member-name-link">game</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color"><code><a href="#backgroundTexture" class="member-name-link">backgroundTexture</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="../rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></code></div>
-<div class="col-second even-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a></code></div>
+<div class="col-second even-row-color"><code><a href="#game" class="member-name-link">game</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected final <a href="../rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -147,7 +150,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createUIScreen(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">createUIScreen</a><wbr>(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#constructEntity(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">constructEntity</a><wbr>(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates the main menu's UI including components for rendering ui elements to the screen and
  capturing and handling ui input.</div>
@@ -195,9 +198,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="backgroundTextures">
-<h3>backgroundTextures</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">backgroundTextures</span></div>
+<section class="detail" id="backgroundTexture">
+<h3>backgroundTexture</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">backgroundTexture</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="additionalTextures">
+<h3>additionalTextures</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;</span>&nbsp;<span class="element-name">additionalTextures</span></div>
 </section>
 </li>
 </ul>
@@ -223,11 +232,17 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createUIScreen(com.badlogic.gdx.scenes.scene2d.Stage)">
-<h3>createUIScreen</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createUIScreen</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</span></div>
+<section class="detail" id="constructEntity(com.badlogic.gdx.scenes.scene2d.Stage)">
+<h3>constructEntity</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">constructEntity</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</span></div>
 <div class="block">Creates the main menu's UI including components for rendering ui elements to the screen and
  capturing and handling ui input.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>stage</code> - the stage to create the UI screen on</dd>
+<dt>Returns:</dt>
+<dd>the UI entity</dd>
+</dl>
 </section>
 </li>
 <li>

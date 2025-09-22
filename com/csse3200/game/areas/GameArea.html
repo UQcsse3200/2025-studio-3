@@ -94,7 +94,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Direct Known Subclasses:</dt>
-<dd><code><a href="ForestGameArea.html" title="class in com.csse3200.game.areas">ForestGameArea</a></code>, <code><a href="LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></code></dd>
+<dd><code><a href="LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">GameArea</span>
@@ -119,12 +119,9 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
 <div class="col-second even-row-color"><code><a href="#areaEntities" class="member-name-link">areaEntities</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected <a href="terrain/TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#terrain" class="member-name-link">terrain</a></code></div>
+<div class="col-first odd-row-color"><code>protected <a href="../entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#waveManager" class="member-name-link">waveManager</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected <a href="../entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></code></div>
-<div class="col-second even-row-color"><code><a href="#waveManager" class="member-name-link">waveManager</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -185,34 +182,26 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawn entity at its current position</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)" class="member-name-link">spawnEntityAt</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
- com.badlogic.gdx.math.GridPoint2&nbsp;tilePos,
- boolean&nbsp;centerX,
- boolean&nbsp;centerY)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Spawn entity on a given tile.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtFloat(float,float)" class="member-name-link">spawnRobotAtFloat</a><wbr>(float&nbsp;x,
- float&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtFloat(float,float,java.lang.String)" class="member-name-link">spawnRobotAtFloat</a><wbr>(float&nbsp;x,
- float&nbsp;y,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtFloat(float,float)" class="member-name-link">spawnRobotAtFloat</a><wbr>(float&nbsp;x,
+ float&nbsp;y)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean)" class="member-name-link">spawnRobotAtTile</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;cell,
- boolean&nbsp;centerX,
- boolean&nbsp;centerY)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtFloat(float,float,java.lang.String)" class="member-name-link">spawnRobotAtFloat</a><wbr>(float&nbsp;x,
+ float&nbsp;y,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean,java.lang.String)" class="member-name-link">spawnRobotAtTile</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;cell,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean)" class="member-name-link">spawnRobotAtTile</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;cell,
+ boolean&nbsp;centerX,
+ boolean&nbsp;centerY)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean,java.lang.String)" class="member-name-link">spawnRobotAtTile</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;cell,
  boolean&nbsp;centerX,
  boolean&nbsp;centerY,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -230,12 +219,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <section class="field-details" id="field-detail">
 <h2>Field Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="terrain">
-<h3>terrain</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="terrain/TerrainComponent.html" title="class in com.csse3200.game.areas.terrain">TerrainComponent</a></span>&nbsp;<span class="element-name">terrain</span></div>
-</section>
-</li>
 <li>
 <section class="detail" id="areaEntities">
 <h3>areaEntities</h3>
@@ -303,23 +286,6 @@ implements com.badlogic.gdx.utils.Disposable</span></div>
 <section class="detail" id="despawnEntity(com.csse3200.game.entities.Entity)">
 <h3>despawnEntity</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">despawnEntity</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">
-<h3>spawnEntityAt</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEntityAt</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
- com.badlogic.gdx.math.GridPoint2&nbsp;tilePos,
- boolean&nbsp;centerX,
- boolean&nbsp;centerY)</span></div>
-<div class="block">Spawn entity on a given tile. Requires the terrain to be set first.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>entity</code> - Entity (not yet registered)</dd>
-<dd><code>tilePos</code> - tile position to spawn at</dd>
-<dd><code>centerX</code> - true to center entity X on the tile, false to align the bottom left corner</dd>
-<dd><code>centerY</code> - true to center entity Y on the tile, false to align the bottom left corner</dd>
-</dl>
 </section>
 </li>
 <li>

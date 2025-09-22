@@ -104,7 +104,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E()" class="member-name-link">GameTime</a>()</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Constructor for the GameTime class.</div>
+</div>
 </div>
 </section>
 </li>
@@ -121,16 +123,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDeltaTime()" class="member-name-link">getDeltaTime</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the time since the last frame in seconds, scaled by time scale</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRawDeltaTime()" class="member-name-link">getRawDeltaTime</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the raw time since the last frame in seconds</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTime()" class="member-name-link">getTime</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the time since the game started in milliseconds</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTimeSince(long)" class="member-name-link">getTimeSince</a><wbr>(long&nbsp;lastTime)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the time since the last time in milliseconds</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTimeScale(float)" class="member-name-link">setTimeScale</a><wbr>(float&nbsp;timeScale)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -157,6 +167,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;()">
 <h3>GameTime</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GameTime</span>()</div>
+<div class="block">Constructor for the GameTime class.</div>
 </section>
 </li>
 </ul>
@@ -182,6 +193,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getDeltaTime()">
 <h3>getDeltaTime</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDeltaTime</span>()</div>
+<div class="block">Get the time since the last frame in seconds, scaled by time scale</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>time passed since the last frame in seconds, scaled by time scale.</dd>
@@ -192,6 +204,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getRawDeltaTime()">
 <h3>getRawDeltaTime</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getRawDeltaTime</span>()</div>
+<div class="block">Get the raw time since the last frame in seconds</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>time passed since the last frame in seconds, not affected by time scale.</dd>
@@ -202,6 +215,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTime()">
 <h3>getTime</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getTime</span>()</div>
+<div class="block">Get the time since the game started in milliseconds</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>time passed since the game started in milliseconds</dd>
@@ -212,6 +226,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getTimeSince(long)">
 <h3>getTimeSince</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getTimeSince</span><wbr><span class="parameters">(long&nbsp;lastTime)</span></div>
+<div class="block">Get the time since the last time in milliseconds</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>lastTime</code> - the time to get the time since</dd>
+<dt>Returns:</dt>
+<dd>the time since the last time</dd>
+</dl>
 </section>
 </li>
 </ul>

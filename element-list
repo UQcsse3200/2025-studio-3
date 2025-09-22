@@ -2,7 +2,6 @@ com.csse3200.game
 com.csse3200.game.ai.movement
 com.csse3200.game.ai.tasks
 com.csse3200.game.areas
-com.csse3200.game.areas.terrain
 com.csse3200.game.components
 com.csse3200.game.components.achievements
 com.csse3200.game.components.cards
@@ -15,14 +14,12 @@ com.csse3200.game.components.hotbar
 com.csse3200.game.components.hud
 com.csse3200.game.components.inventory
 com.csse3200.game.components.items
-com.csse3200.game.components.maingame
 com.csse3200.game.components.mainmenu
 com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
 com.csse3200.game.components.profile
 com.csse3200.game.components.projectiles
-com.csse3200.game.components.proximityinfodisplay
 com.csse3200.game.components.settingsmenu
 com.csse3200.game.components.shop
 com.csse3200.game.components.skilltree
@@ -31,6 +28,7 @@ com.csse3200.game.components.statistics
 com.csse3200.game.components.tasks
 com.csse3200.game.components.tile
 com.csse3200.game.components.waves
+com.csse3200.game.components.worldmap
 com.csse3200.game.concurrency
 com.csse3200.game.cutscene
 com.csse3200.game.cutscene.models.dto
@@ -42,7 +40,6 @@ com.csse3200.game.cutscene.runtime.components
 com.csse3200.game.cutscene.runtime.states
 com.csse3200.game.cutscene.validators
 com.csse3200.game.cutscene.validators.actionvalidators
-com.csse3200.game.data
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
 com.csse3200.game.entities.factories

@@ -113,7 +113,7 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.areas.GameArea">Fields inherited from class&nbsp;com.csse3200.game.areas.<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></h3>
-<code><a href="GameArea.html#areaEntities">areaEntities</a>, <a href="GameArea.html#terrain">terrain</a>, <a href="GameArea.html#waveManager">waveManager</a></code></div>
+<code><a href="GameArea.html#areaEntities">areaEntities</a>, <a href="GameArea.html#waveManager">waveManager</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -124,9 +124,9 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.areas.terrain.TerrainFactory)" class="member-name-link">LevelGameArea</a><wbr>(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String)" class="member-name-link">LevelGameArea</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Initialise this LevelGameArea to use the provided TerrainFactory.</div>
+<div class="block">Initialise this LevelGameArea for a specific level.</div>
 </div>
 </div>
 </section>
@@ -162,26 +162,24 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates the game area by calling helper methods as required.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Extends the super method to stop music and unload assets.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Getter for grid</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedUnit()" class="member-name-link">getSelectedUnit</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedUnit()" class="member-name-link">getSelectedUnit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Getter for selected_unit</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileSize()" class="member-name-link">getTileSize</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileSize()" class="member-name-link">getTileSize</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Getter for tile size in world units</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldWidth()" class="member-name-link">getWorldWidth</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCharacterSelected()" class="member-name-link">isCharacterSelected</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -208,18 +206,16 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScaling()" class="member-name-link">setScaling</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Uses stage height and width (screen resolution from <a href="../rendering/RenderService.html" title="class in com.csse3200.game.rendering"><code>RenderService</code></a>) to set variables relating to tile, grid and
- character sizing and placement.</div>
+<div class="block">Uses stage height and width to set variables relating to tile, grid and character sizing and
+ placement.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSelectedUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setSelectedUnit</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Setter for selected_unit</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,float,float)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
- float&nbsp;velocityX,
- float&nbsp;velocityY)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
@@ -253,7 +249,7 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.csse3200.game.areas.GameArea">Methods inherited from class&nbsp;com.csse3200.game.areas.<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></h3>
-<code><a href="GameArea.html#despawnEntity(com.csse3200.game.entities.Entity)">despawnEntity</a>, <a href="GameArea.html#getEntities()">getEntities</a>, <a href="GameArea.html#requestDespawn(com.csse3200.game.entities.Entity)">requestDespawn</a>, <a href="GameArea.html#setWaveManager(com.csse3200.game.entities.WaveManager)">setWaveManager</a>, <a href="GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)">spawnEntity</a>, <a href="GameArea.html#spawnEntityAt(com.csse3200.game.entities.Entity,com.badlogic.gdx.math.GridPoint2,boolean,boolean)">spawnEntityAt</a>, <a href="GameArea.html#spawnRobotAtFloat(float,float)">spawnRobotAtFloat</a>, <a href="GameArea.html#spawnRobotAtFloat(float,float,java.lang.String)">spawnRobotAtFloat</a>, <a href="GameArea.html#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean)">spawnRobotAtTile</a>, <a href="GameArea.html#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean,java.lang.String)">spawnRobotAtTile</a></code></div>
+<code><a href="GameArea.html#despawnEntity(com.csse3200.game.entities.Entity)">despawnEntity</a>, <a href="GameArea.html#dispose()">dispose</a>, <a href="GameArea.html#getEntities()">getEntities</a>, <a href="GameArea.html#requestDespawn(com.csse3200.game.entities.Entity)">requestDespawn</a>, <a href="GameArea.html#setWaveManager(com.csse3200.game.entities.WaveManager)">setWaveManager</a>, <a href="GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)">spawnEntity</a>, <a href="GameArea.html#spawnRobotAtFloat(float,float)">spawnRobotAtFloat</a>, <a href="GameArea.html#spawnRobotAtFloat(float,float,java.lang.String)">spawnRobotAtFloat</a>, <a href="GameArea.html#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean)">spawnRobotAtTile</a>, <a href="GameArea.html#spawnRobotAtTile(com.badlogic.gdx.math.GridPoint2,boolean,boolean,java.lang.String)">spawnRobotAtTile</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -269,13 +265,13 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.csse3200.game.areas.terrain.TerrainFactory)">
+<section class="detail" id="&lt;init&gt;(java.lang.String)">
 <h3>LevelGameArea</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LevelGameArea</span><wbr><span class="parameters">(<a href="terrain/TerrainFactory.html" title="class in com.csse3200.game.areas.terrain">TerrainFactory</a>&nbsp;terrainFactory)</span></div>
-<div class="block">Initialise this LevelGameArea to use the provided TerrainFactory.</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">LevelGameArea</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</span></div>
+<div class="block">Initialise this LevelGameArea for a specific level.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>terrainFactory</code> - TerrainFactory used to create the terrain for the GameArea.</dd>
+<dd><code>levelKey</code> - the level key to load</dd>
 </dl>
 </section>
 </li>
@@ -291,8 +287,8 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <section class="detail" id="setScaling()">
 <h3>setScaling</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setScaling</span>()</div>
-<div class="block">Uses stage height and width (screen resolution from <a href="../rendering/RenderService.html" title="class in com.csse3200.game.rendering"><code>RenderService</code></a>) to set variables relating to tile, grid and
- character sizing and placement.</div>
+<div class="block">Uses stage height and width to set variables relating to tile, grid and character sizing and
+ placement.</div>
 </section>
 </li>
 <li>
@@ -303,19 +299,6 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="GameArea.html#create()">create</a></code>&nbsp;in class&nbsp;<code><a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="dispose()">
-<h3>dispose</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block">Extends the super method to stop music and unload assets.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="GameArea.html#dispose()">dispose</a></code>&nbsp;in class&nbsp;<code><a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></code></dd>
 </dl>
 </section>
 </li>
@@ -365,11 +348,9 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </section>
 </li>
 <li>
-<section class="detail" id="spawnProjectile(com.badlogic.gdx.math.Vector2,float,float)">
+<section class="detail" id="spawnProjectile(com.badlogic.gdx.math.Vector2)">
 <h3>spawnProjectile</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">spawnProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
- float&nbsp;velocityX,
- float&nbsp;velocityY)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</span></div>
 </section>
 </li>
 <li>
@@ -529,6 +510,12 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <dt>Returns:</dt>
 <dd>true if a character is selected, false otherwise</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getWorldWidth()">
+<h3>getWorldWidth</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getWorldWidth</span>()</div>
 </section>
 </li>
 </ul>

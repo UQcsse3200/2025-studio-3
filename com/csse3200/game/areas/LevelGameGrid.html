@@ -128,21 +128,87 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds a tile to a given index.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTile(int,int)" class="member-name-link">getTile</a><wbr>(int&nbsp;row,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearOccupant(int,int)" class="member-name-link">clearOccupant</a><wbr>(int&nbsp;row,
  int&nbsp;col)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Getter method for retrieving the tile entity instance at a given (row, col).</div>
+<div class="block">Clears a grid tile without a check from tile x, y</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearOccupantIndex(int)" class="member-name-link">clearOccupantIndex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Clears a grid tile without a check from tile x, y</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCols()" class="member-name-link">getCols</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for cols</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileFromXY(float,float)" class="member-name-link">getTileFromXY</a><wbr>(float&nbsp;x,
- float&nbsp;y)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOccupant(int,int)" class="member-name-link">getOccupant</a><wbr>(int&nbsp;row,
+ int&nbsp;col)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTile(int,int,com.csse3200.game.entities.Entity)" class="member-name-link">setTile</a><wbr>(int&nbsp;row,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getOccupantIndex(int)" class="member-name-link">getOccupantIndex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRows()" class="member-name-link">getRows</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for rows</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTile(int)" class="member-name-link">getTile</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter method for retrieving the tile entity instance at a given index.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTile(int,int)" class="member-name-link">getTile</a><wbr>(int&nbsp;row,
+ int&nbsp;col)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter method for retrieving the tile entity instance at a given (row, col).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTileFromXY(float,float)" class="member-name-link">getTileFromXY</a><wbr>(float&nbsp;x,
+ float&nbsp;y)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isOccupied(int,int)" class="member-name-link">isOccupied</a><wbr>(int&nbsp;row,
+ int&nbsp;col)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isOccupiedIndex(int)" class="member-name-link">isOccupiedIndex</a><wbr>(int&nbsp;index)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placeOccupant(int,int,com.csse3200.game.entities.Entity)" class="member-name-link">placeOccupant</a><wbr>(int&nbsp;row,
+ int&nbsp;col,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Place a unit if the tile is empty from its x, y grid position</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#placeOccupantIndex(int,com.csse3200.game.entities.Entity)" class="member-name-link">placeOccupantIndex</a><wbr>(int&nbsp;index,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Place a unit if the tile is empty from array index</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeOccupantIfMatch(int,int,com.csse3200.game.entities.Entity)" class="member-name-link">removeOccupantIfMatch</a><wbr>(int&nbsp;row,
+ int&nbsp;col,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes an occupant from the grid if it exists This is now Null pointer safe</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeOccupantIfMatchIndex(int,com.csse3200.game.entities.Entity)" class="member-name-link">removeOccupantIfMatchIndex</a><wbr>(int&nbsp;index,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes an occupant from the grid if it exists This is now Null pointer safe</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTile(int,int,com.csse3200.game.entities.Entity)" class="member-name-link">setTile</a><wbr>(int&nbsp;row,
  int&nbsp;col,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;tile)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets a specified (row, col) position on the grid to a provided tile entity.</div>
 </div>
 </div>
@@ -184,6 +250,142 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getCols()">
+<h3>getCols</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCols</span>()</div>
+<div class="block">Getter for cols</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the number of cols in the grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRows()">
+<h3>getRows</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRows</span>()</div>
+<div class="block">Getter for rows</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the number of cols in the grid</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isOccupied(int,int)">
+<h3>isOccupied</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isOccupied</span><wbr><span class="parameters">(int&nbsp;row,
+ int&nbsp;col)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="isOccupiedIndex(int)">
+<h3>isOccupiedIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isOccupiedIndex</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getOccupant(int,int)">
+<h3>getOccupant</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getOccupant</span><wbr><span class="parameters">(int&nbsp;row,
+ int&nbsp;col)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getOccupantIndex(int)">
+<h3>getOccupantIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getOccupantIndex</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="placeOccupant(int,int,com.csse3200.game.entities.Entity)">
+<h3>placeOccupant</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeOccupant</span><wbr><span class="parameters">(int&nbsp;row,
+ int&nbsp;col,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Place a unit if the tile is empty from its x, y grid position</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>row</code> - the row for placement</dd>
+<dd><code>col</code> - the col for placement</dd>
+<dd><code>unit</code> - the unit to place</dd>
+<dt>Returns:</dt>
+<dd>true if successful otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="placeOccupantIndex(int,com.csse3200.game.entities.Entity)">
+<h3>placeOccupantIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">placeOccupantIndex</span><wbr><span class="parameters">(int&nbsp;index,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Place a unit if the tile is empty from array index</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the spot in array</dd>
+<dd><code>unit</code> - the unit to place</dd>
+<dt>Returns:</dt>
+<dd>true if successful otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="removeOccupantIfMatch(int,int,com.csse3200.game.entities.Entity)">
+<h3>removeOccupantIfMatch</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeOccupantIfMatch</span><wbr><span class="parameters">(int&nbsp;row,
+ int&nbsp;col,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Removes an occupant from the grid if it exists This is now Null pointer safe</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>row</code> - the row for removal</dd>
+<dd><code>col</code> - the col for removal</dd>
+<dd><code>unit</code> - the unit to remove</dd>
+<dt>Returns:</dt>
+<dd>true if successful, otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="removeOccupantIfMatchIndex(int,com.csse3200.game.entities.Entity)">
+<h3>removeOccupantIfMatchIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">removeOccupantIfMatchIndex</span><wbr><span class="parameters">(int&nbsp;index,
+ <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</span></div>
+<div class="block">Removes an occupant from the grid if it exists This is now Null pointer safe</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the array position of the tile</dd>
+<dd><code>unit</code> - the unit to remove</dd>
+<dt>Returns:</dt>
+<dd>true if successful, otherwise false</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearOccupant(int,int)">
+<h3>clearOccupant</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearOccupant</span><wbr><span class="parameters">(int&nbsp;row,
+ int&nbsp;col)</span></div>
+<div class="block">Clears a grid tile without a check from tile x, y</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>row</code> - the row for removal</dd>
+<dd><code>col</code> - the col for removal</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearOccupantIndex(int)">
+<h3>clearOccupantIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearOccupantIndex</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Clears a grid tile without a check from tile x, y</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the array position for removal</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="addTile(int,com.csse3200.game.entities.Entity)">
 <h3>addTile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addTile</span><wbr><span class="parameters">(int&nbsp;index,
@@ -208,6 +410,19 @@ loadScripts(document, 'script');</script>
 <dd><code>col</code> - the grid's column that is storing the tile of interest</dd>
 <dt>Returns:</dt>
 <dd>the tile entity found at the given (row, col) position on the grid.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTile(int)">
+<h3>getTile</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getTile</span><wbr><span class="parameters">(int&nbsp;index)</span></div>
+<div class="block">Getter method for retrieving the tile entity instance at a given index.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>index</code> - the tile to get from a linear index</dd>
+<dt>Returns:</dt>
+<dd>the tile</dd>
 </dl>
 </section>
 </li>

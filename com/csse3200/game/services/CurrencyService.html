@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">CurrencyService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Service for managing currency operations in the game.</div>
+<div class="block">Service for managing in-level currency.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -125,7 +125,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#add(int)" class="member-name-link">add</a><wbr>(int&nbsp;amount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Adds a positive amount to the currency (clamped to maximum).</div>
+<div class="block">Adds a positive amount to the currency.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canAfford(int)" class="member-name-link">canAfford</a><wbr>(int&nbsp;amount)</code></div>
@@ -135,21 +135,16 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#get()" class="member-name-link">get</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the current currency amount.</div>
+<div class="block">Gets the currency amount.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/currency/Currency.html" title="class in com.csse3200.game.components.currency">Currency</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrency()" class="member-name-link">getCurrency</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(int)" class="member-name-link">set</a><wbr>(int&nbsp;amount)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the internal currency model.</div>
+<div class="block">Sets the currency amount.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#set(int)" class="member-name-link">set</a><wbr>(int&nbsp;amount)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spend(int)" class="member-name-link">spend</a><wbr>(int&nbsp;amount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the absolute currency amount (clamped &gt;= 0).</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spend(int)" class="member-name-link">spend</a><wbr>(int&nbsp;amount)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Attempts to spend the specified amount if affordable.</div>
 </div>
 </div>
@@ -191,24 +186,13 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getCurrency()">
-<h3>getCurrency</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../components/currency/Currency.html" title="class in com.csse3200.game.components.currency">Currency</a></span>&nbsp;<span class="element-name">getCurrency</span>()</div>
-<div class="block">Gets the internal currency model.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the currency instance</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="get()">
 <h3>get</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">get</span>()</div>
-<div class="block">Gets the current currency amount.</div>
+<div class="block">Gets the currency amount.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the current amount</dd>
+<dd>the currency amount</dd>
 </dl>
 </section>
 </li>
@@ -216,7 +200,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="set(int)">
 <h3>set</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">set</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
-<div class="block">Sets the absolute currency amount (clamped &gt;= 0).</div>
+<div class="block">Sets the currency amount.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>amount</code> - the new amount</dd>
@@ -227,7 +211,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="add(int)">
 <h3>add</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">add</span><wbr><span class="parameters">(int&nbsp;amount)</span></div>
-<div class="block">Adds a positive amount to the currency (clamped to maximum).</div>
+<div class="block">Adds a positive amount to the currency.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>amount</code> - the amount to add</dd>

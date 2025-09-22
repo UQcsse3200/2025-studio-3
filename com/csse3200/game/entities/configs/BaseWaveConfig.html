@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li>Nested</li>
-<li><a href="#field-summary">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -46,9 +46,9 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li><a href="#field-detail">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </li>
 </ul>
@@ -58,15 +58,15 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
-<li>Method</li>
+<li><a href="#method-detail">Method</a></li>
 </ul>
 </div>
 <div class="nav-list-search"><a href="../../../../../search.html">SEARCH</a>
@@ -91,54 +91,10 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BaseWaveConfig</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Defines a basic set of properties stored in wave config files to be loaded by Wave Factories.</div>
+<div class="block">BaseWaveConfig is a class that represents a wave configuration.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></code></div>
-<div class="col-second even-row-color"><code><a href="#bungee" class="member-name-link">bungee</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#expGained" class="member-name-link">expGained</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Experience points gained from this wave</div>
-</div>
-<div class="col-first even-row-color"><code><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></code></div>
-<div class="col-second even-row-color"><code><a href="#fast" class="member-name-link">fast</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#minZombiesSpawn" class="member-name-link">minZombiesSpawn</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Minimum number of zombies to spawn in this wave</div>
-</div>
-<div class="col-first even-row-color"><code><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></code></div>
-<div class="col-second even-row-color"><code><a href="#standard" class="member-name-link">standard</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">Enemy definitions - individual fields for JSON compatibility</div>
-</div>
-<div class="col-first odd-row-color"><code><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#tanky" class="member-name-link">tanky</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></code></div>
-<div class="col-second even-row-color"><code><a href="#teleport" class="member-name-link">teleport</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#waveWeight" class="member-name-link">waveWeight</a></code></div>
-<div class="col-last odd-row-color">
-<div class="block">Weight/difficulty of this wave</div>
-</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -151,12 +107,6 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Creates a new BaseWaveConfig with default values.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(int,int,int)" class="member-name-link">BaseWaveConfig</a><wbr>(int&nbsp;waveWeight,
- int&nbsp;expGained,
- int&nbsp;minZombiesSpawn)</code></div>
-<div class="col-last odd-row-color">
-<div class="block">Constructor with parameters</div>
-</div>
 </div>
 </section>
 </li>
@@ -164,6 +114,36 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
+<div id="method-summary-table">
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Method</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn()" class="member-name-link">getMinZombiesSpawn</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the minimum number of zombies to spawn</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpawnConfig(java.lang.String)" class="member-name-link">getSpawnConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;enemyType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the spawn configuration for a given enemy type</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpawnConfigs()" class="member-name-link">getSpawnConfigs</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the spawn configurations</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight()" class="member-name-link">getWaveWeight</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the wave weight</div>
+</div>
+</div>
+</div>
+</div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -173,66 +153,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="waveWeight">
-<h3>waveWeight</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">waveWeight</span></div>
-<div class="block">Weight/difficulty of this wave</div>
-</section>
-</li>
-<li>
-<section class="detail" id="expGained">
-<h3>expGained</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">expGained</span></div>
-<div class="block">Experience points gained from this wave</div>
-</section>
-</li>
-<li>
-<section class="detail" id="minZombiesSpawn">
-<h3>minZombiesSpawn</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">minZombiesSpawn</span></div>
-<div class="block">Minimum number of zombies to spawn in this wave</div>
-</section>
-</li>
-<li>
-<section class="detail" id="standard">
-<h3>standard</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></span>&nbsp;<span class="element-name">standard</span></div>
-<div class="block">Enemy definitions - individual fields for JSON compatibility</div>
-</section>
-</li>
-<li>
-<section class="detail" id="fast">
-<h3>fast</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></span>&nbsp;<span class="element-name">fast</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="tanky">
-<h3>tanky</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></span>&nbsp;<span class="element-name">tanky</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="bungee">
-<h3>bungee</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></span>&nbsp;<span class="element-name">bungee</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="teleport">
-<h3>teleport</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="EnemySpawnConfig.html" title="class in com.csse3200.game.entities.configs">EnemySpawnConfig</a></span>&nbsp;<span class="element-name">teleport</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -245,18 +165,57 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a new BaseWaveConfig with default values.</div>
 </section>
 </li>
+</ul>
+</section>
+</li>
+<!-- ============ METHOD DETAIL ========== -->
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int)">
-<h3>BaseWaveConfig</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">BaseWaveConfig</span><wbr><span class="parameters">(int&nbsp;waveWeight,
- int&nbsp;expGained,
- int&nbsp;minZombiesSpawn)</span></div>
-<div class="block">Constructor with parameters</div>
+<section class="method-details" id="method-detail">
+<h2>Method Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="getWaveWeight()">
+<h3>getWaveWeight</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getWaveWeight</span>()</div>
+<div class="block">Get the wave weight</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the wave weight</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMinZombiesSpawn()">
+<h3>getMinZombiesSpawn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMinZombiesSpawn</span>()</div>
+<div class="block">Get the minimum number of zombies to spawn</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the minimum number of zombies to spawn</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSpawnConfigs()">
+<h3>getSpawnConfigs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</span>&nbsp;<span class="element-name">getSpawnConfigs</span>()</div>
+<div class="block">Get the spawn configurations</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the spawn configurations</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSpawnConfig(java.lang.String)">
+<h3>getSpawnConfig</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a></span>&nbsp;<span class="element-name">getSpawnConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;enemyType)</span></div>
+<div class="block">Get the spawn configuration for a given enemy type</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>waveWeight</code> - the weight budget for this wave</dd>
-<dd><code>expGained</code> - experience gained for completing this wave</dd>
-<dd><code>minZombiesSpawn</code> - minimum number of enemies to spawn</dd>
+<dd><code>enemyType</code> - the enemy type</dd>
+<dt>Returns:</dt>
+<dd>the spawn configuration for the given enemy type</dd>
 </dl>
 </section>
 </li>

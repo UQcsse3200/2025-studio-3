@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li>Nested</li>
-<li><a href="#field-summary">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li><a href="#field-detail">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -58,13 +58,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -101,27 +101,6 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>boolean</code></div>
-<div class="col-second even-row-color"><code><a href="#didHit" class="member-name-link">didHit</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#hit" class="member-name-link">hit</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>short</code></div>
-<div class="col-second even-row-color"><code><a href="#layerMask" class="member-name-link">layerMask</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -146,11 +125,29 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportRayFixture(com.badlogic.gdx.physics.box2d.Fixture,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,float)" class="member-name-link">reportRayFixture</a><wbr>(com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixture,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#didHit()" class="member-name-link">didHit</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHit()" class="member-name-link">getHit</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>short</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLayerMask()" class="member-name-link">getLayerMask</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#reportRayFixture(com.badlogic.gdx.physics.box2d.Fixture,com.badlogic.gdx.math.Vector2,com.badlogic.gdx.math.Vector2,float)" class="member-name-link">reportRayFixture</a><wbr>(com.badlogic.gdx.physics.box2d.Fixture&nbsp;fixture,
  com.badlogic.gdx.math.Vector2&nbsp;point,
  com.badlogic.gdx.math.Vector2&nbsp;normal,
  float&nbsp;fraction)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDidHit(boolean)" class="member-name-link">setDidHit</a><wbr>(boolean&nbsp;didHit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHit(com.csse3200.game.physics.raycast.RaycastHit)" class="member-name-link">setHit</a><wbr>(<a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a>&nbsp;hit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLayerMask(short)" class="member-name-link">setLayerMask</a><wbr>(short&nbsp;layerMask)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -164,32 +161,6 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="layerMask">
-<h3>layerMask</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">short</span>&nbsp;<span class="element-name">layerMask</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="hit">
-<h3>hit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></span>&nbsp;<span class="element-name">hit</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="didHit">
-<h3>didHit</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">didHit</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -220,6 +191,42 @@ implements com.badlogic.gdx.physics.box2d.RayCastCallback</span></div>
 <dt>Specified by:</dt>
 <dd><code>reportRayFixture</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.physics.box2d.RayCastCallback</code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setLayerMask(short)">
+<h3>setLayerMask</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLayerMask</span><wbr><span class="parameters">(short&nbsp;layerMask)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLayerMask()">
+<h3>getLayerMask</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">short</span>&nbsp;<span class="element-name">getLayerMask</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getHit()">
+<h3>getHit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></span>&nbsp;<span class="element-name">getHit</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="didHit()">
+<h3>didHit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">didHit</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setHit(com.csse3200.game.physics.raycast.RaycastHit)">
+<h3>setHit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setHit</span><wbr><span class="parameters">(<a href="RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a>&nbsp;hit)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="setDidHit(boolean)">
+<h3>setDidHit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDidHit</span><wbr><span class="parameters">(boolean&nbsp;didHit)</span></div>
 </section>
 </li>
 </ul>

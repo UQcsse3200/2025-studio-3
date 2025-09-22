@@ -199,6 +199,20 @@ loadScripts(document, 'script');</script>
 <div class="block">Handles window resize by re-centering all active dialogs.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#skill(java.lang.String,java.lang.String)" class="member-name-link">skill</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates and shows a skill dialog.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#skill(java.lang.String,java.lang.String,java.util.function.Consumer,java.util.function.Consumer)" class="member-name-link">skill</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a>&gt;&nbsp;onUnlock,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a>&gt;&nbsp;onClose)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates and shows a skill dialog with callbacks.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#warning(java.lang.String,java.lang.String)" class="member-name-link">warning</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -337,6 +351,40 @@ loadScripts(document, 'script');</script>
 <dd><code>title</code> - the dialog title</dd>
 <dd><code>message</code> - the dialog message</dd>
 <dd><code>onClose</code> - callback when dialog is closed</dd>
+<dt>Returns:</dt>
+<dd>the created dialog component</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="skill(java.lang.String,java.lang.String)">
+<h3>skill</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></span>&nbsp;<span class="element-name">skill</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message)</span></div>
+<div class="block">Creates and shows a skill dialog.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>title</code> - the dialog title</dd>
+<dd><code>message</code> - the dialog message</dd>
+<dt>Returns:</dt>
+<dd>the created dialog component</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="skill(java.lang.String,java.lang.String,java.util.function.Consumer,java.util.function.Consumer)">
+<h3>skill</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a></span>&nbsp;<span class="element-name">skill</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;title,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;message,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a>&gt;&nbsp;onUnlock,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/Consumer.html" title="class or interface in java.util.function" class="external-link">Consumer</a>&lt;<a href="../components/dialog/DialogComponent.html" title="class in com.csse3200.game.components.dialog">DialogComponent</a>&gt;&nbsp;onClose)</span></div>
+<div class="block">Creates and shows a skill dialog with callbacks.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>title</code> - the dialog title</dd>
+<dd><code>message</code> - the dialog message</dd>
+<dd><code>onUnlock</code> - callback when user unlocks the skill</dd>
+<dd><code>onClose</code> - callback when user closes the dialog</dd>
 <dt>Returns:</dt>
 <dd>the created dialog component</dd>
 </dl>
