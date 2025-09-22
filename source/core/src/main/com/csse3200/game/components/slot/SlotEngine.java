@@ -3,6 +3,8 @@ package com.csse3200.game.components.slot;
 import com.csse3200.game.areas.SlotMachineArea;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,8 +15,12 @@ import java.util.logging.Logger;
  * triple reels of that event id. Otherwise, return a non-triple reels array. 3) Effect handling
  *
  * <p>* Output for UI: * - {@code SpinResult#getReels(): int[3]} of ids in [0..7] * - {@code
- * SpinResult#isEffectTriggered(): boolean} * - {@code SpinResult#getEffect():
- * Optional&lt;Effect&gt;}
+ * SpinResult#isEffectTriggered(): boolean} * - {@code
+ * SpinResult#getEffect():Optional&lt;Effect&gt;}
+ *
+ * <p><b>New:</b> Spin Credits * Start with 5 credits by default (configurable). * Automatically +1
+ * credit every 5 seconds (configurable). * {@link #spin()} consumes 1 credit each time. * When no
+ * credits left, return a non-triple result with no effect, and log a warning.
  */
 public class SlotEngine {
   private static final Logger LOG = Logger.getLogger(SlotEngine.class.getName());
@@ -27,6 +33,50 @@ public class SlotEngine {
 
   // Track which effects have already been logged once
   private final EnumSet<Effect> loggedOnce = EnumSet.noneOf(Effect.class);
+
+  // New: spin credits state
+  private final AtomicInteger remainingSpins;
+  private ScheduledExecutorService refillExec;
+
+  /** Try to consume one credit. */
+  private boolean consumeOneCredit() {
+    while (true) {
+      int cur = remainingSpins.get();
+      if (cur <= 0) return false;
+      if (remainingSpins.compareAndSet(cur, cur - 1)) {
+        if (LOG.isLoggable(Level.FINE)) {
+          LOG.fine(() -> String.format("[Slot] credit consumed: %d -> %d", cur, cur - 1));
+        }
+        return true;
+      }
+    }
+  }
+
+  /** Add credits with optional cap and log the source (manual or auto). */
+  private void updateSpins(int delta, String source) {
+    if (delta <= 0) return;
+    int max = config.getMaxSpins();
+    int before;
+    int after;
+    while (true) {
+      before = remainingSpins.get();
+      int next = before + delta;
+      if (max > 0 && next > max) next = max; // respect max cap if set
+      if (next == before) {
+        if (LOG.isLoggable(Level.FINE)) {
+          LOG.fine("[Slot] spins unchanged (at cap), source=" + source + ", left=" + before);
+        }
+        return;
+      }
+      if (remainingSpins.compareAndSet(before, next)) {
+        after = next;
+        break;
+      }
+    }
+    final int b = before;
+    final int a = after;
+    LOG.info(() -> String.format("[Slot] spins +%d (%s): %d -> %d", delta, source, b, a));
+  }
 
   /**
    * Enumeration of all possible effects. Each effect has a stable id (0..7) and a display name for
@@ -134,10 +184,48 @@ public class SlotEngine {
     // Keep a mutable weights map; initialize with enum defaults and keep order stable.
     private final LinkedHashMap<Effect, Integer> weights = new LinkedHashMap<>();
 
+    // New: credits configuration
+    /** Initial credits at start, default 5. */
+    private int initialSpins = 5;
+
+    /** Auto-refill interval in seconds, default 5. */
+    private int refillPeriodSeconds = 5;
+
+    /** Maximum cap of credits; <=0 means no cap. */
+    private int maxSpins = 0;
+
     public SlotConfig() {
       for (Effect e : Effect.values()) {
         weights.put(e, e.getDefaultWeight());
       }
+    }
+
+    // New: credits getters and setters
+    public int getInitialSpins() {
+      return initialSpins;
+    }
+
+    public void setInitialSpins(int initialSpins) {
+      if (initialSpins < 0) throw new IllegalArgumentException("initialSpins must be >= 0");
+      this.initialSpins = initialSpins;
+    }
+
+    public int getRefillPeriodSeconds() {
+      return refillPeriodSeconds;
+    }
+
+    public void setRefillPeriodSeconds(int refillPeriodSeconds) {
+      if (refillPeriodSeconds <= 0)
+        throw new IllegalArgumentException("refillPeriodSeconds must be > 0");
+      this.refillPeriodSeconds = refillPeriodSeconds;
+    }
+
+    public int getMaxSpins() {
+      return maxSpins;
+    }
+
+    public void setMaxSpins(int maxSpins) {
+      this.maxSpins = maxSpins;
     }
 
     /**
@@ -222,20 +310,64 @@ public class SlotEngine {
 
   /** Construct with injected config and RNG. */
   public SlotEngine(SlotConfig config, Random random) {
-    this.config = config;
-    this.random = random;
+    this.config = Objects.requireNonNull(config, "config");
+    this.random = Objects.requireNonNull(random, "random");
+    this.remainingSpins = new AtomicInteger(config.getInitialSpins());
+    startAutoRefill();
   }
 
   private SlotMachineArea slotMachineArea;
 
   public SlotEngine(SlotMachineArea area) {
-    this.config = new SlotConfig();
-    this.random = new SecureRandom();
+    this(new SlotConfig(), new SecureRandom());
     this.slotMachineArea = area;
   }
 
   public void setSlotMachineArea(SlotMachineArea area) {
     this.slotMachineArea = area;
+  }
+
+  // Credits API
+  public int getRemainingSpins() {
+    return remainingSpins.get();
+  }
+
+  public boolean canSpin() {
+    return remainingSpins.get() > 0;
+  }
+
+  public void addSpins(int delta) {
+    if (delta > 0) updateSpins(delta, "manual_add");
+  }
+
+  public synchronized void startAutoRefill() {
+    if (refillExec != null && !refillExec.isShutdown()) {
+      LOG.fine("[Slot] auto_refill already running, skip start");
+      return;
+    }
+    refillExec =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread t = new Thread(r, "SlotEngine-Refill");
+              t.setDaemon(true);
+              return t;
+            });
+    int period = config.getRefillPeriodSeconds();
+    refillExec.scheduleAtFixedRate(
+        () -> updateSpins(1, "auto_refill"), period, period, TimeUnit.SECONDS);
+    LOG.info(() -> String.format("[Slot] auto_refill started, +1 per %ds", period));
+  }
+
+  public synchronized void stopAutoRefill() {
+    if (refillExec != null) {
+      refillExec.shutdownNow();
+      refillExec = null;
+      LOG.info("[Slot] auto_refill stopped");
+    }
+  }
+
+  public void dispose() {
+    stopAutoRefill();
   }
 
   /**
@@ -245,6 +377,17 @@ public class SlotEngine {
    * @return SpinResult consumable by UI.
    */
   public SpinResult spin() {
+    // First check if we have credits; if not, return non-trigger result
+    if (!consumeOneCredit()) {
+      int[] reelsNoCredit = genNonTripleAny();
+      SpinResult noCreditRes = new SpinResult(reelsNoCredit, null);
+      LOG.warning(
+          () ->
+              String.format(
+                  "[Slot] spin blocked: no credits; return non-trigger. reels=%s, left=%d",
+                  Arrays.toString(noCreditRes.getReels()), remainingSpins.get()));
+      return noCreditRes;
+    }
     // Step1: Check trigger
     if (roll(config.getTriggerProbability())) {
       // Step2: Build a picker from the **current** weights (reflects recent setWeight/ setWeights)
@@ -306,11 +449,12 @@ public class SlotEngine {
       LOG.info(
           () ->
               String.format(
-                  "[Slot] triggered=true effect=%s(%d) reels=%s p=%.2f",
+                  "[Slot] triggered=true effect=%s(%d) reels=%s p=%.2f left=%d",
                   eff.getDisplayName(),
                   eff.getId(),
                   Arrays.toString(res.getReels()),
-                  config.getTriggerProbability()));
+                  config.getTriggerProbability(),
+                  remainingSpins.get()));
     }
   }
 
