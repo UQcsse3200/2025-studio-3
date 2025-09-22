@@ -1,5 +1,6 @@
 package com.csse3200.game.minigame;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.csse3200.game.entities.Entity;
@@ -74,7 +75,6 @@ class PaddleInputComponentTest {
     paddle = new TestPaddle();
     paddleEntity.addComponent(paddle);
     paddleEntity.create();
-
     inputComponent = new TestPaddleInputComponent(paddleEntity);
   }
 
@@ -99,6 +99,6 @@ class PaddleInputComponentTest {
     float startX = paddle.getX();
     inputComponent.release();
     inputComponent.update();
-    assertTrue(paddle.getX() == startX, "Paddle should move right when right key is pressed ");
+    assertEquals(startX, paddle.getX());
   }
 }

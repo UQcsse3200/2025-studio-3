@@ -25,7 +25,7 @@ public class EventHandler {
 
   public EventHandler() {
     // Assume no events by default, which will be the case for most entities
-    listeners = new HashMap<>(0);
+    listeners = HashMap.newHashMap(0);
   }
 
   /**

@@ -1,9 +1,8 @@
 package com.csse3200.game.entities;
 
+import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
-import com.csse3200.game.entities.configs.EnemySpawnConfig;
-import com.csse3200.game.entities.configs.GameConfig;
-import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ public class WaveManager implements WaveConfigProvider {
   private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
 
   private int currentWave = 0;
-  private int currentLevel = 1;
+  private String currentLevelKey = "LevelOne";
   private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
@@ -41,7 +40,6 @@ public class WaveManager implements WaveConfigProvider {
   private boolean preparationPhaseActive = false;
   private float preparationPhaseDuration = 10.0f;
   private float preparationPhaseTimer = 0.0f;
-
   private final EntitySpawn entitySpawn;
 
   // Callback interface for spawning enemies
@@ -65,10 +63,10 @@ public class WaveManager implements WaveConfigProvider {
   private int waveLanePointer;
 
   // Wave configuration management
-  private static GameConfig gameConfig = null;
   private boolean levelComplete = false;
+  private BaseLevelConfig levelConfig;
 
-  public WaveManager() {
+  public WaveManager(String levelKey) {
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
@@ -77,9 +75,14 @@ public class WaveManager implements WaveConfigProvider {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
+    this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
     resetToInitialState();
-
     Collections.shuffle(laneOrder);
+    this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
+    if (levelConfig == null) {
+      logger.warn("Level config not found for level {}", this.currentLevelKey);
+      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("levelOne");
+    }
   }
 
   /**
@@ -108,9 +111,7 @@ public class WaveManager implements WaveConfigProvider {
   public void initialiseNewWave() {
     // Don't start new waves if level is complete
     if (levelComplete) {
-      showWinDialog();
       logger.info("Level complete - no more waves will spawn");
-      return;
     }
 
     setCurrentWave(currentWave + 1);
@@ -121,7 +122,7 @@ public class WaveManager implements WaveConfigProvider {
     enemiesDisposed = 0; // Reset disposed counter for new wave
     int maxLanes = Math.min(currentWave + 1, 5);
 
-    entitySpawn.spawnEnemiesFromConfig(); // new method
+    entitySpawn.spawnEnemiesFromConfig();
     enemiesToSpawn = entitySpawn.getSpawnCount();
     waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
     Collections.shuffle(waveLaneSequence);
@@ -210,9 +211,9 @@ public class WaveManager implements WaveConfigProvider {
       logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
 
       // Check if this was the last wave for the current level
-      int maxWaves = getWaveCountForLevel(currentLevel);
+      int maxWaves = getCurrentLevelWaveCount();
       if (currentWave >= maxWaves) {
-        logger.info("All waves completed for level {}! Level complete!", currentLevel);
+        logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
         levelComplete = true;
         waveActive = false; // Just stop the wave, don't call endWave()
         // Don't start a new wave - levelComplete will be handled in initialiseNewWave()
@@ -266,7 +267,6 @@ public class WaveManager implements WaveConfigProvider {
    */
   public void resetToInitialState() {
     currentWave = 0;
-    currentLevel = 1;
     levelComplete = false;
     enemiesDisposed = 0;
     waveActive = false;
@@ -289,22 +289,28 @@ public class WaveManager implements WaveConfigProvider {
   }
 
   /**
-   * @return current level number
+   * @return current level key
    */
-  public int getCurrentLevel() {
-    return currentLevel;
+  public String getCurrentLevelKey() {
+    return currentLevelKey;
   }
 
   /**
    * Sets the current level. This should be called when loading a specific level.
    *
-   * @param level the level number to set
+   * @param levelKey the level key to set
    */
-  public void setCurrentLevel(int level) {
-    this.currentLevel = level;
+  public void setCurrentLevel(String levelKey) {
+    this.currentLevelKey = levelKey;
+    // Reload level configuration
+    this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
+    if (levelConfig == null) {
+      logger.warn("Level config not found for level {}", this.currentLevelKey);
+      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("LevelOne");
+    }
     // Reset level state when switching levels
     resetLevel();
-    logger.info("Level set to {}", level);
+    logger.info("Level set to {}", levelKey);
   }
 
   /**
@@ -370,77 +376,65 @@ public class WaveManager implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-    String robotType = entitySpawn.getNextRobotType(); // new method
+    String robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
-  }
-
-  // Wave configuration methods (moved from WaveFactory)
-
-  /** Gets the game configuration, loading it lazily if needed. */
-  private static GameConfig getGameConfig() {
-    if (gameConfig == null) {
-      gameConfig = loadGameConfig();
-    }
-    return gameConfig;
-  }
-
-  /** Loads game configuration data from JSON. */
-  private static GameConfig loadGameConfig() {
-    return FileLoader.readClass(GameConfig.class, "configs/level1.json");
   }
 
   /**
    * Gets the number of waves configured for a specific level.
    *
-   * @param levelNumber the level number to check
+   * @param levelKey the level key to check
    * @return the number of waves for that level
    */
-  public int getWaveCountForLevel(int levelNumber) {
-    GameConfig config = getGameConfig();
-    return config.getWaveCountForLevel(levelNumber);
+  public int getWaveCountForLevel(String levelKey) {
+    BaseLevelConfig config = ServiceLocator.getConfigService().getLevelConfig(levelKey);
+    return config != null ? config.getWaves().size() : 0;
   }
 
   /**
+   * Gets the number of waves configured for the current level.
+   *
+   * @return the number of waves for the current level
+   */
+  public int getCurrentLevelWaveCount() {
+    return levelConfig != null ? levelConfig.getWaves().size() : 0;
+  }
+
+  /**
+   * Returns the configured weight/budget for the current wave.
+   *
    * @return the configured weight/budget for the current wave
    */
   public int getWaveWeight() {
-    return getCurrentWaveConfig().waveWeight;
+    BaseWaveConfig waveConfig = getCurrentWaveConfig();
+    return waveConfig != null ? waveConfig.getWaveWeight() : 20; // Default fallback
   }
 
   /**
+   * Returns the minimum number of enemies to spawn for the current wave.
+   *
    * @return the minimum number of enemies to spawn for the current wave
    */
   public int getMinZombiesSpawn() {
-    return getCurrentWaveConfig().minZombiesSpawn;
+    BaseWaveConfig waveConfig = getCurrentWaveConfig();
+    return waveConfig != null ? waveConfig.getMinZombiesSpawn() : 5; // Default fallback
   }
 
   /**
-   * @return the experience awarded for completing the current wave
-   */
-  public int getExpGained() {
-    return getCurrentWaveConfig().expGained;
-  }
-
-  /**
+   * Returns the enemy spawn attributes (cost + chance) for the current wave.
+   *
    * @return the enemy spawn attributes (cost + chance) for the current wave.
    */
-  public Map<String, EnemySpawnConfig> getEnemyConfigs() {
+  public Map<String, BaseSpawnConfig> getEnemyConfigs() {
     BaseWaveConfig wave = getCurrentWaveConfig();
 
-    if (wave == null) {
+    if (wave == null || wave.getSpawnConfigs() == null) {
       return new java.util.HashMap<>();
     }
 
-    // Construct Map from individual fields for backward compatibility
-    Map<String, EnemySpawnConfig> configs = new java.util.HashMap<>();
-    configs.put("standard", wave.standard);
-    configs.put("fast", wave.fast);
-    configs.put("tanky", wave.tanky);
-    configs.put("bungee", wave.bungee);
-    configs.put("teleport", wave.teleport);
-
-    return configs;
+    // Return the spawn configurations from the wave
+    return wave.getSpawnConfigs();
   }
 
   /**
@@ -452,18 +446,13 @@ public class WaveManager implements WaveConfigProvider {
     int waveNumber = getCurrentWave();
     int waveIndex = waveNumber - 1; // Convert to 0-based index
 
-    GameConfig config = getGameConfig();
-    return config.getWave(currentLevel, waveIndex);
-  }
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      return levelConfig.getWaves().get(waveIndex);
+    }
 
-  private void showWinDialog() {
-    String title = "You Won!";
-
-    // Build the message content
-    StringBuilder messageBuilder = new StringBuilder();
-    messageBuilder.append("Congratulations! You beat the level!");
-
-    String message = messageBuilder.toString();
-    ServiceLocator.getDialogService().info(title, message);
+    return new BaseWaveConfig(); // Return default if not found
   }
 }

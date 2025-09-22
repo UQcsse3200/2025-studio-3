@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -51,7 +52,7 @@ class HitMarkerComponentTest {
   void NoFlashColour() {
     Entity entity = createTarget();
     HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
-    assertEquals(Color.WHITE, hitMarker.render.colour);
+    assertEquals(Color.WHITE, hitMarker.render.getColour());
   }
 
   @Test
@@ -60,7 +61,7 @@ class HitMarkerComponentTest {
     HitMarkerComponent hitMarker = entity.getComponent(HitMarkerComponent.class);
     entity.getEvents().trigger("hitMarker", entity);
     hitMarker.update(); // Update to apply flash colour
-    assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.colour);
+    assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.getColour());
   }
 
   @Test
@@ -72,9 +73,9 @@ class HitMarkerComponentTest {
     Gdx.graphics = mock(Graphics.class);
     when(Gdx.graphics.getDeltaTime()).thenReturn(0.2f);
     hitMarker.update();
-    assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.colour);
+    assertEquals(HitMarkerComponent.FLASH_COLOUR, hitMarker.render.getColour());
     hitMarker.update();
-    assertEquals(Color.WHITE, hitMarker.render.colour);
+    assertEquals(Color.WHITE, hitMarker.render.getColour());
   }
 
   @Test
@@ -82,7 +83,7 @@ class HitMarkerComponentTest {
     Entity entity = new Entity().addComponent(new HitMarkerComponent());
     entity.create();
     // No exceptions should be thrown and entity will not flash
-    entity.getEvents().trigger("hitMarker", entity);
+    assertDoesNotThrow(() -> entity.getEvents().trigger("hitMarker", entity));
   }
 
   Entity createTarget() {

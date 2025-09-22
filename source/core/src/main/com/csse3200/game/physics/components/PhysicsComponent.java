@@ -88,7 +88,7 @@ public class PhysicsComponent extends Component {
     body.setActive(true);
 
     BodyUserData userData = new BodyUserData();
-    userData.entity = entity;
+    userData.setEntity(entity);
     body.setUserData(userData);
 
     entity.getEvents().addListener("setPosition", (Vector2 pos) -> body.setTransform(pos, 0f));

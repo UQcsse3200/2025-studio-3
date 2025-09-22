@@ -6,11 +6,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.entities.Entity;
-import org.junit.Before;
-import org.junit.Test;
+import com.csse3200.game.extensions.GameExtension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
-public class CollisionComponentTest {
+@ExtendWith(GameExtension.class)
+class CollisionComponentTest {
 
   private float screenWidth = 800f;
   private float screenHeight = 600f;
@@ -20,8 +23,8 @@ public class CollisionComponentTest {
   private BallComponent ball;
   private CollisionComponent collision;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  void setUp() {
     Gdx.graphics = Mockito.mock(Graphics.class);
     Mockito.when(Gdx.graphics.getWidth()).thenReturn((int) screenWidth);
     Mockito.when(Gdx.graphics.getHeight()).thenReturn((int) screenHeight);
@@ -45,30 +48,30 @@ public class CollisionComponentTest {
   }
 
   @Test
-  public void updateDoesNothingIfNoEntity() {
-    CollisionComponent collision = new CollisionComponent(paddleImage);
+  void updateDoesNothingIfNoEntity() {
+    CollisionComponent collision2 = new CollisionComponent(paddleImage);
     try {
-      collision.update();
+      collision2.update();
     } catch (Exception e) {
       fail("No exception if entity is null");
     }
   }
 
   @Test
-  public void updateDoesNothingIfNoBallComponent() {
+  void updateDoesNothingIfNoBallComponent() {
     Entity entity = new Entity();
-    CollisionComponent collision = new CollisionComponent(paddleImage);
-    entity.addComponent(collision);
+    CollisionComponent collision2 = new CollisionComponent(paddleImage);
+    entity.addComponent(collision2);
     entity.create();
     try {
-      collision.update(1f);
+      collision2.update(1f);
     } catch (Exception e) {
       fail("No exception if ballcomponent is null");
     }
   }
 
   @Test
-  public void ballCollidesWithTarget() {
+  void ballCollidesWithTarget() {
     ballImage.setY(140);
     ballImage.setX(140);
 
@@ -84,7 +87,7 @@ public class CollisionComponentTest {
   }
 
   @Test
-  public void ballDoesNotCollideWhenSeperated() {
+  void ballDoesNotCollideWhenSeperated() {
     int initialScore = ball.getScore();
     int initialBallsHit = ball.getBallsHit();
 

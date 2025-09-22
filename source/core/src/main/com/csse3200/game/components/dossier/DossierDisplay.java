@@ -11,58 +11,72 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.entities.configs.NPCConfigs;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseEnemyConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/** DossierDisplay is a class that displays the dossier of the game. */
 public class DossierDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DossierDisplay.class);
   private final GdxGame game;
   private Table rootTable;
   // Where true is robots, false is humans
   private boolean type;
+  private Map<String, BaseEnemyConfig> enemyConfigs;
+  private Map<String, BaseDefenderConfig> defenderConfigs;
+  private Map<String, BaseGeneratorConfig> generatorConfigs;
   private String[] entities;
-  private DossierManager dossierManager;
   private int currentEntity = 0;
+  private boolean enemyMode = true;
+  private static final String CHANGE_TYPE = "change_type";
+  private static final String CHANGE_INFO = "change_info";
 
-  private Label entityInfoLabel;
-  private Label entityNameLabel;
-  private Image entitySpriteImage;
-  private final String changeType = "change_type";
+  // Information display constants
+  private static final String HEALTH_LABEL = "\n Health: ";
+  private static final String ATTACK_LABEL = "\n Attack: ";
+  private static final String COST_LABEL = "\nCost: ";
+  private static final String SCRAP_LABEL = "\nScrap Value: ";
+  private static final String INTERVAL_LABEL = "\nInterval: ";
 
-  /** Constructor to display the dossier. */
-  public DossierDisplay(
-      GdxGame game, NPCConfigs entityData, NPCConfigs defenceData, Texture[] textures) {
-    super();
+  /**
+   * Constructor to display the dossier.
+   *
+   * @param game the game instance
+   */
+  public DossierDisplay(GdxGame game) {
     this.game = game;
+    this.enemyConfigs = ServiceLocator.getConfigService().getEnemyConfigs();
+    this.defenderConfigs = ServiceLocator.getConfigService().getDefenderConfigs();
+    this.generatorConfigs = ServiceLocator.getConfigService().getGeneratorConfigs();
     type = true;
-    this.dossierManager = new DossierManager(entityData, defenceData, textures);
-    // All robot entities
-    entities =
-        new String[] {"standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"};
+    enemyMode = true;
+    entities = this.enemyConfigs.keySet().toArray(new String[0]);
   }
 
   @Override
   public void create() {
     super.create();
-    updateDossierInfoListener();
     changeTypeListener();
     addActors();
   }
 
   /** Adds all tables to the stage. */
   private void addActors() {
-    Label title = new Label("Dossier", skin, "title");
-    Table backBtn = makeBackBtn();
+    Label title = TypographyFactory.createTitle("Dossier");
+    createCloseButton();
 
     // create rootTable
     rootTable = new Table();
     rootTable.setFillParent(true);
     rootTable.padTop(100f);
     rootTable.padBottom(100f);
-    backBtn.padTop(100f);
-    backBtn.padLeft(75f);
 
     // title
     rootTable.add(title).expandX().top().padTop(20f);
@@ -77,9 +91,8 @@ public class DossierDisplay extends UIComponent {
 
     rootTable.add(makeEntitiesButtons()).expand().fill().row();
 
-    // add rootTable and back button to stage
+    // add rootTable to stage
     stage.addActor(rootTable);
-    stage.addActor(backBtn);
   }
 
   /** A listener to change the type of entity shown */
@@ -87,52 +100,72 @@ public class DossierDisplay extends UIComponent {
     entity
         .getEvents()
         .addListener(
-            changeType,
+            CHANGE_TYPE,
             input -> {
               boolean value = (boolean) input;
               if (value == type) {
                 return;
               }
               type = value;
+              enemyMode = value;
+              logger.info(
+                  "[DossierDisplay] Mode changed - type: {}, enemyMode: {}", type, enemyMode);
               if (type) {
-                dossierManager.changeMode();
-                entities =
-                    new String[] {
-                      "standardRobot", "fastRobot", "tankyRobot", "bungeeRobot", "teleportRobot"
-                    };
+                entities = enemyConfigs.keySet().toArray(new String[0]);
+                logger.info(
+                    "[DossierDisplay] Enemy mode - entities count: {}, entities: {}",
+                    entities.length,
+                    java.util.Arrays.toString(entities));
               } else {
-                dossierManager.changeMode();
-                entities = new String[] {"slingshot"};
+                // Combine defenders and generators
+                String[] defenderKeys = defenderConfigs.keySet().toArray(new String[0]);
+                String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
+                entities = new String[defenderKeys.length + generatorKeys.length];
+                System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
+                System.arraycopy(
+                    generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
+                logger.info(
+                    "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
+                    defenderKeys.length,
+                    generatorKeys.length,
+                    entities.length);
+                logger.debug(
+                    "[DossierDisplay] Human mode entities: {}",
+                    java.util.Arrays.toString(entities));
               }
               currentEntity = 0;
               // Rebuild UI for the new type
               stage.clear();
               addActors();
+              // Trigger change_info event to update display with first entity
+              if (entities.length > 0) {
+                entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+              }
             });
   }
 
   /** Sets up the buttons to swap between humans and robots. */
   private Table makeSwapBtn() {
-    TextButton robotsBtn = new TextButton("Robots", skin);
+    TextButton robotsBtn = ButtonFactory.createLargeButton("Robots");
     robotsBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (robotsBtn.isChecked()) {
               logger.info("Selected robot type button");
-              entity.getEvents().trigger(changeType, true);
+              entity.getEvents().trigger(CHANGE_TYPE, true);
             }
           }
         });
 
-    TextButton humansBtn = new TextButton("Humans", skin);
+    TextButton humansBtn = ButtonFactory.createLargeButton("Humans");
     humansBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             if (humansBtn.isChecked()) {
               logger.info("Selected human type button");
-              entity.getEvents().trigger(changeType, false);
+              entity.getEvents().trigger(CHANGE_TYPE, false);
             }
           }
         });
@@ -141,33 +174,37 @@ public class DossierDisplay extends UIComponent {
     table.defaults().expandX().fillX().space(50f);
     table.padTop(50f);
 
-    float buttonWidth = stage.getWidth() * 0.2f; // 20% of screen
+    float buttonWidth = 200f; // Fixed width
+    float buttonHeight = 50f;
 
-    table.add(humansBtn).width(buttonWidth);
-    table.add(robotsBtn).width(buttonWidth);
+    table.add(humansBtn).size(buttonWidth, buttonHeight);
+    table.add(robotsBtn).size(buttonWidth, buttonHeight);
 
     table.row();
 
     return table;
   }
 
-  private void updateDossierInfoListener() {
+  private void updateDossierInfoListener(Label nameLabel, Label infoLabel, Image spriteImage) {
     entity
         .getEvents()
         .addListener(
-            "change_info",
+            CHANGE_INFO,
             index -> {
               if (entities.length == 0) {
-                entityNameLabel.setText("No entries");
-                entityInfoLabel.setText("");
-                entitySpriteImage.setDrawable(null); // Or a placeholder drawable
+                nameLabel.setText("No entries");
+                infoLabel.setText("");
+                spriteImage.setDrawable(null);
                 return;
               }
-              String currentEntityName = entities[(int) index];
-              entityNameLabel.setText(dossierManager.getName(currentEntityName));
-              entityInfoLabel.setText(dossierManager.getInfo(currentEntityName));
-              entitySpriteImage.setDrawable(
-                  dossierManager.getSprite(currentEntityName).getDrawable());
+              // Update current entity index
+              currentEntity = (int) index;
+              String currentEntityKey = entities[currentEntity];
+              logger.debug("Updating dossier info for entity key: {}", currentEntityKey);
+
+              nameLabel.setText(getEntityName(currentEntityKey));
+              infoLabel.setText(getEntityInfo(currentEntityKey));
+              spriteImage.setDrawable(getEntitySprite(currentEntityKey).getDrawable());
             });
   }
 
@@ -181,7 +218,7 @@ public class DossierDisplay extends UIComponent {
     float stageHeight = stage.getHeight();
 
     // Load book image as texture
-    Texture bookTexture = new Texture(Gdx.files.internal("images/dossierBackground.png"));
+    Texture bookTexture = new Texture(Gdx.files.internal("images/ui/dossierBackground.png"));
     bookTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
     // Create background image of dossier
@@ -199,8 +236,13 @@ public class DossierDisplay extends UIComponent {
     contentTable.defaults().pad(10);
 
     // 1st column for Entity Image
-    entitySpriteImage =
-        dossierManager.getSprite(entities.length > 0 ? entities[currentEntity] : "");
+    String currentEntityKey = entities.length > 0 ? entities[currentEntity] : "";
+    logger.debug(
+        "[DossierDisplay] makeDossierTable - entities.length: {}, currentEntity: {}, currentEntityKey: '{}'",
+        entities.length,
+        currentEntity,
+        currentEntityKey);
+    Image entitySpriteImage = getEntitySprite(currentEntityKey);
     entitySpriteImage.setScaling(Scaling.fit);
     Table imageFrame = new Table(skin);
     imageFrame
@@ -212,14 +254,13 @@ public class DossierDisplay extends UIComponent {
     // 2nd column for Entity Info
     Table infoTable = new Table(skin);
 
-    String name =
-        entities.length > 0 ? dossierManager.getName(entities[currentEntity]) : "No entries";
-    entityNameLabel = new Label(name, skin, "large");
+    String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
+    Label entityNameLabel = TypographyFactory.createSubtitle(name);
     entityNameLabel.setAlignment(Align.left);
     infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
 
-    String info = entities.length > 0 ? dossierManager.getInfo(entities[currentEntity]) : "";
-    entityInfoLabel = new Label(info, skin);
+    String info = entities.length > 0 ? getEntityInfo(currentEntityKey) : "";
+    Label entityInfoLabel = TypographyFactory.createParagraph(info);
     entityInfoLabel.setWrap(true);
     entityInfoLabel.setAlignment(Align.left);
     infoTable
@@ -230,6 +271,9 @@ public class DossierDisplay extends UIComponent {
         .padRight(stageWidth * 0.09f)
         .padTop(stageHeight * 0.03f)
         .row();
+
+    // Set up listener with these UI components
+    updateDossierInfoListener(entityNameLabel, entityInfoLabel, entitySpriteImage);
 
     // Add columns to contentTable
     contentTable.add(imageFrame).fillY();
@@ -254,30 +298,29 @@ public class DossierDisplay extends UIComponent {
     return outerTable;
   }
 
-  /**
-   * Builds a table containing exit button.
-   *
-   * @return table with exit button
-   */
-  private Table makeBackBtn() {
-    TextButton backBtn = new TextButton("Back", skin);
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
-    // Add listener for the back button
-    backBtn.addListener(
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
+
+    // Add listener for the close button
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             backMenu();
           }
         });
 
-    // Place button in a table
-    Table table = new Table();
-    table.setFillParent(true);
-    table.top().left().pad(15f);
-    table.add(backBtn);
-    return table;
+    stage.addActor(closeButton);
   }
 
   /**
@@ -289,20 +332,23 @@ public class DossierDisplay extends UIComponent {
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
     ButtonGroup<TextButton> group = new ButtonGroup<>();
-
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
-      TextButton btn = new TextButton(dossierManager.getName(entities[i]), skin, "default");
+      String entityKey = entities[i];
+      // Use the display name for button text
+      String displayName = getEntityName(entityKey);
+      TextButton btn = ButtonFactory.createLargeButton(displayName);
       group.add(btn);
-      buttonRow.add(btn).pad(5);
+      buttonRow.add(btn).size(100f, 35f).pad(5);
 
       btn.addListener(
           new ChangeListener() {
             @Override
             public void changed(ChangeEvent changeEvent, Actor actor) {
               if (btn.isChecked()) {
-                logger.info("Selected robot button {}", index);
-                entity.getEvents().trigger("change_info", index);
+                logger.info(
+                    "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
+                entity.getEvents().trigger(CHANGE_INFO, index);
               }
             }
           });
@@ -310,9 +356,9 @@ public class DossierDisplay extends UIComponent {
     return buttonRow;
   }
 
-  /** Handles navigation back to the Profile Screen. */
+  /** Handles navigation back to the World Map Screen. */
   private void backMenu() {
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 
   @Override
@@ -320,11 +366,139 @@ public class DossierDisplay extends UIComponent {
     // draw is handled by the stage
   }
 
+  /**
+   * Gets the display name for an entity key.
+   *
+   * @param entityKey the configuration key of the entity
+   * @return the display name of the entity
+   */
+  private String getEntityName(String entityKey) {
+    logger.debug("Getting name for entity key: '{}', enemyMode: {}", entityKey, enemyMode);
+    if (enemyMode) {
+      BaseEnemyConfig config = enemyConfigs.get(entityKey);
+      String result = config != null ? config.getName() : "Unknown Enemy";
+      logger.debug("Enemy mode - key: '{}' -> name: '{}'", entityKey, result);
+      return result;
+    } else {
+      // Check defenders first, then generators
+      BaseDefenderConfig defenderConfig = defenderConfigs.get(entityKey);
+      if (defenderConfig != null) {
+        logger.debug(
+            "Defender mode - key: '{}' -> name: '{}'", entityKey, defenderConfig.getName());
+        return defenderConfig.getName();
+      }
+      BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);
+      if (generatorConfig != null) {
+        logger.debug(
+            "Generator mode - key: '{}' -> name: '{}'", entityKey, generatorConfig.getName());
+        return generatorConfig.getName();
+      }
+      logger.warn("No config found for entity key: '{}' in defender/generator mode", entityKey);
+      return "Unknown Entity";
+    }
+  }
+
+  /**
+   * Gets the sprite image for an entity key.
+   *
+   * @param entityKey the configuration key of the entity
+   * @return the sprite image of the entity
+   */
+  private Image getEntitySprite(String entityKey) {
+    logger.debug("Getting sprite for entity key: '{}', enemyMode: {}", entityKey, enemyMode);
+    if (enemyMode) {
+      BaseEnemyConfig config = enemyConfigs.get(entityKey);
+      if (config != null && config.getAssetPath() != null) {
+        Texture texture =
+            ServiceLocator.getResourceService().getAsset(config.getAssetPath(), Texture.class);
+        return new Image(texture);
+      }
+      // Fallback to placeholder if no asset
+      return new Image(
+          ServiceLocator.getResourceService()
+              .getAsset("images/entities/placeholder.png", Texture.class));
+    } else {
+      // Check defenders first, then generators
+      BaseDefenderConfig defenderConfig = defenderConfigs.get(entityKey);
+      if (defenderConfig != null && defenderConfig.getAssetPath() != null) {
+        Texture texture =
+            ServiceLocator.getResourceService()
+                .getAsset(defenderConfig.getAssetPath(), Texture.class);
+        return new Image(texture);
+      }
+
+      BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);
+      if (generatorConfig != null && generatorConfig.getAssetPath() != null) {
+        Texture texture =
+            ServiceLocator.getResourceService()
+                .getAsset(generatorConfig.getAssetPath(), Texture.class);
+        return new Image(texture);
+      }
+
+      // Fallback to placeholder if no asset
+      return new Image(
+          ServiceLocator.getResourceService()
+              .getAsset("images/entities/placeholder.png", Texture.class));
+    }
+  }
+
+  /**
+   * Gets the information text for an entity key.
+   *
+   * @param entityKey the configuration key of the entity
+   * @return the information text of the entity
+   */
+  private String getEntityInfo(String entityKey) {
+    logger.debug("Getting info for entity key: '{}', enemyMode: {}", entityKey, enemyMode);
+    if (enemyMode) {
+      BaseEnemyConfig config = enemyConfigs.get(entityKey);
+      if (config != null) {
+        return " "
+            + config.getDescription()
+            + HEALTH_LABEL
+            + config.getHealth()
+            + ATTACK_LABEL
+            + config.getAttack();
+      }
+      return "No information available";
+    } else {
+      // Check defenders first, then generators
+      BaseDefenderConfig defenderConfig = defenderConfigs.get(entityKey);
+      if (defenderConfig != null) {
+        return " "
+            + defenderConfig.getDescription()
+            + HEALTH_LABEL
+            + defenderConfig.getHealth()
+            + ATTACK_LABEL
+            + defenderConfig.getAttack();
+      }
+
+      BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);
+      if (generatorConfig != null) {
+        return " "
+            + generatorConfig.getDescription()
+            + HEALTH_LABEL
+            + generatorConfig.getHealth()
+            + COST_LABEL
+            + generatorConfig.getCost()
+            + SCRAP_LABEL
+            + generatorConfig.getScrapValue()
+            + INTERVAL_LABEL
+            + generatorConfig.getInterval()
+            + "s";
+      }
+
+      return "No information available";
+    }
+  }
+
   /** Disposes of this UI component. */
   @Override
   public void dispose() {
-    rootTable.clear();
-    stage.dispose();
+    if (rootTable != null) {
+      rootTable.clear();
+      rootTable.remove();
+    }
     super.dispose();
   }
 }

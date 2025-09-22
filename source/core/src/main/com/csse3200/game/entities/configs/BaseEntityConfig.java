@@ -5,36 +5,59 @@ package com.csse3200.game.entities.configs;
  * Factories.
  */
 public class BaseEntityConfig {
+  private String name;
+  private String description;
+  private int health;
+  private String assetPath;
+  private String atlasPath;
+
   /** Creates a new BaseEntityConfig with default values. */
   public BaseEntityConfig() {
     // Default constructor with default field values
   }
 
-  public int health;
-
-  public int baseAttack;
-
-  float movementSpeed;
+  /**
+   * Gets the name of the entity.
+   *
+   * @return
+   */
+  public String getName() {
+    return name;
+  }
 
   /**
-   * Gets the health value for this entity.
+   * Gets the description of the entity.
    *
-   * @return the health value
+   * @return the description of the entity
+   */
+  public String getDescription() {
+    return description;
+  }
+
+  /**
+   * Gets the health of the entity.
+   *
+   * @return the health of the entity
    */
   public int getHealth() {
     return health;
   }
 
   /**
-   * Gets the attack value for this entity.
+   * Gets the asset path of the entity.
    *
-   * @return the attack value
+   * @return the asset path of the entity
    */
-  public int getAttack() {
-    return baseAttack;
+  public String getAssetPath() {
+    return assetPath;
   }
 
-  public float getMovementSpeed() {
-    return movementSpeed;
+  /**
+   * Gets the atlas path of the entity.
+   *
+   * @return the atlas path of the entity
+   */
+  public String getAtlasPath() {
+    return atlasPath;
   }
 }

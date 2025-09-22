@@ -17,7 +17,7 @@ public class LaneRunnerGameOverActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("playAgain", this::onPlayAgain);
-    entity.getEvents().addListener("mainMenu", this::onMainMenu);
+    entity.getEvents().addListener("returnToArcade", this::onReturnToArcade);
   }
 
   public void onPlayAgain() {
@@ -25,8 +25,8 @@ public class LaneRunnerGameOverActions extends Component {
     game.setScreen(GdxGame.ScreenType.LANE_RUNNER);
   }
 
-  public void onMainMenu() {
-    logger.info("Launching Main Menu screen");
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+  public void onReturnToArcade() {
+    logger.info("Returning to Arcade screen");
+    game.setScreen(GdxGame.ScreenType.MINI_GAMES);
   }
 }

@@ -31,8 +31,8 @@ public class ProfileDisplayActions extends Component {
   }
 
   private void onBack() {
-    logger.info("Returning to main game screen");
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    logger.info("Returning to world map");
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 
   private void onInventory() {

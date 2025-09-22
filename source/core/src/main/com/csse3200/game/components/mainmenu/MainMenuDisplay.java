@@ -1,20 +1,14 @@
 package com.csse3200.game.components.mainmenu;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,29 +23,9 @@ public class MainMenuDisplay extends UIComponent {
     super.create();
 
     // Load assets
-    ServiceLocator.getResourceService().loadTextureAtlases(new String[] {"images/btn-blue.atlas"});
-    ServiceLocator.getResourceService().loadTextures(new String[] {"images/settings_icon.png"});
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
-  }
-
-  private TextButton makeTexturedButton(String text, TextureAtlas atlas, String region) {
-    Drawable background = new TextureRegionDrawable(atlas.findRegion(region));
-
-    BitmapFont font = new BitmapFont();
-    font.getData().setScale(1.5f);
-    font.setColor(Color.BLACK);
-
-    TextButton.TextButtonStyle style = new TextButton.TextButtonStyle();
-    style.up = background;
-    style.down = background;
-    style.over = background;
-    style.font = font;
-
-    TextButton button = new TextButton(text, style);
-    button.getLabel().setColor(new Color(0.1f, 0.1f, 0.1f, 1f));
-    return button;
   }
 
   private void addActors() {
@@ -61,53 +35,21 @@ public class MainMenuDisplay extends UIComponent {
     // Title
     Image title =
         new Image(
-            ServiceLocator.getResourceService().getAsset("images/bg-text.png", Texture.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextureAtlas buttonAtlas =
-        ServiceLocator.getResourceService().getAsset("images/btn-blue.atlas", TextureAtlas.class);
-
-    TextButton startBtn = makeTexturedButton("Start", buttonAtlas, "default");
-    TextButton quickStartBtn = makeTexturedButton("Quick Start", buttonAtlas, "default");
-    TextButton loadBtn = makeTexturedButton("Load", buttonAtlas, "default");
-    TextButton miniGameBtn = makeTexturedButton("MiniGames", buttonAtlas, "default");
-    TextButton cutBtn = makeTexturedButton("Cutscene", buttonAtlas, "default");
-    TextButton exitBtn = makeTexturedButton("Exit", buttonAtlas, "default");
-
-    // --- Settings gear icon ---
-    Texture gearTexture =
-        ServiceLocator.getResourceService().getAsset("images/settings_icon.png", Texture.class);
-    ImageButton.ImageButtonStyle gearStyle = new ImageButton.ImageButtonStyle();
-    gearStyle.imageUp = new TextureRegionDrawable(gearTexture);
-
-    ImageButton settingsIcon = new ImageButton(gearStyle);
-    settingsIcon.setSize(90f, 90f);
-    settingsIcon.setPosition(Gdx.graphics.getWidth() - 100f, Gdx.graphics.getHeight() - 120f);
-
-    settingsIcon.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Settings icon clicked");
-            entity.getEvents().trigger("settings");
-          }
-        });
+    TextButton newGameBtn = ButtonFactory.createButton("New Game");
+    TextButton loadBtn = ButtonFactory.createButton("Load Game");
+    TextButton settingsBtn = ButtonFactory.createButton("Settings");
+    TextButton exitBtn = ButtonFactory.createButton("Exit Game");
 
     // Button listeners
-    startBtn.addListener(
+    newGameBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Start button clicked");
-            entity.getEvents().trigger("worldMap");
-          }
-        });
-
-    quickStartBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Quick Start button clicked");
-            entity.getEvents().trigger("quickStart");
+            logger.debug("[MainMenuDisplay] New Game button clicked");
+            entity.getEvents().trigger("start");
           }
         });
 
@@ -115,26 +57,17 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Load button clicked");
+            logger.debug("[MainMenuDisplay] Load Game button clicked");
             entity.getEvents().trigger("load");
           }
         });
 
-    miniGameBtn.addListener(
+    settingsBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("MiniGames button clicked");
-            entity.getEvents().trigger("minigame");
-          }
-        });
-
-    cutBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Cutscene button clicked");
-            entity.getEvents().trigger("Cutscene");
+            logger.debug("[MainMenuDisplay] Settings button clicked");
+            entity.getEvents().trigger("settings");
           }
         });
 
@@ -142,7 +75,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Exit button clicked");
+            logger.debug("[MainMenuDisplay] Exit Game button clicked");
             entity.getEvents().trigger("exit");
           }
         });
@@ -162,25 +95,22 @@ public class MainMenuDisplay extends UIComponent {
     float buttonWidth = 200f;
     float buttonHeight = 50f;
 
-    table.add(startBtn).size(buttonWidth, buttonHeight).padBottom(5f);
-    table.row();
-    table.add(quickStartBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(newGameBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
     table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
-    table.add(miniGameBtn).size(buttonWidth, buttonHeight).padBottom(5f); // moved into main flow
-    table.row();
-    table.add(cutBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(5f);
     table.row();
     table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
 
     // Add actors
     stage.addActor(table);
-    stage.addActor(settingsIcon);
   }
 
   @Override
-  public void draw(SpriteBatch batch) {}
+  public void draw(SpriteBatch batch) {
+    // Drawing is handled by the stage
+  }
 
   @Override
   public float getZIndex() {

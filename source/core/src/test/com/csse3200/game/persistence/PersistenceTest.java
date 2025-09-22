@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.Files;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
+import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.Profile;
 import java.io.File;
 import java.util.List;
@@ -16,6 +17,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
+@ExtendWith(GameExtension.class)
 class PersistenceTest {
 
   @Test
