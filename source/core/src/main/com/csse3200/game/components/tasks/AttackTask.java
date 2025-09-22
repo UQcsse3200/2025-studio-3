@@ -30,14 +30,15 @@ public class AttackTask extends TargetDetectionTasks {
   }
 
   public void enableDoubleFireRate() {
-  fireCooldown = BASE_FIRE_COOLDOWN / 2f;
+    fireCooldown = BASE_FIRE_COOLDOWN / 2f;
     owner.getEntity().getEvents().trigger("doubleAttackStart");
   }
 
   public void resetFireRate() {
     fireCooldown = BASE_FIRE_COOLDOWN;
     owner.getEntity().getEvents().trigger("attackStart");
-    // or maybe "idleStart" then "attackStart", depending on how your DefenceAnimationController is wired
+    // or maybe "idleStart" then "attackStart", depending on how your DefenceAnimationController is
+    // wired
   }
 
   /**

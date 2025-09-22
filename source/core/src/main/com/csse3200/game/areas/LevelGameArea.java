@@ -573,6 +573,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             () -> {
               spawnProjectile(entityPos, 3f, 0f);
               newEntity.getEvents().trigger("attackStart");
+              newEntity
                   .getEvents()
                   .addListener(
                       "entityDeath",

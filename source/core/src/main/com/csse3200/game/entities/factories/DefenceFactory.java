@@ -52,9 +52,7 @@ public class DefenceFactory {
     IdleTask idleTask = new IdleTask(config.getRange());
 
     AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(attackTask)
-            .addTask(idleTask);
+        new AITaskComponent().addTask(attackTask).addTask(idleTask);
 
     defender.addComponent(enemyDetectionTasks);
     defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
@@ -68,6 +66,7 @@ public class DefenceFactory {
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
     animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    animator.addAnimation("doubleattack", 0.02f, Animation.PlayMode.LOOP);
 
     // attach components to the entity
     defender
