@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
+/** Test class for LaneRunnerPlayerFactory. */
 class LaneRunnerPlayerFactoryTest {
 
   private MockedStatic<ServiceLocator> mockedServiceLocator;
@@ -76,7 +77,7 @@ class LaneRunnerPlayerFactoryTest {
 
     verify(mockLaneManager).getLaneCenter(1);
 
-    verify(mockedResourceService).getAsset("images/box_boy.png", Texture.class);
+    verify(mockedResourceService).getAsset("images/entities/character.png", Texture.class);
   }
 
   @Test

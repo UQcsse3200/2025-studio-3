@@ -9,10 +9,18 @@ import com.csse3200.game.entities.Entity;
 public class BodyUserData {
 
   /** The entity to which this body is attached */
-  public Entity entity;
+  private Entity entity;
 
   /** Creates a new BodyUserData instance. */
   public BodyUserData() {
     // Default constructor
+  }
+
+  public Entity getEntity() {
+    return entity;
+  }
+
+  public void setEntity(Entity entity) {
+    this.entity = entity;
   }
 }

@@ -14,8 +14,6 @@ public class PhysicsLayer {
   // Enemy Collison box
   public static final short ENEMY = (1 << 5);
 
-  // public static final short DEFENSE = (1 << 6);
-
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;
   }

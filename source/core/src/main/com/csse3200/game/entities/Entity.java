@@ -33,7 +33,6 @@ public class Entity {
   private static final Logger logger = LoggerFactory.getLogger(Entity.class);
   private static int nextId = 0;
   private static final String EVT_NAME_POS = "setPosition";
-
   private final int id;
   private final IntMap<Component> components;
   private final EventHandler eventHandler;
@@ -44,18 +43,12 @@ public class Entity {
   private Array<Component> createdComponents;
   private boolean disposed = false;
 
-  private final int coins = 5; // number of coins to add when enemy is killed
-
   public Entity() {
     id = nextId;
     nextId++;
 
     components = new IntMap<>(4);
     eventHandler = new EventHandler();
-  }
-
-  public int getCoins() {
-    return coins;
   }
 
   /**
@@ -295,6 +288,15 @@ public class Entity {
   }
 
   /**
+   * Check if the entity has been disposed.
+   *
+   * @return true if the entity has been disposed, false otherwise
+   */
+  public boolean isDisposed() {
+    return disposed;
+  }
+
+  /**
    * Get the event handler attached to this entity. Can be used to trigger events from an attached
    * component, or listen to events from a component.
    *
@@ -306,7 +308,7 @@ public class Entity {
 
   @Override
   public boolean equals(Object obj) {
-    return (obj instanceof Entity && ((Entity) obj).getId() == this.getId());
+    return (obj instanceof Entity entity && entity.getId() == this.getId());
   }
 
   @Override

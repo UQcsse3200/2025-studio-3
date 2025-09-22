@@ -11,6 +11,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class CutsceneUI {
 
+  private CutsceneUI() {
+    // Private constructor to prevent instantiation
+  }
+
   /**
    * Starts a cutscene
    *

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class GeneratorStatsComponentTest {
+class GeneratorStatsComponentTest {
 
   @Test
   void shouldSetGetHealth() {

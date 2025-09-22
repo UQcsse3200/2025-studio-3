@@ -31,8 +31,7 @@ public class SaveGameMenuActions extends Component {
 
   /** Handle going back to the previous screen. */
   private void handleBack() {
-    // Go back to the main game screen since this is typically accessed from in-game
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 
   /**
@@ -58,6 +57,6 @@ public class SaveGameMenuActions extends Component {
       profileService.getProfile().setName(saveName);
     }
     profileService.saveProfileToSlot(selectedSlot);
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 }

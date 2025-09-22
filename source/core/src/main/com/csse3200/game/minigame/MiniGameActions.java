@@ -34,9 +34,9 @@ public class MiniGameActions extends Component {
     game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
   }
 
-  /** Swaps to the Main Menu screen. */
+  /** Swaps to the World Map screen. */
   private void onBack() {
-    logger.info("Launching Main Menu screen");
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+    logger.info("Launching World Map screen");
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 }

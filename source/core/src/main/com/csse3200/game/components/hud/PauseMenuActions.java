@@ -3,12 +3,9 @@ package com.csse3200.game.components.hud;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Handles actions for the pause menu buttons. */
 public class PauseMenuActions extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(PauseMenuActions.class);
   private final GdxGame game;
 
   /**
@@ -22,17 +19,9 @@ public class PauseMenuActions extends Component {
 
   @Override
   public void create() {
-    entity.getEvents().addListener("settings", this::onSettings);
     entity.getEvents().addListener("quit_level", this::onQuitLevel);
     entity.getEvents().addListener("open_main_menu", this::onMainMenu);
     entity.getEvents().addListener("exit_game", this::onExitGame);
-  }
-
-  /** Opens the settings screen */
-  private void onSettings() {
-    logger.info("[PauseMenuActions] Opening settings from pause menu");
-    entity.getEvents().trigger("hide_pause_menu");
-    game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 
   /** Shows warning dialog for quitting level */

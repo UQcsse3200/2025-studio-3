@@ -6,6 +6,7 @@ import com.csse3200.game.components.mainmenu.MainMenuActions;
 import com.csse3200.game.components.mainmenu.MainMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,15 +15,14 @@ public class MainMenuScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
 
   private static final String[] MAIN_MENU_TEXTURES = {
-    "images/bg.png",
-    "images/bg-text.png",
-    "images/btn-blue.png",
-    "images/btn-blue.atlas",
-    "images/settings_icon.png" // ✅ include the gear
+    "images/backgrounds/bg.png",
+    "images/backgrounds/bg-text.png",
+    "images/ui/btn-blue.png",
+    "images/ui/settings-icon.png"
   };
 
   public MainMenuScreen(GdxGame game) {
-    super(game, MAIN_MENU_TEXTURES);
+    super(game, Optional.of("images/backgrounds/bg.png"), Optional.of(MAIN_MENU_TEXTURES));
   }
 
   /**
@@ -30,7 +30,7 @@ public class MainMenuScreen extends BaseScreen {
    * capturing and handling ui input.
    */
   @Override
-  protected Entity createUIScreen(Stage stage) {
+  protected Entity constructEntity(Stage stage) {
     logger.debug("Main menu screen UI is created");
     return new Entity()
         .addComponent(new MainMenuDisplay())

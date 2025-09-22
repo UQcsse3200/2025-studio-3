@@ -59,7 +59,7 @@ public class FileLoader {
       logger.error("Error parsing JSON from file {}: {}", filename, e.getMessage());
       StringWriter sw = new StringWriter();
       e.printStackTrace(new PrintWriter(sw));
-      logger.debug("Full stack trace:\n{}", sw);
+      logger.error("Full stack trace:\n{}", sw);
       return null;
     }
     if (object == null) {

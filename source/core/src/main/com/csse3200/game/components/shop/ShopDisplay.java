@@ -65,7 +65,7 @@ public class ShopDisplay extends UIComponent {
     Image backgroundImage =
         new Image(
             ServiceLocator.getGlobalResourceService()
-                .getAsset("images/shop-popup.png", Texture.class));
+                .getAsset("images/ui/shop-popup.png", Texture.class));
     backgroundImage.setSize(778f, 564f);
     backgroundImage.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
     stage.addActor(backgroundImage);
@@ -82,7 +82,7 @@ public class ShopDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
@@ -212,7 +212,7 @@ public class ShopDisplay extends UIComponent {
       Image coinIcon =
           new Image(
               ServiceLocator.getGlobalResourceService()
-                  .getAsset("images/coins.png", Texture.class));
+                  .getAsset("images/entities/currency/coins.png", Texture.class));
       coinIcon.setSize(COIN_ICON_SIZE, COIN_ICON_SIZE);
       priceTable.add(coinIcon).size(COIN_ICON_SIZE).padRight(8f);
 

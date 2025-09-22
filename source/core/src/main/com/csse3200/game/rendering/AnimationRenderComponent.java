@@ -50,7 +50,7 @@ public class AnimationRenderComponent extends RenderComponent {
    */
   public AnimationRenderComponent(TextureAtlas atlas) {
     this.atlas = atlas;
-    this.animations = new HashMap<>(4);
+    this.animations = HashMap.newHashMap(4);
     timeSource = ServiceLocator.getTimeSource();
   }
 
@@ -187,11 +187,5 @@ public class AnimationRenderComponent extends RenderComponent {
     batch.draw(region, pos.x, pos.y, scale.x, scale.y);
     batch.setColor(Color.WHITE);
     animationPlayTime += timeSource.getDeltaTime();
-  }
-
-  @Override
-  public void dispose() {
-    // atlas.dispose();
-    super.dispose();
   }
 }

@@ -12,7 +12,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public abstract class RenderComponent extends Component implements Renderable, Disposable {
   private static final int DEFAULT_LAYER = 1;
-  public Color colour = new Color(1, 1, 1, 1);
+  protected Color colour = new Color(1, 1, 1, 1);
 
   @Override
   public void create() {
@@ -51,4 +51,12 @@ public abstract class RenderComponent extends Component implements Renderable, D
    * @param batch Batch to render to.
    */
   protected abstract void draw(SpriteBatch batch);
+
+  public Color getColour() {
+    return colour;
+  }
+
+  public void setColour(Color colour) {
+    this.colour = colour;
+  }
 }

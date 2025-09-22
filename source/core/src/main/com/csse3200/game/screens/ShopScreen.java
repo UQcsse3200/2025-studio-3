@@ -3,12 +3,11 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
 import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
-import com.csse3200.game.data.MenuSpriteData;
+import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
@@ -22,12 +21,12 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
+public class ShopScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(ShopScreen.class);
   private final Renderer renderer;
   private final GdxGame game;
   private String[] shopTextures = {
-    "images/shop-popup.png", "images/coins.png", "images/dialog.png"
+    "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
   };
   private String[] itemTextures;
   private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
@@ -91,9 +90,9 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
       logger.warn("ConfigService is null");
       return;
     }
-    itemTextures = new String[configService.getItemConfigs().length];
-    for (int i = 0; i < configService.getItemConfigs().length; i++) {
-      itemTextures[i] = configService.getItemConfigs()[i].getAssetPath();
+    itemTextures = new String[configService.getItemConfigs().size()];
+    for (int i = 0; i < configService.getItemConfigs().size(); i++) {
+      itemTextures[i] = configService.getItemConfigValues()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
     ServiceLocator.getResourceService().loadAll();
@@ -104,18 +103,6 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     logger.debug("Unloading shop assets");
     ServiceLocator.getResourceService().unloadAssets(shopTextures);
     ServiceLocator.getResourceService().unloadAssets(itemTextures);
-  }
-
-  @Override
-  public void register(MenuSpriteData menuSpriteData) {
-    menuSpriteData
-        .edit(this)
-        .position(50, 50)
-        .name("Shop")
-        .description("Shop")
-        .sprite("images/shopsprite.png")
-        .locked(false)
-        .apply();
   }
 
   /**
@@ -129,8 +116,8 @@ public class ShopScreen extends ScreenAdapter implements MenuSpriteScreen {
     ui.addComponent(new ShopDisplay())
         .addComponent(new ShopActions(this.game))
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new MainMapNavigationMenu())
-        .addComponent(new MainMapNavigationMenuActions(this.game))
+        .addComponent(new WorldMapNavigationMenu())
+        .addComponent(new WorldMapNavigationMenuActions(this.game))
         .addComponent(new AnimatedDropdownMenu());
     ServiceLocator.getEntityService().register(ui);
   }
