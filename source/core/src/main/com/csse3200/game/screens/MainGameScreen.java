@@ -220,6 +220,9 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
+    BaseLevelConfig cfgForUi = ServiceLocator.getConfigService().getLevelConfig(level);
+    boolean isSlotLevel = cfgForUi != null && cfgForUi.isSlotMachine();
+
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
@@ -229,8 +232,11 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay(waveManager))
-        .addComponent(new ScrapHudDisplay());
+        .addComponent(new CurrentWaveDisplay(waveManager));
+
+    if (!isSlotLevel) {
+      ui.addComponent(new ScrapHudDisplay());
+    }
 
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);
