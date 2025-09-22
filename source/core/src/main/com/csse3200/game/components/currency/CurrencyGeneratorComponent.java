@@ -1,11 +1,12 @@
 package com.csse3200.game.components.currency;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -46,17 +47,15 @@ public class CurrencyGeneratorComponent extends Component {
   /**
    * Creates a new currency generator component with the specified parameters.
    *
-   * @param intervalSec seconds between spawns
-   * @param scrapValue currency granted per scrap
+   * @param entity the furnace entity associated with the currency generator
    * @param scrapTexturePath texture path for the scrap image
    */
-  public CurrencyGeneratorComponent(
-      float intervalSec, int scrapValue, String scrapTexturePath, Vector2 position) {
-    this.intervalSec = Math.max(0.5f, intervalSec);
-    this.scrapValue = Math.max(1, scrapValue);
+  public CurrencyGeneratorComponent(Entity entity, String scrapTexturePath) {
+    this.intervalSec = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+    this.scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+    this.targetX = entity.getPosition().x;
+    this.targetY = entity.getPosition().y;
     this.scrapTexturePath = scrapTexturePath;
-    this.targetX = position.x;
-    this.targetY = position.y;
   }
 
   @Override
