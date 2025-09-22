@@ -238,12 +238,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(map);
   }
 
-  private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+  private void spawnScrap(Entity entity) {
+    int spawnInterval = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+    int scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
         new CurrencyGeneratorComponent(
-            spawnInterval, scrapValue, "images/entities/currency/scrap_metal.png", targetPos);
+            spawnInterval, scrapValue, "images/entities/currency/scrap_metal.png", entity.getPosition());
     scrapSpawner.addComponent(currencyGenerator);
+    //if furnace dies, dispose of its currency generator
+    entity.getEvents().addListener("defenceDeath", () -> {scrapSpawner.dispose();});
+
     spawnEntity(scrapSpawner);
   }
 
@@ -536,9 +542,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-      spawnScrap(entityPos, spawnInterval, scrapValue);
+        spawnScrap(newEntity);
     }
 
     spawnEntity(newEntity);

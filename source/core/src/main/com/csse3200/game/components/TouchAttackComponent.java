@@ -72,7 +72,6 @@ public class TouchAttackComponent extends Component {
       if (targetStats == null) { //Also hit if entity is generator defender
           targetStats = target.getComponent(GeneratorStatsComponent.class);
       }
-
     }
 
     if (targetStats != null) {
