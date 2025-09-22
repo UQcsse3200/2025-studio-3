@@ -107,7 +107,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
   // Initialising an Entity
-  private Entity gameOverEntity;
+  protected Entity gameOverEntity;
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
@@ -176,7 +176,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawns the level UI */
-  private void displayUI() {
+  protected void displayUI() {
     Entity ui = new Entity();
     // add components here for additional UI Elements
     unitList.put("images/sling_shooter_front.png", DefenceFactory::createSlingShooter);
@@ -229,7 +229,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+  protected void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
         new CurrencyGeneratorComponent(

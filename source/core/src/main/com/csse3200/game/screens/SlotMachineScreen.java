@@ -28,4 +28,9 @@ public class SlotMachineScreen extends MainGameScreen {
   protected void configureMainGameActions(MainGameActions mainGameActions) {
     mainGameActions.setSlotMachineScreen(this);
   }
+
+  @Override
+  protected boolean shouldShowCurrencyHud() {
+    return false;
+  }
 }

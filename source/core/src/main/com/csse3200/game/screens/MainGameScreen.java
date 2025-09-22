@@ -88,8 +88,10 @@ public class MainGameScreen extends ScreenAdapter {
     loadAssets();
     createUI();
 
-    Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
-    ServiceLocator.getEntityService().register(uiHud);
+    if (shouldShowCurrencyHud()) {
+      Entity uiHud = new Entity().addComponent(new ScrapHudDisplay());
+      ServiceLocator.getEntityService().register(uiHud);
+    }
 
     logger.debug("Initialising main game screen entities");
     TerrainFactory terrainFactory = new TerrainFactory(renderer.getCamera());
@@ -234,6 +236,14 @@ public class MainGameScreen extends ScreenAdapter {
   /** Hook for configuring main game actions. Subclasses can override to bind themselves instead. */
   protected void configureMainGameActions(MainGameActions mainGameActions) {
     mainGameActions.setMainGameScreen(this);
+  }
+
+  /**
+   * Whether this screen should display the currency HUD (Scrap/Metal counter). Subclasses can
+   * override to disable it.
+   */
+  protected boolean shouldShowCurrencyHud() {
+    return true;
   }
 
   private void snapCameraBottomLeft() {

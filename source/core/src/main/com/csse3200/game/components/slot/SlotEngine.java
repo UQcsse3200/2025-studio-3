@@ -83,8 +83,8 @@ public class SlotEngine {
    * logging/debugging.
    */
   public enum Effect {
-    GAIN_METALS(0, "GainMetals", 2),
-    GAIN_COINS(1, "GainCoins", 2),
+    GAIN_METALS(0, "GainMetals", 0),
+    GAIN_COINS(1, "GainCoins", 0),
     SUMMON_ENEMY(2, "SummonEnemy", 1),
     FREEZE_ENEMY(5, "FreezeEnemy", 0),
     DESTROY_ENEMY(7, "DestroyEnemy", 1),

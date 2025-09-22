@@ -1,7 +1,9 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
@@ -32,9 +34,8 @@ public class SlotMachineArea extends LevelGameArea {
   /** Initializes the slot machine area by loading assets and adding the HUD. */
   @Override
   public void create() {
-    super.create();
     loadSlotAssets();
-    addSlotHudTopBar();
+    super.create();
   }
 
   /** Unloads slot machine assets and disposes of the area. */
@@ -44,12 +45,17 @@ public class SlotMachineArea extends LevelGameArea {
     super.dispose();
   }
 
-  /** Adds the slot machine HUD and display elements to the top bar. */
-  private void addSlotHudTopBar() {
+  @Override
+  protected void displayUI() {
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
     ui.addComponent(new SlotMachineDisplay(this));
     spawnEntity(ui);
+
+    // Creates a game over entity to handle the game over window UI
+    this.gameOverEntity = new Entity();
+    gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Loads all textures and atlases required for the slot machine. */
@@ -67,5 +73,10 @@ public class SlotMachineArea extends LevelGameArea {
       rs.unloadAssets(SLOT_TEXTURE_ATLASES);
       rs.unloadAssets(SLOT_TEXTURES);
     }
+  }
+
+  @Override
+  protected void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+    // Slot level does not use the currency system; ignore requests to spawn scrap.
   }
 }
