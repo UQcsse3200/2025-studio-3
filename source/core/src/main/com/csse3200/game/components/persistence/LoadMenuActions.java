@@ -30,7 +30,7 @@ public class LoadMenuActions extends Component {
   /** Handle going back to the main menu. */
   private void handleBack() {
     if (ServiceLocator.getProfileService().isActive()) {
-      game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+      game.setScreen(GdxGame.ScreenType.WORLD_MAP);
     } else {
       game.setScreen(GdxGame.ScreenType.MAIN_MENU);
     }
@@ -44,7 +44,6 @@ public class LoadMenuActions extends Component {
   private void handleLoadGame(Savefile savefile) {
     logger.info("Loading game: {}", savefile.getName());
     ServiceLocator.getProfileService().loadProfile(savefile);
-
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 }

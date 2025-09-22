@@ -1,6 +1,7 @@
 package com.csse3200.game.progression.arsenal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /** Arsenal class to manage the player's unlocked defences. */
@@ -9,7 +10,7 @@ public class Arsenal {
 
   /** Constructor for the Arsenal class. */
   public Arsenal() {
-    defences = new ArrayList<>();
+    defences = new ArrayList<>(Arrays.asList("slingshooter", "furnace")); // Default defences
   }
 
   /**

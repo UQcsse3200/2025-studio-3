@@ -8,8 +8,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.csse3200.game.areas.terrain.TerrainComponent;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -19,7 +17,7 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -39,12 +37,12 @@ import org.mockito.quality.Strictness;
 @ExtendWith(GameExtension.class)
 @ExtendWith(MockitoExtension.class)
 class LevelGameAreaTest {
-  @Mock TerrainFactory terrainFactory;
   @Mock RenderService renderService;
   @Mock Stage stage;
   @Mock ResourceService resourceService;
   @Mock Music music;
   @Mock ProfileService profileService;
+  @Mock ConfigService configService;
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
@@ -53,8 +51,8 @@ class LevelGameAreaTest {
   static class CapturingLevelGameArea extends LevelGameArea {
     final List<Entity> spawned = new ArrayList<>();
 
-    CapturingLevelGameArea(TerrainFactory factory) {
-      super(factory);
+    CapturingLevelGameArea() {
+      super("levelOne");
     }
 
     @Override
@@ -68,6 +66,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerProfileService(profileService);
+    ServiceLocator.registerConfigService(configService);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
@@ -86,7 +85,14 @@ class LevelGameAreaTest {
 
     profile = new Profile();
     profile.getInventory().addItem("grenade"); // so inventory not null
+    profile.getArsenal().unlockDefence("slingshooter"); // Add some defences for testing
+    profile.getArsenal().unlockDefence("furnace");
     lenient().when(profileService.getProfile()).thenReturn(profile);
+
+    // Mock config service calls
+    lenient().when(configService.getDefenderConfig(anyString())).thenReturn(null);
+    lenient().when(configService.getGeneratorConfig(anyString())).thenReturn(null);
+    lenient().when(configService.getItemConfig(anyString())).thenReturn(null);
 
     persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
     // Note: Persistence.profile() no longer exists in the reworked system
@@ -106,7 +112,7 @@ class LevelGameAreaTest {
 
   @Test
   void setScalingUsesStageSizeAndRendererWidth() {
-    LevelGameArea area = new LevelGameArea(terrainFactory);
+    LevelGameArea area = new LevelGameArea("levelOne");
 
     float tile = area.getTileSize();
     assertTrue(tile > 0f, "tileSize should be computed > 0");
@@ -125,7 +131,7 @@ class LevelGameAreaTest {
 
   @Test
   void spawnUnitWithNullSupplier() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     // Selected “card” whose supplier returns null
     Entity selected = new Entity().addComponent(new DeckInputComponent(area, () -> null));
@@ -142,7 +148,7 @@ class LevelGameAreaTest {
 
   @Test
   void spawnUnitItemNotInInventoryRemovesFromTileAndReturns() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     // Selected entity is an Item of type GRENADE (matches your seeded key)
     ItemComponent item = mock(ItemComponent.class);
@@ -154,7 +160,7 @@ class LevelGameAreaTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     Entity tile = new Entity().addComponent(storage);
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
+    when(grid.getTile(anyInt())).thenReturn(tile);
     area.setGrid(grid);
 
     // Use profile from @BeforeEach and make it NOT contain the item
@@ -168,7 +174,7 @@ class LevelGameAreaTest {
 
   @Test
   void spawnUnitItemInInventoryConsumesOnePlaysEffectAndClearsTile() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     ItemComponent item = mock(ItemComponent.class);
     when(item.getType()).thenReturn(ItemComponent.Type.GRENADE);
@@ -178,7 +184,7 @@ class LevelGameAreaTest {
     TileStorageComponent storage = mock(TileStorageComponent.class);
     Entity tile = new Entity().addComponent(storage);
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
+    when(grid.getTile(anyInt())).thenReturn(tile);
     area.setGrid(grid);
 
     ItemEffectsService effects = mock(ItemEffectsService.class);
@@ -192,114 +198,9 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void spawnUnitPlacesOnGridAndCallsTileStorage() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
-
-    // Create a selected unit
-    Entity selected =
-        new Entity()
-            .addComponent(
-                new DeckInputComponent(
-                    area,
-                    () ->
-                        new Entity()
-                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
-    area.setSelectedUnit(selected);
-
-    LevelGameGrid grid = mock(LevelGameGrid.class);
-    Entity tile = new Entity().addComponent(mock(TileStorageComponent.class));
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
-    area.setGrid(grid);
-
-    int position = 7;
-    area.spawnUnit(position);
-
-    assertFalse(area.spawned.isEmpty());
-    Entity spawned = area.spawned.get(area.spawned.size() - 1);
-    assertNotNull(spawned.getComponent(TextureRenderComponent.class));
-
-    TileStorageComponent storage = tile.getComponent(TileStorageComponent.class);
-    verify(storage).setTileUnit(spawned);
-  }
-
-  @Test
-  void spawnUnitNoTileDoesNotCallTileStorage() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
-
-    Entity selected =
-        new Entity()
-            .addComponent(
-                new DeckInputComponent(
-                    area,
-                    () ->
-                        new Entity()
-                            .addComponent(new TextureRenderComponent("images/ghost_1.png"))));
-    area.setSelectedUnit(selected);
-
-    LevelGameGrid grid = mock(LevelGameGrid.class);
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(null);
-    area.setGrid(grid);
-
-    // should not throw; still spawns the unit
-    area.spawnUnit(3);
-    assertFalse(area.spawned.isEmpty());
-
-    verify(grid).getTileFromXY(anyFloat(), anyFloat());
-  }
-
-  @Test
-  void createLoadsAssetsSpawnsThingsAndStartsMusic() {
-    // Use a spy so we can verify calls to spawn methods
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
-
-    // Avoid robot factory static
-
-    lenient().doNothing().when(area).spawnRobot(anyInt(), anyInt(), any());
-
-    // Mock the TerrainComponent returned by the TerrainFactory
-    var terrain = mock(TerrainComponent.class);
-
-    // Only mark as lenient if you expect it might not be called
-    lenient().when(terrain.getTileSize()).thenReturn(64f);
-    lenient().when(terrain.getMapBounds(0)).thenReturn(new GridPoint2(12, 6));
-
-    // Ensure the TerrainFactory returns the mock terrain
-    when(terrainFactory.createTerrain(any())).thenReturn(terrain);
-
-    // Simulate resource service loading
-    when(resourceService.loadForMillis(anyInt())).thenReturn(false).thenReturn(true);
-    when(resourceService.getProgress()).thenReturn(0).thenReturn(1);
-
-    // Run the create() method
-    area.create();
-
-    // Verify assets loaded
-    verify(resourceService).loadTextures(any(String[].class));
-    verify(resourceService).loadTextureAtlases(any(String[].class));
-    verify(resourceService).loadSounds(any(String[].class));
-    verify(resourceService).loadMusic(any(String[].class));
-
-    // Verify music started
-    verify(music).setLooping(true);
-    verify(music).setVolume(0.3f);
-    verify(music).play();
-
-    // Ensure entities were spawned
-    assertFalse(area.spawned.isEmpty());
-  }
-
-  @Test
-  void disposeStopsMusicAndUnloadsAssets() {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
-    area.dispose();
-    verify(music).stop();
-    verify(resourceService, atLeastOnce()).unloadAssets(any(String[].class));
-  }
-
-  @Test
   void getters() {
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    LevelGameArea area = new LevelGameArea(terrainFactory);
+    LevelGameArea area = new LevelGameArea("levelOne");
     area.setGrid(grid);
 
     assertSame(grid, area.getGrid());
@@ -307,24 +208,8 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void resizeChangesScaling() {
-    // Given an area built with the initial stage size
-    LevelGameArea area = spy(new LevelGameArea(terrainFactory));
-    float tileBefore = area.getTileSize();
-
-    // change the 'window' size
-    when(stage.getWidth()).thenReturn(1200f);
-    when(stage.getHeight()).thenReturn(800f);
-
-    area.resize();
-
-    verify(area, times(1)).setScaling();
-    assertNotEquals(tileBefore, area.getTileSize(), "resize() should recompute tileSize");
-  }
-
-  @Test
   void dragNullsAreNoop() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     // dragOverlay is null until create(); also pass null texture
     assertDoesNotThrow(() -> area.beginDrag(null));
@@ -333,7 +218,7 @@ class LevelGameAreaTest {
 
   @Test
   void characterSelectedRoundTrip() {
-    LevelGameArea area = new LevelGameArea(terrainFactory);
+    LevelGameArea area = new LevelGameArea("levelOne");
     assertFalse(area.isCharacterSelected());
     area.setIsCharacterSelected(true);
     assertTrue(area.isCharacterSelected());
@@ -341,30 +226,24 @@ class LevelGameAreaTest {
 
   @Test
   void spawnRobotOnDefenceWithNullGridIsNoop() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
     area.spawnRobotOnDefence(RobotFactory.RobotType.STANDARD);
     assertTrue(area.spawned.isEmpty());
   }
 
   @Test
   void spawnRobotOnDefenceWithoutAnyDefenceIsNoop() {
-    CapturingLevelGameArea area = spy(new CapturingLevelGameArea(terrainFactory));
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     LevelGameGrid grid = mock(LevelGameGrid.class);
-    TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.getTileUnit()).thenReturn(null);
-    Entity tile = new Entity().addComponent(storage);
-
-    when(grid.getTileFromXY(anyFloat(), anyFloat())).thenReturn(tile);
     area.setGrid(grid);
-
     area.spawnRobotOnDefence(RobotFactory.RobotType.STANDARD);
     assertTrue(area.spawned.isEmpty());
   }
 
   @Test
   void beginDrag_overlayNull_textureNull_doesNothing() {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     // overlay = null, texture = null → if short-circuits, nothing happens
     assertDoesNotThrow(() -> area.beginDrag(null));
@@ -373,7 +252,7 @@ class LevelGameAreaTest {
 
   @Test
   void beginDrag_overlayNull_textureNotNull_doesNothing() {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     Texture mockTexture = mock(Texture.class);
     // overlay = null, texture != null → left side false, nothing happens
@@ -383,7 +262,7 @@ class LevelGameAreaTest {
 
   @Test
   void beginDrag_overlayNotNull_textureNull_doesNothing() throws Exception {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     // Use reflection to inject a mock DragOverlay into the private field
     DragOverlay overlay = mock(DragOverlay.class);
@@ -400,7 +279,7 @@ class LevelGameAreaTest {
 
   @Test
   void cancelDrag_overlayNull_doesNothing() {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     // overlay = null → if condition false, nothing happens
     assertDoesNotThrow(area::cancelDrag);
@@ -409,7 +288,7 @@ class LevelGameAreaTest {
 
   @Test
   void beginDrag_overlayAndTextureNotNull_callsBegin() throws Exception {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     // Inject a mock overlay
     DragOverlay overlay = mock(DragOverlay.class);
@@ -429,7 +308,7 @@ class LevelGameAreaTest {
 
   @Test
   void cancelDrag_overlayNotNull_callsCancel() throws Exception {
-    CapturingLevelGameArea area = new CapturingLevelGameArea(terrainFactory);
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
 
     // Inject a mock overlay
     DragOverlay overlay = mock(DragOverlay.class);

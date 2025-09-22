@@ -55,7 +55,7 @@ public final class SlotEffect {
   }
 
   // Card asset
-  private static final String CARDS_ATLAS_PATH = "images/ui_cards.atlas";
+  private static final String CARDS_ATLAS_PATH = "images/ui_cards/ui_cards.atlas";
   private static TextureAtlas cardsAtlas;
   private static boolean ownsCardsAtlas = false;
 

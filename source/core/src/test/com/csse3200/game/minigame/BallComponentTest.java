@@ -78,7 +78,6 @@ public class BallComponentTest {
     assertEquals(initialScore + 1, ball.getScore());
     assertTrue("velocity y should be negative", ball.getVelocityY() < 0);
     assertEquals(initialBallsHit, ball.getBallsHit());
-    ;
   }
 
   @Test

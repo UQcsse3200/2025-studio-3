@@ -2,12 +2,9 @@ package com.csse3200.game.components.tile;
 
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.components.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** A component that is used the hitbox calculations of the tiles */
 public class TileHitboxComponent extends Component {
-  private static final Logger logger = LoggerFactory.getLogger(TileHitboxComponent.class);
   private float maxPosX;
   private float maxPosY;
   private float minPosX;

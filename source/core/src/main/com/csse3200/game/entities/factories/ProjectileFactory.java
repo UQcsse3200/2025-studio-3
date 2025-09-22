@@ -42,7 +42,8 @@ public class ProjectileFactory {
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
-    TextureRenderComponent render = new TextureRenderComponent("images/sling_projectile.png");
+    TextureRenderComponent render =
+        new TextureRenderComponent("images/effects/sling_projectile.png");
     slingShot.addComponent(render);
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly

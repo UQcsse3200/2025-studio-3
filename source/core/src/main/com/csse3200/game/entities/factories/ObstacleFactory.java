@@ -3,11 +3,10 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.proximityinfodisplay.LevelPopupDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
-import com.csse3200.game.physics.attacking_system.damageMappingSystem;
+import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
@@ -30,8 +29,7 @@ public class ObstacleFactory {
         new Entity()
             .addComponent(new TextureRenderComponent("images/tree.png"))
             .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE))
-            .addComponent(new LevelPopupDisplay());
+            .addComponent(new ColliderComponent().setLayer(PhysicsLayer.OBSTACLE));
 
     tree.getComponent(PhysicsComponent.class).setBodyType(BodyType.StaticBody);
     tree.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -62,7 +60,7 @@ public class ObstacleFactory {
     laser.setProperty("isProjectile", true);
     laser.getEvents().addListener("destroy", laser::dispose);
     PhysicsUtils.setScaledCollider(laser, 0.2f, 0.8f);
-    new damageMappingSystem(laser);
+    new DamageMappingSystem(laser);
     laser.getComponent(PhysicsComponent.class).setLinearVelocity(5f, 0f);
     laser.getComponent(TextureRenderComponent.class).scaleEntity();
     laser.scaleHeight(1.0f); // adjust size as needed

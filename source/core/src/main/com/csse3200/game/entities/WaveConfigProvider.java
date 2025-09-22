@@ -1,6 +1,6 @@
 package com.csse3200.game.entities;
 
-import com.csse3200.game.entities.configs.EnemySpawnConfig;
+import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import java.util.Map;
 
 /**
@@ -23,16 +23,9 @@ public interface WaveConfigProvider {
   int getMinZombiesSpawn();
 
   /**
-   * Gets the experience points gained for completing the current wave.
-   *
-   * @return the experience points
-   */
-  int getExpGained();
-
-  /**
    * Gets the enemy configuration map for the current wave.
    *
    * @return map of enemy type to spawn configuration
    */
-  Map<String, EnemySpawnConfig> getEnemyConfigs();
+  Map<String, BaseSpawnConfig> getEnemyConfigs();
 }

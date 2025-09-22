@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.Texture;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
-import com.csse3200.game.areas.terrain.TerrainFactory;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
@@ -56,10 +55,8 @@ class TileStorageComponentTest {
     lenient().doNothing().when(inputService).unregister(any());
     ServiceLocator.registerInputService(inputService);
 
-    TerrainFactory factory = mock(TerrainFactory.class);
-
     levelGameArea =
-        new LevelGameArea(factory) {
+        new LevelGameArea("levelOne") {
           @Override
           public void create() {
             // default implementation ignored
@@ -83,10 +80,14 @@ class TileStorageComponentTest {
   void shouldntAddUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
+    levelGameArea.spawnUnit(tileStorageComponent.getPosition());
 
     int beforeSecondTriggerId = tileStorageComponent.getTileUnit().getId();
-    tileStorageComponent.triggerSpawnUnit();
+    levelGameArea.setSelectedUnit(
+        new Entity()
+            .addComponent(new TextureRenderComponent(mock(Texture.class)))
+            .addComponent(new DeckInputComponent(levelGameArea, Entity::new)));
+    levelGameArea.spawnUnit(tileStorageComponent.getPosition());
     int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
 
     // checks if the tile unit has not been replaced with new unit if there was already a unit
@@ -98,7 +99,7 @@ class TileStorageComponentTest {
   void shouldAddUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
+    levelGameArea.spawnUnit(tileStorageComponent.getPosition());
     assertTrue(tileStorageComponent.hasUnit());
   }
 
@@ -106,7 +107,7 @@ class TileStorageComponentTest {
   void shouldRemoveUnit() {
     Entity tile = grid.getTile(0, 0);
     TileStorageComponent tileStorageComponent = tile.getComponent(TileStorageComponent.class);
-    tileStorageComponent.triggerSpawnUnit();
+    levelGameArea.spawnUnit(tileStorageComponent.getPosition());
     tileStorageComponent.removeTileUnit();
     assertFalse(tileStorageComponent.hasUnit());
   }

@@ -60,11 +60,11 @@ public class DebugRenderer {
   public void drawLine(Vector2 from, Vector2 to, Color color, float lineWidth) {
     ensureCapacity();
     DrawRequest request = drawRequests[requestCount];
-    request.drawRequestType = DrawRequestType.LINE;
-    request.pos = from;
-    request.end = to;
-    request.color = color;
-    request.lineWidth = lineWidth;
+    request.setDrawRequestType(DrawRequestType.LINE);
+    request.setPos(from);
+    request.setEnd(to);
+    request.setColor(color);
+    request.setLineWidth(lineWidth);
     requestCount++;
   }
 
@@ -89,11 +89,11 @@ public class DebugRenderer {
   public void drawRectangle(Vector2 pos, Vector2 size, Color color, float lineWidth) {
     ensureCapacity();
     DrawRequest request = drawRequests[requestCount];
-    request.drawRequestType = DrawRequestType.RECT;
-    request.pos = pos;
-    request.end = size;
-    request.color = color;
-    request.lineWidth = lineWidth;
+    request.setDrawRequestType(DrawRequestType.RECT);
+    request.setPos(pos);
+    request.setEnd(size);
+    request.setColor(color);
+    request.setLineWidth(lineWidth);
     requestCount++;
   }
 
@@ -123,7 +123,7 @@ public class DebugRenderer {
     shapeRenderer.setProjectionMatrix(projMatrix);
     shapeRenderer.begin(ShapeType.Line);
     for (int i = 0; i < requestCount; i++) {
-      switch (drawRequests[i].drawRequestType) {
+      switch (drawRequests[i].getDrawRequestType()) {
         case LINE:
           renderLine(drawRequests[i]);
           break;
@@ -140,15 +140,16 @@ public class DebugRenderer {
   }
 
   private void renderLine(DrawRequest request) {
-    Gdx.gl.glLineWidth(request.lineWidth);
-    shapeRenderer.setColor(request.color);
-    shapeRenderer.line(request.pos, request.end);
+    Gdx.gl.glLineWidth(request.getLineWidth());
+    shapeRenderer.setColor(request.getColor());
+    shapeRenderer.line(request.getPos(), request.getEnd());
   }
 
   private void renderRect(DrawRequest request) {
-    Gdx.gl.glLineWidth(request.lineWidth);
-    shapeRenderer.setColor(request.color);
-    shapeRenderer.rect(request.pos.x, request.pos.y, request.end.x, request.end.y);
+    Gdx.gl.glLineWidth(request.getLineWidth());
+    shapeRenderer.setColor(request.getColor());
+    shapeRenderer.rect(
+        request.getPos().x, request.getPos().y, request.getEnd().x, request.getEnd().y);
   }
 
   /**
@@ -172,12 +173,51 @@ public class DebugRenderer {
    * allocating/deallocating new instances every render.
    */
   static class DrawRequest {
-    public DrawRequestType drawRequestType;
-    public Vector2 pos;
-    public Color color;
-    public float lineWidth;
+    private DrawRequestType drawRequestType;
+    private Vector2 pos;
+    private Color color;
+    private float lineWidth;
+    private Vector2 end;
 
-    public Vector2 end;
+    public DrawRequestType getDrawRequestType() {
+      return drawRequestType;
+    }
+
+    public Vector2 getPos() {
+      return pos;
+    }
+
+    public Color getColor() {
+      return color;
+    }
+
+    public float getLineWidth() {
+      return lineWidth;
+    }
+
+    public Vector2 getEnd() {
+      return end;
+    }
+
+    public void setDrawRequestType(DrawRequestType drawRequestType) {
+      this.drawRequestType = drawRequestType;
+    }
+
+    public void setPos(Vector2 pos) {
+      this.pos = pos;
+    }
+
+    public void setColor(Color color) {
+      this.color = color;
+    }
+
+    public void setLineWidth(float lineWidth) {
+      this.lineWidth = lineWidth;
+    }
+
+    public void setEnd(Vector2 end) {
+      this.end = end;
+    }
   }
 
   enum DrawRequestType {

@@ -44,15 +44,19 @@ public class EntityService {
 
   /** Update all registered entities. Should only be called from the main game loop. */
   public void update() {
-    for (Entity entity : entities) {
-      entity.earlyUpdate();
-      entity.update();
+    Array<Entity> entitiesSnapshot = new Array<>(entities);
+    for (Entity entity : entitiesSnapshot) {
+      if (entities.contains(entity, true)) {
+        entity.earlyUpdate();
+        entity.update();
+      }
     }
   }
 
   /** Dispose all entities. */
   public void dispose() {
-    for (Entity entity : entities) {
+    Array<Entity> entitiesSnapshot = new Array<>(entities);
+    for (Entity entity : entitiesSnapshot) {
       entity.dispose();
     }
   }
