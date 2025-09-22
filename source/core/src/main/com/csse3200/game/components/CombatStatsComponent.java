@@ -133,7 +133,6 @@ public class CombatStatsComponent extends Component {
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
-        logger.info("Human has died!");
       } else {
         entity.getEvents().trigger("entityDeath");
       }
