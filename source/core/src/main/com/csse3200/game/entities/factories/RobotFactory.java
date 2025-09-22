@@ -41,7 +41,9 @@ public class RobotFactory {
     FAST,
     TANKY,
     BUNGEE,
-    TELEPORT
+    TELEPORT,
+    GIANT,
+    MINI
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -66,6 +68,8 @@ public class RobotFactory {
       case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
       case STANDARD -> config = configService.getEnemyConfig("standardRobot");
       case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
+      case GIANT -> config = configService.getEnemyConfig("giantRobot");
+      case MINI -> config = configService.getEnemyConfig("miniRobot");
     }
     return createBaseRobot(config);
   }
