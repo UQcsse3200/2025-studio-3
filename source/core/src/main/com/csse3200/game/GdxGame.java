@@ -1,12 +1,10 @@
 package com.csse3200.game;
 
 import static com.badlogic.gdx.Gdx.app;
+
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.persistence.FileLoader;
-import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;

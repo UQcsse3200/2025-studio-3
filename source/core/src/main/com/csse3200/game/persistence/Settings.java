@@ -1,23 +1,20 @@
 package com.csse3200.game.persistence;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Graphics.DisplayMode;
+import com.badlogic.gdx.Graphics.Monitor;
+import com.badlogic.gdx.Input;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.Arrays;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Graphics.DisplayMode;
-import com.badlogic.gdx.Graphics.Monitor;
-
 import net.dermetfan.utils.Pair;
 
 public class Settings {
   public static final String OPERATING_SYSTEM = System.getProperty("os.name");
 
-  /**
-   * Display mode of the game.
-   */
+  /** Display mode of the game. */
   public enum Mode {
     /** Windowed display mode. */
     WINDOWED,
@@ -27,9 +24,7 @@ public class Settings {
     BORDERLESS
   }
 
-  /**
-   * Difficulty of the game.
-   */
+  /** Difficulty of the game. */
   public enum Difficulty {
     /** Easy difficulty. */
     EASY,
@@ -39,9 +34,7 @@ public class Settings {
     HARD
   }
 
-  /**
-   * Quality settings of the game.
-   */
+  /** Quality settings of the game. */
   public enum Quality {
     /** Low quality. */
     LOW,
@@ -49,9 +42,7 @@ public class Settings {
     HIGH
   }
 
-  /**
-   * UI scale settings of the game.
-   */
+  /** UI scale settings of the game. */
   public enum UIScale {
     /** Small UI scale. */
     SMALL,
@@ -61,17 +52,15 @@ public class Settings {
     LARGE
   }
 
-  /**
-   * Resolutions of the game.
-   */
-  static final List<Pair<Integer, Integer>> RESOLUTIONS = Arrays.asList(
-    new Pair<>(3840, 2160),
-    new Pair<>(2560, 1440),
-    new Pair<>(1920, 1080),
-    new Pair<>(1600, 900),
-    new Pair<>(1366, 768),
-    new Pair<>(1280, 720)
-  );
+  /** Resolutions of the game. */
+  static final List<Pair<Integer, Integer>> RESOLUTIONS =
+      Arrays.asList(
+          new Pair<>(3840, 2160),
+          new Pair<>(2560, 1440),
+          new Pair<>(1920, 1080),
+          new Pair<>(1600, 900),
+          new Pair<>(1366, 768),
+          new Pair<>(1280, 720));
 
   /*
    * Display settings of the game.
@@ -110,8 +99,8 @@ public class Settings {
 
   /**
    * Constructor for the Settings class.
-   * 
-   * Initializes the display settings to default settings.
+   *
+   * <p>Initializes the display settings to default settings.
    */
   public Settings() {
     // Volume settings
@@ -129,7 +118,7 @@ public class Settings {
     downButton = Input.Keys.S;
     leftButton = Input.Keys.A;
     rightButton = Input.Keys.D;
-    
+
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
     availableModes.put(Mode.FULLSCREEN, "Fullscreen");
@@ -155,7 +144,7 @@ public class Settings {
 
   /**
    * Constructor for the Settings class, used for saved settings.
-   * 
+   *
    * @param deserializedSettings the deserialized settings.
    */
   public Settings(DeserializedSettings deserializedSettings) {
@@ -192,21 +181,23 @@ public class Settings {
       }
     }
     this.refreshRate = displayMode.refreshRate;
-    this.fps = deserializedSettings.getFps() > displayMode.refreshRate ? displayMode.refreshRate : deserializedSettings.getFps();
+    this.fps =
+        deserializedSettings.getFps() > displayMode.refreshRate
+            ? displayMode.refreshRate
+            : deserializedSettings.getFps();
     this.vsync = deserializedSettings.isVsync();
     this.currentUIScale = deserializedSettings.getCurrentUIScale();
     this.quality = deserializedSettings.getQuality();
   }
 
-  /**
-   * Applies the settings to the game.
-   */
+  /** Applies the settings to the game. */
   public void applySettings() {
     Gdx.graphics.setResizable(false);
   }
 
   /**
    * Gets the sound volume.
+   *
    * @return the sound volume.
    */
   public float getSoundVolume() {
@@ -215,6 +206,7 @@ public class Settings {
 
   /**
    * Gets the voice volume.
+   *
    * @return the voice volume.
    */
   public float getVoiceVolume() {
@@ -223,6 +215,7 @@ public class Settings {
 
   /**
    * Gets the music volume.
+   *
    * @return the music volume.
    */
   public float getMusicVolume() {
@@ -231,6 +224,7 @@ public class Settings {
 
   /**
    * Gets the master volume.
+   *
    * @return the master volume.
    */
   public float getMasterVolume() {
@@ -239,6 +233,7 @@ public class Settings {
 
   /**
    * Gets the difficulty.
+   *
    * @return the difficulty.
    */
   public Difficulty getDifficulty() {
@@ -247,6 +242,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the pause button.
+   *
    * @return the pause button.
    */
   public int getPauseButton() {
@@ -255,6 +251,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the skip button.
+   *
    * @return the skip button.
    */
   public int getSkipButton() {
@@ -263,6 +260,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the interaction button.
+   *
    * @return the interaction button.
    */
   public int getInteractionButton() {
@@ -271,6 +269,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the up button.
+   *
    * @return the up button.
    */
   public int getUpButton() {
@@ -279,6 +278,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the down button.
+   *
    * @return the down button.
    */
   public int getDownButton() {
@@ -287,6 +287,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the left button.
+   *
    * @return the left button.
    */
   public int getLeftButton() {
@@ -295,6 +296,7 @@ public class Settings {
 
   /**
    * Gets the key assigned to the right button.
+   *
    * @return the right button.
    */
   public int getRightButton() {
@@ -352,7 +354,7 @@ public class Settings {
   public void setVoiceVolume(float voiceVolume) {
     this.voiceVolume = voiceVolume;
   }
-  
+
   public void setMusicVolume(float musicVolume) {
     this.musicVolume = musicVolume;
   }
@@ -426,27 +428,71 @@ public class Settings {
   }
 
   public String toString() {
-    return "\n" + "Settings" + "\n" + "--------" + "\n" +
-        "soundVolume = " + soundVolume + "\n" +
-        "voiceVolume = " + voiceVolume + "\n" +
-        "musicVolume = " + musicVolume + "\n" +
-        "masterVolume = " + masterVolume + "\n" +
-        "difficulty = " + difficulty + "\n" +
-        "pauseButton = " + Input.Keys.toString(pauseButton) + "\n" +
-        "skipButton = " + Input.Keys.toString(skipButton) + "\n" +
-        "interactionButton = " + Input.Keys.toString(interactionButton) + "\n" +
-        "upButton = " + Input.Keys.toString(upButton) + "\n" +
-        "downButton = " + Input.Keys.toString(downButton) + "\n" +
-        "leftButton = " + Input.Keys.toString(leftButton) + "\n" +
-        "rightButton = " + Input.Keys.toString(rightButton) + "\n" +
-        "currentResolution = " + currentResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "") + "\n" +
-        "refreshRate = " + refreshRate + "\n" +
-        "fps = " + fps + "\n" +
-        "vsync = " + vsync + "\n" +
-        "currentUIScale = " + currentUIScale + "\n" +
-        "quality = " + quality + "\n" +
-        "currentMode = " + currentMode + "\n" +
-        "currentMonitor = " + currentMonitor.name + "\n" + "--------";
+    return "\n"
+        + "Settings"
+        + "\n"
+        + "--------"
+        + "\n"
+        + "soundVolume = "
+        + soundVolume
+        + "\n"
+        + "voiceVolume = "
+        + voiceVolume
+        + "\n"
+        + "musicVolume = "
+        + musicVolume
+        + "\n"
+        + "masterVolume = "
+        + masterVolume
+        + "\n"
+        + "difficulty = "
+        + difficulty
+        + "\n"
+        + "pauseButton = "
+        + Input.Keys.toString(pauseButton)
+        + "\n"
+        + "skipButton = "
+        + Input.Keys.toString(skipButton)
+        + "\n"
+        + "interactionButton = "
+        + Input.Keys.toString(interactionButton)
+        + "\n"
+        + "upButton = "
+        + Input.Keys.toString(upButton)
+        + "\n"
+        + "downButton = "
+        + Input.Keys.toString(downButton)
+        + "\n"
+        + "leftButton = "
+        + Input.Keys.toString(leftButton)
+        + "\n"
+        + "rightButton = "
+        + Input.Keys.toString(rightButton)
+        + "\n"
+        + "currentResolution = "
+        + currentResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "")
+        + "\n"
+        + "refreshRate = "
+        + refreshRate
+        + "\n"
+        + "fps = "
+        + fps
+        + "\n"
+        + "vsync = "
+        + vsync
+        + "\n"
+        + "currentUIScale = "
+        + currentUIScale
+        + "\n"
+        + "quality = "
+        + quality
+        + "\n"
+        + "currentMode = "
+        + currentMode
+        + "\n"
+        + "currentMonitor = "
+        + currentMonitor.name
+        + "\n"
+        + "--------";
   }
 }
-

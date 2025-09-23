@@ -9,7 +9,7 @@ public class SettingsService {
   public SettingsService() {
     // To be added
   }
-  
+
   public void applyCoreSettings() {
     // To be added
   }
@@ -17,5 +17,4 @@ public class SettingsService {
   public void applyRemainingSettings() {
     // To be added
   }
-
 }
