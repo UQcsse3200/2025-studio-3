@@ -1,11 +1,11 @@
 package com.csse3200.game.areas;
 
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.components.gameover.GameOverWindow;
 
 /**
  * Represents a dedicated game area for the slot machine level. Handles loading and unloading of

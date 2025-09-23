@@ -183,7 +183,8 @@ public class SlotMachineDisplay extends UIComponent {
     barGroup.setTouchable(Touchable.childrenOnly);
     stage.addActor(barGroup);
     TextureAtlas atlas =
-        ServiceLocator.getResourceService().getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
     for (Texture tex : atlas.getTextures()) {
@@ -236,7 +237,8 @@ public class SlotMachineDisplay extends UIComponent {
   /** Loads the reels atlas and collects symbol regions in name order. */
   private void loadSymbols() {
     TextureAtlas reelsAtlas =
-        ServiceLocator.getResourceService().getAsset("images/entities/slotmachine/slot_reels.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/slot_reels.atlas", TextureAtlas.class);
     symbolRegions = new ArrayList<>();
     for (TextureAtlas.AtlasRegion r : reelsAtlas.getRegions()) {
       symbolRegions.add(r);
