@@ -1,10 +1,12 @@
 package com.csse3200.game;
 
 import static com.badlogic.gdx.Gdx.app;
-
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.csse3200.game.persistence.FileLoader;
+import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;
@@ -60,6 +62,36 @@ public class GdxGame extends Game {
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
+    Settings testSettings = new Settings();
+    String defaultSettingsString = testSettings.toString();
+    logger.info("[GdxGame] Default Settings: {}", defaultSettingsString);
+    testSettings.setSoundVolume(0.5f);
+    testSettings.setVoiceVolume(0.5f);
+    testSettings.setMusicVolume(0.5f);
+    testSettings.setMasterVolume(0.5f);
+    testSettings.setDifficulty(Settings.Difficulty.HARD);
+    testSettings.setPauseButton(Input.Keys.SPACE);
+    testSettings.setSkipButton(Input.Keys.ESCAPE);
+    testSettings.setInteractionButton(Input.Keys.F);
+    testSettings.setUpButton(Input.Keys.X);
+    testSettings.setDownButton(Input.Keys.Z);
+    testSettings.setLeftButton(Input.Keys.Y);
+    testSettings.setRightButton(Input.Keys.U);
+    testSettings.setCurrentResolution(new Pair<>(1920, 1080));
+    testSettings.setRefreshRate(80);
+    testSettings.setFps(80);
+    testSettings.setVsync(true);
+    testSettings.setCurrentUIScale(Settings.UIScale.LARGE);
+    testSettings.setQuality(Settings.Quality.LOW);
+    testSettings.setCurrentMode(Settings.Mode.WINDOWED);
+    testSettings.setCurrentMonitor(Gdx.graphics.getMonitors()[1]);
+    String testSettingsString = testSettings.toString();
+    logger.info("[GdxGame] Test Settings: {}", testSettingsString);
+    FileLoader.writeClass(testSettings, "testSettings.json", FileLoader.Location.EXTERNAL);
+    Settings settings = FileLoader.readClass(Settings.class, "testSettings.json", FileLoader.Location.EXTERNAL);
+    String settingsString = settings.toString();
+    logger.info("[GdxGame] Settings: {}", settingsString);
+
     loadGlobalAssets();
     loadSettings();
     loadNodes();

@@ -2,6 +2,8 @@ package com.csse3200.game.persistence;
 
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import java.util.Arrays;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,7 +18,7 @@ public class Settings {
   /**
    * Display mode of the game.
    */
-  enum Mode {
+  public enum Mode {
     /** Windowed display mode. */
     WINDOWED,
     /** Fullscreen display mode. */
@@ -28,7 +30,7 @@ public class Settings {
   /**
    * Difficulty of the game.
    */
-  enum Difficulty {
+  public enum Difficulty {
     /** Easy difficulty. */
     EASY,
     /** Normal difficulty. */
@@ -40,7 +42,7 @@ public class Settings {
   /**
    * Quality settings of the game.
    */
-  enum Quality {
+  public enum Quality {
     /** Low quality. */
     LOW,
     /** High quality. */
@@ -50,7 +52,7 @@ public class Settings {
   /**
    * UI scale settings of the game.
    */
-  enum UIScale {
+  public enum UIScale {
     /** Small UI scale. */
     SMALL,
     /** Medium UI scale. */
@@ -75,7 +77,7 @@ public class Settings {
   private Monitor currentMonitor;
   private EnumMap<Mode, String> availableModes = new EnumMap<>(Mode.class);
   private Mode currentMode;
-  private List<Pair<Integer, Integer>> availableResolutions;
+  private List<Pair<Integer, Integer>> availableResolutions = new ArrayList<>();
   private Pair<Integer, Integer> currentResolution;
   private boolean vsync;
   private int refreshRate;
@@ -152,6 +154,204 @@ public class Settings {
     quality = Quality.HIGH;
   }
 
+  public float getSoundVolume() {
+    return soundVolume;
+  }
 
+  public float getVoiceVolume() {
+    return voiceVolume;
+  }
+
+  public float getMusicVolume() {
+    return musicVolume;
+  }
+
+  public float getMasterVolume() {
+    return masterVolume;
+  }
+
+  public Difficulty getDifficulty() {
+    return difficulty;
+  }
+
+  public int getPauseButton() {
+    return pauseButton;
+  }
+
+  public int getSkipButton() {
+    return skipButton;
+  }
+
+  public int getInteractionButton() {
+    return interactionButton;
+  }
+
+  public int getUpButton() {
+    return upButton;
+  }
+
+  public int getDownButton() {
+    return downButton;
+  }
+
+  public int getLeftButton() {
+    return leftButton;
+  }
+
+  public int getRightButton() {
+    return rightButton;
+  }
+
+  public List<Pair<Integer, Integer>> getAvailableResolutions() {
+    return availableResolutions;
+  }
+
+  public Pair<Integer, Integer> getCurrentResolution() {
+    return currentResolution;
+  }
+
+  public int getRefreshRate() {
+    return refreshRate;
+  }
+
+  public int getFps() {
+    return fps;
+  }
+
+  public boolean isVsync() {
+    return vsync;
+  }
+
+  public UIScale getCurrentUIScale() {
+    return currentUIScale;
+  }
+
+  public Map<UIScale, String> getAvailableUIScales() {
+    return availableUIScales;
+  }
+
+  public Quality getQuality() {
+    return quality;
+  }
+
+  public Map<Mode, String> getAvailableModes() {
+    return availableModes;
+  }
+
+  public Monitor[] getAvailableMonitors() {
+    return availableMonitors;
+  }
+
+  public Monitor getCurrentMonitor() {
+    return currentMonitor;
+  }
+
+  public Mode getCurrentMode() {
+    return currentMode;
+  }
+
+  public void setSoundVolume(float soundVolume) {
+    this.soundVolume = soundVolume;
+  }
+
+  public void setVoiceVolume(float voiceVolume) {
+    this.voiceVolume = voiceVolume;
+  }
+  
+  public void setMusicVolume(float musicVolume) {
+    this.musicVolume = musicVolume;
+  }
+
+  public void setMasterVolume(float masterVolume) {
+    this.masterVolume = masterVolume;
+  }
+
+  public void setDifficulty(Difficulty difficulty) {
+    this.difficulty = difficulty;
+  }
+
+  public void setPauseButton(int pauseButton) {
+    this.pauseButton = pauseButton;
+  }
+
+  public void setSkipButton(int skipButton) {
+    this.skipButton = skipButton;
+  }
+
+  public void setInteractionButton(int interactionButton) {
+    this.interactionButton = interactionButton;
+  }
+
+  public void setUpButton(int upButton) {
+    this.upButton = upButton;
+  }
+
+  public void setDownButton(int downButton) {
+    this.downButton = downButton;
+  }
+
+  public void setLeftButton(int leftButton) {
+    this.leftButton = leftButton;
+  }
+
+  public void setRightButton(int rightButton) {
+    this.rightButton = rightButton;
+  }
+
+  public void setCurrentResolution(Pair<Integer, Integer> currentResolution) {
+    this.currentResolution = currentResolution;
+  }
+
+  public void setRefreshRate(int refreshRate) {
+    this.refreshRate = refreshRate;
+  }
+
+  public void setFps(int fps) {
+    this.fps = fps;
+  }
+
+  public void setVsync(boolean vsync) {
+    this.vsync = vsync;
+  }
+
+  public void setCurrentUIScale(UIScale currentUIScale) {
+    this.currentUIScale = currentUIScale;
+  }
+
+  public void setQuality(Quality quality) {
+    this.quality = quality;
+  }
+
+  public void setCurrentMode(Mode currentMode) {
+    this.currentMode = currentMode;
+  }
+
+  public void setCurrentMonitor(Monitor currentMonitor) {
+    this.currentMonitor = currentMonitor;
+  }
+
+  public String toString() {
+    return "\n" + "Settings" + "\n" + "--------" + "\n" +
+        "soundVolume = " + soundVolume + "\n" +
+        "voiceVolume = " + voiceVolume + "\n" +
+        "musicVolume = " + musicVolume + "\n" +
+        "masterVolume = " + masterVolume + "\n" +
+        "difficulty = " + difficulty + "\n" +
+        "pauseButton = " + Input.Keys.toString(pauseButton) + "\n" +
+        "skipButton = " + Input.Keys.toString(skipButton) + "\n" +
+        "interactionButton = " + Input.Keys.toString(interactionButton) + "\n" +
+        "upButton = " + Input.Keys.toString(upButton) + "\n" +
+        "downButton = " + Input.Keys.toString(downButton) + "\n" +
+        "leftButton = " + Input.Keys.toString(leftButton) + "\n" +
+        "rightButton = " + Input.Keys.toString(rightButton) + "\n" +
+        "currentResolution = " + currentResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "") + "\n" +
+        "refreshRate = " + refreshRate + "\n" +
+        "fps = " + fps + "\n" +
+        "vsync = " + vsync + "\n" +
+        "currentUIScale = " + currentUIScale + "\n" +
+        "quality = " + quality + "\n" +
+        "currentMode = " + currentMode + "\n" +
+        "currentMonitor = " + currentMonitor.name + "\n" + "--------";
+  }
 }
 
