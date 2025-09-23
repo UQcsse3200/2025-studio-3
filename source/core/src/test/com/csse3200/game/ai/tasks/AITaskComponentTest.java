@@ -1,5 +1,6 @@
 package com.csse3200.game.ai.tasks;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -14,7 +15,7 @@ class AITaskComponentTest {
   @Test
   void shouldRunNothingWithNoTask() {
     AITaskComponent taskComponent = new AITaskComponent();
-    taskComponent.update();
+    assertDoesNotThrow(taskComponent::update);
   }
 
   @Test

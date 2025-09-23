@@ -4,7 +4,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 
 public class LaneRunnerPlayerFactory {
-  private static final String PLAYER_TEXTURE = "images/box_boy.png";
+  private static final String PLAYER_TEXTURE = "images/entities/character.png";
 
   public static Entity createPlayer(LaneManager laneManager) {
     Entity player =

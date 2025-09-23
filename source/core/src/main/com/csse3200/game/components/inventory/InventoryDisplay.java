@@ -119,7 +119,7 @@ public class InventoryDisplay extends UIComponent {
     } else {
       Texture itemTexture =
           ServiceLocator.getGlobalResourceService()
-              .getAsset("images/placeholder.png", Texture.class);
+              .getAsset("images/entities/placeholder.png", Texture.class);
 
       Image itemImage = new Image(new TextureRegionDrawable(itemTexture));
       itemImage.setSize(ITEM_SIZE, ITEM_SIZE);
@@ -150,7 +150,7 @@ public class InventoryDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left
     closeButton.setSize(60f, 60f);

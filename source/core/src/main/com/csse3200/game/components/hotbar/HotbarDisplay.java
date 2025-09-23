@@ -12,11 +12,16 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HotbarDisplay extends UIComponent {
 
@@ -25,10 +30,10 @@ public class HotbarDisplay extends UIComponent {
   private final LevelGameArea game;
   private final Map<String, Supplier<Entity>> unitList;
   private final Map<String, Supplier<Entity>> itemList;
+  private static final Logger logger = LoggerFactory.getLogger(HotbarDisplay.class);
   // a list of all the images for the slots
   private final Array<Image> slotImages = new Array<>();
   private float cellWidth;
-  private Group layered;
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -51,10 +56,10 @@ public class HotbarDisplay extends UIComponent {
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
   private void addActors() {
-    layered = new Group();
+    Group layered = new Group();
 
     // create hotbar image
-    Image hotbar = new Image(new Texture("images/hotbar.png"));
+    Image hotbar = new Image(new Texture("images/ui/hotbar.png"));
     layered.addActor(hotbar);
 
     layered.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
@@ -114,8 +119,23 @@ public class HotbarDisplay extends UIComponent {
                         .addComponent(new DeckInputComponent(game, item.getValue()))
                         .addComponent(new TextureRenderComponent(item.getKey()));
                 game.setSelectedUnit(tempPlaceableUnit);
-                // removes the item after use
-                remove(tempItem);
+                // Get name of item
+                String itemName =
+                    item.getValue()
+                        .get()
+                        .getComponent(ItemComponent.class)
+                        .getType()
+                        .toString()
+                        .toLowerCase(Locale.ROOT);
+                // Only remove item from hotbar if it is the last of that item in the inventory
+                if (!ServiceLocator.getProfileService()
+                    .getProfile()
+                    .getInventory()
+                    .containsMoreThanOne(itemName)) {
+                  // removes the item from use
+                  remove(tempItem);
+                  logger.info("Remove {} from hotbar", itemName);
+                }
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);
               }

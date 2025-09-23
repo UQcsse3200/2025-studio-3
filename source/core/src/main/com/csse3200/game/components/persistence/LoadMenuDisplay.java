@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -41,7 +43,7 @@ public class LoadMenuDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
     backBtn.setSize(60f, 60f);
     backBtn.setPosition(
         20f, // 20f padding from left
@@ -57,7 +59,7 @@ public class LoadMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = new Label("LOAD GAME", skin, "large");
+    Label titleLabel = TypographyFactory.createTitle("LOAD GAME");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
@@ -66,7 +68,7 @@ public class LoadMenuDisplay extends UIComponent {
         // Active save slot
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = new TextButton(buttonText, skin);
+        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -80,7 +82,7 @@ public class LoadMenuDisplay extends UIComponent {
             });
       } else {
         // Empty save slot
-        saveSlotButtons[i] = new TextButton("Empty", skin);
+        saveSlotButtons[i] = ButtonFactory.createButton("Empty");
         saveSlotButtons[i].setDisabled(true);
       }
     }

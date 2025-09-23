@@ -12,9 +12,6 @@ public class PaddleComponent extends Component {
     this.paddleImage = paddleImage;
   }
 
-  @Override
-  public void update() {}
-
   public void moveLeft(float delta) {
     float newX = paddleImage.getX() - speed * delta;
     newX = Math.max(0, newX);
@@ -23,7 +20,10 @@ public class PaddleComponent extends Component {
 
   public void moveRight(float delta) {
     float newX = paddleImage.getX() + speed * delta;
-    newX = Math.min(Gdx.graphics.getWidth() - paddleImage.getWidth(), newX);
+    // Only apply boundary check if graphics is available and width > 0
+    if (Gdx.graphics != null && Gdx.graphics.getWidth() > 0) {
+      newX = Math.min(Gdx.graphics.getWidth() - paddleImage.getWidth(), newX);
+    }
     paddleImage.setPosition(newX, paddleImage.getY());
   }
 }

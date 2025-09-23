@@ -8,7 +8,9 @@ import com.csse3200.game.cutscene.runtime.components.CutsceneHudComponent;
 import com.csse3200.game.cutscene.runtime.components.CutsceneInputComponent;
 import com.csse3200.game.cutscene.runtime.components.CutsceneTickComponent;
 import com.csse3200.game.entities.Entity;
+import java.util.function.Consumer;
 
+/** Service for managing cutscenes throughout the game. */
 public class CutsceneService {
   private final CutsceneLoader cutsceneLoader = new CutsceneLoader();
   private final CutsceneValidator cutsceneValidator = new CutsceneValidator();
@@ -17,6 +19,7 @@ public class CutsceneService {
   private final CutsceneOrchestrator orchestrator;
   private Entity cutsceneEntity;
 
+  /** Constructor for the CutsceneService class. */
   public CutsceneService() {
     this.cutscenePipeline =
         new CutscenePipeline(cutsceneLoader, cutsceneValidator, cutsceneCompiler);
@@ -27,13 +30,15 @@ public class CutsceneService {
    * runs a cutscene from its name
    *
    * @param name The name of the cutscene
+   * @param callback The callback to be called when the cutscene is complete
    */
-  public void playCutscene(String name) {
+  public void playCutscene(String name, Consumer<String> callback) {
     Cutscene cutscene = this.cutscenePipeline.fromFile(name);
 
     orchestrator.load(cutscene);
 
     end();
+    callback.accept(name);
 
     cutsceneEntity =
         new Entity()

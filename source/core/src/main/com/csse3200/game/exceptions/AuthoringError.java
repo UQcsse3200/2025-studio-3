@@ -8,9 +8,9 @@ package com.csse3200.game.exceptions;
  * a schema file.
  */
 public class AuthoringError extends Exception {
-  private String code;
-  private String path;
-  private String message;
+  private final String code;
+  private final String path;
+  private final String message;
 
   /**
    * @param code The error code (in all capitals separated by '_')
@@ -33,6 +33,7 @@ public class AuthoringError extends Exception {
     return path;
   }
 
+  @Override
   public String getMessage() {
     return message;
   }

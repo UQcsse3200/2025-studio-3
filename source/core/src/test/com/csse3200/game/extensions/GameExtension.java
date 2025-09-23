@@ -33,4 +33,13 @@ public class GameExtension implements AfterEachCallback, BeforeAllCallback {
     // Clear the global state from the service locator
     ServiceLocator.clear();
   }
+
+  /**
+   * Get the game
+   *
+   * @return the game
+   */
+  public Application getGame() {
+    return game;
+  }
 }

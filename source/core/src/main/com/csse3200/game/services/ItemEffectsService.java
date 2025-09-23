@@ -24,27 +24,32 @@ public class ItemEffectsService {
    *
    * @param atlas Texture atlas that contains the frames for the animation
    * @param animatorName Name of the animation.
-   * @param position Initial world position where the effect entity is spawned
+   * @param positions positions[0] is initial world position where the effect entity is spawned, and
+   *     positions[1] is destination position when movingAnimation is true (value is ignored
+   *     otherwise)
    * @param scale Uniform scale applied to the effect (world units)
-   * @param frameDuration Duration per animation frame (seconds)
+   * @param frameAndEffectDuration frameAndEffectDuration[0] is duration per animation frame
+   *     (seconds), and frameAndEffectDuration[1] is total lifetime of the effect (seconds) when
+   *     playMode == NORMAL
    * @param playMode Animation PlayMode (eg NORMAL, LOOP etc)
    * @param movingAnimation If true the effect will move from position to finalPosition
-   * @param finalPosition Destination position when movingAnimation is true (ignored otherwise)
-   * @param totalEffectTime Total lifetime of the effect (seconds) when paylMode == NORMAL
    */
   public static void spawnEffect(
       TextureAtlas atlas,
       String animatorName,
-      Vector2 position,
+      Vector2[] positions,
       int scale,
-      float frameDuration,
+      float[] frameAndEffectDuration,
       Animation.PlayMode playMode,
-      boolean movingAnimation,
-      Vector2 finalPosition,
-      float totalEffectTime) {
+      boolean movingAnimation) {
+
+    Vector2 position = positions[0];
+    Vector2 finalPosition = positions[1];
+    float frameDuration = frameAndEffectDuration[0];
+    float totalEffectTime = frameAndEffectDuration[1];
 
     if (atlas == null) {
-      logger.error("Atlas not loaded: {}", atlas);
+      logger.error("Atlas not loaded");
       return;
     }
 
@@ -97,18 +102,11 @@ public class ItemEffectsService {
             }
 
             // Dispose effect after effect duration exceeded
-            if (playMode == Animation.PlayMode.NORMAL) {
-              if (totalEffectTime > 0f && age >= totalEffectTime) {
-                Gdx.app.postRunnable(effect::dispose);
-                // Trigger Defence listener to stop double attack speed/double damage
-                // if (Objects.equals(animatorName, "emp")) {
-                // [].getEvents().trigger("stopDoubleDamage");
-                // }
-                // if (Objects.equals(animatorName, "coffee")) {
-                // [].getEvents().trigger("stopDoubleSpeed");
-                // }
-                logger.info("Effect disposed");
-              }
+            if (playMode == Animation.PlayMode.NORMAL
+                && totalEffectTime > 0f
+                && age >= totalEffectTime) {
+              Gdx.app.postRunnable(effect::dispose);
+              logger.info("Effect disposed");
             }
           }
         });
@@ -134,18 +132,17 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/buff.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/buff.atlas", TextureAtlas.class),
             "buff",
-            position,
+            (new Vector2[] {position, bottomCorner}),
             tileSize * 3,
-            0.1f,
+            (new float[] {
+              0.1f, 30f
+            }), // frame duration and total effect time (buff effects remain for 30 seconds)
             Animation.PlayMode.NORMAL,
-            true, // allows display in bottom right to indicate effect duration
-            bottomCorner,
-            30f); // buff effects remain for 30 seconds
+            true); // allows display in bottom right to indicate effect duration
 
-        // Trigger Defence listener to start double damage
-        // [].getEvents().trigger("startDoubleDamage");
         logger.info("Created buff effect");
         break;
       case "coffee":
@@ -154,18 +151,17 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/coffee.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/coffee.atlas", TextureAtlas.class),
             "coffee",
-            position,
+            (new Vector2[] {position, bottomCorner}),
             tileSize * 3,
-            0.1f,
+            (new float[] {
+              0.1f, 30f
+            }), // frame duration and total effect time (coffee effects remain for 30 seconds)
             Animation.PlayMode.NORMAL,
-            true, // allows display in bottom right to indicate effect duration
-            bottomCorner,
-            30f); // coffee effects remain for 30 seconds
+            true); // allows display in bottom right to indicate effect duration
 
-        // Trigger Defence listener to begin double attack speed
-        // [].getEvents().trigger("startDoubleSpeed");
         logger.info("Created coffee effect");
         break;
       case "emp":
@@ -174,15 +170,16 @@ public class ItemEffectsService {
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/emp.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/emp.atlas", TextureAtlas.class),
             "emp",
-            position,
+            (new Vector2[] {position, bottomCorner}),
             tileSize * 3,
-            0.1f,
+            (new float[] {
+              0.1f, 1.5f
+            }), // frame duration and total effect time (emp is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false,
-            bottomCorner,
-            1.5f); // emp is an instantaneous effect
+            false);
         logger.info("Created emp effect");
         break;
       case "grenade":
@@ -192,15 +189,15 @@ public class ItemEffectsService {
         position.y = position.y - tileSize;
         spawnEffect(
             ServiceLocator.getResourceService()
-                .getAsset("images/grenade.atlas", TextureAtlas.class),
+                .getAsset("images/effects/grenade.atlas", TextureAtlas.class),
             "grenade",
-            position,
+            (new Vector2[] {position, bottomCorner}),
             tileSize * 3,
-            0.1f,
+            (new float[] {
+              0.1f, 1.5f
+            }), // frame duration and total effect time (grenade is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false,
-            bottomCorner,
-            1.5f); // grenade is an instantaneous effect
+            false);
         logger.info("Created grenade effect");
         break;
       case "nuke":
@@ -209,17 +206,20 @@ public class ItemEffectsService {
         position.x = position.x - 2 * tileSize;
         position.y = position.y - tileSize;
         spawnEffect(
-            ServiceLocator.getResourceService().getAsset("images/nuke.atlas", TextureAtlas.class),
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/nuke.atlas", TextureAtlas.class),
             "nuke",
-            position,
+            (new Vector2[] {position, bottomCorner}),
             tileSize * 5,
-            0.1f,
+            (new float[] {
+              0.1f, 1.5f
+            }), // frame duration and total effect time (nuke is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false,
-            bottomCorner,
-            1.5f); // nuke is an instantaneous effect
+            false);
         logger.info("Created nuke effect");
         break;
+      default:
+        logger.error("Unknown item name");
     }
   }
 }

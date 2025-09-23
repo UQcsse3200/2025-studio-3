@@ -13,7 +13,7 @@ public class AllHitCallback implements RayCastCallback {
   private final Array<RaycastHit> raycastHits;
 
   /** Layer mask for filtering which colliders to hit */
-  public short layerMask = ~0;
+  private short layerMask = ~0;
 
   /** Creates a new AllHitCallback with default settings. */
   public AllHitCallback() {
@@ -31,13 +31,21 @@ public class AllHitCallback implements RayCastCallback {
     return hits;
   }
 
+  public void setLayerMask(short layerMask) {
+    this.layerMask = layerMask;
+  }
+
+  public short getLayerMask() {
+    return layerMask;
+  }
+
   @Override
   public float reportRayFixture(Fixture fixture, Vector2 point, Vector2 normal, float fraction) {
     if ((fixture.getFilterData().categoryBits & layerMask) != 0) {
       RaycastHit hit = new RaycastHit();
-      hit.fixture = fixture;
-      hit.normal = normal;
-      hit.point = point;
+      hit.setFixture(fixture);
+      hit.setNormal(normal);
+      hit.setPoint(point);
       raycastHits.add(hit);
       return fraction;
     }

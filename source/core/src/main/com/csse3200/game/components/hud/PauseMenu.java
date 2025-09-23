@@ -14,8 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.components.maingame.MainGameActions;
-import com.csse3200.game.screens.MainGameScreen;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,6 @@ public class PauseMenu extends UIComponent {
   private Image dimBackground;
   private Table menuTable;
   private TextButton resumeButton;
-  private TextButton settingsButton;
   private TextButton quitLevelButton;
   private TextButton mainMenuButton;
   private TextButton exitGameButton;
@@ -47,15 +45,8 @@ public class PauseMenu extends UIComponent {
     createMenuTable();
     setVisible(false);
 
-    // Check if the game is already paused (e.g., returning from settings)
-    // This doesn't seem to be working currently.
-    if (entity.getComponent(MainGameActions.class) != null) {
-      MainGameScreen mainGameScreen =
-          entity.getComponent(MainGameActions.class).getMainGameScreen();
-      if (mainGameScreen != null && mainGameScreen.isPaused()) {
-        show();
-      }
-    }
+    // Listen for pause events to show the menu
+    entity.getEvents().addListener("pause", this::handlePause);
   }
 
   /** Creates the dimmed background overlay */
@@ -104,7 +95,6 @@ public class PauseMenu extends UIComponent {
 
     // Add buttons to table
     menuTable.add(resumeButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
-    menuTable.add(settingsButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
     menuTable
         .add(quitLevelButton)
         .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -120,29 +110,19 @@ public class PauseMenu extends UIComponent {
   /** Creates the menu buttons */
   private void createButtons() {
     // Resume button
-    resumeButton = new TextButton("Resume", skin);
+    resumeButton = ButtonFactory.createButton("Resume");
     resumeButton.addListener(
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("[PauseMenu] Resume button clicked");
-            entity.getEvents().trigger("resume_game");
-          }
-        });
-
-    // Settings button
-    settingsButton = new TextButton("Settings", skin);
-    settingsButton.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            logger.info("[PauseMenu] Settings button clicked");
-            entity.getEvents().trigger("settings");
+            entity.getEvents().trigger("resume");
+            setVisible(false);
           }
         });
 
     // Quit Level button
-    quitLevelButton = new TextButton("Quit Level", skin);
+    quitLevelButton = ButtonFactory.createButton("Quit Level");
     quitLevelButton.addListener(
         new ClickListener() {
           @Override
@@ -153,7 +133,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Main Menu button
-    mainMenuButton = new TextButton("Main Menu", skin);
+    mainMenuButton = ButtonFactory.createButton("Main Menu");
     mainMenuButton.addListener(
         new ClickListener() {
           @Override
@@ -164,7 +144,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Exit Game button
-    exitGameButton = new TextButton("Exit Game", skin);
+    exitGameButton = ButtonFactory.createButton("Exit Game");
     exitGameButton.addListener(
         new ClickListener() {
           @Override
@@ -211,6 +191,12 @@ public class PauseMenu extends UIComponent {
     dimBackground.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
     menuTable.addAction(Actions.sequence(Actions.alpha(0f, 0.3f), Actions.visible(false)));
     logger.info("[PauseMenu] Pause menu hidden");
+  }
+
+  /** Handles pause events to show the menu */
+  private void handlePause() {
+    logger.info("[PauseMenu] Pause event received");
+    setVisible(true);
   }
 
   /**

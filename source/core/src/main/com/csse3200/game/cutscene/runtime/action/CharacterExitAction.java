@@ -34,6 +34,9 @@ public class CharacterExitAction implements ActionState {
         case SLIDE ->
             characterState.setxOffset(((float) transitionMsLeft / transitionDurationMs) - 1);
         case FADE -> characterState.setOpacity((float) transitionMsLeft / transitionDurationMs);
+        default -> {
+          // do nothing
+        }
       }
     } else {
       characterState.setOnScreen(false);

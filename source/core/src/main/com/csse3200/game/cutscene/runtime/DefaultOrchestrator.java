@@ -101,10 +101,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
       beatStarted = true;
     }
 
-    active.forEach(
-        actionState -> {
-          actionState.tick(dtMs);
-        });
+    active.forEach(actionState -> actionState.tick(dtMs));
 
     if (!active.isEmpty() && active.getFirst().done()) {
       active.removeFirst();
@@ -148,7 +145,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
    * @param id The id of the choice made
    */
   @Override
-  public void choose(String id) {}
+  public void choose(String id) {
+    // Not implemented
+  }
 
   /**
    * Get the current state of the orchestrator
@@ -196,5 +195,14 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
     this.running = false;
     this.active.clear();
     this.queue.clear();
+  }
+
+  /**
+   * Gets the cutscene
+   *
+   * @return the cutscene
+   */
+  public Cutscene getCutscene() {
+    return cutscene;
   }
 }

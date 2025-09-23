@@ -25,13 +25,17 @@ public class PauseButton extends UIComponent {
   public void create() {
     super.create();
     addActors();
+
+    // Listen for resume events to re-enable the button
+    entity.getEvents().addListener("resume", this::handleResume);
   }
 
   /** Adds the pause button to the stage */
   private void addActors() {
     // Create pause button
     Texture pauseTexture =
-        ServiceLocator.getGlobalResourceService().getAsset("images/pause-icon.png", Texture.class);
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/pause-icon.png", Texture.class);
     pauseButtonComponent =
         new ImageButton(new TextureRegionDrawable(new TextureRegion(pauseTexture)));
     pauseButtonComponent.setSize(BUTTON_SIZE, BUTTON_SIZE);
@@ -50,7 +54,8 @@ public class PauseButton extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             logger.info("[PauseButton] Pause button clicked");
-            entity.getEvents().trigger("pause_game");
+            setPaused(true);
+            entity.getEvents().trigger("pause");
           }
         });
 
@@ -131,6 +136,12 @@ public class PauseButton extends UIComponent {
   @Override
   public float getZIndex() {
     return Z_INDEX;
+  }
+
+  /** Handles resume events to re-enable the pause button */
+  private void handleResume() {
+    logger.info("[PauseButton] Resume event received");
+    setPaused(false);
   }
 
   /**

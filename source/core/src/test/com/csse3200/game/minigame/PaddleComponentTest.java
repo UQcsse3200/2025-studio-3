@@ -5,10 +5,13 @@ import static org.mockito.Mockito.mock;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public class PaddleComponentTest {
+@ExtendWith(GameExtension.class)
+class PaddleComponentTest {
   private PaddleComponent paddleComponent;
   private Image paddleImage;
 

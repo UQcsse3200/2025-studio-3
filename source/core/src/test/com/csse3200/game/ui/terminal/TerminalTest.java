@@ -62,9 +62,9 @@ class TerminalTest {
   @Test
   void shouldProcessMessageNoArgs() {
     Terminal terminal = new Terminal();
-
-    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
-    ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
+    @SuppressWarnings("unchecked")
+    ArgumentCaptor<ArrayList<String>> captor =
+        ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
 
     terminal.addCommand("test1", command);
 
@@ -79,8 +79,9 @@ class TerminalTest {
   void shouldProcessMessageMultipleArgs() {
     Terminal terminal = new Terminal();
 
-    Class<ArrayList<String>> captorClass = (Class<ArrayList<String>>) (Class) ArrayList.class;
-    ArgumentCaptor<ArrayList<String>> captor = ArgumentCaptor.forClass(captorClass);
+    @SuppressWarnings("unchecked")
+    ArgumentCaptor<ArrayList<String>> captor =
+        ArgumentCaptor.forClass((Class<ArrayList<String>>) (Class<?>) ArrayList.class);
 
     terminal.addCommand("test1", command);
 

@@ -28,7 +28,7 @@ public class WallPongGameOverScreen extends ScreenAdapter {
   private final int ballsHit;
 
   private static final String[] wallPongGameOverTextures = {
-    "images/GameOver.png",
+    "images/backgrounds/GameOver.png",
   };
 
   public WallPongGameOverScreen(GdxGame game, int finalScore, float survivalTime, int ballsHit) {

@@ -21,20 +21,21 @@ public class PaddleGameScreen extends ScreenAdapter {
   private final GdxGame game;
   private Stage stage;
   private Image paddleImage;
-  private Image ballImage;
   private Entity paddle;
   private Entity ball;
-
   private Texture paddleTex;
   private Texture ballTex;
   private Texture bgTex;
-
   private Label scoreLabel;
-  private int score;
   private int ballsHit;
   private float totalTime = 0f;
   private Label timeLabel;
 
+  /**
+   * Creates a new PaddleGameScreen and initializes the stage, input processor, and assets.
+   *
+   * @param game
+   */
   public PaddleGameScreen(GdxGame game) {
     this.game = game;
     stage = new Stage(new ScreenViewport());
@@ -48,9 +49,9 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void loadAssests() {
-    paddleTex = new Texture(Gdx.files.internal("images/paddle.png"));
-    ballTex = new Texture(Gdx.files.internal("images/ball.png"));
-    bgTex = new Texture(Gdx.files.internal("images/WallPongbg.png"));
+    paddleTex = new Texture(Gdx.files.internal("images/entities/minigames/paddle.png"));
+    ballTex = new Texture(Gdx.files.internal("images/entities/minigames/ball.png"));
+    bgTex = new Texture(Gdx.files.internal("images/backgrounds/WallPongbg.png"));
   }
 
   private void addBackground() {
@@ -73,7 +74,7 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void createBall() {
-    ballImage = new Image(ballTex);
+    Image ballImage = new Image(ballTex);
     ballImage.setSize(40, 40);
     ballImage.setPosition(Gdx.graphics.getWidth() / 2f - 20, 100);
     stage.addActor(ballImage);
@@ -87,10 +88,10 @@ public class PaddleGameScreen extends ScreenAdapter {
   private void createScoreLabel() {
     Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
     scoreLabel = new Label("Score: 0", style);
-    scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40);
+    scoreLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 40);
     stage.addActor(scoreLabel);
     timeLabel = new Label("Time: 0.00s", style);
-    timeLabel.setPosition(20, Gdx.graphics.getHeight() - 60);
+    timeLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 60);
     stage.addActor(timeLabel);
   }
 
@@ -105,7 +106,7 @@ public class PaddleGameScreen extends ScreenAdapter {
     ball.getComponent(BallComponent.class).update(delta);
     ball.getComponent(CollisionComponent.class).update(delta);
 
-    score = ball.getComponent(BallComponent.class).getScore();
+    int score = ball.getComponent(BallComponent.class).getScore();
     scoreLabel.setText("Score: " + score);
     timeLabel.setText(String.format("Time: %.2f s", survivalTime));
     ballsHit = ball.getComponent(BallComponent.class).getBallsHit();

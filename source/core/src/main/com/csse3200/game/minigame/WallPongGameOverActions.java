@@ -16,7 +16,7 @@ public class WallPongGameOverActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("playAgain", this::onPlayAgain);
-    entity.getEvents().addListener("mainMenu", this::onMainMenu);
+    entity.getEvents().addListener("returnToArcade", this::onReturnToArcade);
   }
 
   private void onPlayAgain() {
@@ -24,8 +24,8 @@ public class WallPongGameOverActions extends Component {
     game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
   }
 
-  private void onMainMenu() {
-    logger.debug("Main Menu event triggered");
-    game.setScreen(GdxGame.ScreenType.MAIN_MENU);
+  private void onReturnToArcade() {
+    logger.debug("Return to Arcade event triggered");
+    game.setScreen(GdxGame.ScreenType.MINI_GAMES);
   }
 }

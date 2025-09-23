@@ -1,52 +1,143 @@
 package com.csse3200.game.services;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.RenderService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class ServiceLocatorTest {
+
+  private EntityService entityService;
+  private RenderService renderService;
+  private PhysicsService physicsService;
+  private GameTime gameTime;
+  private InputService inputService;
+  private ResourceService resourceService;
+  private CurrencyService currencyService;
+  private ProfileService profileService;
+  private ItemEffectsService itemEffectsService;
+  private CutsceneService cutsceneService;
+  private WorldMapService worldMapService;
+  private DialogService dialogService;
+  private ResourceService globalResourceService;
+  private ConfigService configService;
+
+  @BeforeEach
+  void setUp() {
+    ServiceLocator.clear();
+
+    entityService = new EntityService();
+    renderService = new RenderService();
+    physicsService = mock(PhysicsService.class);
+    gameTime = new GameTime();
+    inputService = new InputService();
+    resourceService = new ResourceService();
+    currencyService = new CurrencyService(0, 100);
+    profileService = new ProfileService();
+    itemEffectsService = new ItemEffectsService();
+    cutsceneService = new CutsceneService();
+    worldMapService = new WorldMapService();
+    dialogService = new DialogService();
+    globalResourceService = new ResourceService();
+    configService = new ConfigService();
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.clear();
+  }
+
   @Test
-  void shouldGetSetServices() {
-    EntityService entityService = new EntityService();
-    RenderService renderService = new RenderService();
-    PhysicsService physicsService = mock(PhysicsService.class);
-    GameTime gameTime = new GameTime();
-    MenuSpriteService menuSpriteService = new MenuSpriteService();
-    DialogService dialogService = new DialogService();
-    ConfigService configService = new ConfigService();
+  void shouldRegisterAndRetrieveAllServices() {
+    registerAllServices();
+    assertAllServicesRegistered();
+  }
 
-    ServiceLocator.registerEntityService(entityService);
-    ServiceLocator.registerRenderService(renderService);
-    ServiceLocator.registerPhysicsService(physicsService);
-    ServiceLocator.registerTimeSource(gameTime);
-    ServiceLocator.registerMenuSpriteService(menuSpriteService);
-    ServiceLocator.registerDialogService(dialogService);
-    ServiceLocator.registerConfigService(configService);
-
-    assertEquals(ServiceLocator.getEntityService(), entityService);
-    assertEquals(ServiceLocator.getRenderService(), renderService);
-    assertEquals(ServiceLocator.getPhysicsService(), physicsService);
-    assertEquals(ServiceLocator.getTimeSource(), gameTime);
-    assertEquals(ServiceLocator.getMenuSpriteService(), menuSpriteService);
-    assertEquals(ServiceLocator.getDialogService(), dialogService);
-    assertEquals(ServiceLocator.getConfigService(), configService);
+  @Test
+  void shouldClearTransientServices() {
+    registerAllServices();
 
     ServiceLocator.clear();
+
+    // Transient services should be null after clear
     assertNull(ServiceLocator.getEntityService());
     assertNull(ServiceLocator.getRenderService());
     assertNull(ServiceLocator.getPhysicsService());
     assertNull(ServiceLocator.getTimeSource());
-    assertNotNull(ServiceLocator.getMenuSpriteService());
-    assertNotNull(ServiceLocator.getConfigService());
+    assertNull(ServiceLocator.getInputService());
+    assertNull(ServiceLocator.getResourceService());
+    assertNull(ServiceLocator.getCurrencyService());
+    assertNull(ServiceLocator.getItemEffectsService());
+
+    // Persistent services should remain after clear
+    assertNotNull(ServiceLocator.getCutsceneService());
+    assertNotNull(ServiceLocator.getWorldMapService());
     assertNotNull(ServiceLocator.getDialogService());
+    assertNotNull(ServiceLocator.getGlobalResourceService());
+    assertNotNull(ServiceLocator.getConfigService());
+    assertNotNull(ServiceLocator.getProfileService());
+  }
+
+  @Test
+  void shouldDeregisterPersistentServices() {
+    registerAllServices();
+
+    ServiceLocator.deregisterDialogService();
+    assertNull(ServiceLocator.getDialogService());
+
+    ServiceLocator.deregisterGlobalResourceService();
+    assertNull(ServiceLocator.getGlobalResourceService());
+
+    ServiceLocator.deregisterConfigService();
+    assertNull(ServiceLocator.getConfigService());
+
+    ServiceLocator.deregisterProfileService();
+    assertNull(ServiceLocator.getProfileService());
+
+    ServiceLocator.deregisterWorldMapService();
+    assertNull(ServiceLocator.getWorldMapService());
+  }
+
+  private void registerAllServices() {
+    ServiceLocator.registerEntityService(entityService);
+    ServiceLocator.registerRenderService(renderService);
+    ServiceLocator.registerPhysicsService(physicsService);
+    ServiceLocator.registerTimeSource(gameTime);
+    ServiceLocator.registerInputService(inputService);
+    ServiceLocator.registerResourceService(resourceService);
+    ServiceLocator.registerCurrencyService(currencyService);
+    ServiceLocator.registerProfileService(profileService);
+    ServiceLocator.registerItemEffectsService(itemEffectsService);
+    ServiceLocator.registerCutsceneService(cutsceneService);
+    ServiceLocator.registerWorldMapService(worldMapService);
+    ServiceLocator.registerDialogService(dialogService);
+    ServiceLocator.registerConfigService(configService);
+    ServiceLocator.registerGlobalResourceService(globalResourceService);
+  }
+
+  private void assertAllServicesRegistered() {
+    assertEquals(entityService, ServiceLocator.getEntityService());
+    assertEquals(renderService, ServiceLocator.getRenderService());
+    assertEquals(physicsService, ServiceLocator.getPhysicsService());
+    assertEquals(gameTime, ServiceLocator.getTimeSource());
+    assertEquals(inputService, ServiceLocator.getInputService());
+    assertEquals(resourceService, ServiceLocator.getResourceService());
+    assertEquals(currencyService, ServiceLocator.getCurrencyService());
+    assertEquals(profileService, ServiceLocator.getProfileService());
+    assertEquals(itemEffectsService, ServiceLocator.getItemEffectsService());
+    assertEquals(cutsceneService, ServiceLocator.getCutsceneService());
+    assertEquals(worldMapService, ServiceLocator.getWorldMapService());
+    assertEquals(dialogService, ServiceLocator.getDialogService());
+    assertEquals(globalResourceService, ServiceLocator.getGlobalResourceService());
+    assertEquals(configService, ServiceLocator.getConfigService());
   }
 }

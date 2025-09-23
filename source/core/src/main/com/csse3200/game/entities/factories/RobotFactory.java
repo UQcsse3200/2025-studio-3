@@ -12,13 +12,13 @@ import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -44,8 +44,10 @@ public class RobotFactory {
     TELEPORT
   }
 
-  private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/enemies.json");
+  /** Gets the config service for accessing enemy configurations. */
+  private static ConfigService getConfigService() {
+    return ServiceLocator.getConfigService();
+  }
 
   /**
    * A basic function to create a specific type of robot depending on the input. make this use
@@ -56,13 +58,14 @@ public class RobotFactory {
    * @return The created robot
    */
   public static Entity createRobotType(RobotType robotType) {
+    ConfigService configService = getConfigService();
     BaseEnemyConfig config = null;
     switch (robotType) {
-      case FAST -> config = configs.fastRobot;
-      case TANKY -> config = configs.tankyRobot;
-      case BUNGEE -> config = configs.bungeeRobot;
-      case STANDARD -> config = configs.standardRobot;
-      case TELEPORT -> config = configs.teleportRobot;
+      case FAST -> config = configService.getEnemyConfig("fastRobot");
+      case TANKY -> config = configService.getEnemyConfig("tankyRobot");
+      case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
+      case STANDARD -> config = configService.getEnemyConfig("standardRobot");
+      case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
     }
     return createBaseRobot(config);
   }
@@ -74,11 +77,16 @@ public class RobotFactory {
    * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
    * @return Entity with base robot components plus TeleportTask
    */
-  public static Entity createTeleportRobot(TeleportRobotConfig cfg, float[] laneYs) {
+  public static Entity createTeleportRobot(BaseEnemyConfig cfg, float[] laneYs) {
     Entity robot = createBaseRobot(cfg);
-    robot.addComponent(
-        new TeleportTask(
-            cfg.teleportCooldownSeconds, cfg.teleportChance, cfg.maxTeleports, laneYs));
+    if (cfg.isTeleportRobot()) {
+      robot.addComponent(
+          new TeleportTask(
+              cfg.getTeleportCooldownSeconds(),
+              cfg.getTeleportChance(),
+              cfg.getMaxTeleports(),
+              laneYs));
+    }
     return robot;
   }
 
@@ -91,14 +99,17 @@ public class RobotFactory {
    * @return A robot entity.
    */
   private static Entity createBaseRobot(BaseEnemyConfig config) {
+    if (config == null) {
+      throw new IllegalArgumentException("BaseEnemyConfig cannot be null when creating robot");
+    }
 
     AITaskComponent aiComponent =
         new AITaskComponent()
-            .addTask(new MoveLeftTask(config.movementSpeed))
+            .addTask(new MoveLeftTask(config.getMovementSpeed()))
             .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
 
     // Animation
-    final String atlasPath = config.atlasFilePath;
+    final String atlasPath = config.getAtlasPath();
     var rs = ServiceLocator.getResourceService();
 
     AnimationRenderComponent animator =
@@ -126,20 +137,23 @@ public class RobotFactory {
             .addComponent(new PhysicsMovementComponent())
             .addComponent(solid)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
-            .addComponent(new CombatStatsComponent(config.health, config.attack))
+            .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
             .addComponent(aiComponent)
             .addComponent(new RobotAnimationController())
             .addComponent(new HitMarkerComponent())
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
-    if (config instanceof TeleportRobotConfig tcfg) {
+    if (config.isTeleportRobot()) {
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
       if (laneYs.length >= 2) {
         robot.addComponent(
             new TeleportTask(
-                tcfg.teleportCooldownSeconds, tcfg.teleportChance, tcfg.maxTeleports, laneYs));
+                config.getTeleportCooldownSeconds(),
+                config.getTeleportChance(),
+                config.getMaxTeleports(),
+                laneYs));
       }
     }
 
@@ -148,7 +162,7 @@ public class RobotFactory {
     animator.startAnimation("default"); // start an animation
 
     // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
-    robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
+    robot.setScale(robot.getScale().x * config.getScale(), robot.getScale().y * config.getScale());
 
     return robot;
   }

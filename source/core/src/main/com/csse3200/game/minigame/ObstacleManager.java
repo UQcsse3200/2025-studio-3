@@ -21,14 +21,30 @@ public class ObstacleManager {
   }
 
   private static class ObstacleImage {
-    public Image image;
-    public float speed;
-    public boolean isAlive;
+    private Image image;
+    private float speed;
+    private boolean isAlive;
 
     public ObstacleImage(Image image, float speed) {
       this.image = image;
       this.speed = speed;
       this.isAlive = true;
+    }
+
+    public Image getImage() {
+      return image;
+    }
+
+    public float getSpeed() {
+      return speed;
+    }
+
+    public boolean isAlive() {
+      return isAlive;
+    }
+
+    public void setAlive(boolean isAlive) {
+      this.isAlive = isAlive;
     }
   }
 
@@ -49,35 +65,36 @@ public class ObstacleManager {
     }
     List<ObstacleImage> toRemove = new java.util.ArrayList<>();
     for (ObstacleImage obstacle : obstacles) {
-      if (!obstacle.isAlive) {
+      if (!obstacle.isAlive()) {
         continue;
       }
       moveObstacleDown(obstacle, deltaTime);
 
-      if (obstacle.image.getY() < -obstacle.image.getHeight()) {
-        obstacle.isAlive = false;
+      if (obstacle.getImage().getY() < -obstacle.getImage().getHeight()) {
+        obstacle.setAlive(false);
         obstaclesDodged++;
         toRemove.add(obstacle);
       }
     }
     for (ObstacleImage obstacle : toRemove) {
       obstacles.remove(obstacle);
-      obstacle.image.remove();
+      obstacle.getImage().remove();
     }
   }
 
   private void moveObstacleDown(ObstacleImage obstacle, float deltaTime) {
-    float currentSpeed = obstacle.speed + (elapsedTime * SPEED_GROWTH);
-    float newY = obstacle.image.getY() - (currentSpeed * deltaTime);
-    obstacle.image.setPosition(obstacle.image.getX(), newY);
+    float currentSpeed = obstacle.getSpeed() + (elapsedTime * SPEED_GROWTH);
+    float newY = obstacle.getImage().getY() - (currentSpeed * deltaTime);
+    obstacle.getImage().setPosition(obstacle.getImage().getX(), newY);
   }
 
   private void spawnObstacle() {
-    int LaneIndex = random.nextInt(laneManager.getNumLanes());
-    float x = laneManager.getLaneCenter(LaneIndex) - 32f;
+    int laneIndex = random.nextInt(laneManager.getNumLanes());
+    float x = laneManager.getLaneCenter(laneIndex) - 32f;
     float y = Gdx.graphics.getHeight();
     Texture obstacleTexture =
-        ServiceLocator.getResourceService().getAsset("images/Bomb.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/minigames/Bomb.png", Texture.class);
     Image obstacleImage = new Image(obstacleTexture);
     obstacleImage.setSize(64f, 64f);
     obstacleImage.setPosition(x, y);
@@ -88,10 +105,10 @@ public class ObstacleManager {
 
   public boolean checkCollision(Image playerImage) {
     for (ObstacleImage obstacle : obstacles) {
-      if (!obstacle.isAlive) {
+      if (!obstacle.isAlive()) {
         continue;
       }
-      if (isColliding(playerImage, obstacle.image)) {
+      if (isColliding(playerImage, obstacle.getImage())) {
         return true;
       }
     }
@@ -117,7 +134,7 @@ public class ObstacleManager {
 
   public void clearObstacles() {
     for (ObstacleImage obstacle : obstacles) {
-      obstacle.image.remove();
+      obstacle.getImage().remove();
     }
     obstacles.clear();
     spawnTimer = 0f;
@@ -130,8 +147,8 @@ public class ObstacleManager {
   public List<Image> getObstacles() {
     List<Image> obstacleImages = new java.util.ArrayList<>();
     for (ObstacleImage obstacle : obstacles) {
-      if (obstacle.isAlive) {
-        obstacleImages.add(obstacle.image);
+      if (obstacle.isAlive()) {
+        obstacleImages.add(obstacle.getImage());
       }
     }
     return obstacleImages;

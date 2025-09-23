@@ -1,5 +1,6 @@
 package com.csse3200.game.events;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -58,12 +59,13 @@ class EventHandlerTest {
 
   @Test
   void shouldHandleNoListeners() {
-    handler.trigger("not-real-event");
+    // Should not throw any exception when triggering event with no listeners
+    assertDoesNotThrow(() -> handler.trigger("not-real-event"));
   }
 
   @Test
   void shouldTriggerOneArg() {
-    EventListener1<String> listener = (EventListener1<String>) mock(EventListener1.class);
+    EventListener1<String> listener = mock();
     handler.addListener("event", listener);
     handler.trigger("event", "argument");
     verify(listener).handle("argument");
@@ -71,8 +73,7 @@ class EventHandlerTest {
 
   @Test
   void shouldTriggerTwoArg() {
-    EventListener2<Integer, Boolean> listener =
-        (EventListener2<Integer, Boolean>) mock(EventListener2.class);
+    EventListener2<Integer, Boolean> listener = mock();
     handler.addListener("event", listener);
     handler.trigger("event", 5, true);
     verify(listener).handle(5, true);
@@ -80,8 +81,7 @@ class EventHandlerTest {
 
   @Test
   void shouldTriggerThreeArg() {
-    EventListener3<Integer, Float, Long> listener =
-        (EventListener3<Integer, Float, Long>) mock(EventListener3.class);
+    EventListener3<Integer, Float, Long> listener = mock();
     handler.addListener("event", listener);
     handler.trigger("event", 1, 2f, 3L);
     verify(listener).handle(1, 2f, 3L);

@@ -22,17 +22,19 @@ public class DialogService {
   public enum DialogType {
     /** Info dialog type, typically used for informational messages with a single "OK" button. */
     INFO,
-    /**
-     * Warning dialog type, typically used for warning messages with "Confirm" and "Cancel" buttons.
-     */
+    /** Warning dialog type, typically used for warning msgs w/ "Confirm" and "Cancel" btns. */
     WARNING,
     /** Error dialog type, typically used for error messages with a single "OK" button. */
-    ERROR
+    ERROR,
+    /**
+     * Skill dialog type, typically used for skill information with "Unlock" and "Close" buttons.
+     */
+    SKILL
   }
 
   /** Creates a new dialog service. */
   public DialogService() {
-    logger.debug("Dialog service created");
+    logger.debug("[DialogService] Dialog service created");
   }
 
   /**
@@ -109,9 +111,37 @@ public class DialogService {
     return createAndShowDialog(DialogType.ERROR, title, message, null, null, onClose);
   }
 
+  /**
+   * Creates and shows a skill dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent skill(String title, String message) {
+    return skill(title, message, null, null);
+  }
+
+  /**
+   * Creates and shows a skill dialog with callbacks.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onUnlock callback when user unlocks the skill
+   * @param onClose callback when user closes the dialog
+   * @return the created dialog component
+   */
+  public DialogComponent skill(
+      String title,
+      String message,
+      Consumer<DialogComponent> onUnlock,
+      Consumer<DialogComponent> onClose) {
+    return createAndShowDialog(DialogType.SKILL, title, message, onUnlock, null, onClose);
+  }
+
   /** Hides all active dialogs. */
   public void hideAllDialogs() {
-    logger.debug("Hiding all active dialogs");
+    logger.debug("[DialogService] Hiding all active dialogs");
     // Create copies of the lists to avoid ConcurrentModificationException
     List<DialogComponent> dialogsCopy = new ArrayList<>(activeDialogs);
     List<AchievementDialogComponent> achievementDialogsCopy =
@@ -184,7 +214,7 @@ public class DialogService {
       Consumer<DialogComponent> onConfirm,
       Consumer<DialogComponent> onCancel,
       Consumer<DialogComponent> onClose) {
-    logger.debug("Creating {} dialog: {}", dialogType, title);
+    logger.debug("[DialogService] Creating {} dialog: {}", dialogType, title);
 
     // Create entity and add dialog component
     Entity dialogEntity = new Entity();

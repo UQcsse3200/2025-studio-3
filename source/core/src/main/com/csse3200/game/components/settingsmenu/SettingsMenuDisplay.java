@@ -17,6 +17,7 @@ import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.persistence.UserSettings.DisplaySettings;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.StringDecorator;
 import org.slf4j.Logger;
@@ -68,23 +69,23 @@ public class SettingsMenuDisplay extends UIComponent {
 
     // Create components
     Label fpsLabel = new Label("FPS Cap:", skin);
-    fpsText = new TextField(Integer.toString(settings.fps), skin);
+    fpsText = new TextField(Integer.toString(settings.getFps()), skin);
     whiten(fpsLabel);
 
     Label fullScreenLabel = new Label("Fullscreen:", skin);
     fullScreenCheck = new CheckBox("", skin);
-    fullScreenCheck.setChecked(settings.fullscreen);
+    fullScreenCheck.setChecked(settings.isFullscreen());
     whiten(fullScreenLabel);
 
     Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
-    vsyncCheck.setChecked(settings.vsync);
+    vsyncCheck.setChecked(settings.isVsync());
     whiten(vsyncLabel);
 
     Label uiScaleLabel = new Label("UI Scale (Unused):", skin);
     uiScaleSlider = new Slider(0.2f, 2f, 0.1f, false, skin);
-    uiScaleSlider.setValue(settings.uiScale);
-    Label uiScaleValue = new Label(String.format("%.2fx", settings.uiScale), skin);
+    uiScaleSlider.setValue(settings.getUiScale());
+    Label uiScaleValue = new Label(String.format("%.2fx", settings.getUiScale()), skin);
     whiten(uiScaleLabel);
     whiten(uiScaleValue);
 
@@ -136,7 +137,7 @@ public class SettingsMenuDisplay extends UIComponent {
     DisplayMode active = Gdx.graphics.getDisplayMode();
 
     for (StringDecorator<DisplayMode> stringMode : modes) {
-      DisplayMode mode = stringMode.object;
+      DisplayMode mode = stringMode.getObject();
       if (active.width == mode.width
           && active.height == mode.height
           && active.refreshRate == mode.refreshRate) {
@@ -167,7 +168,7 @@ public class SettingsMenuDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
     exitBtn.setSize(60f, 60f);
     exitBtn.setPosition(
         20f, // padding from left
@@ -184,13 +185,18 @@ public class SettingsMenuDisplay extends UIComponent {
     stage.addActor(exitBtn);
 
     // Apply button
-    TextButton applyBtn = new TextButton("Apply", skin);
+    TextButton applyBtn = ButtonFactory.createButton("Apply");
     applyBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Apply button clicked");
             applyChanges();
+            if (!ServiceLocator.getProfileService().isActive()) {
+              game.setScreen(ScreenType.MAIN_MENU);
+            } else {
+              game.setScreen(ScreenType.WORLD_MAP);
+            }
           }
         });
 
@@ -217,12 +223,12 @@ public class SettingsMenuDisplay extends UIComponent {
 
     Integer fpsVal = parseOrNull(fpsText.getText());
     if (fpsVal != null) {
-      settings.fps = fpsVal;
+      settings.setFps(fpsVal);
     }
-    settings.fullscreen = fullScreenCheck.isChecked();
-    settings.uiScale = uiScaleSlider.getValue();
-    settings.displayMode = new DisplaySettings(displayModeSelect.getSelected().object);
-    settings.vsync = vsyncCheck.isChecked();
+    settings.setFullscreen(fullScreenCheck.isChecked());
+    settings.setUiScale(uiScaleSlider.getValue());
+    settings.setDisplayMode(new DisplaySettings(displayModeSelect.getSelected().getObject()));
+    settings.setVsync(vsyncCheck.isChecked());
 
     UserSettings.set(settings, true);
   }
@@ -231,7 +237,7 @@ public class SettingsMenuDisplay extends UIComponent {
     if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
     } else {
-      game.setScreen(ScreenType.MAIN_GAME);
+      game.setScreen(ScreenType.WORLD_MAP);
     }
   }
 

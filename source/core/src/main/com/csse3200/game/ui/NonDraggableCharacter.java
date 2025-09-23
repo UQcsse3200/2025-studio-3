@@ -12,7 +12,7 @@ public class NonDraggableCharacter extends UIComponent {
   private Image image; // The image representing the character
 
   // Default values for the customisable parameters
-  private String texturePath = "images/box_boy_leaf.png"; // Default texture path
+  private String texturePath = "images/entities/character.png"; // Default texture path
   private float offsetX = 0f; // Default x position
   private float offsetY = 0f; // Default y position
   private float scale = 0.15f; // Scale factor for the image size
@@ -93,7 +93,7 @@ public class NonDraggableCharacter extends UIComponent {
   public void update() {
     if (Gdx.input.isKeyJustPressed(Input.Keys.R)) {
       float x = Gdx.input.getX();
-      float y = Gdx.graphics.getHeight() - Gdx.input.getY();
+      float y = Gdx.graphics.getHeight() - (float) Gdx.input.getY();
 
       if (x >= image.getX()
           && x <= image.getX() + image.getWidth()

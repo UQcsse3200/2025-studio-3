@@ -44,7 +44,7 @@ public class LoadingScreen implements Screen {
 
   private void loadBackground() {
     try {
-      backgroundTexture = new Texture(Gdx.files.internal("images/bg.png"));
+      backgroundTexture = new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
     } catch (Exception e) {
       logger.warn("Could not load background image, using default.");
       backgroundTexture = null;

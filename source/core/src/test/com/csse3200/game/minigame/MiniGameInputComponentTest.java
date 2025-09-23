@@ -6,10 +6,13 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.Input;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.EventHandler;
+import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public class MiniGameInputComponentTest {
+@ExtendWith(GameExtension.class)
+class MiniGameInputComponentTest {
 
   private Entity mockEntity;
   private EventHandler mockEventHandler;
@@ -59,18 +62,18 @@ public class MiniGameInputComponentTest {
   }
 
   @Test
-  void testEscapeKeyTriggersMainMenuInGameOverScreen() {
+  void testEscapeKeyTriggersReturnToArcadeInGameOverScreen() {
     MiniGameInputComponent input = new MiniGameInputComponent(true);
     input.setEntity(mockEntity);
 
     boolean handled = input.keyDown(Input.Keys.ESCAPE);
 
     assertTrue(handled, "ESCAPE should be handled in game over mode");
-    verify(mockEventHandler).trigger("mainMenu");
+    verify(mockEventHandler).trigger("returnToArcade");
   }
 
   @Test
-  void testSpaceKeyTriggersMainMenuInGameOverScreen() {
+  void testSpaceKeyTriggersPlayAgainInGameOverScreen() {
     MiniGameInputComponent input = new MiniGameInputComponent(true);
     input.setEntity(mockEntity);
 
@@ -88,7 +91,7 @@ public class MiniGameInputComponentTest {
     boolean handled = input.keyDown(Input.Keys.ESCAPE);
 
     assertFalse(handled, "ESCAPE should not be handled during gameplay");
-    verify(mockEventHandler, never()).trigger("mainMenu");
+    verify(mockEventHandler, never()).trigger("returnToArcade");
   }
 
   @Test

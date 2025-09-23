@@ -9,24 +9,12 @@ import com.csse3200.game.entities.Entity;
  * adding and removing the units from the tile.
  */
 public class TileStorageComponent extends Component {
-  private boolean containsUnit;
   private int position;
   private final AreaAPI area;
-  private Entity tileUnit;
 
   public TileStorageComponent(AreaAPI area) {
     this.area = area;
-    this.containsUnit = false;
     this.position = 0;
-    this.tileUnit = null;
-  }
-
-  /** Triggers the spawning process for a unit */
-  public void triggerSpawnUnit() {
-    if (!containsUnit) {
-      this.containsUnit = true;
-      area.spawnUnit(position);
-    }
   }
 
   /**
@@ -34,10 +22,9 @@ public class TileStorageComponent extends Component {
    *
    * @param unit the unit being added to the tile
    */
-  public void setTileUnit(Entity unit) {
-    if (this.tileUnit == null && containsUnit) {
-      this.tileUnit = unit;
-    }
+  public boolean setTileUnit(Entity unit) {
+    // returns false if already occupied
+    return area.getGrid().placeOccupantIndex(position, unit);
   }
 
   /**
@@ -46,15 +33,12 @@ public class TileStorageComponent extends Component {
    * @return the unit of a tile
    */
   public Entity getTileUnit() {
-    return this.tileUnit;
+    return area.getGrid().getOccupantIndex(position);
   }
 
   /** Removes the unit from the tile */
   public void removeTileUnit() {
-    if (containsUnit) {
-      this.containsUnit = false;
-      area.removeUnit(position);
-    }
+    area.getGrid().clearOccupantIndex(position);
   }
 
   /**
@@ -63,7 +47,7 @@ public class TileStorageComponent extends Component {
    * @return a boolean value for if the tile has a unit
    */
   public boolean hasUnit() {
-    return containsUnit;
+    return area.getGrid().isOccupiedIndex(position);
   }
 
   /**

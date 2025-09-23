@@ -23,28 +23,29 @@ import org.slf4j.LoggerFactory;
  */
 public class SkilltreeButtons extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SkilltreeButtons.class);
-  private static final float Z_INDEX = 2f;
+  private static final float Z_INDEX = 1f;
   private final GdxGame game;
   private final SkillSet skillSet;
   private final SkilltreeDisplay display;
 
   // Texture path constants
-  private static final String BASIC_LOCKED = "images/basic_locked.png";
-  private static final String BASIC_UNLOCKED = "images/basic_unlocked.png";
-  private static final String INTERMEDIATE_LOCKED = "images/intermediate_locked.png";
-  private static final String INTERMEDIATE_UNLOCKED = "images/intermediate_unlocked.png";
-  private static final String ADVANCED_LOCKED = "images/advanced_locked.png";
-  private static final String ADVANCED_UNLOCKED = "images/advanced_unlocked.png";
-  private static final String ATTACK_EXPERT_LOCKED = "images/attack_expert_locked.png";
-  private static final String ATTACK_EXPERT_UNLOCKED = "images/attack_expert_unlocked.png";
-  private static final String HEALTH_EXPERT_LOCKED = "images/health_expert_locked.png";
-  private static final String HEALTH_EXPERT_UNLOCKED = "images/health_expert_unlocked.png";
-  private static final String SPEED_EXPERT_LOCKED = "images/speed_expert_locked.png";
-  private static final String SPEED_EXPERT_UNLOCKED = "images/speed_expert_unlocked.png";
-  private static final String CRIT_EXPERT_LOCKED = "images/speed_expert_locked.png";
-  private static final String CRIT_EXPERT_UNLOCKED = "images/speed_expert_unlocked.png";
-  private static final String CURRENCY_EXPERT_LOCKED = "images/currency_expert_locked.png";
-  private static final String CURRENCY_EXPERT_UNLOCKED = "images/currency_expert_unlocked.png";
+  private static final String BASIC_LOCKED = "images/skills/basic_locked.png";
+  private static final String BASIC_UNLOCKED = "images/skills/basic_unlocked.png";
+  private static final String INTERMEDIATE_LOCKED = "images/skills/intermediate_locked.png";
+  private static final String INTERMEDIATE_UNLOCKED = "images/skills/intermediate_unlocked.png";
+  private static final String ADVANCED_LOCKED = "images/skills/advanced_locked.png";
+  private static final String ADVANCED_UNLOCKED = "images/skills/advanced_unlocked.png";
+  private static final String ATTACK_EXPERT_LOCKED = "images/skills/attack_expert_locked.png";
+  private static final String ATTACK_EXPERT_UNLOCKED = "images/skills/attack_expert_unlocked.png";
+  private static final String HEALTH_EXPERT_LOCKED = "images/skills/health_expert_locked.png";
+  private static final String HEALTH_EXPERT_UNLOCKED = "images/skills/health_expert_unlocked.png";
+  private static final String SPEED_EXPERT_LOCKED = "images/skills/speed_expert_locked.png";
+  private static final String SPEED_EXPERT_UNLOCKED = "images/skills/speed_expert_unlocked.png";
+  private static final String CRIT_EXPERT_LOCKED = "images/skills/speed_expert_locked.png";
+  private static final String CRIT_EXPERT_UNLOCKED = "images/skills/speed_expert_unlocked.png";
+  private static final String CURRENCY_EXPERT_LOCKED = "images/skills/currency_expert_locked.png";
+  private static final String CURRENCY_EXPERT_UNLOCKED =
+      "images/skills/currency_expert_unlocked.png";
 
   /** Configuration for a skill button. */
   private static class SkillButtonConfig {
@@ -171,12 +172,12 @@ public class SkilltreeButtons extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);
     closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-    closeButton.setZIndex(0);
+    closeButton.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
 
     // Trigger an event when the button is pressed
     closeButton.addListener(
@@ -217,7 +218,7 @@ public class SkilltreeButtons extends UIComponent {
     Button skillButton = new Button(new TextureRegionDrawable(new TextureRegion(texture)));
     setButtonSize(skillButton, skillName);
     skillButton.setPosition(x, y);
-    skillButton.setZIndex(0); // Set z-index lower than navigation menu (3f)
+    skillButton.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
 
     skillButton.addListener(
         new SkilltreeActions(skillName, skillSet, unlockedTexture, skillButton, stage, display));
@@ -265,7 +266,7 @@ public class SkilltreeButtons extends UIComponent {
     attackLabel.setColor(Color.WHITE);
     attackLabel.setPosition(
         button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
-    attackLabel.setZIndex(0); // Set z-index lower than navigation menu (3f)
+    attackLabel.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
     return attackLabel;
   }
 

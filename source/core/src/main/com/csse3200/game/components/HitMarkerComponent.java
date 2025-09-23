@@ -34,10 +34,10 @@ public class HitMarkerComponent extends Component {
 
     if (flashTime > 0f) {
       flashTime -= Gdx.graphics.getDeltaTime();
-      render.colour.set(FLASH_COLOUR);
+      render.setColour(FLASH_COLOUR);
       return;
     }
-    render.colour.set(Color.WHITE); // Reset to normal colour
+    render.setColour(Color.WHITE); // Reset to normal colour
   }
 
   private void onHitMarkerStart(Entity entity) {

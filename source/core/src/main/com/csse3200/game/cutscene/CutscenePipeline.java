@@ -34,7 +34,8 @@ public class CutscenePipeline {
 
     if (!validationErrors.isEmpty()) {
       for (AuthoringError error : validationErrors) {
-        logger.error(error.toString());
+        String errorMessage = error.toString();
+        logger.error(errorMessage);
       }
       throw new ValidationError("Failed with " + validationErrors.size() + " errors");
     } else {

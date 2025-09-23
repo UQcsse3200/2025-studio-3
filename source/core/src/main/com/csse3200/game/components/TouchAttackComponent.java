@@ -60,15 +60,18 @@ public class TouchAttackComponent extends Component {
     }
 
     Object userData = other.getBody().getUserData();
-    if (userData == null || !(userData instanceof BodyUserData bud) || bud.entity == null) {
+    if (userData == null || !(userData instanceof BodyUserData bud) || bud.getEntity() == null) {
       return; // No valid entity to attack
     }
-    Entity target = bud.entity;
+    Entity target = bud.getEntity();
 
     // Attack logic
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-    if (targetStats == null) {
+    if (targetStats == null) { //Hit if entity is normal defender
       targetStats = target.getComponent(DefenderStatsComponent.class);
+      if (targetStats == null) { //Also hit if entity is generator defender
+          targetStats = target.getComponent(GeneratorStatsComponent.class);
+      }
     }
 
     if (targetStats != null) {

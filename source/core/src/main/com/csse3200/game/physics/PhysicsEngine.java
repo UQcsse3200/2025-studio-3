@@ -104,11 +104,11 @@ public class PhysicsEngine implements Disposable {
    * @return true if a collider was hit, false otherwise.
    */
   public boolean raycast(Vector2 from, Vector2 to, short layerMask, RaycastHit hit) {
-    singleHitCallback.didHit = false;
-    singleHitCallback.layerMask = layerMask;
-    singleHitCallback.hit = hit;
+    singleHitCallback.setDidHit(false);
+    singleHitCallback.setLayerMask(layerMask);
+    singleHitCallback.setHit(hit);
     world.rayCast(singleHitCallback, from, to);
-    return singleHitCallback.didHit;
+    return singleHitCallback.didHit();
   }
 
   /**
@@ -134,7 +134,7 @@ public class PhysicsEngine implements Disposable {
    * @return All hits made by the ray, unordered. Empty if no hits were made.
    */
   public RaycastHit[] raycastAll(Vector2 from, Vector2 to, short layerMask) {
-    allHitCallback.layerMask = layerMask;
+    allHitCallback.setLayerMask(layerMask);
     world.rayCast(allHitCallback, from, to);
     return allHitCallback.getHitsAndClear();
   }
