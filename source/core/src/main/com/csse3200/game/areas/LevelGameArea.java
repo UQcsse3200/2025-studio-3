@@ -408,7 +408,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
     else {// if (Objects.equals(projectileType, "bullet")) {
       projectile = ProjectileFactory.createBullet(10); // damage value
-      projectile.setPosition(spawnPos.x + tileSize / 2f, spawnPos.y + tileSize / 2f);
+      projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     }
 
     // Scale the projectile so it’s more visible
