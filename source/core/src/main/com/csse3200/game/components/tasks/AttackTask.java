@@ -11,16 +11,18 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
-  private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+  private static float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
+  private final String projectileType;
 
   /**
    * Creates an attack task
    *
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(float attackRange) {
+  public AttackTask(float attackRange, String projectileType) {
     super(attackRange);
+    this.projectileType = projectileType;
   }
 
   /**
@@ -30,6 +32,13 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
+
+    if (projectileType == "bullet") {
+      FIRE_COOLDOWN = 0.95f / 4f; // bullets fire 4 times as fast
+    } else if (projectileType == "slingshot") {
+      FIRE_COOLDOWN = 0.95f; // normal fire rate for slingshot
+    }
+
     this.owner.getEntity().getEvents().trigger("attackStart");
     owner.getEntity().getEvents().trigger("fire");
   }
