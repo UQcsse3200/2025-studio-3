@@ -8,6 +8,7 @@ public class NPCConfigs {
   public final BaseEntityConfig ghost = new BaseEntityConfig();
   public final GhostKingConfig ghostKing = new GhostKingConfig();
   public final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
+  public TeleportRobotConfig teleportRobot = new TeleportRobotConfig();
   public BaseEnemyConfig bungeeRobot = new BaseEnemyConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();

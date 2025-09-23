@@ -32,11 +32,6 @@ class EntitySpawnTest {
       if (RobotType.FAST.equals(type)) f = true;
       if (RobotType.TANKY.equals(type)) t = true;
       if (s && f && t) break;
-
-      //      if ("standard".equals(type)) s = true;
-      //      if ("fast".equals(type)) f = true;
-      //      if ("tanky".equals(type)) t = true;
-      //      if (s && f && t) break;
     }
     assertTrue(s && f && t, "Expected all three types to appear across trials");
   }
