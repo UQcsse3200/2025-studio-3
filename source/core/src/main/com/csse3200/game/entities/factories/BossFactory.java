@@ -82,7 +82,7 @@ public class BossFactory {
                         .addComponent(new CombatStatsComponent(config.health, config.attack))
                         .addComponent(aiComponent)
                         .addComponent(animator)
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.BOSS_PROJECTILE,1.5f));
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC,1.5f));
                         boss.setScale(config.scale,config.scale);
                         animator.startAnimation("default");
 
