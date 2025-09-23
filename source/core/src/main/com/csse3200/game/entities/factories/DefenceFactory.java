@@ -84,6 +84,51 @@ public class DefenceFactory {
     return defender;
   }
 
+
+  public static Entity createArmyGuy() {
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("armyguy");
+    Entity defender = createBaseDefender();
+
+    // start with a base defender (physics + collider)
+
+    AITaskComponent enemyDetectionTasks =
+            new AITaskComponent()
+                    .addTask(new AttackTask(config.getRange()))
+                    .addTask(new IdleTask(config.getRange()));
+
+    defender.addComponent(enemyDetectionTasks);
+    // animation component
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset(config.getAtlasPath(), TextureAtlas.class));
+
+    // define animations for idle and attack states
+    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+
+    // attach components to the entity
+    defender
+            .addComponent(
+                    new DefenderStatsComponent(
+                            config.getHealth(),
+                            config.getAttack(),
+                            config.getRangeType(),
+                            config.getRange(),
+                            config.getAttackState(),
+                            config.getAttackSpeed(),
+                            config.getCritChance()))
+            .addComponent(animator)
+            .addComponent(new DefenceAnimationController());
+
+    // Scale to tilesize
+    animator.scaleEntity();
+
+    // scale the entity to match animation sprite dimensions
+    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+    return defender;
+  }
+
   public static Entity createFurnace() {
     BaseGeneratorConfig config = getConfigService().getGeneratorConfig("furnace");
 
