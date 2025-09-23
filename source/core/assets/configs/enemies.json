@@ -43,5 +43,13 @@
   "teleportChance": 0.6,
   "maxTeleports": 3,
   "invulnerabilityMs": 200
+}, "gunnerRobot": {
+  "name": "Gunner Robot",
+  "atlasFilePath": "images/blue_robot.atlas",
+  "defaultSprite": "images/blue_robot_default_sprite.png",
+  "health": 60,
+  "attack": 10,
+  "movementSpeed": 20,
+  "scale": 1
 }
 }

@@ -10,6 +10,7 @@ public class NPCConfigs {
   public final BaseDefenceConfig slingshooter = new BaseDefenceConfig();
   public TeleportRobotConfig teleportRobot = new TeleportRobotConfig();
   public BaseEnemyConfig bungeeRobot = new BaseEnemyConfig();
+  public BaseEnemyConfig gunnerRobot = new BaseEnemyConfig();
   // public BaseDefenceConfig trebuchet = new BaseDefenceConfig();
   // public BaseDefenceConfig spearman = new BaseDefenceConfig();
   // public BaseDefenceConfig harpoon = new BaseDefenceConfig();

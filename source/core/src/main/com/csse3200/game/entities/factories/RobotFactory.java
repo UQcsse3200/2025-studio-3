@@ -7,6 +7,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
@@ -41,7 +42,8 @@ public class RobotFactory {
     FAST,
     TANKY,
     BUNGEE,
-    TELEPORT
+    TELEPORT,
+    GUNNER
   }
 
   private static final NPCConfigs configs =
@@ -63,6 +65,7 @@ public class RobotFactory {
       case BUNGEE -> config = configs.bungeeRobot;
       case STANDARD -> config = configs.standardRobot;
       case TELEPORT -> config = configs.teleportRobot;
+      case GUNNER -> config = configs.gunnerRobot;
     }
     return createBaseRobot(config);
   }
@@ -181,4 +184,67 @@ public class RobotFactory {
     for (Integer yi : yInts) ys[i++] = yi / 1000f;
     return ys;
   }
+  /**
+   * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
+   * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
+   * robots.
+   *
+   * @param config A config file that contains the robot's stats.
+   * @return A robot entity.
+   */
+  private static Entity createGunnerRobot(BaseEnemyConfig config) {
+
+    AITaskComponent aiComponent =
+            new AITaskComponent()
+                    .addTask(new MoveLeftTask(config.movementSpeed));
+                    //.addTask(new AttackTask(90f, PhysicsLayer.NPC));
+
+    // Animation
+    final String atlasPath = config.atlasFilePath;
+    var rs = ServiceLocator.getResourceService();
+
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+
+    // These are the animations that all robots should have
+    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
+
+    ColliderComponent solid =
+            new ColliderComponent()
+                    .setCollisionFilter(
+                            PhysicsLayer.ENEMY,
+                            (short)
+                                    (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE) // no ENEMY
+                    )
+                    .setFriction(0f);
+
+    Entity robot =
+            new Entity()
+                    .addComponent(new PhysicsComponent())
+                    .addComponent(new PhysicsMovementComponent())
+                    .addComponent(solid)
+                    .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
+                    .addComponent(new CombatStatsComponent(config.health, config.attack))
+                    .addComponent(aiComponent)
+                    .addComponent(new RobotAnimationController())
+                    .addComponent(new HitMarkerComponent())
+                    .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
+                    .addComponent(animator);
+
+    // Scales
+    animator.scaleEntity();
+    animator.startAnimation("default"); // start an animation
+
+    // This is irrelevant since the robot is rescaled to fit the tile height in LevelGameArea.
+    robot.setScale(robot.getScale().x * config.scale, robot.getScale().y * config.scale);
+
+    return robot;
+  }
+
+
+
 }
