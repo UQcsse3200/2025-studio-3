@@ -17,11 +17,7 @@ import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
-import com.csse3200.game.entities.factories.DefenceFactory;
-import com.csse3200.game.entities.factories.GridFactory;
-import com.csse3200.game.entities.factories.ItemFactory;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -139,7 +135,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
-    displayUI();
+      displayUI();
     spawnMap();
     spawnGrid(levelRows, levelCols);
     Entity overlayEntity = new Entity();
@@ -147,6 +143,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
   }
+
 
   /** Spawns the level UI */
   private void displayUI() {

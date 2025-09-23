@@ -1,10 +1,9 @@
 {
   "scrapTitan": {
     "name": "Scrap Titan",
-    "atlasFilePath": "images/boss_scrapTitan.atlas",
+    "atlasFilePath": "images/entities/enemies/boss_scrapTitan.atlas",
     "health": 500,
     "attack": 50,
-    "scale": 4.0,
-    "description": "The king of the junkyard/scraps."
+    "scale": 4.0
   }
 }
