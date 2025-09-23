@@ -23,6 +23,8 @@ public class Profile {
   private Arsenal arsenal; // The player's arsenal of unlocked defences
   private String currentLevel; // The player's current level
   private List<String> completedNodes; // The player's completed nodes
+  private float worldMapX = -1f; // last saved X on world map; -1 means unset
+  private float worldMapY = -1f; // last saved Y on world map; -1 means unset
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -34,6 +36,8 @@ public class Profile {
     this.arsenal = new Arsenal();
     this.currentLevel = "levelOne";
     this.completedNodes = new ArrayList<>();
+    this.worldMapX = -1f;
+    this.worldMapY = -1f;
   }
 
   /** Initialise a profile with the provided values. */
@@ -53,6 +57,8 @@ public class Profile {
     this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
     this.completedNodes = completedNodes;
+    this.worldMapX = -1f;
+    this.worldMapY = -1f;
   }
 
   /**
@@ -162,4 +168,12 @@ public class Profile {
   public void addCompletedNode(String node) {
     this.completedNodes.add(node);
   }
+
+  public float getWorldMapX() {return worldMapX;}
+
+  public float getWorldMapY() {return worldMapY;}
+
+  public void setWorldMapX(float worldMapX) {this.worldMapX = worldMapX;}
+
+  public void setWorldMapY(float worldMapY) {this.worldMapY = worldMapY;}
 }
