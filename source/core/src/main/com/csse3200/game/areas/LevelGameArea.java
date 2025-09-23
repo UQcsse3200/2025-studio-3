@@ -251,7 +251,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             () -> {
               scrapSpawner.dispose();
             });
-
+    entity
+        .getEvents()
+        .addListener(
+            "entityDespawn",
+            () -> {
+              scrapSpawner.dispose();
+            });
     spawnEntity(scrapSpawner);
   }
 
@@ -613,6 +619,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("No unit at position {}", position);
       return;
     }
+    occ.getEvents().trigger("entityDespawn");
     requestDespawn(occ);
     grid.clearOccupantIndex(position);
     // Also clear the tile component (delegates to grid, stays in sync)
