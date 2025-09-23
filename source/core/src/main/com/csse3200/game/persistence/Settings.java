@@ -61,6 +61,9 @@ public class Settings {
     LARGE
   }
 
+  /**
+   * Resolutions of the game.
+   */
   static final List<Pair<Integer, Integer>> RESOLUTIONS = Arrays.asList(
     new Pair<>(3840, 2160),
     new Pair<>(2560, 1440),
@@ -83,7 +86,6 @@ public class Settings {
   private int refreshRate;
   private int fps;
   private UIScale currentUIScale;
-  private EnumMap<UIScale, String> availableUIScales = new EnumMap<>(UIScale.class);
   private Quality quality;
 
   /*
@@ -148,56 +150,153 @@ public class Settings {
     fps = displayMode.refreshRate;
     vsync = false;
     currentUIScale = UIScale.MEDIUM;
-    availableUIScales.put(UIScale.SMALL, "Small");
-    availableUIScales.put(UIScale.MEDIUM, "Medium");
-    availableUIScales.put(UIScale.LARGE, "Large");
     quality = Quality.HIGH;
   }
 
+  /**
+   * Constructor for the Settings class, used for saved settings.
+   * 
+   * @param deserializedSettings the deserialized settings.
+   */
+  public Settings(DeserializedSettings deserializedSettings) {
+    // Volume settings
+    this.soundVolume = deserializedSettings.getSoundVolume();
+    this.voiceVolume = deserializedSettings.getVoiceVolume();
+    this.musicVolume = deserializedSettings.getMusicVolume();
+    this.masterVolume = deserializedSettings.getMasterVolume();
+
+    // Gameplay settings
+    this.difficulty = deserializedSettings.getDifficulty();
+    this.pauseButton = deserializedSettings.getPauseButton();
+    this.skipButton = deserializedSettings.getSkipButton();
+    this.interactionButton = deserializedSettings.getInteractionButton();
+    this.upButton = deserializedSettings.getUpButton();
+    this.downButton = deserializedSettings.getDownButton();
+    this.leftButton = deserializedSettings.getLeftButton();
+    this.rightButton = deserializedSettings.getRightButton();
+
+    // Display settings
+    availableModes.put(Mode.WINDOWED, "Windowed");
+    availableModes.put(Mode.FULLSCREEN, "Fullscreen");
+    if (OPERATING_SYSTEM.startsWith("Windows")) {
+      availableModes.put(Mode.BORDERLESS, "Windowed Borderless");
+    }
+    this.currentMode = deserializedSettings.getCurrentMode();
+    availableMonitors = Gdx.graphics.getMonitors();
+    currentMonitor = Gdx.graphics.getPrimaryMonitor();
+    DisplayMode displayMode = Gdx.graphics.getDisplayMode(currentMonitor);
+    currentResolution = new Pair<>(displayMode.width, displayMode.height);
+    for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
+      if (displayMode.width >= resolution.getKey() && displayMode.height >= resolution.getValue()) {
+        availableResolutions.add(resolution);
+      }
+    }
+    this.refreshRate = displayMode.refreshRate;
+    this.fps = deserializedSettings.getFps() > displayMode.refreshRate ? displayMode.refreshRate : deserializedSettings.getFps();
+    this.vsync = deserializedSettings.isVsync();
+    this.currentUIScale = deserializedSettings.getCurrentUIScale();
+    this.quality = deserializedSettings.getQuality();
+  }
+
+  /**
+   * Applies the settings to the game.
+   */
+  public void applySettings() {
+    Gdx.graphics.setResizable(false);
+  }
+
+  /**
+   * Gets the sound volume.
+   * @return the sound volume.
+   */
   public float getSoundVolume() {
     return soundVolume;
   }
 
+  /**
+   * Gets the voice volume.
+   * @return the voice volume.
+   */
   public float getVoiceVolume() {
     return voiceVolume;
   }
 
+  /**
+   * Gets the music volume.
+   * @return the music volume.
+   */
   public float getMusicVolume() {
     return musicVolume;
   }
 
+  /**
+   * Gets the master volume.
+   * @return the master volume.
+   */
   public float getMasterVolume() {
     return masterVolume;
   }
 
+  /**
+   * Gets the difficulty.
+   * @return the difficulty.
+   */
   public Difficulty getDifficulty() {
     return difficulty;
   }
 
+  /**
+   * Gets the key assigned to the pause button.
+   * @return the pause button.
+   */
   public int getPauseButton() {
     return pauseButton;
   }
 
+  /**
+   * Gets the key assigned to the skip button.
+   * @return the skip button.
+   */
   public int getSkipButton() {
     return skipButton;
   }
 
+  /**
+   * Gets the key assigned to the interaction button.
+   * @return the interaction button.
+   */
   public int getInteractionButton() {
     return interactionButton;
   }
 
+  /**
+   * Gets the key assigned to the up button.
+   * @return the up button.
+   */
   public int getUpButton() {
     return upButton;
   }
 
+  /**
+   * Gets the key assigned to the down button.
+   * @return the down button.
+   */
   public int getDownButton() {
     return downButton;
   }
 
+  /**
+   * Gets the key assigned to the left button.
+   * @return the left button.
+   */
   public int getLeftButton() {
     return leftButton;
   }
 
+  /**
+   * Gets the key assigned to the right button.
+   * @return the right button.
+   */
   public int getRightButton() {
     return rightButton;
   }
@@ -224,10 +323,6 @@ public class Settings {
 
   public UIScale getCurrentUIScale() {
     return currentUIScale;
-  }
-
-  public Map<UIScale, String> getAvailableUIScales() {
-    return availableUIScales;
   }
 
   public Quality getQuality() {
