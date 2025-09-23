@@ -31,6 +31,7 @@ public class ServiceLocator {
   private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
+  private static SettingsService settingsService;
 
   /**
    * Gets the entity service.
@@ -156,6 +157,15 @@ public class ServiceLocator {
    */
   public static WorldMapService getWorldMapService() {
     return worldMapService;
+  }
+
+  /**
+   * Gets the settings service.
+   *
+   * @return the settings service
+   */
+  public static SettingsService getSettingsService() {
+    return settingsService;
   }
 
   /**
@@ -322,6 +332,22 @@ public class ServiceLocator {
   public static void deregisterWorldMapService() {
     logger.debug("Removing world map service");
     worldMapService = null;
+  }
+
+  /**
+   * Registers the settings service.
+   *
+   * @param source the settings service
+   */
+  public static void registerSettingsService(SettingsService source) {
+    logger.debug("Registering settings service {}", source);
+    settingsService = source;
+  }
+
+  /** Deregisters the settings service. */
+  public static void deregisterSettingsService() {
+    logger.debug("Removing settings service");
+    settingsService = null;
   }
 
   /** Clears all transient services. */

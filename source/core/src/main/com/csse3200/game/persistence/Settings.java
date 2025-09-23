@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.Input;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -12,6 +14,7 @@ import java.util.Map;
 import net.dermetfan.utils.Pair;
 
 public class Settings {
+  private static final Logger logger = LoggerFactory.getLogger(Settings.class);
   public static final String OPERATING_SYSTEM = System.getProperty("os.name");
 
   /** Display mode of the game. */
@@ -71,6 +74,7 @@ public class Settings {
   private Mode currentMode;
   private List<Pair<Integer, Integer>> availableResolutions = new ArrayList<>();
   private Pair<Integer, Integer> currentResolution;
+  private Pair<Integer, Integer> windowedResolution;
   private boolean vsync;
   private int refreshRate;
   private int fps;
@@ -125,14 +129,19 @@ public class Settings {
     if (OPERATING_SYSTEM.startsWith("Windows")) {
       availableModes.put(Mode.BORDERLESS, "Windowed Borderless");
     }
-    currentMode = Mode.WINDOWED;
+    currentMode = Mode.FULLSCREEN;
     availableMonitors = Gdx.graphics.getMonitors();
     currentMonitor = Gdx.graphics.getPrimaryMonitor();
     DisplayMode displayMode = Gdx.graphics.getDisplayMode(currentMonitor);
+    Gdx.graphics.setFullscreenMode(displayMode);
     currentResolution = new Pair<>(displayMode.width, displayMode.height);
+    windowedResolution = new Pair<>(0, 0);
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
       if (displayMode.width >= resolution.getKey() && displayMode.height >= resolution.getValue()) {
         availableResolutions.add(resolution);
+        if (resolution.getKey() > windowedResolution.getKey() && resolution.getValue() > windowedResolution.getValue()) {
+          windowedResolution = resolution;
+        }
       }
     }
     refreshRate = displayMode.refreshRate;
@@ -188,11 +197,6 @@ public class Settings {
     this.vsync = deserializedSettings.isVsync();
     this.currentUIScale = deserializedSettings.getCurrentUIScale();
     this.quality = deserializedSettings.getQuality();
-  }
-
-  /** Applies the settings to the game. */
-  public void applySettings() {
-    Gdx.graphics.setResizable(false);
   }
 
   /**
@@ -395,8 +399,21 @@ public class Settings {
     this.rightButton = rightButton;
   }
 
+  public Pair<Integer, Integer> getWindowedResolution() {
+    return windowedResolution;
+  }
+
   public void setCurrentResolution(Pair<Integer, Integer> currentResolution) {
     this.currentResolution = currentResolution;
+    if (currentResolution.equals(windowedResolution)) {
+      return;
+    }
+    this.windowedResolution = new Pair<>(0, 0);
+    for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
+      if (currentResolution.getKey() >= resolution.getKey() && currentResolution.getValue() >= resolution.getValue() && currentResolution.getKey() > windowedResolution.getKey() && currentResolution.getValue() > windowedResolution.getValue()) {
+        windowedResolution = resolution;
+      }
+    }
   }
 
   public void setRefreshRate(int refreshRate) {
@@ -404,6 +421,10 @@ public class Settings {
   }
 
   public void setFps(int fps) {
+    if (fps > refreshRate) {
+      logger.warn("FPS is greater than refresh rate, setting FPS to refresh rate");
+      fps = refreshRate;
+    }
     this.fps = fps;
   }
 
@@ -425,6 +446,15 @@ public class Settings {
 
   public void setCurrentMonitor(Monitor currentMonitor) {
     this.currentMonitor = currentMonitor;
+  }
+
+  public void setAvailableResolutions() {
+    this.availableResolutions.clear();
+    for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
+      if (currentResolution.getKey() >= resolution.getKey() && currentResolution.getValue() >= resolution.getValue()) {
+        availableResolutions.add(resolution);
+      }
+    }
   }
 
   public String toString() {
