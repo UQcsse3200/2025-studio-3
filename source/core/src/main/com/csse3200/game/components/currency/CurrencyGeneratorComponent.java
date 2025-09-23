@@ -107,23 +107,7 @@ public class CurrencyGeneratorComponent extends Component {
     stage.addActor(scrap);
 
     scrap.setPosition(this.targetX, this.targetY);
-
-    // Auto-expire if not collected to avoid screen flooding
-    float expireSec = SCRAP_LIFETIME_SEC;
-    scrap.addAction(
-        Actions.sequence(
-            Actions.delay(expireSec),
-            Actions.parallel(Actions.fadeOut(0.25f), Actions.scaleTo(0.85f, 0.85f, 0.25f)),
-            Actions.run(
-                () -> {
-                  if (scrap.hasParent()) {
-                    scrap.clearActions();
-                    scrap.clearListeners();
-                    scrap.remove();
-                    logger.debug(
-                        "Scrap expired without being collected at ({}, {})", targetX, targetY);
-                  }
-                })));
+    scrap.addCurrencyAnimation();
   }
 
   /** Configure scrap visual size in pixels. */
