@@ -60,15 +60,15 @@ public class TouchAttackComponent extends Component {
     }
 
     Object userData = other.getBody().getUserData();
-    if (userData == null || !(userData instanceof BodyUserData bud) || bud.entity == null) {
+    if (userData == null || !(userData instanceof BodyUserData bud) || bud.getEntity() == null) {
       return; // No valid entity to attack
     }
-    Entity target = bud.entity;
+    Entity target = bud.getEntity();
 
     // Attack logic
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
     if (targetStats == null) {
-      targetStats = target.getComponent(DefenceStatsComponent.class);
+      targetStats = target.getComponent(DefenderStatsComponent.class);
     }
 
     if (targetStats != null) {
@@ -84,5 +84,6 @@ public class TouchAttackComponent extends Component {
       Vector2 impulse = direction.setLength(knockbackForce);
       targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
     }
+    entity.getEvents().trigger("despawnSlingshot", entity);
   }
 }

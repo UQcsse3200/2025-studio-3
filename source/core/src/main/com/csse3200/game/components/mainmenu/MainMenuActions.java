@@ -19,35 +19,29 @@ public class MainMenuActions extends Component {
     entity.getEvents().addListener("load", this::onLoad);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("worldMap", this::onWorldMap);
   }
 
-  /** Swaps to the New Game screen. */
+  /** Start → World Map */
   private void onStart() {
-    logger.info("Start new game");
+    logger.info("[MainMenuActions] Starting new game");
     game.setScreen(GdxGame.ScreenType.NEW_GAME);
   }
 
-  /** Intended for loading a saved game state. Load functionality is not actually implemented. */
+  /** Load game (placeholder for saved states). */
   private void onLoad() {
-    logger.info("Load game");
+    logger.info("[MainMenuActions] Loading game");
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 
-  private void onWorldMap() {
-    logger.info("Launching world map screen");
-    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-  }
-
-  /** Exits the game. */
+  /** Exit the game. */
   private void onExit() {
-    logger.info("Exit game");
+    logger.info("[MainMenuActions] Exiting game");
     game.exit();
   }
 
-  /** Swaps to the Settings screen. */
+  /** Open Settings screen. */
   private void onSettings() {
-    logger.info("Launching settings screen");
+    logger.info("[MainMenuActions] Launching settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 }

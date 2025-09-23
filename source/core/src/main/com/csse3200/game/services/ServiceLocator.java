@@ -24,12 +24,13 @@ public class ServiceLocator {
   private static InputService inputService;
   private static ResourceService resourceService;
   private static CurrencyService currencyService;
-  private static MenuSpriteService menuSpriteService;
   private static ConfigService configService;
   private static DialogService dialogService;
   private static ResourceService globalResourceService;
   private static ProfileService profileService;
   private static ItemEffectsService itemEffectsService;
+  private static CutsceneService cutsceneService;
+  private static WorldMapService worldMapService;
 
   /**
    * Gets the entity service.
@@ -95,15 +96,6 @@ public class ServiceLocator {
   }
 
   /**
-   * Gets the menu sprite service.
-   *
-   * @return the menu sprite service
-   */
-  public static MenuSpriteService getMenuSpriteService() {
-    return menuSpriteService;
-  }
-
-  /**
    * Gets the config service.
    *
    * @return the config service
@@ -139,9 +131,31 @@ public class ServiceLocator {
     return profileService;
   }
 
-  /** Registers the item effects service. */
+  /**
+   * Gets the item effects service.
+   *
+   * @return the item effects service
+   */
   public static ItemEffectsService getItemEffectsService() {
     return itemEffectsService;
+  }
+
+  /**
+   * Gets the cutscene service.
+   *
+   * @return the cutscene service
+   */
+  public static CutsceneService getCutsceneService() {
+    return cutsceneService;
+  }
+
+  /**
+   * Gets the world map service.
+   *
+   * @return the world map service
+   */
+  public static WorldMapService getWorldMapService() {
+    return worldMapService;
   }
 
   /**
@@ -231,22 +245,6 @@ public class ServiceLocator {
   }
 
   /**
-   * Registers the menu sprite service.
-   *
-   * @param source the menu sprite service
-   */
-  public static void registerMenuSpriteService(MenuSpriteService source) {
-    logger.debug("Registering menu sprite service {}", source);
-    menuSpriteService = source;
-  }
-
-  /** Deregisters the menu sprite service. */
-  public static void deregisterMenuSpriteService() {
-    logger.debug("Removing menu sprite service");
-    menuSpriteService = null;
-  }
-
-  /**
    * Registers the config service.
    *
    * @param source the config service
@@ -302,6 +300,28 @@ public class ServiceLocator {
   public static void deregisterProfileService() {
     logger.debug("Removing profile service");
     profileService = null;
+  }
+
+  /** Registers cutscene service */
+  public static void registerCutsceneService(CutsceneService source) {
+    logger.debug("Registering cutscene service {}", source);
+    cutsceneService = source;
+  }
+
+  /**
+   * Registers the world map service.
+   *
+   * @param source the world map service
+   */
+  public static void registerWorldMapService(WorldMapService source) {
+    logger.debug("Registering world map service {}", source);
+    worldMapService = source;
+  }
+
+  /** Deregisters the world map service. */
+  public static void deregisterWorldMapService() {
+    logger.debug("Removing world map service");
+    worldMapService = null;
   }
 
   /** Clears all transient services. */

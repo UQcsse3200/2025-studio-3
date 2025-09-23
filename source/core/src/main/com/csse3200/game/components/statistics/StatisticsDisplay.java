@@ -10,6 +10,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +44,7 @@ public class StatisticsDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Statistics screen. */
   private void addActors() {
-    Label title = new Label("Statistics", skin, "title");
+    Label title = TypographyFactory.createTitle("Statistics");
     Table statisticsTable = makeStatisticsTable();
 
     rootTable = new Table();
@@ -68,51 +69,71 @@ public class StatisticsDisplay extends UIComponent {
     Statistics statistics = ServiceLocator.getProfileService().getProfile().getStatistics();
 
     // Create components
-    Label killsLabel = new Label("Total Kills:", skin);
-    Label kills = new Label(Integer.toString(statistics.getStatistic("enemiesKilled")), skin);
+    Label killsLabel = TypographyFactory.createSubtitle("Total Kills:");
+    Label kills =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("enemiesKilled")));
 
-    Label shotsLabel = new Label("Shots Fired:", skin);
-    Label shots = new Label(Integer.toString(statistics.getStatistic("shotsFired")), skin);
+    Label shotsLabel = TypographyFactory.createSubtitle("Shots Fired:");
+    Label shots =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("shotsFired")));
 
-    Label levelsLabel = new Label("Levels Passed:", skin);
-    Label levels = new Label(Integer.toString(statistics.getStatistic("levelsCompleted")), skin);
+    Label levelsLabel = TypographyFactory.createSubtitle("Levels Passed:");
+    Label levels =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("levelsCompleted")));
 
-    Label lostLevelsLabel = new Label("Levels Lost:", skin);
-    Label lostLevels = new Label(Integer.toString(statistics.getStatistic("levelsLost")), skin);
+    Label lostLevelsLabel = TypographyFactory.createSubtitle("Levels Lost:");
+    Label lostLevels =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("levelsLost")));
 
-    Label defencesPlantedLabel = new Label("Defences Planted:", skin);
+    Label defencesPlantedLabel = TypographyFactory.createSubtitle("Defences Planted:");
     Label defencesPlanted =
-        new Label(Integer.toString(statistics.getStatistic("defencesPlanted")), skin);
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("defencesPlanted")));
 
-    Label defencesUnlockedLabel = new Label("Defences Unlocked:", skin);
+    Label defencesUnlockedLabel = TypographyFactory.createSubtitle("Defences Unlocked:");
     Label defencesUnlocked =
-        new Label(Integer.toString(statistics.getStatistic("defencesUnlocked")), skin);
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("defencesUnlocked")));
 
-    Label defencesLostLabel = new Label("Defences Lost:", skin);
-    Label defencesLost = new Label(Integer.toString(statistics.getStatistic("defencesLost")), skin);
+    Label defencesLostLabel = TypographyFactory.createSubtitle("Defences Lost:");
+    Label defencesLost =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("defencesLost")));
 
-    Label coinsLabel = new Label("Total Coins Earned:", skin);
-    Label coins = new Label(Integer.toString(statistics.getStatistic("coinsCollected")), skin);
+    Label coinsLabel = TypographyFactory.createSubtitle("Total Coins Earned:");
+    Label coins =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("coinsCollected")));
 
-    Label coinsSpentLabel = new Label("Total Coins Spent:", skin);
-    Label coinsSpent = new Label(Integer.toString(statistics.getStatistic("coinsSpent")), skin);
+    Label coinsSpentLabel = TypographyFactory.createSubtitle("Total Coins Spent:");
+    Label coinsSpent =
+        TypographyFactory.createSubtitle(Integer.toString(statistics.getStatistic("coinsSpent")));
 
-    Label skillPointsLabel = new Label("Skill Points Collected:", skin);
+    Label skillPointsLabel = TypographyFactory.createSubtitle("Skill Points Collected:");
     Label skillPoints =
-        new Label(Integer.toString(statistics.getStatistic("skillPointsCollected")), skin);
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("skillPointsCollected")));
 
-    Label skillPointsSpentLabel = new Label("Skill Points Spent:", skin);
+    Label skillPointsSpentLabel = TypographyFactory.createSubtitle("Skill Points Spent:");
     Label skillPointsSpent =
-        new Label(Integer.toString(statistics.getStatistic("skillPointsSpent")), skin);
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("skillPointsSpent")));
 
-    Label purchasesLabel = new Label("Purchases Made:", skin);
-    Label purchases = new Label(Integer.toString(statistics.getStatistic("purchasesMade")), skin);
+    Label purchasesLabel = TypographyFactory.createSubtitle("Purchases Made:");
+    Label purchases =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("purchasesMade")));
 
-    Label wavesLabel = new Label("Waves Completed:", skin);
-    Label waves = new Label(Integer.toString(statistics.getStatistic("wavesCompleted")), skin);
+    Label wavesLabel = TypographyFactory.createSubtitle("Waves Completed:");
+    Label waves =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("wavesCompleted")));
 
-    Label itemsLabel = new Label("Items Collected:", skin);
-    Label items = new Label(Integer.toString(statistics.getStatistic("itemsCollected")), skin);
+    Label itemsLabel = TypographyFactory.createSubtitle("Items Collected:");
+    Label items =
+        TypographyFactory.createSubtitle(
+            Integer.toString(statistics.getStatistic("itemsCollected")));
 
     // Position Components on table
     Table table = new Table();
@@ -182,7 +203,7 @@ public class StatisticsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     // Position in top left with 20f padding
     closeButton.setSize(60f, 60f);

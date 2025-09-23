@@ -1,13 +1,13 @@
 package com.csse3200.game.services;
 
-import com.csse3200.game.components.currency.Currency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Service for managing currency operations in the game. */
+/** Service for managing in-level currency. */
 public class CurrencyService {
   private static final Logger logger = LoggerFactory.getLogger(CurrencyService.class);
-  private final Currency currency;
+  private int amount;
+  private int maxAmount;
 
   /**
    * Creates a new currency service with the specified initial amount and maximum limit.
@@ -16,44 +16,43 @@ public class CurrencyService {
    * @param maxAmount maximum currency cap
    */
   public CurrencyService(int initialAmount, int maxAmount) {
-    this.currency = new Currency(initialAmount, maxAmount);
-    logger.debug("Currency service created.");
+    this.amount = initialAmount;
+    this.maxAmount = maxAmount;
+    logger.debug("[CurrencyService] Currency service created.");
   }
 
   /**
-   * Gets the internal currency model.
+   * Gets the currency amount.
    *
-   * @return the currency instance
-   */
-  public Currency getCurrency() {
-    return currency;
-  }
-
-  /**
-   * Gets the current currency amount.
-   *
-   * @return the current amount
+   * @return the currency amount
    */
   public int get() {
-    return currency.getSunlight();
+    return amount;
   }
 
   /**
-   * Sets the absolute currency amount (clamped >= 0).
+   * Sets the currency amount.
    *
    * @param amount the new amount
    */
   public void set(int amount) {
-    currency.setSunlight(amount);
+    this.amount = amount;
+    if (this.amount > maxAmount) {
+      this.amount = maxAmount;
+    }
   }
 
   /**
-   * Adds a positive amount to the currency (clamped to maximum).
+   * Adds a positive amount to the currency.
    *
    * @param amount the amount to add
    */
   public void add(int amount) {
-    currency.addSunshine(amount);
+    if (this.amount + amount > maxAmount) {
+      this.amount = maxAmount;
+    } else {
+      this.amount += amount;
+    }
   }
 
   /**
@@ -63,7 +62,11 @@ public class CurrencyService {
    * @return true if successful, false if insufficient funds
    */
   public boolean spend(int amount) {
-    return currency.spendSunshine(amount);
+    if (this.amount >= amount) {
+      this.amount -= amount;
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -73,6 +76,6 @@ public class CurrencyService {
    * @return true if affordable, false otherwise
    */
   public boolean canAfford(int amount) {
-    return currency.canAffordSunshine(amount);
+    return this.amount >= amount;
   }
 }

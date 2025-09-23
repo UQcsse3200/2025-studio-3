@@ -1,6 +1,7 @@
 package com.csse3200.game.components.persistence;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -13,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -56,7 +59,7 @@ public class SaveGameMenuDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
     backBtn.setSize(60f, 60f);
     backBtn.setPosition(
         20f, // 20f padding from left
@@ -72,11 +75,20 @@ public class SaveGameMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = new Label("SAVE GAME", skin, "large");
+    Label titleLabel = TypographyFactory.createTitle("SAVE GAME");
 
     // Name input field (initially hidden)
-    nameLabel = new Label("Enter Save Name:", skin);
-    nameInput = new TextField("", skin);
+    nameLabel = TypographyFactory.createSubtitle("Enter Save Name:");
+
+    // Create TextField with custom font
+    TextField.TextFieldStyle textFieldStyle =
+        new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
+    BitmapFont customFont =
+        ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
+    if (customFont != null) {
+      textFieldStyle.font = customFont;
+    }
+    nameInput = new TextField("", textFieldStyle);
     nameInput.setMessageText("");
 
     // Create save slot buttons
@@ -86,7 +98,7 @@ public class SaveGameMenuDisplay extends UIComponent {
         // Active save slot - show existing save info
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = new TextButton(buttonText, skin);
+        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -102,7 +114,7 @@ public class SaveGameMenuDisplay extends UIComponent {
       } else {
         // Empty save slot
         String buttonText = "Empty";
-        saveSlotButtons[i] = new TextButton(buttonText, skin);
+        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -119,7 +131,7 @@ public class SaveGameMenuDisplay extends UIComponent {
     }
 
     // Save game button
-    saveButton = new TextButton("Save Game", skin);
+    saveButton = ButtonFactory.createButton("Save Game");
     saveButton.addListener(
         new ChangeListener() {
           @Override

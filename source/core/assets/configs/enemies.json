@@ -1,47 +1,79 @@
 {
-  "standardRobot": {
-    "name": "Standard Robot",
-    "atlasFilePath": "images/basic_robot.atlas",
-    "defaultSprite": "images/basic_robot_default_sprite.png",
-    "health": 60,
-    "attack": 10,
-    "movementSpeed": 20,
-    "scale": 1
-  }, "fastRobot": {
-  "name": "Fast Robot",
-  "atlasFilePath": "images/blue_robot.atlas",
-  "defaultSprite": "images/blue_robot_default_sprite.png",
-  "health": 40,
-  "attack": 10,
-  "movementSpeed": 50,
-  "scale": 0.75
-  }, "tankyRobot": {
-  "name": "Tanky Robot",
-  "atlasFilePath": "images/red_robot.atlas",
-  "defaultSprite": "images/red_robot_default_sprite.png",
-  "health": 100,
-  "attack": 15,
-  "movementSpeed": 10,
-  "scale": 1.25
-  }, "bungeeRobot": {
-  "name": "Bungee Robot",
-  "atlasFilePath": "images/blue_robot.atlas",
-  "defaultSprite": "images/blue_robot_default_sprite.png",
-  "health": 60,
-  "attack": 10,
-  "movementSpeed": 20,
-  "scale": 1
-  }, "teleportRobot": {
-  "name": "Teleport Robot",
-  "atlasFilePath": "images/red_robot.atlas",
-  "defaultSprite": "images/red_robot_default_sprite.png",
-  "health": 60,
-  "attack": 10,
-  "movementSpeed": 30,
-  "scale": 1.0,
-  "teleportCooldownSeconds": 4.0,
-  "teleportChance": 0.6,
-  "maxTeleports": 3,
-  "invulnerabilityMs": 200
-}
+  "config": {
+    "standardRobot": {
+      "name": "Standard Robot",
+      "atlasPath": "images/entities/enemies/basic_robot.atlas",
+      "assetPath": "images/entities/enemies/basic_robot_default_sprite.png",
+      "health": 30,
+      "attack": 10,
+      "movementSpeed": 20,
+      "scale": 1,
+      "description": "Just a regular old robot, not too threatening...",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 1,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
+    },
+    "fastRobot": {
+      "name": "Fast Robot",
+      "atlasPath": "images/entities/enemies/blue_robot.atlas",
+      "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
+      "health": 30,
+      "attack": 10,
+      "movementSpeed": 50,
+      "scale": 0.75,
+      "description": "A robot optimised for speed.",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 2,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
+    },
+    "tankyRobot": {
+      "name": "Tanky Robot",
+      "atlasPath": "images/entities/enemies/red_robot.atlas",
+      "assetPath": "images/entities/enemies/red_robot_default_sprite.png",
+      "health": 60,
+      "attack": 15,
+      "movementSpeed": 10,
+      "scale": 1.25,
+      "description": "A regular old robot, just... bigger.",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 3,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
+    },
+    "bungeeRobot": {
+      "name": "Bungee Robot",
+      "atlasPath": "images/entities/enemies/blue_robot.atlas",
+      "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
+      "health": 30,
+      "attack": 10,
+      "movementSpeed": 20,
+      "scale": 1,
+      "description": "A bungee robot. Yeehaw!",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 2,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
+    },
+    "teleportRobot": {
+      "name": "Teleport Robot",
+      "atlasPath": "images/entities/enemies/red_robot.atlas",
+      "assetPath": "images/entities/enemies/red_robot_default_sprite.png",
+      "health": 30,
+      "attack": 10,
+      "movementSpeed": 30,
+      "scale": 1,
+      "description": "A teleporting robot. Watch your back.",
+      "teleportCooldownSeconds": 4,
+      "teleportChance": 0.6,
+      "coinsRewarded": 2,
+      "maxTeleports": 3,
+      "invulnerabilityMs": 200
+    }
+  }
 }

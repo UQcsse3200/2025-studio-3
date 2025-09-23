@@ -14,6 +14,7 @@ import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -47,8 +48,7 @@ public class AchievementsDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Achievements screen. */
   private void addActors() {
-    Label title = new Label("Achievements", skin);
-    title.setFontScale(2f);
+    Label title = TypographyFactory.createTitle("Achievements");
     rootTable = new Table();
     rootTable.setFillParent(true);
     rootTable.top().padTop(20);
@@ -88,13 +88,13 @@ public class AchievementsDisplay extends UIComponent {
     // Stack tables vertically
     Table allTables = new Table();
 
-    allTables.add(new Label("Tier 1", skin)).center().row();
+    allTables.add(TypographyFactory.createSubtitle("Tier 1")).center().row();
     allTables.add(t1Table).left().padBottom(20).row();
 
-    allTables.add(new Label("Tier 2", skin)).center().row();
+    allTables.add(TypographyFactory.createSubtitle("Tier 2")).center().row();
     allTables.add(t2Table).left().padBottom(20).row();
 
-    allTables.add(new Label("Tier 3", skin)).center().row();
+    allTables.add(TypographyFactory.createSubtitle("Tier 3")).center().row();
     allTables.add(t3Table).left().padBottom(20).row();
 
     ScrollPane scrollPane = new ScrollPane(allTables, skin);
@@ -164,18 +164,11 @@ public class AchievementsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/achievement.png", Texture.class)));
+                    .getAsset("images/ui/achievement.png", Texture.class)));
 
     achButton.setSize(200f, 72f);
-    Label nameLabel = new Label(config.getName(), skin);
-    Label.LabelStyle st = new Label.LabelStyle(nameLabel.getStyle());
-    if (isUnlocked) {
-      st.fontColor = Color.GREEN;
-    } else {
-      st.fontColor = Color.RED;
-    }
-    nameLabel.setStyle(st);
-    nameLabel.setFontScale(0.7f);
+    Color labelColor = isUnlocked ? Color.GREEN : Color.RED;
+    Label nameLabel = TypographyFactory.createCustomSize(config.getName(), 12, labelColor);
     nameLabel.setAlignment(com.badlogic.gdx.utils.Align.center);
     Table centerTable = new Table();
     centerTable.setSize(200f, 72f);
@@ -230,7 +223,7 @@ public class AchievementsDisplay extends UIComponent {
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/close-icon.png", Texture.class)));
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
 
     closeButton.setSize(60f, 60f);
     updateCloseButtonPosition();

@@ -55,6 +55,22 @@ public class Inventory {
   }
 
   /**
+   * Checks if the inventory contains multiple of the specified item key.
+   *
+   * @param itemKey The key of the item to check.
+   * @return True if the inventory contains more than one of the item, false otherwise.
+   */
+  public boolean containsMoreThanOne(String itemKey) {
+    int count = 0;
+    for (String item : this.getKeys()) {
+      if (item.equals(itemKey)) {
+        count++;
+      }
+    }
+    return count > 1;
+  }
+
+  /**
    * Get the items in the inventory.
    *
    * @return the items in the inventory.

@@ -2,245 +2,223 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.hud.AnimatedDropdownMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenu;
-import com.csse3200.game.components.hud.MainMapNavigationMenuActions;
+import com.csse3200.game.components.CameraComponent;
+import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
+import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
+import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
+import com.csse3200.game.components.worldmap.WorldMapPlayerComponent;
+import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.input.InputDecorator;
-import com.csse3200.game.input.InputService;
-import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.WorldMapService;
+import com.csse3200.game.ui.WorldMapNode;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class WorldMapScreen implements Screen {
-  private final GdxGame game;
-  private SpriteBatch batch;
-  private OrthographicCamera camera;
-  private final Renderer renderer;
+/** World map screen */
+public class WorldMapScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapScreen.class);
-  private static final String SHOP_NODE_ID = "shop";
-  private static final String SKILLS_NODE_ID = "skills";
-  private Texture worldMap;
-  private Texture nodeCompleted;
-  private Texture nodeUnlocked;
-  private Texture lockedLevel1;
-  private Texture lockedLevel2;
-  private Texture shopTexture;
-  private Texture skillsTexture;
-  private Texture playerTex;
-  private Node[] nodes;
-  private Vector2 playerPos;
-  private float playerSpeed = 200f;
-  private Node nearbyNode = null;
-  private BitmapFont font;
+  private static final String[] ADDITIONAL_TEXTURES = {
+    "images/backgrounds/world_map.png",
+    "images/entities/character.png",
+    "images/nodes/completed.png",
+    "images/nodes/locked.png"
+  };
+  private static final float WORLD_WIDTH = 3000f;
+  private static final float WORLD_HEIGHT = 2000f;
+  private static final Vector2 WORLD_SIZE = new Vector2(WORLD_WIDTH, WORLD_HEIGHT);
+  private static final float[] ZOOM_STEPS = {1.20f, 1.35f, 1.50f, 1.70f, 1.90f};
+  private static final float CAMERA_LERP_SPEED = 8.0f;
+  private int zoomIdx = 0;
+  private Entity playerEntity;
+  private List<String> textures = new ArrayList<>();
 
+  /**
+   * Constructor for the world map screen.
+   *
+   * @param game the game instance
+   */
   public WorldMapScreen(GdxGame game) {
-    this.game = game;
-    ServiceLocator.registerInputService(new InputService());
-    ServiceLocator.registerResourceService(new ResourceService());
-    ServiceLocator.registerEntityService(new EntityService());
-    ServiceLocator.registerRenderService(new RenderService());
-    renderer = RenderFactory.createRenderer();
-    createUI();
+    super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
+    logger.debug("[WorldMapScreen] Initializing world map");
+    loadTextures();
+    createEntities();
+    createNodes();
   }
 
+  /**
+   * Constructs the UI entity for the world map screen.
+   *
+   * @param stage the stage to create the UI screen on
+   * @return the UI entity
+   */
   @Override
-  public void show() {
-    batch = new SpriteBatch();
+  protected Entity constructEntity(Stage stage) {
+    Entity ui = new Entity();
+    ui.addComponent(new InputDecorator(stage, 10))
+        .addComponent(new WorldMapNavigationMenu())
+        .addComponent(new WorldMapNavigationMenuActions(game))
+        .addComponent(new AnimatedDropdownMenu());
+    return ui;
+  }
 
-    camera = new OrthographicCamera();
-    camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+  /** Creates the entities for the world map screen. */
+  private void createEntities() {
+    // Create world map background entity
+    Entity worldMapEntity = new Entity();
+    worldMapEntity.addComponent(new WorldMapRenderComponent(WORLD_SIZE));
+    ServiceLocator.getEntityService().register(worldMapEntity);
 
-    worldMap = new Texture(Gdx.files.internal("images/world_map.png"));
-    nodeCompleted = new Texture(Gdx.files.internal("images/node_completed.png"));
-    nodeUnlocked = new Texture(Gdx.files.internal("images/node_unlocked.png"));
-    lockedLevel1 = new Texture(Gdx.files.internal("images/locked_level1.png"));
-    lockedLevel2 = new Texture(Gdx.files.internal("images/locked_level2.png"));
-    shopTexture = new Texture(Gdx.files.internal("images/shopsprite.png"));
-    skillsTexture = new Texture(Gdx.files.internal("images/skills.png"));
-    playerTex = new Texture(Gdx.files.internal("images/character.png"));
+    // Create player entity
+    playerEntity = new Entity();
+    playerEntity.setPosition(
+        new Vector2(WORLD_WIDTH * 0.1f, WORLD_HEIGHT * 0.25f)); // Start position
+    playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
+    ServiceLocator.getEntityService().register(playerEntity);
 
-    FileHandle file = Gdx.files.internal("data/nodes.json");
-    Json json = new Json();
-    nodes = json.fromJson(Node[].class, file);
+    // Setup camera to follow player
+    CameraComponent camera = renderer.getCamera();
+    camera.getEntity().setPosition(WORLD_WIDTH * 0.1f, WORLD_HEIGHT * 0.25f);
 
-    playerPos =
-        new Vector2(nodes[0].px * Gdx.graphics.getWidth(), nodes[0].py * Gdx.graphics.getHeight());
+    // Set initial zoom on the underlying camera
+    if (camera.getCamera()
+        instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+      orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
+    }
 
-    font = new BitmapFont();
-    font.setColor(Color.WHITE);
-    font.getData().setScale(2f);
+    // Listen for node events
+    playerEntity.getEvents().addListener("enterNode", this::onNodeEnter);
+  }
+
+  /** Loads the textures for the nodes. */
+  private void loadTextures() {
+    for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
+      textures.add(node.getNodeTexture());
+    }
+    ServiceLocator.getResourceService().loadTextures(textures.toArray(new String[0]));
+    ServiceLocator.getResourceService().loadAll();
+  }
+
+  /** Creates the nodes for the world map. */
+  private void createNodes() {
+    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+
+    // Get existing nodes and mark completed ones
+    List<WorldMapNode> nodes = worldMapService.getAllNodes();
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService != null) {
+      List<String> completedNodes = profileService.getProfile().getCompletedNodes();
+      for (String nodeId : completedNodes) {
+        worldMapService.completeNode(nodeId);
+        worldMapService.lockNode(nodeId, "This level has already been completed.");
+      }
+      String currentLevel = profileService.getProfile().getCurrentLevel();
+      worldMapService.unlockNode(currentLevel);
+    }
+
+    // Create render entities for each node
+    for (WorldMapNode node : nodes) {
+      Entity nodeEntity = new Entity();
+      float worldX = node.getPositionX() * WORLD_WIDTH;
+      float worldY = node.getPositionY() * WORLD_HEIGHT;
+      nodeEntity.setPosition(worldX, worldY);
+      nodeEntity.addComponent(new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f));
+      ServiceLocator.getEntityService().register(nodeEntity);
+    }
   }
 
   @Override
   public void render(float delta) {
-    camera.update();
-    batch.setProjectionMatrix(camera.combined);
-
-    batch.begin();
-
-    batch.draw(worldMap, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-    for (Node node : nodes) {
-      Texture nodeTex;
-      if (SHOP_NODE_ID.equals(node.id)) {
-        nodeTex = shopTexture;
-      } else if (SKILLS_NODE_ID.equals(node.id)) {
-        nodeTex = skillsTexture;
-      } else if (node.completed) {
-        nodeTex = nodeCompleted;
-      } else if (node.unlocked) {
-        nodeTex = nodeUnlocked;
-      } else if (node.level == 2) {
-        nodeTex = lockedLevel1;
-      } else {
-        nodeTex = lockedLevel2;
-      }
-
-      float x = node.px * Gdx.graphics.getWidth();
-      float y = node.py * Gdx.graphics.getHeight();
-      batch.draw(nodeTex, x, y, 80, 80);
-
-      if (playerPos.dst(x, y) < 60) {
-        nearbyNode = node;
-        String prompt;
-        if (SHOP_NODE_ID.equals(nearbyNode.id)) {
-          prompt = "Press E to Shop";
-        } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
-          prompt = "Press E to view Skills";
-        } else if (nearbyNode.level == 1) {
-          prompt = "Press E to Start";
-        } else {
-          prompt = "Press E to Checkpoint";
-        }
-        font.draw(batch, prompt, x, y + 100);
-      }
-    }
-
-    batch.draw(playerTex, playerPos.x, playerPos.y, 96, 96);
-
-    batch.end();
-
-    // Update and render only the stage (UI components) without clearing the screen
-    ServiceLocator.getEntityService().update();
-    Stage stage = ServiceLocator.getRenderService().getStage();
-    stage.act();
-    stage.draw();
-
-    handleInput(delta);
+    handleZoomInput();
+    updateCamera();
+    super.render(delta);
   }
 
-  private void handleInput(float delta) {
-    float moveAmount = playerSpeed * delta;
+  /** Updates the camera to follow the player with smooth interpolation. */
+  private void updateCamera() {
+    if (playerEntity != null) {
+      Vector2 playerPos = playerEntity.getPosition();
+      CameraComponent camera = renderer.getCamera();
+      Vector2 currentCameraPos = camera.getEntity().getPosition();
 
-    if (Gdx.input.isKeyPressed(Input.Keys.W)) playerPos.y += moveAmount;
-    if (Gdx.input.isKeyPressed(Input.Keys.S)) playerPos.y -= moveAmount;
-    if (Gdx.input.isKeyPressed(Input.Keys.A)) playerPos.x -= moveAmount;
-    if (Gdx.input.isKeyPressed(Input.Keys.D)) playerPos.x += moveAmount;
+      // Smoothly interpolate camera position towards player position
+      float deltaTime = Gdx.graphics.getDeltaTime();
+      float lerpFactor = 1.0f - (float) Math.pow(0.5, CAMERA_LERP_SPEED * deltaTime);
 
-    if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if (SHOP_NODE_ID.equals(nearbyNode.id)) {
-        logger.info("Opening Shop!");
-        game.setScreen(GdxGame.ScreenType.SHOP);
-      } else if (SKILLS_NODE_ID.equals(nearbyNode.id)) {
-        logger.info("Opening Skills!");
-        game.setScreen(GdxGame.ScreenType.SKILLTREE);
-      } else if (nearbyNode.level == 1) {
-        logger.info("Starting Level 1!");
-        game.setScreen(GdxGame.ScreenType.MAIN_GAME);
-      } else {
-        logger.info("Checkpoint reached at Level {}", nearbyNode.level);
-        nearbyNode.unlocked = true;
-      }
-    }
-  }
+      float newX = MathUtils.lerp(currentCameraPos.x, playerPos.x, lerpFactor);
+      float newY = MathUtils.lerp(currentCameraPos.y, playerPos.y, lerpFactor);
 
-  @Override
-  public void resize(int width, int height) {
-    camera.setToOrtho(false, width, height);
-  }
-
-  @Override
-  public void pause() {
-    // Do nothing
-  }
-
-  @Override
-  public void resume() {
-    // Do nothing
-  }
-
-  @Override
-  public void hide() {
-    // Do nothing
-  }
-
-  @Override
-  public void dispose() {
-    renderer.dispose();
-    if (batch != null) {
-      batch.dispose();
+      camera.getEntity().setPosition(newX, newY);
+      clampCamera(camera);
     }
-    if (worldMap != null) {
-      worldMap.dispose();
-    }
-    if (nodeCompleted != null) {
-      nodeCompleted.dispose();
-    }
-    if (nodeUnlocked != null) {
-      nodeUnlocked.dispose();
-    }
-    if (lockedLevel1 != null) {
-      lockedLevel1.dispose();
-    }
-    if (lockedLevel2 != null) {
-      lockedLevel2.dispose();
-    }
-    if (shopTexture != null) {
-      shopTexture.dispose();
-    }
-    if (skillsTexture != null) {
-      skillsTexture.dispose();
-    }
-    if (playerTex != null) {
-      playerTex.dispose();
-    }
-    if (font != null) {
-      font.dispose();
-    }
-    ServiceLocator.getRenderService().dispose();
-    ServiceLocator.getEntityService().dispose();
-    ServiceLocator.clear();
   }
 
   /**
-   * Creates the StatisticsScreen's UI including components for rendering UI elements to the screen
-   * and capturing and handling UI input.
+   * Clamps the camera to the world bounds.
+   *
+   * @param camera the camera to clamp
    */
-  private void createUI() {
-    logger.debug("Creating ui");
-    Stage stage = ServiceLocator.getRenderService().getStage();
-    Entity ui = new Entity();
-    ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new MainMapNavigationMenu())
-        .addComponent(new MainMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu());
-    ServiceLocator.getEntityService().register(ui);
+  private void clampCamera(CameraComponent camera) {
+    Vector2 cameraPos = camera.getEntity().getPosition();
+    com.badlogic.gdx.graphics.Camera gdxCamera = camera.getCamera();
+
+    float zoom = 1.0f;
+    if (gdxCamera instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+      zoom = orthographicCamera.zoom;
+    }
+
+    float effectiveViewportWidth = gdxCamera.viewportWidth * zoom;
+    float effectiveViewportHeight = gdxCamera.viewportHeight * zoom;
+    float minX = effectiveViewportWidth / 2f;
+    float maxX = WORLD_WIDTH - effectiveViewportWidth / 2f;
+    float minY = effectiveViewportHeight / 2f;
+    float maxY = WORLD_HEIGHT - effectiveViewportHeight / 2f;
+    float newX = Math.clamp(cameraPos.x, minX, maxX);
+    float newY = Math.clamp(cameraPos.y, minY, maxY);
+
+    camera.getEntity().setPosition(newX, newY);
+  }
+
+  /** Handles the zoom input. */
+  private void handleZoomInput() {
+    CameraComponent camera = renderer.getCamera();
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
+      zoomIdx++;
+      if (camera.getCamera()
+          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+        orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
+        logger.info("Zoom OUT → {}", ZOOM_STEPS[zoomIdx]);
+      }
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
+      zoomIdx--;
+      if (camera.getCamera()
+          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+        orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
+        logger.info("Zoom IN → {}", ZOOM_STEPS[zoomIdx]);
+      }
+    }
+  }
+
+  /**
+   * Handles the event when the player enters a node.
+   *
+   * @param node the node the player entered
+   */
+  private void onNodeEnter(WorldMapNode node) {
+    logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
+    game.setScreen(node.getTargetScreen());
   }
 }

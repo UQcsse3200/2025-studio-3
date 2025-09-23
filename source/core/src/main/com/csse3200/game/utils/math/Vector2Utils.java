@@ -34,6 +34,7 @@ public class Vector2Utils {
     return Math.toDegrees(Math.atan2(to.y - from.y, to.x - from.x));
   }
 
+  /** Constructor for the Vector2Utils class. */
   private Vector2Utils() {
     throw new IllegalStateException("Instantiating static util class");
   }

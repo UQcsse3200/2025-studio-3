@@ -1,11 +1,32 @@
 {
-  "slingshooter": {
-    "health": 50,
-    "baseAttack": 1,
-    "rangeType": 1,
-    "range": 5,
-    "state": 0,
-    "attackSpeed": 3,
-    "critChance": 1
+  "config": {
+    "defenders": {
+      "slingshooter": {
+        "health": 50,
+        "rangeType": 1,
+        "range": 500,
+        "name": "Slingshooter",
+        "description": "Slingshots do a surprising amount of damage, even to metal robots.",
+        "assetPath": "images/entities/defences/sling_shooter_1.png",
+        "atlasPath": "images/entities/defences/sling_shooter.atlas",
+        "cost": 100,
+        "state": 0,
+        "attack": 1,
+        "attackSpeed": 3,
+        "critChance": 1
+      }
+    },
+    "generators": {
+      "furnace": {
+        "name": "Furnace",
+        "description": "This building produces scrap, used to install new defences.",
+        "assetPath": "images/entities/defences/forge_1.png",
+        "atlasPath": "images/entities/defences/forge.atlas",
+        "health": 50,
+        "interval": 12,
+        "scrapValue": 25,
+        "cost": 50
+      }
+    }
   }
 }

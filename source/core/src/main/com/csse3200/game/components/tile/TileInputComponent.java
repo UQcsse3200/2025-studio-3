@@ -4,15 +4,10 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
-import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Input handler for tiles for mouse input. This input handler uses touch input. */
 public class TileInputComponent extends InputComponent {
-
-  private static final Logger logger = LoggerFactory.getLogger(TileInputComponent.class);
 
   private final AreaAPI area;
 
@@ -33,9 +28,7 @@ public class TileInputComponent extends InputComponent {
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
     Vector2 position = entity.getPosition();
-
     TileStorageComponent tileStatus = entity.getComponent(TileStorageComponent.class);
-    Entity selectedUnit = area.getSelectedUnit();
 
     float tileSize = area.getTileSize();
     GridPoint2 clickInWorld = area.stageToWorld(new GridPoint2(screenX, screenY));
@@ -45,18 +38,25 @@ public class TileInputComponent extends InputComponent {
         && clickInWorld.x <= position.x + tileSize
         && clickInWorld.y >= position.y
         && clickInWorld.y <= position.y + tileSize) {
-      logger.info("Tile Clicked");
+      int posIndex = tileStatus.getPosition();
+
       return switch (button) {
         case Input.Buttons.LEFT -> {
-          if (!tileStatus.hasUnit() && selectedUnit != null) {
-            tileStatus.triggerSpawnUnit();
+          if (area.getSelectedUnit() == null) {
+            yield false;
           }
-          yield true;
+          area.spawnUnit(posIndex);
+          if (area.getGrid().isOccupiedIndex(posIndex)) {
+            // spawn worked
+            area.cancelDrag();
+            area.setIsCharacterSelected(false);
+            area.setSelectedUnit(null);
+            yield true;
+          }
+          yield false;
         }
         case Input.Buttons.RIGHT -> {
-          if (tileStatus.hasUnit()) {
-            tileStatus.removeTileUnit();
-          }
+          area.removeUnit(posIndex);
           yield true;
         }
         default -> false;

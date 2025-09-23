@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.entities.Entity;
 
@@ -66,4 +67,28 @@ public interface AreaAPI {
    * @return the stage coords as GridPoint2
    */
   GridPoint2 worldToStage(GridPoint2 pos);
+
+  /**
+   * Begins a drag operation with the given texture.
+   *
+   * @param texture the texture to show while dragging
+   */
+  default void beginDrag(Texture texture) {}
+
+  /** Cancels an ongoing drag operation. */
+  default void cancelDrag() {}
+
+  /**
+   * Checks if a character is currently selected.
+   *
+   * @return true if a character is selected, false otherwise
+   */
+  boolean isCharacterSelected();
+
+  /**
+   * Sets the character selection status.
+   *
+   * @param selected true to indicate a character is selected, false otherwise
+   */
+  void setIsCharacterSelected(boolean selected);
 }

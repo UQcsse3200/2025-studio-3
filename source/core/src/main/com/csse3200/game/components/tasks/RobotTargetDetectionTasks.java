@@ -20,7 +20,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
   protected final RaycastHit hit = new RaycastHit();
   protected short targetLayer;
 
-  public RobotTargetDetectionTasks(float attackRange, short targetLayer) {
+  protected RobotTargetDetectionTasks(float attackRange, short targetLayer) {
     this.attackRange = attackRange;
     this.targetLayer = targetLayer;
     physics = ServiceLocator.getPhysicsService().getPhysics();
@@ -71,20 +71,13 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     for (Entity target : targets) {
       HitboxComponent hitbox = target.getComponent(HitboxComponent.class);
 
-      if (hitbox == null) {
-        continue;
-      }
-
-      if (hitbox.getLayer() != targetLayer) {
+      if (hitbox == null || hitbox.getLayer() != targetLayer) {
         continue;
       }
 
       Vector2 targetPos = target.getCenterPosition();
       float distance = from.dst(targetPos);
-      if (abs(targetPos.y - from.y) > 10f) {
-        continue;
-      }
-      if (distance <= attackRange) { // if target visible and in range
+      if ((abs(targetPos.y - from.y) <= 10f) && (distance <= attackRange)) {
         return target;
       }
     }

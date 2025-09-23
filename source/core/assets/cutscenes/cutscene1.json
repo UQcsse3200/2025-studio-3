@@ -1,0 +1,208 @@
+{
+    "schemaVersion": 1,
+    "characters": [
+        {
+            "id": "alice",
+            "name": "Alice",
+            "poses": {
+                "normal": "alice_normal.png",
+                "happy": "alice_happy.png",
+                "sad": "alice_sad.png",
+                "surprised": "alice_surprised.png",
+                "angry": "alice_angry.png"
+            }
+        },
+        {
+            "id": "bob",
+            "name": "Bob",
+            "poses": {
+                "normal": "bob_normal.png",
+                "happy": "bob_happy.png",
+                "sad": "bob_sad.png",
+                "surprised": "bob_surprised.png",
+                "angry": "bob_angry.png"
+            }
+        },
+        {
+            "id": "eve",
+            "name": "Eve",
+            "poses": {
+                "normal": "eve_normal.png",
+                "happy": "eve_happy.png",
+                "sad": "eve_sad.png",
+                "surprised": "eve_surprised.png",
+                "angry": "eve_angry.png"
+            }
+        }
+    ],
+    "backgrounds": [
+        {
+            "id": "park",
+            "image": "park.png"
+        },
+        {
+            "id": "cafe",
+            "image": "cafe.png"
+        },
+        {
+            "id": "library",
+            "image": "library.png"
+        }
+    ],
+    "sounds": [
+        {
+            "id": "explosion",
+            "file": "explosion.mp3"
+        },
+        {
+            "id": "backgroundMusic",
+            "file": "backgroundAmbiance.mp3"
+        }
+    ],
+    "cutscene": {
+        "id": "intro_park",
+        "beats": [
+            {
+                "id": "b0",
+                "advance": {
+                    "mode": "auto"
+                },
+                "actions": [
+                    {
+                        "type": "background.set", "backgroundId": "park", "transition": "fade", "duration": 300, "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b1",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "parallel",
+                        "await": true,
+                        "actions": [
+                            {
+                                "type": "character.enter", "characterId": "alice", "pose": "happy", "position": "left", "transition": "slide", "duration": 400, "await": true
+                            },
+                            {
+                                "type": "dialogue.show", "characterId": "alice", "text": "What a beautiful day in the park, isn't it, {player_name}?", "await": true
+                            }
+                        ]
+                    },
+                    {
+                        "type": "dialogue.hide", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b2",
+                "advance": {
+                    "mode": "auto_delay",
+                    "delay": 200
+                },
+                "actions": [
+                    {
+                        "type": "dialogue.show", "characterId": "alice", "text": "I love coming here to relax and enjoy nature.", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b3",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "character.exit", "characterId": "alice", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
+                        "type": "parallel",
+                        "await": true,
+                        "actions": [
+                            {
+                                "type": "character.enter", "characterId": "bob", "pose": "normal", "position": "right", "transition": "slide", "duration": 400, "await": true
+                            },
+                            {
+                                "type": "dialogue.show", "characterId": "bob", "text": "Hi, I'm bob.", "await": true
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "id": "bExplosion",
+                "advance": {
+                    "mode": "auto"
+                },
+                "actions": [
+                    {
+                        "type": "audio.play", "bus": "sfx", "soundId": "explosion", "volume": 1.0, "pitch": 1.0, "pan": 0.0, "await": true
+                    },
+                    {
+                        "type": "audio.play", "bus": "music", "soundId": "backgroundMusic", "loop": true, "volume": 0.7, "await": false
+                    },
+                    {
+                        "type": "audio.set", "bus": "music", "volume": 0.4
+                    },
+                    {
+                        "type": "audio.stop", "bus": "music", "fadeMs": 400, "await": true
+                    }
+                ]
+            },
+            {
+                "id": "b4",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "character.exit", "characterId": "bob", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
+                        "type": "parallel",
+                        "await": true,
+                        "actions": [
+                            {
+                                "type": "character.enter", "characterId": "alice", "pose": "surprised", "position": "left", "transition": "slide", "duration": 400, "await": true
+                            },
+                            {
+                                "type": "character.enter", "characterId": "eve", "pose": "surprised", "position": "left", "transition": "slide", "duration": 400, "await": true
+                            }
+                        ]
+                    },
+                    {
+                        "type": "dialogue.chorus", "characterIds": ["alice", "eve"], "text": "BOB?!?!", "await": true
+                    }
+                ]
+            },
+            {
+                "id": "branch",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "choice",
+                        "prompt": "How do you respond?",
+                        "choices": [
+                            {
+                                "type": "goto",
+                                "line": "What are you doing here, Bob?!",
+                                "cutsceneId": "current",
+                                "entryBeatId": "end"
+                            },
+                            {
+                                "type": "goto",
+                                "line": "Bob... I didn't expect to see you.",
+                                "cutsceneId": "current",
+                                "entryBeatId": "b3"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

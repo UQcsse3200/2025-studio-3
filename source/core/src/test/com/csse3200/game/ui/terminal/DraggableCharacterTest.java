@@ -23,7 +23,7 @@ class DraggableCharacterTest {
   @Test
   void testSetTexturePath() {
     DraggableCharacter character = new DraggableCharacter(mockArea);
-    String testPath = "images/box_boy_leaf.png";
+    String testPath = "images/entities/character.png";
     character.setTexture(testPath);
     assertEquals(testPath, character.getTexturePath());
   }
