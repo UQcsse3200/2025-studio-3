@@ -103,6 +103,9 @@ public class SlotMachineDisplay extends UIComponent {
   /** Whether any spin sequence is currently active. */
   private boolean isSpinning = false;
 
+  /** Maximum number of cards allowed on the field to permit a spin. */
+  private static final int MAX_ACTIVE_CARDS = 5;
+
   /** Count of columns that have fully stopped in the current sequence. */
   private int stoppedCount = 0;
 
@@ -144,6 +147,12 @@ public class SlotMachineDisplay extends UIComponent {
 
   /** Drawable for pressed frame state (atlas region). */
   private TextureRegionDrawable frameDownDrawable;
+
+  /** Drawable for locked frame state (atlas region). */
+  private TextureRegionDrawable frameLockedDrawable;
+
+  /** Cache last available state to avoid redundant swaps. */
+  private boolean lastAvailable = true;
 
   /** Ordered list of symbol regions forming one cycle. */
   private List<TextureAtlas.AtlasRegion> symbolRegions;
@@ -196,6 +205,7 @@ public class SlotMachineDisplay extends UIComponent {
     lastStageH = stage.getHeight();
     lastSeenSpins = slotEngine.getRemainingSpins();
     lastRefillEpochMs = System.currentTimeMillis();
+    updateAvailabilityVisual();
   }
 
   /**
@@ -216,11 +226,17 @@ public class SlotMachineDisplay extends UIComponent {
             .getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
+    TextureRegion lockedRegion = atlas.findRegion("slot_frame_locked");
+    if (lockedRegion == null) {
+      logger.warn("slot_frame_locked not found in atlas; falling back to up state.");
+      lockedRegion = upRegion;
+    }
     for (Texture tex : atlas.getTextures()) {
       tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
     frameUpDrawable = new TextureRegionDrawable(upRegion);
     frameDownDrawable = new TextureRegionDrawable(downRegion);
+    frameLockedDrawable = new TextureRegionDrawable(lockedRegion);
 
     Texture reelsBgTex =
         ServiceLocator.getResourceService()
@@ -248,6 +264,23 @@ public class SlotMachineDisplay extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             if (isSpinning) return;
+            int remaining = slotEngine.getRemainingSpins();
+            int activeCards = SlotEffect.getActiveCardCount();
+            if (remaining <= 0 || activeCards >= MAX_ACTIVE_CARDS) {
+              logger.info(
+                  "Spin blocked: credits={}, fieldCards={} (limit={})",
+                  remaining,
+                  activeCards,
+                  MAX_ACTIVE_CARDS);
+              frameImage.clearActions();
+              frameImage.setDrawable(frameDownDrawable);
+              frameImage.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.08f),
+                      Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
+              return;
+            }
+
             logger.info("Topbar slot clicked");
             pendingResult = slotEngine.spin();
             targetIndices = pendingResult.getReels();
@@ -633,6 +666,7 @@ public class SlotMachineDisplay extends UIComponent {
       centerSpinsLabelOverPie();
     }
     updateSpinsHud();
+    updateAvailabilityVisual();
   }
 
   /** Updates remaining spins text and swaps pie frame based on refill progress. */
@@ -667,6 +701,27 @@ public class SlotMachineDisplay extends UIComponent {
         currentPieIndex = idx;
         pieImage.setDrawable(new TextureRegionDrawable(pieRegions.get(idx)));
       }
+    }
+  }
+
+  /** Swap the frame image to locked/unlocked depending on availability. */
+  private void updateAvailabilityVisual() {
+    if (frameImage == null) return;
+    if (isSpinning || frameImage.hasActions()) return;
+
+    int remaining = slotEngine.getRemainingSpins();
+    int activeCards = SlotEffect.getActiveCardCount();
+    boolean available = (remaining > 0) && (activeCards < MAX_ACTIVE_CARDS);
+
+    if (available != lastAvailable) {
+      if (available) {
+        frameImage.setDrawable(frameUpDrawable);
+        frameImage.setTouchable(Touchable.enabled);
+      } else {
+        frameImage.setDrawable(frameLockedDrawable);
+        frameImage.setTouchable(Touchable.disabled);
+      }
+      lastAvailable = available;
     }
   }
 
