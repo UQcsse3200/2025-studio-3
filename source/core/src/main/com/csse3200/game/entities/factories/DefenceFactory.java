@@ -85,6 +85,59 @@ public class DefenceFactory {
   }
 
   /**
+   * Creates a fully configured Shadow defence entity.
+   *
+   * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
+   * file - Animation rendering and animation controller
+   *
+   * @return entity representing the Shadow
+   */
+  public static Entity createShadow() {
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("shadow");
+    Entity defender = createBaseDefender();
+
+    // start with a base defender (physics + collider)
+
+    AITaskComponent enemyDetectionTasks =
+            new AITaskComponent()
+                    .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT))
+                    .addTask(new IdleTask(config.getRange()));
+
+    defender.addComponent(enemyDetectionTasks);
+    // animation component
+    AnimationRenderComponent animator =
+            new AnimationRenderComponent(
+                    ServiceLocator.getResourceService()
+                            .getAsset(config.getAtlasPath(), TextureAtlas.class));
+
+    // define animations for idle and attack states
+    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+
+    // attach components to the entity
+    defender
+            .addComponent(
+                    new DefenderStatsComponent(
+                            config.getHealth(),
+                            config.getAttack(),
+                            config.getRangeType(),
+                            config.getRange(),
+                            config.getAttackState(),
+                            config.getAttackSpeed(),
+                            config.getCritChance()))
+            .addComponent(animator)
+            .addComponent(new DefenceAnimationController());
+
+    // Scale to tilesize
+    animator.scaleEntity();
+
+    // scale the entity to match animation sprite dimensions
+    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+    return defender;
+  }
+
+
+  /**
    * Creates a fully configured Army Guy defence entity.
    *
    * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config

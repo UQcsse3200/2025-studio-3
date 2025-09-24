@@ -51,6 +51,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/backgrounds/level-2-map-v1.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
+      "images/entities/defences/shadow_idle1.png",
     "images/entities/defences/army_guy_1.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
