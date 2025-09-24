@@ -310,7 +310,8 @@ public class SlotMachineDisplay extends UIComponent {
     barGroup.addActor(pieImage);
 
     // Remaining spins label
-    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+    Color amber = new Color(1.0f, 0.70f, 0.00f, 1.0f);
+    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), amber);
     spinsLabel = new Label("0", style);
     spinsLabel.setAlignment(Align.center);
     spinsLabel.setTouchable(Touchable.disabled);
@@ -421,7 +422,7 @@ public class SlotMachineDisplay extends UIComponent {
 
   private void layoutPie(float visX, float visW, float barX, float barY, float barH) {
     float gap = marginPx * 0.6f;
-    float pieSize = barH * 0.80f;
+    float pieSize = barH * 0.35f;
     float preferredPieX = visX + visW + gap;
     float pieY = barY + (barH - pieSize) * 0.5f;
 
@@ -675,7 +676,7 @@ public class SlotMachineDisplay extends UIComponent {
 
     final float pieW = pieImage.getWidth();
     final float pieH = pieImage.getHeight();
-    final float targetPx = pieW * 0.42f;
+    final float targetPx = pieW * 0.65f;
     final float base = 32f;
     final float scale = Math.clamp(targetPx / base, 0.8f, 3.5f);
     spinsLabel.setFontScale(scale);
@@ -689,8 +690,8 @@ public class SlotMachineDisplay extends UIComponent {
     final float cx = pieImage.getX() + pieW * 0.5f;
     final float cy = pieImage.getY() + pieH * 0.5f;
 
-    final float offsetX = -0.05f * pieW;
-    final float offsetY = -0.02f * pieH;
+    final float offsetX =  0.00f * pieW;
+    final float offsetY =  0.10f * pieH;
 
     spinsLabel.setSize(w, h);
     spinsLabel.setPosition(Math.round(cx - w / 2f + offsetX), Math.round(cy - h / 2f + offsetY));
