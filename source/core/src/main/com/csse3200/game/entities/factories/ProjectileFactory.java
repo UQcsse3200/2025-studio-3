@@ -54,9 +54,9 @@ public class ProjectileFactory {
   /**
    * Creates a bullet projectile entity.
    *
-   * <p>The bullet is designed to be used by defense entities such as the army guy. It
-   * includes components for physics, collision, attack damage, and rendering. The projectile is set
-   * to deal damage to enemies and is destroyed upon impact. It fires 4 times faster than a slingshot
+   * <p>The bullet is designed to be used by defense entities such as the army guy. It includes
+   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
+   * damage to enemies and is destroyed upon impact. It fires 4 times faster than a slingshot
    *
    * @param damage amount of damage dealt to an enemy entity
    * @return entity representing a bullet projectile
@@ -71,8 +71,7 @@ public class ProjectileFactory {
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
-    TextureRenderComponent render =
-        new TextureRenderComponent("images/effects/bullet.png");
+    TextureRenderComponent render = new TextureRenderComponent("images/effects/bullet.png");
     bullet.addComponent(render);
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly

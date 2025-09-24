@@ -31,7 +31,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
-
 import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -405,8 +404,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (Objects.equals(projectileType, "slingshot")) {
       projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
       projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    }
-    else {// if (Objects.equals(projectileType, "bullet")) {
+    } else { // if (Objects.equals(projectileType, "bullet")) {
       projectile = ProjectileFactory.createBullet(10); // damage value
       projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     }
@@ -603,7 +601,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             "fire",
             () -> {
               String projectileType = "slingshot";
-              DefenderStatsComponent entityType = newEntity.getComponent(DefenderStatsComponent.class);
+              DefenderStatsComponent entityType =
+                  newEntity.getComponent(DefenderStatsComponent.class);
               if (entityType.getType() == 1) {
                 projectileType = "slingshot";
               } else if (entityType.getType() == 2) {
