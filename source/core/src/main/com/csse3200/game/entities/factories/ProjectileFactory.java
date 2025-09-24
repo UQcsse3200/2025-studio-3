@@ -51,6 +51,16 @@ public class ProjectileFactory {
     return slingShot;
   }
 
+  /**
+   * Creates a bullet projectile entity.
+   *
+   * <p>The bullet is designed to be used by defense entities such as the army guy. It
+   * includes components for physics, collision, attack damage, and rendering. The projectile is set
+   * to deal damage to enemies and is destroyed upon impact. It fires 4 times faster than a slingshot
+   *
+   * @param damage amount of damage dealt to an enemy entity
+   * @return entity representing a bullet projectile
+   */
   public static Entity createBullet(int damage) {
     Entity bullet =
         new Entity()

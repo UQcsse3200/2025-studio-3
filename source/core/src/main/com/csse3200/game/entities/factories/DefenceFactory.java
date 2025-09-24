@@ -84,6 +84,14 @@ public class DefenceFactory {
     return defender;
   }
 
+  /**
+   * Creates a fully configured Army Guy defence entity.
+   *
+   * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
+   * file - Animation rendering and animation controller
+   *
+   * @return entity representing the armyguy
+   */
   public static Entity createArmyGuy() {
     BaseDefenderConfig config = getConfigService().getDefenderConfig("armyguy");
     Entity defender = createBaseDefender();
