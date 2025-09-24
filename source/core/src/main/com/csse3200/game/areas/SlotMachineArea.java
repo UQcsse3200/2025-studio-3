@@ -14,7 +14,9 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class SlotMachineArea extends LevelGameArea {
   private static final String[] SLOT_TEXTURE_ATLASES = {
-    "images/entities/slotmachine/slot_frame.atlas", "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/slotmachine/slot_frame.atlas",
+    "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/slotmachine/pie_filled.atlas",
   };
   private static final String[] SLOT_TEXTURES = {
     "images/entities/slotmachine/slot_reels_background.png",

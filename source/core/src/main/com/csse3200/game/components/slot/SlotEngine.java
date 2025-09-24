@@ -186,7 +186,7 @@ public class SlotEngine {
     private int initialSpins = 5;
 
     /** Auto-refill interval in seconds, default 5. */
-    private int refillPeriodSeconds = 5;
+    private int refillPeriodSeconds = 10;
 
     /** Maximum cap of credits; <=0 means no cap. */
     private int maxSpins = 0;
