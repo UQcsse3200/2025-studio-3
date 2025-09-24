@@ -12,7 +12,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
-  private static float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+  private float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
   private final ProjectileFactory.ProjectileType projectileType;
 
@@ -35,9 +35,9 @@ public class AttackTask extends TargetDetectionTasks {
     super.start();
 
     if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
-      FIRE_COOLDOWN = 0.95f / 4f; // bullets fire 4 times as fast
+      fireCooldown = 0.95f / 4f; // bullets fire 4 times as fast
     } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
-      FIRE_COOLDOWN = 0.95f; // normal fire rate for slingshot
+      fireCooldown = 0.95f; // normal fire rate for slingshot
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
@@ -55,7 +55,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (getDistanceToTarget() <= attackRange) {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
-      if (timeSinceLastFire >= FIRE_COOLDOWN) {
+      if (timeSinceLastFire >= fireCooldown) {
         // tell listeners (LevelGameArea) to spawn a projectile
         owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
         timeSinceLastFire = 0f;
