@@ -21,6 +21,9 @@ public class ProjectileFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 
+  public enum ProjectileType {
+    BULLET, SLINGSHOT
+  }
   /**
    * Creates a sling shot projectile entity.
    *

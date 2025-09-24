@@ -1,6 +1,7 @@
 package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.services.ServiceLocator;
 
 // TODO : integrate with attack system team
@@ -13,14 +14,14 @@ public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
   private static float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
-  private final String projectileType;
+  private final ProjectileFactory.ProjectileType projectileType;
 
   /**
    * Creates an attack task
    *
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(float attackRange, String projectileType) {
+  public AttackTask(float attackRange, ProjectileFactory.ProjectileType projectileType) {
     super(attackRange);
     this.projectileType = projectileType;
   }
@@ -33,9 +34,9 @@ public class AttackTask extends TargetDetectionTasks {
   public void start() {
     super.start();
 
-    if (projectileType == "bullet") {
+    if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
       FIRE_COOLDOWN = 0.95f / 4f; // bullets fire 4 times as fast
-    } else if (projectileType == "slingshot") {
+    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
       FIRE_COOLDOWN = 0.95f; // normal fire rate for slingshot
     }
 

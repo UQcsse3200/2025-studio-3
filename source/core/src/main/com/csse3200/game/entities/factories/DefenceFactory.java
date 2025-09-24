@@ -48,7 +48,7 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), "slingshot"))
+            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT))
             .addTask(new IdleTask(config.getRange()));
 
     defender.addComponent(enemyDetectionTasks);
@@ -100,7 +100,7 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), "bullet"))
+            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
             .addTask(new IdleTask(config.getRange()));
 
     defender.addComponent(enemyDetectionTasks);

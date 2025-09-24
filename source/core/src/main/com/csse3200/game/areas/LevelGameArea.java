@@ -398,13 +398,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos, String projectileType) {
+  public void spawnProjectile(Vector2 spawnPos, ProjectileFactory.ProjectileType projectileType) {
     Entity projectile;
 
-    if (Objects.equals(projectileType, "slingshot")) {
+    if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
       projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
       projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    } else { // if (Objects.equals(projectileType, "bullet")) {
+    } else { // bullet
       projectile = ProjectileFactory.createBullet(10); // damage value
       projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     }
@@ -600,13 +600,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             () -> {
-              String projectileType = "slingshot";
+              ProjectileFactory.ProjectileType projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               DefenderStatsComponent entityType =
                   newEntity.getComponent(DefenderStatsComponent.class);
               if (entityType.getType() == 1) {
-                projectileType = "slingshot";
+                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               } else if (entityType.getType() == 2) {
-                projectileType = "bullet";
+                projectileType = ProjectileFactory.ProjectileType.BULLET;
               }
               spawnProjectile(entityPos, projectileType);
               newEntity.getEvents().trigger("attackStart");
