@@ -22,8 +22,10 @@ public class ProjectileFactory {
   }
 
   public enum ProjectileType {
-    BULLET, SLINGSHOT
+    BULLET,
+    SLINGSHOT
   }
+
   /**
    * Creates a sling shot projectile entity.
    *

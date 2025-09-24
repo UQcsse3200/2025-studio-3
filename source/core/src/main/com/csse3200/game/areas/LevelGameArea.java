@@ -253,13 +253,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             entity.getPosition());
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
-    entity
-        .getEvents()
-        .addListener(
-            "defenceDeath",
-            () -> {
-              scrapSpawner.dispose();
-            });
+    entity.getEvents().addListener("defenceDeath", scrapSpawner::dispose);
 
     spawnEntity(scrapSpawner);
   }
@@ -600,7 +594,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             () -> {
-              ProjectileFactory.ProjectileType projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
+              ProjectileFactory.ProjectileType projectileType =
+                  ProjectileFactory.ProjectileType.SLINGSHOT;
               DefenderStatsComponent entityType =
                   newEntity.getComponent(DefenderStatsComponent.class);
               if (entityType.getType() == 1) {
