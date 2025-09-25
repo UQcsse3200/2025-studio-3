@@ -10,6 +10,7 @@ import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -48,8 +49,8 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT))
-            .addTask(new IdleTask(config.getRange()));
+            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT, TargetDetectionTasks.AttackDirection.RIGHT))
+            .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.RIGHT));
 
     defender.addComponent(enemyDetectionTasks);
     // animation component
@@ -100,8 +101,8 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
             new AITaskComponent()
-                    .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT))
-                    .addTask(new IdleTask(config.getRange()));
+                    .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT, TargetDetectionTasks.AttackDirection.LEFT))
+                    .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
 
     defender.addComponent(enemyDetectionTasks);
     // animation component
@@ -153,8 +154,8 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
-            .addTask(new IdleTask(config.getRange()));
+            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET, TargetDetectionTasks.AttackDirection.RIGHT))
+            .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
 
     defender.addComponent(enemyDetectionTasks);
     // animation component

@@ -30,9 +30,9 @@
         "critChance": 1
       },
       "shadow" : {
-        "health": 10,
+        "health": 20,
         "rangeType": 3,
-        "range": 10,
+        "range": 250,
         "name": "Shadow",
         "description": "",
         "assetPath": "images/entities/defences/shadow_idle1.png",

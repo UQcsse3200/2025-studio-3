@@ -19,10 +19,11 @@ public class AttackTask extends TargetDetectionTasks {
   /**
    * Creates an attack task
    *
+   * @param direction the directiion enemies are detected from
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(float attackRange, ProjectileFactory.ProjectileType projectileType) {
-    super(attackRange);
+  public AttackTask(float attackRange, ProjectileFactory.ProjectileType projectileType, AttackDirection direction) {
+    super(attackRange, direction);
     this.projectileType = projectileType;
   }
 
@@ -41,7 +42,7 @@ public class AttackTask extends TargetDetectionTasks {
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
-    owner.getEntity().getEvents().trigger("fire");
+    owner.getEntity().getEvents().trigger("fire", direction);
   }
 
   /** Updates the task each game frame */
@@ -57,7 +58,7 @@ public class AttackTask extends TargetDetectionTasks {
 
       if (timeSinceLastFire >= fireCooldown) {
         // tell listeners (LevelGameArea) to spawn a projectile
-        owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
+        owner.getEntity().getEvents().trigger("fire", direction); // <-- this is the key bit
         timeSinceLastFire = 0f;
       }
     }
