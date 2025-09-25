@@ -11,7 +11,8 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.projectiles.MoveRightComponent;
+import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
@@ -161,6 +162,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
           unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createArmyGuy);
+        }
+      }
+      if (defenceKey.equals("shadow")) {
+        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
+        if (defenderConfig != null) {
+          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createShadow);
         }
       }
       if (defenceKey.equals("furnace")) {
@@ -392,22 +399,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos, ProjectileFactory.ProjectileType projectileType) {
+  public void spawnProjectile(Vector2 spawnPos, ProjectileFactory.ProjectileType projectileType, TargetDetectionTasks.AttackDirection direction) {
     Entity projectile;
 
     if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
       projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
       projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    } else { // bullet
+    } else if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
       projectile = ProjectileFactory.createBullet(10); // damage value
       projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    } else { // shock
+      projectile = ProjectileFactory.createShock(8); // damage value
+      projectile.setPosition(spawnPos.x + tileSize / 2f - 5f, spawnPos.y + tileSize / 2f - 13f);
     }
 
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
-    projectile.addComponent(new MoveRightComponent()); // pass velocity
+    projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
   }
@@ -593,17 +603,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .getEvents()
         .addListener(
             "fire",
-            () -> {
+            (TargetDetectionTasks.AttackDirection direction) -> {
               ProjectileFactory.ProjectileType projectileType =
                   ProjectileFactory.ProjectileType.SLINGSHOT;
+
               DefenderStatsComponent entityType =
                   newEntity.getComponent(DefenderStatsComponent.class);
+
               if (entityType.getType() == 1) {
                 projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               } else if (entityType.getType() == 2) {
                 projectileType = ProjectileFactory.ProjectileType.BULLET;
+              } else if (entityType.getType() == 3) {
+                projectileType = ProjectileFactory.ProjectileType.SHOCK;
+              } else { // default
+                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               }
-              spawnProjectile(entityPos, projectileType);
+
+              spawnProjectile(entityPos, projectileType, direction);
               newEntity.getEvents().trigger("attackStart");
               newEntity
                   .getEvents()
