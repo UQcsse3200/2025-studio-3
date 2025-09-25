@@ -5,7 +5,7 @@ filter: Linear, Linear
 repeat: none
 pma: false
 default
-  bounds: 1000, 0, 500, 500
+  bounds: 1500, 0, 500, 500
 attack
   bounds: 0, 0, 500, 500
 attack

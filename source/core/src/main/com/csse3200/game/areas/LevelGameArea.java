@@ -410,7 +410,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     } else { // shock
       projectile = ProjectileFactory.createShock(8); // damage value
-      projectile.setPosition(spawnPos.x + tileSize / 2f - 2f, spawnPos.y + tileSize / 2f - 13f);
+      projectile.setPosition(spawnPos.x + tileSize / 2f - 5f, spawnPos.y + tileSize / 2f - 13f);
     }
 
     // Scale the projectile so it’s more visible
