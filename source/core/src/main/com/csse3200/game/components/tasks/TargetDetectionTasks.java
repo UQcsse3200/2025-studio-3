@@ -126,17 +126,13 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
     for (Entity target : targets) {
       Vector2 targetPos = target.getCenterPosition();
+      boolean skip = false;
 
-      if (direction == AttackDirection.RIGHT) {
-        // Skip targets that are not directly to the right of the defense - OpenAI was used to only
+        // Skip targets that are not directly to the DIRECTION of the defense - OpenAI was used to only
         // consider targets to the right of defender
-        if (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1) {
-          continue;
-        }
-      } else {
-        if (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 1) {
-          continue;
-        }
+      if (direction == AttackDirection.RIGHT && (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1)
+        || direction == AttackDirection.LEFT && (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 1)) {
+        continue;
       }
 
       float distance = from.dst(targetPos);

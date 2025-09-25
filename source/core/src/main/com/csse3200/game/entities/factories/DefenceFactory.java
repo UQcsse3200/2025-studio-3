@@ -33,6 +33,9 @@ public class DefenceFactory {
   private static ConfigService getConfigService() {
     return ServiceLocator.getConfigService();
   }
+  private static final String ATTACK = "attack";
+  private static final String IDLE = "idle";
+
 
   /**
    * Creates a fully configured Sling Shooter defence entity.
@@ -65,8 +68,8 @@ public class DefenceFactory {
                 .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    animator.addAnimation(IDLE, 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation(ATTACK, 0.04f, Animation.PlayMode.LOOP);
 
     // attach components to the entity
     defender
@@ -121,8 +124,8 @@ public class DefenceFactory {
                 .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    animator.addAnimation(IDLE, 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation(ATTACK, 0.04f, Animation.PlayMode.LOOP);
 
     // attach components to the entity
     defender
@@ -177,8 +180,8 @@ public class DefenceFactory {
                 .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    animator.addAnimation(IDLE, 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation(ATTACK, 0.04f, Animation.PlayMode.LOOP);
 
     // attach components to the entity
     defender
@@ -215,7 +218,7 @@ public class DefenceFactory {
                 .getAsset("images/entities/defences/forge.atlas", TextureAtlas.class));
 
     // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation(IDLE, 0.1f, Animation.PlayMode.LOOP);
 
     // attach components to the entity
     generator

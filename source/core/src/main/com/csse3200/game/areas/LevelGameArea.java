@@ -405,17 +405,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       TargetDetectionTasks.AttackDirection direction) {
     Entity projectile;
 
-    if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
-      projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-      projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    } else if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
-      projectile = ProjectileFactory.createBullet(10); // damage value
-      projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
-    } else { // shock
-      projectile = ProjectileFactory.createShock(8); // damage value
-      projectile.setPosition(spawnPos.x + tileSize / 2f - 5f, spawnPos.y + tileSize / 2f - 13f);
+    switch (projectileType) {
+      case SLINGSHOT -> {
+        projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+        projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+      }
+      case BULLET -> {
+        projectile = ProjectileFactory.createBullet(10); // damage value
+        projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+      }
+      case SHOCK -> {
+        projectile = ProjectileFactory.createShock(8); // damage value
+        projectile.setPosition(spawnPos.x + tileSize / 2f - 5f, spawnPos.y + tileSize / 2f - 13f);
+      }
+      default -> {
+        projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+        projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+      }
     }
-
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
