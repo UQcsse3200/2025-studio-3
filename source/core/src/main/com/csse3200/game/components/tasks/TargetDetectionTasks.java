@@ -28,7 +28,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   }
 
   /**
-   * Creates a TargetDirection task to detect an enemy entity in the specified direction and attack range
+   * Creates a TargetDirection task to detect an enemy entity in the specified direction and attack
+   * range
+   *
    * @param attackRange, the range an enemey is detected from
    * @param direction the attack direction, left or right
    */

@@ -50,7 +50,11 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT, TargetDetectionTasks.AttackDirection.RIGHT))
+            .addTask(
+                new AttackTask(
+                    config.getRange(),
+                    ProjectileFactory.ProjectileType.SLINGSHOT,
+                    TargetDetectionTasks.AttackDirection.RIGHT))
             .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.RIGHT));
 
     defender.addComponent(enemyDetectionTasks);
@@ -101,16 +105,20 @@ public class DefenceFactory {
     // start with a base defender (physics + collider)
 
     AITaskComponent enemyDetectionTasks =
-            new AITaskComponent()
-                    .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT, TargetDetectionTasks.AttackDirection.LEFT))
-                    .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
+        new AITaskComponent()
+            .addTask(
+                new AttackTask(
+                    config.getRange(),
+                    ProjectileFactory.ProjectileType.SLINGSHOT,
+                    TargetDetectionTasks.AttackDirection.LEFT))
+            .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
 
     defender.addComponent(enemyDetectionTasks);
     // animation component
     AnimationRenderComponent animator =
-            new AnimationRenderComponent(
-                    ServiceLocator.getResourceService()
-                            .getAsset(config.getAtlasPath(), TextureAtlas.class));
+        new AnimationRenderComponent(
+            ServiceLocator.getResourceService()
+                .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
@@ -118,17 +126,17 @@ public class DefenceFactory {
 
     // attach components to the entity
     defender
-            .addComponent(
-                    new DefenderStatsComponent(
-                            config.getHealth(),
-                            config.getAttack(),
-                            config.getRangeType(),
-                            config.getRange(),
-                            config.getAttackState(),
-                            config.getAttackSpeed(),
-                            config.getCritChance()))
-            .addComponent(animator)
-            .addComponent(new DefenceAnimationController());
+        .addComponent(
+            new DefenderStatsComponent(
+                config.getHealth(),
+                config.getAttack(),
+                config.getRangeType(),
+                config.getRange(),
+                config.getAttackState(),
+                config.getAttackSpeed(),
+                config.getCritChance()))
+        .addComponent(animator)
+        .addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
     animator.scaleEntity();
@@ -137,7 +145,6 @@ public class DefenceFactory {
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
     return defender;
   }
-
 
   /**
    * Creates a fully configured Army Guy defence entity.
@@ -155,7 +162,11 @@ public class DefenceFactory {
 
     AITaskComponent enemyDetectionTasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET, TargetDetectionTasks.AttackDirection.RIGHT))
+            .addTask(
+                new AttackTask(
+                    config.getRange(),
+                    ProjectileFactory.ProjectileType.BULLET,
+                    TargetDetectionTasks.AttackDirection.RIGHT))
             .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
 
     defender.addComponent(enemyDetectionTasks);
@@ -233,8 +244,7 @@ public class DefenceFactory {
     // start with a base defender (physics + collider)
     Entity wall = createBaseDefender();
 
-    wall
-        .addComponent(
+    wall.addComponent(
             new DefenderStatsComponent(
                 config.getHealth(),
                 config.getAttack(),

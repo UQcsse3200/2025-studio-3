@@ -399,7 +399,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos, ProjectileFactory.ProjectileType projectileType, TargetDetectionTasks.AttackDirection direction) {
+  public void spawnProjectile(
+      Vector2 spawnPos,
+      ProjectileFactory.ProjectileType projectileType,
+      TargetDetectionTasks.AttackDirection direction) {
     Entity projectile;
 
     if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {

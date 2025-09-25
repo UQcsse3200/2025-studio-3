@@ -22,7 +22,10 @@ public class AttackTask extends TargetDetectionTasks {
    * @param direction the directiion enemies are detected from
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(float attackRange, ProjectileFactory.ProjectileType projectileType, AttackDirection direction) {
+  public AttackTask(
+      float attackRange,
+      ProjectileFactory.ProjectileType projectileType,
+      AttackDirection direction) {
     super(attackRange, direction);
     this.projectileType = projectileType;
   }
@@ -37,7 +40,8 @@ public class AttackTask extends TargetDetectionTasks {
 
     if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
       fireCooldown = 0.95f / 4f; // bullets fire 4 times as fast
-    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT || projectileType == ProjectileFactory.ProjectileType.SHOCK) {
+    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT
+        || projectileType == ProjectileFactory.ProjectileType.SHOCK) {
       fireCooldown = 0.95f; // normal fire rate
     }
 

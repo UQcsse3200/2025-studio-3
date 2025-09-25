@@ -11,7 +11,8 @@ public class Arsenal {
   /** Constructor for the Arsenal class. */
   public Arsenal() {
     defences =
-        new ArrayList<>(Arrays.asList("slingshooter", "furnace", "armyguy", "shadow")); // Default defences
+        new ArrayList<>(
+            Arrays.asList("slingshooter", "furnace", "armyguy", "shadow")); // Default defences
   }
 
   /**
