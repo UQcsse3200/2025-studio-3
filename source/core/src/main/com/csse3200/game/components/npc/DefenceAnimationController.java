@@ -28,6 +28,6 @@ public class DefenceAnimationController extends Component {
   }
 
   void animateHit() {
-        animator.startAnimation("hit");
-    }
+    animator.startAnimation("hit");
+  }
 }

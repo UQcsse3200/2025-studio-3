@@ -5,21 +5,18 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
-import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -36,80 +33,81 @@ public class DefenceFactory {
   }
 
   public enum UnitType {
-      SLINGSHOOTER,
-      SOLDIER,
-      FORGE
+    SLINGSHOOTER,
+    SOLDIER,
+    FORGE
   }
 
   public static Entity createDefenceUnit(UnitType type) {
-      switch (type) {
-          case SLINGSHOOTER:
-              return createUnitFromConfig("slingshooter");
-          case SOLDIER:
-              return createUnitFromConfig("armyguy");
-          case FORGE:
-              return createUnitFromConfig("furnace");
-      }
-      return null;
+    switch (type) {
+      case SLINGSHOOTER:
+        return createUnitFromConfig("slingshooter");
+      case SOLDIER:
+        return createUnitFromConfig("armyguy");
+      case FORGE:
+        return createUnitFromConfig("furnace");
+    }
+    return null;
   }
 
   public static Entity createUnitFromConfig(String key) {
-      BaseDefenderConfig config = getConfigService().getDefenderConfig(key);
-      // start with a base defender (physics + collider)
-      Entity defender = createBaseDefender();
+    BaseDefenderConfig config = getConfigService().getDefenderConfig(key);
+    // start with a base defender (physics + collider)
+    Entity defender = createBaseDefender();
 
-      if (key != "furnace") {
-          AITaskComponent tasks = getTaskComponent(config);
-          defender.addComponent(tasks);
-      }
+    if (key != "furnace") {
+      AITaskComponent tasks = getTaskComponent(config);
+      defender.addComponent(tasks);
+    }
 
-      AnimationRenderComponent animator = getAnimationComponent(config);
-      DefenderStatsComponent stats = getUnitStats(config);
+    AnimationRenderComponent animator = getAnimationComponent(config);
+    DefenderStatsComponent stats = getUnitStats(config);
 
-      // attach components to the entity
-      defender
-              .addComponent(stats)
-              .addComponent(animator)
-              .addComponent(new DefenceAnimationController());
+    // attach components to the entity
+    defender
+        .addComponent(stats)
+        .addComponent(animator)
+        .addComponent(new DefenceAnimationController());
 
-      // Scale to tilesize
-      animator.scaleEntity();
-      return defender;
+    // Scale to tilesize
+    animator.scaleEntity();
+    return defender;
   }
 
   public static DefenderStatsComponent getUnitStats(BaseDefenderConfig config) {
-      DefenderStatsComponent stats = new DefenderStatsComponent(
-              config.getHealth(),
-              config.getAttack(),
-              config.getRangeType(),
-              config.getRange(),
-              config.getAttackState(),
-              config.getAttackSpeed(),
-              config.getCritChance());
+    DefenderStatsComponent stats =
+        new DefenderStatsComponent(
+            config.getHealth(),
+            config.getAttack(),
+            config.getRangeType(),
+            config.getRange(),
+            config.getAttackState(),
+            config.getAttackSpeed(),
+            config.getCritChance());
 
-      return stats;
+    return stats;
   }
 
   public static AITaskComponent getTaskComponent(BaseDefenderConfig config) {
-      AITaskComponent tasks =
-              new AITaskComponent()
-                      .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
-                      .addTask(new IdleTask(config.getRange()));
+    AITaskComponent tasks =
+        new AITaskComponent()
+            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
+            .addTask(new IdleTask(config.getRange()));
 
-      return tasks;
+    return tasks;
   }
 
   public static AnimationRenderComponent getAnimationComponent(BaseDefenderConfig config) {
-      AnimationRenderComponent animator =
-              new AnimationRenderComponent(
-                      ServiceLocator.getResourceService()
-                              .getAsset(config.getAtlasPath(), TextureAtlas.class));
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(
+            ServiceLocator.getResourceService()
+                .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
-      // define animations for idle and attack states
-      animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-      animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    // define animations for idle and attack states
+    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
 
-      return animator;
+    return animator;
   }
 
   /**
@@ -118,23 +116,20 @@ public class DefenceFactory {
    * @return the wall entity to be placed
    */
   public static Entity createWall() {
-      BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
-      // start with a base defender (physics + collider)
-      Entity wall = createBaseDefender();
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
+    // start with a base defender (physics + collider)
+    Entity wall = createBaseDefender();
 
-      // animation component
-      AnimationRenderComponent animator = getAnimationComponent(config);
-      DefenderStatsComponent stats = getUnitStats(config);
+    // animation component
+    AnimationRenderComponent animator = getAnimationComponent(config);
+    DefenderStatsComponent stats = getUnitStats(config);
 
-      // attach components to the entity
-      wall
-              .addComponent(stats)
-              .addComponent(animator)
-              .addComponent(new DefenceAnimationController());
+    // attach components to the entity
+    wall.addComponent(stats).addComponent(animator).addComponent(new DefenceAnimationController());
 
-      // Scale to tilesize
-      animator.scaleEntity();
-      return wall;
+    // Scale to tilesize
+    animator.scaleEntity();
+    return wall;
   }
 
   /**

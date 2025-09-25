@@ -154,22 +154,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (defenceKey.equals("slingshooter")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(),
-                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SLINGSHOOTER));
+          unitList.put(
+              defenderConfig.getAssetPath(),
+              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SLINGSHOOTER));
         }
       }
       if (defenceKey.equals("armyguy")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(),
-                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SOLDIER));
+          unitList.put(
+              defenderConfig.getAssetPath(),
+              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SOLDIER));
         }
       }
       if (defenceKey.equals("furnace")) {
         BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
         if (generatorConfig != null) {
-          unitList.put(generatorConfig.getAssetPath(),
-                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.FORGE));
+          unitList.put(
+              generatorConfig.getAssetPath(),
+              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.FORGE));
         }
       }
     }
@@ -573,8 +576,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     spawnEntity(newEntity);
-      // trigger the animation - this will change with more entities
-      newEntity.getEvents().trigger("idleStart");
+    // trigger the animation - this will change with more entities
+    newEntity.getEvents().trigger("idleStart");
 
     // Ensure grid slot frees when unit leaves
     Runnable clearTile =
