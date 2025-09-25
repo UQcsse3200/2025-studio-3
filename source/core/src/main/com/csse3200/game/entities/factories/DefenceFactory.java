@@ -19,6 +19,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -113,6 +114,32 @@ public class DefenceFactory {
     // scale the entity to match animation sprite dimensions
     generator.getComponent(AnimationRenderComponent.class).scaleEntity();
     return generator;
+  }
+
+  /**
+   * Creates a wall entity with entity collision
+   *
+   * @return the wall entity to be placed
+   */
+  public static Entity createWall() {
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
+
+    // start with a base defender (physics + collider)
+    Entity wall = createBaseDefender();
+
+    wall
+        .addComponent(
+            new DefenderStatsComponent(
+                config.getHealth(),
+                config.getAttack(),
+                config.getRangeType(),
+                config.getRange(),
+                config.getAttackState(),
+                config.getAttackSpeed(),
+                config.getCritChance()))
+        .addComponent(new TextureRenderComponent(config.getAssetPath()));
+
+    return wall;
   }
 
   /**

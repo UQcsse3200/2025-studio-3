@@ -14,6 +14,15 @@
         "attack": 1,
         "attackSpeed": 3,
         "critChance": 1
+      },
+      "wall": {
+        "health": 30,
+        "range": 0,
+        "name": "Wall",
+        "assetPath": "images/entities/defences/wall.png",
+        "attack": 0,
+        "attackSpeed": 0,
+        "critChance": 0
       }
     },
     "generators": {
