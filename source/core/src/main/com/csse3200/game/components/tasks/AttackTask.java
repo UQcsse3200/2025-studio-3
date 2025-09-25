@@ -37,8 +37,8 @@ public class AttackTask extends TargetDetectionTasks {
 
     if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
       fireCooldown = 0.95f / 4f; // bullets fire 4 times as fast
-    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
-      fireCooldown = 0.95f; // normal fire rate for slingshot
+    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT || projectileType == ProjectileFactory.ProjectileType.SHOCK) {
+      fireCooldown = 0.95f; // normal fire rate
     }
 
     this.owner.getEntity().getEvents().trigger("attackStart");

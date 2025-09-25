@@ -405,9 +405,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
       projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
       projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-    } else { // bullet
+    } else if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
       projectile = ProjectileFactory.createBullet(10); // damage value
       projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    } else { // shock
+      projectile = ProjectileFactory.createShock(8); // damage value
+      projectile.setPosition(spawnPos.x + tileSize / 2f - 2f, spawnPos.y + tileSize / 2f - 13f);
     }
 
     // Scale the projectile so it’s more visible
@@ -611,6 +614,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               } else if (entityType.getType() == 2) {
                 projectileType = ProjectileFactory.ProjectileType.BULLET;
+              } else if (entityType.getType() == 3) {
+                projectileType = ProjectileFactory.ProjectileType.SHOCK;
+              } else { // default
+                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
               }
 
               spawnProjectile(entityPos, projectileType, direction);
