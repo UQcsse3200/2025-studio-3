@@ -13,6 +13,8 @@ import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapPlayerComponent;
 import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
+import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
+
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ProfileService;
@@ -68,7 +70,8 @@ public class WorldMapScreen extends BaseScreen {
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new WorldMapZoomInputComponent(this, 5));
     return ui;
   }
 
@@ -236,6 +239,19 @@ public class WorldMapScreen extends BaseScreen {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         logger.info("Zoom IN → {}", ZOOM_STEPS[zoomIdx]);
       }
+    }
+  }
+
+  /** Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out). */
+  public void stepZoom(int steps) {
+    int newIdx = MathUtils.clamp(zoomIdx + steps, 0, ZOOM_STEPS.length - 1);
+    if (newIdx == zoomIdx) {
+      return;
+    }
+    zoomIdx = newIdx;
+    var camera = renderer.getCamera();
+    if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera oc) {
+      oc.zoom = ZOOM_STEPS[zoomIdx];
     }
   }
 
