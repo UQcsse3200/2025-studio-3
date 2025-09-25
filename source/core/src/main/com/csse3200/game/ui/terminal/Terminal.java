@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.csse3200.game.ui.terminal.commands.InfiniteMoney;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +30,7 @@ public class Terminal extends Component {
     this.commands = commands;
 
     addCommand("debug", new DebugCommand());
+    addCommand("infiniteMoney", new InfiniteMoney());
   }
 
   /**
