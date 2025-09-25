@@ -150,47 +150,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
-    for (String defenceKey : profile.getArsenal().getKeys()) {
-      logger.info("putting {} into the inventory...", defenceKey);
-      BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
-      unitList.put(
-          defenderConfig.getAssetPath(), () -> DefenceFactory.createDefenceUnit(defenceKey));
+    for (String defenceKey : profile.getArsenal().getDefenders()) {
+      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
+      unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
     }
     /*
-      if (defenceKey.equals("slingshooter")) {
-        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
-        if (defenderConfig != null) {
-          unitList.put(
-              defenderConfig.getAssetPath(),
-              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SLINGSHOOTER));
-        }
-      }
-      if (defenceKey.equals("armyguy")) {
-        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
-        if (defenderConfig != null) {
-          unitList.put(
-              defenderConfig.getAssetPath(),
-              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SOLDIER));
-        }
-      }
-      if (defenceKey.equals("shadow")) {
-        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
-        if (defenderConfig != null) {
-          unitList.put(
-              defenderConfig.getAssetPath(),
-              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SHADOW));
-        }
-      }
-      if (defenceKey.equals("furnace")) {
-        BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
-        if (generatorConfig != null) {
-          unitList.put(
-              generatorConfig.getAssetPath(),
-              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.FORGE));
-        }
-      }
+    for (String generatorKey : profile.getArsenal().getGenerators()) {
+      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
+      unitList.put(
+          config.getAssetPath(), () -> DefenceFactory.createGeneratorUnit(config));
     }
-
      */
 
     Inventory inventory = profile.getInventory();

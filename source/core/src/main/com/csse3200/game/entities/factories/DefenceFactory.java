@@ -22,6 +22,7 @@ import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 // TODO - provide documentation for refactored functions
+// TODO - make a different factory for generator entities altogether
 
 /**
  * Factory class for creating defence entities (e.g., sling shooters). This class should not be
@@ -36,16 +37,12 @@ public class DefenceFactory {
     return ServiceLocator.getConfigService();
   }
 
-  public static Entity createDefenceUnit(String key) {
-    BaseDefenderConfig config = getConfigService().getDefenderConfig(key);
+  public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
 
-    if (key != "furnace") {
-      AITaskComponent tasks = getTaskComponent(config);
-      defender.addComponent(tasks);
-    }
-
+    AITaskComponent tasks = getTaskComponent(config);
+    defender.addComponent(tasks);
     // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
     // stats component
@@ -117,7 +114,6 @@ public class DefenceFactory {
     AnimationRenderComponent animator = getAnimationComponent(config);
     // stats component
     DefenderStatsComponent stats = getUnitStats(config);
-
     // attach components to the entity
     wall.addComponent(stats).addComponent(animator).addComponent(new DefenceAnimationController());
 

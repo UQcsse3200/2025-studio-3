@@ -7,12 +7,13 @@ import java.util.List;
 /** Arsenal class to manage the player's unlocked defences. */
 public class Arsenal {
   private final List<String> defences;
+  private final List<String> generators;
 
   /** Constructor for the Arsenal class. */
   public Arsenal() {
     defences =
-        new ArrayList<>(
-            Arrays.asList("slingshooter", "furnace", "armyguy", "shadow")); // Default defences
+        new ArrayList<>(Arrays.asList("slingshooter", "armyguy", "shadow")); // Default defences
+    generators = new ArrayList<>(Arrays.asList("furnace"));
   }
 
   /**
@@ -38,8 +39,17 @@ public class Arsenal {
    *
    * @return The list of keys of the defences in the arsenal.
    */
-  public List<String> getKeys() {
+  public List<String> getDefenders() {
     return defences;
+  }
+
+  /**
+   * Gets the list of generators in the arsenal.
+   *
+   * @return The list of keys of the generators in the arsenal.
+   */
+  public List<String> getGenerators() {
+    return generators;
   }
 
   /**
