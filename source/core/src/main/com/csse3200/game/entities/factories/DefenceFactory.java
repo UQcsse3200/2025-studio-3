@@ -33,9 +33,9 @@ public class DefenceFactory {
   private static ConfigService getConfigService() {
     return ServiceLocator.getConfigService();
   }
+
   private static final String ATTACK = "attack";
   private static final String IDLE = "idle";
-
 
   /**
    * Creates a fully configured Sling Shooter defence entity.
