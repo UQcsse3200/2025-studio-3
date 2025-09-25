@@ -18,9 +18,7 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Settings menu display and logic.
- */
+/** Settings menu display and logic. */
 public class SettingsMenuDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SettingsMenuDisplay.class);
   private static final String PERCENTAGE_FORMAT = "%.0f%%";
@@ -28,15 +26,15 @@ public class SettingsMenuDisplay extends UIComponent {
 
   private Table rootTable;
   private Table currentMenu;
-  
+
   // Display Settings Components
   private SelectBox<String> displayModeSelect;
   private TextField fpsText;
   private CheckBox vsyncCheck;
-  
+
   // Game Settings Components
   private SelectBox<String> difficultySelect;
-  
+
   // Audio Settings Components
   private Slider masterVolumeSlider;
   private Slider musicVolumeSlider;
@@ -72,317 +70,331 @@ public class SettingsMenuDisplay extends UIComponent {
     if (currentMenu != null) {
       rootTable.removeActor(currentMenu);
     }
-    
+
     currentMenu = new Table();
-    
+
     // Create main menu buttons
     TextButton displayBtn = ButtonFactory.createButton("Display Settings");
     TextButton gameBtn = ButtonFactory.createButton("Game Settings");
     TextButton audioBtn = ButtonFactory.createButton("Audio Settings");
-    
-    displayBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showDisplaySettings();
-      }
-    });
-    
-    gameBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showGameSettings();
-      }
-    });
-    
-    audioBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showAudioSettings();
-      }
-    });
-    
+
+    displayBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showDisplaySettings();
+          }
+        });
+
+    gameBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showGameSettings();
+          }
+        });
+
+    audioBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showAudioSettings();
+          }
+        });
+
     currentMenu.add(displayBtn).size(200f, 50f).padBottom(20f);
     currentMenu.row();
     currentMenu.add(gameBtn).size(200f, 50f).padBottom(20f);
     currentMenu.row();
     currentMenu.add(audioBtn).size(200f, 50f);
-    
+
     rootTable.add(currentMenu).expandX().expandY();
   }
-  
+
   private void showDisplaySettings() {
     if (currentMenu != null) {
       rootTable.removeActor(currentMenu);
     }
-    
+
     currentMenu = new Table();
-    
+
     // Get current settings
     Settings settings = new Settings();
-    
+
     // Create components
     Label displayModeLabel = new Label("Display Mode:", skin);
     displayModeSelect = new SelectBox<>(skin);
     displayModeSelect.setItems("Windowed", "Fullscreen", "Borderless");
     displayModeSelect.setSelected(settings.getCurrentMode().toString());
     whiten(displayModeLabel);
-    
+
     Label resolutionLabel = new Label("Resolution:", skin);
     SelectBox<String> resolutionSelect = new SelectBox<>(skin);
     resolutionSelect.setItems("1920x1080", "1600x900", "1366x768", "1280x720");
     whiten(resolutionLabel);
-    
+
     Label fpsLabel = new Label("Max FPS:", skin);
     fpsText = new TextField(Integer.toString(settings.getFps()), skin);
     whiten(fpsLabel);
-    
+
     Label uiScaleLabel = new Label("UI Scale:", skin);
     SelectBox<String> uiScaleSelect = new SelectBox<>(skin);
     uiScaleSelect.setItems("Small", "Medium", "Large");
     uiScaleSelect.setSelected(settings.getCurrentUIScale().toString());
     whiten(uiScaleLabel);
-    
+
     Label qualityLabel = new Label("Quality:", skin);
     SelectBox<String> qualitySelect = new SelectBox<>(skin);
     qualitySelect.setItems("Low", "High");
     qualitySelect.setSelected(settings.getQuality().toString());
     whiten(qualityLabel);
-    
+
     Label vsyncLabel = new Label("VSync:", skin);
     vsyncCheck = new CheckBox("", skin);
     vsyncCheck.setChecked(settings.isVsync());
     whiten(vsyncLabel);
-    
+
     // Back button
     TextButton backBtn = ButtonFactory.createButton("Back");
-    backBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showMainMenu();
-      }
-    });
-    
+    backBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showMainMenu();
+          }
+        });
+
     // Layout
     currentMenu.add(displayModeLabel).right().padRight(15f);
     currentMenu.add(displayModeSelect).left().width(150f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(resolutionLabel).right().padRight(15f);
     currentMenu.add(resolutionSelect).left().width(150f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(fpsLabel).right().padRight(15f);
     currentMenu.add(fpsText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(uiScaleLabel).right().padRight(15f);
     currentMenu.add(uiScaleSelect).left().width(150f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(qualityLabel).right().padRight(15f);
     currentMenu.add(qualitySelect).left().width(150f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(vsyncLabel).right().padRight(15f);
     currentMenu.add(vsyncCheck).left();
     currentMenu.row().padTop(20f);
-    
+
     currentMenu.add(backBtn).size(100f, 40f);
-    
+
     rootTable.add(currentMenu).expandX().expandY();
   }
-  
+
   private void showGameSettings() {
     if (currentMenu != null) {
       rootTable.removeActor(currentMenu);
     }
-    
+
     currentMenu = new Table();
-    
+
     // Get current settings
     Settings settings = new Settings();
-    
+
     // Create components
     Label pauseLabel = new Label("Pause Key:", skin);
     TextField pauseKeyText = new TextField(Input.Keys.toString(settings.getPauseButton()), skin);
     whiten(pauseLabel);
-    
+
     Label skipLabel = new Label("Skip Key:", skin);
     TextField skipKeyText = new TextField(Input.Keys.toString(settings.getSkipButton()), skin);
     whiten(skipLabel);
-    
+
     Label interactionLabel = new Label("Interaction Key:", skin);
-    TextField interactionKeyText = new TextField(Input.Keys.toString(settings.getInteractionButton()), skin);
+    TextField interactionKeyText =
+        new TextField(Input.Keys.toString(settings.getInteractionButton()), skin);
     whiten(interactionLabel);
-    
+
     Label upLabel = new Label("Up Key:", skin);
     TextField upKeyText = new TextField(Input.Keys.toString(settings.getUpButton()), skin);
     whiten(upLabel);
-    
+
     Label downLabel = new Label("Down Key:", skin);
     TextField downKeyText = new TextField(Input.Keys.toString(settings.getDownButton()), skin);
     whiten(downLabel);
-    
+
     Label leftLabel = new Label("Left Key:", skin);
     TextField leftKeyText = new TextField(Input.Keys.toString(settings.getLeftButton()), skin);
     whiten(leftLabel);
-    
+
     Label rightLabel = new Label("Right Key:", skin);
     TextField rightKeyText = new TextField(Input.Keys.toString(settings.getRightButton()), skin);
     whiten(rightLabel);
-    
+
     Label difficultyLabel = new Label("Difficulty:", skin);
     difficultySelect = new SelectBox<>(skin);
     difficultySelect.setItems("Easy", "Normal", "Hard");
     difficultySelect.setSelected(settings.getDifficulty().toString());
     whiten(difficultyLabel);
-    
+
     // Back button
     TextButton backBtn = ButtonFactory.createButton("Back");
-    backBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showMainMenu();
-      }
-    });
-    
+    backBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showMainMenu();
+          }
+        });
+
     // Layout
     currentMenu.add(pauseLabel).right().padRight(15f);
     currentMenu.add(pauseKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(skipLabel).right().padRight(15f);
     currentMenu.add(skipKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(interactionLabel).right().padRight(15f);
     currentMenu.add(interactionKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(upLabel).right().padRight(15f);
     currentMenu.add(upKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(downLabel).right().padRight(15f);
     currentMenu.add(downKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(leftLabel).right().padRight(15f);
     currentMenu.add(leftKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(rightLabel).right().padRight(15f);
     currentMenu.add(rightKeyText).left().width(100f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(difficultyLabel).right().padRight(15f);
     currentMenu.add(difficultySelect).left().width(150f);
     currentMenu.row().padTop(20f);
-    
+
     currentMenu.add(backBtn).size(100f, 40f);
-    
+
     rootTable.add(currentMenu).expandX().expandY();
   }
-  
+
   private void showAudioSettings() {
     if (currentMenu != null) {
       rootTable.removeActor(currentMenu);
     }
-    
+
     currentMenu = new Table();
-    
+
     // Get current settings
     Settings settings = new Settings();
-    
+
     // Create components
     Label masterVolumeLabel = new Label("Master Volume:", skin);
     masterVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
     masterVolumeSlider.setValue(settings.getMasterVolume());
-    final Label masterVolumeValueLabel = new Label(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100), skin);
+    final Label masterVolumeValueLabel =
+        new Label(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100), skin);
     whiten(masterVolumeLabel);
     whiten(masterVolumeValueLabel);
-    
+
     Label musicVolumeLabel = new Label("Music Volume:", skin);
     musicVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
     musicVolumeSlider.setValue(settings.getMusicVolume());
-    final Label musicVolumeValueLabel = new Label(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100), skin);
+    final Label musicVolumeValueLabel =
+        new Label(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100), skin);
     whiten(musicVolumeLabel);
     whiten(musicVolumeValueLabel);
-    
+
     Label soundVolumeLabel = new Label("Sound Volume:", skin);
     soundVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
     soundVolumeSlider.setValue(settings.getSoundVolume());
-    final Label soundVolumeValueLabel = new Label(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100), skin);
+    final Label soundVolumeValueLabel =
+        new Label(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100), skin);
     whiten(soundVolumeLabel);
     whiten(soundVolumeValueLabel);
-    
+
     Label voiceVolumeLabel = new Label("Voice Volume:", skin);
     voiceVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
     voiceVolumeSlider.setValue(settings.getVoiceVolume());
-    final Label voiceVolumeValueLabel = new Label(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100), skin);
+    final Label voiceVolumeValueLabel =
+        new Label(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100), skin);
     whiten(voiceVolumeLabel);
     whiten(voiceVolumeValueLabel);
-    
+
     // Back button
     TextButton backBtn = ButtonFactory.createButton("Back");
-    backBtn.addListener(new ChangeListener() {
-      @Override
-      public void changed(ChangeEvent changeEvent, Actor actor) {
-        showMainMenu();
-      }
-    });
-    
+    backBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            showMainMenu();
+          }
+        });
+
     // Slider listeners
-    masterVolumeSlider.addListener((Event event) -> {
-      float value = masterVolumeSlider.getValue();
-      masterVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
-      return true;
-    });
-    
-    musicVolumeSlider.addListener((Event event) -> {
-      float value = musicVolumeSlider.getValue();
-      musicVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
-      return true;
-    });
-    
-    soundVolumeSlider.addListener((Event event) -> {
-      float value = soundVolumeSlider.getValue();
-      soundVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
-      return true;
-    });
-    
-    voiceVolumeSlider.addListener((Event event) -> {
-      float value = voiceVolumeSlider.getValue();
-      voiceVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
-      return true;
-    });
-    
+    masterVolumeSlider.addListener(
+        (Event event) -> {
+          float value = masterVolumeSlider.getValue();
+          masterVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
+          return true;
+        });
+
+    musicVolumeSlider.addListener(
+        (Event event) -> {
+          float value = musicVolumeSlider.getValue();
+          musicVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
+          return true;
+        });
+
+    soundVolumeSlider.addListener(
+        (Event event) -> {
+          float value = soundVolumeSlider.getValue();
+          soundVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
+          return true;
+        });
+
+    voiceVolumeSlider.addListener(
+        (Event event) -> {
+          float value = voiceVolumeSlider.getValue();
+          voiceVolumeValueLabel.setText(String.format(PERCENTAGE_FORMAT, value * 100));
+          return true;
+        });
+
     // Layout
     currentMenu.add(masterVolumeLabel).right().padRight(15f);
     currentMenu.add(masterVolumeSlider).width(200f).left();
     currentMenu.add(masterVolumeValueLabel).left().padLeft(10f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(musicVolumeLabel).right().padRight(15f);
     currentMenu.add(musicVolumeSlider).width(200f).left();
     currentMenu.add(musicVolumeValueLabel).left().padLeft(10f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(soundVolumeLabel).right().padRight(15f);
     currentMenu.add(soundVolumeSlider).width(200f).left();
     currentMenu.add(soundVolumeValueLabel).left().padLeft(10f);
     currentMenu.row().padTop(10f);
-    
+
     currentMenu.add(voiceVolumeLabel).right().padRight(15f);
     currentMenu.add(voiceVolumeSlider).width(200f).left();
     currentMenu.add(voiceVolumeValueLabel).left().padLeft(10f);
     currentMenu.row().padTop(20f);
-    
+
     currentMenu.add(backBtn).size(100f, 40f);
-    
+
     rootTable.add(currentMenu).expandX().expandY();
   }
-
 
   private Table makeMenuBtns() {
     // Exit button (from main branch)
@@ -469,7 +481,7 @@ public class SettingsMenuDisplay extends UIComponent {
         settings.setVsync(vsyncCheck.isChecked());
       }
     }
-    
+
     // Apply game settings if they exist
     if (difficultySelect != null) {
       Settings settings = new Settings();
@@ -490,7 +502,7 @@ public class SettingsMenuDisplay extends UIComponent {
       }
       // Note: Key bindings would need to be implemented with proper key input handling
     }
-    
+
     // Apply audio settings if they exist
     if (masterVolumeSlider != null) {
       Settings settings = new Settings();

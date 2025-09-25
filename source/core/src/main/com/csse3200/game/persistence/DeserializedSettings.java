@@ -20,6 +20,36 @@ public class DeserializedSettings {
   private int fps;
   private boolean vsync;
 
+  /** Constructor for the DeserializedSettings class. */
+  public DeserializedSettings() {
+    // Default settings
+  }
+
+  /**
+   * Constructor for the DeserializedSettings class.
+   *
+   * @param settings the settings to deserialize.
+   */
+  public DeserializedSettings(Settings settings) {
+    this.musicVolume = settings.getMusicVolume();
+    this.soundVolume = settings.getSoundVolume();
+    this.voiceVolume = settings.getVoiceVolume();
+    this.masterVolume = settings.getMasterVolume();
+    this.difficulty = settings.getDifficulty();
+    this.pauseButton = settings.getPauseButton();
+    this.skipButton = settings.getSkipButton();
+    this.interactionButton = settings.getInteractionButton();
+    this.upButton = settings.getUpButton();
+    this.downButton = settings.getDownButton();
+    this.leftButton = settings.getLeftButton();
+    this.rightButton = settings.getRightButton();
+    this.currentUIScale = settings.getCurrentUIScale();
+    this.quality = settings.getQuality();
+    this.currentMode = settings.getCurrentMode();
+    this.fps = settings.getFps();
+    this.vsync = settings.isVsync();
+  }
+
   /**
    * Gets the music volume.
    *

@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.Input;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Settings {
   private static final Logger logger = LoggerFactory.getLogger(Settings.class);
@@ -139,7 +139,8 @@ public class Settings {
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
       if (displayMode.width >= resolution.getKey() && displayMode.height >= resolution.getValue()) {
         availableResolutions.add(resolution);
-        if (resolution.getKey() > windowedResolution.getKey() && resolution.getValue() > windowedResolution.getValue()) {
+        if (resolution.getKey() > windowedResolution.getKey()
+            && resolution.getValue() > windowedResolution.getValue()) {
           windowedResolution = resolution;
         }
       }
@@ -410,7 +411,10 @@ public class Settings {
     }
     this.windowedResolution = new Pair<>(0, 0);
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
-      if (currentResolution.getKey() >= resolution.getKey() && currentResolution.getValue() >= resolution.getValue() && currentResolution.getKey() > windowedResolution.getKey() && currentResolution.getValue() > windowedResolution.getValue()) {
+      if (currentResolution.getKey() >= resolution.getKey()
+          && currentResolution.getValue() >= resolution.getValue()
+          && currentResolution.getKey() > windowedResolution.getKey()
+          && currentResolution.getValue() > windowedResolution.getValue()) {
         windowedResolution = resolution;
       }
     }
@@ -451,7 +455,8 @@ public class Settings {
   public void setAvailableResolutions() {
     this.availableResolutions.clear();
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
-      if (currentResolution.getKey() >= resolution.getKey() && currentResolution.getValue() >= resolution.getValue()) {
+      if (currentResolution.getKey() >= resolution.getKey()
+          && currentResolution.getValue() >= resolution.getValue()) {
         availableResolutions.add(resolution);
       }
     }

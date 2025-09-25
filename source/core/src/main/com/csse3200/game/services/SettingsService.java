@@ -1,40 +1,34 @@
 package com.csse3200.game.services;
 
-import java.io.File;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.csse3200.game.persistence.DeserializedSettings;
 import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.persistence.Settings;
-
+import java.io.File;
 import net.dermetfan.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-/**
- * Makes the settings into a service available throughout the game, instead of a singleton.
- */
+/** Makes the settings into a service available throughout the game, instead of a singleton. */
 public class SettingsService {
   private static final Logger logger = LoggerFactory.getLogger(SettingsService.class);
   private Settings settings;
-  private static final String ROOT_DIR = "The Day We Fought Back";
-  private static final String SETTINGS_FILE = "settings.json";
+  private static final String PATH = "The Day We Fought Back" + File.separator + "settings.json";
 
-  /**
-   * Constructor for the SettingsService.
-   */
+  /** Constructor for the SettingsService. */
   public SettingsService() {
     logger.info("[SettingsService] SettingsService created");
-    String path = ROOT_DIR + File.separator + SETTINGS_FILE;
-    DeserializedSettings deserializedSettings = FileLoader.readClass(DeserializedSettings.class, path, FileLoader.Location.EXTERNAL);
+    DeserializedSettings deserializedSettings =
+        FileLoader.readClass(DeserializedSettings.class, PATH, FileLoader.Location.EXTERNAL);
     settings = deserializedSettings != null ? new Settings(deserializedSettings) : new Settings();
     Gdx.graphics.setForegroundFPS(settings.getFps());
     Gdx.graphics.setVSync(settings.isVsync());
     saveSettings();
     logger.info("[SettingsService] SettingsService initialized");
+    String settingsString = settings.toString();
+    logger.info(settingsString);
   }
 
   /**
@@ -46,9 +40,7 @@ public class SettingsService {
     return settings;
   }
 
-  /**
-   * Change the display mode.
-   */
+  /** Change the display mode. */
   public void changeDisplayMode(Settings.Mode mode) {
     Gdx.graphics.setResizable(false);
     DisplayMode displayMode;
@@ -69,7 +61,8 @@ public class SettingsService {
         break;
       case WINDOWED:
         settings.setCurrentMode(Settings.Mode.WINDOWED);
-        Gdx.graphics.setWindowedMode(settings.getWindowedResolution().getKey(), settings.getWindowedResolution().getValue());
+        Gdx.graphics.setWindowedMode(
+            settings.getWindowedResolution().getKey(), settings.getWindowedResolution().getValue());
         settings.setCurrentResolution(settings.getWindowedResolution());
         break;
       default:
@@ -80,13 +73,14 @@ public class SettingsService {
 
   /**
    * Change the display settings.
-   * 
+   *
    * @param fps the FPS to set.
    * @param vsync the VSync to set.
    * @param uiScale the UI Scale to set.
    * @param quality the Quality to set.
    */
-  public void changeDisplaySettings(int fps, boolean vsync, Settings.UIScale uiScale, Settings.Quality quality) {
+  public void changeDisplaySettings(
+      int fps, boolean vsync, Settings.UIScale uiScale, Settings.Quality quality) {
     if (fps < 30 || fps > 240) {
       logger.warn("[SettingsService] FPS must be between 30 and 240");
       return;
@@ -116,7 +110,7 @@ public class SettingsService {
 
   /**
    * Switch to a different resolution if in windowed mode.
-   * 
+   *
    * @param resolution the resolution to switch to.
    */
   public void switchResolution(Pair<Integer, Integer> resolution) {
@@ -136,7 +130,8 @@ public class SettingsService {
    * @param voiceVolume the voice volume to set.
    * @param masterVolume the master volume to set.
    */
-  public void changeAudioSettings(float musicVolume, float soundVolume, float voiceVolume, float masterVolume) {
+  public void changeAudioSettings(
+      float musicVolume, float soundVolume, float voiceVolume, float masterVolume) {
     if (musicVolume < 0 || musicVolume > 1) {
       logger.warn("[SettingsService] Music volume must be between 0 and 1");
       return;
@@ -170,7 +165,14 @@ public class SettingsService {
    * @param leftButton the left button to set.
    * @param rightButton the right button to set.
    */
-  public void changeKeybinds(int pauseButton, int skipButton, int interactionButton, int upButton, int downButton, int leftButton, int rightButton) {
+  public void changeKeybinds(
+      int pauseButton,
+      int skipButton,
+      int interactionButton,
+      int upButton,
+      int downButton,
+      int leftButton,
+      int rightButton) {
     settings.setPauseButton(pauseButton);
     settings.setSkipButton(skipButton);
     settings.setInteractionButton(interactionButton);
@@ -181,19 +183,35 @@ public class SettingsService {
   }
 
   /**
-   * Change the difficulty.
+   * Get the sound volume.
    *
-   * @param difficulty the difficulty to set.
+   * @return the sound volume.
    */
-  public void changeDifficulty(Settings.Difficulty difficulty) {
-    settings.setDifficulty(difficulty);
+  public float getSoundVolume() {
+    return settings.getSoundVolume() * settings.getMasterVolume();
   }
 
   /**
-   * Save the settings.
+   * Get the voice volume.
+   *
+   * @return the voice volume.
    */
+  public float getVoiceVolume() {
+    return settings.getVoiceVolume() * settings.getMasterVolume();
+  }
+
+  /**
+   * Get the music volume.
+   *
+   * @return the music volume.
+   */
+  public float getMusicVolume() {
+    return settings.getMusicVolume() * settings.getMasterVolume();
+  }
+
+  /** Save the settings. */
   public void saveSettings() {
-    String path = ROOT_DIR + File.separator + SETTINGS_FILE;
-    FileLoader.writeClass(settings, path, FileLoader.Location.EXTERNAL);
+    DeserializedSettings deserializedSettings = new DeserializedSettings(settings);
+    FileLoader.writeClass(deserializedSettings, PATH, FileLoader.Location.EXTERNAL);
   }
 }
