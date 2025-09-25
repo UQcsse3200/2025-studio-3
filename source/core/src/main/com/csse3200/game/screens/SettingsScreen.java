@@ -2,7 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.components.settingsmenu.SettingsMenuDisplay;
+import com.csse3200.game.components.settingsmenu.*;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import java.util.Optional;
@@ -20,7 +20,10 @@ public class SettingsScreen extends BaseScreen {
   @Override
   protected Entity constructEntity(Stage stage) {
     return new Entity()
-        .addComponent(new SettingsMenuDisplay(game))
+        .addComponent(new SettingsMenu(game))
+        .addComponent(new DisplaySettingsMenu())
+        .addComponent(new AudioSettingsMenu())
+        .addComponent(new GameSettingsMenu())
         .addComponent(new InputDecorator(stage, 10));
   }
 }
