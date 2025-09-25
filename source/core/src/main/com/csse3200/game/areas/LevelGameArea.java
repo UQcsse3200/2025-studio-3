@@ -16,7 +16,6 @@ import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
-import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -152,6 +151,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     ConfigService configService = ServiceLocator.getConfigService();
 
     for (String defenceKey : profile.getArsenal().getKeys()) {
+      logger.info("putting {} into the inventory...", defenceKey);
+      BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
+      unitList.put(
+          defenderConfig.getAssetPath(), () -> DefenceFactory.createDefenceUnit(defenceKey));
+    }
+    /*
       if (defenceKey.equals("slingshooter")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
@@ -171,7 +176,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (defenceKey.equals("shadow")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createShadow);
+          unitList.put(
+              defenderConfig.getAssetPath(),
+              () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SHADOW));
         }
       }
       if (defenceKey.equals("furnace")) {
@@ -183,6 +190,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         }
       }
     }
+
+     */
 
     Inventory inventory = profile.getInventory();
     if (inventory.contains("grenade")) {

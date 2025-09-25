@@ -21,7 +21,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
-// TODO provide documentation for refactored functions
+// TODO - provide documentation for refactored functions
 
 /**
  * Factory class for creating defence entities (e.g., sling shooters). This class should not be
@@ -33,28 +33,10 @@ public class DefenceFactory {
 
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
-      return ServiceLocator.getConfigService();
+    return ServiceLocator.getConfigService();
   }
 
-  public enum UnitType {
-    SLINGSHOOTER,
-    SOLDIER,
-    FORGE
-  }
-
-  public static Entity createDefenceUnit(UnitType type) {
-    switch (type) {
-      case SLINGSHOOTER:
-        return createUnitFromConfig("slingshooter");
-      case SOLDIER:
-        return createUnitFromConfig("armyguy");
-      case FORGE:
-        return createUnitFromConfig("furnace");
-    }
-    return null;
-  }
-
-  public static Entity createUnitFromConfig(String key) {
+  public static Entity createDefenceUnit(String key) {
     BaseDefenderConfig config = getConfigService().getDefenderConfig(key);
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
@@ -95,6 +77,7 @@ public class DefenceFactory {
   }
 
   public static AITaskComponent getTaskComponent(BaseDefenderConfig config) {
+    // TODO - differentiate between different configs to decide attack direction and projectile type
     AITaskComponent tasks =
         new AITaskComponent()
             .addTask(
