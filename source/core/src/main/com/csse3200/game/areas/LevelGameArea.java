@@ -154,19 +154,22 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (defenceKey.equals("slingshooter")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createSlingShooter);
+          unitList.put(defenderConfig.getAssetPath(),
+                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SLINGSHOOTER));
         }
       }
       if (defenceKey.equals("armyguy")) {
         BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
         if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createArmyGuy);
+          unitList.put(defenderConfig.getAssetPath(),
+                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.SOLDIER));
         }
       }
       if (defenceKey.equals("furnace")) {
         BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
         if (generatorConfig != null) {
-          unitList.put(generatorConfig.getAssetPath(), DefenceFactory::createFurnace);
+          unitList.put(generatorConfig.getAssetPath(),
+                  () -> DefenceFactory.createDefenceUnit(DefenceFactory.UnitType.FORGE));
         }
       }
     }
@@ -238,6 +241,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.worldWidth = bg.getWorldWidth();
 
     spawnEntity(map);
+    spawnWall();
+  }
+
+  private void spawnWall() {
+    Entity wall = DefenceFactory.createWall();
+    float tileX = xOffset + tileSize * -1;
+    float tileY = yOffset - tileSize / 5;
+    float wallSize = tileSize * 6;
+    wall.scaleHeight(wallSize);
+    wall.setPosition(tileX, tileY);
+    spawnEntity(wall);
+    wall.getEvents().trigger("idleStart");
   }
 
   private void spawnScrap(Entity entity) {
@@ -323,7 +338,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               requestDespawn(unit);
               robots.remove(unit);
             });
-    logger.info("Robot {} spawned at position {} {}", robotType, col, row);
+    logger.info("Robot {} spawned at position {} {}", robotType, row, col);
   }
 
   /**
@@ -558,8 +573,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     spawnEntity(newEntity);
-    // trigger the animation - this will change with more entities
-    newEntity.getEvents().trigger("idleStart");
+      // trigger the animation - this will change with more entities
+      newEntity.getEvents().trigger("idleStart");
 
     // Ensure grid slot frees when unit leaves
     Runnable clearTile =

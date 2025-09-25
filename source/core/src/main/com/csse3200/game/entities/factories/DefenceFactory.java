@@ -23,6 +23,8 @@ import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
+// TODO provide documentation for refactored functions
+
 /**
  * Factory class for creating defence entities (e.g., sling shooters). This class should not be
  * instantiated — all methods and configuration are static utilities.
@@ -33,139 +35,81 @@ public class DefenceFactory {
     return ServiceLocator.getConfigService();
   }
 
-  /**
-   * Creates a fully configured Sling Shooter defence entity.
-   *
-   * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
-   * file - Animation rendering and animation controller
-   *
-   * @return entity representing the slingshooter
-   */
-  public static Entity createSlingShooter() {
-    BaseDefenderConfig config = getConfigService().getDefenderConfig("slingshooter");
-    Entity defender = createBaseDefender();
-
-    // start with a base defender (physics + collider)
-
-    AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.SLINGSHOT))
-            .addTask(new IdleTask(config.getRange()));
-
-    defender.addComponent(enemyDetectionTasks);
-    // animation component
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset(config.getAtlasPath(), TextureAtlas.class));
-
-    // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
-
-    // attach components to the entity
-    defender
-        .addComponent(
-            new DefenderStatsComponent(
-                config.getHealth(),
-                config.getAttack(),
-                config.getRangeType(),
-                config.getRange(),
-                config.getAttackState(),
-                config.getAttackSpeed(),
-                config.getCritChance()))
-        .addComponent(animator)
-        .addComponent(new DefenceAnimationController());
-
-    // Scale to tilesize
-    animator.scaleEntity();
-
-    // scale the entity to match animation sprite dimensions
-    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
-    return defender;
+  public enum UnitType {
+      SLINGSHOOTER,
+      SOLDIER,
+      FORGE
   }
 
-  /**
-   * Creates a fully configured Army Guy defence entity.
-   *
-   * <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
-   * file - Animation rendering and animation controller
-   *
-   * @return entity representing the armyguy
-   */
-  public static Entity createArmyGuy() {
-    BaseDefenderConfig config = getConfigService().getDefenderConfig("armyguy");
-    Entity defender = createBaseDefender();
-
-    // start with a base defender (physics + collider)
-
-    AITaskComponent enemyDetectionTasks =
-        new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
-            .addTask(new IdleTask(config.getRange()));
-
-    defender.addComponent(enemyDetectionTasks);
-    // animation component
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset(config.getAtlasPath(), TextureAtlas.class));
-
-    // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
-
-    // attach components to the entity
-    defender
-        .addComponent(
-            new DefenderStatsComponent(
-                config.getHealth(),
-                config.getAttack(),
-                config.getRangeType(),
-                config.getRange(),
-                config.getAttackState(),
-                config.getAttackSpeed(),
-                config.getCritChance()))
-        .addComponent(animator)
-        .addComponent(new DefenceAnimationController());
-
-    // Scale to tilesize
-    animator.scaleEntity();
-
-    // scale the entity to match animation sprite dimensions
-    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
-    return defender;
+  public static Entity createDefenceUnit(UnitType type) {
+      switch (type) {
+          case SLINGSHOOTER:
+              return createUnitFromConfig("slingshooter");
+          case SOLDIER:
+              return createUnitFromConfig("armyguy");
+          case FORGE:
+              return createUnitFromConfig("furnace");
+      }
+      return null;
   }
 
-  public static Entity createFurnace() {
-    BaseGeneratorConfig config = getConfigService().getGeneratorConfig("furnace");
+  public static Entity createUnitFromConfig(String key) {
+      BaseDefenderConfig config = getConfigService().getDefenderConfig(key);
+      // start with a base defender (physics + collider)
+      Entity defender = createBaseDefender();
 
-    // start with a base defender (physics + collider)
-    Entity generator = createBaseDefender();
+      if (key != "furnace") {
+          AITaskComponent tasks = getTaskComponent(config);
+          defender.addComponent(tasks);
+      }
 
-    // animation component
-    AnimationRenderComponent animator =
-        new AnimationRenderComponent(
-            ServiceLocator.getResourceService()
-                .getAsset("images/entities/defences/forge.atlas", TextureAtlas.class));
+      AnimationRenderComponent animator = getAnimationComponent(config);
+      DefenderStatsComponent stats = getUnitStats(config);
 
-    // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+      // attach components to the entity
+      defender
+              .addComponent(stats)
+              .addComponent(animator)
+              .addComponent(new DefenceAnimationController());
 
-    // attach components to the entity
-    generator
-        .addComponent(
-            new GeneratorStatsComponent(
-                config.getHealth(), config.getInterval(), config.getScrapValue()))
-        .addComponent(animator)
-        .addComponent(new DefenceAnimationController());
+      // Scale to tilesize
+      animator.scaleEntity();
+      return defender;
+  }
 
-    // trigger the initial attack event to kick off behaviour
-    generator.getEvents().trigger("idleStart");
+  public static DefenderStatsComponent getUnitStats(BaseDefenderConfig config) {
+      DefenderStatsComponent stats = new DefenderStatsComponent(
+              config.getHealth(),
+              config.getAttack(),
+              config.getRangeType(),
+              config.getRange(),
+              config.getAttackState(),
+              config.getAttackSpeed(),
+              config.getCritChance());
 
-    // scale the entity to match animation sprite dimensions
-    generator.getComponent(AnimationRenderComponent.class).scaleEntity();
-    return generator;
+      return stats;
+  }
+
+  public static AITaskComponent getTaskComponent(BaseDefenderConfig config) {
+      AITaskComponent tasks =
+              new AITaskComponent()
+                      .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
+                      .addTask(new IdleTask(config.getRange()));
+
+      return tasks;
+  }
+
+  public static AnimationRenderComponent getAnimationComponent(BaseDefenderConfig config) {
+      AnimationRenderComponent animator =
+              new AnimationRenderComponent(
+                      ServiceLocator.getResourceService()
+                              .getAsset(config.getAtlasPath(), TextureAtlas.class));
+
+      // define animations for idle and attack states
+      animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+
+      return animator;
   }
 
   /**
@@ -174,24 +118,23 @@ public class DefenceFactory {
    * @return the wall entity to be placed
    */
   public static Entity createWall() {
-    BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
+      BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
+      // start with a base defender (physics + collider)
+      Entity wall = createBaseDefender();
 
-    // start with a base defender (physics + collider)
-    Entity wall = createBaseDefender();
+      // animation component
+      AnimationRenderComponent animator = getAnimationComponent(config);
+      DefenderStatsComponent stats = getUnitStats(config);
 
-    wall
-        .addComponent(
-            new DefenderStatsComponent(
-                config.getHealth(),
-                config.getAttack(),
-                config.getRangeType(),
-                config.getRange(),
-                config.getAttackState(),
-                config.getAttackSpeed(),
-                config.getCritChance()))
-        .addComponent(new TextureRenderComponent(config.getAssetPath()));
+      // attach components to the entity
+      wall
+              .addComponent(stats)
+              .addComponent(animator)
+              .addComponent(new DefenceAnimationController());
 
-    return wall;
+      // Scale to tilesize
+      animator.scaleEntity();
+      return wall;
   }
 
   /**

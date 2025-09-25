@@ -16,10 +16,11 @@
         "critChance": 1
       },
       "wall": {
-        "health": 30,
+        "health": 100,
         "range": 0,
         "name": "Wall",
         "assetPath": "images/entities/defences/wall.png",
+        "atlasPath": "images/entities/defences/wall.atlas",
         "attack": 0,
         "attackSpeed": 0,
         "critChance": 0
