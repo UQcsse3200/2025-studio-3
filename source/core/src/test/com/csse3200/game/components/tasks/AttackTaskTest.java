@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
@@ -40,7 +41,7 @@ class AttackTaskTest {
     float attackRange = 5f;
 
     AttackTask attackTask =
-        new AttackTask(attackRange) {
+        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
           @Override
           protected boolean isTargetVisible(Entity target) {
             return true;
@@ -75,7 +76,7 @@ class AttackTaskTest {
     float attackRange = 5f;
     float targetDistance = 10f;
     AttackTask attackTask =
-        new AttackTask(attackRange) {
+        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -92,7 +93,7 @@ class AttackTaskTest {
   @Test
   void startTriggersAttackStartAndFire() {
     float attackRange = 5f;
-    AttackTask attackTask = new AttackTask(attackRange);
+    AttackTask attackTask = new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT);
 
     Entity attacker = new Entity();
     AITaskComponent aiTaskComponent = new AITaskComponent();
@@ -114,7 +115,7 @@ class AttackTaskTest {
   @Test
   void updateDoesNothingWithoutTarget() {
     AttackTask attackTask =
-        new AttackTask(5f) {
+        new AttackTask(5f, ProjectileFactory.ProjectileType.SLINGSHOT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return null; // no target
@@ -147,7 +148,7 @@ class AttackTaskTest {
 
     float attackRange = 5f;
     AttackTask attackTask =
-        new AttackTask(attackRange) {
+        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -188,7 +189,7 @@ class AttackTaskTest {
     when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
 
     AttackTask attackTask =
-        new AttackTask(5f) {
+        new AttackTask(5f, ProjectileFactory.ProjectileType.SLINGSHOT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;

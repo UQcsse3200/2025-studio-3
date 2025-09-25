@@ -1,6 +1,7 @@
 package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.services.ServiceLocator;
 
 // TODO : integrate with attack system team
@@ -11,16 +12,18 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
-  private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+  private float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
+  private final ProjectileFactory.ProjectileType projectileType;
 
   /**
    * Creates an attack task
    *
    * @param attackRange the maximum distance the entity can find a target to attack
    */
-  public AttackTask(float attackRange) {
+  public AttackTask(float attackRange, ProjectileFactory.ProjectileType projectileType) {
     super(attackRange);
+    this.projectileType = projectileType;
   }
 
   /**
@@ -30,6 +33,13 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
+
+    if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
+      fireCooldown = 0.95f / 4f; // bullets fire 4 times as fast
+    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
+      fireCooldown = 0.95f; // normal fire rate for slingshot
+    }
+
     this.owner.getEntity().getEvents().trigger("attackStart");
     owner.getEntity().getEvents().trigger("fire");
   }
@@ -45,7 +55,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (getDistanceToTarget() <= attackRange) {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
-      if (timeSinceLastFire >= FIRE_COOLDOWN) {
+      if (timeSinceLastFire >= fireCooldown) {
         // tell listeners (LevelGameArea) to spawn a projectile
         owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
         timeSinceLastFire = 0f;

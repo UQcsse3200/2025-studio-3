@@ -23,6 +23,20 @@
         "attack": 0,
         "attackSpeed": 0,
         "critChance": 0
+      },
+      "armyguy" : {
+        "health": 80,
+        "rangeType": 2,
+        "range": 1000,
+        "name": "Army Guy",
+        "description": "",
+        "assetPath": "images/entities/defences/army_guy_1.png",
+        "atlasPath": "images/entities/defences/machine_gun.atlas",
+        "cost": 100,
+        "state": 0,
+        "attack": 1,
+        "attackSpeed": 8,
+        "critChance": 1
       }
     },
     "generators": {

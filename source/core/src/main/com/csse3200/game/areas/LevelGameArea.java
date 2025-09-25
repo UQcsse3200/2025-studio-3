@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -30,12 +31,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -161,6 +157,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createSlingShooter);
         }
       }
+      if (defenceKey.equals("armyguy")) {
+        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
+        if (defenderConfig != null) {
+          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createArmyGuy);
+        }
+      }
       if (defenceKey.equals("furnace")) {
         BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
         if (generatorConfig != null) {
@@ -245,10 +247,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
         new CurrencyGeneratorComponent(
-            spawnInterval, scrapValue, "images/entities/currency/scrap_metal.png", entity.getPosition());
+            spawnInterval,
+            scrapValue,
+            "images/entities/currency/scrap_metal.png",
+            entity.getPosition());
     scrapSpawner.addComponent(currencyGenerator);
-    //if furnace dies, dispose of its currency generator
-    entity.getEvents().addListener("defenceDeath", () -> {scrapSpawner.dispose();});
+    // if furnace dies, dispose of its currency generator
+    entity.getEvents().addListener("defenceDeath", scrapSpawner::dispose);
 
     spawnEntity(scrapSpawner);
   }
@@ -387,9 +392,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos) {
-    Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+  public void spawnProjectile(Vector2 spawnPos, ProjectileFactory.ProjectileType projectileType) {
+    Entity projectile;
+
+    if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT) {
+      projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+      projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+    } else { // bullet
+      projectile = ProjectileFactory.createBullet(10); // damage value
+      projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    }
 
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
@@ -542,7 +554,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-        spawnScrap(newEntity);
+      spawnScrap(newEntity);
     }
 
     spawnEntity(newEntity);
@@ -582,7 +594,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             () -> {
-              spawnProjectile(entityPos);
+              ProjectileFactory.ProjectileType projectileType =
+                  ProjectileFactory.ProjectileType.SLINGSHOT;
+              DefenderStatsComponent entityType =
+                  newEntity.getComponent(DefenderStatsComponent.class);
+              if (entityType.getType() == 1) {
+                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
+              } else if (entityType.getType() == 2) {
+                projectileType = ProjectileFactory.ProjectileType.BULLET;
+              }
+              spawnProjectile(entityPos, projectileType);
               newEntity.getEvents().trigger("attackStart");
               newEntity
                   .getEvents()
