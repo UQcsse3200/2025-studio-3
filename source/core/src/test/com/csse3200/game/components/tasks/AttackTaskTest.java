@@ -9,6 +9,8 @@ import static org.mockito.Mockito.when;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.events.listeners.EventListener0;
+import com.csse3200.game.events.listeners.EventListener1;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
@@ -41,7 +43,10 @@ class AttackTaskTest {
     float attackRange = 5f;
 
     AttackTask attackTask =
-        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
+        new AttackTask(
+            attackRange,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected boolean isTargetVisible(Entity target) {
             return true;
@@ -76,7 +81,10 @@ class AttackTaskTest {
     float attackRange = 5f;
     float targetDistance = 10f;
     AttackTask attackTask =
-        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
+        new AttackTask(
+            attackRange,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -93,7 +101,11 @@ class AttackTaskTest {
   @Test
   void startTriggersAttackStartAndFire() {
     float attackRange = 5f;
-    AttackTask attackTask = new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT);
+    AttackTask attackTask =
+        new AttackTask(
+            attackRange,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT);
 
     Entity attacker = new Entity();
     AITaskComponent aiTaskComponent = new AITaskComponent();
@@ -103,8 +115,11 @@ class AttackTaskTest {
 
     AtomicBoolean attackStarted = new AtomicBoolean(false);
     AtomicBoolean fired = new AtomicBoolean(false);
-    attacker.getEvents().addListener("attackStart", () -> attackStarted.set(true));
-    attacker.getEvents().addListener("fire", () -> fired.set(true));
+    // OpenAI was used to patch these
+    attacker
+        .getEvents()
+        .addListener("attackStart", (EventListener0) (() -> attackStarted.set(true)));
+    attacker.getEvents().addListener("fire", (EventListener1<?>) (e -> fired.set(true)));
 
     attackTask.start();
 
@@ -115,7 +130,10 @@ class AttackTaskTest {
   @Test
   void updateDoesNothingWithoutTarget() {
     AttackTask attackTask =
-        new AttackTask(5f, ProjectileFactory.ProjectileType.SLINGSHOT) {
+        new AttackTask(
+            5f,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return null; // no target
@@ -148,7 +166,10 @@ class AttackTaskTest {
 
     float attackRange = 5f;
     AttackTask attackTask =
-        new AttackTask(attackRange, ProjectileFactory.ProjectileType.SLINGSHOT) {
+        new AttackTask(
+            attackRange,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -167,7 +188,7 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     // Listen to "fire" events
-    defender.getEvents().addListener("fire", fireCount::incrementAndGet);
+    defender.getEvents().addListener("fire", event -> fireCount.incrementAndGet());
 
     // Trigger start -> should fire immediately
     attackTask.start();
@@ -189,7 +210,10 @@ class AttackTaskTest {
     when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
 
     AttackTask attackTask =
-        new AttackTask(5f, ProjectileFactory.ProjectileType.SLINGSHOT) {
+        new AttackTask(
+            5f,
+            ProjectileFactory.ProjectileType.SLINGSHOT,
+            TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -208,7 +232,7 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     AtomicInteger fireCount = new AtomicInteger(0);
-    attacker.getEvents().addListener("fire", fireCount::incrementAndGet);
+    attacker.getEvents().addListener("fire", event -> fireCount.incrementAndGet());
 
     // Simulate 5 seconds (should fire ~5 times since cooldown is ~1 sec)
     for (int i = 0; i < 5; i++) {

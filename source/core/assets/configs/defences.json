@@ -38,6 +38,20 @@
         "attack": 1,
         "attackSpeed": 8,
         "critChance": 1
+      },
+      "shadow" : {
+        "health": 20,
+        "rangeType": 3,
+        "range": 250,
+        "name": "Shadow",
+        "description": "",
+        "assetPath": "images/entities/defences/shadow_idle1.png",
+        "atlasPath": "images/entities/defences/shadow.atlas",
+        "cost": 100,
+        "state": 0,
+        "attack": 1,
+        "attackSpeed": 2,
+        "critChance": 1
       }
     },
     "generators": {

@@ -23,7 +23,8 @@ public class ProjectileFactory {
 
   public enum ProjectileType {
     BULLET,
-    SLINGSHOT
+    SLINGSHOT,
+    SHOCK
   }
 
   /**
@@ -77,6 +78,34 @@ public class ProjectileFactory {
 
     // Add render component so it draws above the grid
     TextureRenderComponent render = new TextureRenderComponent("images/effects/bullet.png");
+    bullet.addComponent(render);
+
+    render.scaleEntity(); // mimic human entities to ensure it renders correctly
+    PhysicsUtils.setScaledCollider(bullet, 0.05f, 0.05f);
+    return bullet;
+  }
+
+  /**
+   * Creates a shock projectile entity.
+   *
+   * <p>The shock is designed to be used by defense entities such as the shadow. It includes
+   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
+   * damage to enemies and is destroyed upon impact.
+   *
+   * @param damage amount of damage dealt to an enemy entity
+   * @return entity representing a bullet projectile
+   */
+  public static Entity createShock(int damage) {
+    Entity bullet =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+            .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
+
+    // Add render component so it draws above the grid
+    TextureRenderComponent render = new TextureRenderComponent("images/effects/shock.png");
     bullet.addComponent(render);
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly

@@ -9,6 +9,7 @@ import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -27,9 +28,12 @@ import com.csse3200.game.services.ServiceLocator;
  * instantiated — all methods and configuration are static utilities.
  */
 public class DefenceFactory {
+  private static final String ATTACK = "attack";
+  private static final String IDLE = "idle";
+
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
-    return ServiceLocator.getConfigService();
+      return ServiceLocator.getConfigService();
   }
 
   public enum UnitType {
@@ -60,7 +64,9 @@ public class DefenceFactory {
       defender.addComponent(tasks);
     }
 
+    // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
+    // stats component
     DefenderStatsComponent stats = getUnitStats(config);
 
     // attach components to the entity
@@ -91,8 +97,12 @@ public class DefenceFactory {
   public static AITaskComponent getTaskComponent(BaseDefenderConfig config) {
     AITaskComponent tasks =
         new AITaskComponent()
-            .addTask(new AttackTask(config.getRange(), ProjectileFactory.ProjectileType.BULLET))
-            .addTask(new IdleTask(config.getRange()));
+            .addTask(
+                new AttackTask(
+                    config.getRange(),
+                    ProjectileFactory.ProjectileType.BULLET,
+                    TargetDetectionTasks.AttackDirection.RIGHT))
+            .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
 
     return tasks;
   }
@@ -104,8 +114,8 @@ public class DefenceFactory {
                 .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
-    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    animator.addAnimation(IDLE, 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation(ATTACK, 0.04f, Animation.PlayMode.LOOP);
 
     return animator;
   }
@@ -122,6 +132,7 @@ public class DefenceFactory {
 
     // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
+    // stats component
     DefenderStatsComponent stats = getUnitStats(config);
 
     // attach components to the entity
