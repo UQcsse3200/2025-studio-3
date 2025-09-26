@@ -16,13 +16,10 @@ import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
-import com.csse3200.game.entities.factories.DefenceFactory;
-import com.csse3200.game.entities.factories.GridFactory;
-import com.csse3200.game.entities.factories.ItemFactory;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -154,13 +151,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
       unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
     }
-    /*
     for (String generatorKey : profile.getArsenal().getGenerators()) {
       BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
-      unitList.put(
-          config.getAssetPath(), () -> DefenceFactory.createGeneratorUnit(config));
+      unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
     }
-     */
 
     Inventory inventory = profile.getInventory();
     if (inventory.contains("grenade")) {
