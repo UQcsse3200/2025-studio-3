@@ -10,6 +10,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,13 @@ public class SettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(SettingsMenu.class);
   private final GdxGame game;
   private Table rootTable;
+  private Table exitBtn;
 
+  /**
+   * Constructor for SettingsMenu.
+   *
+   * @param game The game instance.
+   */
   public SettingsMenu(GdxGame game) {
     super();
     this.game = game;
@@ -35,21 +42,17 @@ public class SettingsMenu extends UIComponent {
     entity.getEvents().addListener("audiosettings", this::hideMenu);
   }
 
+  /** Add actors to the UI. */
   private void addActors() {
+    makeCloseBtn();
     rootTable = new Table();
     rootTable.setFillParent(true);
 
-    // Add top menu row (title, exit, apply)
-    rootTable.add(makeMenuBtns()).expandX().fillX().top();
-
-    // Next row: settings table
+    // Create title
+    Label title = TypographyFactory.createTitle("Settings");
+    rootTable.add(title).expandX().center().padTop(30f);
     rootTable.row().padTop(30f);
-    showMainMenu();
 
-    stage.addActor(rootTable);
-  }
-
-  private void showMainMenu() {
     // Create main menu buttons
     TextButton displayBtn = ButtonFactory.createButton("Display Settings");
     displayBtn.setSize(300f, 100f);
@@ -82,28 +85,28 @@ public class SettingsMenu extends UIComponent {
           }
         });
 
-    Table menuTable = new Table();
-    menuTable.add(displayBtn).size(300f, 100f).padBottom(20f);
-    menuTable.row();
-    menuTable.add(gameBtn).size(300f, 100f).padBottom(20f);
-    menuTable.row();
-    menuTable.add(audioBtn).size(300f, 100f);
+    // Add buttons to the main table
+    rootTable.add(displayBtn).size(300f, 100f).padBottom(20f);
+    rootTable.row();
+    rootTable.add(gameBtn).size(300f, 100f).padBottom(20f);
+    rootTable.row();
+    rootTable.add(audioBtn).size(300f, 100f);
 
-    rootTable.add(menuTable).expandX().expandY();
+    // Center the table content
+    rootTable.center();
+
+    stage.addActor(rootTable);
   }
 
-  private Table makeMenuBtns() {
-    // Exit button (from main branch)
-    ImageButton exitBtn =
+  /** Make the close button. */
+  private void makeCloseBtn() {
+    exitBtn =
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
                     .getAsset("images/ui/close-icon.png", Texture.class)));
     exitBtn.setSize(60f, 60f);
-    exitBtn.setPosition(
-        20f, // padding from left
-        stage.getHeight() - 60f - 20f // padding from top
-        );
+    exitBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -113,18 +116,9 @@ public class SettingsMenu extends UIComponent {
           }
         });
     stage.addActor(exitBtn);
-
-    // Title
-    Label title = new Label("Settings", skin, "title");
-
-    Table table = new Table();
-    table.setFillParent(true);
-    table.top().padTop(10f).padLeft(10f).padRight(10f);
-    table.add(title).expandX().center();
-
-    return table;
   }
 
+  /** Exit the menu. */
   private void exitMenu() {
     if (!ServiceLocator.getProfileService().isActive()) {
       game.setScreen(ScreenType.MAIN_MENU);
@@ -133,22 +127,27 @@ public class SettingsMenu extends UIComponent {
     }
   }
 
+  /** Show the menu. */
   private void showMenu() {
     rootTable.setVisible(true);
+    exitBtn.setVisible(true);
   }
 
+  /** Hide the menu. */
   private void hideMenu() {
     rootTable.setVisible(false);
+    exitBtn.setVisible(false);
   }
 
   @Override
   protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
+    // draw
   }
 
   @Override
   public void update() {
-    stage.act(ServiceLocator.getTimeSource().getDeltaTime());
+    super.update();
+    exitBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
   }
 
   @Override
@@ -156,5 +155,4 @@ public class SettingsMenu extends UIComponent {
     rootTable.clear();
     super.dispose();
   }
-
 }

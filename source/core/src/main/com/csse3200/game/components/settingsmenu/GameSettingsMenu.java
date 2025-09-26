@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,9 +34,7 @@ public class GameSettingsMenu extends UIComponent {
   private static final String LEFT_KEY = "left";
   private static final String RIGHT_KEY = "right";
 
-  /**
-   * Constructor for GameSettingsMenu.
-   */
+  /** Constructor for GameSettingsMenu. */
   public GameSettingsMenu() {
     super();
   }
@@ -52,12 +51,17 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.setVisible(false);
   }
 
-  /**
-   * Add actors to the UI.
-   */
+  /** Add actors to the UI. */
   private void addActors() {
     rootTable = new Table();
     rootTable.setFillParent(true);
+    rootTable.center(); // Center the entire table content
+
+    // Create title
+    Label title = TypographyFactory.createTitle("Game Settings");
+    rootTable.add(title).padTop(30f).center().colspan(2);
+    rootTable.row().padTop(30f);
+
     Settings settings = ServiceLocator.getSettingsService().getSettings();
 
     Label pauseLabel = new Label("Pause Key:", skin);
@@ -127,98 +131,98 @@ public class GameSettingsMenu extends UIComponent {
           }
         });
 
-    rootTable.add(pauseLabel).right().padRight(15f);
-    rootTable.add(pauseKeyText).left().width(100f);
+    rootTable.add(pauseLabel).left().padRight(20f);
+    rootTable.add(pauseKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(skipLabel).right().padRight(15f);
-    rootTable.add(skipKeyText).left().width(100f);
+    rootTable.add(skipLabel).left().padRight(25f);
+    rootTable.add(skipKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(interactionLabel).right().padRight(15f);
-    rootTable.add(interactionKeyText).left().width(100f);
+    rootTable.add(interactionLabel).left().padRight(25f);
+    rootTable.add(interactionKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(upLabel).right().padRight(15f);
-    rootTable.add(upKeyText).left().width(100f);
+    rootTable.add(upLabel).left().padRight(25f);
+    rootTable.add(upKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(downLabel).right().padRight(15f);
-    rootTable.add(downKeyText).left().width(100f);
+    rootTable.add(downLabel).left().padRight(25f);
+    rootTable.add(downKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(leftLabel).right().padRight(15f);
-    rootTable.add(leftKeyText).left().width(100f);
+    rootTable.add(leftLabel).left().padRight(25f);
+    rootTable.add(leftKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(rightLabel).right().padRight(15f);
-    rootTable.add(rightKeyText).left().width(100f);
+    rootTable.add(rightLabel).left().padRight(25f);
+    rootTable.add(rightKeyText).width(150f).center();
     rootTable.row().padTop(10f);
 
-    rootTable.add(difficultyLabel).right().padRight(15f);
-    rootTable.add(difficultySelect).left().width(150f);
+    rootTable.add(difficultyLabel).left().padRight(25f);
+    rootTable.add(difficultySelect).width(150f).center();
     rootTable.row().padTop(20f);
+    stage.addActor(rootTable);
 
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f);
+    bottomRow.add(applyBtn).size(150f, 50f).center();
     stage.addActor(bottomRow);
-
-    stage.addActor(rootTable);
   }
 
   /**
    * Setup a TextField for keybind input with focus and key listeners.
-   * 
+   *
    * @param textField The TextField to setup
    */
   private void setupKeybindTextField(TextField textField) {
     // Add focus listener to clear text when focused
-    textField.addListener(new FocusListener() {
-      @Override
-      public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
-        if (focused) {
-          textField.setText("");
-        }
-      }
-    });
+    textField.addListener(
+        new FocusListener() {
+          @Override
+          public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
+            if (focused) {
+              textField.setText("");
+            }
+          }
+        });
 
     // Add key input listener to capture single key presses
-    textField.addListener(new InputListener() {
-      @Override
-      public boolean keyDown(InputEvent event, int keycode) {
-        if (textField.hasKeyboardFocus()) {
-          // Update the text field with the new key
-          if (keybinds.containsValue(keycode)) {
-            logger.info("Keybind conflict: {}", keycode);
-            ServiceLocator.getDialogService().error("Keybind conflict", "This key is already in use by another action.");
-            textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
-            textField.setFocusTraversal(false);
-            stage.setKeyboardFocus(null);
+    textField.addListener(
+        new InputListener() {
+          @Override
+          public boolean keyDown(InputEvent event, int keycode) {
+            if (textField.hasKeyboardFocus()) {
+              // Update the text field with the new key
+              if (keybinds.containsValue(keycode)) {
+                logger.info("Keybind conflict: {}", keycode);
+                ServiceLocator.getDialogService()
+                    .error("Keybind conflict", "This key is already in use by another action.");
+                textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
+                textField.setFocusTraversal(false);
+                stage.setKeyboardFocus(null);
+                return false;
+              }
+              logger.info("Keybind not conflict: {}", keycode);
+              // to fix
+              keybinds.put(textField.getName(), keycode);
+              textField.setText(Input.Keys.toString(keycode));
+              textField.setFocusTraversal(false);
+              stage.setKeyboardFocus(null);
+              return true;
+            }
             return false;
           }
-          logger.info("Keybind not conflict: {}", keycode);
-          // to fix
-          keybinds.put(textField.getName(), keycode);
-          textField.setText(Input.Keys.toString(keycode));
-          textField.setFocusTraversal(false);
-          stage.setKeyboardFocus(null);
-          return true;
-        }
-        return false;
-      }
-    });
+        });
   }
 
-  /**
-   * Apply changes to the game settings.
-   */
+  /** Apply changes to the game settings. */
   private void applyChanges() {
     logger.info("[GameSettingsMenu] Applying game settings");
-    
+
     Settings settings = ServiceLocator.getSettingsService().getSettings();
-    
+
     // Apply difficulty changes
     if (difficultySelect != null) {
       String difficulty = difficultySelect.getSelected();
@@ -234,27 +238,30 @@ public class GameSettingsMenu extends UIComponent {
           break;
         default:
           break;
-      } 
+      }
     }
-    
-    ServiceLocator.getSettingsService().changeKeybinds(
-        keybinds.get(PAUSE_KEY), keybinds.get(SKIP_KEY), keybinds.get(INTERACTION_KEY), keybinds.get(UP_KEY), keybinds.get(DOWN_KEY), keybinds.get(LEFT_KEY), keybinds.get(RIGHT_KEY));
-      logger.info("[GameSettingsMenu] New Keybinds: {}", keybinds);
+
+    ServiceLocator.getSettingsService()
+        .changeKeybinds(
+            keybinds.get(PAUSE_KEY),
+            keybinds.get(SKIP_KEY),
+            keybinds.get(INTERACTION_KEY),
+            keybinds.get(UP_KEY),
+            keybinds.get(DOWN_KEY),
+            keybinds.get(LEFT_KEY),
+            keybinds.get(RIGHT_KEY));
+    logger.info("[GameSettingsMenu] New Keybinds: {}", keybinds);
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[GameSettingsMenu] Game settings applied");
   }
 
-  /**
-   * Show the game settings menu.
-   */
+  /** Show the game settings menu. */
   private void showMenu() {
     rootTable.setVisible(true);
     bottomRow.setVisible(true);
   }
 
-  /**
-   * Hide the game settings menu.
-   */
+  /** Hide the game settings menu. */
   private void hideMenu() {
     rootTable.setVisible(false);
     bottomRow.setVisible(false);
@@ -274,7 +281,7 @@ public class GameSettingsMenu extends UIComponent {
 
   /**
    * Whiten the label.
-   * 
+   *
    * @param label The label to whiten.
    */
   private static void whiten(Label label) {

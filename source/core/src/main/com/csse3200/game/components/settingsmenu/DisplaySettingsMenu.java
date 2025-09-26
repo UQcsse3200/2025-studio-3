@@ -7,8 +7,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
+import java.util.Arrays;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,12 +21,16 @@ public class DisplaySettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DisplaySettingsMenu.class);
   private Table rootTable;
   private Table bottomRow;
-
-  // Display Settings Components
+  private int previousFps;
   private SelectBox<String> displayModeSelect;
+  private SelectBox<String> resolutionSelect;
+  private Label resolutionLabel;
   private TextField fpsText;
   private CheckBox vsyncCheck;
+  private SelectBox<String> uiScaleSelect;
+  private SelectBox<String> qualitySelect;
 
+  /** Constructor for DisplaySettingsMenu. */
   public DisplaySettingsMenu() {
     super();
   }
@@ -39,38 +47,86 @@ public class DisplaySettingsMenu extends UIComponent {
     rootTable.setVisible(false);
   }
 
+  /** Add actors to the UI. */
   private void addActors() {
     rootTable = new Table();
     rootTable.setFillParent(true);
+    rootTable.center();
+
+    // Create title
+    Label title = TypographyFactory.createTitle("Display Settings");
+    rootTable.add(title).center().padTop(30f).colspan(2);
+    rootTable.row().padTop(30f);
 
     // Get current settings
-    Settings settings = new Settings();
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
 
     // Create components
     Label displayModeLabel = new Label("Display Mode:", skin);
     displayModeSelect = new SelectBox<>(skin);
-    displayModeSelect.setItems("Windowed", "Fullscreen", "Borderless");
+    String[] displayModeItems = settings.getAvailableModes().values().toArray(new String[0]);
+    String[] items =
+        Arrays.stream(displayModeItems).map(String::toUpperCase).toArray(String[]::new);
+    displayModeSelect.setItems(items);
     displayModeSelect.setSelected(settings.getCurrentMode().toString());
     whiten(displayModeLabel);
 
-    Label resolutionLabel = new Label("Resolution:", skin);
-    SelectBox<String> resolutionSelect = new SelectBox<>(skin);
-    resolutionSelect.setItems("1920x1080", "1600x900", "1366x768", "1280x720");
+    // Add change listener to show/hide resolution row based on display mode
+    displayModeSelect.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            String selectedMode = displayModeSelect.getSelected();
+            boolean isWindowed = "WINDOWED".equals(selectedMode);
+            resolutionLabel.setVisible(isWindowed);
+            resolutionSelect.setVisible(isWindowed);
+
+            // Apply display mode change immediately
+            applyDisplayModeChange(selectedMode);
+          }
+        });
+
+    resolutionLabel = new Label("Resolution:", skin);
+    resolutionSelect = new SelectBox<>(skin);
+    String[] resolutionStrings =
+        settings.getAvailableResolutions().stream()
+            .map(pair -> pair.getKey() + "x" + pair.getValue())
+            .toArray(String[]::new);
+    String currentResolution =
+        settings.getWindowedResolution().getKey()
+            + "x"
+            + settings.getWindowedResolution().getValue();
+    resolutionSelect.setItems(resolutionStrings);
+    resolutionSelect.setSelected(currentResolution);
     whiten(resolutionLabel);
+
+    boolean isWindowed = settings.getCurrentMode() == Settings.Mode.WINDOWED;
+    resolutionLabel.setVisible(isWindowed);
+    resolutionSelect.setVisible(isWindowed);
+
+    // Add change listener to apply resolution change immediately
+    resolutionSelect.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            applyResolutionChange();
+          }
+        });
 
     Label fpsLabel = new Label("Max FPS:", skin);
     fpsText = new TextField(Integer.toString(settings.getFps()), skin);
+    previousFps = settings.getFps(); // Store initial FPS value
     whiten(fpsLabel);
 
     Label uiScaleLabel = new Label("UI Scale:", skin);
-    SelectBox<String> uiScaleSelect = new SelectBox<>(skin);
-    uiScaleSelect.setItems("Small", "Medium", "Large");
+    uiScaleSelect = new SelectBox<>(skin);
+    uiScaleSelect.setItems("SMALL", "MEDIUM", "LARGE");
     uiScaleSelect.setSelected(settings.getCurrentUIScale().toString());
     whiten(uiScaleLabel);
 
     Label qualityLabel = new Label("Quality:", skin);
-    SelectBox<String> qualitySelect = new SelectBox<>(skin);
-    qualitySelect.setItems("Low", "High");
+    qualitySelect = new SelectBox<>(skin);
+    qualitySelect.setItems("LOW", "HIGH");
     qualitySelect.setSelected(settings.getQuality().toString());
     whiten(qualityLabel);
 
@@ -87,75 +143,141 @@ public class DisplaySettingsMenu extends UIComponent {
           public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Apply button clicked");
             applyChanges();
-            entity.getEvents().trigger("backtosettingsmenu");
           }
         });
 
     // Layout
-    rootTable.add(displayModeLabel).right().padRight(15f);
-    rootTable.add(displayModeSelect).left().width(150f);
+    rootTable.add(displayModeLabel).left().padRight(25f);
+    rootTable.add(displayModeSelect).center().width(200f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(resolutionLabel).right().padRight(15f);
-    rootTable.add(resolutionSelect).left().width(150f);
+    rootTable.add(resolutionLabel).left().padRight(25f);
+    rootTable.add(resolutionSelect).center().width(200f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(fpsLabel).right().padRight(15f);
-    rootTable.add(fpsText).left().width(100f);
+    rootTable.add(fpsLabel).left().padRight(25f);
+    rootTable.add(fpsText).center().width(200f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(uiScaleLabel).right().padRight(15f);
-    rootTable.add(uiScaleSelect).left().width(150f);
+    rootTable.add(uiScaleLabel).left().padRight(25f);
+    rootTable.add(uiScaleSelect).center().width(200f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(qualityLabel).right().padRight(15f);
-    rootTable.add(qualitySelect).left().width(150f);
+    rootTable.add(qualityLabel).left().padRight(25f);
+    rootTable.add(qualitySelect).center().width(200f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(vsyncLabel).right().padRight(15f);
-    rootTable.add(vsyncCheck).left();
+    rootTable.add(vsyncLabel).left().padRight(25f);
+    rootTable.add(vsyncCheck).center();
     rootTable.row().padTop(20f);
 
     // Apply button bottom center
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f);
+    bottomRow.add(applyBtn).size(150f, 50f).center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
   }
 
-  private void applyChanges() {
-    // Apply display settings
-    Settings settings = new Settings();
-    Integer fpsVal = parseOrNull(fpsText.getText());
-    if (fpsVal != null) {
-      settings.setFps(fpsVal);
+  /** Apply display mode change immediately. */
+  private void applyDisplayModeChange(String selectedMode) {
+    logger.info("[DisplaySettingsMenu] Applying display mode change: {}", selectedMode);
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    switch (selectedMode) {
+      case "WINDOWED":
+        settingsService.changeDisplayMode(Settings.Mode.WINDOWED);
+        break;
+      case "FULLSCREEN":
+        settingsService.changeDisplayMode(Settings.Mode.FULLSCREEN);
+        break;
+      case "BORDERLESS":
+        settingsService.changeDisplayMode(Settings.Mode.BORDERLESS);
+        break;
+      default:
+        break;
     }
-    if (displayModeSelect != null) {
-      String mode = displayModeSelect.getSelected();
-      switch (mode) {
-        case "Windowed":
-          settings.setCurrentMode(Settings.Mode.WINDOWED);
-          break;
-        case "Fullscreen":
-          settings.setCurrentMode(Settings.Mode.FULLSCREEN);
-          break;
-        case "Borderless":
-          settings.setCurrentMode(Settings.Mode.BORDERLESS);
-          break;
-        default:
-          settings.setCurrentMode(Settings.Mode.WINDOWED);
-          break;
-      }
-    }
-    if (vsyncCheck != null) {
-      settings.setVsync(vsyncCheck.isChecked());
-    }
-    logger.debug("Display settings applied");
+    resolutionSelect.setSelected(
+        settingsService.getSettings().getWindowedResolution().getKey()
+            + "x"
+            + settingsService.getSettings().getWindowedResolution().getValue());
+    ServiceLocator.getSettingsService().saveSettings();
   }
 
+  /** Apply resolution change immediately. */
+  private void applyResolutionChange() {
+    logger.info("[DisplaySettingsMenu] Applying resolution change");
+    String selectedResolution = resolutionSelect.getSelected();
+    if (selectedResolution != null) {
+      // Parse resolution string (e.g., "1920x1080")
+      String[] parts = selectedResolution.split("x");
+      if (parts.length == 2) {
+        try {
+          int width = Integer.parseInt(parts[0]);
+          int height = Integer.parseInt(parts[1]);
+          ServiceLocator.getSettingsService().switchResolution(new Pair<>(width, height));
+        } catch (NumberFormatException e) {
+          logger.error("Invalid resolution format: {}", selectedResolution);
+        }
+      }
+    }
+    ServiceLocator.getSettingsService().saveSettings();
+  }
+
+  /** Apply the remaining display settings (FPS, VSync, etc.). */
+  private void applyChanges() {
+    logger.info("[DisplaySettingsMenu] Applying remaining display settings");
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    Integer fpsVal = parseOrNull(fpsText.getText());
+
+    // Validate FPS value
+    if (fpsVal != null) {
+      int maxRefreshRate = settings.getRefreshRate();
+      if (fpsVal > maxRefreshRate) {
+        ServiceLocator.getDialogService()
+            .error(
+                "Invalid FPS",
+                "FPS cannot exceed monitor refresh rate (" + maxRefreshRate + " Hz).");
+        fpsText.setText(Integer.toString(previousFps));
+        return;
+      }
+    }
+
+    // Apply remaining display settings
+    if (fpsVal != null && vsyncCheck != null && uiScaleSelect != null && qualitySelect != null) {
+      // Parse UI scale
+      Settings.UIScale uiScale;
+      try {
+        uiScale = Settings.UIScale.valueOf(uiScaleSelect.getSelected());
+      } catch (IllegalArgumentException e) {
+        uiScale = Settings.UIScale.MEDIUM; // Default fallback
+      }
+      
+      // Parse quality
+      Settings.Quality quality;
+      try {
+        quality = Settings.Quality.valueOf(qualitySelect.getSelected());
+      } catch (IllegalArgumentException e) {
+        quality = Settings.Quality.HIGH; // Default fallback
+      }
+      
+      ServiceLocator.getSettingsService()
+          .changeDisplaySettings(fpsVal, vsyncCheck.isChecked(), uiScale, quality);
+      previousFps = fpsVal;
+    }
+
+    ServiceLocator.getSettingsService().saveSettings();
+    logger.info("[DisplaySettingsMenu] Remaining display settings applied");
+    entity.getEvents().trigger("backtosettingsmenu");
+  }
+
+  /**
+   * Parse the number or return null.
+   *
+   * @param num The number to parse.
+   * @return The parsed number or null.
+   */
   private Integer parseOrNull(String num) {
     try {
       return Integer.parseInt(num, 10);
@@ -164,11 +286,13 @@ public class DisplaySettingsMenu extends UIComponent {
     }
   }
 
+  /** Show the display settings menu. */
   private void showMenu() {
     rootTable.setVisible(true);
     bottomRow.setVisible(true);
   }
 
+  /** Hide the display settings menu. */
   private void hideMenu() {
     rootTable.setVisible(false);
     bottomRow.setVisible(false);
@@ -180,17 +304,17 @@ public class DisplaySettingsMenu extends UIComponent {
   }
 
   @Override
-  public void update() {
-    stage.act(ServiceLocator.getTimeSource().getDeltaTime());
-  }
-
-  @Override
   public void dispose() {
     rootTable.clear();
     bottomRow.clear();
     super.dispose();
   }
 
+  /**
+   * Whiten the label.
+   *
+   * @param label The label to whiten.
+   */
   private static void whiten(Label label) {
     Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
     st.fontColor = Color.WHITE;

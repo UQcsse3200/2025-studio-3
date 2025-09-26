@@ -190,6 +190,19 @@ public class Settings {
         availableResolutions.add(resolution);
       }
     }
+    // Load windowed resolution from deserialized settings
+    windowedResolution = deserializedSettings.getWindowedResolution();
+    if (this.currentMode == Mode.WINDOWED && availableResolutions.contains(windowedResolution)) {
+      logger.info("[Settings] Windowed resolution is available, setting windowed resolution to saved resolution");
+    } else {
+      for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
+        if (currentResolution.getKey() >= resolution.getKey()
+            && currentResolution.getValue() >= resolution.getValue()) {
+          logger.info("[Settings] Windowed resolution is not available, setting windowed resolution to first available resolution");
+          windowedResolution = resolution;
+        }
+      }
+    }
     this.refreshRate = displayMode.refreshRate;
     this.fps =
         deserializedSettings.getFps() > displayMode.refreshRate
@@ -402,6 +415,10 @@ public class Settings {
 
   public Pair<Integer, Integer> getWindowedResolution() {
     return windowedResolution;
+  }
+
+  public void setWindowedResolution(Pair<Integer, Integer> windowedResolution) {
+    this.windowedResolution = windowedResolution;
   }
 
   public void setCurrentResolution(Pair<Integer, Integer> currentResolution) {

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +25,7 @@ public class AudioSettingsMenu extends UIComponent {
   private Slider soundVolumeSlider;
   private Slider voiceVolumeSlider;
 
-  /**
-   * Constructor for AudioSettingsMenu.
-   */
+  /** Constructor for AudioSettingsMenu. */
   public AudioSettingsMenu() {
     super();
   }
@@ -43,12 +42,17 @@ public class AudioSettingsMenu extends UIComponent {
     rootTable.setVisible(false);
   }
 
-  /**
-   * Add actors to the UI.
-   */
+  /** Add actors to the UI. */
   private void addActors() {
     rootTable = new Table();
     rootTable.setFillParent(true);
+    rootTable.center(); // Center the entire table content
+
+    // Create title
+    Label title = TypographyFactory.createTitle("Audio Settings");
+    rootTable.add(title).center().padTop(30f).colspan(3);
+    rootTable.row().padTop(30f);
+
     Settings settings = ServiceLocator.getSettingsService().getSettings();
 
     // Create components
@@ -126,23 +130,23 @@ public class AudioSettingsMenu extends UIComponent {
         });
 
     // Layout
-    rootTable.add(masterVolumeLabel).right().padRight(15f);
-    rootTable.add(masterVolumeSlider).width(200f).left();
+    rootTable.add(masterVolumeLabel).left().padRight(15f);
+    rootTable.add(masterVolumeSlider).width(200f).center();
     rootTable.add(masterVolumeValueLabel).left().padLeft(10f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(musicVolumeLabel).right().padRight(15f);
-    rootTable.add(musicVolumeSlider).width(200f).left();
+    rootTable.add(musicVolumeLabel).left().padRight(15f);
+    rootTable.add(musicVolumeSlider).width(200f).center();
     rootTable.add(musicVolumeValueLabel).left().padLeft(10f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(soundVolumeLabel).right().padRight(15f);
-    rootTable.add(soundVolumeSlider).width(200f).left();
+    rootTable.add(soundVolumeLabel).left().padRight(15f);
+    rootTable.add(soundVolumeSlider).width(200f).center();
     rootTable.add(soundVolumeValueLabel).left().padLeft(10f);
     rootTable.row().padTop(10f);
 
-    rootTable.add(voiceVolumeLabel).right().padRight(15f);
-    rootTable.add(voiceVolumeSlider).width(200f).left();
+    rootTable.add(voiceVolumeLabel).left().padRight(15f);
+    rootTable.add(voiceVolumeSlider).width(200f).center();
     rootTable.add(voiceVolumeValueLabel).left().padLeft(10f);
     rootTable.row().padTop(20f);
 
@@ -150,15 +154,13 @@ public class AudioSettingsMenu extends UIComponent {
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f);
+    bottomRow.add(applyBtn).size(150f, 50f).center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
   }
 
-  /**
-   * Apply changes to the audio settings.
-   */
+  /** Apply changes to the audio settings. */
   private void applyChanges() {
     logger.info("[AudioSettingsMenu] Applying audio settings");
     Settings settings = ServiceLocator.getSettingsService().getSettings();
@@ -170,17 +172,13 @@ public class AudioSettingsMenu extends UIComponent {
     logger.info("[AudioSettingsMenu] Audio settings applied");
   }
 
-  /**
-   * Show the audio settings menu.
-   */
+  /** Show the audio settings menu. */
   private void showMenu() {
     rootTable.setVisible(true);
     bottomRow.setVisible(true);
   }
 
-  /**
-   * Hide the audio settings menu.
-   */
+  /** Hide the audio settings menu. */
   private void hideMenu() {
     rootTable.setVisible(false);
     bottomRow.setVisible(false);
@@ -192,11 +190,6 @@ public class AudioSettingsMenu extends UIComponent {
   }
 
   @Override
-  public void update() {
-    stage.act(ServiceLocator.getTimeSource().getDeltaTime());
-  }
-
-  @Override
   public void dispose() {
     rootTable.clear();
     bottomRow.clear();
@@ -205,7 +198,7 @@ public class AudioSettingsMenu extends UIComponent {
 
   /**
    * Whiten the label.
-   * 
+   *
    * @param label The label to whiten.
    */
   private static void whiten(Label label) {

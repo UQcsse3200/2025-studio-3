@@ -25,6 +25,7 @@ public class SettingsService {
     settings = deserializedSettings != null ? new Settings(deserializedSettings) : new Settings();
     Gdx.graphics.setForegroundFPS(settings.getFps());
     Gdx.graphics.setVSync(settings.isVsync());
+    changeDisplayMode(settings.getCurrentMode());
     saveSettings();
     logger.info("[SettingsService] SettingsService initialized");
     String settingsString = settings.toString();

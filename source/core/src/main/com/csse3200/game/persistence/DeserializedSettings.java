@@ -1,5 +1,7 @@
 package com.csse3200.game.persistence;
 
+import net.dermetfan.utils.Pair;
+
 /** DeserializedSettings is a class that is used to deserialize a user's settings. */
 public class DeserializedSettings {
   private float musicVolume;
@@ -19,6 +21,8 @@ public class DeserializedSettings {
   private Settings.Mode currentMode;
   private int fps;
   private boolean vsync;
+  private int windowedResolutionWidth;
+  private int windowedResolutionHeight;
 
   /** Constructor for the DeserializedSettings class. */
   public DeserializedSettings() {
@@ -48,6 +52,9 @@ public class DeserializedSettings {
     this.currentMode = settings.getCurrentMode();
     this.fps = settings.getFps();
     this.vsync = settings.isVsync();
+    Pair<Integer, Integer> windowedRes = settings.getWindowedResolution();
+    this.windowedResolutionWidth = windowedRes.getKey();
+    this.windowedResolutionHeight = windowedRes.getValue();
   }
 
   /**
@@ -204,6 +211,15 @@ public class DeserializedSettings {
   }
 
   /**
+   * Gets the windowed resolution.
+   *
+   * @return the windowed resolution.
+   */
+  public Pair<Integer, Integer> getWindowedResolution() {
+    return new Pair<>(windowedResolutionWidth, windowedResolutionHeight);
+  }
+
+  /**
    * Sets the music volume.
    *
    * @param musicVolume the music volume.
@@ -354,5 +370,15 @@ public class DeserializedSettings {
    */
   public void setVsync(boolean vsync) {
     this.vsync = vsync;
+  }
+
+  /**
+   * Sets the windowed resolution.
+   *
+   * @param windowedResolution the windowed resolution.
+   */
+  public void setWindowedResolution(net.dermetfan.utils.Pair<Integer, Integer> windowedResolution) {
+    this.windowedResolutionWidth = windowedResolution.getKey();
+    this.windowedResolutionHeight = windowedResolution.getValue();
   }
 }
