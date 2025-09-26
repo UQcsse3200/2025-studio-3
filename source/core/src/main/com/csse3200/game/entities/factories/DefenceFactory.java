@@ -23,6 +23,7 @@ import com.csse3200.game.services.ServiceLocator;
 
 // TODO - provide documentation for refactored functions
 // TODO - make a different factory for generator entities altogether
+// TODO - fix tests to account for this refactor
 
 /**
  * Factory class for creating defence entities (e.g., sling shooters). This class should not be

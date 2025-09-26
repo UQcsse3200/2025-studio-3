@@ -35,6 +35,24 @@ public class Arsenal {
   }
 
   /**
+   * Adds a defence to the arsenal.
+   *
+   * @param defenceKey The key of the defence to add.
+   */
+  public void unlockGenerator(String defenceKey) {
+    generators.add(defenceKey);
+  }
+
+  /**
+   * Removes a defence from the arsenal.
+   *
+   * @param defenceKey The key of the defence to remove.
+   */
+  public void lockGenerator(String defenceKey) {
+    generators.remove(defenceKey);
+  }
+
+  /**
    * Gets the list of defences in the arsenal.
    *
    * @return The list of keys of the defences in the arsenal.
@@ -55,10 +73,10 @@ public class Arsenal {
   /**
    * Checks if the arsenal contains the specified defence key.
    *
-   * @param defenceKey The key of the defence to check.
+   * @param key The key of the defence to check.
    * @return True if the arsenal contains the defence key, false otherwise.
    */
-  public boolean contains(String defenceKey) {
-    return defences.contains(defenceKey);
+  public boolean contains(String key) {
+    return defences.contains(key) || generators.contains(key);
   }
 }
