@@ -80,8 +80,6 @@ public class DisplaySettingsMenu extends UIComponent {
             boolean isWindowed = "WINDOWED".equals(selectedMode);
             resolutionLabel.setVisible(isWindowed);
             resolutionSelect.setVisible(isWindowed);
-
-            // Apply display mode change immediately
             applyDisplayModeChange(selectedMode);
           }
         });
@@ -115,7 +113,7 @@ public class DisplaySettingsMenu extends UIComponent {
 
     Label fpsLabel = new Label("Max FPS:", skin);
     fpsText = new TextField(Integer.toString(settings.getFps()), skin);
-    previousFps = settings.getFps(); // Store initial FPS value
+    previousFps = settings.getFps();
     whiten(fpsLabel);
 
     Label uiScaleLabel = new Label("UI Scale:", skin);
@@ -246,22 +244,20 @@ public class DisplaySettingsMenu extends UIComponent {
 
     // Apply remaining display settings
     if (fpsVal != null && vsyncCheck != null && uiScaleSelect != null && qualitySelect != null) {
-      // Parse UI scale
       Settings.UIScale uiScale;
       try {
         uiScale = Settings.UIScale.valueOf(uiScaleSelect.getSelected());
       } catch (IllegalArgumentException e) {
-        uiScale = Settings.UIScale.MEDIUM; // Default fallback
+        uiScale = Settings.UIScale.MEDIUM;
       }
-      
-      // Parse quality
+
       Settings.Quality quality;
       try {
         quality = Settings.Quality.valueOf(qualitySelect.getSelected());
       } catch (IllegalArgumentException e) {
-        quality = Settings.Quality.HIGH; // Default fallback
+        quality = Settings.Quality.HIGH;
       }
-      
+
       ServiceLocator.getSettingsService()
           .changeDisplaySettings(fpsVal, vsyncCheck.isChecked(), uiScale, quality);
       previousFps = fpsVal;

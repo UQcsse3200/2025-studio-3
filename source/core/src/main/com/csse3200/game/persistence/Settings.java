@@ -155,6 +155,8 @@ public class Settings {
   /**
    * Constructor for the Settings class, used for saved settings.
    *
+   * <p>Handles a bunch of parsing and loading of settings from a deserialized settings object.
+   *
    * @param deserializedSettings the deserialized settings.
    */
   public Settings(DeserializedSettings deserializedSettings) {
@@ -193,12 +195,14 @@ public class Settings {
     // Load windowed resolution from deserialized settings
     windowedResolution = deserializedSettings.getWindowedResolution();
     if (this.currentMode == Mode.WINDOWED && availableResolutions.contains(windowedResolution)) {
-      logger.info("[Settings] Windowed resolution is available, setting windowed resolution to saved resolution");
+      logger.info(
+          "[Settings] Windowed resolution is available, setting windowed resolution to saved resolution");
     } else {
       for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
         if (currentResolution.getKey() >= resolution.getKey()
             && currentResolution.getValue() >= resolution.getValue()) {
-          logger.info("[Settings] Windowed resolution is not available, setting windowed resolution to first available resolution");
+          logger.info(
+              "[Settings] Windowed resolution is not available, setting windowed resolution to first available resolution");
           windowedResolution = resolution;
         }
       }
@@ -321,106 +325,236 @@ public class Settings {
     return rightButton;
   }
 
+  /**
+   * Gets the available resolutions.
+   *
+   * @return the available resolutions.
+   */
   public List<Pair<Integer, Integer>> getAvailableResolutions() {
     return availableResolutions;
   }
 
+  /**
+   * Gets the current resolution.
+   *
+   * @return the current resolution.
+   */
   public Pair<Integer, Integer> getCurrentResolution() {
     return currentResolution;
   }
 
+  /**
+   * Gets the refresh rate.
+   *
+   * @return the refresh rate.
+   */
   public int getRefreshRate() {
     return refreshRate;
   }
 
+  /**
+   * Gets the FPS.
+   *
+   * @return the FPS.
+   */
   public int getFps() {
     return fps;
   }
 
+  /**
+   * Gets whether vsync is enabled.
+   *
+   * @return whether vsync is enabled.
+   */
   public boolean isVsync() {
     return vsync;
   }
 
+  /**
+   * Gets the current UI scale.
+   *
+   * @return the current UI scale.
+   */
   public UIScale getCurrentUIScale() {
     return currentUIScale;
   }
 
+  /**
+   * Gets the current quality.
+   *
+   * @return the current quality.
+   */
   public Quality getQuality() {
     return quality;
   }
 
+  /**
+   * Gets the available modes.
+   *
+   * @return the available modes.
+   */
   public Map<Mode, String> getAvailableModes() {
     return availableModes;
   }
 
+  /**
+   * Gets the available monitors.
+   *
+   * @return the available monitors.
+   */
   public Monitor[] getAvailableMonitors() {
     return availableMonitors;
   }
 
+  /**
+   * Gets the current monitor.
+   *
+   * @return the current monitor.
+   */
   public Monitor getCurrentMonitor() {
     return currentMonitor;
   }
 
+  /**
+   * Gets the current mode.
+   *
+   * @return the current mode.
+   */
   public Mode getCurrentMode() {
     return currentMode;
   }
 
+  /**
+   * Sets the sound volume.
+   *
+   * @param soundVolume the sound volume.
+   */
   public void setSoundVolume(float soundVolume) {
     this.soundVolume = soundVolume;
   }
 
+  /**
+   * Sets the voice volume.
+   *
+   * @param voiceVolume the voice volume.
+   */
   public void setVoiceVolume(float voiceVolume) {
     this.voiceVolume = voiceVolume;
   }
 
+  /**
+   * Sets the music volume.
+   *
+   * @param musicVolume the music volume.
+   */
   public void setMusicVolume(float musicVolume) {
     this.musicVolume = musicVolume;
   }
 
+  /**
+   * Sets the master volume.
+   *
+   * @param masterVolume the master volume.
+   */
   public void setMasterVolume(float masterVolume) {
     this.masterVolume = masterVolume;
   }
 
+  /**
+   * Sets the difficulty.
+   *
+   * @param difficulty the difficulty.
+   */
   public void setDifficulty(Difficulty difficulty) {
     this.difficulty = difficulty;
   }
 
+  /**
+   * Sets the pause button.
+   *
+   * @param pauseButton the pause button.
+   */
   public void setPauseButton(int pauseButton) {
     this.pauseButton = pauseButton;
   }
 
+  /**
+   * Sets the skip button.
+   *
+   * @param skipButton the skip button.
+   */
   public void setSkipButton(int skipButton) {
     this.skipButton = skipButton;
   }
 
+  /**
+   * Sets the interaction button.
+   *
+   * @param interactionButton the interaction button.
+   */
   public void setInteractionButton(int interactionButton) {
     this.interactionButton = interactionButton;
   }
 
+  /**
+   * Sets the up button.
+   *
+   * @param upButton the up button.
+   */
   public void setUpButton(int upButton) {
     this.upButton = upButton;
   }
 
+  /**
+   * Sets the down button.
+   *
+   * @param downButton the down button.
+   */
   public void setDownButton(int downButton) {
     this.downButton = downButton;
   }
 
+  /**
+   * Sets the left button.
+   *
+   * @param leftButton the left button.
+   */
   public void setLeftButton(int leftButton) {
     this.leftButton = leftButton;
   }
 
+  /**
+   * Sets the right button.
+   *
+   * @param rightButton the right button.
+   */
   public void setRightButton(int rightButton) {
     this.rightButton = rightButton;
   }
 
+  /**
+   * Gets the windowed resolution.
+   *
+   * @return the windowed resolution.
+   */
   public Pair<Integer, Integer> getWindowedResolution() {
     return windowedResolution;
   }
 
+  /**
+   * Sets the windowed resolution.
+   *
+   * @param windowedResolution the windowed resolution.
+   */
   public void setWindowedResolution(Pair<Integer, Integer> windowedResolution) {
     this.windowedResolution = windowedResolution;
   }
 
+  /**
+   * Sets the current resolution.
+   *
+   * @param currentResolution the current resolution.
+   */
   public void setCurrentResolution(Pair<Integer, Integer> currentResolution) {
     this.currentResolution = currentResolution;
     if (currentResolution.equals(windowedResolution)) {
@@ -437,10 +571,20 @@ public class Settings {
     }
   }
 
+  /**
+   * Sets the refresh rate.
+   *
+   * @param refreshRate the refresh rate.
+   */
   public void setRefreshRate(int refreshRate) {
     this.refreshRate = refreshRate;
   }
 
+  /**
+   * Sets the FPS.
+   *
+   * @param fps the FPS.
+   */
   public void setFps(int fps) {
     if (fps > refreshRate) {
       logger.warn("FPS is greater than refresh rate, setting FPS to refresh rate");
@@ -449,26 +593,52 @@ public class Settings {
     this.fps = fps;
   }
 
+  /**
+   * Sets whether vsync is enabled.
+   *
+   * @param vsync whether vsync is enabled.
+   */
   public void setVsync(boolean vsync) {
     this.vsync = vsync;
   }
 
+  /**
+   * Sets the current UI scale.
+   *
+   * @param currentUIScale the current UI scale.
+   */
   public void setCurrentUIScale(UIScale currentUIScale) {
     this.currentUIScale = currentUIScale;
   }
 
+  /**
+   * Sets the current quality.
+   *
+   * @param quality the current quality.
+   */
   public void setQuality(Quality quality) {
     this.quality = quality;
   }
 
+  /**
+   * Sets the current mode.
+   *
+   * @param currentMode the current mode.
+   */
   public void setCurrentMode(Mode currentMode) {
     this.currentMode = currentMode;
   }
 
+  /**
+   * Sets the current monitor.
+   *
+   * @param currentMonitor the current monitor.
+   */
   public void setCurrentMonitor(Monitor currentMonitor) {
     this.currentMonitor = currentMonitor;
   }
 
+  /** Sets the available resolutions. */
   public void setAvailableResolutions() {
     this.availableResolutions.clear();
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
@@ -479,6 +649,11 @@ public class Settings {
     }
   }
 
+  /**
+   * Returns a string representation of the settings.
+   *
+   * @return a string representation of the settings.
+   */
   public String toString() {
     return "\n"
         + "Settings"
