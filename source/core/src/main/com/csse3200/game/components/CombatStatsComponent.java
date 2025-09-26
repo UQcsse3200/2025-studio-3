@@ -14,6 +14,7 @@ public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
+  private int maxHealth;
   private int baseAttack;
 
   /**
@@ -24,6 +25,7 @@ public class CombatStatsComponent extends Component {
    */
   public CombatStatsComponent(int health, int baseAttack) {
     setHealth(health);
+    maxHealth = this.health; // setHealth will handle processing this
     setBaseAttack(baseAttack);
   }
 
@@ -43,6 +45,15 @@ public class CombatStatsComponent extends Component {
    */
   public int getHealth() {
     return health;
+  }
+
+  /**
+   * Returns the entity's maximum health.
+   *
+   * @return entity's maximum health
+   */
+  public int getMaxHealth() {
+    return maxHealth;
   }
 
   /**
@@ -83,7 +94,8 @@ public class CombatStatsComponent extends Component {
         // despawn entity
         entity.getEvents().trigger("despawnRobot", entity);
       }
-      entity.getEvents().trigger("updateHealth", this.health);
+
+      entity.getEvents().trigger("updateHealth", this.health, this.maxHealth);
     }
   }
 
