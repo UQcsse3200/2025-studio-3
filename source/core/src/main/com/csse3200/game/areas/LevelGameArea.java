@@ -292,6 +292,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Entity unit = RobotFactory.createRobotType(robotType);
 
+    // if the roobt spawned is a giant, add a health watcher component to spawn mini
     if (robotType == RobotType.GIANT) {
       // spawnMinion once when health <= 40 percent
       unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
