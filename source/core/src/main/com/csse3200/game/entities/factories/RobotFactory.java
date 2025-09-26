@@ -20,6 +20,7 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -36,12 +37,23 @@ public class RobotFactory {
    * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
    * file is missing or deserialization fails, this will be null.
    */
+  private static final Logger logger = org.slf4j.LoggerFactory.getLogger(RobotFactory.class);
+
   public enum RobotType {
-    STANDARD,
-    FAST,
-    TANKY,
-    BUNGEE,
-    TELEPORT
+    STANDARD("standardRobot"),
+    FAST("fastRobot"),
+    TANKY("tankyRobot"),
+    BUNGEE("bungeeRobot"),
+    TELEPORT("teleportRobot"),
+    JUMPER("jumperRobot");
+
+    private final String configKey;
+    RobotType(String configKey) {
+        this.configKey = configKey;
+    }
+    public String get() {
+        return configKey;
+    }
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -59,13 +71,9 @@ public class RobotFactory {
    */
   public static Entity createRobotType(RobotType robotType) {
     ConfigService configService = getConfigService();
-    BaseEnemyConfig config = null;
-    switch (robotType) {
-      case FAST -> config = configService.getEnemyConfig("fastRobot");
-      case TANKY -> config = configService.getEnemyConfig("tankyRobot");
-      case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
-      case STANDARD -> config = configService.getEnemyConfig("standardRobot");
-      case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
+    BaseEnemyConfig config = configService.getEnemyConfig(robotType.get());
+    if (config == null) {
+        config = configService.getEnemyConfig(RobotType.STANDARD.get());
     }
     return createBaseRobot(config);
   }
@@ -143,6 +151,10 @@ public class RobotFactory {
             .addComponent(new HitMarkerComponent())
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
+
+    if (config.getName().contains("Jumper")) {
+      logger.info("Adding jumper behaviour to robot");
+    }
 
     if (config.isTeleportRobot()) {
       float[] laneYs = discoverLaneYsFromTiles();
