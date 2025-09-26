@@ -7,6 +7,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.JumpTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
@@ -154,6 +155,7 @@ public class RobotFactory {
 
     if (config.getName().contains("Jumper")) {
       logger.info("Adding jumper behaviour to robot");
+      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(90f, PhysicsLayer.NPC));
     }
 
     if (config.isTeleportRobot()) {
