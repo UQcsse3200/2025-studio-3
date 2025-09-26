@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 public class DisplaySettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DisplaySettingsMenu.class);
   private Table rootTable;
+  private Table bottomRow;
 
   // Display Settings Components
   private SelectBox<String> displayModeSelect;
@@ -34,6 +35,7 @@ public class DisplaySettingsMenu extends UIComponent {
     entity.getEvents().addListener("gamesettings", this::hideMenu);
     entity.getEvents().addListener("displaysettings", this::showMenu);
     entity.getEvents().addListener("audiosettings", this::hideMenu);
+    bottomRow.setVisible(false);
     rootTable.setVisible(false);
   }
 
@@ -115,9 +117,9 @@ public class DisplaySettingsMenu extends UIComponent {
     rootTable.row().padTop(20f);
 
     // Apply button bottom center
-    Table bottomRow = new Table();
+    bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().center().pad(20f);
+    bottomRow.bottom().padBottom(20f);
     bottomRow.add(applyBtn).size(150f, 50f);
     stage.addActor(bottomRow);
 
@@ -164,10 +166,12 @@ public class DisplaySettingsMenu extends UIComponent {
 
   private void showMenu() {
     rootTable.setVisible(true);
+    bottomRow.setVisible(true);
   }
 
   private void hideMenu() {
     rootTable.setVisible(false);
+    bottomRow.setVisible(false);
   }
 
   @Override
@@ -183,6 +187,7 @@ public class DisplaySettingsMenu extends UIComponent {
   @Override
   public void dispose() {
     rootTable.clear();
+    bottomRow.clear();
     super.dispose();
   }
 

@@ -52,8 +52,11 @@ public class SettingsMenu extends UIComponent {
   private void showMainMenu() {
     // Create main menu buttons
     TextButton displayBtn = ButtonFactory.createButton("Display Settings");
+    displayBtn.setSize(300f, 100f);
     TextButton gameBtn = ButtonFactory.createButton("Game Settings");
+    gameBtn.setSize(300f, 100f);
     TextButton audioBtn = ButtonFactory.createButton("Audio Settings");
+    audioBtn.setSize(300f, 100f);
 
     displayBtn.addListener(
         new ChangeListener() {
@@ -80,11 +83,11 @@ public class SettingsMenu extends UIComponent {
         });
 
     Table menuTable = new Table();
-    menuTable.add(displayBtn).size(200f, 50f).padBottom(20f);
+    menuTable.add(displayBtn).size(300f, 100f).padBottom(20f);
     menuTable.row();
-    menuTable.add(gameBtn).size(200f, 50f).padBottom(20f);
+    menuTable.add(gameBtn).size(300f, 100f).padBottom(20f);
     menuTable.row();
-    menuTable.add(audioBtn).size(200f, 50f);
+    menuTable.add(audioBtn).size(300f, 100f);
 
     rootTable.add(menuTable).expandX().expandY();
   }
@@ -111,22 +114,6 @@ public class SettingsMenu extends UIComponent {
         });
     stage.addActor(exitBtn);
 
-    // Apply button
-    TextButton applyBtn = ButtonFactory.createButton("Apply");
-    applyBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Apply button clicked");
-            applyChanges();
-            if (!ServiceLocator.getProfileService().isActive()) {
-              game.setScreen(ScreenType.MAIN_MENU);
-            } else {
-              game.setScreen(ScreenType.WORLD_MAP);
-            }
-          }
-        });
-
     // Title
     Label title = new Label("Settings", skin, "title");
 
@@ -135,19 +122,7 @@ public class SettingsMenu extends UIComponent {
     table.top().padTop(10f).padLeft(10f).padRight(10f);
     table.add(title).expandX().center();
 
-    // Apply button bottom-right
-    Table bottomRow = new Table();
-    bottomRow.setFillParent(true);
-    bottomRow.bottom().right().pad(20f);
-    bottomRow.add(applyBtn).size(100f, 50f);
-    stage.addActor(bottomRow);
-
     return table;
-  }
-
-  private void applyChanges() {
-    // Main menu doesn't have specific settings to apply
-    logger.debug("Main settings menu - no changes to apply");
   }
 
   private void exitMenu() {

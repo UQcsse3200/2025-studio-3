@@ -17,10 +17,12 @@ import org.slf4j.LoggerFactory;
 public class GameSettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(GameSettingsMenu.class);
   private Table rootTable;
-
-  // Game Settings Components
+  private Table bottomRow;
   private SelectBox<String> difficultySelect;
 
+  /**
+   * Constructor for GameSettingsMenu.
+   */
   public GameSettingsMenu() {
     super();
   }
@@ -33,17 +35,18 @@ public class GameSettingsMenu extends UIComponent {
     entity.getEvents().addListener("gamesettings", this::showMenu);
     entity.getEvents().addListener("displaysettings", this::hideMenu);
     entity.getEvents().addListener("audiosettings", this::hideMenu);
+    bottomRow.setVisible(false);
     rootTable.setVisible(false);
   }
 
+  /**
+   * Add actors to the UI.
+   */
   private void addActors() {
     rootTable = new Table();
     rootTable.setFillParent(true);
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
 
-    // Get current settings
-    Settings settings = new Settings();
-
-    // Create components
     Label pauseLabel = new Label("Pause Key:", skin);
     TextField pauseKeyText = new TextField(Input.Keys.toString(settings.getPauseButton()), skin);
     whiten(pauseLabel);
@@ -75,11 +78,10 @@ public class GameSettingsMenu extends UIComponent {
 
     Label difficultyLabel = new Label("Difficulty:", skin);
     difficultySelect = new SelectBox<>(skin);
-    difficultySelect.setItems("Easy", "Normal", "Hard");
+    difficultySelect.setItems("EASY", "NORMAL", "HARD");
     difficultySelect.setSelected(settings.getDifficulty().toString());
     whiten(difficultyLabel);
 
-    // Apply button
     TextButton applyBtn = ButtonFactory.createButton("Apply");
     applyBtn.addListener(
         new ChangeListener() {
@@ -91,7 +93,6 @@ public class GameSettingsMenu extends UIComponent {
           }
         });
 
-    // Layout
     rootTable.add(pauseLabel).right().padRight(15f);
     rootTable.add(pauseKeyText).left().width(100f);
     rootTable.row().padTop(10f);
@@ -124,46 +125,55 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.add(difficultySelect).left().width(150f);
     rootTable.row().padTop(20f);
 
-    // Apply button bottom center
-    Table bottomRow = new Table();
+    bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().center().pad(20f);
+    bottomRow.bottom().padBottom(20f);
     bottomRow.add(applyBtn).size(150f, 50f);
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
   }
 
+  /**
+   * Apply changes to the game settings.
+   */
   private void applyChanges() {
-    // Apply game settings
+    logger.info("[GameSettingsMenu] Applying game settings");
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
     if (difficultySelect != null) {
-      Settings settings = new Settings();
       String difficulty = difficultySelect.getSelected();
       switch (difficulty) {
-        case "Easy":
+        case "EASY":
           settings.setDifficulty(Settings.Difficulty.EASY);
           break;
-        case "Normal":
+        case "NORMAL":
           settings.setDifficulty(Settings.Difficulty.NORMAL);
           break;
-        case "Hard":
+        case "HARD":
           settings.setDifficulty(Settings.Difficulty.HARD);
           break;
         default:
-          settings.setDifficulty(Settings.Difficulty.NORMAL);
           break;
       }
-      // Note: Key bindings would need to be implemented with proper key input handling
     }
-    logger.debug("Game settings applied");
+    ServiceLocator.getSettingsService().saveSettings();
+    logger.info("[GameSettingsMenu] Game settings applied");
   }
 
+  /**
+   * Show the game settings menu.
+   */
   private void showMenu() {
     rootTable.setVisible(true);
+    bottomRow.setVisible(true);
   }
 
+  /**
+   * Hide the game settings menu.
+   */
   private void hideMenu() {
     rootTable.setVisible(false);
+    bottomRow.setVisible(false);
   }
 
   @Override
@@ -172,16 +182,17 @@ public class GameSettingsMenu extends UIComponent {
   }
 
   @Override
-  public void update() {
-    stage.act(ServiceLocator.getTimeSource().getDeltaTime());
-  }
-
-  @Override
   public void dispose() {
     rootTable.clear();
+    bottomRow.clear();
     super.dispose();
   }
 
+  /**
+   * Whiten the label.
+   * 
+   * @param label The label to whiten.
+   */
   private static void whiten(Label label) {
     Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
     st.fontColor = Color.WHITE;

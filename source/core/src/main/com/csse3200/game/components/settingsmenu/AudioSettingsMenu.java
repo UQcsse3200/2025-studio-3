@@ -18,13 +18,15 @@ public class AudioSettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(AudioSettingsMenu.class);
   private static final String PERCENTAGE_FORMAT = "%.0f%%";
   private Table rootTable;
-
-  // Audio Settings Components
+  private Table bottomRow;
   private Slider masterVolumeSlider;
   private Slider musicVolumeSlider;
   private Slider soundVolumeSlider;
   private Slider voiceVolumeSlider;
 
+  /**
+   * Constructor for AudioSettingsMenu.
+   */
   public AudioSettingsMenu() {
     super();
   }
@@ -37,15 +39,17 @@ public class AudioSettingsMenu extends UIComponent {
     entity.getEvents().addListener("gamesettings", this::hideMenu);
     entity.getEvents().addListener("displaysettings", this::hideMenu);
     entity.getEvents().addListener("audiosettings", this::showMenu);
+    bottomRow.setVisible(false);
     rootTable.setVisible(false);
   }
 
+  /**
+   * Add actors to the UI.
+   */
   private void addActors() {
     rootTable = new Table();
     rootTable.setFillParent(true);
-
-    // Get current settings
-    Settings settings = new Settings();
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
 
     // Create components
     Label masterVolumeLabel = new Label("Master Volume:", skin);
@@ -143,31 +147,43 @@ public class AudioSettingsMenu extends UIComponent {
     rootTable.row().padTop(20f);
 
     // Apply button bottom center
-    Table bottomRow = new Table();
+    bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().center().pad(20f);
+    bottomRow.bottom().padBottom(20f);
     bottomRow.add(applyBtn).size(150f, 50f);
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
   }
 
+  /**
+   * Apply changes to the audio settings.
+   */
   private void applyChanges() {
-    // Apply audio settings
-    Settings settings = new Settings();
+    logger.info("[AudioSettingsMenu] Applying audio settings");
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
     settings.setMasterVolume(masterVolumeSlider.getValue());
     settings.setMusicVolume(musicVolumeSlider.getValue());
     settings.setSoundVolume(soundVolumeSlider.getValue());
     settings.setVoiceVolume(voiceVolumeSlider.getValue());
-    logger.debug("Audio settings applied");
+    ServiceLocator.getSettingsService().saveSettings();
+    logger.info("[AudioSettingsMenu] Audio settings applied");
   }
 
+  /**
+   * Show the audio settings menu.
+   */
   private void showMenu() {
     rootTable.setVisible(true);
+    bottomRow.setVisible(true);
   }
 
+  /**
+   * Hide the audio settings menu.
+   */
   private void hideMenu() {
     rootTable.setVisible(false);
+    bottomRow.setVisible(false);
   }
 
   @Override
@@ -183,9 +199,15 @@ public class AudioSettingsMenu extends UIComponent {
   @Override
   public void dispose() {
     rootTable.clear();
+    bottomRow.clear();
     super.dispose();
   }
 
+  /**
+   * Whiten the label.
+   * 
+   * @param label The label to whiten.
+   */
   private static void whiten(Label label) {
     Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
     st.fontColor = Color.WHITE;
