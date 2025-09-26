@@ -75,4 +75,20 @@ class CombatStatsComponentTest {
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
   }
+
+  @Test
+  void shouldLowerHealthOnHit() {
+    CombatStatsComponent defender = new CombatStatsComponent(5, 0);
+    CombatStatsComponent attacker = new CombatStatsComponent(100, 3);
+
+    assertEquals(5, defender.getHealth());
+
+    defender.hit(attacker);
+    assertEquals(2, defender.getHealth());
+    assertFalse(defender.isDead());
+
+    defender.hit(attacker);
+    assertEquals(0, defender.getHealth());
+    assertTrue(defender.isDead());
+  }
 }
