@@ -10,6 +10,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -291,6 +292,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Entity unit = RobotFactory.createRobotType(robotType);
 
+    if (robotType == RobotType.GIANT) {
+      // spawnMinion once when health <= 40 percent
+      unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+    }
+
     // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
@@ -312,6 +318,32 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               requestDespawn(unit);
               robots.remove(unit);
             });
+
+    unit.getEvents()
+        .addListener(
+            "spawnMinion",
+            () -> {
+              Entity mini = RobotFactory.createRobotType(RobotType.MINI);
+
+              // spawn slightly ahead
+              float aheadX = unit.getPosition().x - 0.5f * tileSize; // half a tile ahead
+              float spawnY = unit.getPosition().y;
+
+              mini.setPosition(aheadX, spawnY);
+              mini.scaleHeight(tileSize);
+
+              spawnEntity(mini);
+              robots.add(mini);
+
+              mini.getEvents()
+                  .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                        requestDespawn(mini);
+                        robots.remove(mini);
+                      });
+            });
+
     logger.info("Robot {} spawned at position {} {}", robotType, col, row);
   }
 
