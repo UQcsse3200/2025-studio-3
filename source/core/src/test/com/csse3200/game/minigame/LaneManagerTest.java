@@ -2,8 +2,11 @@ package com.csse3200.game.minigame;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.csse3200.game.extensions.GameExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+@ExtendWith(GameExtension.class)
 class LaneManagerTest {
   @Test
   void testLaneCenters() {

@@ -41,9 +41,9 @@ public class PhysicsContactListener implements ContactListener {
 
   private void triggerEventOn(Fixture fixture, String evt, Fixture otherFixture) {
     BodyUserData userData = (BodyUserData) fixture.getBody().getUserData();
-    if (userData != null && userData.entity != null) {
-      logger.debug("{} on entity {}", evt, userData.entity);
-      userData.entity.getEvents().trigger(evt, fixture, otherFixture);
+    if (userData != null && userData.getEntity() != null) {
+      logger.debug("{} on entity {}", evt, userData.getEntity());
+      userData.getEntity().getEvents().trigger(evt, fixture, otherFixture);
     }
   }
 }

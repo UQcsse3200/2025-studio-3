@@ -13,6 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -70,17 +72,12 @@ public class DialogComponent extends UIComponent {
     Table contentTable = new Table();
     contentTable.pad(20f);
     Color titleColor = getTextColor();
-    Label.LabelStyle titleStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    titleStyle.fontColor = titleColor;
-    Label titleLabel = new Label(title, titleStyle);
+    Label titleLabel = TypographyFactory.createSubtitle(title, titleColor);
     titleLabel.setAlignment(Align.center);
-    titleLabel.setFontScale(1.3f);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
 
     // Add message label
-    Label.LabelStyle messageStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    messageStyle.fontColor = Color.WHITE;
-    Label messageLabel = new Label(message, messageStyle);
+    Label messageLabel = TypographyFactory.createParagraph(message, Color.WHITE);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
@@ -106,7 +103,7 @@ public class DialogComponent extends UIComponent {
     // Set the dialog background image
     try {
       Texture dialogTexture =
-          ServiceLocator.getGlobalResourceService().getAsset("images/dialog.png", Texture.class);
+          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
@@ -128,6 +125,8 @@ public class DialogComponent extends UIComponent {
         return Color.ORANGE;
       case ERROR:
         return Color.RED;
+      case SKILL:
+        return Color.GOLD;
       default:
         return Color.WHITE;
     }
@@ -140,7 +139,7 @@ public class DialogComponent extends UIComponent {
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
-        TextButton okButton = new TextButton("OK", skin);
+        TextButton okButton = ButtonFactory.createDialogButton("OK");
         okButton.addListener(
             new ClickListener() {
               @Override
@@ -151,12 +150,12 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButton).pad(5f);
+        buttonTable.add(okButton).size(120f, 60f).pad(5f);
         break;
 
       // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = new TextButton("Cancel", skin);
+        TextButton cancelButton = ButtonFactory.createDialogButton("Cancel");
         cancelButton.addListener(
             new ClickListener() {
               @Override
@@ -168,7 +167,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton continueButton = new TextButton("Continue", skin);
+        TextButton continueButton = ButtonFactory.createDialogButton("Continue");
         continueButton.addListener(
             new ClickListener() {
               @Override
@@ -180,13 +179,13 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(cancelButton).pad(5f);
-        buttonTable.add(continueButton).pad(5f);
+        buttonTable.add(cancelButton).size(120f, 60f).pad(5f);
+        buttonTable.add(continueButton).size(150f, 60f).pad(5f);
         break;
 
       // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = new TextButton("OK", skin);
+        TextButton okButtonError = ButtonFactory.createDialogButton("OK");
         okButtonError.addListener(
             new ClickListener() {
               @Override
@@ -197,7 +196,37 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButtonError).pad(5f);
+        buttonTable.add(okButtonError).size(120f, 60f).pad(5f);
+        break;
+
+      // Skill dialog buttons
+      case SKILL:
+        TextButton closeButton = ButtonFactory.createDialogButton("Close");
+        closeButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                hide();
+                if (onClose != null) {
+                  onClose.accept(DialogComponent.this);
+                }
+              }
+            });
+
+        TextButton unlockButton = ButtonFactory.createDialogButton("Unlock");
+        unlockButton.addListener(
+            new ClickListener() {
+              @Override
+              public void clicked(InputEvent event, float x, float y) {
+                if (onConfirm != null) {
+                  onConfirm.accept(DialogComponent.this);
+                }
+                // Note: Dialog hiding is handled by the callback
+              }
+            });
+
+        buttonTable.add(closeButton).size(120f, 60f).pad(5f);
+        buttonTable.add(unlockButton).size(120f, 60f).pad(5f);
         break;
     }
 
@@ -220,7 +249,7 @@ public class DialogComponent extends UIComponent {
 
   /** Shows the dialog with a fade-in animation. */
   public void show() {
-    if (isVisible) {
+    if (isVisible || dialog == null) {
       return;
     }
 
@@ -235,7 +264,7 @@ public class DialogComponent extends UIComponent {
 
   /** Hides the dialog with a fade-out animation. */
   public void hide() {
-    if (!isVisible) {
+    if (!isVisible || dialog == null) {
       return;
     }
 
@@ -264,7 +293,9 @@ public class DialogComponent extends UIComponent {
    * @param y the y coordinate
    */
   public void setPosition(float x, float y) {
-    dialog.setPosition(x, y);
+    if (dialog != null) {
+      dialog.setPosition(x, y);
+    }
   }
 
   /**
@@ -274,7 +305,9 @@ public class DialogComponent extends UIComponent {
    * @param height the height
    */
   public void setSize(float width, float height) {
-    dialog.setSize(width, height);
+    if (dialog != null) {
+      dialog.setSize(width, height);
+    }
   }
 
   /**

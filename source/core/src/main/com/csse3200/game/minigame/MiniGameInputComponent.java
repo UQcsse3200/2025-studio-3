@@ -14,15 +14,13 @@ public class MiniGameInputComponent extends InputComponent {
   @Override
   public boolean keyDown(int key) {
     switch (key) {
-      case Input.Keys.LEFT:
-      case Input.Keys.A:
+      case Input.Keys.LEFT, Input.Keys.A:
         if (!isGameOverScreen) {
           entity.getEvents().trigger("moveLeft");
           return true;
         }
         return false;
-      case Input.Keys.RIGHT:
-      case Input.Keys.D:
+      case Input.Keys.RIGHT, Input.Keys.D:
         if (!isGameOverScreen) {
           entity.getEvents().trigger("moveRight");
           return true;
@@ -30,7 +28,7 @@ public class MiniGameInputComponent extends InputComponent {
         return false;
       case Input.Keys.ESCAPE:
         if (isGameOverScreen) {
-          entity.getEvents().trigger("mainMenu");
+          entity.getEvents().trigger("returnToArcade");
           return true;
         }
         return false;

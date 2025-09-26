@@ -42,8 +42,8 @@ class PhysicsContactListenerTest {
     Fixture fixture2 = entity2.getComponent(ColliderComponent.class).getFixture();
 
     // Register collision callbacks
-    EventListener2<Fixture, Fixture> callback1 = mock(EventListener2.class);
-    EventListener2<Fixture, Fixture> callback2 = mock(EventListener2.class);
+    EventListener2<Fixture, Fixture> callback1 = mock();
+    EventListener2<Fixture, Fixture> callback2 = mock();
     entity1.getEvents().addListener("collisionStart", callback1);
     entity2.getEvents().addListener("collisionStart", callback2);
 
@@ -66,8 +66,8 @@ class PhysicsContactListenerTest {
     Fixture fixture2 = entity2.getComponent(ColliderComponent.class).getFixture();
 
     // Register end collision callbacks
-    EventListener2<Fixture, Fixture> endCallback1 = mock(EventListener2.class);
-    EventListener2<Fixture, Fixture> endCallback2 = mock(EventListener2.class);
+    EventListener2<Fixture, Fixture> endCallback1 = mock();
+    EventListener2<Fixture, Fixture> endCallback2 = mock();
     entity1.getEvents().addListener("collisionEnd", endCallback1);
     entity2.getEvents().addListener("collisionEnd", endCallback2);
 

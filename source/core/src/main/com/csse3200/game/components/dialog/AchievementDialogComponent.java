@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -54,7 +55,7 @@ public class AchievementDialogComponent extends UIComponent {
     try {
       Texture achievementTexture =
           ServiceLocator.getGlobalResourceService()
-              .getAsset("images/achievement.png", Texture.class);
+              .getAsset("images/ui/achievement.png", Texture.class);
       if (achievementTexture != null) {
         TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
         achievementBackground.setMinWidth(400f);
@@ -81,37 +82,25 @@ public class AchievementDialogComponent extends UIComponent {
     Table textTable = new Table();
 
     // Achievement unlocked header
-    Label.LabelStyle headerStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    headerStyle.fontColor = Color.GOLD;
-    Label headerLabel = new Label("Achievement Unlocked!", headerStyle);
-    headerLabel.setFontScale(0.9f);
+    Label headerLabel = TypographyFactory.createSubtitle("Achievement Unlocked!", Color.GOLD);
     headerLabel.setAlignment(Align.left);
     textTable.add(headerLabel).left().row();
 
     // Achievement name
-    Label.LabelStyle nameStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    nameStyle.fontColor = Color.WHITE;
-    Label nameLabel = new Label(name, nameStyle);
-    nameLabel.setFontScale(0.8f);
+    Label nameLabel = TypographyFactory.createParagraph(name, Color.WHITE);
     nameLabel.setAlignment(Align.left);
     textTable.add(nameLabel).left().padTop(2f).row();
 
     // Achievement description
-    Label.LabelStyle descStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-    descStyle.fontColor = Color.LIGHT_GRAY;
-    Label descLabel = new Label(description, descStyle);
+    Label descLabel = TypographyFactory.createCustomSize(description, 14, Color.LIGHT_GRAY);
     descLabel.setWrap(true);
     descLabel.setAlignment(Align.left);
-    descLabel.setFontScale(0.7f);
     textTable.add(descLabel).width(320f).left().padTop(2f).row();
 
     // Tier information
     if (tier != null && !tier.isEmpty()) {
-      Label.LabelStyle tierStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-      tierStyle.fontColor = Color.YELLOW;
-      Label tierLabel = new Label("Tier: " + tier, tierStyle);
+      Label tierLabel = TypographyFactory.createCustomSize("Tier: " + tier, 12, Color.YELLOW);
       tierLabel.setAlignment(Align.left);
-      tierLabel.setFontScale(0.6f);
       textTable.add(tierLabel).left().padTop(2f).row();
     }
 
@@ -123,7 +112,7 @@ public class AchievementDialogComponent extends UIComponent {
       try {
         Texture skillPointTexture =
             ServiceLocator.getGlobalResourceService()
-                .getAsset("images/skillpoints.png", Texture.class);
+                .getAsset("images/entities/currency/skillpoints.png", Texture.class);
         if (skillPointTexture != null) {
           Drawable skillPointDrawable = new TextureRegionDrawable(skillPointTexture);
           Image skillPointIcon = new Image(skillPointDrawable);
@@ -135,11 +124,9 @@ public class AchievementDialogComponent extends UIComponent {
         // Continue without icon
       }
 
-      Label.LabelStyle pointsStyle = new Label.LabelStyle(skin.get(Label.LabelStyle.class));
-      pointsStyle.fontColor = Color.CYAN;
-      Label pointsLabel = new Label("+" + skillPoints + " Skill Points", pointsStyle);
+      Label pointsLabel =
+          TypographyFactory.createCustomSize("+" + skillPoints + " Skill Points", 12, Color.CYAN);
       pointsLabel.setAlignment(Align.left);
-      pointsLabel.setFontScale(0.6f);
       skillPointTable.add(pointsLabel);
       textTable.add(skillPointTable).left().padTop(2f).row();
     }

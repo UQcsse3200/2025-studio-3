@@ -166,7 +166,7 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     // Listen to "fire" events
-    defender.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
+    defender.getEvents().addListener("fire", fireCount::incrementAndGet);
 
     // Trigger start -> should fire immediately
     attackTask.start();
@@ -207,7 +207,7 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     AtomicInteger fireCount = new AtomicInteger(0);
-    attacker.getEvents().addListener("fire", () -> fireCount.incrementAndGet());
+    attacker.getEvents().addListener("fire", fireCount::incrementAndGet);
 
     // Simulate 5 seconds (should fire ~5 times since cooldown is ~1 sec)
     for (int i = 0; i < 5; i++) {

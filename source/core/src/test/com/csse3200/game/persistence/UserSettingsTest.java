@@ -22,15 +22,15 @@ class UserSettingsTest {
     when(Gdx.graphics.getDisplayMode()).thenReturn(displayMode);
 
     Settings settings = new Settings();
-    settings.vsync = true;
-    settings.displayMode = null;
-    settings.fullscreen = true;
-    settings.fps = 40;
+    settings.setVsync(true);
+    settings.setDisplayMode(null);
+    settings.setFullscreen(true);
+    settings.setFps(40);
     UserSettings.applySettings(settings);
 
-    verify(Gdx.graphics).setForegroundFPS(settings.fps);
+    verify(Gdx.graphics).setForegroundFPS(settings.getFps());
     verify(Gdx.graphics).setFullscreenMode(displayMode);
-    verify(Gdx.graphics).setVSync(settings.vsync);
+    verify(Gdx.graphics).setVSync(settings.isVsync());
   }
 
   @Test
@@ -43,11 +43,11 @@ class UserSettingsTest {
     when(Gdx.graphics.getDisplayModes()).thenReturn(displayModes);
 
     Settings settings = new Settings();
-    settings.displayMode = new DisplaySettings();
-    settings.displayMode.height = 100;
-    settings.displayMode.width = 200;
-    settings.displayMode.refreshRate = 60;
-    settings.fullscreen = true;
+    settings.setDisplayMode(new DisplaySettings());
+    settings.getDisplayMode().setHeight(100);
+    settings.getDisplayMode().setWidth(200);
+    settings.getDisplayMode().setRefreshRate(60);
+    settings.setFullscreen(true);
     UserSettings.applySettings(settings);
 
     verify(Gdx.graphics).setFullscreenMode(correctMode);

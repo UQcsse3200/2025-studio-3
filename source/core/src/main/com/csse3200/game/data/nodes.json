@@ -1,5 +1,0 @@
-[
-  { "x": 120, "y": 160, "level": 1, "unlocked": true, "completed": false },
-  { "x": 260, "y": 200, "level": 2, "unlocked": false, "completed": false },
-  { "x": 400, "y": 180, "level": 3, "unlocked": false, "completed": false }
-]

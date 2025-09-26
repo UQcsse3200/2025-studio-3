@@ -92,7 +92,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
     // If there is an obstacle in the path to the player, not visible.
     if (physics.raycast(from, to, PhysicsLayer.NPC, hit)) {
-      debugRenderer.drawLine(from, hit.point);
+      debugRenderer.drawLine(from, hit.getPoint());
       return false;
     }
     debugRenderer.drawLine(from, to);
@@ -120,11 +120,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       }
 
       float distance = from.dst(targetPos);
-      if (distance <= attackRange) { // if target in range
-        if (distance < closestDist) {
-          closestDist = distance;
-          closestTarget = target;
-        }
+      if (distance <= attackRange && distance < closestDist) {
+        closestDist = distance;
+        closestTarget = target;
       }
     }
     return closestTarget;

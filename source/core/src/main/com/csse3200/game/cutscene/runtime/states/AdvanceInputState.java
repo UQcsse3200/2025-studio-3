@@ -13,17 +13,21 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
    * @param dtMs The delta time in milliseconds
    */
   @Override
-  public void tick(int dtMs) {}
+  public void tick(int dtMs) {
+    // Not implemented
+  }
 
   /**
    * Triggered on skip, will fast track any logic to its final state
    */
   @Override
   public void skip() {
-
+    // Not implemented
   }
 
   /**
+   * Checks if the action is blocking till completion (false if async)
+   *
    * @return True if the action is blocking till completion (false if async)
    */
   @Override
@@ -32,6 +36,8 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
   }
 
   /**
+   * Checks if the action is completed (can be disposed of)
+   *
    * @return True if the action is completed (can be disposed of)
    */
   @Override

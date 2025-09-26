@@ -13,14 +13,13 @@ import com.csse3200.game.components.tasks.IdleTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
-import com.csse3200.game.entities.configs.NPCConfigs;
-import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -28,12 +27,10 @@ import com.csse3200.game.services.ServiceLocator;
  * instantiated — all methods and configuration are static utilities.
  */
 public class DefenceFactory {
-  /**
-   * Loads defence configuration data from JSON. The configs object is populated at class-load time.
-   * If the file is missing or deserialization fails, this will be null.
-   */
-  private static final NPCConfigs configs =
-      FileLoader.readClass(NPCConfigs.class, "configs/Defences.json");
+  /** Gets the config service for accessing defence configurations. */
+  private static ConfigService getConfigService() {
+    return ServiceLocator.getConfigService();
+  }
 
   /**
    * Creates a fully configured Sling Shooter defence entity.
@@ -44,7 +41,7 @@ public class DefenceFactory {
    * @return entity representing the slingshooter
    */
   public static Entity createSlingShooter() {
-    BaseDefenderConfig config = configs.slingshooter;
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("slingshooter");
     Entity defender = createBaseDefender();
 
     // start with a base defender (physics + collider)
@@ -59,7 +56,7 @@ public class DefenceFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService()
-                .getAsset("images/sling_shooter.atlas", TextureAtlas.class));
+                .getAsset(config.getAtlasPath(), TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
@@ -88,7 +85,7 @@ public class DefenceFactory {
   }
 
   public static Entity createFurnace() {
-    BaseGeneratorConfig config = configs.furnace;
+    BaseGeneratorConfig config = getConfigService().getGeneratorConfig("furnace");
 
     // start with a base defender (physics + collider)
     Entity generator = createBaseDefender();
@@ -96,7 +93,8 @@ public class DefenceFactory {
     // animation component
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
-            ServiceLocator.getResourceService().getAsset("images/forge.atlas", TextureAtlas.class));
+            ServiceLocator.getResourceService()
+                .getAsset("images/entities/defences/forge.atlas", TextureAtlas.class));
 
     // define animations for idle and attack states
     animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);

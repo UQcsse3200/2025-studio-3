@@ -20,7 +20,6 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
-import java.awt.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,11 +41,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private Label scoreLabel;
   private Label timeLabel;
   private static final String[] laneRunnerTextures = {
-    "images/box_boy.png",
-    "images/lanes.png",
-    "images/Bomb.png",
-    "images/Background.png",
-    "images/GameOver.png"
+    "images/entities/minigames/Bomb.png",
+    "images/backgrounds/Background.png",
+    "images/backgrounds/GameOver.png",
+    "images/backgrounds/lanes.png",
+    "images/entities/character.png"
   };
 
   public LaneRunnerScreen(GdxGame game) {
@@ -85,10 +84,12 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("Creating UI");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
-    addBackground("images/Background.png", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    addBackground(
+        "images/backgrounds/Background.png", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
     // Create the background image
-    Texture bgTex = ServiceLocator.getResourceService().getAsset("images/lanes.png", Texture.class);
+    Texture bgTex =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/lanes.png", Texture.class);
     Image background = new Image(bgTex);
 
     // Calculate the correct width to avoid stretching, based on our lane logic
@@ -103,14 +104,15 @@ public class LaneRunnerScreen extends ScreenAdapter {
     stage.addActor(background);
 
     Texture playerTex =
-        ServiceLocator.getResourceService().getAsset("images/box_boy.png", Texture.class);
-    Image playerImage = new Image(playerTex);
-    playerImage.setSize(64f, 64f);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class);
+    Image playerImg = new Image(playerTex);
+    playerImg.setSize(64f, 64f);
     float playerX = laneManager.getLaneCenter(1) - 32f;
     float playerY = 2f;
-    playerImage.setPosition(playerX, playerY);
-    stage.addActor(playerImage);
-    this.playerImage = playerImage;
+    playerImg.setPosition(playerX, playerY);
+    stage.addActor(playerImg);
+    this.playerImage = playerImg;
     this.cureentLane = 1;
 
     createScoreUI(stage);
@@ -147,7 +149,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
                     () -> {
                       if (!gameOver) {
                         score += 0.5; // Increment score
-                        survivalTime += 1f; // Increment survival time
+                        survivalTime += 0.1f; // Increment survival time
                         scoreLabel.setText("Score: " + score);
                         timeLabel.setText(String.format("Time: %.1fs", survivalTime));
                       }
@@ -164,7 +166,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     if (cureentLane < laneManager.getNumLanes() - 1) {
       cureentLane++;
       updatePlayerPosition();
-      System.out.println("Moved Right to lane: " + cureentLane);
+      logger.info("Moved Right to lane: {}", cureentLane);
     }
   }
 
@@ -177,7 +179,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     if (cureentLane > 0) {
       cureentLane--;
       updatePlayerPosition();
-      System.out.println("Moved Left to lane: " + cureentLane);
+      logger.info("Moved Left to lane: {}", cureentLane);
     }
   }
 

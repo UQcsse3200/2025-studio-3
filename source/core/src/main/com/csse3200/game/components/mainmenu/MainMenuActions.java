@@ -2,7 +2,6 @@ package com.csse3200.game.components.mainmenu;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,51 +16,32 @@ public class MainMenuActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("start", this::onStart);
-    entity.getEvents().addListener("minigame", this::onMiniGame);
     entity.getEvents().addListener("load", this::onLoad);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
-    entity.getEvents().addListener("worldMap", this::onWorldMap);
-    entity.getEvents().addListener("Cutscene", this::onCutscene);
   }
 
-  /** Swaps to the New Game screen. */
-  private void onCutscene() {
-    ServiceLocator.getCutsceneService().playCutscene("dialogue");
-  }
-
-  /** Swaps to the Main Game screen. */
+  /** Start → World Map */
   private void onStart() {
-    logger.info("Start game");
-    game.setScreen(GdxGame.ScreenType.MAIN_GAME);
+    logger.info("[MainMenuActions] Starting new game");
+    game.setScreen(GdxGame.ScreenType.NEW_GAME);
   }
 
-  private void onMiniGame() {
-    logger.info("MiniGames");
-
-    game.setScreen(GdxGame.ScreenType.MINI_GAMES);
-  }
-
-  /** Intended for loading a saved game state. Load functionality is not actually implemented. */
+  /** Load game (placeholder for saved states). */
   private void onLoad() {
-    logger.info("Load game");
+    logger.info("[MainMenuActions] Loading game");
     game.setScreen(GdxGame.ScreenType.LOAD_GAME);
   }
 
-  private void onWorldMap() {
-    logger.info("Launching world map screen");
-    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-  }
-
-  /** Exits the game. */
+  /** Exit the game. */
   private void onExit() {
-    logger.info("Exit game");
+    logger.info("[MainMenuActions] Exiting game");
     game.exit();
   }
 
-  /** Swaps to the Settings screen. */
+  /** Open Settings screen. */
   private void onSettings() {
-    logger.info("Launching settings screen");
+    logger.info("[MainMenuActions] Launching settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
   }
 }

@@ -2,6 +2,7 @@ package com.csse3200.game.cutscene.runtime.states;
 
 import com.csse3200.game.cutscene.runtime.ActionState;
 
+/** Advance auto delay state. */
 public class AdvanceAutoDelayState implements ActionState {
   private final int duration;
   private int elapsed;
@@ -30,10 +31,12 @@ public class AdvanceAutoDelayState implements ActionState {
    */
   @Override
   public void skip() {
-    // do nothing
+    // Not implemented
   }
 
   /**
+   * Checks if the action is blocking till completion (false if async)
+   *
    * @return True if the action is blocking till completion (false if async)
    */
   @Override
@@ -42,6 +45,8 @@ public class AdvanceAutoDelayState implements ActionState {
   }
 
   /**
+   * Checks if the action is completed (can be disposed of)
+   *
    * @return True if the action is completed (can be disposed of)
    */
   @Override

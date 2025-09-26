@@ -56,14 +56,12 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-    //    logger.info(String.valueOf(this.health));
 
     if (entity != null) {
       if (this.health == 0) {
-        // 1) Decide coin amount (don’t rely on entity.getCoins() unless you KNOW it’s set)
+        // Add coins & update statistics
+        // TODO: use config passed into the entity
         int extraCoins = 3;
-
-        // 2) Progression stats (HudDisplay / coins.png reads this)
         ProfileService profileService = ServiceLocator.getProfileService();
         if (profileService != null && profileService.isActive()) {
           int before = profileService.getProfile().getWallet().getCoins();
@@ -82,13 +80,7 @@ public class CombatStatsComponent extends Component {
           logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
-        // 3) Gameplay currency service (ScrapHudDisplay reads this)
-        if (ServiceLocator.getCurrencyService() != null) {
-          ServiceLocator.getCurrencyService().add(extraCoins);
-          logger.info("[Death] CurrencyService +{}", extraCoins);
-        }
-
-        // 4) Now despawn
+        // despawn entity
         entity.getEvents().trigger("despawnRobot", entity);
       }
       entity.getEvents().trigger("updateHealth", this.health);
@@ -135,12 +127,13 @@ public class CombatStatsComponent extends Component {
 
   /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
-    if (isDead() || getHealth() < 0) {
+    boolean isDead = isDead();
+    if (isDead || getHealth() < 0) {
       // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
-        System.out.println("Human has died!");
+        logger.info("Human has died!");
       } else {
         entity.getEvents().trigger("entityDeath");
       }

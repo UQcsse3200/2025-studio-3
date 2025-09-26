@@ -1,10 +1,15 @@
 package com.csse3200.game.minigame;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +17,7 @@ import org.slf4j.LoggerFactory;
 /** ui component for displaying the Main menu. */
 public class MiniGameDisplay extends UIComponent {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.components.mainmenu.MainMenuDisplay.class);
+      LoggerFactory.getLogger(com.csse3200.game.minigame.MiniGameDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
 
@@ -26,11 +31,11 @@ public class MiniGameDisplay extends UIComponent {
     table = new Table();
     table.setFillParent(true);
 
-    TextButton LaneRunnerBtn = new TextButton("Lane Runner", skin);
-    TextButton WallPongBtn = new TextButton("Wall Pong", skin);
-    TextButton BackBtn = new TextButton("Back", skin);
+    TextButton laneRunnerBtn = ButtonFactory.createButton("Lane Runner");
+    TextButton wallPongBtn = ButtonFactory.createButton("Wall Pong");
+
     // Triggers an event when the button is pressed
-    LaneRunnerBtn.addListener(
+    laneRunnerBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -38,7 +43,7 @@ public class MiniGameDisplay extends UIComponent {
             entity.getEvents().trigger("lanerunner");
           }
         });
-    WallPongBtn.addListener(
+    wallPongBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
@@ -46,22 +51,40 @@ public class MiniGameDisplay extends UIComponent {
             entity.getEvents().trigger("wallpong");
           }
         });
-    BackBtn.addListener(
+
+    table.add(laneRunnerBtn).size(200f, 50f).padTop(30f);
+    table.row();
+    table.add(wallPongBtn).size(200f, 50f).padTop(30f);
+    table.row();
+    stage.addActor(table);
+
+    // Add close button in top left corner
+    createCloseButton();
+  }
+
+  /** Creates the close button in the top-left corner. */
+  private void createCloseButton() {
+    ImageButton closeButton =
+        new ImageButton(
+            new TextureRegionDrawable(
+                ServiceLocator.getGlobalResourceService()
+                    .getAsset("images/ui/close-icon.png", Texture.class)));
+
+    // Position in top left with 20f padding
+    closeButton.setSize(60f, 60f);
+    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
+
+    // Add listener for the close button
+    closeButton.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
+            logger.debug("Close button clicked");
             entity.getEvents().trigger("back");
           }
         });
 
-    table.add(LaneRunnerBtn).padTop(30f);
-    table.row();
-    table.add(WallPongBtn).padTop(30f);
-    table.row();
-    table.add(BackBtn).padTop(15f);
-    table.row();
-    stage.addActor(table);
+    stage.addActor(closeButton);
   }
 
   @Override

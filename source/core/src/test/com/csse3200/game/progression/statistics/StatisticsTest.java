@@ -5,7 +5,10 @@ import static org.mockito.Mockito.*;
 
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +24,24 @@ import org.mockito.MockitoAnnotations;
 class StatisticsTest {
 
   @Mock private ConfigService mockConfigService;
+  @Mock private ProfileService mockProfileService;
+  @Mock private Profile mockProfile;
+  @Mock private Wallet mockWallet;
 
   private Statistics statistics;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
+
+    // Set up mock chain: ProfileService -> Profile -> Wallet
+    when(mockProfileService.getProfile()).thenReturn(mockProfile);
+    when(mockProfile.getWallet()).thenReturn(mockWallet);
+
+    // Register services
     ServiceLocator.registerConfigService(mockConfigService);
+    ServiceLocator.registerProfileService(mockProfileService);
+
     statistics = new Statistics();
   }
 

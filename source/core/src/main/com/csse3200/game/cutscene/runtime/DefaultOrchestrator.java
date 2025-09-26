@@ -245,4 +245,13 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
     this.active.clear();
     this.queue.clear();
   }
+
+  /**
+   * Gets the cutscene
+   *
+   * @return the cutscene
+   */
+  public Cutscene getCutscene() {
+    return cutscene;
+  }
 }

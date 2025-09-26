@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.entities.Entity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,74 +43,43 @@ class TileInputComponentTest {
   @Test
   void insideLeftWhenEmptyAndSelectedTriggersSpawnAndReturnsTrue() {
     TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(false);
     when(area.getSelectedUnit()).thenReturn(new Entity());
-
+    LevelGameGrid mockGrid = mock(LevelGameGrid.class);
+    when(area.getGrid()).thenReturn(mockGrid);
+    when(mockGrid.isOccupiedIndex(anyInt())).thenReturn(true);
     Entity tile = makeTileAt(10, 20, storage);
     boolean handled =
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
 
     assertTrue(handled);
-    verify(storage).triggerSpawnUnit();
+    verify(area).spawnUnit(anyInt());
     verify(storage, never()).removeTileUnit();
   }
 
   @Test
-  void insideLeftWhenEmptyAndNoSelectedDoesNotSpawnButReturnsTrue() {
+  void insideLeftWhenNoSelectedDoesNotSpawnAndReturnsFalse() {
     TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(false);
     when(area.getSelectedUnit()).thenReturn(null);
 
     Entity tile = makeTileAt(10, 20, storage);
     boolean handled =
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
 
-    assertTrue(handled);
-    verify(storage, never()).triggerSpawnUnit();
-    verify(storage, never()).removeTileUnit();
+    assertFalse(handled);
+    verify(area, never()).spawnUnit(anyInt());
+    verify(area, never()).removeUnit(anyInt());
   }
 
   @Test
-  void insideLeftWhenOccupiedDoesNotSpawnButReturnsTrue() {
+  void insideRightRemovesAndReturnsTrue() {
     TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(true);
-    when(area.getSelectedUnit()).thenReturn(new Entity());
-
-    Entity tile = makeTileAt(10, 20, storage);
-    boolean handled =
-        tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
-
-    assertTrue(handled);
-    verify(storage, never()).triggerSpawnUnit();
-    verify(storage, never()).removeTileUnit();
-  }
-
-  @Test
-  void insideRightWhenOccupiedRemovesAndReturnsTrue() {
-    TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(true);
-
     Entity tile = makeTileAt(10, 20, storage);
     boolean handled =
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.RIGHT);
 
     assertTrue(handled);
-    verify(storage).removeTileUnit();
-    verify(storage, never()).triggerSpawnUnit();
-  }
-
-  @Test
-  void insideRightWhenEmptyDoesNothingButReturnsTrue() {
-    TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(false);
-
-    Entity tile = makeTileAt(10, 20, storage);
-    boolean handled =
-        tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.RIGHT);
-
-    assertTrue(handled);
-    verify(storage, never()).removeTileUnit();
-    verify(storage, never()).triggerSpawnUnit();
+    verify(area).removeUnit(anyInt());
+    verify(area, never()).spawnUnit(anyInt());
   }
 
   @Test
@@ -121,7 +91,7 @@ class TileInputComponentTest {
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.MIDDLE);
 
     assertFalse(handled);
-    verify(storage, never()).triggerSpawnUnit();
+    verify(area, never()).spawnUnit(anyInt());
     verify(storage, never()).removeTileUnit();
   }
 
@@ -134,45 +104,22 @@ class TileInputComponentTest {
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
 
     assertFalse(handled);
-    verify(storage, never()).triggerSpawnUnit();
+    verify(area, never()).spawnUnit(anyInt());
     verify(storage, never()).removeTileUnit();
-  }
-
-  @Test
-  void boundariesAreInclusive() {
-    TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(storage.hasUnit()).thenReturn(false);
-    when(area.getSelectedUnit()).thenReturn(new Entity());
-
-    Entity tile = makeTileAt(10, 20, storage);
-    TileInputComponent comp = tile.getComponent(TileInputComponent.class);
-
-    // left edge x == 10
-    assertTrue(comp.touchDown(10, 25, 0, Input.Buttons.LEFT));
-    // right edge x == 10 + TILE
-    assertTrue(comp.touchDown((int) (10 + TILE), 25, 0, Input.Buttons.LEFT));
-    // bottom edge y == 20
-    assertTrue(comp.touchDown(15, 20, 0, Input.Buttons.LEFT));
-    // top edge y == 20 + TILE
-    assertTrue(comp.touchDown(15, (int) (20 + TILE), 0, Input.Buttons.LEFT));
-
-    verify(storage, atLeastOnce()).triggerSpawnUnit();
   }
 
   @Test
   void stageToWorldIsRespected() {
     TileStorageComponent storage = mock(TileStorageComponent.class);
-    when(area.getSelectedUnit()).thenReturn(new Entity());
-
     Entity tile = makeTileAt(10, 20, storage);
 
-    doReturn(new GridPoint2(0, 0)).when(area).stageToWorld(any());
+    doReturn(new GridPoint2(0, 0)).when(area).stageToWorld(any(GridPoint2.class));
 
     boolean handled =
         tile.getComponent(TileInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
 
     assertFalse(handled);
-    verify(storage, never()).triggerSpawnUnit();
+    verify(area, never()).spawnUnit(anyInt());
     verify(storage, never()).removeTileUnit();
   }
 }
