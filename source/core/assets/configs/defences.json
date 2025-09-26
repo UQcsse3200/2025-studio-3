@@ -9,21 +9,11 @@
         "description": "Slingshots do a surprising amount of damage, even to metal robots.",
         "assetPath": "images/entities/defences/sling_shooter_1.png",
         "atlasPath": "images/entities/defences/sling_shooter.atlas",
+        "projectilePath": "images/effects/sling_projectile.png",
         "cost": 100,
-        "state": 0,
         "attack": 1,
         "attackSpeed": 3,
         "critChance": 1
-      },
-      "wall": {
-        "health": 100,
-        "range": 0,
-        "name": "Wall",
-        "assetPath": "images/entities/defences/wall.png",
-        "atlasPath": "images/entities/defences/wall.atlas",
-        "attack": 0,
-        "attackSpeed": 0,
-        "critChance": 0
       },
       "armyguy" : {
         "health": 80,
@@ -33,8 +23,8 @@
         "description": "",
         "assetPath": "images/entities/defences/army_guy_1.png",
         "atlasPath": "images/entities/defences/machine_gun.atlas",
+        "projectilePath": "images/effects/bullet.png",
         "cost": 100,
-        "state": 0,
         "attack": 1,
         "attackSpeed": 8,
         "critChance": 1
@@ -47,11 +37,22 @@
         "description": "",
         "assetPath": "images/entities/defences/shadow_idle1.png",
         "atlasPath": "images/entities/defences/shadow.atlas",
+        "projectilePath": "images/effects/shock.png",
         "cost": 100,
-        "state": 0,
         "attack": 1,
         "attackSpeed": 2,
         "critChance": 1
+      },
+      "wall": {
+        "health": 100,
+        "range": 0,
+        "name": "Wall",
+        "assetPath": "images/entities/defences/wall.png",
+        "atlasPath": "images/entities/defences/wall.atlas",
+        "projectilePath": "",
+        "attack": 0,
+        "attackSpeed": 0,
+        "critChance": 0
       }
     },
     "generators": {

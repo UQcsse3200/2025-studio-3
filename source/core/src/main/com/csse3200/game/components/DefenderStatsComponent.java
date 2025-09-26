@@ -17,9 +17,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Maximum range (in game units) at which the defender can engage targets. */
   private int range;
 
-  /** Current state of the defender (could represent idle, attacking, etc.). */
-  private int state;
-
   /** Rate of attacks, typically in attacks per second or ticks per attack. */
   private int attackSpeed;
 
@@ -55,12 +52,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param baseAttack the base attack damage
    * @param type the type identifier of this defender
    * @param range the maximum attack range
-   * @param state the current combat/behavioural state
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
+      int health, int baseAttack, int type, int range, int attackSpeed, int critChance) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
@@ -68,7 +64,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     // Initialise all additional defence stats
     setType(type);
     setRange(range);
-    setState(state);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
   }
@@ -99,18 +94,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public int getRange() {
     return range;
-  }
-
-  /** Sets the defender's current state. */
-  public void setState(int state) {
-    this.state = state;
-  }
-
-  /**
-   * @return the defender's current state
-   */
-  public int getState() {
-    return state;
   }
 
   /** Sets the defender's attack speed. */

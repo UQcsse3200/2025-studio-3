@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
+import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.IdleTask;
@@ -53,6 +54,11 @@ public class DefenceFactory {
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
+    if (config.getProjectilePath() != null) {
+        Entity projectile = ProjectileFactory.createProjectile(config.getProjectilePath(), config.getAttack());
+        defender.addComponent(new ProjectileComponent(projectile));
+    }
+
     // Scale to tilesize
     animator.scaleEntity();
     return defender;
@@ -65,7 +71,6 @@ public class DefenceFactory {
             config.getAttack(),
             config.getRangeType(),
             config.getRange(),
-            config.getAttackState(),
             config.getAttackSpeed(),
             config.getCritChance());
 

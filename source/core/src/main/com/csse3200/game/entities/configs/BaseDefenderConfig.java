@@ -5,10 +5,10 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   private int cost;
   private int rangeType; // what is this???
   private int range;
-  private int state; // what is this???
   private int attackSpeed;
   private int critChance;
   private int attack;
+  private String projectilePath;
 
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
@@ -43,15 +43,6 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   }
 
   /**
-   * Gets the state value for this entity.
-   *
-   * @return the state value
-   */
-  public int getAttackState() {
-    return state;
-  }
-
-  /**
    * Gets the attack value for this entity.
    *
    * @return the attack value
@@ -77,4 +68,12 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   public int getAttack() {
     return attack;
   }
+    /**
+     * Gets the attack value for this entity.
+     *
+     * @return the attack value
+     */
+    public String getProjectilePath() {
+        return projectilePath;
+    }
 }
