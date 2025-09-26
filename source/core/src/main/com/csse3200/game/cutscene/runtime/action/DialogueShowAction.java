@@ -13,8 +13,6 @@ public class DialogueShowAction implements ActionState {
   private int nextCharMsCountdown;
   private boolean done;
 
-  // TODO: Add appearing logic
-
   public DialogueShowAction(DialogueState dialogueState, DialogueShowData dialogueShowData) {
     this.dialogueState = dialogueState;
     this.speaker = dialogueShowData.character().getName();
@@ -53,6 +51,16 @@ public class DialogueShowAction implements ActionState {
     } else {
       done = true;
     }
+  }
+
+  /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    dialogueState.setVisible(true);
+    dialogueState.set(speaker, text);
+    done = true;
   }
 
   /**

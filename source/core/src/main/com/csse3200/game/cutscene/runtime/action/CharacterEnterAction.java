@@ -64,6 +64,18 @@ public class CharacterEnterAction implements ActionState {
   }
 
   /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    switch (characterEnterData.transition()) {
+      case SLIDE -> characterState.setxOffset(0f);
+      case FADE -> characterState.setOpacity(1f);
+    }
+    done = true;
+  }
+
+  /**
    * @return True if the action is blocking till completion (false if async)
    */
   @Override

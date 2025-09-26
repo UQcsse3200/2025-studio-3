@@ -25,6 +25,14 @@ public class AdvanceSignalState implements ActionState {
   public void tick(int dtMs) {}
 
   /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+
+  }
+
+  /**
    * @return True if the action is blocking till completion (false if async)
    */
   @Override
