@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -85,6 +86,18 @@ public class MainGameScreen extends ScreenAdapter {
   private List<String> textures = new ArrayList<>();
   private String level;
 
+  private enum PanPhase {
+    RIGHT,
+    LEFT,
+    DONE
+  }
+
+  private PanPhase panPhase = PanPhase.RIGHT;
+  private float panElapsed = 0f;
+  private float panDuration = 2f; // seconds
+  private boolean doIntroPan = true;
+  private float panStartX, panTargetX;
+
   /**
    * Constructor for the main game screen.
    *
@@ -126,6 +139,14 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea.create();
 
     snapCameraBottomLeft();
+
+    var camComp = renderer.getCamera();
+    float halfVW = camComp.getCamera().viewportWidth / 2f;
+    float worldWidth = gameArea.getWorldWidth();
+    panStartX = halfVW; // current
+    panTargetX =
+        Math.max(halfVW, Math.min(worldWidth - halfVW, halfVW + (worldWidth - halfVW) * 0.35f));
+
     waveManager.initialiseNewWave();
   }
 
@@ -135,6 +156,28 @@ public class MainGameScreen extends ScreenAdapter {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
       waveManager.update(delta);
+    }
+    if (doIntroPan) {
+      panElapsed += delta;
+      float t = Math.min(1f, panElapsed / panDuration);
+      var cam = renderer.getCamera().getCamera();
+
+      if (panPhase == PanPhase.RIGHT) {
+        cam.position.x = Interpolation.smoother.apply(panStartX, panTargetX, t);
+        cam.update();
+        if (t >= 1f) {
+          // switch to left pan
+          panPhase = PanPhase.LEFT;
+          panElapsed = 0f;
+        }
+      } else if (panPhase == PanPhase.LEFT) {
+        cam.position.x = Interpolation.smoother.apply(panTargetX, panStartX, t);
+        cam.update();
+        if (t >= 1f) {
+          panPhase = PanPhase.DONE;
+          doIntroPan = false;
+        }
+      }
     }
 
     renderer.render();
