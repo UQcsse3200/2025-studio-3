@@ -169,11 +169,19 @@ public class Profile {
     this.completedNodes.add(node);
   }
 
-  public float getWorldMapX() {return worldMapX;}
+  public float getWorldMapX() {
+    return worldMapX;
+  }
 
-  public float getWorldMapY() {return worldMapY;}
+  public float getWorldMapY() {
+    return worldMapY;
+  }
 
-  public void setWorldMapX(float worldMapX) {this.worldMapX = worldMapX;}
+  public void setWorldMapX(float worldMapX) {
+    this.worldMapX = worldMapX;
+  }
 
-  public void setWorldMapY(float worldMapY) {this.worldMapY = worldMapY;}
+  public void setWorldMapY(float worldMapY) {
+    this.worldMapY = worldMapY;
+  }
 }

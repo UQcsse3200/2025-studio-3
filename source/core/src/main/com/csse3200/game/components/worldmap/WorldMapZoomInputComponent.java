@@ -4,8 +4,8 @@ import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.screens.WorldMapScreen;
 
 /**
- * Handles mouse wheel scrolling to zoom the world map.
- * Uses a lower priority than the Stage InputDecorator so UI can consume scroll first.
+ * Handles mouse wheel scrolling to zoom the world map. Uses a lower priority than the Stage
+ * InputDecorator so UI can consume scroll first.
  */
 public class WorldMapZoomInputComponent extends InputComponent {
   private final WorldMapScreen screen;
@@ -38,4 +38,3 @@ public class WorldMapZoomInputComponent extends InputComponent {
     return true;
   }
 }
-

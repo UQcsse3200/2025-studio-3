@@ -14,7 +14,6 @@ import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapPlayerComponent;
 import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
-
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ProfileService;
@@ -84,29 +83,29 @@ public class WorldMapScreen extends BaseScreen {
 
     // Create player entity
     playerEntity = new Entity();
-      // Restore last saved world-map position if available; otherwise use default
-      float defaultX = WORLD_WIDTH * 0.1f;
-      float defaultY = WORLD_HEIGHT * 0.25f;
-      float startX = defaultX;
-      float startY = defaultY;
+    // Restore last saved world-map position if available; otherwise use default
+    float defaultX = WORLD_WIDTH * 0.1f;
+    float defaultY = WORLD_HEIGHT * 0.25f;
+    float startX = defaultX;
+    float startY = defaultY;
 
-      var profileService = ServiceLocator.getProfileService();
-      if (profileService != null) {
-          float savedX = profileService.getProfile().getWorldMapX();
-          float savedY = profileService.getProfile().getWorldMapY();
-          if (savedX >= 0f && savedY >= 0f) { // only use if previously saved
-              startX = savedX;
-              startY = savedY;
-          }
+    var profileService = ServiceLocator.getProfileService();
+    if (profileService != null) {
+      float savedX = profileService.getProfile().getWorldMapX();
+      float savedY = profileService.getProfile().getWorldMapY();
+      if (savedX >= 0f && savedY >= 0f) { // only use if previously saved
+        startX = savedX;
+        startY = savedY;
       }
+    }
 
-      playerEntity.setPosition(new Vector2(startX, startY));
-      playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
-      ServiceLocator.getEntityService().register(playerEntity);
+    playerEntity.setPosition(new Vector2(startX, startY));
+    playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
+    ServiceLocator.getEntityService().register(playerEntity);
 
     // Setup camera to follow player and start at the same place
-      CameraComponent camera = renderer.getCamera();
-      camera.getEntity().setPosition(startX, startY);
+    CameraComponent camera = renderer.getCamera();
+    camera.getEntity().setPosition(startX, startY);
 
     // Set initial zoom on the underlying camera
     if (camera.getCamera()
@@ -150,15 +149,16 @@ public class WorldMapScreen extends BaseScreen {
       float worldX = node.getPositionX() * WORLD_WIDTH;
       float worldY = node.getPositionY() * WORLD_HEIGHT;
       nodeEntity.setPosition(worldX, worldY);
-      WorldMapNodeRenderComponent comp =
-              new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
+      WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
       nodeEntity.addComponent(comp);
       // register render component for proximity updates
-        ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
+      ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
 
-        ServiceLocator.getEntityService().register(nodeEntity);
-
+      ServiceLocator.getEntityService().register(nodeEntity);
     }
+
+    // TODO: Test only, delete this before pushing.
+    ServiceLocator.getWorldMapService().unlockNode("levelTwo");
   }
 
   @Override
@@ -168,10 +168,10 @@ public class WorldMapScreen extends BaseScreen {
     super.render(delta);
     var profileService = ServiceLocator.getProfileService();
     if (profileService != null && playerEntity != null) {
-        var pos = playerEntity.getPosition();
-        profileService.getProfile().setWorldMapX(pos.x);
-        profileService.getProfile().setWorldMapY(pos.y);
-      }
+      var pos = playerEntity.getPosition();
+      profileService.getProfile().setWorldMapX(pos.x);
+      profileService.getProfile().setWorldMapY(pos.y);
+    }
   }
 
   /** Updates the camera to follow the player with smooth interpolation. */
@@ -261,16 +261,20 @@ public class WorldMapScreen extends BaseScreen {
    * @param node the node the player entered
    */
   private void onNodeEnter(WorldMapNode node) {
-      var ps = ServiceLocator.getProfileService();
-      if (ps != null) {
-          ps.getProfile().setCurrentLevel(node.getRegistrationKey());
-          if (playerEntity != null) {
-              var pos = playerEntity.getPosition();
-              ps.getProfile().setWorldMapX(pos.x);
-              ps.getProfile().setWorldMapY(pos.y);
-          }
-          ps.saveCurrentProfile();
+    var ps = ServiceLocator.getProfileService();
+    if (ps != null) {
+      ps.getProfile().setCurrentLevel(node.getRegistrationKey());
+      if (playerEntity != null) {
+        var pos = playerEntity.getPosition();
+        ps.getProfile().setWorldMapX(pos.x);
+        ps.getProfile().setWorldMapY(pos.y);
       }
-      game.setScreen(node.getTargetScreen());
+      ps.saveCurrentProfile();
+    }
+    ServiceLocator.getProfileService().getProfile().setCurrentLevel(node.getRegistrationKey());
+    logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
+    ServiceLocator.getProfileService().getProfile().setCurrentLevel(node.getRegistrationKey());
+    logger.debug("[WorldMapScreen] Set profile current level to: {}", node.getRegistrationKey());
+    game.setScreen(node.getTargetScreen());
   }
 }

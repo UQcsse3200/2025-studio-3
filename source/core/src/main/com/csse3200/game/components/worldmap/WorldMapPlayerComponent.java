@@ -10,10 +10,8 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
-import java.util.List;
 import java.util.ArrayList;
-import java.util.Comparator;
-
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +22,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   private static final float PLAYER_SPEED = 200f;
   private static final float INTERACTION_DISTANCE = 150f;
   private static final float PROXIMITY_CHECK_INTERVAL =
-          0.1f; // Check every 100ms instead of every frame
+      0.1f; // Check every 100ms instead of every frame
   private final Vector2 worldSize;
   private WorldMapNode nearbyNode = null;
   private Texture playerTexture;
@@ -40,7 +38,6 @@ public class WorldMapPlayerComponent extends UIComponent {
   private WorldMapNode levelThreeNode;
   private WorldMapNode townNode;
 
-
   private CompletableFuture<WorldMapNode> proximityCheckFuture = null;
   private float timeSinceLastProximityCheck = 0f;
 
@@ -52,10 +49,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   public void create() {
     super.create();
     playerTexture =
-            ServiceLocator.getResourceService()
-                    .getAsset("images/entities/character.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class);
     buildOrderedPath();
-
   }
 
   @Override
@@ -109,11 +105,10 @@ public class WorldMapPlayerComponent extends UIComponent {
         isMoving = true;
         currentNodeIndex = (pathNodes != null) ? pathNodes.indexOf(left) : -1;
       }
-    }else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+    } else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
       if (isAtNode(levelThreeNode, position) && townNode != null) {
         targetPosition = getWorldCoords(townNode);
         isMoving = true;
-
       }
     } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
       if (isAtNode(townNode, position) && levelThreeNode != null) {
@@ -123,13 +118,9 @@ public class WorldMapPlayerComponent extends UIComponent {
         currentNodeIndex = (idx >= 0) ? idx : 2;
       }
     }
-
-
   }
 
-  /**
-   * Build ordered path (1 -> 2 -> 3) and cache Town as the highest Y node
-   */
+  /** Build ordered path (1 -> 2 -> 3) and cache Town as the highest Y node */
   private void buildOrderedPath() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
 
@@ -149,7 +140,6 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     currentNodeIndex = -1; // recalc on-demand
   }
-
 
   /** Find nearest neighbor strictly to the left/right (excluding Town). */
   private WorldMapNode findDirectionalNeighbor(Vector2 pos, boolean toRight) {
@@ -177,7 +167,8 @@ public class WorldMapPlayerComponent extends UIComponent {
       float primary = Math.abs(dx);
       float secondary = pos.dst2(new Vector2(nx, ny));
 
-      if (primary < bestPrimary - 1e-3f || (Math.abs(primary - bestPrimary) <= 1e-3f && secondary < bestSecondary)) {
+      if (primary < bestPrimary - 1e-3f
+          || (Math.abs(primary - bestPrimary) <= 1e-3f && secondary < bestSecondary)) {
         bestPrimary = primary;
         bestSecondary = secondary;
         best = n;
@@ -220,7 +211,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Determines if a new proximity check should be started. */
   private boolean shouldStartNewProximityCheck() {
     return timeSinceLastProximityCheck >= PROXIMITY_CHECK_INTERVAL
-            && (proximityCheckFuture == null || proximityCheckFuture.isDone());
+        && (proximityCheckFuture == null || proximityCheckFuture.isDone());
   }
 
   /** Starts a new proximity check using the job system. */
@@ -240,11 +231,11 @@ public class WorldMapPlayerComponent extends UIComponent {
       } catch (InterruptedException e) {
         Thread.currentThread().interrupt();
         logger.warn(
-                "[WorldMapPlayerComponent] Proximity check was interrupted: {}", e.getMessage());
+            "[WorldMapPlayerComponent] Proximity check was interrupted: {}", e.getMessage());
         proximityCheckFuture = null;
       } catch (Exception e) {
         logger.warn(
-                "[WorldMapPlayerComponent] Error getting proximity check result: {}", e.getMessage());
+            "[WorldMapPlayerComponent] Error getting proximity check result: {}", e.getMessage());
         proximityCheckFuture = null;
       }
     }
@@ -297,24 +288,24 @@ public class WorldMapPlayerComponent extends UIComponent {
       if (nearbyNode.isUnlocked() && !nearbyNode.isCompleted()) {
         String message = "Do you want to enter " + nearbyNode.getLabel() + "?";
         ServiceLocator.getDialogService()
-                .warning(
-                        nearbyNode.getLabel(),
-                        message,
-                        dialog -> {
-                          logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
-                          entity.getEvents().trigger("enterNode", nearbyNode);
-                        },
-                        null);
+            .warning(
+                nearbyNode.getLabel(),
+                message,
+                dialog -> {
+                  logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
+                  entity.getEvents().trigger("enterNode", nearbyNode);
+                },
+                null);
       } else {
         String message =
-                nearbyNode.getLockReason() != null
-                        ? nearbyNode.getLockReason()
-                        : "This node is not available.";
+            nearbyNode.getLockReason() != null
+                ? nearbyNode.getLockReason()
+                : "This node is not available.";
         ServiceLocator.getDialogService().error(nearbyNode.getLabel(), message);
         logger.info(
-                "[WorldMapPlayerComponent] Node '{}' is not accessible: {}",
-                nearbyNode.getLabel(),
-                message);
+            "[WorldMapPlayerComponent] Node '{}' is not accessible: {}",
+            nearbyNode.getLabel(),
+            message);
       }
     }
   }
