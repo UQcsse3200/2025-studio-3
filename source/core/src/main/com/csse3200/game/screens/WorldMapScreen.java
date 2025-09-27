@@ -130,17 +130,28 @@ public class WorldMapScreen extends BaseScreen {
   private void createNodes() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
 
-    // Get existing nodes and mark completed ones
+    // Get existing nodes and mark/lock according to linear progression
     List<WorldMapNode> nodes = worldMapService.getAllNodes();
     ProfileService profileService = ServiceLocator.getProfileService();
     if (profileService != null) {
-      List<String> completedNodes = profileService.getProfile().getCompletedNodes();
-      for (String nodeId : completedNodes) {
-        worldMapService.completeNode(nodeId);
-        worldMapService.lockNode(nodeId, "This level has already been completed.");
-      }
       String currentLevel = profileService.getProfile().getCurrentLevel();
-      worldMapService.unlockNode(currentLevel);
+
+      boolean reachedCurrent = false;
+      for (WorldMapNode node : nodes) {
+        String key = node.getRegistrationKey();
+        if (key.equals(currentLevel)) {
+          worldMapService.unlockNode(key);
+          reachedCurrent = true;
+          continue;
+        }
+        if (!reachedCurrent) {
+          worldMapService.completeNode(key);
+          worldMapService.lockNode(key, "This level has already been completed.");
+        }
+      }
+      if (currentLevel == null && !nodes.isEmpty()) {
+        worldMapService.unlockNode(nodes.get(0).getRegistrationKey());
+      }
     }
 
     // Create render entities for each node
