@@ -32,6 +32,7 @@ public class ServiceLocator {
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
   private static SettingsService settingsService;
+  private static DiscordRichPresenceService discordRichPresenceService;
 
   /**
    * Gets the entity service.
@@ -166,6 +167,15 @@ public class ServiceLocator {
    */
   public static SettingsService getSettingsService() {
     return settingsService;
+  }
+
+  /**
+   * Gets the Discord Rich Presence service.
+   *
+   * @return the Discord Rich Presence service
+   */
+  public static DiscordRichPresenceService getDiscordRichPresenceService() {
+    return discordRichPresenceService;
   }
 
   /**
@@ -348,6 +358,25 @@ public class ServiceLocator {
   public static void deregisterSettingsService() {
     logger.debug("Removing settings service");
     settingsService = null;
+  }
+
+  /**
+   * Registers the Discord Rich Presence service.
+   *
+   * @param source the Discord Rich Presence service
+   */
+  public static void registerDiscordRichPresenceService(DiscordRichPresenceService source) {
+    logger.debug("Registering Discord Rich Presence service {}", source);
+    discordRichPresenceService = source;
+  }
+
+  /** Deregisters the Discord Rich Presence service. */
+  public static void deregisterDiscordRichPresenceService() {
+    logger.debug("Removing Discord Rich Presence service");
+    if (discordRichPresenceService != null) {
+      discordRichPresenceService.shutdown();
+    }
+    discordRichPresenceService = null;
   }
 
   /** Clears all transient services. */

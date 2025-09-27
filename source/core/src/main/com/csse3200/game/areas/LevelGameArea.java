@@ -84,6 +84,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
     selectedUnit = null;
+
+    // TODO: Add dynamic updates when wave is changed.
+    ServiceLocator.getDiscordRichPresenceService().updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
 
   /** Loads level configuration from ConfigService. */

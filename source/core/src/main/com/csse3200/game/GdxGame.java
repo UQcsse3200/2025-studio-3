@@ -60,6 +60,16 @@ public class GdxGame extends Game {
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
+
+    // Initialize Discord Rich Presence
+    DiscordRichPresenceService discordService = new DiscordRichPresenceService();
+    discordService.initialize();
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
+    if (discordService.isInitialized()) {
+      discordService.setPresence(null);
+    }
+    
+    // Asset configs
     loadGlobalAssets();
     loadNodes();
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
@@ -173,6 +183,15 @@ public class GdxGame extends Game {
   }
 
   @Override
+  public void render() {
+    super.render();
+    DiscordRichPresenceService discordService = ServiceLocator.getDiscordRichPresenceService();
+    if (discordService != null && discordService.isInitialized()) {
+      discordService.runCallbacks();
+    }
+  }
+
+  @Override
   public void dispose() {
     logger.debug("[GdxGame] Disposing of current screen");
     getScreen().dispose();
@@ -265,11 +284,13 @@ public class GdxGame extends Game {
 
   /** Exits the game. */
   public void exit() {
+    ServiceLocator.getDiscordRichPresenceService().shutdown();
     ServiceLocator.deregisterGlobalResourceService();
     ServiceLocator.deregisterConfigService();
     ServiceLocator.deregisterProfileService();
     ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.deregisterDialogService();
+    ServiceLocator.deregisterDiscordRichPresenceService();
     app.exit();
   }
 }
