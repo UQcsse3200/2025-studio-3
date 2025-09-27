@@ -2,15 +2,16 @@ package com.csse3200.game.cutscene.runtime.states;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ChoiceState {
     private boolean active;
     private List<Button> choices;
 
-    public ChoiceState(boolean active, List<Button> choices) {
-        this.active = active;
-        this.choices = choices;
+    public ChoiceState() {
+        this.active = false;
+        this.choices = new ArrayList<>();
     }
 
     public void setActive(boolean active) {
@@ -27,6 +28,10 @@ public class ChoiceState {
 
     public void removeChoice(Button button) {
         this.choices.remove(button);
+    }
+
+    public List<Button> getChoices() {
+        return choices;
     }
 
     public boolean isActive() {

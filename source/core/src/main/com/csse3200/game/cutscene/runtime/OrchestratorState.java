@@ -23,7 +23,7 @@ public class OrchestratorState {
     this.backgroundState = new BackgroundState();
     this.backgroundState.setImage(CutsceneHudComponent.loadImage(Color.BLACK));
     this.characterStates = new HashMap<>();
-    this.choiceState = null;
+    this.choiceState = new ChoiceState();
   }
 
   public DialogueState getDialogueState() {

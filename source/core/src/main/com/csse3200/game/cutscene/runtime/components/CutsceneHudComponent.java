@@ -30,9 +30,9 @@ public class CutsceneHudComponent extends UIComponent {
   private PaneGroup rightPane;
 
   private Table choicesGroup;
-  private VerticalGroup choicesLeft;
-  private VerticalGroup choicesCenter;
-  private VerticalGroup choicesRight;
+  private Table choicesLeft;
+  private Table choicesCenter;
+  private Table choicesRight;
 
   private Table dialogueBox;
   private Label characterName;
@@ -129,30 +129,38 @@ public class CutsceneHudComponent extends UIComponent {
 
     // Setup choices
     choicesGroup = new Table();
-    choicesGroup.setDebug(true);
-    choicesGroup.defaults().uniformX().expandX().fillY().pad(8f);
+    choicesGroup.defaults().pad(8f).top().uniformX().expandY().fillY();
     choicesGroup.setDebug(true);
 
-    choicesLeft = new VerticalGroup();
-    choicesLeft.fill();
-    choicesCenter = new VerticalGroup();
-    choicesCenter.fill();
-    choicesRight = new VerticalGroup();
-    choicesRight.fill();
+    choicesLeft = new Table();
+    choicesLeft.defaults().pad(6f).growX();
+    //choicesLeft.fill();
+    choicesCenter = new Table();
+    choicesCenter.defaults().pad(6f).growX();
+    //choicesCenter.fill();
+    choicesRight = new Table();
+    choicesRight.defaults().pad(6f).growX();
+    //choicesRight.fill();
 
-    choicesGroup.add(choicesLeft).fill().expand();
-    choicesGroup.add(choicesCenter).fill().expand();
-    choicesGroup.add(choicesRight).fill().expand();
+//    choicesGroup.addActor(choicesLeft);
+//    choicesGroup.addActor(choicesCenter);
+//    choicesGroup.addActor(choicesRight);
+
+    choicesGroup.add(choicesLeft).expand().fill();
+    choicesGroup.add(choicesCenter).expand().fill();
+    choicesGroup.add(choicesRight).expand().fill();
 
     TextButton testButton1 = ButtonFactory.createButton("Test");
     TextButton testButton2 = ButtonFactory.createButton("Test2");
     TextButton testButton3 = ButtonFactory.createButton("Test3");
 
-    choicesLeft.addActor(testButton1);
-    choicesCenter.addActor(testButton2);
-    choicesRight.addActor(testButton3);
+//    choicesLeft.addActor(testButton1);
+//    choicesCenter.addActor(testButton2);
+//    choicesRight.addActor(testButton3);
 
-    // TODO: root.add(choicesGroup).growX().fillX().row();
+    root.add(choicesGroup).fillX().bottom().padBottom(12f).row();
+
+//     TODO: root.add(choicesGroup).growX().fillX().row();
 
     // Make dialogue panel
     dialogueBox = new Table();
@@ -224,6 +232,17 @@ public class CutsceneHudComponent extends UIComponent {
                 }
               }
             });
+
+
+    if (orchestratorState.getChoiceState().isActive()) {
+      for (Button button : orchestratorState.getChoiceState().getChoices()) {
+//        choicesCenter.addActor(button);
+        if (button instanceof TextButton tb) tb.setFillParent(false);
+        choicesCenter.add(button).growX().height(48f).row();
+      }
+    } else if (!orchestratorState.getChoiceState().isActive() && choicesCenter.hasChildren()) {
+      choicesCenter.clearChildren();
+    }
   }
 
   @Override

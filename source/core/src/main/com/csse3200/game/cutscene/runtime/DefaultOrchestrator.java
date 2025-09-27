@@ -148,7 +148,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
                 state.getCharacterStates().get(d.character()), d);
       }
       case ChoiceData d ->
-              new ChoiceAction(state.getChoiceState(), state().getDialogueState(), d);
+              new ChoiceAction(this, state.getChoiceState(), state().getDialogueState(), d);
       case DialogueShowData d ->
               new DialogueShowAction(state.getDialogueState(), d);
       case DialogueHideData d ->
