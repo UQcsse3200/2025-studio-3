@@ -34,6 +34,7 @@ public class ChoiceAction implements ActionState {
                     @Override
                     public void changed(ChangeEvent event, Actor actor) {
                         orchestrator.choose(choice.getEntryBeatId());
+                        orchestrator.state().getChoiceState().setActive(false);
                     }
                 });
                 choiceState.addChoice(button);

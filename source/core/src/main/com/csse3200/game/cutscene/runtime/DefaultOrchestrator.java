@@ -180,10 +180,9 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
    */
   @Override
   public void choose(String id) {
-    gotoBeat(id);
     active.clear();
     queue.clear();
-    beatStarted = false;
+    gotoBeat(id);
   }
 
   /**

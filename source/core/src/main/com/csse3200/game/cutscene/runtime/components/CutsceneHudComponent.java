@@ -33,6 +33,7 @@ public class CutsceneHudComponent extends UIComponent {
   private Table choicesLeft;
   private Table choicesCenter;
   private Table choicesRight;
+  private boolean choicesBound;
 
   private Table dialogueBox;
   private Label characterName;
@@ -129,36 +130,23 @@ public class CutsceneHudComponent extends UIComponent {
 
     // Setup choices
     choicesGroup = new Table();
-    choicesGroup.defaults().pad(8f).top().uniformX().expandY().fillY();
-    choicesGroup.setDebug(true);
+    choicesGroup.defaults().pad(8f).space(6f).uniform();
 
     choicesLeft = new Table();
-    choicesLeft.defaults().pad(6f).growX();
-    //choicesLeft.fill();
+    choicesLeft.defaults().uniformX().expandX().fillX();
+    choicesLeft.setClip(true);
     choicesCenter = new Table();
-    choicesCenter.defaults().pad(6f).growX();
-    //choicesCenter.fill();
+    choicesCenter.defaults().uniformX().expandX().fillX();
+    choicesCenter.setClip(true);
     choicesRight = new Table();
-    choicesRight.defaults().pad(6f).growX();
-    //choicesRight.fill();
-
-//    choicesGroup.addActor(choicesLeft);
-//    choicesGroup.addActor(choicesCenter);
-//    choicesGroup.addActor(choicesRight);
+    choicesRight.defaults().uniformX().expandX().fillX();
+    choicesRight.setClip(true);
 
     choicesGroup.add(choicesLeft).expand().fill();
     choicesGroup.add(choicesCenter).expand().fill();
     choicesGroup.add(choicesRight).expand().fill();
 
-    TextButton testButton1 = ButtonFactory.createButton("Test");
-    TextButton testButton2 = ButtonFactory.createButton("Test2");
-    TextButton testButton3 = ButtonFactory.createButton("Test3");
-
-//    choicesLeft.addActor(testButton1);
-//    choicesCenter.addActor(testButton2);
-//    choicesRight.addActor(testButton3);
-
-    root.add(choicesGroup).fillX().bottom().padBottom(12f).row();
+    root.add(choicesGroup).growX().bottom().pad(0f, 1f, 12f, 1f).row();
 
 //     TODO: root.add(choicesGroup).growX().fillX().row();
 
@@ -234,14 +222,31 @@ public class CutsceneHudComponent extends UIComponent {
             });
 
 
-    if (orchestratorState.getChoiceState().isActive()) {
-      for (Button button : orchestratorState.getChoiceState().getChoices()) {
-//        choicesCenter.addActor(button);
-        if (button instanceof TextButton tb) tb.setFillParent(false);
-        choicesCenter.add(button).growX().height(48f).row();
-      }
-    } else if (!orchestratorState.getChoiceState().isActive() && choicesCenter.hasChildren()) {
+    if (orchestratorState.getChoiceState().isActive() && !choicesBound) {
+      choicesGroup.setVisible(true);
+      choicesLeft.clearChildren();
       choicesCenter.clearChildren();
+      choicesRight.clearChildren();
+      for (Button button : orchestratorState.getChoiceState().getChoices()) {
+        if (button instanceof TextButton tb) tb.setFillParent(false);
+        if (button.getParent() == null) {
+          choicesLeft.add(button)
+                  .minWidth(0)
+                  .prefWidth(Value.percentWidth(1f, choicesLeft))
+                  .maxWidth(Value.percentWidth(1f, choicesLeft))
+                  .fillX().height(48f).row();
+        }
+      }
+      choicesBound = true;
+    } else if (!orchestratorState.getChoiceState().isActive() && choicesCenter.hasChildren()) {
+      choicesLeft.clearChildren();
+      choicesCenter.clearChildren();
+      choicesRight.clearChildren();
+      choicesBound = false;
+    }
+
+    if (!orchestratorState.getChoiceState().isActive()) {
+      choicesGroup.setVisible(false);
     }
   }
 
