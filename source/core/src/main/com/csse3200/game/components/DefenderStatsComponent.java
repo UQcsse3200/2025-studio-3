@@ -10,10 +10,6 @@ import com.csse3200.game.services.ServiceLocator;
  * range, attack speed, and critical hit chance.
  */
 public class DefenderStatsComponent extends CombatStatsComponent {
-
-  /** Integer identifier for the type of defender (e.g., tower, trap, etc.). */
-  private int type;
-
   /** Maximum range (in game units) at which the defender can engage targets. */
   private int range;
 
@@ -50,34 +46,20 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    *
    * @param health the maximum health of the defender
    * @param baseAttack the base attack damage
-   * @param type the type identifier of this defender
    * @param range the maximum attack range
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int type, int range, int attackSpeed, int critChance) {
+      int health, int baseAttack, int range, int attackSpeed, int critChance) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
-    setType(type);
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
-  }
-
-  /** Sets the type of defender. */
-  public void setType(int type) {
-    this.type = type;
-  }
-
-  /**
-   * @return the defender type identifier
-   */
-  public int getType() {
-    return type;
   }
 
   /** Sets the defender's attack range. */

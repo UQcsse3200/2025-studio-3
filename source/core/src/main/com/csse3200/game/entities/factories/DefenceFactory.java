@@ -56,7 +56,7 @@ public class DefenceFactory {
 
     if (config.getProjectilePath() != null) {
       defender.addComponent(
-          new ProjectileComponent(config.getProjectilePath(), config.getAttack()));
+          new ProjectileComponent(config.getProjectilePath(), config.getDamage()));
     }
 
     // Scale to tilesize
@@ -68,8 +68,7 @@ public class DefenceFactory {
     DefenderStatsComponent stats =
         new DefenderStatsComponent(
             config.getHealth(),
-            config.getAttack(),
-            config.getRangeType(),
+            config.getDamage(),
             config.getRange(),
             config.getAttackSpeed(),
             config.getCritChance());
