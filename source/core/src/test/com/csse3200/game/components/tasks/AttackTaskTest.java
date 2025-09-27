@@ -145,7 +145,6 @@ class AttackTaskTest {
     when(gameTime.getDeltaTime()).thenReturn(0f); // start with 0 delta
     ServiceLocator.registerTimeSource(gameTime);
 
-    float attackRange = 5f;
     AttackTask attackTask =
         new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override

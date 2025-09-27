@@ -14,17 +14,11 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 
 public class GeneratorFactory {
   private static final String HIT = "hit";
   private static final String IDLE = "idle";
-
-  /** Gets the config service for accessing defence configurations. */
-  private static ConfigService getConfigService() {
-    return ServiceLocator.getConfigService();
-  }
 
   public static Entity createGeneratorUnit(BaseGeneratorConfig config) {
     // start with a base defender (physics + collider)
@@ -46,11 +40,8 @@ public class GeneratorFactory {
   }
 
   public static GeneratorStatsComponent getUnitStats(BaseGeneratorConfig config) {
-    GeneratorStatsComponent stats =
-        new GeneratorStatsComponent(
+    return new GeneratorStatsComponent(
             config.getHealth(), config.getInterval(), config.getScrapValue());
-
-    return stats;
   }
 
   public static AnimationRenderComponent getAnimationComponent(BaseGeneratorConfig config) {
