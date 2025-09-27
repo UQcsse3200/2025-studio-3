@@ -2,6 +2,10 @@ package com.csse3200.game.services;
 
 import de.jcm.discordgamesdk.*;
 import de.jcm.discordgamesdk.activity.Activity;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -13,38 +17,26 @@ import org.slf4j.LoggerFactory;
 public class DiscordRichPresenceService {
   private static final Logger logger = LoggerFactory.getLogger(DiscordRichPresenceService.class);
   private static final long APPLICATION_ID = 1421050206404739225L;
-  private Core core;
-  private ActivityManager activityManager;
-  private boolean isInitialized = false;
-  private long startTime;
+  Core core;
+  ActivityManager activityManager;
+  boolean isInitialized = false;
+  long startTime;
+  Supplier<CreateParams> createParamsSupplier = CreateParams::new;
+  Function<CreateParams, Core> coreFactory = Core::new;
+  Supplier<Activity> activitySupplier = Activity::new;
 
   /** Initializes the Discord Rich Presence service. Should be called once when the game starts. */
   public void initialize() {
-    if (isInitialized) {
-      logger.warn("Discord Rich Presence service already initialized");
-      return;
-    }
-
-    try {
-      try (CreateParams params = new CreateParams()) {
-        params.setClientID(APPLICATION_ID);
-        params.setFlags(CreateParams.getDefaultFlags());
-
-        core = new Core(params);
-        activityManager = core.activityManager();
-        startTime = System.currentTimeMillis() / 1000;
-        isInitialized = true;
-
-        logger.info("[Discord Rich Presence service] Initialized successfully");
-      }
+    try (CreateParams params = createParamsSupplier.get()) {
+      params.setClientID(APPLICATION_ID);
+      params.setFlags(CreateParams.getDefaultFlags());
+      core = coreFactory.apply(params);
+      activityManager = core.activityManager();
+      startTime = System.currentTimeMillis() / 1000;
+      isInitialized = true;
+      logger.info("[Discord Rich Presence service] Initialized successfully");
     } catch (Exception e) {
-      if (e.getCause() instanceof java.net.ConnectException) {
-        logger.warn(
-            "[Discord Rich Presence service] Discord not running, Rich Presence disabled: {}",
-            e.getCause().getMessage());
-      } else {
-        logger.error("[Discord Rich Presence service] Failed to initialize: {}", e.getMessage());
-      }
+      logger.error("[Discord Rich Presence service] Failed to initialize: {}", e.getMessage());
       isInitialized = false;
     }
   }
@@ -56,7 +48,7 @@ public class DiscordRichPresenceService {
       return;
     }
 
-    try (Activity activity = new Activity()) {
+    try (Activity activity = activitySupplier.get()) {
       // Create activity
       activity.setDetails("Playing The Day We Fought Back");
       if (state != null) {
@@ -123,10 +115,11 @@ public class DiscordRichPresenceService {
     }
 
     try {
+      isInitialized = false;
       if (core != null) {
         core.close();
       }
-      isInitialized = false;
+      
       logger.info("Discord Rich Presence service shut down");
     } catch (Exception e) {
       logger.error("Failed to shutdown Discord Rich Presence: {}", e.getMessage());

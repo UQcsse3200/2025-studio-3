@@ -30,6 +30,7 @@ class ServiceLocatorTest {
   private DialogService dialogService;
   private ResourceService globalResourceService;
   private ConfigService configService;
+  private DiscordRichPresenceService discordRichPresenceService;
 
   @BeforeEach
   void setUp() {
@@ -49,6 +50,7 @@ class ServiceLocatorTest {
     dialogService = new DialogService();
     globalResourceService = new ResourceService();
     configService = new ConfigService();
+    discordRichPresenceService = new DiscordRichPresenceService();
   }
 
   @AfterEach
@@ -77,7 +79,7 @@ class ServiceLocatorTest {
     assertNull(ServiceLocator.getResourceService());
     assertNull(ServiceLocator.getCurrencyService());
     assertNull(ServiceLocator.getItemEffectsService());
-
+    assertNull(ServiceLocator.getDiscordRichPresenceService());
     // Persistent services should remain after clear
     assertNotNull(ServiceLocator.getCutsceneService());
     assertNotNull(ServiceLocator.getWorldMapService());
@@ -85,6 +87,7 @@ class ServiceLocatorTest {
     assertNotNull(ServiceLocator.getGlobalResourceService());
     assertNotNull(ServiceLocator.getConfigService());
     assertNotNull(ServiceLocator.getProfileService());
+    assertNotNull(ServiceLocator.getDiscordRichPresenceService());
   }
 
   @Test
@@ -105,6 +108,9 @@ class ServiceLocatorTest {
 
     ServiceLocator.deregisterWorldMapService();
     assertNull(ServiceLocator.getWorldMapService());
+
+    ServiceLocator.deregisterDiscordRichPresenceService();
+    assertNull(ServiceLocator.getDiscordRichPresenceService());
   }
 
   private void registerAllServices() {
@@ -122,6 +128,7 @@ class ServiceLocatorTest {
     ServiceLocator.registerDialogService(dialogService);
     ServiceLocator.registerConfigService(configService);
     ServiceLocator.registerGlobalResourceService(globalResourceService);
+    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
   }
 
   private void assertAllServicesRegistered() {
@@ -139,5 +146,6 @@ class ServiceLocatorTest {
     assertEquals(dialogService, ServiceLocator.getDialogService());
     assertEquals(globalResourceService, ServiceLocator.getGlobalResourceService());
     assertEquals(configService, ServiceLocator.getConfigService());
+    assertEquals(discordRichPresenceService, ServiceLocator.getDiscordRichPresenceService());
   }
 }
