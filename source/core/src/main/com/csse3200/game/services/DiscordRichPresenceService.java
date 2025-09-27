@@ -6,9 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service for managing the Discord Rich Presence integration. 
- * 
- * Provides functionality to update Discord status with current game state.
+ * Service for managing the Discord Rich Presence integration.
+ *
+ * <p>Provides functionality to update Discord status with current game state.
  */
 public class DiscordRichPresenceService {
   private static final Logger logger = LoggerFactory.getLogger(DiscordRichPresenceService.class);
@@ -39,7 +39,9 @@ public class DiscordRichPresenceService {
       }
     } catch (Exception e) {
       if (e.getCause() instanceof java.net.ConnectException) {
-        logger.warn("[Discord Rich Presence service] Discord not running, Rich Presence disabled: {}", e.getCause().getMessage());
+        logger.warn(
+            "[Discord Rich Presence service] Discord not running, Rich Presence disabled: {}",
+            e.getCause().getMessage());
       } else {
         logger.error("[Discord Rich Presence service] Failed to initialize: {}", e.getMessage());
       }
@@ -47,9 +49,7 @@ public class DiscordRichPresenceService {
     }
   }
 
-  /**
-   * Updates the Discord presence with simple game information.
-   */
+  /** Updates the Discord presence with simple game information. */
   public void setPresence(String state) {
     if (!isInitialized || activityManager == null) {
       logger.error("[Discord Rich Presence service] Not initialized, skipping update");
@@ -77,7 +77,8 @@ public class DiscordRichPresenceService {
           activity,
           result -> {
             if (result == Result.OK) {
-            logger.debug("[Discord Rich Presence service] Updated presence: Playing The Day We Fought Back");
+              logger.debug(
+                  "[Discord Rich Presence service] Updated presence: Playing The Day We Fought Back");
             } else {
               logger.warn("[Discord Rich Presence service] Failed to update activity: {}", result);
             }

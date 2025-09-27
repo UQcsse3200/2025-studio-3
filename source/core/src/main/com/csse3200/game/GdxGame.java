@@ -68,7 +68,7 @@ public class GdxGame extends Game {
     if (discordService.isInitialized()) {
       discordService.setPresence(null);
     }
-    
+
     // Asset configs
     loadGlobalAssets();
     loadNodes();

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.Input;
+import com.csse3200.game.utils.EnvironmentUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
@@ -15,7 +16,6 @@ import org.slf4j.LoggerFactory;
 
 public class Settings {
   private static final Logger logger = LoggerFactory.getLogger(Settings.class);
-  public static final String OPERATING_SYSTEM = System.getProperty("os.name");
 
   /** Display mode of the game. */
   public enum Mode {
@@ -126,7 +126,7 @@ public class Settings {
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
     availableModes.put(Mode.FULLSCREEN, "Fullscreen");
-    if (OPERATING_SYSTEM.startsWith("Windows")) {
+    if (EnvironmentUtils.getOperatingSystem().startsWith("Windows")) {
       availableModes.put(Mode.BORDERLESS, "Windowed Borderless");
     }
     currentMode = Mode.FULLSCREEN;
@@ -134,10 +134,11 @@ public class Settings {
     currentMonitor = Gdx.graphics.getPrimaryMonitor();
     DisplayMode displayMode = Gdx.graphics.getDisplayMode(currentMonitor);
     Gdx.graphics.setFullscreenMode(displayMode);
-    currentResolution = new Pair<>(displayMode.width, displayMode.height);
+    currentResolution = EnvironmentUtils.getResolutionFromDisplayMode(currentMonitor);
     windowedResolution = new Pair<>(0, 0);
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
-      if (displayMode.width >= resolution.getKey() && displayMode.height >= resolution.getValue()) {
+      if (currentResolution.getKey() >= resolution.getKey()
+          && currentResolution.getValue() >= resolution.getValue()) {
         availableResolutions.add(resolution);
         if (resolution.getKey() > windowedResolution.getKey()
             && resolution.getValue() > windowedResolution.getValue()) {
@@ -145,8 +146,8 @@ public class Settings {
         }
       }
     }
-    refreshRate = displayMode.refreshRate;
-    fps = displayMode.refreshRate;
+    refreshRate = EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor);
+    fps = EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor);
     vsync = false;
     currentUIScale = UIScale.MEDIUM;
     quality = Quality.HIGH;
@@ -179,16 +180,16 @@ public class Settings {
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
     availableModes.put(Mode.FULLSCREEN, "Fullscreen");
-    if (OPERATING_SYSTEM.startsWith("Windows")) {
+    if (EnvironmentUtils.getOperatingSystem().startsWith("Windows")) {
       availableModes.put(Mode.BORDERLESS, "Windowed Borderless");
     }
     this.currentMode = deserializedSettings.getCurrentMode();
     availableMonitors = Gdx.graphics.getMonitors();
     currentMonitor = Gdx.graphics.getPrimaryMonitor();
-    DisplayMode displayMode = Gdx.graphics.getDisplayMode(currentMonitor);
-    currentResolution = new Pair<>(displayMode.width, displayMode.height);
+    currentResolution = EnvironmentUtils.getResolutionFromDisplayMode(currentMonitor);
     for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
-      if (displayMode.width >= resolution.getKey() && displayMode.height >= resolution.getValue()) {
+      if (currentResolution.getKey() >= resolution.getKey()
+          && currentResolution.getValue() >= resolution.getValue()) {
         availableResolutions.add(resolution);
       }
     }
@@ -207,10 +208,11 @@ public class Settings {
         }
       }
     }
-    this.refreshRate = displayMode.refreshRate;
+    this.refreshRate = EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor);
     this.fps =
-        deserializedSettings.getFps() > displayMode.refreshRate
-            ? displayMode.refreshRate
+        deserializedSettings.getFps()
+                > EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor)
+            ? EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor)
             : deserializedSettings.getFps();
     this.vsync = deserializedSettings.isVsync();
     this.currentUIScale = deserializedSettings.getCurrentUIScale();
