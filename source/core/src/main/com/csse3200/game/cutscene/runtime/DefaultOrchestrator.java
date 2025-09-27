@@ -155,6 +155,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
               new DialogueHideAction(state.getDialogueState(), d);
       case GotoData d ->
               new GotoAction(this, beatIdx, beats, d);
+      case ParallelData d ->
+              new ParallelAction(this, d);
       default -> null;
     };
   }
