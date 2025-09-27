@@ -562,13 +562,15 @@ public class Settings {
     if (currentResolution.equals(windowedResolution)) {
       return;
     }
-    this.windowedResolution = new Pair<>(0, 0);
-    for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
-      if (currentResolution.getKey() >= resolution.getKey()
-          && currentResolution.getValue() >= resolution.getValue()
-          && currentResolution.getKey() > windowedResolution.getKey()
-          && currentResolution.getValue() > windowedResolution.getValue()) {
-        windowedResolution = resolution;
+    if (windowedResolution.getKey() == 0 && windowedResolution.getValue() == 0) {
+      this.windowedResolution = new Pair<>(0, 0);
+      for (Pair<Integer, Integer> resolution : RESOLUTIONS) {
+        if (currentResolution.getKey() >= resolution.getKey()
+            && currentResolution.getValue() >= resolution.getValue()
+            && currentResolution.getKey() > windowedResolution.getKey()
+            && currentResolution.getValue() > windowedResolution.getValue()) {
+          windowedResolution = resolution;
+        }
       }
     }
   }
@@ -697,6 +699,9 @@ public class Settings {
         + "\n"
         + "rightButton = "
         + Input.Keys.toString(rightButton)
+        + "\n"
+        + "windowedResolution = "
+        + windowedResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "")
         + "\n"
         + "currentResolution = "
         + currentResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "")

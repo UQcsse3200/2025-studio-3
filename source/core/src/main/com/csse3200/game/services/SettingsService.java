@@ -123,6 +123,7 @@ public class SettingsService {
       logger.warn("[SettingsService] Cannot switch resolution in fullscreen mode");
     } else {
       settings.setCurrentResolution(resolution);
+      settings.setWindowedResolution(resolution);
       Gdx.graphics.setWindowedMode(resolution.getKey(), resolution.getValue());
     }
   }

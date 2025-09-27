@@ -259,6 +259,7 @@ class SettingsServiceTest {
 
     Settings settings = service.getSettings();
     assertEquals(newResolution, settings.getCurrentResolution());
+    assertEquals(newResolution, settings.getWindowedResolution());
     verify(Gdx.graphics).setWindowedMode(1600, 900);
   }
 

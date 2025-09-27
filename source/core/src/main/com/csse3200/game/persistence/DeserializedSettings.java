@@ -377,7 +377,7 @@ public class DeserializedSettings {
    *
    * @param windowedResolution the windowed resolution.
    */
-  public void setWindowedResolution(net.dermetfan.utils.Pair<Integer, Integer> windowedResolution) {
+  public void setWindowedResolution(Pair<Integer, Integer> windowedResolution) {
     this.windowedResolutionWidth = windowedResolution.getKey();
     this.windowedResolutionHeight = windowedResolution.getValue();
   }

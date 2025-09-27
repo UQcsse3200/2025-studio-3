@@ -190,7 +190,7 @@ public class DisplaySettingsMenu extends UIComponent {
       case "FULLSCREEN":
         settingsService.changeDisplayMode(Settings.Mode.FULLSCREEN);
         break;
-      case "BORDERLESS":
+      case "WINDOWED BORDERLESS":
         settingsService.changeDisplayMode(Settings.Mode.BORDERLESS);
         break;
       default:
@@ -214,7 +214,8 @@ public class DisplaySettingsMenu extends UIComponent {
         try {
           int width = Integer.parseInt(parts[0]);
           int height = Integer.parseInt(parts[1]);
-          ServiceLocator.getSettingsService().switchResolution(new Pair<>(width, height));
+          Pair<Integer, Integer> resolution = new Pair<>(width, height);
+          ServiceLocator.getSettingsService().switchResolution(resolution);
         } catch (NumberFormatException e) {
           logger.error("Invalid resolution format: {}", selectedResolution);
         }
