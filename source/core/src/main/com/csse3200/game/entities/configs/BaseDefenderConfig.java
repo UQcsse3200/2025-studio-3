@@ -7,6 +7,8 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   private int attackSpeed;
   private int critChance;
   private int damage;
+  private String direction;
+  private int numSprites;
   private String projectilePath;
 
   /** Creates a new BaseDefenceConfig with default values. */
@@ -33,7 +35,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   }
 
   /**
-   * Gets the attack value for this entity.
+   * Gets the attack value for this entity (measured in seconds/attack, like an attack 'period')
    *
    * @return the attack value
    */
@@ -59,6 +61,24 @@ public class BaseDefenderConfig extends BaseEntityConfig {
     return damage;
   }
 
+    /**
+     * Get the direction the entity faces
+     *
+     * @return attacking direction of the entity
+     */
+  public String getDirection() {
+      return direction;
+  }
+
+    /**
+     * Gets the number of sprites in the enitity's sprite sheet
+     *
+     * @return the number of sprites
+     */
+    public int getNumSprites() {
+        return numSprites;
+    }
+
   /**
    * Gets the file location for the projectile for this entity.
    *
@@ -67,4 +87,6 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   public String getProjectilePath() {
     return projectilePath;
   }
+
+
 }

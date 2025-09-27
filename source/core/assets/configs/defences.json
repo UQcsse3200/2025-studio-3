@@ -11,6 +11,8 @@
         "projectilePath": "images/effects/sling_projectile.png",
         "cost": 100,
         "damage": 1,
+        "direction": "right",
+        "numSprites": 46,
         "attackSpeed": 3,
         "critChance": 1
       },
@@ -24,6 +26,8 @@
         "projectilePath": "images/effects/bullet.png",
         "cost": 100,
         "damage": 1,
+        "direction": "right",
+        "numSprites": 14,
         "attackSpeed": 8,
         "critChance": 1
       },
@@ -37,6 +41,8 @@
         "projectilePath": "images/effects/shock.png",
         "cost": 100,
         "damage": 1,
+        "direction": "left",
+        "numSprites": 4,
         "attackSpeed": 2,
         "critChance": 1
       },
@@ -48,6 +54,8 @@
         "atlasPath": "images/entities/defences/wall.atlas",
         "projectilePath": "",
         "damage": 0,
+        "direction": "right",
+        "numSprites": 2,
         "attackSpeed": 0,
         "critChance": 0
       }

@@ -37,6 +37,13 @@ public class DefenceFactory {
     return ServiceLocator.getConfigService();
   }
 
+    /**
+     * Create a defence unit based on the config class that is passed into the function,
+     * which contains health, damage, range, attack speed, crit chance and asset paths
+     *
+     * @param config configuration class describing the entity's stats
+     * @return new defence entity
+     */
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
@@ -64,32 +71,45 @@ public class DefenceFactory {
     return defender;
   }
 
+    /**
+     * Construct a stats component for the defence unit given its config class
+     *
+     * @param config class containing defence stats
+     * @return stats component to be added to an entity
+     */
   public static DefenderStatsComponent getUnitStats(BaseDefenderConfig config) {
-    DefenderStatsComponent stats =
-        new DefenderStatsComponent(
+    return new DefenderStatsComponent(
             config.getHealth(),
             config.getDamage(),
             config.getRange(),
             config.getAttackSpeed(),
             config.getCritChance());
-
-    return stats;
   }
 
+    /**
+     * Construct a task component for allowing the defence to idle and attack, dependent on
+     * attack speed, range and direction
+     *
+     * @param config class containing all stats of the unit
+     * @return task component for the entity
+     */
   public static AITaskComponent getTaskComponent(BaseDefenderConfig config) {
     // TODO - differentiate between different configs to decide attack direction and projectile type
-    AITaskComponent tasks =
-        new AITaskComponent()
+    return new AITaskComponent()
             .addTask(
                 new AttackTask(
                     config.getRange(),
                     ProjectileFactory.ProjectileType.BULLET,
                     TargetDetectionTasks.AttackDirection.RIGHT))
             .addTask(new IdleTask(config.getRange(), TargetDetectionTasks.AttackDirection.LEFT));
-
-    return tasks;
   }
 
+    /**
+     * Get the animation component to be attached to the entity
+     *
+     * @param config class containing the atlas path of the entity
+     * @return animation component for the entity
+     */
   public static AnimationRenderComponent getAnimationComponent(BaseDefenderConfig config) {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
