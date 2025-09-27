@@ -118,8 +118,13 @@ public class CombatStatsComponent extends Component {
     }
   }
 
-  public void hit(CombatStatsComponent attacker) {
-    int newHealth = getHealth() - attacker.getBaseAttack();
+    /**
+     * Hit another entity, affecting their respective component
+     *
+     * @param target the combat stats component of the target
+     */
+  public void hit(CombatStatsComponent target) {
+    int newHealth = getHealth() - target.getBaseAttack();
 
     setHealth(newHealth);
     handleDeath();
@@ -133,7 +138,6 @@ public class CombatStatsComponent extends Component {
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
-        logger.info("Human has died!");
       } else {
         entity.getEvents().trigger("entityDeath");
       }

@@ -35,7 +35,7 @@ class IdleTaskTest {
     float attackRange = 5f;
     float targetDistance = 10f; // out of range
     IdleTask idleTask =
-        new IdleTask(attackRange) {
+        new IdleTask(attackRange, TargetDetectionTasks.AttackDirection.LEFT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -54,7 +54,7 @@ class IdleTaskTest {
     float attackRange = 5f;
     float targetDistance = 3f;
     IdleTask idleTask =
-        new IdleTask(attackRange) {
+        new IdleTask(attackRange, TargetDetectionTasks.AttackDirection.LEFT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
