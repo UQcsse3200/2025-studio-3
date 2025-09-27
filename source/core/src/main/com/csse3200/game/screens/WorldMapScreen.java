@@ -164,12 +164,8 @@ public class WorldMapScreen extends BaseScreen {
       nodeEntity.addComponent(comp);
       // register render component for proximity updates
       ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
-
       ServiceLocator.getEntityService().register(nodeEntity);
     }
-
-    // TODO: Test only, delete this before pushing.
-    ServiceLocator.getWorldMapService().unlockNode("levelTwo");
   }
 
   @Override
