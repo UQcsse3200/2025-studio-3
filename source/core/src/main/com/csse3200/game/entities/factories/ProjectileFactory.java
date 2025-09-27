@@ -27,38 +27,15 @@ public class ProjectileFactory {
     SHOCK
   }
 
-  // TODO - javadoc
+    /**
+     * Creates and returns a projectile entity given it's sprite path and the damage it deals
+     *
+     * @param path the file path of the projectile's sprite
+     * @param damage amount of damage that the projectile does
+     * @return projectile entity
+     */
   public static Entity createProjectile(String path, int damage) {
-      Entity proj =
-              new Entity()
-                      .addComponent(new PhysicsComponent())
-                      .addComponent(new ColliderComponent())
-                      .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-                      .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
-                      .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
-
-      // Add render component so it draws above the grid
-      TextureRenderComponent render = new TextureRenderComponent(path);
-      proj.addComponent(render);
-
-      render.scaleEntity(); // mimic human entities to ensure it renders correctly
-      PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
-      return proj;
-  }
-
-  /**
-   * Creates a sling shot projectile entity.
-   *
-   * <p>The sling shot is designed to be used by defense entities such as sling shooters. It
-   * includes components for physics, collision, attack damage, and rendering. The projectile is set
-   * to deal damage to enemies and is destroyed upon impact.
-   *
-   * @param damage amount of damage dealt to an enemy entity
-   * @param speed the speed the sling shot moves at
-   * @return entity representing a sling shot projectile
-   */
-  public static Entity createSlingShot(int damage, float speed) {
-    Entity slingShot =
+    Entity proj =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
@@ -67,68 +44,11 @@ public class ProjectileFactory {
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
-    TextureRenderComponent render =
-        new TextureRenderComponent("images/effects/sling_projectile.png");
-    slingShot.addComponent(render);
+    TextureRenderComponent render = new TextureRenderComponent(path);
+    proj.addComponent(render);
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly
-    PhysicsUtils.setScaledCollider(slingShot, 0.1f, 0.1f);
-    return slingShot;
-  }
-
-  /**
-   * Creates a bullet projectile entity.
-   *
-   * <p>The bullet is designed to be used by defense entities such as the army guy. It includes
-   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
-   * damage to enemies and is destroyed upon impact. It fires 4 times faster than a slingshot
-   *
-   * @param damage amount of damage dealt to an enemy entity
-   * @return entity representing a bullet projectile
-   */
-  public static Entity createBullet(int damage) {
-    Entity bullet =
-        new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
-            .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
-
-    // Add render component so it draws above the grid
-    TextureRenderComponent render = new TextureRenderComponent("images/effects/bullet.png");
-    bullet.addComponent(render);
-
-    render.scaleEntity(); // mimic human entities to ensure it renders correctly
-    PhysicsUtils.setScaledCollider(bullet, 0.05f, 0.05f);
-    return bullet;
-  }
-
-  /**
-   * Creates a shock projectile entity.
-   *
-   * <p>The shock is designed to be used by defense entities such as the shadow. It includes
-   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
-   * damage to enemies and is destroyed upon impact.
-   *
-   * @param damage amount of damage dealt to an enemy entity
-   * @return entity representing a bullet projectile
-   */
-  public static Entity createShock(int damage) {
-    Entity bullet =
-        new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
-            .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
-
-    // Add render component so it draws above the grid
-    TextureRenderComponent render = new TextureRenderComponent("images/effects/shock.png");
-    bullet.addComponent(render);
-
-    render.scaleEntity(); // mimic human entities to ensure it renders correctly
-    PhysicsUtils.setScaledCollider(bullet, 0.05f, 0.05f);
-    return bullet;
+    PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
+    return proj;
   }
 }

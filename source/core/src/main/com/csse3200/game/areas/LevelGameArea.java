@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -390,29 +390,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-      Vector2 spawnPos,
-      ProjectileFactory.ProjectileType projectileType,
-      TargetDetectionTasks.AttackDirection direction) {
-    Entity projectile;
-
-    switch (projectileType) {
-      case SLINGSHOT -> {
-        projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-        projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-      }
-      case BULLET -> {
-        projectile = ProjectileFactory.createBullet(10); // damage value
-        projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
-      }
-      case SHOCK -> {
-        projectile = ProjectileFactory.createShock(8); // damage value
-        projectile.setPosition(spawnPos.x + tileSize / 2f - 5f, spawnPos.y + tileSize / 2f - 13f);
-      }
-      default -> {
-        projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-        projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-      }
-    }
+      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
@@ -581,21 +560,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     newEntity
         .getEvents()
         .addListener(
-            "defenceDeath",
-            () -> {
-              requestDespawn(newEntity);
-              clearTile.run();
-            });
-    newEntity.getEvents().addListener("despawned", clearTile::run);
-
-    newEntity
-        .getEvents()
-        .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(newEntity);
+              clearTile.run();
               robots.remove(newEntity);
             });
+
+    newEntity.getEvents().addListener("despawned", clearTile::run);
 
     logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
 
@@ -604,33 +576,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             (TargetDetectionTasks.AttackDirection direction) -> {
-              ProjectileFactory.ProjectileType projectileType =
-                  ProjectileFactory.ProjectileType.SLINGSHOT;
-
-              DefenderStatsComponent entityType =
-                  newEntity.getComponent(DefenderStatsComponent.class);
-
-              if (entityType.getType() == 1) {
-                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
-              } else if (entityType.getType() == 2) {
-                projectileType = ProjectileFactory.ProjectileType.BULLET;
-              } else if (entityType.getType() == 3) {
-                projectileType = ProjectileFactory.ProjectileType.SHOCK;
-              } else { // default
-                projectileType = ProjectileFactory.ProjectileType.SLINGSHOT;
-              }
-
-              spawnProjectile(entityPos, projectileType, direction);
+              spawnProjectile(
+                  entityPos,
+                  newEntity.getComponent(ProjectileComponent.class).getProjectile(),
+                  direction);
               newEntity.getEvents().trigger("attackStart");
-              newEntity
-                  .getEvents()
-                  .addListener(
-                      ENTITY_DEATH_EVENT,
-                      () -> {
-                        requestDespawn(newEntity);
-                        robots.remove(newEntity);
-                      });
-              logger.info("Unit spawned at position {}", position);
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);

@@ -68,12 +68,13 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   public int getAttack() {
     return attack;
   }
-    /**
-     * Gets the attack value for this entity.
-     *
-     * @return the attack value
-     */
-    public String getProjectilePath() {
-        return projectilePath;
-    }
+
+  /**
+   * Gets the attack value for this entity.
+   *
+   * @return the attack value
+   */
+  public String getProjectilePath() {
+    return projectilePath;
+  }
 }

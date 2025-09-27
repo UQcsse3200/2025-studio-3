@@ -55,8 +55,8 @@ public class DefenceFactory {
         .addComponent(new DefenceAnimationController());
 
     if (config.getProjectilePath() != null) {
-        Entity projectile = ProjectileFactory.createProjectile(config.getProjectilePath(), config.getAttack());
-        defender.addComponent(new ProjectileComponent(projectile));
+      defender.addComponent(
+          new ProjectileComponent(config.getProjectilePath(), config.getAttack()));
     }
 
     // Scale to tilesize
