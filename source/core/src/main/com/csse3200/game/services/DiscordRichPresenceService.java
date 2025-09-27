@@ -2,10 +2,8 @@ package com.csse3200.game.services;
 
 import de.jcm.discordgamesdk.*;
 import de.jcm.discordgamesdk.activity.Activity;
-
 import java.util.function.Function;
 import java.util.function.Supplier;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +117,7 @@ public class DiscordRichPresenceService {
       if (core != null) {
         core.close();
       }
-      
+
       logger.info("Discord Rich Presence service shut down");
     } catch (Exception e) {
       logger.error("Failed to shutdown Discord Rich Presence: {}", e.getMessage());

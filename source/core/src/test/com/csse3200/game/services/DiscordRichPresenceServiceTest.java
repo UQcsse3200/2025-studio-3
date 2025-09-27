@@ -7,19 +7,18 @@ import de.jcm.discordgamesdk.*;
 import de.jcm.discordgamesdk.activity.Activity;
 import de.jcm.discordgamesdk.activity.ActivityAssets;
 import de.jcm.discordgamesdk.activity.ActivityTimestamps;
+import java.net.ConnectException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.net.ConnectException;
-
 @ExtendWith(MockitoExtension.class)
 class DiscordRichPresenceServiceTest {
   @Mock Core mockCore;
   @Mock ActivityManager mockActivityManager;
-  @Mock CreateParams mockCreateParams;  
+  @Mock CreateParams mockCreateParams;
   @Mock Activity mockActivity;
   private DiscordRichPresenceService service;
 
@@ -29,27 +28,28 @@ class DiscordRichPresenceServiceTest {
     service.createParamsSupplier = () -> mockCreateParams;
     service.coreFactory = p -> mockCore;
     service.activitySupplier = () -> mockActivity;
-    
+
     lenient().when(mockActivity.assets()).thenReturn(mock(ActivityAssets.class));
     lenient().when(mockActivity.timestamps()).thenReturn(mock(ActivityTimestamps.class));
   }
 
   @Test
   void testInitializationSuccess() {
-      when(mockCore.activityManager()).thenReturn(mockActivityManager);
+    when(mockCore.activityManager()).thenReturn(mockActivityManager);
 
-      service.initialize();
-      assertTrue(service.isInitialized());
-      verify(mockCreateParams).setClientID(1421050206404739225L);
-      verify(mockCreateParams).setFlags(CreateParams.getDefaultFlags());
-      verify(mockCore).activityManager();
+    service.initialize();
+    assertTrue(service.isInitialized());
+    verify(mockCreateParams).setClientID(1421050206404739225L);
+    verify(mockCreateParams).setFlags(CreateParams.getDefaultFlags());
+    verify(mockCore).activityManager();
   }
 
   @Test
   void testInitializationFailure() {
-    service.createParamsSupplier = () -> {
-      throw new RuntimeException("Discord not available");
-    };
+    service.createParamsSupplier =
+        () -> {
+          throw new RuntimeException("Discord not available");
+        };
 
     service.initialize();
 
@@ -60,9 +60,10 @@ class DiscordRichPresenceServiceTest {
   void testInitializationWithConnectException() {
     ConnectException connectException = new ConnectException("Connection refused");
     RuntimeException wrappedException = new RuntimeException(connectException);
-    service.createParamsSupplier = () -> {
-      throw wrappedException;
-    };
+    service.createParamsSupplier =
+        () -> {
+          throw wrappedException;
+        };
 
     service.initialize();
 
@@ -182,7 +183,7 @@ class DiscordRichPresenceServiceTest {
   void testShutdownWithException() {
     service.isInitialized = true;
     service.core = mockCore;
-    
+
     doThrow(new RuntimeException("Close failed")).when(mockCore).close();
 
     // Should not throw exception, just log error
@@ -219,7 +220,7 @@ class DiscordRichPresenceServiceTest {
   @Test
   void testIsInitialized() {
     assertFalse(service.isInitialized());
-    
+
     when(mockCore.activityManager()).thenReturn(mockActivityManager);
     service.createParamsSupplier = () -> mockCreateParams;
     service.coreFactory = p -> mockCore;
@@ -232,11 +233,12 @@ class DiscordRichPresenceServiceTest {
   void testSetPresenceWithException() {
     service.isInitialized = true;
     service.activityManager = mockActivityManager;
-    
+
     // Mock the activity supplier to throw an exception
-    service.activitySupplier = () -> {
-      throw new RuntimeException("Activity creation failed");
-    };
+    service.activitySupplier =
+        () -> {
+          throw new RuntimeException("Activity creation failed");
+        };
 
     // Should not throw exception, just log error
     assertDoesNotThrow(() -> service.setPresence("Test State"));
@@ -259,7 +261,8 @@ class DiscordRichPresenceServiceTest {
     service.activityManager = mockActivityManager;
     service.startTime = System.currentTimeMillis() / 1000;
 
-    String longLevel = "Very long level name that might exceed normal limits and should still be handled gracefully by the Discord Rich Presence service";
+    String longLevel =
+        "Very long level name that might exceed normal limits and should still be handled gracefully by the Discord Rich Presence service";
     service.updateGamePresence(longLevel, 999);
 
     verify(mockActivity).setState("Level: " + longLevel + " | Wave: 999");
@@ -271,10 +274,10 @@ class DiscordRichPresenceServiceTest {
     service.activityManager = mockActivityManager;
     service.startTime = System.currentTimeMillis() / 1000;
 
-    String longState = "Very long state string that might exceed normal limits and should still be handled gracefully by the Discord Rich Presence service";
+    String longState =
+        "Very long state string that might exceed normal limits and should still be handled gracefully by the Discord Rich Presence service";
     service.setPresence(longState);
 
     verify(mockActivity).setState(longState);
   }
-
 }

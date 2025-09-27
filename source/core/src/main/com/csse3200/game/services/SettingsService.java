@@ -6,6 +6,7 @@ import com.badlogic.gdx.Graphics.Monitor;
 import com.csse3200.game.persistence.DeserializedSettings;
 import com.csse3200.game.persistence.FileLoader;
 import com.csse3200.game.persistence.Settings;
+import com.csse3200.game.utils.EnvironmentUtils;
 import java.io.File;
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
@@ -50,7 +51,8 @@ public class SettingsService {
         settings.setCurrentMode(Settings.Mode.FULLSCREEN);
         displayMode = Gdx.graphics.getDisplayMode(settings.getCurrentMonitor());
         Gdx.graphics.setFullscreenMode(displayMode);
-        settings.setCurrentResolution(new Pair<>(displayMode.width, displayMode.height));
+        settings.setCurrentResolution(
+            EnvironmentUtils.getResolutionFromDisplayMode(settings.getCurrentMonitor()));
         break;
       case BORDERLESS:
         settings.setCurrentMode(Settings.Mode.BORDERLESS);
@@ -58,13 +60,15 @@ public class SettingsService {
         Gdx.graphics.setResizable(false);
         displayMode = Gdx.graphics.getDisplayMode(settings.getCurrentMonitor());
         Gdx.graphics.setWindowedMode(displayMode.width, displayMode.height);
-        settings.setCurrentResolution(new Pair<>(displayMode.width, displayMode.height));
+        settings.setCurrentResolution(
+            EnvironmentUtils.getResolutionFromDisplayMode(settings.getCurrentMonitor()));
         break;
       case WINDOWED:
         settings.setCurrentMode(Settings.Mode.WINDOWED);
         Gdx.graphics.setWindowedMode(
             settings.getWindowedResolution().getKey(), settings.getWindowedResolution().getValue());
-        settings.setCurrentResolution(settings.getWindowedResolution());
+        settings.setCurrentResolution(
+            EnvironmentUtils.getResolutionFromDisplayMode(settings.getCurrentMonitor()));
         break;
       default:
         logger.warn("[SettingsService] Invalid display mode");

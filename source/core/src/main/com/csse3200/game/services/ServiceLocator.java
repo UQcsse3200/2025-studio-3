@@ -328,6 +328,12 @@ public class ServiceLocator {
     cutsceneService = source;
   }
 
+  /** Deregisters the cutscene service. */
+  public static void deregisterCutsceneService() {
+    logger.debug("Removing cutscene service");
+    cutsceneService = null;
+  }
+
   /**
    * Registers the world map service.
    *
