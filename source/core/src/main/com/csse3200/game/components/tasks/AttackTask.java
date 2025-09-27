@@ -11,7 +11,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
-  private float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
+  private float fireCooldown; // time between attacks
   private float timeSinceLastFire = 0f;
 
   /**
@@ -19,7 +19,7 @@ public class AttackTask extends TargetDetectionTasks {
    *
    * @param attackRange the maximum distance the entity can find a target to attack
    * @param attackSpeed attacking speed of the entity
-   * @param numSprites number of sprites in the sprite sheet
+   * @param direction the direction the projectile will travel
    */
   public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
     super(attackRange, direction);
