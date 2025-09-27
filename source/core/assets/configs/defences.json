@@ -13,7 +13,7 @@
         "damage": 1,
         "direction": "right",
         "numSprites": 46,
-        "attackSpeed": 3,
+        "attackSpeed": 1,
         "critChance": 1
       },
       "armyguy" : {
@@ -28,7 +28,7 @@
         "damage": 1,
         "direction": "right",
         "numSprites": 14,
-        "attackSpeed": 8,
+        "attackSpeed": 0.5,
         "critChance": 1
       },
       "shadow" : {
@@ -43,7 +43,7 @@
         "damage": 1,
         "direction": "left",
         "numSprites": 4,
-        "attackSpeed": 2,
+        "attackSpeed": 1.5,
         "critChance": 1
       },
       "wall": {

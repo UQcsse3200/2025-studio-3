@@ -8,7 +8,6 @@ import static org.mockito.Mockito.when;
 
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.events.listeners.EventListener0;
 import com.csse3200.game.events.listeners.EventListener1;
 import com.csse3200.game.physics.PhysicsService;
@@ -39,14 +38,8 @@ class AttackTaskTest {
 
   @Test
   void attackWhenInRange() {
-    // AI was used to help create this method
-    float attackRange = 5f;
-
     AttackTask attackTask =
-        new AttackTask(
-            attackRange,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected boolean isTargetVisible(Entity target) {
             return true;
@@ -78,13 +71,9 @@ class AttackTaskTest {
 
   @Test
   void noAttackWhenOutOfRange() {
-    float attackRange = 5f;
     float targetDistance = 10f;
     AttackTask attackTask =
-        new AttackTask(
-            attackRange,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -100,12 +89,7 @@ class AttackTaskTest {
 
   @Test
   void startTriggersAttackStartAndFire() {
-    float attackRange = 5f;
-    AttackTask attackTask =
-        new AttackTask(
-            attackRange,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT);
+    AttackTask attackTask = new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT);
 
     Entity attacker = new Entity();
     AITaskComponent aiTaskComponent = new AITaskComponent();
@@ -130,10 +114,7 @@ class AttackTaskTest {
   @Test
   void updateDoesNothingWithoutTarget() {
     AttackTask attackTask =
-        new AttackTask(
-            5f,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return null; // no target
@@ -166,10 +147,7 @@ class AttackTaskTest {
 
     float attackRange = 5f;
     AttackTask attackTask =
-        new AttackTask(
-            attackRange,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -195,7 +173,7 @@ class AttackTaskTest {
     assertEquals(1, fireCount.get(), "Should fire immediately on start");
 
     // Update with delta < cooldown -> should NOT fire
-    when(gameTime.getDeltaTime()).thenReturn(0.5f);
+    when(gameTime.getDeltaTime()).thenReturn(0.4f);
     attackTask.update();
     assertEquals(1, fireCount.get(), "Should not fire before cooldown");
 
@@ -210,10 +188,7 @@ class AttackTaskTest {
     when(ServiceLocator.getTimeSource().getDeltaTime()).thenReturn(1f);
 
     AttackTask attackTask =
-        new AttackTask(
-            5f,
-            ProjectileFactory.ProjectileType.SLINGSHOT,
-            TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;

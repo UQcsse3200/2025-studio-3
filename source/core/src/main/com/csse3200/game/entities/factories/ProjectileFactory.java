@@ -27,13 +27,13 @@ public class ProjectileFactory {
     SHOCK
   }
 
-    /**
-     * Creates and returns a projectile entity given it's sprite path and the damage it deals
-     *
-     * @param path the file path of the projectile's sprite
-     * @param damage amount of damage that the projectile does
-     * @return projectile entity
-     */
+  /**
+   * Creates and returns a projectile entity given it's sprite path and the damage it deals
+   *
+   * @param path the file path of the projectile's sprite
+   * @param damage amount of damage that the projectile does
+   * @return projectile entity
+   */
   public static Entity createProjectile(String path, int damage) {
     Entity proj =
         new Entity()

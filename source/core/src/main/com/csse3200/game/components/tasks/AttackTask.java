@@ -1,7 +1,6 @@
 package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.factories.ProjectileFactory;
 import com.csse3200.game.services.ServiceLocator;
 
 // TODO : integrate with attack system team
@@ -14,20 +13,17 @@ public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
   private float fireCooldown = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
-  private final ProjectileFactory.ProjectileType projectileType;
 
   /**
    * Creates an attack task
    *
-   * @param direction the directiion enemies are detected from
    * @param attackRange the maximum distance the entity can find a target to attack
+   * @param attackSpeed attacking speed of the entity
+   * @param numSprites number of sprites in the sprite sheet
    */
-  public AttackTask(
-      float attackRange,
-      ProjectileFactory.ProjectileType projectileType,
-      AttackDirection direction) {
+  public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
     super(attackRange, direction);
-    this.projectileType = projectileType;
+    this.fireCooldown = attackSpeed;
   }
 
   /**
@@ -37,13 +33,6 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-
-    if (projectileType == ProjectileFactory.ProjectileType.BULLET) {
-      fireCooldown = 0.95f / 4f; // bullets fire 4 times as fast
-    } else if (projectileType == ProjectileFactory.ProjectileType.SLINGSHOT
-        || projectileType == ProjectileFactory.ProjectileType.SHOCK) {
-      fireCooldown = 0.95f; // normal fire rate
-    }
 
     this.owner.getEntity().getEvents().trigger("attackStart");
     owner.getEntity().getEvents().trigger("fire", direction);

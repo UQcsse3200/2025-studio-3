@@ -14,10 +14,10 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   private int range;
 
   /** Rate of attacks, typically in attacks per second or ticks per attack. */
-  private int attackSpeed;
+  private float attackSpeed;
 
   /** Chance (percentage) of delivering a critical hit when attacking. */
-  private int critChance;
+  private float critChance;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
@@ -51,7 +51,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param critChance the critical hit chance
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int range, int attackSpeed, int critChance) {
+      int health, int baseAttack, int range, float attackSpeed, float critChance) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
@@ -79,30 +79,30 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   }
 
   /** Sets the defender's attack speed. */
-  public void setAttackSpeed(int attackSpeed) {
+  public void setAttackSpeed(float attackSpeed) {
     if (attackSpeed < 0) {
       this.attackSpeed = 0;
     } else {
-      this.attackSpeed = (int) Math.ceil(attackSpeed * SPEED_UPGRADE);
+      this.attackSpeed = (float) Math.ceil(attackSpeed * SPEED_UPGRADE);
     }
   }
 
   /**
    * @return the defender's attack speed
    */
-  public int getAttackSpeed() {
+  public float getAttackSpeed() {
     return attackSpeed;
   }
 
   /** Sets the defender's critical hit chance (as a percentage). */
-  public void setCritChance(int critChance) {
-    this.critChance = (int) (critChance + CRIT_UPGRADE);
+  public void setCritChance(float critChance) {
+    this.critChance = critChance + CRIT_UPGRADE;
   }
 
   /**
    * @return the defender's critical hit chance (percentage)
    */
-  public int getCritChance() {
+  public float getCritChance() {
     return critChance;
   }
 }

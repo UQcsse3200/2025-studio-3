@@ -4,8 +4,8 @@ package com.csse3200.game.entities.configs;
 public class BaseDefenderConfig extends BaseEntityConfig {
   private int cost;
   private int range;
-  private int attackSpeed;
-  private int critChance;
+  private float attackSpeed;
+  private float critChance;
   private int damage;
   private String direction;
   private int numSprites;
@@ -39,7 +39,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    *
    * @return the attack value
    */
-  public int getAttackSpeed() {
+  public float getAttackSpeed() {
     return attackSpeed;
   }
 
@@ -48,7 +48,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    *
    * @return the attack speed value
    */
-  public int getCritChance() {
+  public float getCritChance() {
     return critChance;
   }
 
@@ -61,23 +61,23 @@ public class BaseDefenderConfig extends BaseEntityConfig {
     return damage;
   }
 
-    /**
-     * Get the direction the entity faces
-     *
-     * @return attacking direction of the entity
-     */
+  /**
+   * Get the direction the entity faces
+   *
+   * @return attacking direction of the entity
+   */
   public String getDirection() {
-      return direction;
+    return direction;
   }
 
-    /**
-     * Gets the number of sprites in the enitity's sprite sheet
-     *
-     * @return the number of sprites
-     */
-    public int getNumSprites() {
-        return numSprites;
-    }
+  /**
+   * Gets the number of sprites in the enitity's sprite sheet
+   *
+   * @return the number of sprites
+   */
+  public int getNumSprites() {
+    return numSprites;
+  }
 
   /**
    * Gets the file location for the projectile for this entity.
@@ -87,6 +87,4 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   public String getProjectilePath() {
     return projectilePath;
   }
-
-
 }
