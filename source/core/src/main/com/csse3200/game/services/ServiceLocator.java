@@ -31,6 +31,7 @@ public class ServiceLocator {
   private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
+  private static WaveService waveService;
 
   /**
    * Gets the entity service.
@@ -156,6 +157,15 @@ public class ServiceLocator {
    */
   public static WorldMapService getWorldMapService() {
     return worldMapService;
+  }
+
+  /**
+   * Gets the wave service.
+   *
+   * @return the wave service
+   */
+  public static WaveService getWaveService() {
+    return waveService;
   }
 
   /**
@@ -323,6 +333,23 @@ public class ServiceLocator {
     logger.debug("Removing world map service");
     worldMapService = null;
   }
+
+  /**
+   * Registers the wave service.
+   *
+   * @param source the wave service
+   */
+  public static void registerWaveService(WaveService source) {
+    logger.debug("Registering wave service {}", source);
+    waveService = source;
+  }
+
+  /** Deregisters the wave service. */
+  public static void deregisterWaveService() {
+    logger.debug("Removing wave service");
+    waveService = null;
+  }
+
 
   /** Clears all transient services. */
   public static void clear() {

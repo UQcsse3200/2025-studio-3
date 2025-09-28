@@ -19,7 +19,6 @@ import java.util.List;
  */
 public abstract class GameArea implements Disposable {
   protected List<Entity> areaEntities;
-  protected WaveManager waveManager;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();
@@ -52,16 +51,10 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().unregister(entity);
     entity.dispose();
     areaEntities.remove(entity);
-
-    // Notify WaveManager of entity disposal (for wave tracking)
-    if (waveManager != null) {
-      waveManager.onEnemyDisposed();
-    }
   }
 
   public void requestDespawn(Entity entity) {
     if (entity == null) return;
-    this.waveManager.onEnemyDisposed();
     Gdx.app.postRunnable(() -> despawnEntity(entity));
   }
 
@@ -130,12 +123,4 @@ public abstract class GameArea implements Disposable {
     return robot;
   }
 
-  /**
-   * Sets the WaveManager reference for disposal tracking
-   *
-   * @param waveManager the WaveManager instance
-   */
-  public void setWaveManager(WaveManager waveManager) {
-    this.waveManager = waveManager;
-  }
 }

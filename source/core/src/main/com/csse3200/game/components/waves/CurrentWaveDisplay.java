@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.entities.WaveManager;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -22,16 +23,10 @@ public class CurrentWaveDisplay extends UIComponent {
   private Label waveLabel;
   private Label waveNumberLabel;
   private int currentWave = 0;
-  private WaveManager waveManager;
 
   /**
    * Creates a new current wave display component.
-   *
-   * @param waveManager the WaveManager to listen to for wave events
    */
-  public CurrentWaveDisplay(WaveManager waveManager) {
-    this.waveManager = waveManager;
-  }
 
   @Override
   public void create() {
@@ -39,9 +34,8 @@ public class CurrentWaveDisplay extends UIComponent {
     addActors();
 
     // Listen directly to WaveManager events
-    if (waveManager != null) {
-      waveManager.setWaveEventListener(
-          new WaveManager.WaveEventListener() {
+    ServiceLocator.getWaveService().setWaveEventListener(
+            new WaveManager.WaveEventListener() {
             @Override
             public void onPreparationPhaseStarted(int waveNumber) {
               updateWaveDisplay(waveNumber);
@@ -57,10 +51,10 @@ public class CurrentWaveDisplay extends UIComponent {
               updateWaveDisplay(waveNumber);
             }
           });
-    }
+
 
     // Initialize with current wave from WaveManager (starts at 0, shows "No Wave Active")
-    updateWaveDisplay(waveManager != null ? waveManager.getCurrentWave() : 0);
+    updateWaveDisplay(ServiceLocator.getWaveService().getCurrentWave());
   }
 
   /**
