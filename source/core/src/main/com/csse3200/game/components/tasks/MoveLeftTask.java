@@ -49,10 +49,12 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
 
     // play footstep sounds
     float playTime = owner.getEntity().getComponent(AnimationRenderComponent.class).getCurrentAnimationPlayTime();
+    // Play a footstep sound every 0.4 seconds based on the animation’s elapsed play time
+    // 0.4 picked based on sprite sheet and animation speed
     if (playTime > animationNumLoops * 0.4f) {
       Sound stepSound = ServiceLocator.getResourceService()
               .getAsset("sounds/robot_footstep.mp3", Sound.class);
-      stepSound.play();
+      stepSound.play(1.0f);
       animationNumLoops ++;
     }
   }
