@@ -157,7 +157,7 @@ public class WorldMapPlayerComponent extends UIComponent {
             return;
           }
         }
-        // If no JSON path for this key, fall through to legacy handling
+        return;
       }
       // If not on a node, fall through to legacy handling
     }
