@@ -195,6 +195,7 @@ public class MainGameScreen extends ScreenAdapter {
     resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
     resourceService.loadSounds(new String[] {"sounds/robot_footstep.mp3"});
     resourceService.loadSounds(new String[] {"sounds/drill_noise_slow.mp3"});
+    resourceService.loadSounds(new String[] {"sounds/hrgh.mp3"});
 
 
     // Load Textures

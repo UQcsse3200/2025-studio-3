@@ -1,6 +1,7 @@
 package com.csse3200.game.components.hotbar;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -90,6 +91,13 @@ public class HotbarDisplay extends UIComponent {
                     new Entity()
                         .addComponent(new DeckInputComponent(game, unit.getValue()))
                         .addComponent(new TextureRenderComponent(unit.getKey()));
+
+                // play sound
+                if (unit.getKey().contains("sling_shooter")) {
+                  Sound selectSound = ServiceLocator.getResourceService()
+                          .getAsset("sounds/hrgh.mp3", Sound.class);
+                  selectSound.play();
+                }
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);
