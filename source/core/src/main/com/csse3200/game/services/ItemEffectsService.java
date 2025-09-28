@@ -1,6 +1,7 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -65,6 +66,20 @@ public class ItemEffectsService {
     animator.addAnimation(animatorName, frameDuration, playMode);
     animator.startAnimation(animatorName);
     logger.info("Started animation {}", animatorName);
+
+    // Play sound effect for item
+    Sound effectSound = null;
+    try {
+      effectSound =
+          ServiceLocator.getResourceService()
+              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+    } catch (Exception ignored) {
+      // ResourceService may throw if asset not loaded
+    }
+    if (effectSound != null) {
+      effectSound.play();
+      logger.info("Sound played {}", animatorName);
+    }
 
     // Attach component to handle optional movement and timed disposal
     effect.addComponent(

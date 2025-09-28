@@ -84,6 +84,13 @@ public class MainGameScreen extends ScreenAdapter {
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
   private String level;
+  private static final String[] ITEM_SOUNDS = {
+    "sounds/item_buff.mp3",
+    "sounds/item_coffee.mp3",
+    "sounds/item_emp.mp3",
+    "sounds/item_grenade.mp3",
+    "sounds/item_nuke.mp3"
+  };
 
   /**
    * Constructor for the main game screen.
@@ -193,6 +200,7 @@ public class MainGameScreen extends ScreenAdapter {
     // Load Music & Sounds
     resourceService.loadMusic(new String[] {"sounds/BGM_03_mp3.mp3"});
     resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
+    resourceService.loadSounds(ITEM_SOUNDS);
 
     // Load Textures
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
