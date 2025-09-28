@@ -20,6 +20,8 @@ import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 /** Unified card module: resource loading, drop animation, drag placement, count (no UI label). */
 public final class SlotCardEntity {
@@ -42,16 +44,43 @@ public final class SlotCardEntity {
     private static int activeCount = 0;
     public static int getActiveCardCount() { return Math.max(0, activeCount); }
 
-    /** Called from SlotEffect to drop a card. */
+    // Added: General card specifications
+    public static final class CardSpec {
+        public final String atlasRegion;           // Atlas Area Name (Map)
+        public final Supplier<Entity> factory;     // The factory that produces the unit
+
+        public CardSpec(String atlasRegion, Supplier<Entity> factory) {
+            this.atlasRegion = Objects.requireNonNull(atlasRegion, "atlasRegion");
+            this.factory = Objects.requireNonNull(factory, "factory");
+        }
+        public static CardSpec of(String region, Supplier<Entity> factory) {
+            return new CardSpec(region, factory);
+        }
+    }
+
+    /** [Original] Only trebuchet version (retain compatibility); [Modified] Internally call the general entry */
     public static void dropSlingShooterCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
-        if (uiStage == null || uiReelsPane == null || area == null) {
-            logger.error("[SlotCardEntity] drop: missing stage/reels/area");
+
+        // Universal Transposition dropCard
+        dropCard(
+                uiStage,
+                uiReelsPane,
+                area,
+                CardSpec.of("Card_SlingShooter", DefenceFactory::createSlingShooter)
+        );
+    }
+
+    // New: Universal drop entrance
+    public static void dropCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area, CardSpec spec) {
+        if (uiStage == null || uiReelsPane == null || area == null || spec == null) {
+            logger.error("[SlotCardEntity] drop: missing stage/reels/area/spec");
             return;
         }
         ensureAtlas();
 
-        if (cardsAtlas.findRegion("Card_SlingShooter") == null) {
-            logger.error("[SlotCardEntity] region missing: Card_SlingShooter");
+        // The texture area is read from spec
+        if (cardsAtlas.findRegion(spec.atlasRegion) == null) {
+            logger.error("[SlotCardEntity] region missing: {}", spec.atlasRegion);
             return;
         }
 
@@ -65,7 +94,9 @@ public final class SlotCardEntity {
         float stageH = uiStage.getHeight();
         float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
 
-        DraggableCard card = new DraggableCard(uiStage, cardsAtlas, "Card_SlingShooter", area);
+        // 【Past】DraggableCard(uiStage, cardsAtlas, "Card_SlingShooter", area);
+        // 【New】Pass in spec, and Image also uses spec to get the texture
+        DraggableCard card = new DraggableCard(uiStage, cardsAtlas, spec, area);
 
         float desiredWpx =
                 Math.min(stageW * CARD_SCREEN_W_RATIO, uiReelsPane.getWidth() * CARD_SLOT_W_RATIO);
@@ -105,16 +136,30 @@ public final class SlotCardEntity {
     private static final class DraggableCard extends Image {
         private final Stage stage;
         private final LevelGameArea currentArea;
+
+        //New: Save specifications to facilitate selecting the right factory when placing
+        private final CardSpec spec;
+
         private float percentW = 0.12f;
         private float posPx = 0.50f;
         private float posPy = 0.25f;
         private int lastW = -1, lastH = -1;
 
-        DraggableCard(Stage stage, TextureAtlas atlas, String regionName, LevelGameArea area) {
-            super(new TextureRegionDrawable(atlas.findRegion(regionName)));
-            if (getDrawable() == null) throw new IllegalArgumentException("Region not found: " + regionName);
+        // 【Past】DraggableCard(Stage stage, TextureAtlas atlas, String regionName, LevelGameArea area)
+        // 【New】Pass in CardSpec instead
+        DraggableCard(Stage stage, TextureAtlas atlas, CardSpec spec, LevelGameArea area) {
+            // 【Past】super(new TextureRegionDrawable(atlas.findRegion(regionName)));
+            // 【New】Get the texture from spec.atlasRegion
+            super(new TextureRegionDrawable(atlas.findRegion(spec.atlasRegion)));
+            if (getDrawable() == null)
+                // 【Past】throw new IllegalArgumentException("Region not found: " + regionName);
+                // 【New】Error message synchronization spec
+                throw new IllegalArgumentException("Region not found: " + spec.atlasRegion);
+
             this.stage = stage;
             this.currentArea = area;
+            this.spec = spec;
+
             setOrigin(Align.center);
             setScaling(Scaling.stretch);
             setAlign(Align.center);
@@ -145,6 +190,7 @@ public final class SlotCardEntity {
             int sw = (int) stage.getWidth(), sh = (int) stage.getHeight();
             if (sw <= 0 || sh <= 0 || getDrawable() == null) return;
             float targetW = sw * percentW;
+
             float aspect = getDrawable().getMinHeight() / getDrawable().getMinWidth();
             float targetH = targetW * aspect;
             setSize(targetW, targetH);
@@ -202,7 +248,7 @@ public final class SlotCardEntity {
             boolean occupiedBefore = grid.isOccupiedIndex(pos);
 
             Entity selected =
-                    new Entity().addComponent(new DeckInputComponent(currentArea, DefenceFactory::createSlingShooter));
+                    new Entity().addComponent(new DeckInputComponent(currentArea, spec.factory));
             selected.create();
 
             currentArea.setSelectedUnit(selected);
@@ -214,7 +260,9 @@ public final class SlotCardEntity {
                 remove();
                 activeCount = Math.max(0, activeCount - 1); // -1 on successful placement
                 logger.info("[CardCount] after placement = {}", getActiveCardCount());
-                logger.info("[SlotCardEntity] Placed slingshooter at row={}, col={}, pos={}", row, col, pos);
+                // 【原】logger.info("[SlotCardEntity] Placed slingshooter at row={}, col={}, pos={}", row, col, pos);
+                logger.info("[SlotCardEntity] Placed '{}' at row={}, col={}, pos={}",
+                        spec.atlasRegion, row, col, pos);
             } else {
                 logger.info("[SlotCardEntity] Placement did not take effect");
             }
