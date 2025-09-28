@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -254,5 +255,175 @@ class ItemEffectsServiceTest {
     // Verify the correct asset path was requested
     assertEquals(List.of("images/effects/emp.atlas"), paths);
     assertTrue(emp.getComponent(AnimationRenderComponent.class).hasAnimation("emp"));
+  }
+
+  @Test
+  void spawnEffect_requestsCorrectSound_andPlays_whenPresent() {
+    // Specific animator
+    String animator = "grenade";
+    TextureAtlas atlas = atlasWithFramesFor(animator);
+
+    // Create mock for exact path so can verify play()
+    Sound s = mock(Sound.class);
+    String expectedPath = "sounds/item_" + animator + ".mp3";
+    when(resources.getAsset(eq(expectedPath), eq(Sound.class))).thenReturn(s);
+
+    ItemEffectsService.spawnEffect(
+        atlas,
+        animator,
+        new Vector2[] {new Vector2(1, 2), new Vector2(0, 0)},
+        2,
+        new float[] {0.1f, 30f},
+        Animation.PlayMode.NORMAL,
+        false);
+
+    // Registered as usual
+    captureRegisteredEntity();
+
+    // Check correct sound path requested and played
+    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
+    verify(s, times(1)).play();
+  }
+
+  @Test
+  void spawnEffect_doesNotPlay_whenSoundAssetMissing() {
+    String animator = "emp";
+    TextureAtlas atlas = atlasWithFramesFor(animator);
+
+    // Return null for this path to simulate "not loaded"
+    String expectedPath = "sounds/item_" + animator + ".mp3";
+    when(resources.getAsset(eq(expectedPath), eq(Sound.class))).thenReturn(null);
+
+    ItemEffectsService.spawnEffect(
+        atlas,
+        animator,
+        new Vector2[] {new Vector2(0, 0), new Vector2(0, 0)},
+        1,
+        new float[] {0.1f, 0.2f},
+        Animation.PlayMode.NORMAL,
+        false);
+
+    captureRegisteredEntity();
+
+    // Requested but no play call because asset was null
+    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
+    // No specific Sound mock to verify play() against so also ensure default stub wasn't used for
+    // this path again
+    verifyNoMoreInteractions(resources);
+  }
+
+  @Test
+  void spawnEffect_swallowException_whenResourceServiceThrows_onSoundLoad() {
+    String animator = "coffee";
+    TextureAtlas atlas = atlasWithFramesFor(animator);
+
+    String expectedPath = "sounds/item_" + animator + ".mp3";
+    when(resources.getAsset(eq(expectedPath), eq(Sound.class)))
+        .thenThrow(new RuntimeException("simulated load failure"));
+
+    // Should not throw
+    assertDoesNotThrow(
+        () ->
+            ItemEffectsService.spawnEffect(
+                atlas,
+                animator,
+                new Vector2[] {new Vector2(3, 4), new Vector2(0, 0)},
+                1,
+                new float[] {0.1f, 0.3f},
+                Animation.PlayMode.NORMAL,
+                false));
+
+    // Still registers the entity normally
+    captureRegisteredEntity();
+
+    // Confirm tried to load the sound but couldn't play anything
+    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
+  }
+
+  @Test
+  void spawnEffect_withNullAtlas_neitherRegistersNorAttemptsToLoadSound() {
+    ItemEffectsService.spawnEffect(
+        null,
+        "buff",
+        new Vector2[] {new Vector2(0, 0), new Vector2(0, 0)},
+        1,
+        new float[] {0.1f, 1.5f},
+        Animation.PlayMode.NORMAL,
+        false);
+
+    verify(entities, never()).register(any());
+    // Ensure didn't try to fetch a sound
+    verify(resources, never()).getAsset(startsWith("sounds/item_"), eq(Sound.class));
+  }
+
+  @Test
+  void playEffect_variants_requestMatchingSoundNames_onceEach() {
+    // Ensure this test fully controls stubbing for resources
+    reset(resources);
+
+    // Sound: capture every requested sound path and always return a playable mock
+    List<String> soundPaths = new ArrayList<>();
+    when(resources.getAsset(anyString(), eq(Sound.class)))
+        .thenAnswer(
+            inv -> {
+              String p = inv.getArgument(0, String.class);
+              if (p.startsWith("sounds/item_")) soundPaths.add(p);
+              return mock(Sound.class);
+            });
+
+    // Atlas: one Answer that maps path -> appropriate atlas
+    when(resources.getAsset(anyString(), eq(TextureAtlas.class)))
+        .thenAnswer(
+            inv -> {
+              String p = inv.getArgument(0, String.class);
+              if (p.endsWith("buff.atlas")) return atlasWithFramesFor("buff");
+              if (p.endsWith("coffee.atlas")) return atlasWithFramesFor("coffee");
+              if (p.endsWith("emp.atlas")) return atlasWithFramesFor("emp");
+              if (p.endsWith("grenade.atlas")) return atlasWithFramesFor("grenade");
+              if (p.endsWith("nuke.atlas")) return atlasWithFramesFor("nuke");
+              // fallback so stubbing is always "finished"
+              return atlasWithFramesFor("fallback");
+            });
+
+    ItemEffectsService svc = new ItemEffectsService();
+    int tile = 16;
+    Vector2 pos = new Vector2(100, 200);
+    Vector2 br = new Vector2(0, 0);
+
+    svc.playEffect("buff", new Vector2(pos), tile, br);
+    svc.playEffect("coffee", new Vector2(pos), tile, br);
+    svc.playEffect("emp", new Vector2(pos), tile, br);
+    svc.playEffect("grenade", new Vector2(pos), tile, br);
+    svc.playEffect("nuke", new Vector2(pos), tile, br);
+
+    assertEquals(
+        List.of(
+            "sounds/item_buff.mp3",
+            "sounds/item_coffee.mp3",
+            "sounds/item_emp.mp3",
+            "sounds/item_grenade.mp3",
+            "sounds/item_nuke.mp3"),
+        soundPaths);
+  }
+
+  @Test
+  void spawnEffect_doesNotDoublePlay_whenCalledOnce() {
+    // Ensure that a single spawn leads to a single Sound.play()
+    String animator = "buff";
+    TextureAtlas atlas = atlasWithFramesFor(animator);
+    Sound s = mock(Sound.class);
+    when(resources.getAsset(eq("sounds/item_buff.mp3"), eq(Sound.class))).thenReturn(s);
+
+    ItemEffectsService.spawnEffect(
+        atlas,
+        animator,
+        new Vector2[] {new Vector2(0, 0), new Vector2(10, 10)},
+        1,
+        new float[] {0.1f, 2.0f},
+        Animation.PlayMode.NORMAL,
+        true);
+
+    captureRegisteredEntity();
+    verify(s, times(1)).play();
   }
 }
