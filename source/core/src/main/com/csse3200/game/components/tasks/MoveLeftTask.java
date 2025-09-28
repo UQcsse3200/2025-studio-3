@@ -1,10 +1,13 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Wander around by moving a random position within a range of the starting position. Wait a little
@@ -15,6 +18,7 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
   private Vector2 startPos;
   private MovementTask movementTask;
   private Task currentTask;
+  private float animationNumLoops = 0f; // for playing sounds
 
   /**
    * @param moveSpeed The speed that the entity will move left at.
@@ -42,6 +46,15 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
 
     // Horizontal-only: move left, never allow vertical drift
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
+
+    // play footstep sounds
+    float playTime = owner.getEntity().getComponent(AnimationRenderComponent.class).getCurrentAnimationPlayTime();
+    if (playTime > animationNumLoops * 0.4f) {
+      Sound stepSound = ServiceLocator.getResourceService()
+              .getAsset("sounds/robot_footstep.mp3", Sound.class);
+      stepSound.play();
+      animationNumLoops ++;
+    }
   }
 
   // This was used to switch between moving and waiting when this was wanderTask.
