@@ -24,34 +24,31 @@ public class CurrentWaveDisplay extends UIComponent {
   private Label waveNumberLabel;
   private int currentWave = 0;
 
-  /**
-   * Creates a new current wave display component.
-   */
-
+  /** Creates a new current wave display component. */
   @Override
   public void create() {
     super.create();
     addActors();
 
     // Listen directly to WaveManager events
-    ServiceLocator.getWaveService().setWaveEventListener(
+    ServiceLocator.getWaveService()
+        .setWaveEventListener(
             new WaveManager.WaveEventListener() {
-            @Override
-            public void onPreparationPhaseStarted(int waveNumber) {
-              updateWaveDisplay(waveNumber);
-            }
+              @Override
+              public void onPreparationPhaseStarted(int waveNumber) {
+                updateWaveDisplay(waveNumber);
+              }
 
-            @Override
-            public void onWaveChanged(int waveNumber) {
-              updateWaveDisplay(waveNumber);
-            }
+              @Override
+              public void onWaveChanged(int waveNumber) {
+                updateWaveDisplay(waveNumber);
+              }
 
-            @Override
-            public void onWaveStarted(int waveNumber) {
-              updateWaveDisplay(waveNumber);
-            }
-          });
-
+              @Override
+              public void onWaveStarted(int waveNumber) {
+                updateWaveDisplay(waveNumber);
+              }
+            });
 
     // Initialize with current wave from WaveManager (starts at 0, shows "No Wave Active")
     updateWaveDisplay(ServiceLocator.getWaveService().getCurrentWave());

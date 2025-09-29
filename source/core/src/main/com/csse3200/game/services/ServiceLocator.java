@@ -350,7 +350,6 @@ public class ServiceLocator {
     waveService = null;
   }
 
-
   /** Clears all transient services. */
   public static void clear() {
     entityService = null;

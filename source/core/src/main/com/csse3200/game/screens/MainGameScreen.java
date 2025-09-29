@@ -119,9 +119,10 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea = createGameArea();
     // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
-    ServiceLocator.getWaveService().setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    ServiceLocator.getWaveService()
+        .setEnemySpawnCallback(
+            (col, row, type) ->
+                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
@@ -236,23 +237,24 @@ public class MainGameScreen extends ScreenAdapter {
     ui.getEvents().addListener("resume", this::handleResume);
 
     // Connect the CurrentWaveDisplay to the WaveManager for event listening
-    ServiceLocator.getWaveService().setWaveEventListener(
-        new WaveManager.WaveEventListener() {
-          @Override
-          public void onPreparationPhaseStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+    ServiceLocator.getWaveService()
+        .setWaveEventListener(
+            new WaveManager.WaveEventListener() {
+              @Override
+              public void onPreparationPhaseStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveChanged(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+              @Override
+              public void onWaveChanged(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
-        });
+              @Override
+              public void onWaveStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
+            });
 
     ServiceLocator.getEntityService().register(ui);
   }

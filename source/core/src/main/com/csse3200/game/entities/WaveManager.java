@@ -38,7 +38,7 @@ public class WaveManager implements WaveConfigProvider {
 
   // Preparation phase variables
   private boolean preparationPhaseActive = false;
-  private final float preparationPhaseDuration = 5.0f;
+  private static final float preparationPhaseDuration = 5.0f;
   private float preparationPhaseTimer = 0.0f;
   private final EntitySpawn entitySpawn;
 

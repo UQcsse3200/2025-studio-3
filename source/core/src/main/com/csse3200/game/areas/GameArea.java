@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.ServiceLocator;
@@ -122,5 +121,4 @@ public abstract class GameArea implements Disposable {
     spawnEntity(robot);
     return robot;
   }
-
 }
