@@ -21,6 +21,10 @@ public class WaveService {
         return waveManager.getCurrentWave();
     }
 
+    public void setCurrentWave(int wave) {
+        waveManager.setCurrentWave(wave);
+    }
+
     public void initialiseNewWave() {
         waveManager.initialiseNewWave();
     }

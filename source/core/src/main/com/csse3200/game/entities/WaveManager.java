@@ -165,7 +165,7 @@ public class WaveManager implements WaveConfigProvider {
     return currentWave;
   }
 
-  private void setCurrentWave(int wave) {
+  public void setCurrentWave(int wave) {
     currentWave = wave;
   }
 
