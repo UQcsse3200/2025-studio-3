@@ -13,7 +13,6 @@ public class WaveService {
         waveManager = new WaveManager("levelOne");
     }
 
-
     public void update(float delta) {
         waveManager.update(delta);
     }
@@ -28,10 +27,6 @@ public class WaveService {
 
     public void setEnemySpawnCallback(WaveManager.EnemySpawnCallback callback) {
         waveManager.setEnemySpawnCallback(callback);
-    }
-
-    public WaveManager getWaveManager() {
-        return waveManager;
     }
 
     public void setWaveEventListener(WaveManager.WaveEventListener listener) {
