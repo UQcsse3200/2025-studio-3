@@ -5,6 +5,7 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;
@@ -45,7 +46,8 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
-    setScreen(new LoadingScreen(this));
+    ServiceLocator.registerMusicService(new MusicService());
+      setScreen(new LoadingScreen(this));
   }
 
   /**
@@ -270,6 +272,8 @@ public class GdxGame extends Game {
     /** Lane runner game screen */
     LANE_RUNNER
   }
+
+
 
   /** Exits the game. */
   public void exit() {

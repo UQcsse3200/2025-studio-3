@@ -31,6 +31,7 @@ public class ServiceLocator {
   private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
+  private static MusicService musicService;
 
   /**
    * Gets the entity service.
@@ -158,11 +159,24 @@ public class ServiceLocator {
     return worldMapService;
   }
 
+    /**
+     * Gets the world map service.
+     *
+     * @return the world map service
+     */
+    public static MusicService getMusicService() {
+        return musicService;
+    }
+
+
+
   /**
    * Registers the entity service.
    *
    * @param service the entity service
    */
+
+
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
@@ -308,6 +322,12 @@ public class ServiceLocator {
     cutsceneService = source;
   }
 
+  /** Registers music service */
+    public static void registerMusicService(MusicService service) {
+        logger.debug("Registering music service {}", service);
+        musicService = service;
+    }
+
   /**
    * Registers the world map service.
    *
@@ -317,6 +337,7 @@ public class ServiceLocator {
     logger.debug("Registering world map service {}", source);
     worldMapService = source;
   }
+
 
   /** Deregisters the world map service. */
   public static void deregisterWorldMapService() {

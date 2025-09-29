@@ -44,7 +44,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private Music music;
   private List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
@@ -191,7 +190,6 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Load Music & Sounds
-    resourceService.loadMusic(new String[] {"sounds/BGM_03_mp3.mp3"});
     resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
 
     // Load Textures
@@ -200,10 +198,7 @@ public class MainGameScreen extends ScreenAdapter {
     resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
     resourceService.loadTextureAtlases(textureAtlases.toArray(new String[0]));
     ServiceLocator.getResourceService().loadAll();
-    music = ServiceLocator.getResourceService().getAsset("sounds/BGM_03_mp3.mp3", Music.class);
-    music.setLooping(true);
-    music.setVolume(0.3f);
-    music.play();
+    ServiceLocator.getMusicService().play("sounds/background-music/level1_music.mp3");
   }
 
   private void unloadAssets() {
@@ -288,14 +283,14 @@ public class MainGameScreen extends ScreenAdapter {
   /** Event handler for pause events */
   private void handlePause() {
     logger.info("[MainGameScreen] Game paused");
-    music.pause();
+    ServiceLocator.getMusicService().pause();
     // Pause currency generation, pause wave manager, pause generators.
   }
 
   /** Event handler for resume events */
   private void handleResume() {
     logger.info("[MainGameScreen] Game resumed");
-    music.play();
+    ServiceLocator.getMusicService().resume();
     // Resume currency generation, resume wave manager, resume generators.
   }
 }

@@ -6,6 +6,8 @@ import com.csse3200.game.components.statistics.StatisticsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import java.util.Optional;
+
+import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +37,7 @@ public class StatisticsScreen extends BaseScreen {
   @Override
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating statistics screen UI");
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     return new Entity()
         .addComponent(new StatisticsDisplay(game))
         .addComponent(new InputDecorator(stage, 10));

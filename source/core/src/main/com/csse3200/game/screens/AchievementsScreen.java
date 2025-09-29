@@ -1,10 +1,12 @@
 package com.csse3200.game.screens;
 
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.achievements.AchievementsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -28,6 +30,7 @@ public class AchievementsScreen extends BaseScreen {
    */
   public AchievementsScreen(GdxGame gdxGame) {
     super(gdxGame, Optional.of("images/backgrounds/bg.png"), Optional.empty());
+    ServiceLocator.registerResourceService(new ResourceService());
   }
 
   /**
@@ -47,6 +50,8 @@ public class AchievementsScreen extends BaseScreen {
     }
   }
 
+
+
   /**
    * Creates the AchievementsScreen's UI including components for rendering UI elements to the
    * screen and capturing and handling UI input.
@@ -55,8 +60,11 @@ public class AchievementsScreen extends BaseScreen {
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating achievements screen UI");
     achievementsDisplay = new AchievementsDisplay(game);
-    return new Entity()
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+      return new Entity()
         .addComponent(achievementsDisplay)
         .addComponent(new InputDecorator(stage, 10));
   }
+
+
 }

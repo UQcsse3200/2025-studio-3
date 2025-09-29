@@ -41,10 +41,11 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     renderer = RenderFactory.createRenderer();
     loadAssets();
     createUI();
+
   }
 
   private void loadAssets() {
