@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -19,7 +21,8 @@ import org.slf4j.LoggerFactory;
 public class Renderer implements Disposable {
   public static final float GAME_SCREEN_WIDTH = 1280f;
   private static final Logger logger = LoggerFactory.getLogger(Renderer.class);
-
+  private static final float VIEWPORT_BOUND_WIDTH = 1920f;
+  private static final float VIEWPORT_BOUND_HEIGHT = 1080f;
   private CameraComponent camera;
   private float gameWidth;
   private SpriteBatch batch;
@@ -41,7 +44,7 @@ public class Renderer implements Disposable {
         camera,
         GAME_SCREEN_WIDTH,
         spriteBatch,
-        new Stage(new ScreenViewport(), spriteBatch),
+        new Stage(new ExtendViewport(VIEWPORT_BOUND_WIDTH, VIEWPORT_BOUND_HEIGHT), spriteBatch),
         ServiceLocator.getRenderService(),
         debugRenderer);
   }
@@ -130,10 +133,22 @@ public class Renderer implements Disposable {
     return debugRenderer;
   }
 
+  /**
+   * Resize the camera to the new screen size.
+   *
+   * @param screenWidth new screen width
+   * @param screenHeight new screen height
+   */
   private void resizeCamera(int screenWidth, int screenHeight) {
     camera.resize(screenWidth, screenHeight, gameWidth);
   }
 
+  /**
+   * Resize the stage to the new screen size.
+   *
+   * @param screenWidth new screen width
+   * @param screenHeight new screen height
+   */
   private void resizeStage(int screenWidth, int screenHeight) {
     stage.getViewport().update(screenWidth, screenHeight, true);
   }
