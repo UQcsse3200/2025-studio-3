@@ -17,6 +17,7 @@ public abstract class UIComponent extends RenderComponent {
   public void create() {
     super.create();
     stage = ServiceLocator.getRenderService().getStage();
+    entity.getEvents().addListener("resize", this::resize);
   }
 
   @Override
@@ -32,5 +33,12 @@ public abstract class UIComponent extends RenderComponent {
   @Override
   protected void draw(SpriteBatch batch) {
     // For most UI components, drawing is handled by the stage
+  }
+
+  /**
+   * Handle the resize event. This is called when the screen is resized.
+   */
+  protected void resize() {
+    // To be implemented by subclasses
   }
 }

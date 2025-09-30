@@ -1,13 +1,13 @@
 {
 "com.badlogic.gdx.graphics.g2d.BitmapFont": {
 	"z": {
-		"file": "z.fnt",
+		"file": "tdwfb_data/z.fnt",
 		"scaledSize": -1,
 		"markupEnabled": false,
 		"flip": false
 	},
 	"zzz": {
-		"file": "zzz.fnt",
+		"file": "tdwfb_data/zzz.fnt",
 		"scaledSize": -1,
 		"markupEnabled": false,
 		"flip": false

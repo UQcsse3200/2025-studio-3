@@ -38,7 +38,7 @@ public class LoadingScreen implements Screen {
     camera = new OrthographicCamera();
     camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     stage = new Stage(new ScreenViewport());
-    skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+    skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
     createUI();
   }
 
@@ -54,7 +54,6 @@ public class LoadingScreen implements Screen {
   private void createUI() {
     loadingLabel = new Label("Loading...", skin);
     Label.LabelStyle st = new Label.LabelStyle(loadingLabel.getStyle());
-    st.fontColor = Color.WHITE;
     loadingLabel.setStyle(st);
     loadingLabel.setFontScale(2f);
 

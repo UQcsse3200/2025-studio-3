@@ -37,7 +37,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private final Texture background;
   private final SpriteBatch batch;
   protected static final Skin skin =
-      new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+      new Skin(Gdx.files.internal("skin/tdwfb.json"));
 
   /**
    * Constructs a SkillTreeScreen, initializing all necessary services and rendering components.
