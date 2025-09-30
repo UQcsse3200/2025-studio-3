@@ -7,8 +7,6 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -70,6 +68,17 @@ public class Renderer implements Disposable {
     init(camera, gameWidth, batch, stage, renderService, debugRenderer);
   }
 
+  /**
+   * Initialize the renderer.
+   *
+   * @param camera Camera to use for rendering.
+   * @param gameWidth Desired game width in metres the screen should show. Height is then based on *
+   *     the aspect ratio.
+   * @param batch Batch to render to.
+   * @param stage Scene2D stage for UI rendering
+   * @param renderService Render service to use
+   * @param debugRenderer Debug renderer to render
+   */
   private void init(
       CameraComponent camera,
       float gameWidth,
@@ -90,6 +99,11 @@ public class Renderer implements Disposable {
     resizeCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
   }
 
+  /**
+   * Get the camera attached to this renderer.
+   *
+   * @return the camera
+   */
   public CameraComponent getCamera() {
     return camera;
   }
@@ -127,6 +141,8 @@ public class Renderer implements Disposable {
   }
 
   /**
+   * Get the debug renderer attached to this renderer.
+   *
    * @return The debug renderer attached to this renderer
    */
   public DebugRenderer getDebug() {
@@ -159,6 +175,11 @@ public class Renderer implements Disposable {
     batch.dispose();
   }
 
+  /**
+   * Get the stage.
+   *
+   * @return the stage
+   */
   public Stage getStage() {
     return stage;
   }

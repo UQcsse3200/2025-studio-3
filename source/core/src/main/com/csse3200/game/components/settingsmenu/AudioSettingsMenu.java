@@ -1,7 +1,6 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -182,11 +181,6 @@ public class AudioSettingsMenu extends UIComponent {
   private void hideMenu() {
     rootTable.setVisible(false);
     bottomRow.setVisible(false);
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

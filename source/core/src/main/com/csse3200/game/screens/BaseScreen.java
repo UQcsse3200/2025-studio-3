@@ -3,6 +3,7 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -76,6 +77,9 @@ abstract class BaseScreen extends ScreenAdapter {
   public void resize(int width, int height) {
     logger.debug("[{}] Resized renderer: ({} x {})", getClass().getSimpleName(), width, height);
     renderer.resize(width, height);
+    ServiceLocator.getEntityService()
+        .getEntities()
+        .forEach(entity -> entity.getEvents().trigger("resize", new Vector2(width, height)));
   }
 
   @Override
