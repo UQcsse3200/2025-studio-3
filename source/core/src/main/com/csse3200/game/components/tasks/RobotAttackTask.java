@@ -57,8 +57,8 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
     timeLeft = TIME_BETWEEN_ATTACKS;
-    Sound attackSound = ServiceLocator.getResourceService()
-            .getAsset("sounds/drill_noise_slow.mp3", Sound.class);
+    Sound attackSound =
+        ServiceLocator.getResourceService().getAsset("sounds/drill_noise_slow.mp3", Sound.class);
     attackSound.play(1.0f);
   }
 
