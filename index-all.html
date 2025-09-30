@@ -335,10 +335,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.html#applyEffect(com.csse3200.game.components.slot.SlotEngine.SpinResult)" class="member-name-link">applyEffect(SlotEngine.SpinResult)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.html#applySettings(com.csse3200.game.persistence.UserSettings.Settings)" class="member-name-link">applySettings(UserSettings.Settings)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.html" title="class in com.csse3200.game.persistence">UserSettings</a></dt>
-<dd>
-<div class="block">Apply the given settings without storing them.</div>
-</dd>
 <dt><a href="com/csse3200/game/areas/AreaAPI.html" class="type-name-link" title="interface in com.csse3200.game.areas">AreaAPI</a> - Interface in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
 <div class="block">Interface to inject LevelGameArea into components to safely have access to Entities and
@@ -396,6 +392,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/cutscene/models/object/actiondata/AudioSetData.html#%3Cinit%3E(com.csse3200.game.cutscene.models.object.AudioBus,java.lang.Float)" class="member-name-link">AudioSetData(AudioBus, Float)</a> - Constructor for record class com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/AudioSetData.html" title="class in com.csse3200.game.cutscene.models.object.actiondata">AudioSetData</a></dt>
 <dd>
 <div class="block">Creates an instance of a <code>AudioSetData</code> record class.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a> - Class in <a href="com/csse3200/game/components/settingsmenu/package-summary.html">com.csse3200.game.components.settingsmenu</a></dt>
+<dd>
+<div class="block">Audio settings menu component.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html#%3Cinit%3E()" class="member-name-link">AudioSettingsMenu()</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a></dt>
+<dd>
+<div class="block">Constructor for AudioSettingsMenu.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/validators/actionvalidators/AudioSetValidator.html" class="type-name-link" title="class in com.csse3200.game.cutscene.validators.actionvalidators">AudioSetValidator</a> - Class in <a href="com/csse3200/game/cutscene/validators/actionvalidators/package-summary.html">com.csse3200.game.cutscene.validators.actionvalidators</a></dt>
 <dd>
@@ -718,6 +722,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new BodyUserData instance.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html#BORDERLESS" class="member-name-link">BORDERLESS</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a></dt>
+<dd>
+<div class="block">Windowed Borderless display mode.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsComponent.AlignY.html#BOTTOM" class="member-name-link">BOTTOM</a> - Enum constant in enum class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignY.html" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignY</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.Type.html#BUFF" class="member-name-link">BUFF</a> - Enum constant in enum class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></dt>
@@ -783,6 +791,22 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsComponent.AlignY.html#CENTER" class="member-name-link">CENTER</a> - Enum constant in enum class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignY.html" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignY</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#changeAudioSettings(float,float,float,float)" class="member-name-link">changeAudioSettings(float, float, float, float)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Change the audio settings.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#changeDisplayMode(com.csse3200.game.persistence.Settings.Mode)" class="member-name-link">changeDisplayMode(Settings.Mode)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Change the display mode.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#changeDisplaySettings(int,boolean,com.csse3200.game.persistence.Settings.UIScale,com.csse3200.game.persistence.Settings.Quality)" class="member-name-link">changeDisplaySettings(int, boolean, Settings.UIScale, Settings.Quality)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Change the display settings.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#changeKeybinds(int,int,int,int,int,int,int)" class="member-name-link">changeKeybinds(int, int, int, int, int, int, int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Change the keybinds.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html#character()" class="member-name-link">character()</a> - Method in record class com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html" title="class in com.csse3200.game.cutscene.models.object.actiondata">CharacterEnterData</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html#param-character"><code>character</code></a> record component.</div>
@@ -1306,7 +1330,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplayActions.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplayActions.html" title="class in com.csse3200.game.components.profile">ProfileDisplayActions</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
+<dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">DisplaySettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/shop/ShopActions.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.shop.<a href="com/csse3200/game/components/shop/ShopActions.html" title="class in com.csse3200.game.components.shop">ShopActions</a></dt>
 <dd>&nbsp;</dd>
@@ -1773,9 +1803,17 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Deregisters the config service.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterCutsceneService()" class="member-name-link">deregisterCutsceneService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Deregisters the cutscene service.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterDialogService()" class="member-name-link">deregisterDialogService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Deregisters the dialog service.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterDiscordRichPresenceService()" class="member-name-link">deregisterDiscordRichPresenceService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Deregisters the Discord Rich Presence service.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterGlobalResourceService()" class="member-name-link">deregisterGlobalResourceService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -1784,6 +1822,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterProfileService()" class="member-name-link">deregisterProfileService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Deregisters the profile service.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterSettingsService()" class="member-name-link">deregisterSettingsService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Deregisters the settings service.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterWorldMapService()" class="member-name-link">deregisterWorldMapService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -1817,6 +1859,18 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/BaseLevelConfig.DeserializedLevelConfig.html#%3Cinit%3E()" class="member-name-link">DeserializedLevelConfig()</a> - Constructor for class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseLevelConfig.DeserializedLevelConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelConfig.DeserializedLevelConfig</a></dt>
 <dd>
 <div class="block">Creates a new DeserializedLevelConfig.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html" class="type-name-link" title="class in com.csse3200.game.persistence">DeserializedSettings</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
+<dd>
+<div class="block">DeserializedSettings is a class that is used to deserialize a user's settings.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#%3Cinit%3E()" class="member-name-link">DeserializedSettings()</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Constructor for the DeserializedSettings class.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#%3Cinit%3E(com.csse3200.game.persistence.Settings)" class="member-name-link">DeserializedSettings(Settings)</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Constructor for the DeserializedSettings class.</div>
 </dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#despawnEntity(com.csse3200.game.entities.Entity)" class="member-name-link">despawnEntity(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>&nbsp;</dd>
@@ -1911,14 +1965,24 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#didHit()" class="member-name-link">didHit()</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html" class="type-name-link" title="class in com.csse3200.game.services">DiscordRichPresenceService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">Service for managing the Discord Rich Presence integration.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#%3Cinit%3E()" class="member-name-link">DiscordRichPresenceService()</a> - Constructor for class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Transition.html#displayNames()" class="member-name-link">displayNames()</a> - Static method in enum class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Transition.html" title="enum class in com.csse3200.game.cutscene.models.object">Transition</a></dt>
 <dd>
 <div class="block">Converts each element to its string version to be returned as a list of strings.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#%3Cinit%3E()" class="member-name-link">DisplaySettings()</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#%3Cinit%3E(com.badlogic.gdx.Graphics.DisplayMode)" class="member-name-link">DisplaySettings(Graphics.DisplayMode)</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">DisplaySettingsMenu</a> - Class in <a href="com/csse3200/game/components/settingsmenu/package-summary.html">com.csse3200.game.components.settingsmenu</a></dt>
+<dd>
+<div class="block">Display settings menu component.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html#%3Cinit%3E()" class="member-name-link">DisplaySettingsMenu()</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">DisplaySettingsMenu</a></dt>
+<dd>
+<div class="block">Constructor for DisplaySettingsMenu.</div>
+</dd>
 <dt><a href="com/csse3200/game/ai/tasks/AITaskComponent.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/AITaskComponent.html" title="class in com.csse3200.game.ai.tasks">AITaskComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
@@ -1983,7 +2047,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplay.html" title="class in com.csse3200.game.components.profile">ProfileDisplay</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
+<dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">DisplaySettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/skilltree/SkilltreeButton.html#dispose()" class="member-name-link">dispose()</a> - Method in class com.csse3200.game.components.skilltree.<a href="com/csse3200/game/components/skilltree/SkilltreeButton.html" title="class in com.csse3200.game.components.skilltree">SkilltreeButton</a></dt>
 <dd>&nbsp;</dd>
@@ -2193,7 +2263,13 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplay.html" title="class in com.csse3200.game.components.profile">ProfileDisplay</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
+<dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/DisplaySettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">DisplaySettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/shop/ShopDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.shop.<a href="com/csse3200/game/components/shop/ShopDisplay.html" title="class in com.csse3200.game.components.shop">ShopDisplay</a></dt>
 <dd>&nbsp;</dd>
@@ -2308,6 +2384,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Entity position needs to be updated to match the new physics position.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#EASY" class="member-name-link">EASY</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
+<dd>
+<div class="block">Easy difficulty.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.Type.html#EMP" class="member-name-link">EMP</a> - Enum constant in enum class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/Component.html#enabled" class="member-name-link">enabled</a> - Variable in class com.csse3200.game.components.<a href="com/csse3200/game/components/Component.html" title="class in com.csse3200.game.components">Component</a></dt>
@@ -2366,6 +2446,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Test-only constructor allowing injection of a prebuilt WaveConfigProvider to avoid LibGDX file
  IO in unit tests.</div>
+</dd>
+<dt><a href="com/csse3200/game/utils/EnvironmentUtils.html" class="type-name-link" title="class in com.csse3200.game.utils">EnvironmentUtils</a> - Class in <a href="com/csse3200/game/utils/package-summary.html">com.csse3200.game.utils</a></dt>
+<dd>
+<div class="block">Utility class for getting the operating system.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/actiondata/AudioPlayData.html#equals(java.lang.Object)" class="member-name-link">equals(Object)</a> - Method in record class com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/AudioPlayData.html" title="class in com.csse3200.game.cutscene.models.object.actiondata">AudioPlayData</a></dt>
 <dd>
@@ -2554,6 +2638,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a Savefile object from a string representation.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html#FULLSCREEN" class="member-name-link">FULLSCREEN</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a></dt>
+<dd>
+<div class="block">Fullscreen display mode.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:G">G</h2>
 <dl class="index">
@@ -2601,6 +2689,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/gameover/GameOverWindow.html#%3Cinit%3E()" class="member-name-link">GameOverWindow()</a> - Constructor for class com.csse3200.game.components.gameover.<a href="com/csse3200/game/components/gameover/GameOverWindow.html" title="class in com.csse3200.game.components.gameover">GameOverWindow</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a> - Class in <a href="com/csse3200/game/components/settingsmenu/package-summary.html">com.csse3200.game.components.settingsmenu</a></dt>
+<dd>
+<div class="block">Game settings menu component.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#%3Cinit%3E()" class="member-name-link">GameSettingsMenu()</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
+<dd>
+<div class="block">Constructor for GameSettingsMenu.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/GameTime.html" class="type-name-link" title="class in com.csse3200.game.services">GameTime</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
 <dd>
 <div class="block">Controls the game time</div>
@@ -2632,10 +2728,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/GeneratorStatsComponent.html#%3Cinit%3E(int,int,int)" class="member-name-link">GeneratorStatsComponent(int, int, int)</a> - Constructor for class com.csse3200.game.components.<a href="com/csse3200/game/components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></dt>
 <dd>
 <div class="block">Creates a new GeneratorStatsComponent with the given stats</div>
-</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.html#get()" class="member-name-link">get()</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.html" title="class in com.csse3200.game.persistence">UserSettings</a></dt>
-<dd>
-<div class="block">Get the stored user settings</div>
 </dd>
 <dt><a href="com/csse3200/game/services/CurrencyService.html#get()" class="member-name-link">get()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/CurrencyService.html" title="class in com.csse3200.game.services">CurrencyService</a></dt>
 <dd>
@@ -2740,6 +2832,18 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/BaseDefenderConfig.html#getAttackState()" class="member-name-link">getAttackState()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a></dt>
 <dd>
 <div class="block">Gets the state value for this entity.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getAvailableModes()" class="member-name-link">getAvailableModes()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the available modes.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getAvailableMonitors()" class="member-name-link">getAvailableMonitors()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the available monitors.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getAvailableResolutions()" class="member-name-link">getAvailableResolutions()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the available resolutions.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/CutsceneCompiler.html#getBackground(java.lang.String)" class="member-name-link">getBackground(String)</a> - Method in class com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneCompiler.html" title="class in com.csse3200.game.cutscene">CutsceneCompiler</a></dt>
 <dd>
@@ -2891,12 +2995,36 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the number of waves configured for the current level.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getCurrentMode()" class="member-name-link">getCurrentMode()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the current mode.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getCurrentMode()" class="member-name-link">getCurrentMode()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the current mode.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getCurrentMonitor()" class="member-name-link">getCurrentMonitor()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the current monitor.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getCurrentResolution()" class="member-name-link">getCurrentResolution()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the current resolution.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ProfileService.html#getCurrentSlot()" class="member-name-link">getCurrentSlot()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ProfileService.html" title="class in com.csse3200.game.services">ProfileService</a></dt>
 <dd>
 <div class="block">Gets the current slot number.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/tasks/MoveLeftTask.html#getCurrentTask()" class="member-name-link">getCurrentTask()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/MoveLeftTask.html" title="class in com.csse3200.game.components.tasks">MoveLeftTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getCurrentUIScale()" class="member-name-link">getCurrentUIScale()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the current UI scale.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getCurrentUIScale()" class="member-name-link">getCurrentUIScale()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the current UI scale.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/WaveManager.html#getCurrentWave()" class="member-name-link">getCurrentWave()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#getCurrentWaveNumber()" class="member-name-link">getCurrentWaveNumber()</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
@@ -2979,14 +3107,24 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/OrchestratorState.html#getDialogueState()" class="member-name-link">getDialogueState()</a> - Method in class com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/OrchestratorState.html" title="class in com.csse3200.game.cutscene.runtime">OrchestratorState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getDifficulty()" class="member-name-link">getDifficulty()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the difficulty.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getDifficulty()" class="member-name-link">getDifficulty()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the difficulty.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#getDirection()" class="member-name-link">getDirection()</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#getDiscordRichPresenceService()" class="member-name-link">getDiscordRichPresenceService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Gets the Discord Rich Presence service.</div>
+</dd>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#getDisplayDate()" class="member-name-link">getDisplayDate()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
 <dd>
 <div class="block">Get the date of the savefile to be displayed.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#getDisplayMode()" class="member-name-link">getDisplayMode()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#getDisplayName()" class="member-name-link">getDisplayName()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
@@ -3000,6 +3138,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html#getDistanceToTarget()" class="member-name-link">getDistanceToTarget()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></dt>
 <dd>
 <div class="block">Gets the distance to the nearest visible target</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getDownButton()" class="member-name-link">getDownButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the down button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getDownButton()" class="member-name-link">getDownButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the down button.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#getEffect()" class="member-name-link">getEffect()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
 <dd>&nbsp;</dd>
@@ -3073,8 +3219,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/RaycastHit.html#getFixture()" class="member-name-link">getFixture()</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#getFps()" class="member-name-link">getFps()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getFps()" class="member-name-link">getFps()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the FPS.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getFps()" class="member-name-link">getFps()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the FPS.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/ComponentType.html#getFrom(java.lang.Class)" class="member-name-link">getFrom(Class&lt;? extends Component&gt;)</a> - Static method in class com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentType.html" title="class in com.csse3200.game.components">ComponentType</a></dt>
 <dd>
 <div class="block">Gets or creates a ComponentType for the specified component class.</div>
@@ -3123,8 +3275,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the health of the entity.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#getHeight()" class="member-name-link">getHeight()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#getHit()" class="member-name-link">getHit()</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/AllHitCallback.html#getHitsAndClear()" class="member-name-link">getHitsAndClear()</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/AllHitCallback.html" title="class in com.csse3200.game.physics.raycast">AllHitCallback</a></dt>
@@ -3184,6 +3334,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getInputService()" class="member-name-link">getInputService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Gets the input service.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getInteractionButton()" class="member-name-link">getInteractionButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the interaction button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getInteractionButton()" class="member-name-link">getInteractionButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the interaction button.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/GeneratorStatsComponent.html#getInterval()" class="member-name-link">getInterval()</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></dt>
 <dd>
@@ -3262,6 +3420,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#getLayerMask()" class="member-name-link">getLayerMask()</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getLeftButton()" class="member-name-link">getLeftButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the left button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getLeftButton()" class="member-name-link">getLeftButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the left button.</div>
+</dd>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#getLevel(java.lang.String)" class="member-name-link">getLevel(String)</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getLevelConfig(java.lang.String)" class="member-name-link">getLevelConfig(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
@@ -3293,6 +3459,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/BaseLevelConfig.html#getMapFile()" class="member-name-link">getMapFile()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseLevelConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelConfig</a></dt>
 <dd>
 <div class="block">Get the map file</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getMasterVolume()" class="member-name-link">getMasterVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the master volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getMasterVolume()" class="member-name-link">getMasterVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the master volume.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/tile/TileHitboxComponent.html#getMaxPosX()" class="member-name-link">getMaxPosX()</a> - Method in class com.csse3200.game.components.tile.<a href="com/csse3200/game/components/tile/TileHitboxComponent.html" title="class in com.csse3200.game.components.tile">TileHitboxComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -3338,6 +3512,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#getMoving()" class="member-name-link">getMoving()</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getMusicVolume()" class="member-name-link">getMusicVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the music volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getMusicVolume()" class="member-name-link">getMusicVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the music volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#getMusicVolume()" class="member-name-link">getMusicVolume()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Get the music volume.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Character.html#getName()" class="member-name-link">getName()</a> - Method in class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Character.html" title="class in com.csse3200.game.cutscene.models.object">Character</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html#getName()" class="member-name-link">getName()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></dt>
@@ -3436,8 +3622,20 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the opacity.</div>
 </dd>
+<dt><a href="com/csse3200/game/utils/EnvironmentUtils.html#getOperatingSystem()" class="member-name-link">getOperatingSystem()</a> - Static method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/EnvironmentUtils.html" title="class in com.csse3200.game.utils">EnvironmentUtils</a></dt>
+<dd>
+<div class="block">Get the operating system.</div>
+</dd>
 <dt><a href="com/csse3200/game/exceptions/AuthoringError.html#getPath()" class="member-name-link">getPath()</a> - Method in exception class com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/AuthoringError.html" title="class in com.csse3200.game.exceptions">AuthoringError</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getPauseButton()" class="member-name-link">getPauseButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the pause button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getPauseButton()" class="member-name-link">getPauseButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the pause button.</div>
+</dd>
 <dt><a href="com/csse3200/game/progression/skilltree/Skill.html#getPercentage()" class="member-name-link">getPercentage()</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/Skill.html" title="class in com.csse3200.game.progression.skilltree">Skill</a></dt>
 <dd>
 <div class="block">Returns the percentage bonus this skill provides.</div>
@@ -3528,6 +3726,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#getProperty(java.lang.String)" class="member-name-link">getProperty(String)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getQuality()" class="member-name-link">getQuality()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the current quality.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getQuality()" class="member-name-link">getQuality()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the current quality.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html#getQuota()" class="member-name-link">getQuota()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></dt>
 <dd>
 <div class="block">Gets the quota required to unlock this achievement.</div>
@@ -3548,8 +3754,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html#getReels()" class="member-name-link">getReels()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#getRefreshRate()" class="member-name-link">getRefreshRate()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getRefreshRate()" class="member-name-link">getRefreshRate()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the refresh rate.</div>
+</dd>
+<dt><a href="com/csse3200/game/utils/EnvironmentUtils.html#getRefreshRateFromDisplayMode(com.badlogic.gdx.Graphics.Monitor)" class="member-name-link">getRefreshRateFromDisplayMode(Graphics.Monitor)</a> - Static method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/EnvironmentUtils.html" title="class in com.csse3200.game.utils">EnvironmentUtils</a></dt>
+<dd>
+<div class="block">Gets the refresh rate from a specified monitor's display mode.</div>
+</dd>
 <dt><a href="com/csse3200/game/ui/WorldMapNode.html#getRegistrationKey()" class="member-name-link">getRegistrationKey()</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></dt>
 <dd>
 <div class="block">Gets the registration key of the node.</div>
@@ -3558,9 +3770,21 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the render service.</div>
 </dd>
+<dt><a href="com/csse3200/game/utils/EnvironmentUtils.html#getResolutionFromDisplayMode(com.badlogic.gdx.Graphics.Monitor)" class="member-name-link">getResolutionFromDisplayMode(Graphics.Monitor)</a> - Static method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/EnvironmentUtils.html" title="class in com.csse3200.game.utils">EnvironmentUtils</a></dt>
+<dd>
+<div class="block">Gets the resolution from a specified monitor's display mode.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getResourceService()" class="member-name-link">getResourceService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Gets the resource service.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getRightButton()" class="member-name-link">getRightButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the right button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getRightButton()" class="member-name-link">getRightButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the right button.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html#getRotation()" class="member-name-link">getRotation()</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html" title="class in com.csse3200.game.cutscene.runtime.states">CharacterState</a></dt>
 <dd>
@@ -3616,6 +3840,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Getter for selected_unit</div>
 </dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#getSettings()" class="member-name-link">getSettings()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Get the settings.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#getSettingsService()" class="member-name-link">getSettingsService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Gets the settings service.</div>
+</dd>
 <dt><a href="com/csse3200/game/utils/ShopRandomizer.html#getShopItemIndexes(java.lang.String,int,int,java.time.LocalDateTime)" class="member-name-link">getShopItemIndexes(String, int, int, LocalDateTime)</a> - Static method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/ShopRandomizer.html" title="class in com.csse3200.game.utils">ShopRandomizer</a></dt>
 <dd>
 <div class="block">Gets the indexes of the shop items.</div>
@@ -3642,6 +3874,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the current amount of skill points in the wallet.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getSkipButton()" class="member-name-link">getSkipButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the skip button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getSkipButton()" class="member-name-link">getSkipButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the skip button.</div>
+</dd>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#getSlot()" class="member-name-link">getSlot()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
 <dd>
 <div class="block">Get the slot number of the savefile.</div>
@@ -3652,6 +3892,18 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Cutscene.html#getSounds()" class="member-name-link">getSounds()</a> - Method in class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object">Cutscene</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getSoundVolume()" class="member-name-link">getSoundVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the sound volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getSoundVolume()" class="member-name-link">getSoundVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the sound volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#getSoundVolume()" class="member-name-link">getSoundVolume()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Get the sound volume.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseWaveConfig.html#getSpawnConfig(java.lang.String)" class="member-name-link">getSpawnConfig(String)</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseWaveConfig.html" title="class in com.csse3200.game.entities.configs">BaseWaveConfig</a></dt>
 <dd>
 <div class="block">Get the spawn configuration for a given enemy type</div>
@@ -3780,8 +4032,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Choice.html#getType()" class="member-name-link">getType()</a> - Method in class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Choice.html" title="class in com.csse3200.game.cutscene.models.object">Choice</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#getUiScale()" class="member-name-link">getUiScale()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/statistics/Statistics.html#getUnlockedAchievements()" class="member-name-link">getUnlockedAchievements()</a> - Method in class com.csse3200.game.progression.statistics.<a href="com/csse3200/game/progression/statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></dt>
 <dd>
 <div class="block">Gets the list of unlocked achievement keys.</div>
@@ -3789,6 +4039,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#getUnlockedSkills()" class="member-name-link">getUnlockedSkills()</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>
 <div class="block">Returns the list of skills that have been unlocked for this instance/player.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getUpButton()" class="member-name-link">getUpButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the up button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getUpButton()" class="member-name-link">getUpButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the up button.</div>
 </dd>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#getUpgradeValue(com.csse3200.game.progression.skilltree.Skill.StatType)" class="member-name-link">getUpgradeValue(Skill.StatType)</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>&nbsp;</dd>
@@ -3804,6 +4062,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/minigame/BallComponent.html#getVelocityY()" class="member-name-link">getVelocityY()</a> - Method in class com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/BallComponent.html" title="class in com.csse3200.game.minigame">BallComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getVoiceVolume()" class="member-name-link">getVoiceVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the voice volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getVoiceVolume()" class="member-name-link">getVoiceVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the voice volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#getVoiceVolume()" class="member-name-link">getVoiceVolume()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Get the voice volume.</div>
+</dd>
 <dt><a href="com/csse3200/game/progression/Profile.html#getWallet()" class="member-name-link">getWallet()</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
 <dd>
 <div class="block">Get the wallet associated with the profile.</div>
@@ -3830,8 +4100,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#getWeights()" class="member-name-link">getWeights()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#getWidth()" class="member-name-link">getWidth()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getWindowedResolution()" class="member-name-link">getWindowedResolution()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the windowed resolution.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getWindowedResolution()" class="member-name-link">getWindowedResolution()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the windowed resolution.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsEngine.html#getWorld()" class="member-name-link">getWorld()</a> - Method in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/BackgroundMapComponent.html#getWorldHeight()" class="member-name-link">getWorldHeight()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/BackgroundMapComponent.html" title="class in com.csse3200.game.rendering">BackgroundMapComponent</a></dt>
@@ -3951,6 +4227,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Triggers death event handlers if a hit causes an entity to die.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#HARD" class="member-name-link">HARD</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
+<dd>
+<div class="block">Hard difficulty.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/DialogService.html#hasActiveDialogs()" class="member-name-link">hasActiveDialogs()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DialogService.html" title="class in com.csse3200.game.services">DialogService</a></dt>
 <dd>
 <div class="block">Checks if there are any active dialogs.</div>
@@ -4045,6 +4325,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/ComponentPriority.html#HIGH" class="member-name-link">HIGH</a> - Enum constant in enum class com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentPriority.html" title="enum class in com.csse3200.game.components">ComponentPriority</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Quality.html#HIGH" class="member-name-link">HIGH</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Quality.html" title="enum class in com.csse3200.game.persistence">Settings.Quality</a></dt>
+<dd>
+<div class="block">High quality.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html#hit" class="member-name-link">hit</a> - Variable in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">RobotTargetDetectionTasks</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html#hit" class="member-name-link">hit</a> - Variable in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></dt>
@@ -4118,6 +4402,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Advances to the next wave, resets internal state and lane sequence, and computes the number of
  enemies to spawn for this wave.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#initialize()" class="member-name-link">initialize()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Initializes the Discord Rich Presence service.</div>
 </dd>
 <dt><a href="com/csse3200/game/GdxGame.html#initializeGame()" class="member-name-link">initializeGame()</a> - Method in class com.csse3200.game.<a href="com/csse3200/game/GdxGame.html" title="class in com.csse3200.game">GdxGame</a></dt>
 <dd>
@@ -4249,8 +4537,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Has the playing animation finished? This will always be false for looping animations.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#isFullscreen()" class="member-name-link">isFullscreen()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#isInitialized()" class="member-name-link">isInitialized()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Checks if the service is initialized and ready to use.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/WaveManager.html#isLevelComplete()" class="member-name-link">isLevelComplete()</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/WaveManager.html" title="class in com.csse3200.game.entities">WaveManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameGrid.html#isOccupied(int,int)" class="member-name-link">isOccupied(int, int)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></dt>
@@ -4320,8 +4610,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html#isVisible()" class="member-name-link">isVisible()</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#isVsync()" class="member-name-link">isVsync()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#isVsync()" class="member-name-link">isVsync()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets whether vsync is enabled.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#isVsync()" class="member-name-link">isVsync()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets whether vsync is enabled.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.html" class="type-name-link" title="class in com.csse3200.game.components.items">ItemComponent</a> - Class in <a href="com/csse3200/game/components/items/package-summary.html">com.csse3200.game.components.items</a></dt>
 <dd>
 <div class="block">ItemComponent provides the ability to add an Item Type to an Entity for the purpose of
@@ -4491,6 +4787,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/LaneRunnerScreen.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">LaneRunnerScreen(GdxGame)</a> - Constructor for class com.csse3200.game.screens.<a href="com/csse3200/game/screens/LaneRunnerScreen.html" title="class in com.csse3200.game.screens">LaneRunnerScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html#LARGE" class="member-name-link">LARGE</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.UIScale.html" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a></dt>
+<dd>
+<div class="block">Large UI scale.</div>
+</dd>
 <dt><a href="com/csse3200/game/concurrency/JobSystem.html#launch(java.util.function.Supplier)" class="member-name-link">launch(Supplier&lt;T&gt;)</a> - Static method in class com.csse3200.game.concurrency.<a href="com/csse3200/game/concurrency/JobSystem.html" title="class in com.csse3200.game.concurrency">JobSystem</a></dt>
 <dd>
 <div class="block">Launch an asynchronous job which may be run on a separate thread.</div>
@@ -4649,6 +4949,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/ComponentPriority.html#LOW" class="member-name-link">LOW</a> - Enum constant in enum class com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentPriority.html" title="enum class in com.csse3200.game.components">ComponentPriority</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Quality.html#LOW" class="member-name-link">LOW</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Quality.html" title="enum class in com.csse3200.game.persistence">Settings.Quality</a></dt>
+<dd>
+<div class="block">Low quality.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:M">M</h2>
 <dl class="index">
@@ -4686,6 +4990,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/ComponentPriority.html#MEDIUM" class="member-name-link">MEDIUM</a> - Enum constant in enum class com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentPriority.html" title="enum class in com.csse3200.game.components">ComponentPriority</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html#MEDIUM" class="member-name-link">MEDIUM</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.UIScale.html" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a></dt>
+<dd>
+<div class="block">Medium UI scale.</div>
+</dd>
 <dt><a href="com/csse3200/game/exceptions/MenuSpriteNotFoundException.html" class="type-name-link" title="class in com.csse3200.game.exceptions">MenuSpriteNotFoundException</a> - Exception Class in <a href="com/csse3200/game/exceptions/package-summary.html">com.csse3200.game.exceptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/exceptions/MenuSpriteNotFoundException.html#%3Cinit%3E()" class="member-name-link">MenuSpriteNotFoundException()</a> - Constructor for exception class com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/MenuSpriteNotFoundException.html" title="class in com.csse3200.game.exceptions">MenuSpriteNotFoundException</a></dt>
@@ -4798,6 +5106,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#NONE" class="member-name-link">NONE</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#NORMAL" class="member-name-link">NORMAL</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
+<dd>
+<div class="block">Normal difficulty.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#NPC" class="member-name-link">NPC</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.Type.html#NUKE" class="member-name-link">NUKE</a> - Enum constant in enum class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></dt>
@@ -5245,6 +5557,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Registers the dialog service.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#registerDiscordRichPresenceService(com.csse3200.game.services.DiscordRichPresenceService)" class="member-name-link">registerDiscordRichPresenceService(DiscordRichPresenceService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Registers the Discord Rich Presence service.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerEntityService(com.csse3200.game.entities.EntityService)" class="member-name-link">registerEntityService(EntityService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Registers the entity service.</div>
@@ -5284,6 +5600,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerResourceService(com.csse3200.game.services.ResourceService)" class="member-name-link">registerResourceService(ResourceService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Registers the resource service.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#registerSettingsService(com.csse3200.game.services.SettingsService)" class="member-name-link">registerSettingsService(SettingsService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Registers the settings service.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerTimeSource(com.csse3200.game.services.GameTime)" class="member-name-link">registerTimeSource(GameTime)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -5330,6 +5650,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Remove a unit form a tile</div>
 </dd>
 <dt><a href="com/csse3200/game/components/HitMarkerComponent.html#render" class="member-name-link">render</a> - Variable in class com.csse3200.game.components.<a href="com/csse3200/game/components/HitMarkerComponent.html" title="class in com.csse3200.game.components">HitMarkerComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/GdxGame.html#render()" class="member-name-link">render()</a> - Method in class com.csse3200.game.<a href="com/csse3200/game/GdxGame.html" title="class in com.csse3200.game">GdxGame</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/Renderer.html#render()" class="member-name-link">render()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></dt>
 <dd>
@@ -5570,6 +5892,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html#%3Cinit%3E(float,short)" class="member-name-link">RobotTargetDetectionTasks(float, short)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">RobotTargetDetectionTasks</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#runCallbacks()" class="member-name-link">runCallbacks()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Runs Discord callbacks.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:S">S</h2>
 <dl class="index">
@@ -5618,6 +5944,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ProfileService.html#saveProfileToSlot(int)" class="member-name-link">saveProfileToSlot(int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ProfileService.html" title="class in com.csse3200.game.services">ProfileService</a></dt>
 <dd>
 <div class="block">Saves the current profile to a specific slot.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#saveSettings()" class="member-name-link">saveSettings()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Save the settings.</div>
 </dd>
 <dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#scaleEntity()" class="member-name-link">scaleEntity()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
 <dd>
@@ -5681,10 +6011,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the currency amount.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.html#set(com.csse3200.game.persistence.UserSettings.Settings,boolean)" class="member-name-link">set(UserSettings.Settings, boolean)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.html" title="class in com.csse3200.game.persistence">UserSettings</a></dt>
-<dd>
-<div class="block">Set the stored user settings</div>
-</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html#set(java.lang.String,java.lang.String)" class="member-name-link">set(String, String)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></dt>
 <dd>
 <div class="block">Set the speaker and text parameters</div>
@@ -5708,6 +6034,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/DefenderStatsComponent.html#setAttackSpeed(int)" class="member-name-link">setAttackSpeed(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DefenderStatsComponent.html" title="class in com.csse3200.game.components">DefenderStatsComponent</a></dt>
 <dd>
 <div class="block">Sets the defender's attack speed.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setAvailableResolutions()" class="member-name-link">setAvailableResolutions()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the available resolutions.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/CombatStatsComponent.html#setBaseAttack(int)" class="member-name-link">setBaseAttack(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></dt>
 <dd>
@@ -5775,6 +6105,30 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the current level of the profile.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setCurrentMode(com.csse3200.game.persistence.Settings.Mode)" class="member-name-link">setCurrentMode(Settings.Mode)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the current mode.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setCurrentMode(com.csse3200.game.persistence.Settings.Mode)" class="member-name-link">setCurrentMode(Settings.Mode)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the current mode.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setCurrentMonitor(com.badlogic.gdx.Graphics.Monitor)" class="member-name-link">setCurrentMonitor(Graphics.Monitor)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the current monitor.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setCurrentResolution(net.dermetfan.utils.Pair)" class="member-name-link">setCurrentResolution(Pair&lt;Integer, Integer&gt;)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the current resolution.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setCurrentUIScale(com.csse3200.game.persistence.Settings.UIScale)" class="member-name-link">setCurrentUIScale(Settings.UIScale)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the current UI scale.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setCurrentUIScale(com.csse3200.game.persistence.Settings.UIScale)" class="member-name-link">setCurrentUIScale(Settings.UIScale)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the current UI scale.</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/RenderService.html#setDebug(com.csse3200.game.rendering.DebugRenderer)" class="member-name-link">setDebug(DebugRenderer)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setDensity(float)" class="member-name-link">setDensity(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
@@ -5787,8 +6141,22 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#setDidHit(boolean)" class="member-name-link">setDidHit(boolean)</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#setDisplayMode(com.csse3200.game.persistence.UserSettings.DisplaySettings)" class="member-name-link">setDisplayMode(UserSettings.DisplaySettings)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setDifficulty(com.csse3200.game.persistence.Settings.Difficulty)" class="member-name-link">setDifficulty(Settings.Difficulty)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the difficulty.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setDifficulty(com.csse3200.game.persistence.Settings.Difficulty)" class="member-name-link">setDifficulty(Settings.Difficulty)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the difficulty.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setDownButton(int)" class="member-name-link">setDownButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the down button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setDownButton(int)" class="member-name-link">setDownButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the down button.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/Component.html#setEnabled(boolean)" class="member-name-link">setEnabled(boolean)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/Component.html" title="class in com.csse3200.game.components">Component</a></dt>
 <dd>
 <div class="block">Enable or disable the component.</div>
@@ -5813,14 +6181,18 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/RaycastHit.html#setFixture(com.badlogic.gdx.physics.box2d.Fixture)" class="member-name-link">setFixture(Fixture)</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#setFps(int)" class="member-name-link">setFps(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setFps(int)" class="member-name-link">setFps(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the FPS.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setFps(int)" class="member-name-link">setFps(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the FPS.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setFriction(float)" class="member-name-link">setFriction(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
 <dd>
 <div class="block">Set friction.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#setFullscreen(boolean)" class="member-name-link">setFullscreen(boolean)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#setGold(int)" class="member-name-link">setGold(int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
 <dd>
 <div class="block">Sets the player's gold.</div>
@@ -5831,8 +6203,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the entity's health.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#setHeight(int)" class="member-name-link">setHeight(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#setHit(com.csse3200.game.physics.raycast.RaycastHit)" class="member-name-link">setHit(RaycastHit)</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/BackgroundState.html#setImage(com.badlogic.gdx.scenes.scene2d.utils.Drawable)" class="member-name-link">setImage(Drawable)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/BackgroundState.html" title="class in com.csse3200.game.cutscene.runtime.states">BackgroundState</a></dt>
@@ -5849,6 +6219,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/input/InputComponent.html#setInputPriority(int)" class="member-name-link">setInputPriority(int)</a> - Method in class com.csse3200.game.input.<a href="com/csse3200/game/input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setInteractionButton(int)" class="member-name-link">setInteractionButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the interaction button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setInteractionButton(int)" class="member-name-link">setInteractionButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the interaction button.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/GeneratorStatsComponent.html#setInterval(int)" class="member-name-link">setInterval(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></dt>
 <dd>
 <div class="block">Sets the interval value.</div>
@@ -5873,6 +6251,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/raycast/SingleHitCallback.html#setLayerMask(short)" class="member-name-link">setLayerMask(short)</a> - Method in class com.csse3200.game.physics.raycast.<a href="com/csse3200/game/physics/raycast/SingleHitCallback.html" title="class in com.csse3200.game.physics.raycast">SingleHitCallback</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setLeftButton(int)" class="member-name-link">setLeftButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the left button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setLeftButton(int)" class="member-name-link">setLeftButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the left button.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsComponent.html#setLinearVelocity(float,float)" class="member-name-link">setLinearVelocity(float, float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.html" title="class in com.csse3200.game.physics.components">PhysicsComponent</a></dt>
 <dd>
 <div class="block">Sets the linear velocity of the physics body.</div>
@@ -5880,6 +6266,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/ui/WorldMapNode.html#setLockReason(java.lang.String)" class="member-name-link">setLockReason(String)</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></dt>
 <dd>
 <div class="block">Sets the lock reason of the node.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setMasterVolume(float)" class="member-name-link">setMasterVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the master volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setMasterVolume(float)" class="member-name-link">setMasterVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the master volume.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/tile/TileHitboxComponent.html#setMaxPosX(float)" class="member-name-link">setMaxPosX(float)</a> - Method in class com.csse3200.game.components.tile.<a href="com/csse3200/game/components/tile/TileHitboxComponent.html" title="class in com.csse3200.game.components.tile">TileHitboxComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -5894,6 +6288,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#setMoving(boolean)" class="member-name-link">setMoving(boolean)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>
 <div class="block">Enable/disable movement for the controller.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setMusicVolume(float)" class="member-name-link">setMusicVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the music volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setMusicVolume(float)" class="member-name-link">setMusicVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the music volume.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html#setName(java.lang.String)" class="member-name-link">setName(String)</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></dt>
 <dd>
@@ -5955,6 +6357,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the pause state of the orchestrator</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setPauseButton(int)" class="member-name-link">setPauseButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the pause button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setPauseButton(int)" class="member-name-link">setPauseButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the pause button.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/hud/PauseButton.html#setPaused(boolean)" class="member-name-link">setPaused(boolean)</a> - Method in class com.csse3200.game.components.hud.<a href="com/csse3200/game/components/hud/PauseButton.html" title="class in com.csse3200.game.components.hud">PauseButton</a></dt>
 <dd>
 <div class="block">Moves the pause button and tooltip behind the dimmed background when paused</div>
@@ -5997,8 +6407,20 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the position.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#setPresence(java.lang.String)" class="member-name-link">setPresence(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Updates the Discord presence with simple game information.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#setProperty(java.lang.String,java.lang.Object)" class="member-name-link">setProperty(String, Object)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setQuality(com.csse3200.game.persistence.Settings.Quality)" class="member-name-link">setQuality(Settings.Quality)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the current quality.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setQuality(com.csse3200.game.persistence.Settings.Quality)" class="member-name-link">setQuality(Settings.Quality)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the current quality.</div>
+</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html#setQuota(int)" class="member-name-link">setQuota(int)</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></dt>
 <dd>
 <div class="block">Sets the quota required to unlock this achievement.</div>
@@ -6007,8 +6429,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the defender's attack range.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#setRefreshRate(int)" class="member-name-link">setRefreshRate(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setRefreshRate(int)" class="member-name-link">setRefreshRate(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the refresh rate.</div>
+</dd>
 <dt><a href="com/csse3200/game/ui/WorldMapNode.html#setRegistrationKey(java.lang.String)" class="member-name-link">setRegistrationKey(String)</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></dt>
 <dd>
 <div class="block">Sets the registration key of the node.</div>
@@ -6016,6 +6440,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html#setRestitution(float)" class="member-name-link">setRestitution(float)</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/ColliderComponent.html" title="class in com.csse3200.game.physics.components">ColliderComponent</a></dt>
 <dd>
 <div class="block">Set restitution</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setRightButton(int)" class="member-name-link">setRightButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the right button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setRightButton(int)" class="member-name-link">setRightButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the right button.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html#setRotation(float)" class="member-name-link">setRotation(float)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html" title="class in com.csse3200.game.cutscene.runtime.states">CharacterState</a></dt>
 <dd>
@@ -6092,8 +6524,24 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the current amount of skills points in the wallet.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setSkipButton(int)" class="member-name-link">setSkipButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the skip button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setSkipButton(int)" class="member-name-link">setSkipButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the skip button.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.html#setSlotMachineArea(com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">setSlotMachineArea(SlotMachineArea)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setSoundVolume(float)" class="member-name-link">setSoundVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the sound volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setSoundVolume(float)" class="member-name-link">setSoundVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the sound volume.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html#setSpeaker(java.lang.String)" class="member-name-link">setSpeaker(String)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/MovementTask.html#setSpeed(float)" class="member-name-link">setSpeed(float)</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/MovementTask.html" title="class in com.csse3200.game.components.tasks">MovementTask</a></dt>
@@ -6158,35 +6606,75 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Set the speed of time passing.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#%3Cinit%3E()" class="member-name-link">Settings()</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
+<dt><a href="com/csse3200/game/persistence/Settings.html" class="type-name-link" title="class in com.csse3200.game.persistence">Settings</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#%3Cinit%3E()" class="member-name-link">Settings()</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Constructor for the Settings class.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#%3Cinit%3E(com.csse3200.game.persistence.DeserializedSettings)" class="member-name-link">Settings(DeserializedSettings)</a> - Constructor for class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Constructor for the Settings class, used for saved settings.</div>
+</dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html#SETTINGS" class="member-name-link">SETTINGS</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
 <dd>
 <div class="block">Settings screen.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a> - Class in <a href="com/csse3200/game/components/settingsmenu/package-summary.html">com.csse3200.game.components.settingsmenu</a></dt>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a> - Enum Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
 <dd>
-<div class="block">Settings menu display and logic.</div>
+<div class="block">Difficulty of the game.</div>
 </dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">SettingsMenuDisplay(GdxGame)</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">Settings.Mode</a> - Enum Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
+<dd>
+<div class="block">Display mode of the game.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Quality.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">Settings.Quality</a> - Enum Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
+<dd>
+<div class="block">Quality settings of the game.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a> - Enum Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
+<dd>
+<div class="block">UI scale settings of the game.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" class="type-name-link" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a> - Class in <a href="com/csse3200/game/components/settingsmenu/package-summary.html">com.csse3200.game.components.settingsmenu</a></dt>
+<dd>
+<div class="block">Main settings menu component.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">SettingsMenu(GdxGame)</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
+<dd>
+<div class="block">Constructor for SettingsMenu.</div>
+</dd>
 <dt><a href="com/csse3200/game/screens/SettingsScreen.html" class="type-name-link" title="class in com.csse3200.game.screens">SettingsScreen</a> - Class in <a href="com/csse3200/game/screens/package-summary.html">com.csse3200.game.screens</a></dt>
 <dd>
 <div class="block">The game screen containing the settings.</div>
 </dd>
 <dt><a href="com/csse3200/game/screens/SettingsScreen.html#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">SettingsScreen(GdxGame)</a> - Constructor for class com.csse3200.game.screens.<a href="com/csse3200/game/screens/SettingsScreen.html" title="class in com.csse3200.game.screens">SettingsScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html" class="type-name-link" title="class in com.csse3200.game.services">SettingsService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">Makes the settings into a service available throughout the game, instead of a singleton.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#%3Cinit%3E()" class="member-name-link">SettingsService()</a> - Constructor for class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Constructor for the SettingsService.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html#setTriggerProbability(double)" class="member-name-link">setTriggerProbability(double)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.SlotConfig.html" title="class in com.csse3200.game.components.slot">SlotEngine.SlotConfig</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/DefenderStatsComponent.html#setType(int)" class="member-name-link">setType(int)</a> - Method in class com.csse3200.game.components.<a href="com/csse3200/game/components/DefenderStatsComponent.html" title="class in com.csse3200.game.components">DefenderStatsComponent</a></dt>
 <dd>
 <div class="block">Sets the type of defender.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#setUiScale(float)" class="member-name-link">setUiScale(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/WorldMapNode.html#setUnlocked(boolean)" class="member-name-link">setUnlocked(boolean)</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></dt>
 <dd>
 <div class="block">Sets the unlocked state of the node.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setUpButton(int)" class="member-name-link">setUpButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the up button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setUpButton(int)" class="member-name-link">setUpButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the up button.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/currency/ScrapComponent.html#setValue(int)" class="member-name-link">setValue(int)</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/ScrapComponent.html" title="class in com.csse3200.game.components.currency">ScrapComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -6196,8 +6684,22 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html#setVisible(boolean)" class="member-name-link">setVisible(boolean)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html#setVsync(boolean)" class="member-name-link">setVsync(boolean)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.Settings.html" title="class in com.csse3200.game.persistence">UserSettings.Settings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setVoiceVolume(float)" class="member-name-link">setVoiceVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the voice volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setVoiceVolume(float)" class="member-name-link">setVoiceVolume(float)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the voice volume.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setVsync(boolean)" class="member-name-link">setVsync(boolean)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets whether vsync is enabled.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setVsync(boolean)" class="member-name-link">setVsync(boolean)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets whether vsync is enabled.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#setWave(int)" class="member-name-link">setWave(int)</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
 <dd>
 <div class="block">Manually trigger a wave change for testing purposes.</div>
@@ -6220,8 +6722,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Bulk set weights.</div>
 </dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html#setWidth(int)" class="member-name-link">setWidth(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a></dt>
-<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setWindowedResolution(net.dermetfan.utils.Pair)" class="member-name-link">setWindowedResolution(Pair&lt;Integer, Integer&gt;)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the windowed resolution.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setWindowedResolution(net.dermetfan.utils.Pair)" class="member-name-link">setWindowedResolution(Pair&lt;Integer, Integer&gt;)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the windowed resolution.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html#setxOffset(float)" class="member-name-link">setxOffset(float)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html" title="class in com.csse3200.game.cutscene.runtime.states">CharacterState</a></dt>
 <dd>
 <div class="block">Sets the x offset.</div>
@@ -6276,6 +6784,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/screens/LoadingScreen.html#show()" class="member-name-link">show()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/LoadingScreen.html" title="class in com.csse3200.game.screens">LoadingScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#shutdown()" class="member-name-link">shutdown()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Shuts down the Discord Rich Presence service.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Advance.html#signal(java.lang.String)" class="member-name-link">signal(String)</a> - Static method in class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Advance.html" title="class in com.csse3200.game.cutscene.models.object">Advance</a></dt>
 <dd>
 <div class="block">Get an <code>Advance</code> configured for <a href="com/csse3200/game/cutscene/models/object/AdvanceMode.html#SIGNAL"><code>AdvanceMode.SIGNAL</code></a>.</div>
@@ -6440,6 +6952,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotSymbols.html" class="type-name-link" title="class in com.csse3200.game.components.slot">SlotSymbols</a> - Class in <a href="com/csse3200/game/components/slot/package-summary.html">com.csse3200.game.components.slot</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html#SMALL" class="member-name-link">SMALL</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.UIScale.html" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a></dt>
+<dd>
+<div class="block">Small UI scale.</div>
+</dd>
 <dt><a href="com/csse3200/game/utils/SortedIntMap.html" class="type-name-link" title="class in com.csse3200.game.utils">SortedIntMap&lt;V&gt;</a> - Class in <a href="com/csse3200/game/utils/package-summary.html">com.csse3200.game.utils</a></dt>
 <dd>
 <div class="block">A map sorted by the value of key with O(1) iteration.</div>
@@ -6685,6 +7201,14 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/tasks/MoveLeftTask.html#swapTask(com.csse3200.game.ai.tasks.Task)" class="member-name-link">swapTask(Task)</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/MoveLeftTask.html" title="class in com.csse3200.game.components.tasks">MoveLeftTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#switchMonitor(com.badlogic.gdx.Graphics.Monitor)" class="member-name-link">switchMonitor(Graphics.Monitor)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Switch to a different monitor.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#switchResolution(net.dermetfan.utils.Pair)" class="member-name-link">switchResolution(Pair&lt;Integer, Integer&gt;)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Switch to a different resolution if in windowed mode.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:T">T</h2>
 <dl class="index">
@@ -6886,6 +7410,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/persistence/Savefile.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a></dt>
 <dd>
 <div class="block">Converts the Savefile object to a string representation.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Returns a string representation of the settings.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ConfigService.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
+<dd>
+<div class="block">Creates a string representation of the configs.</div>
 </dd>
 <dt><a href="com/csse3200/game/utils/StringDecorator.html#toString()" class="member-name-link">toString()</a> - Method in class com.csse3200.game.utils.<a href="com/csse3200/game/utils/StringDecorator.html" title="class in com.csse3200.game.utils">StringDecorator</a></dt>
 <dd>&nbsp;</dd>
@@ -7096,7 +7628,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/projectiles/MoveRightComponent.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.projectiles.<a href="com/csse3200/game/components/projectiles/MoveRightComponent.html" title="class in com.csse3200.game.components.projectiles">MoveRightComponent</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenuDisplay.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenuDisplay</a></dt>
+<dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/shop/ShopDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.shop.<a href="com/csse3200/game/components/shop/ShopDisplay.html" title="class in com.csse3200.game.components.shop">ShopDisplay</a></dt>
 <dd>&nbsp;</dd>
@@ -7182,6 +7714,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Updates the display with current wallet amounts</div>
 </dd>
+<dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#updateGamePresence(java.lang.String,int)" class="member-name-link">updateGamePresence(String, int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
+<dd>
+<div class="block">Updates the Discord presence with specific game state information.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/WorldMapService.html#updateNodeProximity(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateNodeProximity(WorldMapNode)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>
 <div class="block">Update all node render components with the current nearby node</div>
@@ -7197,18 +7733,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#updateWaveDisplay(int)" class="member-name-link">updateWaveDisplay(int)</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
 <dd>
 <div class="block">Updates the wave display on the UI.</div>
-</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
-<dd>
-<div class="block">Reading, Writing, and applying user settings in the game.</div>
-</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.DisplaySettings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings.DisplaySettings</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
-<dd>
-<div class="block">Stores chosen display settings.</div>
-</dd>
-<dt><a href="com/csse3200/game/persistence/UserSettings.Settings.html" class="type-name-link" title="class in com.csse3200.game.persistence">UserSettings.Settings</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
-<dd>
-<div class="block">Stores game settings, can be serialised/deserialised.</div>
 </dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
@@ -7396,6 +7920,22 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Quality.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Quality.html" title="enum class in com.csse3200.game.persistence">Settings.Quality</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.UIScale.html" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsComponent.AlignX.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsComponent.AlignX.html" title="enum class in com.csse3200.game.physics.components">PhysicsComponent.AlignX</a></dt>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
@@ -7468,6 +8008,26 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/csse3200/game/persistence/FileLoader.Location.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/FileLoader.Location.html" title="enum class in com.csse3200.game.persistence">FileLoader.Location</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Quality.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Quality.html" title="enum class in com.csse3200.game.persistence">Settings.Quality</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.UIScale.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.UIScale.html" title="enum class in com.csse3200.game.persistence">Settings.UIScale</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>
@@ -7574,6 +8134,10 @@ the order they are declared.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/WaveManager.WaveEventListener.html" class="type-name-link" title="interface in com.csse3200.game.entities">WaveManager.WaveEventListener</a> - Interface in <a href="com/csse3200/game/entities/package-summary.html">com.csse3200.game.entities</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.Mode.html#WINDOWED" class="member-name-link">WINDOWED</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a></dt>
+<dd>
+<div class="block">Windowed display mode.</div>
+</dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html#WORLD_MAP" class="member-name-link">WORLD_MAP</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
 <dd>
 <div class="block">World map screen.</div>
