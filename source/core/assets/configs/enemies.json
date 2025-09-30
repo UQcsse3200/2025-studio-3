@@ -74,6 +74,25 @@
       "coinsRewarded": 2,
       "maxTeleports": 3,
       "invulnerabilityMs": 200
+    },
+    "gunnerRobot": {
+      "name": "Gunner Robot",
+      "atlasPath": "images/entities/enemies/blue_robot.atlas",
+      "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
+      "health": 25,
+      "attack": 8,
+      "attackRange": 8.0,
+      "attackSpeed": 1.5,
+      "movementSpeed": 20,
+      "scale": 0.75,
+      "description": "A robot that can shoot. Scary",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 2,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0,
+      "projectileType": "enemyProjectile",
+      "targetLayer": "DEFENCE"
     }
   }
 }

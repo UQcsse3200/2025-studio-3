@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -282,14 +283,28 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
   }
-
+/**
   public void spawnRobot(int col, int row, RobotType robotType) {
     if (robotType == RobotType.BUNGEE) {
       spawnRobotOnDefence(robotType);
       return;
     }
 
-    Entity unit = RobotFactory.createRobotType(robotType);
+    Entity unit;
+    if (robotType == RobotFactory.RobotType.GUNNER) {
+      unit = RobotFactory.createRobotType(RobotFactory.RobotType.GUNNER);
+
+      // Ensure the gunner attacks immediately
+      unit.getEvents().addListener("tick", () -> {
+        // Example: spawn a projectile every tick or based on cooldown
+        Vector2 spawnPos = unit.getPosition();
+        spawnProjectile(spawnPos);
+      });
+    } else {
+      unit = RobotFactory.createRobotType(robotType);
+    }
+
+    //Entity unit = RobotFactory.createRobotType(robotType);
 
     // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
@@ -314,6 +329,78 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             });
     logger.info("Robot {} spawned at position {} {}", robotType, col, row);
   }
+*/
+  public void spawnRobot(int col, int row, RobotType robotType) {
+    Entity unit;
+
+    if (robotType == RobotType.BUNGEE) {
+      spawnRobotOnDefence(robotType);
+      return;
+    }
+
+    // Create the robot entity
+    unit = RobotFactory.createRobotType(robotType);
+    if (unit == null) {
+      logger.error("RobotFactory returned null for {}", robotType);
+      return;
+    }
+
+    // Clamp grid coordinates
+    col = Math.clamp(col, 0, levelCols - 1);
+    row = Math.clamp(row, 0, levelRows - 1);
+
+    // Place on the grid cell
+    float tileX = xOffset + tileSize * col;
+    float tileY = yOffset + tileSize * row;
+
+    unit.setPosition(tileX, tileY);
+    unit.scaleHeight(tileSize);
+
+    // Add to the game area
+    spawnEntity(unit);
+    robots.add(unit);
+
+    // Log after spawning to confirm
+    logger.info(
+            "SPAWN CHECK: Robot {} entity spawned at world position ({}, {}), list size={}",
+            robotType,
+            tileX,
+            tileY,
+            robots.size()
+    );
+
+    // Event: Remove robot on death
+    unit.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
+      requestDespawn(unit);
+      robots.remove(unit);
+      logger.info("Robot {} despawned and removed from list", robotType);
+    });
+
+    // --- GUNNER-SPECIFIC ATTACK LOGIC ---
+    if (robotType == RobotType.GUNNER) {
+      logger.info("GUNNER: Starting attack loop");
+      float attackInterval = 1f; // seconds
+      Timer.schedule(new Timer.Task() {
+        @Override
+        public void run() {
+          // Skip if robot was removed
+          if (!robots.contains(unit)) {
+            logger.info("GUNNER: Robot removed, cancelling attack loop");
+            this.cancel();
+            return;
+          }
+
+          Vector2 spawnPos = unit.getPosition();
+          logger.info("GUNNER: Firing projectile from ({}, {})", spawnPos.x, spawnPos.y);
+          spawnProjectile(spawnPos); // Reuse your spawnProjectile method
+        }
+      }, 0f, attackInterval);
+    }
+
+    logger.info("Robot {} spawned at grid position {} {}", robotType, col, row);
+  }
+
+
 
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence

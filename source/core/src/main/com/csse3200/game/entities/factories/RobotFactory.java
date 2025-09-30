@@ -7,6 +7,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.GunnerAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
@@ -20,6 +21,7 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
+
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -41,7 +43,8 @@ public class RobotFactory {
     FAST,
     TANKY,
     BUNGEE,
-    TELEPORT
+    TELEPORT,
+    GUNNER
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -66,6 +69,22 @@ public class RobotFactory {
       case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
       case STANDARD -> config = configService.getEnemyConfig("standardRobot");
       case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
+      case GUNNER -> {
+        BaseEnemyConfig gunnerConfig = configService.getEnemyConfig("gunnerRobot");
+        // check if gunner config can be found
+        if (gunnerConfig == null) {
+          return null;
+        }
+        Entity gunner = createBaseRobot(gunnerConfig);
+
+        AITaskComponent aiComponent = gunner.getComponent(AITaskComponent.class);
+        aiComponent.addTask(new GunnerAttackTask(gunnerConfig.getAttackRange()));
+
+        gunner.getEvents().trigger("gunnerRobotCreated");
+        return gunner;
+
+
+      }
     }
     return createBaseRobot(config);
   }
@@ -91,6 +110,28 @@ public class RobotFactory {
   }
 
   /**
+   * Creates a gunner robot entity with ranged attack capabilities.
+   * The gunner is a specialized robot that targets defensive structures from a distance.
+   *
+   * @return entity with gunner-specific components
+   */
+ public static Entity createGunner() {
+   BaseEnemyConfig config = getConfigService().getEnemyConfig("gunnerRobot");
+   Entity gunner = createBaseRobot(config);
+
+   AITaskComponent aiComponent = gunner.getComponent(AITaskComponent.class);
+   aiComponent.addTask(new GunnerAttackTask(config.getAttackRange()));
+
+   gunner.getEvents().trigger("gunnerRobotCreated");
+   return gunner;
+
+
+
+ }
+
+
+
+  /**
    * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
    * robots.
@@ -107,6 +148,7 @@ public class RobotFactory {
         new AITaskComponent()
             .addTask(new MoveLeftTask(config.getMovementSpeed()))
             .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
+
 
     // Animation
     final String atlasPath = config.getAtlasPath();
@@ -143,6 +185,7 @@ public class RobotFactory {
             .addComponent(new HitMarkerComponent())
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
+
 
     if (config.isTeleportRobot()) {
       float[] laneYs = discoverLaneYsFromTiles();
