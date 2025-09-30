@@ -32,6 +32,8 @@ public class ServiceLocator {
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
   private static WaveService waveService;
+  private static SettingsService settingsService;
+  private static DiscordRichPresenceService discordRichPresenceService;
 
   /**
    * Gets the entity service.
@@ -166,6 +168,24 @@ public class ServiceLocator {
    */
   public static WaveService getWaveService() {
     return waveService;
+  }
+
+  /**
+   * Gets the settings service.
+   *
+   * @return the settings service
+   */
+  public static SettingsService getSettingsService() {
+    return settingsService;
+  }
+
+  /**
+   * Gets the Discord Rich Presence service.
+   *
+   * @return the Discord Rich Presence service
+   */
+  public static DiscordRichPresenceService getDiscordRichPresenceService() {
+    return discordRichPresenceService;
   }
 
   /**
@@ -318,6 +338,12 @@ public class ServiceLocator {
     cutsceneService = source;
   }
 
+  /** Deregisters the cutscene service. */
+  public static void deregisterCutsceneService() {
+    logger.debug("Removing cutscene service");
+    cutsceneService = null;
+  }
+
   /**
    * Registers the world map service.
    *
@@ -332,6 +358,41 @@ public class ServiceLocator {
   public static void deregisterWorldMapService() {
     logger.debug("Removing world map service");
     worldMapService = null;
+  }
+
+  /**
+   * Registers the settings service.
+   *
+   * @param source the settings service
+   */
+  public static void registerSettingsService(SettingsService source) {
+    logger.debug("Registering settings service {}", source);
+    settingsService = source;
+  }
+
+  /** Deregisters the settings service. */
+  public static void deregisterSettingsService() {
+    logger.debug("Removing settings service");
+    settingsService = null;
+  }
+
+  /**
+   * Registers the Discord Rich Presence service.
+   *
+   * @param source the Discord Rich Presence service
+   */
+  public static void registerDiscordRichPresenceService(DiscordRichPresenceService source) {
+    logger.debug("Registering Discord Rich Presence service {}", source);
+    discordRichPresenceService = source;
+  }
+
+  /** Deregisters the Discord Rich Presence service. */
+  public static void deregisterDiscordRichPresenceService() {
+    logger.debug("Removing Discord Rich Presence service");
+    if (discordRichPresenceService != null) {
+      discordRichPresenceService.shutdown();
+    }
+    discordRichPresenceService = null;
   }
 
   /**

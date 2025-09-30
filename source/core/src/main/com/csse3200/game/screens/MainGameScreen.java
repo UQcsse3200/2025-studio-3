@@ -15,7 +15,6 @@ import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -117,7 +116,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
     ServiceLocator.getWaveService()
         .setEnemySpawnCallback(
@@ -236,10 +235,10 @@ public class MainGameScreen extends ScreenAdapter {
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
 
-    // Connect the CurrentWaveDisplay to the WaveManager for event listening
+    // Connect the CurrentWaveDisplay to the WaveService for event listening
     ServiceLocator.getWaveService()
         .setWaveEventListener(
-            new WaveManager.WaveEventListener() {
+            new WaveService.WaveEventListener() {
               @Override
               public void onPreparationPhaseStarted(int waveNumber) {
                 // CurrentWaveDisplay will handle this internally

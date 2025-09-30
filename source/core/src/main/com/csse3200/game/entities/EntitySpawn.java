@@ -17,8 +17,8 @@ public class EntitySpawn {
   }
 
   /**
-   * Creates a new instance with a specified per-enemy weight cost. Note: WaveManager must be set
-   * separately using setWaveManager().
+   * Creates a new instance with a specified per-enemy weight cost. Note: WaveService must be set
+   * separately using setWaveService().
    *
    * @param robotWeight weight cost of a single enemy used to derive spawn counts
    */
