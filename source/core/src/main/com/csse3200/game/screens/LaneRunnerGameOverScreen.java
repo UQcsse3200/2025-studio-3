@@ -45,7 +45,6 @@ public class LaneRunnerGameOverScreen extends ScreenAdapter {
     renderer = RenderFactory.createRenderer();
     loadAssets();
     createUI();
-
   }
 
   private void loadAssets() {

@@ -159,24 +159,20 @@ public class ServiceLocator {
     return worldMapService;
   }
 
-    /**
-     * Gets the world map service.
-     *
-     * @return the world map service
-     */
-    public static MusicService getMusicService() {
-        return musicService;
-    }
-
-
+  /**
+   * Gets the world map service.
+   *
+   * @return the world map service
+   */
+  public static MusicService getMusicService() {
+    return musicService;
+  }
 
   /**
    * Registers the entity service.
    *
    * @param service the entity service
    */
-
-
   public static void registerEntityService(EntityService service) {
     logger.debug("Registering entity service {}", service);
     entityService = service;
@@ -323,10 +319,10 @@ public class ServiceLocator {
   }
 
   /** Registers music service */
-    public static void registerMusicService(MusicService service) {
-        logger.debug("Registering music service {}", service);
-        musicService = service;
-    }
+  public static void registerMusicService(MusicService service) {
+    logger.debug("Registering music service {}", service);
+    musicService = service;
+  }
 
   /**
    * Registers the world map service.
@@ -337,7 +333,6 @@ public class ServiceLocator {
     logger.debug("Registering world map service {}", source);
     worldMapService = source;
   }
-
 
   /** Deregisters the world map service. */
   public static void deregisterWorldMapService() {

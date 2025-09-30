@@ -1,7 +1,9 @@
 package com.csse3200.game.progression.statistics;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -179,6 +181,13 @@ public class Statistics {
    */
   private void unlockAchievement(String achievementKey, BaseAchievementConfig config) {
     if (!achievements.contains(achievementKey)) {
+      // load resource to play sound
+      ResourceService resourceService = ServiceLocator.getResourceService();
+      resourceService.loadSounds(new String[] {"sounds/achievementUnlock.mp3"});
+      resourceService.loadAll();
+      Sound unlock = resourceService.getAsset("sounds/achievementUnlock.mp3", Sound.class);
+      unlock.play();
+
       achievements.add(achievementKey);
       logger.info("Achievement unlocked: {} - {}", config.getName(), config.getDescription());
       ServiceLocator.getProfileService()

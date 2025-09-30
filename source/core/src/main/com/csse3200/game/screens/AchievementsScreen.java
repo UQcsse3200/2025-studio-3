@@ -1,6 +1,5 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.achievements.AchievementsDisplay;
@@ -50,8 +49,6 @@ public class AchievementsScreen extends BaseScreen {
     }
   }
 
-
-
   /**
    * Creates the AchievementsScreen's UI including components for rendering UI elements to the
    * screen and capturing and handling UI input.
@@ -61,10 +58,8 @@ public class AchievementsScreen extends BaseScreen {
     logger.debug("Creating achievements screen UI");
     achievementsDisplay = new AchievementsDisplay(game);
     ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
-      return new Entity()
+    return new Entity()
         .addComponent(achievementsDisplay)
         .addComponent(new InputDecorator(stage, 10));
   }
-
-
 }

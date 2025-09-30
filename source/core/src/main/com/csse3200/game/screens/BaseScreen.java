@@ -1,7 +1,6 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -25,7 +24,6 @@ import org.slf4j.LoggerFactory;
 /** Base screen class for all screens. */
 abstract class BaseScreen extends ScreenAdapter {
   private Logger logger = LoggerFactory.getLogger(BaseScreen.class);
-  private static Music music;
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final Optional<String> backgroundTexture;
@@ -107,41 +105,6 @@ abstract class BaseScreen extends ScreenAdapter {
     resourceService.loadAll();
   }
 
-
-    /**
-     Plays the specified music track for the current screen.
-     This method is responsible for controlling background music playback.
-     It ensures that only one music track is playing at a time, stopping any
-     previously playing music if necessary before starting the new one.
-     If the requested track is already playing, no action will be taken.
-     @param path the name or file path of the music to play
-     */
-    public void playMusic(String path) {
-        if (music != null) {
-            if (music.toString().contains(path)) {
-                return; // already playing same track
-            }
-            music.stop();
-            music.dispose();
-        }
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        resourceService.loadMusic(new String[] {path});
-        ServiceLocator.getResourceService().loadAll();
-        this.music =
-                ServiceLocator.getResourceService()
-                        .getAsset(path, Music.class);
-        music.setLooping(true);
-        music.setVolume(0.3f);
-        music.play();
-    }
-    /**
-     Stops music from playing
-     */
-    public void stopMusic() {
-        if (music != null) {
-            music.stop();
-        }
-    }
 
   /** Creates the UI for the base screen. */
   private void createUI() {
