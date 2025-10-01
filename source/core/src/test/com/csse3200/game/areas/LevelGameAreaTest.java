@@ -18,6 +18,7 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -43,6 +44,7 @@ class LevelGameAreaTest {
   @Mock Music music;
   @Mock ProfileService profileService;
   @Mock ConfigService configService;
+  @Mock DiscordRichPresenceService discordRichPresenceService;
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
@@ -67,6 +69,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerProfileService(profileService);
     ServiceLocator.registerConfigService(configService);
+    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
@@ -93,6 +96,11 @@ class LevelGameAreaTest {
     lenient().when(configService.getDefenderConfig(anyString())).thenReturn(null);
     lenient().when(configService.getGeneratorConfig(anyString())).thenReturn(null);
     lenient().when(configService.getItemConfig(anyString())).thenReturn(null);
+
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
 
     persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
     // Note: Persistence.profile() no longer exists in the reworked system
