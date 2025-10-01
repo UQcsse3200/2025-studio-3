@@ -47,12 +47,13 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     // Horizontal-only: move left, never allow vertical drift
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
 
+    AnimationRenderComponent anim = owner.getEntity().getComponent(AnimationRenderComponent.class);
+    // defensive programming
+    if (anim == null) {
+      return;
+    }
     // play footstep sounds
-    float playTime =
-        owner
-            .getEntity()
-            .getComponent(AnimationRenderComponent.class)
-            .getCurrentAnimationPlayTime();
+    float playTime = anim.getCurrentAnimationPlayTime();
     // Play a footstep sound every 0.4 seconds based on the animation’s elapsed play time
     // 0.4 picked based on sprite sheet and animation speed
     if (playTime > animationNumLoops * 0.4f) {
