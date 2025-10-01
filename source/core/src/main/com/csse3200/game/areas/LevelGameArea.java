@@ -1,6 +1,8 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
@@ -25,6 +27,7 @@ import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
@@ -72,6 +75,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+  // Wave preview placeholders
+  private final ArrayList<Entity> previewEntities = new ArrayList<>();
+  private boolean wavePreviewActive = false;
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -771,5 +777,52 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public float getWorldWidth() {
     return worldWidth;
+  }
+
+  /**
+   * Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
+   * per row just off the right edge. These are visual only and removed after the intro camera pan.
+   */
+  public void createWavePreview() {
+    if (wavePreviewActive) return;
+    wavePreviewActive = true;
+    final String atlasPath = "images/entities/enemies/blue_robot.atlas"; // placeholder
+    var rs = ServiceLocator.getResourceService();
+
+    int rows = this.levelRows; // number of rows in the map
+    int cols = this.levelCols; // number of columns in the map
+
+    float startCol = cols + 1f;
+    float spacing = 1.5f;
+
+    for (int r = 0; r < rows; r++) {
+      for (int k = 0; k < 2; k++) {
+        Entity robot = new Entity();
+        AnimationRenderComponent arc =
+            new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+        robot.addComponent(arc);
+        arc.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+
+        float colF = startCol + k * spacing;
+        float worldX = xOffset + tileSize * colF;
+        float worldY = yOffset + tileSize * r;
+        robot.setPosition(worldX, worldY);
+        robot.scaleHeight(tileSize);
+
+        spawnEntity(robot);
+        arc.startAnimation("moveLeft");
+        previewEntities.add(robot);
+      }
+    }
+  }
+
+  /** Remove preview entities created for the intro camera pan. */
+  public void clearWavePreview() {
+    if (!wavePreviewActive) return;
+    for (Entity e : new ArrayList<>(previewEntities)) {
+      requestDespawn(e);
+    }
+    previewEntities.clear();
+    wavePreviewActive = false;
   }
 }

@@ -40,7 +40,8 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: <a href="https://happycoding.io/tutorials/libgdx/game-screens">...</a>
+ * <p>Details on libGDX screens: <a
+ * href="https://happycoding.io/tutorials/libgdx/game-screens">...</a>
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
@@ -156,6 +157,11 @@ public class MainGameScreen extends ScreenAdapter {
       ServiceLocator.getEntityService().update();
       ServiceLocator.getWaveService().update(delta);
     }
+
+    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+      gameArea.createWavePreview();
+    }
+
     if (doIntroPan) {
       panElapsed += delta;
       float t = Math.min(1f, panElapsed / PAN_DURATION);
@@ -175,6 +181,7 @@ public class MainGameScreen extends ScreenAdapter {
         if (t >= 1f) {
           panPhase = PanPhase.DONE;
           doIntroPan = false;
+          gameArea.clearWavePreview();
         }
       }
     }
