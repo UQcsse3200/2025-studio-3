@@ -15,7 +15,6 @@ import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -79,7 +78,6 @@ public class MainGameScreen extends ScreenAdapter {
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
-  protected final WaveManager waveManager;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
@@ -96,7 +94,6 @@ public class MainGameScreen extends ScreenAdapter {
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
     logger.debug("[MainGameScreen] Profile current level: '{}'", level);
     logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
-    this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
@@ -108,6 +105,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
+    ServiceLocator.registerWaveService(new WaveService());
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -118,15 +116,16 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
-    waveManager.setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    ServiceLocator.getWaveService()
+        .setEnemySpawnCallback(
+            (col, row, type) ->
+                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
-    waveManager.initialiseNewWave();
+    ServiceLocator.getWaveService().initialiseNewWave();
   }
 
   @Override
@@ -134,7 +133,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      waveManager.update(delta);
+      ServiceLocator.getWaveService().update(delta);
     }
 
     renderer.render();
@@ -232,7 +231,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay(waveManager));
+        .addComponent(new CurrentWaveDisplay());
 
     if (!isSlotLevel) {
       ui.addComponent(new ScrapHudDisplay());
@@ -242,24 +241,25 @@ public class MainGameScreen extends ScreenAdapter {
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
 
-    // Connect the CurrentWaveDisplay to the WaveManager for event listening
-    waveManager.setWaveEventListener(
-        new WaveManager.WaveEventListener() {
-          @Override
-          public void onPreparationPhaseStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+    // Connect the CurrentWaveDisplay to the WaveService for event listening
+    ServiceLocator.getWaveService()
+        .setWaveEventListener(
+            new WaveService.WaveEventListener() {
+              @Override
+              public void onPreparationPhaseStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveChanged(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+              @Override
+              public void onWaveChanged(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
-        });
+              @Override
+              public void onWaveStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
+            });
 
     ServiceLocator.getEntityService().register(ui);
   }
@@ -271,13 +271,9 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea createGameArea() {
     BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(level);
     if (cfg != null && cfg.isSlotMachine()) {
-      var slot = new SlotMachineArea(level);
-      slot.setWaveManager(this.waveManager);
-      return slot;
+      return new SlotMachineArea(level);
     } else {
-      var area = new LevelGameArea(level);
-      area.setWaveManager(this.waveManager);
-      return area;
+      return new LevelGameArea(level);
     }
   }
 
