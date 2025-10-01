@@ -49,7 +49,7 @@ public class SettingsMenu extends UIComponent {
     rootTable.setFillParent(true);
 
     // Create title
-    Label title = TypographyFactory.createTitle("Settings");
+    Label title = ui.title("Settings");
     rootTable.add(title).expandX().center().padTop(30f);
     rootTable.row().padTop(30f);
 

@@ -5,6 +5,8 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;
 import com.csse3200.game.screens.MainGameScreen;
@@ -34,7 +36,8 @@ public class GdxGame extends Game {
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
-    "images/ui/btn-blue.png"
+    "images/ui/btn-blue.png",
+    "images/ui/cursor.png"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
@@ -73,6 +76,7 @@ public class GdxGame extends Game {
     loadGlobalAssets();
     loadNodes();
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
+    setCursor();
     setScreen(ScreenType.MAIN_MENU);
   }
 
@@ -180,6 +184,19 @@ public class GdxGame extends Game {
       currentScreen.dispose();
     }
     setScreen(newScreen(screenType));
+  }
+
+  /**
+   * Sets the cursor to the custom cursor.
+   */
+  public void setCursor() {
+    logger.info("[GdxGame] Setting cursor");
+    Pixmap pixmap = new Pixmap(Gdx.files.internal("images/ui/cursor.png"));
+    int xHotspot = 0;
+    int yHotspot = 0;
+    Cursor cursor = Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot);
+    pixmap.dispose();
+    Gdx.graphics.setCursor(cursor);
   }
 
   @Override

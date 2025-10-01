@@ -100,7 +100,7 @@ public class UIFactory {
    * @return a styled Label with title styling
    */
   public Label title(String text) {
-    return createLabel(text, 40, white);
+    return createLabel(text.toUpperCase(), 56, white);
   }
 
   /**
