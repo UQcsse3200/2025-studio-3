@@ -76,8 +76,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
   // Wave preview placeholders
-  private final ArrayList<Entity> previewEntities = new ArrayList<>();
-  private boolean wavePreviewActive = false;
+  final ArrayList<Entity> previewEntities = new ArrayList<>();
+  boolean wavePreviewActive = false;
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -364,10 +364,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Create the robot and place it slightly to the right of the right-most defence
     Entity unit = RobotFactory.createRobotType(robotType);
-    if (unit == null) {
-      logger.error("spawnRobotOnDefence: RobotFactory returned null for {}", robotType);
-      return;
-    }
 
     // Clamp just inside the right edge to avoid spawning off-map
     float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);

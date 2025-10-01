@@ -5,6 +5,7 @@
 * ChatGPT was used to create the unit tests for DragOverlayTest.java
 * ChatGPT was used to provide steps to refactor map loading to stop using MapFactory and TerrainFactory
 * ChatGPT was used to provide steps to fix tracking of spawned units in LGA
+* ChatGPT was used in creating the wave preview pan camera movement and unit tests
 
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.

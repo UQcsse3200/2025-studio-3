@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -329,5 +330,35 @@ class LevelGameAreaTest {
 
     // Assert
     verify(overlay).cancel();
+  }
+
+  @Test
+  void createWavePreview_isGatedAndClearAllowsRespawn() {
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
+
+    TextureAtlas dummyAtlas = new TextureAtlas();
+    when(resourceService.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(dummyAtlas);
+
+    // Clear does not proceed when no active wave preview
+    area.spawned.add(new Entity());
+    area.clearWavePreview(); // ensure gate is false
+
+    assertEquals(1, area.spawned.size());
+
+    // First preview should spawn > 0 entities
+    area.createWavePreview();
+    int firstSpawnCount = area.spawned.size();
+    assertTrue(firstSpawnCount > 1);
+
+    // Calling again without clearing should NOT spawn more (gated by wavePreviewActive)
+    area.createWavePreview();
+    int secondSpawnCount = area.spawned.size();
+    assertEquals(firstSpawnCount, secondSpawnCount);
+
+    // Clearing should allow a new preview to spawn again
+    area.clearWavePreview();
+    area.createWavePreview();
+    int thirdSpawnCount = area.spawned.size();
+    assertTrue(thirdSpawnCount > secondSpawnCount);
   }
 }
