@@ -786,6 +786,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void createWavePreview() {
     if (wavePreviewActive) return;
     wavePreviewActive = true;
+    // TODO: make this match the wave config
     final String atlasPath = "images/entities/enemies/blue_robot.atlas"; // placeholder
     var rs = ServiceLocator.getResourceService();
 
