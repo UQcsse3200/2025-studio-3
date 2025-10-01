@@ -25,6 +25,7 @@ public class Profile {
   private List<String> completedNodes; // The player's completed nodes
   private float worldMapX = -1f; // last saved X on world map; -1 means unset
   private float worldMapY = -1f; // last saved Y on world map; -1 means unset
+  private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -38,6 +39,7 @@ public class Profile {
     this.completedNodes = new ArrayList<>();
     this.worldMapX = -1f;
     this.worldMapY = -1f;
+    this.worldMapZoomIdx = -1;
   }
 
   /** Initialise a profile with the provided values. */
@@ -59,6 +61,7 @@ public class Profile {
     this.completedNodes = completedNodes;
     this.worldMapX = -1f;
     this.worldMapY = -1f;
+    this.worldMapZoomIdx = -1;
   }
 
   /**
@@ -181,6 +184,16 @@ public class Profile {
     this.worldMapX = worldMapX;
   }
 
+
+  /** Gets the saved world map zoom step index (-1 if unset). */
+  public int getWorldMapZoomIdx() {
+    return worldMapZoomIdx;
+  }
+
+  /** Sets the saved world map zoom step index. */
+  public void setWorldMapZoomIdx(int worldMapZoomIdx) {
+    this.worldMapZoomIdx = worldMapZoomIdx;
+  }
   public void setWorldMapY(float worldMapY) {
     this.worldMapY = worldMapY;
   }

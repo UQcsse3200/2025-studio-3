@@ -458,6 +458,12 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
   }
 
+
+  /** Returns true if the player is currently moving along a path or towards a target. */
+  public boolean isCurrentlyMoving() {
+    return pathMoving || isMoving;
+  }
+
   /** Clean up any running background tasks when the component is disposed. */
   @Override
   public void dispose() {
