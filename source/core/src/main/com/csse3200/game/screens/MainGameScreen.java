@@ -16,7 +16,6 @@ import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -41,12 +40,12 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>Details on libGDX screens: <a href="https://happycoding.io/tutorials/libgdx/game-screens">...</a>
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private Music music;
-  private List<String> textureAtlases = new ArrayList<>();
+  private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
     "images/backgrounds/level-2-map-v1.png",
@@ -80,11 +79,10 @@ public class MainGameScreen extends ScreenAdapter {
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
-  protected final WaveManager waveManager;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
-  private List<String> textures = new ArrayList<>();
-  private String level;
+  private final List<String> textures = new ArrayList<>();
+  private final String level;
 
   private enum PanPhase {
     RIGHT,
@@ -92,11 +90,12 @@ public class MainGameScreen extends ScreenAdapter {
     DONE
   }
 
-  private PanPhase panPhase = PanPhase.RIGHT;
-  private float panElapsed = 0f;
-  private float panDuration = 2f; // seconds
+  private PanPhase panPhase;
+  private float panElapsed;
+  private static final float PAN_DURATION = 2f; // seconds
   private boolean doIntroPan = true;
-  private float panStartX, panTargetX;
+  private final float panStartX;
+  private final float panTargetX;
 
   /**
    * Constructor for the main game screen.
@@ -106,11 +105,11 @@ public class MainGameScreen extends ScreenAdapter {
   public MainGameScreen(GdxGame game) {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
+
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
     logger.debug("[MainGameScreen] Profile current level: '{}'", level);
-    logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
-    this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
+
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
@@ -121,7 +120,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
-
+    ServiceLocator.registerWaveService(new WaveService());
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -131,23 +130,23 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
-    // conversion
-    waveManager.setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
+    ServiceLocator.getWaveService()
+        .setEnemySpawnCallback(
+            (col, row, type) ->
+                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
-
     snapCameraBottomLeft();
+    ServiceLocator.getWaveService().initialiseNewWave();
 
+    // Setup for camera pan
     var camComp = renderer.getCamera();
     float halfVW = camComp.getCamera().viewportWidth / 2f;
     float worldWidth = gameArea.getWorldWidth();
     panStartX = halfVW; // current
-    panTargetX =
-        Math.max(halfVW, Math.min(worldWidth - halfVW, halfVW + (worldWidth - halfVW) * 0.35f));
-
-    waveManager.initialiseNewWave();
+    panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
+    panElapsed = 0f;
+    panPhase = PanPhase.RIGHT;
   }
 
   @Override
@@ -155,11 +154,11 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      waveManager.update(delta);
+      ServiceLocator.getWaveService().update(delta);
     }
     if (doIntroPan) {
       panElapsed += delta;
-      float t = Math.min(1f, panElapsed / panDuration);
+      float t = Math.min(1f, panElapsed / PAN_DURATION);
       var cam = renderer.getCamera().getCamera();
 
       if (panPhase == PanPhase.RIGHT) {
@@ -272,31 +271,32 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay(waveManager))
+        .addComponent(new CurrentWaveDisplay())
         .addComponent(new ScrapHudDisplay());
 
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
 
-    // Connect the CurrentWaveDisplay to the WaveManager for event listening
-    waveManager.setWaveEventListener(
-        new WaveManager.WaveEventListener() {
-          @Override
-          public void onPreparationPhaseStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+    // Connect the CurrentWaveDisplay to the WaveService for event listening
+    ServiceLocator.getWaveService()
+        .setWaveEventListener(
+            new WaveService.WaveEventListener() {
+              @Override
+              public void onPreparationPhaseStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveChanged(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+              @Override
+              public void onWaveChanged(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
-        });
+              @Override
+              public void onWaveStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
+            });
 
     ServiceLocator.getEntityService().register(ui);
   }
@@ -308,13 +308,9 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea createGameArea() {
     BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(level);
     if (cfg != null && cfg.isSlotMachine()) {
-      var slot = new SlotMachineArea(level);
-      slot.setWaveManager(this.waveManager);
-      return slot;
+      return new SlotMachineArea(level);
     } else {
-      var area = new LevelGameArea(level);
-      area.setWaveManager(this.waveManager);
-      return area;
+      return new LevelGameArea(level);
     }
   }
 
