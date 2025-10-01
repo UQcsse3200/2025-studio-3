@@ -23,7 +23,7 @@ public class WaveService implements WaveConfigProvider {
   private boolean waveActive = false;
 
   private boolean preparationPhaseActive = false;
-  private static final float preparationPhaseDuration = 5.0f;
+  private static final float PREPERATION_PHASE_DURATION = 5.0f;
   private float preparationPhaseTimer = 0.0f;
   private final EntitySpawn entitySpawn;
 
@@ -91,7 +91,7 @@ public class WaveService implements WaveConfigProvider {
   public void update(float deltaTime) {
     if (preparationPhaseActive) {
       preparationPhaseTimer += deltaTime;
-      if (preparationPhaseTimer >= preparationPhaseDuration) {
+      if (preparationPhaseTimer >= PREPERATION_PHASE_DURATION) {
         startWave();
       }
       return;
@@ -202,11 +202,11 @@ public class WaveService implements WaveConfigProvider {
     if (!preparationPhaseActive) {
       return 0.0f;
     }
-    return Math.max(0.0f, preparationPhaseDuration - preparationPhaseTimer);
+    return Math.max(0.0f, PREPERATION_PHASE_DURATION - preparationPhaseTimer);
   }
 
   public float getPreparationPhaseDuration() {
-    return preparationPhaseDuration;
+    return PREPERATION_PHASE_DURATION;
   }
 
   public int getEnemiesDisposed() {
