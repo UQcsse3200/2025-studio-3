@@ -68,17 +68,15 @@ public class ItemEffectsService {
     logger.info("Started animation {}", animatorName);
 
     // Play sound effect for item
-    Sound effectSound = null;
-    try {
-      effectSound =
-          ServiceLocator.getResourceService()
-              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
-    } catch (Exception ignored) {
-      // ResourceService may throw if asset not loaded
+    Sound effectSound =
+        ServiceLocator.getResourceService()
+            .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+
+    if (effectSound != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      effectSound.play(volume);
+      logger.info("Sound played {}", animatorName);
     }
-    float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    effectSound.play(volume);
-    logger.info("Sound played {}", animatorName);
 
     // Attach component to handle optional movement and timed disposal
     effect.addComponent(

@@ -40,13 +40,16 @@ class ItemEffectsServiceTest {
     // Service mocks
     resources = mock(ResourceService.class);
     entities = mock(EntityService.class);
+
     time = mock(GameTime.class);
     RenderService render = mock(RenderService.class);
+    SettingsService settings = mock(SettingsService.class);
     ServiceLocator.clear();
     ServiceLocator.registerResourceService(resources);
     ServiceLocator.registerEntityService(entities);
     ServiceLocator.registerTimeSource(time);
     ServiceLocator.registerRenderService(render);
+    ServiceLocator.registerSettingsService(settings);
 
     // When entities are registered, create them so components are ready to update()
     doAnswer(
@@ -63,6 +66,8 @@ class ItemEffectsServiceTest {
         .thenAnswer(inv -> atlasWithFramesFor("buff", "coffee", "emp", "grenade", "nuke"));
 
     when(time.getDeltaTime()).thenReturn(0.1f);
+
+    when(settings.getSoundVolume()).thenReturn(1.0f);
   }
 
   // helpers
@@ -266,7 +271,7 @@ class ItemEffectsServiceTest {
     // Create mock for exact path so can verify play()
     Sound s = mock(Sound.class);
     String expectedPath = "sounds/item_" + animator + ".mp3";
-    when(resources.getAsset(eq(expectedPath), eq(Sound.class))).thenReturn(s);
+    when(resources.getAsset(expectedPath, Sound.class)).thenReturn(s);
 
     ItemEffectsService.spawnEffect(
         atlas,
@@ -281,8 +286,8 @@ class ItemEffectsServiceTest {
     captureRegisteredEntity();
 
     // Check correct sound path requested and played
-    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
-    verify(s, times(1)).play();
+    verify(resources).getAsset(expectedPath, Sound.class);
+    verify(s, times(1)).play(anyFloat());
   }
 
   @Test
@@ -292,7 +297,7 @@ class ItemEffectsServiceTest {
 
     // Return null for this path to simulate "not loaded"
     String expectedPath = "sounds/item_" + animator + ".mp3";
-    when(resources.getAsset(eq(expectedPath), eq(Sound.class))).thenReturn(null);
+    when(resources.getAsset(expectedPath, Sound.class)).thenReturn(null);
 
     ItemEffectsService.spawnEffect(
         atlas,
@@ -306,38 +311,30 @@ class ItemEffectsServiceTest {
     captureRegisteredEntity();
 
     // Requested but no play call because asset was null
-    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
+    verify(resources).getAsset(expectedPath, Sound.class);
     // No specific Sound mock to verify play() against so also ensure default stub wasn't used for
     // this path again
     verifyNoMoreInteractions(resources);
   }
 
   @Test
-  void spawnEffect_swallowException_whenResourceServiceThrows_onSoundLoad() {
+  void spawnEffect_propagatesException_whenResourceServiceThrows_onSoundLoad() {
     String animator = "coffee";
     TextureAtlas atlas = atlasWithFramesFor(animator);
 
     String expectedPath = "sounds/item_" + animator + ".mp3";
-    when(resources.getAsset(eq(expectedPath), eq(Sound.class)))
+    when(resources.getAsset(expectedPath, Sound.class))
         .thenThrow(new RuntimeException("simulated load failure"));
-
-    // Should not throw
-    assertDoesNotThrow(
+    Vector2[] positions = {new Vector2(3, 4), new Vector2(0, 0)};
+    float[] durations = {0.1f, 0.3f};
+    assertThrows(
+        RuntimeException.class,
         () ->
             ItemEffectsService.spawnEffect(
-                atlas,
-                animator,
-                new Vector2[] {new Vector2(3, 4), new Vector2(0, 0)},
-                1,
-                new float[] {0.1f, 0.3f},
-                Animation.PlayMode.NORMAL,
-                false));
+                atlas, animator, positions, 1, durations, Animation.PlayMode.NORMAL, false));
 
-    // Still registers the entity normally
-    captureRegisteredEntity();
-
-    // Confirm tried to load the sound but couldn't play anything
-    verify(resources).getAsset(eq(expectedPath), eq(Sound.class));
+    // No captureRegisteredEntity() here because never get that far
+    verify(resources).getAsset(expectedPath, Sound.class);
   }
 
   @Test
@@ -412,7 +409,7 @@ class ItemEffectsServiceTest {
     String animator = "buff";
     TextureAtlas atlas = atlasWithFramesFor(animator);
     Sound s = mock(Sound.class);
-    when(resources.getAsset(eq("sounds/item_buff.mp3"), eq(Sound.class))).thenReturn(s);
+    when(resources.getAsset("sounds/item_buff.mp3", Sound.class)).thenReturn(s);
 
     ItemEffectsService.spawnEffect(
         atlas,
@@ -424,6 +421,6 @@ class ItemEffectsServiceTest {
         true);
 
     captureRegisteredEntity();
-    verify(s, times(1)).play();
+    verify(s, times(1)).play(anyFloat());
   }
 }
