@@ -11,6 +11,8 @@ import com.csse3200.game.services.ServiceLocator;
 public abstract class UIComponent extends RenderComponent {
   private static final int UI_LAYER = 2;
   protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
+  protected static final UIFactory ui =
+      new UIFactory(skin, ServiceLocator.getSettingsService().getSettings().getCurrentUIScale());
   protected Stage stage;
 
   @Override
@@ -35,10 +37,9 @@ public abstract class UIComponent extends RenderComponent {
     // For most UI components, drawing is handled by the stage
   }
 
-  /**
-   * Handle the resize event. This is called when the screen is resized.
-   */
+  /** Handle the resize event. This is called when the screen is resized. */
   protected void resize() {
-    // To be implemented by subclasses
+    // To be implemented by subclasses.
+    // ... should something else be here?
   }
 }

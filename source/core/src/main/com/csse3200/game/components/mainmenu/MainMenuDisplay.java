@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,17 +37,17 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextButton newGameBtn = ButtonFactory.createButton("New Game");
-    TextButton loadBtn = ButtonFactory.createButton("Load Game");
-    TextButton settingsBtn = ButtonFactory.createButton("Settings");
-    TextButton exitBtn = ButtonFactory.createButton("Exit Game");
+    TextButton newGameBtn = ui.primaryButton("New Game", 200f);
+    TextButton loadBtn = ui.primaryButton("Load Game", 200f);
+    TextButton settingsBtn = ui.primaryButton("Settings", 200f);
+    TextButton exitBtn = ui.primaryButton("Exit Game", 200f);
 
     // Button listeners
     newGameBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] New Game button clicked");
+            logger.info("[MainMenuDisplay] New Game button clicked");
             entity.getEvents().trigger("start");
           }
         });
@@ -57,7 +56,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Load Game button clicked");
+            logger.info("[MainMenuDisplay] Load Game button clicked");
             entity.getEvents().trigger("load");
           }
         });
@@ -66,7 +65,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Settings button clicked");
+            logger.info("[MainMenuDisplay] Settings button clicked");
             entity.getEvents().trigger("settings");
           }
         });
@@ -75,7 +74,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Exit Game button clicked");
+            logger.info("[MainMenuDisplay] Exit Game button clicked");
             entity.getEvents().trigger("exit");
           }
         });
@@ -92,24 +91,16 @@ public class MainMenuDisplay extends UIComponent {
         .padBottom(20f);
     table.row();
 
-    float buttonWidth = 200f;
-    float buttonHeight = 50f;
-
-    table.add(newGameBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(newGameBtn).padBottom(5f);
     table.row();
-    table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(loadBtn).padBottom(5f);
     table.row();
-    table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(settingsBtn).padBottom(5f);
     table.row();
-    table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table.add(exitBtn).padBottom(5f);
 
     // Add actors
     stage.addActor(table);
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Drawing is handled by the stage
   }
 
   @Override
