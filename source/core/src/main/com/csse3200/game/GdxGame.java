@@ -44,6 +44,7 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
+    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 

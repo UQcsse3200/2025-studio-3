@@ -83,6 +83,7 @@ public class ShopScreen extends ScreenAdapter {
   /** Loads the shop screen's assets. */
   private void loadAssets() {
     ServiceLocator.getResourceService().loadTextures(shopTextures);
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     ServiceLocator.getResourceService().loadSounds(SHOP_SOUNDS);
     logger.debug("Loading shop assets");
     ConfigService configService = ServiceLocator.getConfigService();
