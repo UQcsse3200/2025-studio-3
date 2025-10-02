@@ -14,7 +14,7 @@
       "eventName": "coffee",
       "assetPath": "images/entities/items/coffee.png",
       "cost": 30,
-      "trigger": "doubleAttackSpeed"
+      "trigger": "doubleFireRate"
     },
     "emp": {
       "name": "EMP",
@@ -45,35 +45,40 @@
       "description": "Provides placed defences with temporary invincibility for 15s. One time use.",
       "eventName": "shield",
       "assetPath": "images/entities/items/shield.png",
-      "cost": 50
+      "cost": 50,
+      "trigger": ""
     },
     "charmHack": {
       "name": "Charm Hack",
       "description": "Hacks an enemy robot, turning it to your side. One time use.",
       "eventName": "charmHack",
       "assetPath": "images/entities/items/charmHack.png",
-      "cost": 75
+      "cost": 75,
+      "trigger": ""
     },
     "scrapper": {
       "name": "Scrapper",
       "description": "All scrap metal recovered from destroyed enemies doubles for 30s. One time use.",
       "eventName": "scrapper",
       "assetPath": "images/entities/items/scrapper.png",
-      "cost": 40
+      "cost": 40,
+      "trigger": ""
     },
     "conscriptionOrder": {
       "name": "Conscription Order",
       "description": "The next human placed is placed for free. One time use.",
       "eventName": "conscriptionOrder",
       "assetPath": "images/entities/items/conscriptionOrder.png",
-      "cost": 60
+      "cost": 60,
+      "trigger": ""
     },
     "doomHack": {
       "name": "Doom Hack",
       "description": "Hacks an enemy robot, destroying it. One time use.",
       "eventName": "doomHack",
       "assetPath": "images/entities/items/doomHack.png",
-      "cost": 35
+      "cost": 35,
+      "trigger": ""
     }
   }
 }
