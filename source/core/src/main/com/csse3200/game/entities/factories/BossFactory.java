@@ -81,8 +81,8 @@ public class BossFactory {
 
         animator.addAnimation("moveLeft",0.1f,Animation.PlayMode.LOOP);
         animator.addAnimation("attack",0.1f, Animation.PlayMode.LOOP);
-        animator.addAnimation("moveLeftDamaged",0.1f,Animation.PlayMode.LOOP);
-        animator.addAnimation("attackDamaged",0.1f, Animation.PlayMode.LOOP);
+       // animator.addAnimation("moveLeftDamaged",0.1f,Animation.PlayMode.LOOP);
+       // animator.addAnimation("attackDamaged",0.1f, Animation.PlayMode.LOOP);
         animator.addAnimation("default",1f, Animation.PlayMode.LOOP);
 
         ColliderComponent colliderComponent = new ColliderComponent()
@@ -104,9 +104,9 @@ public class BossFactory {
                         .addComponent(new HitMarkerComponent())
                         .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
                         .addComponent(animator);
-        animator.scaleEntity();
+       // animator.scaleEntity();
         animator.startAnimation("default");
-        boss.setScale(boss.getScale().x*config.scale,boss.getScale().y*config.scale);
+      //  boss.setScale(boss.getScale().x*config.scale,boss.getScale().y*config.scale);
         return boss;
     }
 }

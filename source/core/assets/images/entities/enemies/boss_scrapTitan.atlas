@@ -1,65 +1,131 @@
-Sprite_titan.png
-size:512,256
-repeat:none
-attack
-index:0
-bounds:2,2,64,64
-attack
-index:1
-bounds:68,2,64,64
-attackDamaged
-index:0
-bounds:134,2,64,64
-attackDamaged
-index:1
-bounds:200,2,64,64
-moveLeft
-index:0
-bounds:2,68,64,64
-moveLeft
-index:1
-bounds:68,68,64,64
-moveLeft
-index:2
-bounds:134,68,64,64
-moveLeft
-index:3
-bounds:200,68,64,64
-moveLeft
-index:4
-bounds:266,68,64,64
-moveLeft
-index:5
-bounds:332,68,64,64
-moveLeft
-index:6
-bounds:398,68,64,64
-moveLeft
-index:7
-bounds:2,134,64,64
-moveLeftDamaged
-index:0
-bounds:68,134,64,64
-moveLeftDamaged
-index:1
-bounds:134,134,64,64
-moveLeftDamaged
-index:2
-bounds:200,134,64,64
-moveLeftDamaged
-index:3
-bounds:266,134,64,64
-moveLeftDamaged
-index:4
-bounds:332,134,64,64
-moveLeftDamaged
-index:5
-bounds:398,134,64,64
-moveLeftDamaged
-index:6
-bounds:2,200,64,64
-moveLeftDamaged
-index:7
-bounds:68,200,64,64
+scrap_titan.png
+size: 1472, 702
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
 default
-bounds:2,68,64,64
+  rotate: false
+  xy: 0, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 0
+default
+  rotate: false
+  xy: 246, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 1
+default
+  rotate: false
+  xy: 492, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 2
+default
+  rotate: false
+  xy: 738, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 3
+default
+  rotate: false
+  xy: 984, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 4
+default
+  rotate: false
+  xy: 1230, 468
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 5
+moveLeft
+  rotate: false
+  xy: 0, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 0
+moveLeft
+  rotate: false
+  xy: 246, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 1
+moveLeft
+  rotate: false
+  xy: 492, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 2
+moveLeft
+  rotate: false
+  xy: 738, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 3
+moveLeft
+  rotate: false
+  xy: 984, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 4
+moveLeft
+  rotate: false
+  xy: 1230, 234
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 5
+attack
+  rotate: false
+  xy: 0, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 0
+attack
+  rotate: false
+  xy: 246, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 1
+attack
+  rotate: false
+  xy: 492, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 2
+attack
+  rotate: false
+  xy: 738, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 3
+attack
+  rotate: false
+  xy: 984, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 4
+attack
+  rotate: false
+  xy: 1230, 0
+  size: 245, 234
+  orig: 245, 234
+  offset: 0, 0
+  index: 5

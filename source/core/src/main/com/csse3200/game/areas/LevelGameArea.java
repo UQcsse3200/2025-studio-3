@@ -395,22 +395,30 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     public void spawnBoss() {
         logger.info("Spawning Boss");
         Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
-        int spawnCol = levelCols - 2;
-        int spawnRow = levelRows/2;
+
+        int spawnCol = levelCols - 3;
+        int spawnRow = 1; // Bottom row for now
+
         float spawnX = xOffset + tileSize * spawnCol;
         float spawnY = yOffset + tileSize * spawnRow;
+
+        // Manual scaling - set both width and height
+        float bossHeight = tileSize * 2;
+        float bossWidth = tileSize * 2; // Adjust aspect ratio as needed
+        boss.setScale(bossWidth, bossHeight);
+
         boss.setPosition(spawnX, spawnY);
-        boss.scaleHeight(tileSize*2);
+
+        logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+
         spawnEntity(boss);
         robots.add(boss);
-        boss.getEvents().addListener(
-                ENTITY_DEATH_EVENT,
-                () -> {
-                  requestDespawn(boss);
-                    robots.remove(boss);
-                    logger.info("Boss defeated");
-                }
-        );
+
+        boss.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
+            requestDespawn(boss);
+            robots.remove(boss);
+            logger.info("Boss defeated");
+        });
     }
 
   /**
