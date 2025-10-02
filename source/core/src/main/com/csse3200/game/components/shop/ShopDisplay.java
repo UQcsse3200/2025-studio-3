@@ -325,7 +325,8 @@ public class ShopDisplay extends UIComponent {
     ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
 
     // Play Item purchased sound
-    purchasedSound.play();
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    purchasedSound.play(volume);
 
     // Update statistics
     ServiceLocator.getProfileService()
