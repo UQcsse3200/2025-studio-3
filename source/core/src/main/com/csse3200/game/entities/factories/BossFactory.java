@@ -4,6 +4,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
@@ -28,7 +29,6 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.badlogic.gdx.math.Vector2;
 
 import java.awt.*;
-
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -104,8 +104,25 @@ public class BossFactory {
                         .addComponent(new HitMarkerComponent())
                         .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
                         .addComponent(animator);
+
        // animator.scaleEntity();
         animator.startAnimation("default");
+
+        TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
+        RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
+        if (touch != null && controller != null) {
+            boss.getEvents().addListener("attack", target -> {
+                animator.startAnimation("attack");
+
+                Timer.schedule(new Timer.Task(){
+                    @Override
+                    public void run() {
+                        animator.startAnimation("default");
+                    }
+                },0.6f);
+            });
+        }
+
       //  boss.setScale(boss.getScale().x*config.scale,boss.getScale().y*config.scale);
         return boss;
     }
