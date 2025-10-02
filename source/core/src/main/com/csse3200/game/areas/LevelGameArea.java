@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -11,13 +12,12 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
+import com.csse3200.game.components.tasks.GunnerAttackTask;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.BaseDefenderConfig;
-import com.csse3200.game.entities.configs.BaseGeneratorConfig;
-import com.csse3200.game.entities.configs.BaseItemConfig;
-import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.factories.DefenceFactory;
 import com.csse3200.game.entities.factories.GridFactory;
 import com.csse3200.game.entities.factories.ItemFactory;
@@ -40,6 +40,8 @@ import java.util.Set;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.csse3200.game.services.ServiceLocator.getConfigService;
 
 /**
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
@@ -95,7 +97,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void loadLevelConfiguration() {
     logger.debug(
         "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
-    ConfigService configService = ServiceLocator.getConfigService();
+    ConfigService configService = getConfigService();
 
     if (configService == null) {
       logger.error("[LevelGameArea] ConfigService is null!");
@@ -157,7 +159,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void displayUI() {
     Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
-    ConfigService configService = ServiceLocator.getConfigService();
+    ConfigService configService = getConfigService();
 
     for (String defenceKey : profile.getArsenal().getKeys()) {
       if (defenceKey.equals("slingshooter")) {
@@ -287,7 +289,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
   }
-/**
+
   public void spawnRobot(int col, int row, RobotType robotType) {
     if (robotType == RobotType.BUNGEE) {
       spawnRobotOnDefence(robotType);
@@ -296,13 +298,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Entity unit;
     if (robotType == RobotFactory.RobotType.GUNNER) {
+      ConfigService configService = ServiceLocator.getConfigService();
+      BaseEnemyConfig gunnerConfig = getConfigService().getEnemyConfig("gunnerRobot");
       unit = RobotFactory.createRobotType(RobotFactory.RobotType.GUNNER);
+      AITaskComponent aiTaskComponent = unit.getComponent(AITaskComponent.class);
+      aiTaskComponent.addTask(new GunnerAttackTask(gunnerConfig.getAttackRange()));
 
-      // Ensure the gunner attacks immediately
-      unit.getEvents().addListener("tick", () -> {
-        // Example: spawn a projectile every tick or based on cooldown
-        Vector2 spawnPos = unit.getPosition();
-        spawnProjectile(spawnPos);
+      //ensure gunner attacks immediately
+      unit.getEvents().addListener("fire", () -> {
+        //spawn a projectile every tick
+        Vector2 spawnPos = unit.getPosition().cpy();
+        spawnRobotProjectile(spawnPos);
+        logger.info("Gunner fired projectile at position {}", spawnPos);
       });
     } else {
       unit = RobotFactory.createRobotType(robotType);
@@ -334,77 +341,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             });
     logger.info("Robot {} spawned at position {} {}", robotType, col, row);
   }
-*/
-  public void spawnRobot(int col, int row, RobotType robotType) {
-    Entity unit;
-
-    if (robotType == RobotType.BUNGEE) {
-      spawnRobotOnDefence(robotType);
-      return;
-    }
-
-    // Create the robot entity
-    unit = RobotFactory.createRobotType(robotType);
-    if (unit == null) {
-      logger.error("RobotFactory returned null for {}", robotType);
-      return;
-    }
-
-    // Clamp grid coordinates
-    col = Math.clamp(col, 0, levelCols - 1);
-    row = Math.clamp(row, 0, levelRows - 1);
-
-    // Place on the grid cell
-    float tileX = xOffset + tileSize * col;
-    float tileY = yOffset + tileSize * row;
-
-    unit.setPosition(tileX, tileY);
-    unit.scaleHeight(tileSize);
-
-    // Add to the game area
-    spawnEntity(unit);
-    robots.add(unit);
-
-    // Log after spawning to confirm
-    logger.info(
-            "SPAWN CHECK: Robot {} entity spawned at world position ({}, {}), list size={}",
-            robotType,
-            tileX,
-            tileY,
-            robots.size()
-    );
-
-    // Event: Remove robot on death
-    unit.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
-      requestDespawn(unit);
-      robots.remove(unit);
-      logger.info("Robot {} despawned and removed from list", robotType);
-    });
-
-    // --- GUNNER-SPECIFIC ATTACK LOGIC ---
-    if (robotType == RobotType.GUNNER) {
-      logger.info("GUNNER: Starting attack loop");
-      float attackInterval = 1f; // seconds
-      Timer.schedule(new Timer.Task() {
-        @Override
-        public void run() {
-          // Skip if robot was removed
-          if (!robots.contains(unit)) {
-            logger.info("GUNNER: Robot removed, cancelling attack loop");
-            this.cancel();
-            return;
-          }
-
-          Vector2 spawnPos = unit.getPosition();
-          logger.info("GUNNER: Firing projectile from ({}, {})", spawnPos.x, spawnPos.y);
-          spawnProjectile(spawnPos); // Reuse your spawnProjectile method
-        }
-      }, 0f, attackInterval);
-    }
-
-    logger.info("Robot {} spawned at grid position {} {}", robotType, col, row);
-  }
-
 
 
   /**
@@ -486,6 +422,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
   }
+
+  /**
+   * Spawns a projectile (bullet) for the gunner robot type
+   * @param spawnPos the position to spawn the projectile at
+   */
+
+  public void spawnRobotProjectile(Vector2 spawnPos) {
+    Entity projectile = ProjectileFactory.createGunnerProjectile(5, 150f);
+    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+
+    projectile.scaleHeight(30f);
+    projectile.scaleWidth(30f);
+
+    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+
+    spawnEntity(projectile);
+    logger.info("Gunner projectile spawned at {}", spawnPos);
+  }
+
+
+
 
   /**
    * Getter for selected_unit

@@ -8,6 +8,10 @@ import com.csse3200.game.services.ServiceLocator;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 /**
  * A specialized attack task for the Gunner Robot that targets defensive structures.
@@ -15,6 +19,7 @@ import java.util.List;
  * DefenderStatsComponent, which are typically defensive structures.
  */
 public class GunnerAttackTask extends AttackTask {
+    private static final Logger logger = LoggerFactory.getLogger(GunnerAttackTask.class);
     private Entity currentTarget;
 
     /**
@@ -42,13 +47,11 @@ public class GunnerAttackTask extends AttackTask {
             // Check if the entity is a defense structure
             boolean isDefense = entity.getComponent(DefenderStatsComponent.class) != null;
 
-            // Also verify it has combat stats (can be damaged)
-            boolean canBeDamaged = entity.getComponent(CombatStatsComponent.class) != null;
-
-            if (isDefense && canBeDamaged) {
+            if (isDefense) {
                 targets.add(entity);
             }
         }
+        logger.info("GunnerAttackTask found {} targets", targets.size());
         return targets;
     }
 
