@@ -3,8 +3,12 @@ package com.csse3200.game.ui;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
+
+import net.dermetfan.utils.Pair;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,6 +66,15 @@ public class UIFactory {
       case LARGE -> this.uiScale = 1.2f;
       default -> this.uiScale = 1.0f;
     }
+  }
+
+  /**
+   * Gets the UI scale.
+   *
+   * @return the UI scale
+   */
+  public float getUIScale() {
+    return uiScale;
   }
 
   /**
@@ -144,28 +157,60 @@ public class UIFactory {
   }
 
   /**
-   * Creates a primary button with consistent styling and UI scale support.
+   * Gets the scaled dimensions for a given width. USed for 
+   * 
+   * @param width the base width
+   * @return the scaled dimensions, width and height
+   */
+  public Pair<Float, Float> getScaledDimensions(float width) {
+    return new Pair<>(width * uiScale, 42f * uiScale);
+  }
+
+  /**
+   * Creates a primary button with consistent styling and UI scale support. Unfortunately, to
+   * make the buttons look crisp, we need to create the button style manually.
+   * 
+   * NOTE: This does not work by itself for tables. You will need to call the 
+   * getScaledDimensions() method above and set the table cell width and height.
    *
    * @param text the button text
    * @return a styled TextButton
    */
   public TextButton primaryButton(String text, float width) {
-    TextButton button = new TextButton(text.toUpperCase(), skin);
-    // button.pad(8f, 10f, 8f, 10f);
-    // button.setSize(width, 24f);
-    button.setLabel(createLabel(text.toUpperCase(), 32, white));
+    TextButtonStyle style = new TextButtonStyle();
+    style.font = createFont(32);
+    style.fontColor = white;  
+    style.overFontColor = cyan;
+    style.up = skin.getDrawable("b");
+    style.down = skin.getDrawable("a");
+    TextButton button = new TextButton(text.toUpperCase(), style);
+    button.setWidth(width * uiScale);
+    button.setHeight(42f * uiScale);
+    button.getLabelCell().center();
     return button;
   }
 
   /**
-   * Creates a secondary button with consistent styling and UI scale support.
+   * Creates a secondary button with consistent styling and UI scale support.Unfortunately, to
+   * make the buttons look crisp, we need to create the button style manually.
+   * 
+   * NOTE: This does not work by itself for tables. You will need to call the 
+   * getScaledDimensions() method above and set the table cell width and height.
    *
    * @param text the button text
    * @return a styled TextButton
    */
-  public TextButton secondaryButton(String text) {
-    TextButton button = new TextButton(text.toUpperCase(), skin, "secondary");
-    button.scaleBy(uiScale, uiScale);
+  public TextButton secondaryButton(String text, float width) {
+    TextButtonStyle style = new TextButtonStyle();
+    style.font = createFont(32);
+    style.fontColor = white;  
+    style.overFontColor = cyan;
+    style.up = skin.getDrawable("c");
+    style.down = skin.getDrawable("d");
+    TextButton button = new TextButton(text.toUpperCase(), style);
+    button.setWidth(width * uiScale);
+    button.setHeight(42f * uiScale);
+    button.getLabelCell().center();
     return button;
   }
 
@@ -245,5 +290,23 @@ public class UIFactory {
   /** Clears the font cache. Call this when UI scale changes. */
   public void clearFontCache() {
     fontCache.clear();
+  }
+
+  /**
+   * Gets the scaled width for a given base width.
+   * @param baseWidth the base width to scale
+   * @return the scaled width
+   */
+  public float getScaledWidth(float baseWidth) {
+    return baseWidth * uiScale;
+  }
+
+  /**
+   * Gets the scaled height for a given base height.
+   * @param baseHeight the base height to scale
+   * @return the scaled height
+   */
+  public float getScaledHeight(float baseHeight) {
+    return baseHeight * uiScale;
   }
 }

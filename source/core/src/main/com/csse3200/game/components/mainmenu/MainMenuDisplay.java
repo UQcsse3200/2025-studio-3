@@ -1,7 +1,6 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -9,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+
+import net.dermetfan.utils.Pair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +27,7 @@ public class MainMenuDisplay extends UIComponent {
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
+    testButton();
   }
 
   private void addActors() {
@@ -37,10 +40,13 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextButton newGameBtn = ui.primaryButton("New Game", 200f);
-    TextButton loadBtn = ui.primaryButton("Load Game", 200f);
-    TextButton settingsBtn = ui.primaryButton("Settings", 200f);
-    TextButton exitBtn = ui.primaryButton("Exit Game", 200f);
+    int buttonWidth = 300;
+    TextButton newGameBtn = ui.primaryButton("New Game", buttonWidth);
+    TextButton loadBtn = ui.primaryButton("Load Game", buttonWidth);
+    TextButton settingsBtn = ui.primaryButton("Settings", buttonWidth);
+    TextButton exitBtn = ui.primaryButton("Exit Game", buttonWidth);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+    float uiScale = ui.getUIScale();
 
     // Button listeners
     newGameBtn.addListener(
@@ -81,26 +87,42 @@ public class MainMenuDisplay extends UIComponent {
 
     // Layout
     table.center();
-    float xf = 0.40f;
     table
         .add(title)
-        .size(title.getWidth() * xf, title.getHeight() * xf)
+        .size(title.getWidth() * 0.5f *uiScale, title.getHeight() * 0.5f *uiScale)
         .top()
         .center()
-        .padTop(20f)
-        .padBottom(20f);
+        .padTop(20f * uiScale)
+        .padBottom(60f * uiScale);
     table.row();
 
-    table.add(newGameBtn).padBottom(5f);
+    // Get UI scale from settings
+
+    table.add(newGameBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
     table.row();
-    table.add(loadBtn).padBottom(5f);
+    table.add(loadBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
     table.row();
-    table.add(settingsBtn).padBottom(5f);
+    table.add(settingsBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
     table.row();
-    table.add(exitBtn).padBottom(5f);
+    table.add(exitBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
 
     // Add actors
     stage.addActor(table);
+  }
+
+  private void testButton() {
+    TextButton button = ui.primaryButton("Test Button", 300f);
+    float margin = 10f;
+    button.setPosition(stage.getWidth() - button.getWidth() - margin, stage.getHeight() - button.getHeight() - margin);
+    button.setDebug(true);
+    stage.addActor(button);
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    table.clear();
+    addActors();
   }
 
   @Override
