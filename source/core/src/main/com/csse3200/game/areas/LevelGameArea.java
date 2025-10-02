@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -516,6 +517,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           requestDespawn(r);
           robots.remove(r);
         }
+      } else {
+        //          if (itemType.equals("COFFEE")) {
+        //            newEntity.getEvents().trigger("doubleAttackSpeed");
+        //              final Timer.Task repeatTask = new Timer.Task() {
+        //                  @Override public void run() {
+        //                      newEntity.getEvents().trigger(itemTrigger + "Stop");
+        //                  }
+        //              };
+        //              Timer.schedule(repeatTask, 30f);
+        //          }
+        String itemTrigger =
+            ServiceLocator.getConfigService().getItemConfig(item.getType().toString()).getTrigger();
+        newEntity.getEvents().trigger(itemTrigger);
+        final Timer.Task repeatTask =
+            new Timer.Task() {
+              @Override
+              public void run() {
+                newEntity.getEvents().trigger(itemTrigger + "Stop");
+              }
+            };
+        Timer.schedule(repeatTask, 30f);
       }
 
       // Clear Item from tile storage

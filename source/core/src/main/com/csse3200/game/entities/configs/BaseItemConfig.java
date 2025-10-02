@@ -10,6 +10,7 @@ public class BaseItemConfig {
   private String eventName;
   private String assetPath;
   private int cost;
+  private String trigger;
 
   /** Creates a new BaseItemConfig. */
   public BaseItemConfig() {
@@ -50,6 +51,10 @@ public class BaseItemConfig {
    */
   public String getAssetPath() {
     return assetPath;
+  }
+
+  public String getTrigger() {
+    return trigger;
   }
 
   /**

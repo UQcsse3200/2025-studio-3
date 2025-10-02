@@ -5,35 +5,40 @@
       "description": "Temporarily doubles damage for 30s. One time use.",
       "eventName": "buff",
       "assetPath": "images/entities/items/buff.png",
-      "cost": 30
+      "cost": 30,
+      "trigger": "doubleDamage"
     },
     "coffee": {
       "name": "Coffee",
       "description": "Temporarily boosts shooting speed for 30s. One time use.",
       "eventName": "coffee",
       "assetPath": "images/entities/items/coffee.png",
-      "cost": 30
+      "cost": 30,
+      "trigger": "doubleAttackSpeed"
     },
     "emp": {
       "name": "EMP",
       "description": "Shocks everything within a 3x3 square area. One time use.",
       "eventName": "emp",
       "assetPath": "images/entities/items/emp.png",
-      "cost": 30
+      "cost": 30,
+      "trigger": "damage3x3"
     },
     "grenade": {
       "name": "Grenade",
       "description": "Destroys everything within a 3x3 square area. One time use.",
       "eventName": "grenade",
       "assetPath": "images/entities/items/grenade.png",
-      "cost": 30
+      "cost": 30,
+      "trigger": "kill3x3"
     },
     "nuke": {
       "name": "Nuke",
       "description": "Wipes the grid of all active enemies. One time use.",
       "eventName": "nuke",
       "assetPath": "images/entities/items/nuke.png",
-      "cost": 100
+      "cost": 100,
+      "trigger": "killOnScreen"
     },
     "shield": {
       "name": "Shield",
