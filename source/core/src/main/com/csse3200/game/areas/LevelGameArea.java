@@ -142,6 +142,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
+    spawnBoss();
   }
 
 
@@ -390,6 +391,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
   }
+
+    public void spawnBoss() {
+        logger.info("Spawning Boss");
+        Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
+        int spawnCol = levelCols - 2;
+        int spawnRow = levelRows/2;
+        float spawnX = xOffset + tileSize * spawnCol;
+        float spawnY = yOffset + tileSize * spawnRow;
+        boss.setPosition(spawnX, spawnY);
+        boss.scaleHeight(tileSize*2);
+        spawnEntity(boss);
+        robots.add(boss);
+        boss.getEvents().addListener(
+                ENTITY_DEATH_EVENT,
+                () -> {
+                  requestDespawn(boss);
+                    robots.remove(boss);
+                    logger.info("Boss defeated");
+                }
+        );
+    }
 
   /**
    * Getter for selected_unit

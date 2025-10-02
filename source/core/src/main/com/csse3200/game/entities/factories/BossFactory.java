@@ -6,9 +6,11 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
+import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.persistence.FileLoader;
@@ -24,6 +26,8 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.badlogic.gdx.math.Vector2;
+
+import java.awt.*;
 
 
 /**
@@ -54,54 +58,58 @@ public class BossFactory {
      * @param bossType The type of boss to create
      * @return The created boss
      */
-    public static Entity createBossType(BossTypes bossType,Entity target) {
+    public static Entity createBossType(BossTypes bossType) {
         BaseBossConfig config = null;
         switch (bossType) {
             case SCRAP_TITAN -> config = configs.scrapTitan;
         }
-        return createBaseBoss(config,target);
+        return createBaseBoss(config);
     }
     /**
      * Creates a base robot entity with the common components.
      * @param config The configuration to create the robot from
      * @return The created robot entity
      */
-    private static Entity createBaseBoss(BaseBossConfig config,Entity target) {
-        AITaskComponent aiComponent = new AITaskComponent();
+    private static Entity createBaseBoss(BaseBossConfig config) {
+        if (config == null) {
+            throw new IllegalArgumentException("Robot config cannot be null");
+        }
+        AITaskComponent aiComponent = new AITaskComponent()
+                .addTask(new MoveLeftTask(config.speed))
+                .addTask(new RobotAttackTask(90f,PhysicsLayer.NPC));
+        AnimationRenderComponent animator = new AnimationRenderComponent(ServiceLocator.getResourceService().getAsset(config.atlasFilePath,TextureAtlas.class));
 
-//        AnimationRenderComponent animator =
-//                new AnimationRenderComponent(ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
-//        animator.addAnimation("walk", 0.2f, Animation.PlayMode.LOOP);
-//        animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
-//        animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
-//        animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
-//        animator.addAnimation("default", 1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("moveLeft",0.1f,Animation.PlayMode.LOOP);
+        animator.addAnimation("attack",0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("moveLeftDamaged",0.1f,Animation.PlayMode.LOOP);
+        animator.addAnimation("attackDamaged",0.1f, Animation.PlayMode.LOOP);
+        animator.addAnimation("default",1f, Animation.PlayMode.LOOP);
 
         ColliderComponent colliderComponent = new ColliderComponent()
-                .setLayer(PhysicsLayer.BOSS)
                  .setCollisionFilter(
-                        PhysicsLayer.BOSS, (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.BOSS_PROJECTILE)
-                 );
+                        PhysicsLayer.BOSS, (short) (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE))
+                .setFriction(0f);
+
 
 
         Entity boss =
                 new Entity()
                         .addComponent(new PhysicsComponent())
+                        .addComponent(new PhysicsMovementComponent())
                         .addComponent(colliderComponent)
                         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS))
                         .addComponent(new CombatStatsComponent(config.health, config.attack))
                         .addComponent(aiComponent)
-                        //.addComponent(animator)
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC,1.5f));
-//                        boss.setScale(config.scale,config.scale);
-                        //animator.startAnimation("default");
-
-
+                        .addComponent(new RobotAnimationController())
+                        .addComponent(new HitMarkerComponent())
+                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
+                        .addComponent(animator);
+        animator.scaleEntity();
+        animator.startAnimation("default");
+        boss.setScale(boss.getScale().x*config.scale,boss.getScale().y*config.scale);
         return boss;
     }
-
-
-
 }
+
 
 
