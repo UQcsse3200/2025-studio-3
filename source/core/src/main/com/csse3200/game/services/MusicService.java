@@ -64,4 +64,13 @@ public class MusicService {
   public boolean isPlaying() {
     return currentMusic != null && currentMusic.isPlaying();
   }
+
+  /**
+   * Updates the volume of the currently playing music to match the current settings.
+   */
+  public void updateVolume(float volume) {
+    if (currentMusic != null) {
+      currentMusic.setVolume(volume);
+    }
+  }
 }

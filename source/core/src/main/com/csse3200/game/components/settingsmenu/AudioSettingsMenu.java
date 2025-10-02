@@ -169,6 +169,12 @@ public class AudioSettingsMenu extends UIComponent {
     settings.setSoundVolume(soundVolumeSlider.getValue());
     settings.setVoiceVolume(voiceVolumeSlider.getValue());
     ServiceLocator.getSettingsService().saveSettings();
+    
+    // Update the volume of currently playing music
+    if (ServiceLocator.getMusicService() != null) {
+      ServiceLocator.getMusicService().updateVolume(masterVolumeSlider.getValue() * musicVolumeSlider.getValue());
+    }
+    
     logger.info("[AudioSettingsMenu] Audio settings applied");
   }
 
