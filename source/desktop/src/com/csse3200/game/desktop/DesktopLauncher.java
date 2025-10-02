@@ -40,7 +40,7 @@ public class DesktopLauncher {
         config.setResizable(true);
         config.setMaximized(true);
     }
-    
+
     new Lwjgl3Application(new GdxGame(), config);
   }
 }

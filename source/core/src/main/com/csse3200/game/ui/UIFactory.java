@@ -6,11 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-
-import net.dermetfan.utils.Pair;
-
 import java.util.HashMap;
 import java.util.Map;
+import net.dermetfan.utils.Pair;
 
 /**
  * Factory class for creating UI components with consistent styling.
@@ -157,8 +155,8 @@ public class UIFactory {
   }
 
   /**
-   * Gets the scaled dimensions for a given width. USed for 
-   * 
+   * Gets the scaled dimensions for a given width. USed for
+   *
    * @param width the base width
    * @return the scaled dimensions, width and height
    */
@@ -167,10 +165,10 @@ public class UIFactory {
   }
 
   /**
-   * Creates a primary button with consistent styling and UI scale support. Unfortunately, to
-   * make the buttons look crisp, we need to create the button style manually.
-   * 
-   * NOTE: This does not work by itself for tables. You will need to call the 
+   * Creates a primary button with consistent styling and UI scale support. Unfortunately, to make
+   * the buttons look crisp, we need to create the button style manually.
+   *
+   * <p>NOTE: This does not work by itself for tables. You will need to call the
    * getScaledDimensions() method above and set the table cell width and height.
    *
    * @param text the button text
@@ -179,7 +177,7 @@ public class UIFactory {
   public TextButton primaryButton(String text, float width) {
     TextButtonStyle style = new TextButtonStyle();
     style.font = createFont(32);
-    style.fontColor = white;  
+    style.fontColor = white;
     style.overFontColor = cyan;
     style.up = skin.getDrawable("b");
     style.down = skin.getDrawable("a");
@@ -191,10 +189,10 @@ public class UIFactory {
   }
 
   /**
-   * Creates a secondary button with consistent styling and UI scale support.Unfortunately, to
-   * make the buttons look crisp, we need to create the button style manually.
-   * 
-   * NOTE: This does not work by itself for tables. You will need to call the 
+   * Creates a secondary button with consistent styling and UI scale support.Unfortunately, to make
+   * the buttons look crisp, we need to create the button style manually.
+   *
+   * <p>NOTE: This does not work by itself for tables. You will need to call the
    * getScaledDimensions() method above and set the table cell width and height.
    *
    * @param text the button text
@@ -203,7 +201,7 @@ public class UIFactory {
   public TextButton secondaryButton(String text, float width) {
     TextButtonStyle style = new TextButtonStyle();
     style.font = createFont(32);
-    style.fontColor = white;  
+    style.fontColor = white;
     style.overFontColor = cyan;
     style.up = skin.getDrawable("c");
     style.down = skin.getDrawable("d");
@@ -294,6 +292,7 @@ public class UIFactory {
 
   /**
    * Gets the scaled width for a given base width.
+   *
    * @param baseWidth the base width to scale
    * @return the scaled width
    */
@@ -303,6 +302,7 @@ public class UIFactory {
 
   /**
    * Gets the scaled height for a given base height.
+   *
    * @param baseHeight the base height to scale
    * @return the scaled height
    */

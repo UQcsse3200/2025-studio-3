@@ -8,9 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-
 import net.dermetfan.utils.Pair;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +87,7 @@ public class MainMenuDisplay extends UIComponent {
     table.center();
     table
         .add(title)
-        .size(title.getWidth() * 0.5f *uiScale, title.getHeight() * 0.5f *uiScale)
+        .size(title.getWidth() * 0.5f * uiScale, title.getHeight() * 0.5f * uiScale)
         .top()
         .center()
         .padTop(20f * uiScale)
@@ -98,13 +96,29 @@ public class MainMenuDisplay extends UIComponent {
 
     // Get UI scale from settings
 
-    table.add(newGameBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
+    table
+        .add(newGameBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(loadBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
+    table
+        .add(loadBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(settingsBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
+    table
+        .add(settingsBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(exitBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padBottom(10f);
+    table
+        .add(exitBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
 
     // Add actors
     stage.addActor(table);
@@ -113,7 +127,9 @@ public class MainMenuDisplay extends UIComponent {
   private void testButton() {
     TextButton button = ui.primaryButton("Test Button", 300f);
     float margin = 10f;
-    button.setPosition(stage.getWidth() - button.getWidth() - margin, stage.getHeight() - button.getHeight() - margin);
+    button.setPosition(
+        stage.getWidth() - button.getWidth() - margin,
+        stage.getHeight() - button.getHeight() - margin);
     button.setDebug(true);
     stage.addActor(button);
   }

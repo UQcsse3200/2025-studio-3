@@ -1,11 +1,15 @@
-package com.csse3200.game.ui.terminal;
+package com.csse3200.game.ui;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.ui.DraggableCharacter;
+import com.csse3200.game.persistence.Settings;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -13,6 +17,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 class DraggableCharacterTest {
 
   LevelGameArea mockArea = mock(LevelGameArea.class);
+
+  @BeforeEach
+  void setUp() {
+    // Set up required services for UIComponent static initialization
+    SettingsService mockSettingsService = mock(SettingsService.class);
+    Settings mockSettings = mock(Settings.class);
+    when(mockSettingsService.getSettings()).thenReturn(mockSettings);
+    when(mockSettings.getCurrentUIScale()).thenReturn(Settings.UIScale.MEDIUM);
+    ServiceLocator.registerSettingsService(mockSettingsService);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.deregisterSettingsService();
+  }
 
   @Test
   void testCreateDraggableCharacter() {

@@ -1,9 +1,8 @@
-package com.csse3200.game.ui.terminal;
+package com.csse3200.game.ui;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.ui.NonDraggableCharacter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

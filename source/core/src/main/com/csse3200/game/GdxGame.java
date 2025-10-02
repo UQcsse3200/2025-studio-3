@@ -186,9 +186,7 @@ public class GdxGame extends Game {
     setScreen(newScreen(screenType));
   }
 
-  /**
-   * Sets the cursor to the custom cursor.
-   */
+  /** Sets the cursor to the custom cursor. */
   public void setCursor() {
     logger.info("[GdxGame] Setting cursor");
     Pixmap pixmap = new Pixmap(Gdx.files.internal("images/ui/cursor.png"));
