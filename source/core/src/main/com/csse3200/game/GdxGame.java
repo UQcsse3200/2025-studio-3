@@ -75,7 +75,7 @@ public class GdxGame extends Game {
     // Asset configs
     loadGlobalAssets();
     loadNodes();
-    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
+    Gdx.gl.glClearColor(0f / 255f, 0f / 255f, 0f / 255f, 1);
     setCursor();
     setScreen(ScreenType.MAIN_MENU);
   }

@@ -25,26 +25,22 @@ public class DesktopLauncher {
     Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
     config.setWindowIcon("app.png");
     config.setTitle("The Day We Fought Back");
-
     switch (deserializedSettings.getCurrentMode()) {
-      case FULLSCREEN:
-        config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
-        break;
       case WINDOWED:
         Pair<Integer, Integer> windowedRes = deserializedSettings.getWindowedResolution();
         config.setWindowedMode(windowedRes.getKey(), windowedRes.getValue());
+        config.setResizable(false);
         break;
       case BORDERLESS:
-        config.setWindowedMode(
-            Lwjgl3ApplicationConfiguration.getDisplayMode().width,
-            Lwjgl3ApplicationConfiguration.getDisplayMode().height);
+        config.setResizable(true);
         config.setDecorated(false);
+        config.setMaximized(true);
         break;
       default:
-        config.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
+        config.setResizable(true);
+        config.setMaximized(true);
     }
-
-    config.setResizable(false);
+    
     new Lwjgl3Application(new GdxGame(), config);
   }
 }

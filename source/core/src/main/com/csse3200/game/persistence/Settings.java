@@ -211,8 +211,8 @@ public class Settings {
     this.refreshRate = EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor);
     this.fps =
         deserializedSettings.getFps()
-                > EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor)
-            ? EnvironmentUtils.getRefreshRateFromDisplayMode(currentMonitor)
+                > refreshRate
+            ? refreshRate
             : deserializedSettings.getFps();
     this.vsync = deserializedSettings.isVsync();
     this.currentUIScale = deserializedSettings.getCurrentUIScale();
