@@ -170,6 +170,8 @@ public class GdxGame extends Game {
         .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
+    ServiceLocator.getGlobalResourceService()
+        .loadSounds(new String[] {"sounds/button_clicked.mp3"});
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 
