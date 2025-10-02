@@ -189,7 +189,8 @@ public class Statistics {
             resourceService.loadAll();
             Sound unlock = resourceService.getAsset("sounds/achievementUnlock.mp3", Sound.class);
             if (unlock != null) {
-                unlock.play();
+                float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                unlock.play(volume);
             }
         } else {
             logger.warn("ResourceService not registered. Achievement sound not played.");

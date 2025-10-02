@@ -25,12 +25,13 @@ public class MusicService {
 
     stop(); // Stop and dispose previous track if any
 
+    float volume = ServiceLocator.getSettingsService().getMusicVolume();
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadMusic(new String[] {path});
     resourceService.loadAll();
     currentMusic = resourceService.getAsset(path, Music.class);
     currentMusic.setLooping(true);
-    currentMusic.setVolume(0.3f);
+    currentMusic.setVolume(volume);
     currentMusic.play();
     currentPath = path;
   }
