@@ -105,7 +105,6 @@ abstract class BaseScreen extends ScreenAdapter {
     resourceService.loadAll();
   }
 
-
   /** Creates the UI for the base screen. */
   private void createUI() {
     logger.debug("[{}] Creating UI", getClass().getSimpleName());

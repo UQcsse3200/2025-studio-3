@@ -11,9 +11,8 @@ public class MusicService {
   private String currentPath;
 
   public MusicService() {
-      // Default constructor, resources are managed at play/stop time
+    // Default constructor, resources are managed at play/stop time
   }
-
 
   /**
    * Plays the specified music track. If the requested track is already playing, nothing happens.
@@ -64,5 +63,4 @@ public class MusicService {
   public boolean isPlaying() {
     return currentMusic != null && currentMusic.isPlaying();
   }
-
 }
