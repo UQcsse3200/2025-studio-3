@@ -76,6 +76,9 @@ public class SkilltreeDisplay extends UIComponent {
               ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
           boolean locked = !skillSet.checkIfUnlocked(skill.getName());
 
+          // Get set volume
+          float volume = ServiceLocator.getSettingsService().getSoundVolume();
+
           // unlock skill conditions which removes skill points and replaces button if successful
           if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
             skillSet.addSkill(skill);
@@ -86,12 +89,12 @@ public class SkilltreeDisplay extends UIComponent {
             unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());
             unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
             skillButton.remove();
-            unlockSound.play();
+            unlockSound.play(volume);
             stage.addActor(unlockedImage);
             unlockedImage.setZIndex(1);
             dialog.hide();
           } else {
-            errorSound.play();
+            errorSound.play(volume);
             // display corresponding error message
             if (cost > points) {
               dialogService.error("Error", "Not enough skill points for this purchase");
