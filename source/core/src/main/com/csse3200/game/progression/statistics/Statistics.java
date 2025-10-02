@@ -183,18 +183,18 @@ public class Statistics {
     if (!achievements.contains(achievementKey)) {
       // load resource to play sound
 
-        ResourceService resourceService = ServiceLocator.getResourceService();
-        if (resourceService != null) {
-            resourceService.loadSounds(new String[] {"sounds/achievementUnlock.mp3"});
-            resourceService.loadAll();
-            Sound unlock = resourceService.getAsset("sounds/achievementUnlock.mp3", Sound.class);
-            if (unlock != null) {
-                float volume = ServiceLocator.getSettingsService().getSoundVolume();
-                unlock.play(volume);
-            }
-        } else {
-            logger.warn("ResourceService not registered. Achievement sound not played.");
+      ResourceService resourceService = ServiceLocator.getResourceService();
+      if (resourceService != null) {
+        resourceService.loadSounds(new String[] {"sounds/achievementUnlock.mp3"});
+        resourceService.loadAll();
+        Sound unlock = resourceService.getAsset("sounds/achievementUnlock.mp3", Sound.class);
+        if (unlock != null) {
+          float volume = ServiceLocator.getSettingsService().getSoundVolume();
+          unlock.play(volume);
         }
+      } else {
+        logger.warn("ResourceService not registered. Achievement sound not played.");
+      }
       achievements.add(achievementKey);
       logger.info("Achievement unlocked: {} - {}", config.getName(), config.getDescription());
       ServiceLocator.getProfileService()
