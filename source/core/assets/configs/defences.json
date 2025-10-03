@@ -31,6 +31,21 @@
         "attackSpeed": 0.5,
         "critChance": 1
       },
+      "harpoon" : {
+        "health": 50,
+        "range": 750,
+        "name": "Harpoon",
+        "description": "",
+        "assetPath": "images/entities/defences/harpoon0.png",
+        "atlasPath": "images/entities/defences/harpoon.atlas",
+        "projectilePath": "images/effects/harpoon_projectile.png",
+        "cost": 100,
+        "damage": 1,
+        "direction": "right",
+        "numSprites": 26,
+        "attackSpeed": 1,
+        "critChance": 1
+      },
       "shadow" : {
         "health": 20,
         "range": 250,

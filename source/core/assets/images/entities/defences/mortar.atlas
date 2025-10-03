@@ -1,0 +1,52 @@
+mortar.png
+size: 612, 1632
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 816, 612, 408
+idle
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 0, 612, 408
+attack
+  bounds: 0, 408, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 816, 612, 408
+attack
+  bounds: 0, 1224, 612, 408
+attack
+  bounds: 0, 1224, 612, 408
+attack
+  bounds: 0, 1224, 612, 408
