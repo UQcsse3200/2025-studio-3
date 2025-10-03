@@ -1,8 +1,6 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
@@ -15,6 +13,7 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntitySpawn;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -27,7 +26,6 @@ import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
-import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
@@ -39,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +69,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private boolean characterSelected = false;
 
   // Level configuration
-  private String currentLevelKey;
+  private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
@@ -679,8 +678,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       int row = i / levelCols;
       float tileX = xOffset + tileSize * col;
       float tileY = yOffset + tileSize * row;
-
-      // Assuming LevelGameGrid exposes getTile(i). If not, add it.
       Entity tile = grid.getTile(i);
       if (tile != null) {
         tile.setPosition(tileX, tileY);
@@ -782,33 +779,32 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void createWavePreview() {
     if (wavePreviewActive) return;
     wavePreviewActive = true;
-    // TODO: make this match the wave config
-    final String atlasPath = "images/entities/enemies/blue_robot.atlas"; // placeholder
-    var rs = ServiceLocator.getResourceService();
 
     int rows = this.levelRows; // number of rows in the map
     int cols = this.levelCols; // number of columns in the map
 
-    float startCol = cols + 1f;
-    float spacing = 1.5f;
+    EntitySpawn spawner = new EntitySpawn();
+    spawner.setWaveConfigProvider(ServiceLocator.getWaveService());
 
-    for (int r = 0; r < rows; r++) {
-      for (int k = 0; k < 2; k++) {
-        Entity robot = new Entity();
-        AnimationRenderComponent arc =
-            new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
-        robot.addComponent(arc);
-        arc.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+    Map<Integer, List<String>> plan = spawner.previewAllWaves();
+    for (Map.Entry<Integer, List<String>> entry : plan.entrySet()) {
+      int wave = entry.getKey();
+      List<String> enemies = entry.getValue();
 
-        float colF = startCol + k * spacing;
-        float worldX = xOffset + tileSize * colF;
-        float worldY = yOffset + tileSize * r;
-        robot.setPosition(worldX, worldY);
-        robot.scaleHeight(tileSize);
+      for (String type : enemies) {
+        // Random horizontal placement within wave group
+        float xSpread = ThreadLocalRandom.current().nextFloat(tileSize);
+        float x = xOffset + (cols * tileSize) + (wave * 1.5f * tileSize) + xSpread;
 
-        spawnEntity(robot);
-        arc.startAnimation("moveLeft");
-        previewEntities.add(robot);
+        // Pick a random row
+        int row = ThreadLocalRandom.current().nextInt(rows);
+        float y = yOffset + row * tileSize;
+
+        Entity preview = RobotFactory.createPreviewRobot(type);
+        preview.setPosition(x, y);
+        preview.scaleHeight(tileSize);
+        spawnEntity(preview);
+        previewEntities.add(preview);
       }
     }
   }
