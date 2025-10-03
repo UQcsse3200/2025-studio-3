@@ -53,6 +53,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/shadow_idle1.png",
     "images/entities/defences/army_guy_1.png",
+          "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -64,6 +65,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/bullet.png",
     "images/effects/shock.png",
     "images/effects/sling_projectile_pad.png",
+          "images/effects/harpoon_projectile.png",
     "images/entities/currency/scrap_metal.png"
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {

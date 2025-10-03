@@ -87,6 +87,6 @@ public class TouchAttackComponent extends Component {
       Vector2 impulse = direction.setLength(knockbackForce);
       targetBody.applyLinearImpulse(impulse, targetBody.getWorldCenter(), true);
     }
-    entity.getEvents().trigger("despawnSlingshot", entity);
+    //entity.getEvents().trigger("despawnSlingshot", entity);
   }
 }

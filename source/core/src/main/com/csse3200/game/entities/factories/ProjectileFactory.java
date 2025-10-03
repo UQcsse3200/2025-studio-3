@@ -9,6 +9,7 @@ import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 
 /**
  * Factory class for creating projectile entities for defense entities (e.g., sling shoots for sling
@@ -24,7 +25,7 @@ public class ProjectileFactory {
   public enum ProjectileType {
     BULLET,
     SLINGSHOT,
-    SHOCK
+    SHOCK,
   }
 
   /**
@@ -35,11 +36,18 @@ public class ProjectileFactory {
    * @return projectile entity
    */
   public static Entity createProjectile(String path, int damage) {
+    HitboxComponent hitbox = new HitboxComponent();
+    hitbox.setLayer(PhysicsLayer.PROJECTILE);
+    hitbox.setSensor(true);
+    PhysicsComponent physics = new PhysicsComponent();
+    physics.setBodyType(BodyDef.BodyType.KinematicBody); // kinematic so it moves but doesn't react
+    ColliderComponent collider = new ColliderComponent();
+    collider.setSensor(true);
     Entity proj =
         new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(physics)
+            .addComponent(collider)
+            .addComponent(hitbox)
             .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 

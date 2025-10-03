@@ -391,10 +391,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
-    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y);// + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
-    projectile.scaleHeight(30f); // set the height in world units
-    projectile.scaleWidth(30f); // set the width in world units
+    projectile.scaleHeight(100f); // set the height in world units
+    projectile.scaleWidth(100f); // set the width in world units
 
     projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
