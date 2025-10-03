@@ -13,6 +13,7 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntitySpawn;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +69,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private boolean characterSelected = false;
 
   // Level configuration
-  private String currentLevelKey;
+  private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+  // Wave preview placeholders
+  final ArrayList<Entity> previewEntities = new ArrayList<>();
+  boolean wavePreviewActive = false;
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -358,10 +363,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Create the robot and place it slightly to the right of the right-most defence
     Entity unit = RobotFactory.createRobotType(robotType);
-    if (unit == null) {
-      logger.error("spawnRobotOnDefence: RobotFactory returned null for {}", robotType);
-      return;
-    }
 
     // Clamp just inside the right edge to avoid spawning off-map
     float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);
@@ -677,8 +678,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       int row = i / levelCols;
       float tileX = xOffset + tileSize * col;
       float tileY = yOffset + tileSize * row;
-
-      // Assuming LevelGameGrid exposes getTile(i). If not, add it.
       Entity tile = grid.getTile(i);
       if (tile != null) {
         tile.setPosition(tileX, tileY);
@@ -771,5 +770,52 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public float getWorldWidth() {
     return worldWidth;
+  }
+
+  /**
+   * Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
+   * per row just off the right edge. These are visual only and removed after the intro camera pan.
+   */
+  public void createWavePreview() {
+    if (wavePreviewActive) return;
+    wavePreviewActive = true;
+
+    int rows = this.levelRows; // number of rows in the map
+    int cols = this.levelCols; // number of columns in the map
+
+    EntitySpawn spawner = new EntitySpawn();
+    spawner.setWaveConfigProvider(ServiceLocator.getWaveService());
+
+    Map<Integer, List<String>> plan = spawner.previewAllWaves();
+    for (Map.Entry<Integer, List<String>> entry : plan.entrySet()) {
+      int wave = entry.getKey();
+      List<String> enemies = entry.getValue();
+
+      for (String type : enemies) {
+        // Random horizontal placement within wave group
+        float xSpread = ThreadLocalRandom.current().nextFloat(tileSize);
+        float x = xOffset + (cols * tileSize) + (wave * 1.15f * tileSize) + xSpread;
+
+        // Pick a random row
+        int row = ThreadLocalRandom.current().nextInt(rows);
+        float y = yOffset + row * tileSize;
+
+        Entity preview = RobotFactory.createPreviewRobot(type);
+        preview.setPosition(x, y);
+        preview.scaleHeight(tileSize);
+        spawnEntity(preview);
+        previewEntities.add(preview);
+      }
+    }
+  }
+
+  /** Remove preview entities created for the intro camera pan. */
+  public void clearWavePreview() {
+    if (!wavePreviewActive) return;
+    for (Entity e : new ArrayList<>(previewEntities)) {
+      requestDespawn(e);
+    }
+    previewEntities.clear();
+    wavePreviewActive = false;
   }
 }

@@ -116,25 +116,69 @@ public class EntitySpawn {
       spawnCount = 0;
       return;
     }
-    int budget = waveConfigProvider.getWaveWeight();
-    Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs();
 
+    List<String> result =
+        generateSpawnList(waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
     spawnQueue.clear();
-    spawnCount = 0;
+    spawnQueue.addAll(result);
+    spawnCount = result.size();
+  }
 
-    if (configs == null || configs.isEmpty() || budget <= 0) return;
+  /**
+   * @param budget
+   * @param configs
+   * @return
+   */
+  private List<String> generateSpawnList(int budget, Map<String, BaseSpawnConfig> configs) {
+    if (configs == null || configs.isEmpty() || budget <= 0) {
+      return Collections.emptyList();
+    }
 
     List<String> pattern = buildPattern(configs);
+    List<String> list = new ArrayList<>();
 
     int i = 0;
     while (budget > 0) {
       String enemy = pattern.get(i % pattern.size());
       BaseSpawnConfig cfg = configs.get(enemy);
       if (cfg.getCost() > budget) break;
-      spawnQueue.add(enemy);
-      spawnCount++;
+      list.add(enemy);
       budget -= cfg.getCost();
       i++;
     }
+    return list;
+  }
+
+  /**
+   * @return
+   */
+  public List<String> previewEnemiesForCurrentWave() {
+    if (waveConfigProvider == null) return Collections.emptyList();
+    return generateSpawnList(
+        waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
+  }
+
+  /**
+   * Preview the spawn plan for all waves in the current level. Uses the same deterministic
+   * generation logic as spawnEnemiesFromConfig.
+   *
+   * @return a map from wave index (1-based) to list of enemy types for that wave
+   */
+  public Map<Integer, List<String>> previewAllWaves() {
+    if (waveConfigProvider == null) {
+      return Collections.emptyMap();
+    }
+
+    int total = waveConfigProvider.getTotalWaves();
+    Map<Integer, List<String>> plan = new LinkedHashMap<>();
+
+    for (int w = 0; w < total; w++) {
+      int budget = waveConfigProvider.getWaveWeight(w);
+      Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs(w);
+      List<String> list = generateSpawnList(budget, configs);
+      plan.put(w + 1, list); // 1-based wave index
+    }
+
+    return plan;
   }
 }

@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -39,12 +40,13 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>Details on libGDX screens: <a
+ * href="https://happycoding.io/tutorials/libgdx/game-screens">...</a>
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private Music music;
-  private List<String> textureAtlases = new ArrayList<>();
+  private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
     "images/backgrounds/level-2-map-v1.png",
@@ -80,8 +82,21 @@ public class MainGameScreen extends ScreenAdapter {
   protected final PhysicsEngine physicsEngine;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
-  private List<String> textures = new ArrayList<>();
-  private String level;
+  private final List<String> textures = new ArrayList<>();
+  private final String level;
+
+  private enum PanPhase {
+    RIGHT,
+    LEFT,
+    DONE
+  }
+
+  private PanPhase panPhase;
+  private float panElapsed;
+  private static final float PAN_DURATION = 3f; // seconds
+  private boolean doIntroPan = true;
+  private final float panStartX;
+  private final float panTargetX;
 
   /**
    * Constructor for the main game screen.
@@ -91,10 +106,11 @@ public class MainGameScreen extends ScreenAdapter {
   public MainGameScreen(GdxGame game) {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
+
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
     logger.debug("[MainGameScreen] Profile current level: '{}'", level);
-    logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
+
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
@@ -106,7 +122,6 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
     ServiceLocator.registerWaveService(new WaveService());
-
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -116,16 +131,23 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum
-    // conversion
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
     ServiceLocator.getWaveService()
         .setEnemySpawnCallback(
             (col, row, type) ->
                 gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
-
     snapCameraBottomLeft();
     ServiceLocator.getWaveService().initialiseNewWave();
+
+    // Setup for camera pan
+    var camComp = renderer.getCamera();
+    float halfVW = camComp.getCamera().viewportWidth / 2f;
+    float worldWidth = gameArea.getWorldWidth();
+    panStartX = halfVW; // current
+    panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
+    panElapsed = 0f;
+    panPhase = PanPhase.RIGHT;
   }
 
   @Override
@@ -134,6 +156,34 @@ public class MainGameScreen extends ScreenAdapter {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
       ServiceLocator.getWaveService().update(delta);
+    }
+
+    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+      gameArea.createWavePreview();
+    }
+
+    if (doIntroPan) {
+      panElapsed += delta;
+      float t = Math.min(1f, panElapsed / PAN_DURATION);
+      var cam = renderer.getCamera().getCamera();
+
+      if (panPhase == PanPhase.RIGHT) {
+        cam.position.x = Interpolation.smoother.apply(panStartX, panTargetX, t);
+        cam.update();
+        if (t >= 1f) {
+          // switch to left pan
+          panPhase = PanPhase.LEFT;
+          panElapsed = 0f;
+        }
+      } else if (panPhase == PanPhase.LEFT) {
+        cam.position.x = Interpolation.smoother.apply(panTargetX, panStartX, t);
+        cam.update();
+        if (t >= 1f) {
+          panPhase = PanPhase.DONE;
+          doIntroPan = false;
+          gameArea.clearWavePreview();
+        }
+      }
     }
 
     renderer.render();
