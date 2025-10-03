@@ -42,7 +42,7 @@ public class DesktopLauncher {
             config.setResizable(true);
             config.setMaximized(true);
         }
-    } catch {
+    } catch (Exception e) {
         config.setResizable(true);
         config.setMaximized(true);
     }
