@@ -102,7 +102,7 @@ public class HotbarDisplay extends UIComponent {
           });
       unitLayers.addActor(tempUnit);
     }
-    //lays out the units
+    // lays out the units
     layoutUnits(startX, y, cellWidth, slotImages);
 
     // sets the position to the top middle of screen
@@ -118,7 +118,9 @@ public class HotbarDisplay extends UIComponent {
     unitHotbarTable.setTouchable(Touchable.childrenOnly);
 
     // changes size to fit screen
-    unitHotbarTable.add(unitLayers).size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale);
+    unitHotbarTable
+        .add(unitLayers)
+        .size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale);
 
     // creates a new table for item hotbar
     itemHotbarTable = new Table();
@@ -211,7 +213,9 @@ public class HotbarDisplay extends UIComponent {
 
     itemLayers.setScale(scale);
     itemLayers.toBack();
-    itemHotbarTable.add(itemLayers).size(itemLayers.getWidth() * scale, itemLayers.getHeight() * scale);
+    itemHotbarTable
+        .add(itemLayers)
+        .size(itemLayers.getWidth() * scale, itemLayers.getHeight() * scale);
     // makes only the images touchable
     itemHotbarTable.setTouchable(Touchable.childrenOnly);
 
