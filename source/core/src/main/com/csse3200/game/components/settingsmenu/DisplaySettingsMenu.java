@@ -1,6 +1,5 @@
 package com.csse3200.game.components.settingsmenu;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -8,8 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Arrays;
 import net.dermetfan.utils.Pair;
@@ -53,23 +50,21 @@ public class DisplaySettingsMenu extends UIComponent {
     rootTable.setFillParent(true);
     rootTable.center();
 
-    // Create title
-    Label title = TypographyFactory.createTitle("Display Settings");
-    rootTable.add(title).center().padTop(30f).colspan(2);
-    rootTable.row().padTop(30f);
+    // Create title with proper UI scaling
+    Label title = ui.title("Display Settings");
+    float uiScale = ui.getUIScale();
+    rootTable.add(title).center().padTop(30f * uiScale).colspan(2);
+    rootTable.row().padTop(30f * uiScale);
 
     // Get current settings
     Settings settings = ServiceLocator.getSettingsService().getSettings();
 
-    // Create components
-    Label displayModeLabel = new Label("Display Mode:", skin);
-    displayModeSelect = new SelectBox<>(skin);
+    // Create components using UIFactory
+    Label displayModeLabel = ui.text("Display Mode:");
     String[] displayModeItems = settings.getAvailableModes().values().toArray(new String[0]);
-    String[] items =
-        Arrays.stream(displayModeItems).map(String::toUpperCase).toArray(String[]::new);
-    displayModeSelect.setItems(items);
+    String[] items = Arrays.stream(displayModeItems).map(String::toUpperCase).toArray(String[]::new);
+    displayModeSelect = ui.createSelectBox(items);
     displayModeSelect.setSelected(settings.getCurrentMode().toString());
-    whiten(displayModeLabel);
 
     // Add change listener to show/hide resolution row based on display mode
     displayModeSelect.addListener(
@@ -84,8 +79,7 @@ public class DisplaySettingsMenu extends UIComponent {
           }
         });
 
-    resolutionLabel = new Label("Resolution:", skin);
-    resolutionSelect = new SelectBox<>(skin);
+    resolutionLabel = ui.text("Resolution:");
     String[] resolutionStrings =
         settings.getAvailableResolutions().stream()
             .map(pair -> pair.getKey() + "x" + pair.getValue())
@@ -94,9 +88,8 @@ public class DisplaySettingsMenu extends UIComponent {
         settings.getWindowedResolution().getKey()
             + "x"
             + settings.getWindowedResolution().getValue();
-    resolutionSelect.setItems(resolutionStrings);
+    resolutionSelect = ui.createSelectBox(resolutionStrings);
     resolutionSelect.setSelected(currentResolution);
-    whiten(resolutionLabel);
 
     boolean isWindowed = settings.getCurrentMode() == Settings.Mode.WINDOWED;
     resolutionLabel.setVisible(isWindowed);
@@ -111,30 +104,26 @@ public class DisplaySettingsMenu extends UIComponent {
           }
         });
 
-    Label fpsLabel = new Label("Max FPS:", skin);
-    fpsText = new TextField(Integer.toString(settings.getFps()), skin);
+    Label fpsLabel = ui.text("Max FPS:");
+    fpsText = ui.createTextField(Integer.toString(settings.getFps()));
     previousFps = settings.getFps();
-    whiten(fpsLabel);
 
-    Label uiScaleLabel = new Label("UI Scale:", skin);
-    uiScaleSelect = new SelectBox<>(skin);
-    uiScaleSelect.setItems("SMALL", "MEDIUM", "LARGE");
+    Label uiScaleLabel = ui.text("UI Scale:");
+    uiScaleSelect = ui.createSelectBox(new String[]{"SMALL", "MEDIUM", "LARGE"});
     uiScaleSelect.setSelected(settings.getCurrentUIScale().toString());
-    whiten(uiScaleLabel);
 
-    Label qualityLabel = new Label("Quality:", skin);
-    qualitySelect = new SelectBox<>(skin);
-    qualitySelect.setItems("LOW", "HIGH");
+    Label qualityLabel = ui.text("Quality:");
+    qualitySelect = ui.createSelectBox(new String[]{"LOW", "HIGH"});
     qualitySelect.setSelected(settings.getQuality().toString());
-    whiten(qualityLabel);
 
-    Label vsyncLabel = new Label("VSync:", skin);
-    vsyncCheck = new CheckBox("", skin);
+    Label vsyncLabel = ui.text("VSync:");
+    vsyncCheck = ui.createCheckBox("");
     vsyncCheck.setChecked(settings.isVsync());
-    whiten(vsyncLabel);
 
-    // Apply button
-    TextButton applyBtn = ButtonFactory.createButton("Apply");
+    // Create apply button using UIFactory
+    int buttonWidth = 150;
+    TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
         new ChangeListener() {
           @Override
@@ -144,36 +133,36 @@ public class DisplaySettingsMenu extends UIComponent {
           }
         });
 
-    // Layout
-    rootTable.add(displayModeLabel).left().padRight(25f);
-    rootTable.add(displayModeSelect).center().width(200f);
-    rootTable.row().padTop(10f);
+    // Layout with proper UI scaling
+    rootTable.add(displayModeLabel).left().padRight(25f * uiScale);
+    rootTable.add(displayModeSelect).center().width(200f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(resolutionLabel).left().padRight(25f);
-    rootTable.add(resolutionSelect).center().width(200f);
-    rootTable.row().padTop(10f);
+    rootTable.add(resolutionLabel).left().padRight(25f * uiScale);
+    rootTable.add(resolutionSelect).center().width(200f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(fpsLabel).left().padRight(25f);
-    rootTable.add(fpsText).center().width(200f);
-    rootTable.row().padTop(10f);
+    rootTable.add(fpsLabel).left().padRight(25f * uiScale);
+    rootTable.add(fpsText).center().width(200f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(uiScaleLabel).left().padRight(25f);
-    rootTable.add(uiScaleSelect).center().width(200f);
-    rootTable.row().padTop(10f);
+    rootTable.add(uiScaleLabel).left().padRight(25f * uiScale);
+    rootTable.add(uiScaleSelect).center().width(200f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(qualityLabel).left().padRight(25f);
-    rootTable.add(qualitySelect).center().width(200f);
-    rootTable.row().padTop(10f);
+    rootTable.add(qualityLabel).left().padRight(25f * uiScale);
+    rootTable.add(qualitySelect).center().width(200f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(vsyncLabel).left().padRight(25f);
+    rootTable.add(vsyncLabel).left().padRight(25f * uiScale);
     rootTable.add(vsyncCheck).center();
-    rootTable.row().padTop(20f);
+    rootTable.row().padTop(20f * uiScale);
 
     // Apply button bottom center
     bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f).center();
+    bottomRow.bottom().padBottom(20f * uiScale);
+    bottomRow.add(applyBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
@@ -307,15 +296,4 @@ public class DisplaySettingsMenu extends UIComponent {
     super.dispose();
   }
 
-  /**
-   * Whiten the label.
-   *
-   * @param label The label to whiten.
-   */
-  private static void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
-    logger.debug("Labels are white");
-  }
 }

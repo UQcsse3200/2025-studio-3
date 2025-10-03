@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,18 +47,20 @@ public class SettingsMenu extends UIComponent {
     rootTable = new Table();
     rootTable.setFillParent(true);
 
-    // Create title
+    // Create title with proper UI scaling
     Label title = ui.title("Settings");
-    rootTable.add(title).expandX().center().padTop(30f);
-    rootTable.row().padTop(30f);
+    float uiScale = ui.getUIScale();
+    rootTable.add(title).expandX().center().padTop(30f * uiScale);
+    rootTable.row().padTop(30f * uiScale);
 
-    // Create main menu buttons
-    TextButton displayBtn = ButtonFactory.createButton("Display Settings");
-    displayBtn.setSize(300f, 100f);
-    TextButton gameBtn = ButtonFactory.createButton("Game Settings");
-    gameBtn.setSize(300f, 100f);
-    TextButton audioBtn = ButtonFactory.createButton("Audio Settings");
-    audioBtn.setSize(300f, 100f);
+    // Create main menu buttons using UIFactory with proper scaling
+    int buttonWidth = 300;
+    TextButton displayBtn = ui.primaryButton("Display Settings", buttonWidth);
+    TextButton gameBtn = ui.primaryButton("Game Settings", buttonWidth);
+    TextButton audioBtn = ui.primaryButton("Audio Settings", buttonWidth);
+    
+    // Get scaled dimensions for consistent button sizing
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
     displayBtn.addListener(
         new ChangeListener() {
@@ -84,12 +86,20 @@ public class SettingsMenu extends UIComponent {
           }
         });
 
-    // Add buttons to the main table
-    rootTable.add(displayBtn).size(300f, 100f).padBottom(20f);
+    // Add buttons to the main table with proper scaling
+    rootTable.add(displayBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(20f * uiScale);
     rootTable.row();
-    rootTable.add(gameBtn).size(300f, 100f).padBottom(20f);
+    rootTable.add(gameBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(20f * uiScale);
     rootTable.row();
-    rootTable.add(audioBtn).size(300f, 100f);
+    rootTable.add(audioBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue());
 
     // Center the table content
     rootTable.center();
@@ -99,13 +109,14 @@ public class SettingsMenu extends UIComponent {
 
   /** Make the close button. */
   private void makeCloseBtn() {
+    float uiScale = ui.getUIScale();
     exitBtn =
         new ImageButton(
             new TextureRegionDrawable(
                 ServiceLocator.getGlobalResourceService()
                     .getAsset("images/ui/close-icon.png", Texture.class)));
-    exitBtn.setSize(60f, 60f);
-    exitBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
+    exitBtn.setSize(60f * uiScale, 60f * uiScale);
+    exitBtn.setPosition(20f * uiScale, stage.getHeight() - 60f * uiScale - 20f * uiScale);
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -146,7 +157,8 @@ public class SettingsMenu extends UIComponent {
   @Override
   public void update() {
     super.update();
-    exitBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
+    float uiScale = ui.getUIScale();
+    exitBtn.setPosition(20f * uiScale, stage.getHeight() - 60f * uiScale - 20f * uiScale);
   }
 
   @Override

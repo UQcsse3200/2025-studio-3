@@ -121,7 +121,7 @@ public class UIFactory {
    * @return a styled Label with heading styling
    */
   public Label heading(String text) {
-    return createLabel(text, 32, white);
+    return createLabel(text, 44, white);
   }
 
   /**
@@ -131,7 +131,7 @@ public class UIFactory {
    * @return a styled Label with subheading styling
    */
   public Label subheading(String text) {
-    return createLabel(text, 24, white);
+    return createLabel(text, 36, white);
   }
 
   /**
@@ -141,7 +141,7 @@ public class UIFactory {
    * @return a styled Label with text styling
    */
   public Label text(String text) {
-    return createLabel(text, 18, white);
+    return createLabel(text, 28, white);
   }
 
   /**
@@ -151,7 +151,7 @@ public class UIFactory {
    * @return a styled Label with subtext styling
    */
   public Label subtext(String text) {
-    return createLabel(text, 14, gray);
+    return createLabel(text, 24, gray);
   }
 
   /**
@@ -220,7 +220,6 @@ public class UIFactory {
    */
   public Window createWindow(String title) {
     Window window = new Window(title, skin);
-    window.scaleBy(uiScale, uiScale);
     return window;
   }
 
@@ -231,8 +230,16 @@ public class UIFactory {
    * @return a styled TextField
    */
   public TextField createTextField(String placeholder) {
-    TextField textField = new TextField(placeholder, skin);
-    textField.scaleBy(uiScale, uiScale);
+    TextField.TextFieldStyle style = new TextField.TextFieldStyle();
+    style.font = createFont(32);
+    style.fontColor = white;
+    style.focusedFontColor = white;
+    style.cursor = skin.getDrawable("q");
+    style.selection = skin.getDrawable("w");
+    style.background = skin.getDrawable("d");
+    style.focusedBackground = skin.getDrawable("d");
+    
+    TextField textField = new TextField(placeholder, style);
     return textField;
   }
 
@@ -243,10 +250,16 @@ public class UIFactory {
    * @return a styled CheckBox
    */
   public CheckBox createCheckBox(String text) {
-    CheckBox checkBox = new CheckBox(text, skin);
-    checkBox.scaleBy(uiScale, uiScale);
+    CheckBox.CheckBoxStyle style = new CheckBox.CheckBoxStyle();
+    style.font = createFont(32);
+    style.fontColor = white;
+    style.checkboxOff = skin.getDrawable("e");
+    style.checkboxOn = skin.getDrawable("f");
+    
+    CheckBox checkBox = new CheckBox(text, style);
     return checkBox;
   }
+
 
   /**
    * Creates a slider with consistent styling and UI scale support.
@@ -259,7 +272,6 @@ public class UIFactory {
    */
   public Slider createSlider(float min, float max, float step, boolean vertical) {
     Slider slider = new Slider(min, max, step, vertical, skin);
-    slider.scaleBy(uiScale, uiScale);
     return slider;
   }
 
@@ -280,8 +292,15 @@ public class UIFactory {
    * @return a styled SelectBox
    */
   public <T> SelectBox<T> createSelectBox(T[] items) {
-    SelectBox<T> selectBox = new SelectBox<>(skin);
-    selectBox.scaleBy(uiScale, uiScale);
+    SelectBox.SelectBoxStyle style = new SelectBox.SelectBoxStyle();
+    style.font = createFont(32);
+    style.fontColor = white;
+    style.background = skin.getDrawable("n");
+    style.scrollStyle = skin.get("list", ScrollPane.ScrollPaneStyle.class);
+    style.listStyle = skin.get("default", List.ListStyle.class);
+    
+    SelectBox<T> selectBox = new SelectBox<>(style);
+    selectBox.setItems(items);
     return selectBox;
   }
 

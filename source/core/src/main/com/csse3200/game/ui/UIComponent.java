@@ -22,7 +22,7 @@ public abstract class UIComponent extends RenderComponent {
     if (getEntity() != null) {
       entity.getEvents().addListener("resize", this::resize);
     }
-    resize();
+    ui.setUIScale(ServiceLocator.getSettingsService().getSettings().getCurrentUIScale());
   }
 
   @Override

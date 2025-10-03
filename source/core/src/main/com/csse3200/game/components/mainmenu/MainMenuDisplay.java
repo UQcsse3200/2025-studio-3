@@ -25,7 +25,6 @@ public class MainMenuDisplay extends UIComponent {
     ServiceLocator.getResourceService().loadAll();
 
     addActors();
-    testButton();
   }
 
   private void addActors() {
@@ -122,16 +121,6 @@ public class MainMenuDisplay extends UIComponent {
 
     // Add actors
     stage.addActor(table);
-  }
-
-  private void testButton() {
-    TextButton button = ui.primaryButton("Test Button", 300f);
-    float margin = 10f;
-    button.setPosition(
-        stage.getWidth() - button.getWidth() - margin,
-        stage.getHeight() - button.getHeight() - margin);
-    button.setDebug(true);
-    stage.addActor(button);
   }
 
   @Override

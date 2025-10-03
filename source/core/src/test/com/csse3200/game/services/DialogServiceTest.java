@@ -15,6 +15,7 @@ import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.extensions.UIExtension;
 import com.csse3200.game.rendering.RenderService;
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,43 +30,18 @@ import org.slf4j.LoggerFactory;
 
 /** Test class for DialogService. */
 @ExtendWith(GameExtension.class)
+@ExtendWith(UIExtension.class)
 class DialogServiceTest {
   private static final Logger logger = LoggerFactory.getLogger(DialogServiceTest.class);
-  @Mock private GL20 mockGL20;
-  @Mock private Stage mockStage;
   @Mock private EntityService mockEntityService;
-
-  private RenderService renderService;
   private ResourceService resourceService;
   private DialogService dialogService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-
-    // Initialize headless application for testing
-    if (Gdx.app == null) {
-      HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
-      new HeadlessApplication(new GdxGame(), config);
-    }
-
-    // Mock Gdx.gl
-    Gdx.gl = mockGL20;
-
     // Create real services
-    renderService = new RenderService();
     resourceService = new ResourceService();
-
-    // Mock the stage
-    when(mockStage.getWidth()).thenReturn(800f);
-    when(mockStage.getHeight()).thenReturn(600f);
-
-    // Set the stage on the render service
-    renderService.setStage(mockStage);
-
-    // Register services with ServiceLocator
-    ServiceLocator.clear();
-    ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerGlobalResourceService(resourceService);
     ServiceLocator.registerEntityService(mockEntityService);
