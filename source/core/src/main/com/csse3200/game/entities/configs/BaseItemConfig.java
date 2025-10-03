@@ -53,6 +53,11 @@ public class BaseItemConfig {
     return assetPath;
   }
 
+  /**
+   * Gets the trigger name for the item.
+   *
+   * @return item trigger name
+   */
   public String getTrigger() {
     return trigger;
   }
