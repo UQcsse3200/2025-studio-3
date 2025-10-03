@@ -109,7 +109,7 @@ public class HotbarDisplay extends UIComponent {
     unitHotbarTable = new Table();
     unitHotbarTable.setFillParent(true);
     unitHotbarTable.center().top();
-    float targetWidth = stage.getViewport().getWorldWidth() * 0.45f;
+    float targetWidth = stage.getViewport().getWorldWidth() * 0.35f;
     float scale = targetWidth / unitLayers.getWidth();
 
     unitLayers.setScale(scale);
