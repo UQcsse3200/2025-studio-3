@@ -176,9 +176,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     Inventory inventory = profile.getInventory();
-    inventory.addItem("coffee");
-    inventory.addItem("buff");
-    inventory.addItem("coffee");
 
     if (inventory.contains("grenade")) {
       BaseItemConfig grenadeConfig = configService.getItemConfig("grenade");
