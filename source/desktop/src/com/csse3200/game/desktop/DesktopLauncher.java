@@ -12,6 +12,9 @@ import net.dermetfan.utils.Pair;
 /** This is the launch class for the desktop game. Passes control to libGDX to run GdxGame(). */
 public class DesktopLauncher {
   public static void main(String[] arg) {
+    Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+    config.setWindowIcon("app.png");
+    config.setTitle("The Day We Fought Back");
     FileHandle fileHandle =
         new FileHandle(
             System.getProperty("user.home")
@@ -19,24 +22,27 @@ public class DesktopLauncher {
                 + "The Day We Fought Back"
                 + File.separator
                 + "settings.json");
-    DeserializedSettings deserializedSettings =
-        FileLoader.readClass(DeserializedSettings.class, fileHandle);
 
-    Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-    config.setWindowIcon("app.png");
-    config.setTitle("The Day We Fought Back");
-    switch (deserializedSettings.getCurrentMode()) {
-      case WINDOWED:
-        Pair<Integer, Integer> windowedRes = deserializedSettings.getWindowedResolution();
-        config.setWindowedMode(windowedRes.getKey(), windowedRes.getValue());
-        config.setResizable(false);
-        break;
-      case BORDERLESS:
-        config.setResizable(true);
-        config.setDecorated(false);
-        config.setMaximized(true);
-        break;
-      default:
+    try {
+        DeserializedSettings deserializedSettings =
+            FileLoader.readClass(DeserializedSettings.class, fileHandle);
+
+        switch (deserializedSettings.getCurrentMode()) {
+        case WINDOWED:
+            Pair<Integer, Integer> windowedRes = deserializedSettings.getWindowedResolution();
+            config.setWindowedMode(windowedRes.getKey(), windowedRes.getValue());
+            config.setResizable(false);
+            break;
+        case BORDERLESS:
+            config.setResizable(true);
+            config.setDecorated(false);
+            config.setMaximized(true);
+            break;
+        default:
+            config.setResizable(true);
+            config.setMaximized(true);
+        }
+    } catch {
         config.setResizable(true);
         config.setMaximized(true);
     }
