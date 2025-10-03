@@ -59,7 +59,8 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     if (playTime > animationNumLoops * 0.4f) {
       Sound stepSound =
           ServiceLocator.getResourceService().getAsset("sounds/robot_footstep.mp3", Sound.class);
-      stepSound.play(1.0f);
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      stepSound.play(Math.min(1.0f, volume));
       animationNumLoops++;
     }
   }

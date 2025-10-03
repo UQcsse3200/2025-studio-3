@@ -96,7 +96,8 @@ public class HotbarDisplay extends UIComponent {
                 if (unit.getKey().contains("sling_shooter")) {
                   Sound selectSound =
                       ServiceLocator.getResourceService().getAsset("sounds/hrgh.mp3", Sound.class);
-                  selectSound.play();
+                  float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                  selectSound.play(volume);
                 }
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {

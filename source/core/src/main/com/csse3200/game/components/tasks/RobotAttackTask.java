@@ -59,7 +59,8 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     timeLeft = TIME_BETWEEN_ATTACKS;
     Sound attackSound =
         ServiceLocator.getResourceService().getAsset("sounds/drill_noise_slow.mp3", Sound.class);
-    attackSound.play(1.0f);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    attackSound.play(Math.min(0.1f, volume));
   }
 
   /** Stops the attack */
