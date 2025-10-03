@@ -5,6 +5,6 @@
     "health": 500,
     "attack": 50,
     "scale": 4.0,
-    "speed": 0.5
+    "speed": 15
   }
 }
