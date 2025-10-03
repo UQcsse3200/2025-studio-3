@@ -12,35 +12,35 @@ default
   index: 0
 default
   rotate: false
-  xy: 246, 468
+  xy: 245, 468
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 1
 default
   rotate: false
-  xy: 492, 468
+  xy: 490, 468
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 2
 default
   rotate: false
-  xy: 738, 468
+  xy: 735, 468
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 3
 default
   rotate: false
-  xy: 984, 468
+  xy: 980, 468
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 4
 default
   rotate: false
-  xy: 1230, 468
+  xy: 1225, 468
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
@@ -54,35 +54,35 @@ moveLeft
   index: 0
 moveLeft
   rotate: false
-  xy: 246, 234
+  xy: 245, 234
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 1
 moveLeft
   rotate: false
-  xy: 492, 234
+  xy: 490, 234
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 2
 moveLeft
   rotate: false
-  xy: 738, 234
+  xy: 735, 234
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 3
 moveLeft
   rotate: false
-  xy: 984, 234
+  xy: 980, 234
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 4
 moveLeft
   rotate: false
-  xy: 1230, 234
+  xy: 1225, 234
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
@@ -96,35 +96,35 @@ attack
   index: 0
 attack
   rotate: false
-  xy: 246, 0
+  xy: 245, 0
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 1
 attack
   rotate: false
-  xy: 492, 0
+  xy: 490, 0
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 2
 attack
   rotate: false
-  xy: 738, 0
+  xy: 735, 0
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 3
 attack
   rotate: false
-  xy: 984, 0
+  xy: 980, 0
   size: 245, 234
   orig: 245, 234
   offset: 0, 0
   index: 4
 attack
   rotate: false
-  xy: 1230, 0
+  xy: 1225, 0
   size: 245, 234
   orig: 245, 234
   offset: 0, 0

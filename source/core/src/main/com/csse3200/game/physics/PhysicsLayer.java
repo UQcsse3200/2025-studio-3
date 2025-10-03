@@ -16,9 +16,9 @@ public class PhysicsLayer {
 
   // public static final short DEFENSE = (1 << 6);
 
+  public static final short BOSS = (1 << 6);
+  public static final short BOSS_PROJECTILE = (1 << 7);
 
-    public static final short BOSS = (1 << 6);
-    public static final short BOSS_PROJECTILE = (1 << 7);
   public static boolean contains(short filterBits, short layer) {
     return (filterBits & layer) != 0;
   }

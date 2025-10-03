@@ -1,7 +1,7 @@
 {
   "scrapTitan": {
     "name": "Scrap Titan",
-    "atlasFilePath": "images/entities/enemies/boss_scrapTitan.atlas",
+    "atlasFilePath": "images/entities/enemies/blue_robot.atlas",
     "health": 500,
     "attack": 50,
     "scale": 2.0,

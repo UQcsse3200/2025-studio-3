@@ -135,7 +135,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
-      displayUI();
+    displayUI();
     spawnMap();
     spawnGrid(levelRows, levelCols);
     Entity overlayEntity = new Entity();
@@ -144,7 +144,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
     spawnBoss();
   }
-
 
   /** Spawns the level UI */
   private void displayUI() {
@@ -392,34 +391,37 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(projectile); // adds to area and entity service
   }
 
-    public void spawnBoss() {
-        logger.info("Spawning Boss");
-        Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
+  public void spawnBoss() {
+    logger.info("Spawning Boss");
+    Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
 
-        int spawnCol = levelCols - 3;
-        int spawnRow = 1; // Bottom row for now
+    int spawnCol = levelCols - 3;
+    int spawnRow = 1; // Bottom row for now
 
-        float spawnX = xOffset + tileSize * spawnCol;
-        float spawnY = yOffset + tileSize * spawnRow;
+    float spawnX = xOffset + tileSize * spawnCol;
+    float spawnY = yOffset + tileSize * spawnRow;
 
-        // Manual scaling - set both width and height
-        float bossHeight = tileSize * 2;
-        float bossWidth = tileSize * 2; // Adjust aspect ratio as needed
-        boss.setScale(bossWidth, bossHeight);
+    // Manual scaling - set both width and height
+    float bossHeight = tileSize * 2;
+    float bossWidth = tileSize * 2; // Adjust aspect ratio as needed
+    boss.setScale(bossWidth, bossHeight);
 
-        boss.setPosition(spawnX, spawnY);
+    boss.setPosition(spawnX, spawnY);
 
-        logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
 
-        spawnEntity(boss);
-        robots.add(boss);
+    spawnEntity(boss);
+    robots.add(boss);
 
-        boss.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
-            requestDespawn(boss);
-            robots.remove(boss);
-            logger.info("Boss defeated");
-        });
-    }
+    boss.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              requestDespawn(boss);
+              robots.remove(boss);
+              logger.info("Boss defeated");
+            });
+  }
 
   /**
    * Getter for selected_unit
