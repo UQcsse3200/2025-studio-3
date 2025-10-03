@@ -16,6 +16,7 @@ import com.csse3200.game.minigame.BallComponent;
 import com.csse3200.game.minigame.CollisionComponent;
 import com.csse3200.game.minigame.PaddleComponent;
 import com.csse3200.game.minigame.PaddleInputComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class PaddleGameScreen extends ScreenAdapter {
   private final GdxGame game;
@@ -97,6 +98,7 @@ public class PaddleGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
+    ServiceLocator.getMusicService().play("sounds/background-music/level2_music.mp3");
     totalTime += delta;
     float survivalTime = totalTime;
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

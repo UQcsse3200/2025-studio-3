@@ -1,9 +1,11 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Allows an entity to attack the closest target entity from a list of potential targets. This task
@@ -55,6 +57,10 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
     timeLeft = TIME_BETWEEN_ATTACKS;
+    Sound attackSound =
+        ServiceLocator.getResourceService().getAsset("sounds/drill_noise_slow.mp3", Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    attackSound.play(Math.min(1.0f, volume));
   }
 
   /** Stops the attack */

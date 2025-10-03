@@ -60,6 +60,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
     renderer = RenderFactory.createRenderer();
     this.laneManager = new LaneManager(Gdx.graphics.getWidth());
+    ServiceLocator.getMusicService().play("sounds/background-music/level3_music.mp3");
     loadAssets();
     createUI();
     initializeObstacles();

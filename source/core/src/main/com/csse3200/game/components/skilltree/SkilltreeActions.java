@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * SkilltreeActions is a click listener for skill tree buttons. It handles user interactions with
@@ -79,7 +80,8 @@ public class SkilltreeActions extends ClickListener {
    */
   @Override
   public void clicked(InputEvent event, float x, float y) {
-    clickSound.play();
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    clickSound.play(volume);
     Skill skill = skillSet.getSkill(skillName);
     display.unlockedPopUp(skill, skillSet, unlockedTexture, skillButton, stage);
   }
@@ -96,7 +98,8 @@ public class SkilltreeActions extends ClickListener {
    */
   @Override
   public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-    hoverSound.play();
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    hoverSound.play(volume);
     skillButton.setOrigin(Align.center);
     skillButton.addAction(Actions.scaleTo(1.1f, 1.1f, 0.1f));
   }

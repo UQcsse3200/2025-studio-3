@@ -44,6 +44,7 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
+    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 
@@ -169,6 +170,8 @@ public class GdxGame extends Game {
         .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
+    ServiceLocator.getGlobalResourceService()
+        .loadSounds(new String[] {"sounds/button_clicked.mp3"});
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 

@@ -47,6 +47,7 @@ public class InventoryScreen extends ScreenAdapter {
     renderer.getCamera().getEntity().setPosition(5f, 5f);
     loadAssets();
     createUI();
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
   }
 
   @Override

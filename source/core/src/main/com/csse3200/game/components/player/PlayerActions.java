@@ -63,6 +63,7 @@ public class PlayerActions extends Component {
   void attack() {
     Sound attackSound =
         ServiceLocator.getResourceService().getAsset("sounds/Impact4.ogg", Sound.class);
-    attackSound.play();
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    attackSound.play(volume);
   }
 }

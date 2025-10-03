@@ -66,6 +66,9 @@ public class DossierScreen extends ScreenAdapter {
 
     // Create UI last
     createUI();
+
+    // play music
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
   }
 
   /** Loads the configs for the dossier screen. */
