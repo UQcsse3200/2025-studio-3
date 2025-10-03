@@ -19,6 +19,8 @@ import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
@@ -401,11 +403,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     float spawnX = xOffset + tileSize * spawnCol;
     float spawnY = yOffset + tileSize * spawnRow;
 
-    // Manual scaling - set both width and height
-    float bossHeight = tileSize * 2;
-    float bossWidth = tileSize * 2; // Adjust aspect ratio as needed
-    boss.setScale(bossWidth, bossHeight);
-
     boss.setPosition(spawnX, spawnY);
 
     logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
@@ -729,7 +726,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       float nx = (p.x - oldX) * s + xOffset;
       float ny = (p.y - oldY) * s + yOffset;
       r.setPosition(nx, ny);
-      r.scaleHeight(tileSize);
+      if(r.getComponent(HitboxComponent.class).getLayer()== PhysicsLayer.BOSS) {
+          r.scaleHeight(tileSize*2.0f);
+      }else{
+          r.scaleHeight(tileSize);
+      }
+
+
     }
   }
 

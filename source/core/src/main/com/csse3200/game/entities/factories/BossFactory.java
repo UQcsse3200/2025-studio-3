@@ -127,7 +127,7 @@ public class BossFactory {
               });
     }
 
-    boss.setScale(boss.getScale().x * config.scale, boss.getScale().y * config.scale);
+    boss.setScale(config.scale, config.scale);
     return boss;
   }
 }
