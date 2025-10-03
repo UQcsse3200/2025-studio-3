@@ -81,7 +81,7 @@
       "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
       "health": 25,
       "attack": 8,
-      "attackRange": 8.0,
+      "attackRange": 500,
       "attackSpeed": 1.5,
       "movementSpeed": 20,
       "scale": 0.75,

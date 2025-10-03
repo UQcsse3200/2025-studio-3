@@ -56,8 +56,8 @@ public class ProjectileFactory {
             new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.OBSTACLE, 0))
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
             .addComponent(new CombatStatsComponent(1, damage))
             .addComponent(new MoveLeftComponent(speed))
             .addComponent(new TextureRenderComponent("images/effects/sling_projectile.png"));

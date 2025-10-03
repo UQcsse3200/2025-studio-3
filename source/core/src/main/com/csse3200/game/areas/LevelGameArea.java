@@ -298,16 +298,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Entity unit;
     if (robotType == RobotFactory.RobotType.GUNNER) {
-      ConfigService configService = ServiceLocator.getConfigService();
-      BaseEnemyConfig gunnerConfig = getConfigService().getEnemyConfig("gunnerRobot");
+
       unit = RobotFactory.createRobotType(RobotFactory.RobotType.GUNNER);
-      AITaskComponent aiTaskComponent = unit.getComponent(AITaskComponent.class);
-      aiTaskComponent.addTask(new GunnerAttackTask(gunnerConfig.getAttackRange()));
+
 
       //ensure gunner attacks immediately
       unit.getEvents().addListener("fire", () -> {
         //spawn a projectile every tick
         Vector2 spawnPos = unit.getPosition().cpy();
+        logger.info("spawnRobotProjectile called at {}", spawnPos);
         spawnRobotProjectile(spawnPos);
         logger.info("Gunner fired projectile at position {}", spawnPos);
       });

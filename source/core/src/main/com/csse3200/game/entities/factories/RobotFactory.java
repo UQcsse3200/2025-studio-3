@@ -79,6 +79,7 @@ public class RobotFactory {
         Entity gunner = createBaseRobot(gunnerConfig);
 
         AITaskComponent aiComponent = gunner.getComponent(AITaskComponent.class);
+        aiComponent.addTask(new MoveLeftTask(50));
         aiComponent.addTask(new GunnerAttackTask(gunnerConfig.getAttackRange()));
 
         gunner.getEvents().trigger("gunnerRobotCreated");
