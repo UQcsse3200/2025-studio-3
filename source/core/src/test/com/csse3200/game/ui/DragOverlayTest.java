@@ -4,42 +4,27 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.areas.AreaAPI;
-import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.extensions.UIExtension;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.*;
-import org.mockito.MockedStatic;
 
+@ExtendWith(UIExtension.class)
+@ExtendWith(GameExtension.class)
 class DragOverlayTest {
-
   private DragOverlay overlay;
-  private Stage stage;
-  private MockedStatic<Gdx> gdxStatic;
 
   @BeforeEach
   void beforeEach() {
     AreaAPI area = mock(AreaAPI.class);
-    when(area.getTileSize()).thenReturn(64f);
-
-    stage = mock(Stage.class, RETURNS_DEEP_STUBS);
-    RenderService renderService = mock(RenderService.class, RETURNS_DEEP_STUBS);
-    ServiceLocator.registerRenderService(renderService);
-    when(renderService.getStage()).thenReturn(stage);
-
+    doAnswer(invocation -> 64f).when(area).getTileSize();
+    Gdx.input = mock(Input.class);
     overlay = new DragOverlay(area);
     overlay.create();
-
-    gdxStatic = mockStatic(Gdx.class, CALLS_REAL_METHODS);
-    Gdx.input = mock(com.badlogic.gdx.Input.class);
-  }
-
-  @AfterEach
-  void afterEach() {
-    gdxStatic.close();
-    ServiceLocator.clear();
   }
 
   @Test
@@ -88,13 +73,12 @@ class DragOverlayTest {
 
     when(Gdx.input.getX()).thenReturn(100);
     when(Gdx.input.getY()).thenReturn(50);
-    when(stage.getHeight()).thenReturn(200f);
 
     overlay.update();
 
     Image img = getImage();
     assertEquals(100 - img.getWidth() / 2f, img.getX(), 0.1f);
-    assertEquals(200 - 50 - img.getHeight() / 2f, img.getY(), 0.1f);
+    assertEquals(720 - 50 - img.getHeight() / 2f, img.getY(), 0.1f);
   }
 
   @Test

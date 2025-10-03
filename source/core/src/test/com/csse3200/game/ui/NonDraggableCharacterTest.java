@@ -3,10 +3,12 @@ package com.csse3200.game.ui;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.extensions.UIExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
+@ExtendWith(UIExtension.class)
 class NonDraggableCharacterTest {
 
   @Test

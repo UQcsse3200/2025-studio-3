@@ -32,6 +32,14 @@ public class GameExtension implements AfterEachCallback, BeforeAllCallback {
   public void afterEach(ExtensionContext context) {
     // Clear the global state from the service locator
     ServiceLocator.clear();
+    ServiceLocator.deregisterSettingsService();
+    ServiceLocator.deregisterDiscordRichPresenceService();
+    ServiceLocator.deregisterConfigService();
+    ServiceLocator.deregisterDialogService();
+    ServiceLocator.deregisterGlobalResourceService();
+    ServiceLocator.deregisterProfileService();
+    ServiceLocator.deregisterWorldMapService();
+    ServiceLocator.deregisterCutsceneService();
   }
 
   /**
