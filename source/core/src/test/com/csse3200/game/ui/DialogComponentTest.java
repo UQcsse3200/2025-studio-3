@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.extensions.UIExtension;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ResourceService;
@@ -21,13 +22,8 @@ import org.mockito.MockitoAnnotations;
 
 /** Test class for DialogComponent functionality. */
 @ExtendWith(GameExtension.class)
+@ExtendWith(UIExtension.class)
 class DialogComponentTest {
-
-  @Mock private GL20 mockGL20;
-
-  @Mock private Stage mockStage;
-
-  private RenderService renderService;
   private ResourceService resourceService;
 
   private Entity testEntity;
@@ -37,18 +33,8 @@ class DialogComponentTest {
     MockitoAnnotations.openMocks(this);
 
     // Create real services
-    renderService = new RenderService();
     resourceService = new ResourceService();
 
-    // Mock the stage
-    when(mockStage.getWidth()).thenReturn(800f);
-    when(mockStage.getHeight()).thenReturn(600f);
-
-    // Set the stage on the render service
-    renderService.setStage(mockStage);
-
-    // Register services with ServiceLocator
-    ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerGlobalResourceService(resourceService);
 
