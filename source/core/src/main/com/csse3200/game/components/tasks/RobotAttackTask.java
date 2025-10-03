@@ -60,7 +60,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     Sound attackSound =
         ServiceLocator.getResourceService().getAsset("sounds/drill_noise_slow.mp3", Sound.class);
     float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    attackSound.play(Math.min(0.1f, volume));
+    attackSound.play(Math.min(1.0f, volume));
   }
 
   /** Stops the attack */
