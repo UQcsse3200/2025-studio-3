@@ -794,7 +794,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       for (String type : enemies) {
         // Random horizontal placement within wave group
         float xSpread = ThreadLocalRandom.current().nextFloat(tileSize);
-        float x = xOffset + (cols * tileSize) + (wave * 1.5f * tileSize) + xSpread;
+        float x = xOffset + (cols * tileSize) + (wave * 1.15f * tileSize) + xSpread;
 
         // Pick a random row
         int row = ThreadLocalRandom.current().nextInt(rows);

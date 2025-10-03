@@ -93,7 +93,7 @@ public class MainGameScreen extends ScreenAdapter {
 
   private PanPhase panPhase;
   private float panElapsed;
-  private static final float PAN_DURATION = 2f; // seconds
+  private static final float PAN_DURATION = 3f; // seconds
   private boolean doIntroPan = true;
   private final float panStartX;
   private final float panTargetX;
