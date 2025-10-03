@@ -1,7 +1,6 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -15,7 +14,6 @@ import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -44,7 +42,6 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private Music music;
   private List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level-1-map-v2.png",
@@ -79,11 +76,17 @@ public class MainGameScreen extends ScreenAdapter {
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
-  protected final WaveManager waveManager;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
   private String level;
+  private static final String[] ITEM_SOUNDS = {
+    "sounds/item_buff.mp3",
+    "sounds/item_coffee.mp3",
+    "sounds/item_emp.mp3",
+    "sounds/item_grenade.mp3",
+    "sounds/item_nuke.mp3"
+  };
 
   /**
    * Constructor for the main game screen.
@@ -96,7 +99,6 @@ public class MainGameScreen extends ScreenAdapter {
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
     logger.debug("[MainGameScreen] Profile current level: '{}'", level);
     logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
-    this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
@@ -108,6 +110,7 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
+    ServiceLocator.registerWaveService(new WaveService());
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -118,15 +121,16 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-    // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
-    waveManager.setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    ServiceLocator.getWaveService()
+        .setEnemySpawnCallback(
+            (col, row, type) ->
+                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
 
     snapCameraBottomLeft();
-    waveManager.initialiseNewWave();
+    ServiceLocator.getWaveService().initialiseNewWave();
   }
 
   @Override
@@ -134,7 +138,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      waveManager.update(delta);
+      ServiceLocator.getWaveService().update(delta);
     }
 
     renderer.render();
@@ -191,11 +195,11 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Load Music & Sounds
-    resourceService.loadMusic(new String[] {"sounds/BGM_03_mp3.mp3"});
     resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
     resourceService.loadSounds(new String[] {"sounds/robot_footstep.mp3"});
     resourceService.loadSounds(new String[] {"sounds/drill_noise_slow.mp3"});
     resourceService.loadSounds(new String[] {"sounds/hrgh.mp3"});
+    resourceService.loadSounds(ITEM_SOUNDS);
 
     // Load Textures
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
@@ -203,10 +207,7 @@ public class MainGameScreen extends ScreenAdapter {
     resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
     resourceService.loadTextureAtlases(textureAtlases.toArray(new String[0]));
     ServiceLocator.getResourceService().loadAll();
-    music = ServiceLocator.getResourceService().getAsset("sounds/BGM_03_mp3.mp3", Music.class);
-    music.setLooping(true);
-    music.setVolume(0.3f);
-    music.play();
+    ServiceLocator.getMusicService().play("sounds/background-music/level1_music.mp3");
   }
 
   private void unloadAssets() {
@@ -232,31 +233,32 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay(waveManager))
+        .addComponent(new CurrentWaveDisplay())
         .addComponent(new ScrapHudDisplay());
 
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
 
-    // Connect the CurrentWaveDisplay to the WaveManager for event listening
-    waveManager.setWaveEventListener(
-        new WaveManager.WaveEventListener() {
-          @Override
-          public void onPreparationPhaseStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+    // Connect the CurrentWaveDisplay to the WaveService for event listening
+    ServiceLocator.getWaveService()
+        .setWaveEventListener(
+            new WaveService.WaveEventListener() {
+              @Override
+              public void onPreparationPhaseStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveChanged(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
+              @Override
+              public void onWaveChanged(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
 
-          @Override
-          public void onWaveStarted(int waveNumber) {
-            // CurrentWaveDisplay will handle this internally
-          }
-        });
+              @Override
+              public void onWaveStarted(int waveNumber) {
+                // CurrentWaveDisplay will handle this internally
+              }
+            });
 
     ServiceLocator.getEntityService().register(ui);
   }
@@ -268,13 +270,9 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea createGameArea() {
     BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(level);
     if (cfg != null && cfg.isSlotMachine()) {
-      var slot = new SlotMachineArea(level);
-      slot.setWaveManager(this.waveManager);
-      return slot;
+      return new SlotMachineArea(level);
     } else {
-      var area = new LevelGameArea(level);
-      area.setWaveManager(this.waveManager);
-      return area;
+      return new LevelGameArea(level);
     }
   }
 
@@ -291,14 +289,14 @@ public class MainGameScreen extends ScreenAdapter {
   /** Event handler for pause events */
   private void handlePause() {
     logger.info("[MainGameScreen] Game paused");
-    music.pause();
+    ServiceLocator.getMusicService().pause();
     // Pause currency generation, pause wave manager, pause generators.
   }
 
   /** Event handler for resume events */
   private void handleResume() {
     logger.info("[MainGameScreen] Game resumed");
-    music.play();
+    ServiceLocator.getMusicService().resume();
     // Resume currency generation, resume wave manager, resume generators.
   }
 }

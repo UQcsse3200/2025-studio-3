@@ -84,6 +84,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
     selectedUnit = null;
+
+    // TODO: Add dynamic updates when wave is changed.
+    ServiceLocator.getDiscordRichPresenceService()
+        .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
 
   /** Loads level configuration from ConfigService. */
@@ -310,6 +314,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
     logger.info("Robot {} spawned at position {} {}", robotType, col, row);
@@ -374,6 +379,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));

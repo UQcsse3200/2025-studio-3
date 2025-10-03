@@ -73,6 +73,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private void loadAssets() {
     logger.debug("Loading assets");
     ServiceLocator.getResourceService().loadAll();
+    ServiceLocator.getMusicService().play("sounds/background-music/skilltree_background.mp3");
   }
 
   @Override

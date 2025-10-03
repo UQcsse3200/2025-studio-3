@@ -6,6 +6,7 @@ import com.csse3200.game.components.mainmenu.MainMenuActions;
 import com.csse3200.game.components.mainmenu.MainMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +32,7 @@ public class MainMenuScreen extends BaseScreen {
    */
   @Override
   protected Entity constructEntity(Stage stage) {
+    ServiceLocator.getMusicService().play("sounds/background-music/intro_music.mp3");
     logger.debug("Main menu screen UI is created");
     return new Entity()
         .addComponent(new MainMenuDisplay())

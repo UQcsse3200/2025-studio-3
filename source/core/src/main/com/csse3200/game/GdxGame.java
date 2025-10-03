@@ -5,7 +5,6 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.csse3200.game.persistence.UserSettings;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.screens.LoadingScreen;
 import com.csse3200.game.screens.MainGameScreen;
@@ -45,6 +44,7 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
+    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 
@@ -54,14 +54,24 @@ public class GdxGame extends Game {
    */
   public void initializeGame() {
     logger.info("[GdxGame] Initializing game after loading screen");
+    ServiceLocator.registerSettingsService(new SettingsService());
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
+
+    // Initialize Discord Rich Presence
+    DiscordRichPresenceService discordService = new DiscordRichPresenceService();
+    discordService.initialize();
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
+    if (discordService.isInitialized()) {
+      discordService.setPresence(null);
+    }
+
+    // Asset configs
     loadGlobalAssets();
-    loadSettings();
     loadNodes();
     Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
     setScreen(ScreenType.MAIN_MENU);
@@ -160,14 +170,9 @@ public class GdxGame extends Game {
         .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
+    ServiceLocator.getGlobalResourceService()
+        .loadSounds(new String[] {"sounds/button_clicked.mp3"});
     ServiceLocator.getGlobalResourceService().loadAll();
-  }
-
-  /** Loads the game's settings. */
-  private void loadSettings() {
-    logger.debug("[GdxGame] Loading game settings");
-    UserSettings.Settings settings = UserSettings.get();
-    UserSettings.applySettings(settings);
   }
 
   /** Sets the game screen to the provided type. */
@@ -178,6 +183,15 @@ public class GdxGame extends Game {
       currentScreen.dispose();
     }
     setScreen(newScreen(screenType));
+  }
+
+  @Override
+  public void render() {
+    super.render();
+    DiscordRichPresenceService discordService = ServiceLocator.getDiscordRichPresenceService();
+    if (discordService != null && discordService.isInitialized()) {
+      discordService.runCallbacks();
+    }
   }
 
   @Override
@@ -273,11 +287,13 @@ public class GdxGame extends Game {
 
   /** Exits the game. */
   public void exit() {
+    ServiceLocator.getDiscordRichPresenceService().shutdown();
     ServiceLocator.deregisterGlobalResourceService();
     ServiceLocator.deregisterConfigService();
     ServiceLocator.deregisterProfileService();
     ServiceLocator.getDialogService().hideAllDialogs();
     ServiceLocator.deregisterDialogService();
+    ServiceLocator.deregisterDiscordRichPresenceService();
     app.exit();
   }
 }

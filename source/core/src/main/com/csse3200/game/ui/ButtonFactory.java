@@ -1,9 +1,12 @@
 package com.csse3200.game.ui;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
@@ -25,7 +28,9 @@ public class ButtonFactory {
    * @return A TextButton with the btn-blue styling
    */
   public static TextButton createButton(String text) {
-    return createButton(text, 1.5f);
+    TextButton button = createButton(text, 1.5f);
+    buttonPressedListener(button);
+    return button;
   }
 
   /**
@@ -37,6 +42,7 @@ public class ButtonFactory {
   public static TextButton createSmallButton(String text) {
     TextButton button = createButton(text, 1.0f);
     button.pad(0f, 3f, 0f, 3f); // top, left, bottom, right
+    buttonPressedListener(button);
     return button;
   }
 
@@ -49,6 +55,7 @@ public class ButtonFactory {
   public static TextButton createLargeButton(String text) {
     TextButton button = createButton(text, 2.0f);
     button.pad(0f, 5f, 0f, 5f); // top, left, bottom, right
+    buttonPressedListener(button);
     return button;
   }
 
@@ -61,6 +68,7 @@ public class ButtonFactory {
   public static TextButton createDialogButton(String text) {
     TextButton button = createButton(text, 1.5f);
     button.pad(5f, 10f, 5f, 10f); // top, left, bottom, right - wider padding
+    buttonPressedListener(button);
     return button;
   }
 
@@ -72,7 +80,9 @@ public class ButtonFactory {
    * @return A TextButton with the btn-blue styling
    */
   public static TextButton createButton(String text, float fontScale) {
-    return createButton(text, fontScale, null);
+    TextButton button = createButton(text, fontScale, null);
+    buttonPressedListener(button);
+    return button;
   }
 
   /**
@@ -114,6 +124,29 @@ public class ButtonFactory {
     style.overFontColor = Color.CYAN;
     style.downFontColor = Color.CYAN;
 
-    return new TextButton(text, style);
+    TextButton button = new TextButton(text, style);
+    buttonPressedListener(button);
+    return button;
+  }
+
+  public static void buttonPressedListener(TextButton button) {
+    button.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            buttonPressedSound();
+          }
+        });
+  }
+
+  public static void buttonPressedSound() {
+    // Play sound effect for button click
+    Sound buttonSound =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("sounds/button_clicked.mp3", Sound.class);
+    if (buttonSound != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      buttonSound.play(volume);
+    }
   }
 }
