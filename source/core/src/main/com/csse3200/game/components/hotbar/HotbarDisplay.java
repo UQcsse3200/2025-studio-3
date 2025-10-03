@@ -102,7 +102,7 @@ public class HotbarDisplay extends UIComponent {
           });
       unitLayers.addActor(tempUnit);
     }
-
+    //lays out the units
     layoutUnits(startX, y, cellWidth, slotImages);
 
     // sets the position to the top middle of screen
@@ -120,6 +120,7 @@ public class HotbarDisplay extends UIComponent {
     // changes size to fit screen
     unitHotbarTable.add(unitLayers).size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale);
 
+    // creates a new table for item hotbar
     itemHotbarTable = new Table();
     itemHotbarTable.setFillParent(true);
     itemHotbarTable.center().top().padTop(165 * scale);
@@ -132,10 +133,12 @@ public class HotbarDisplay extends UIComponent {
     itemLayers.setSize(itemHotbar.getPrefWidth(), itemHotbar.getPrefHeight());
 
     startX = cellWidth / 4;
+    // creates down arrow image
     Image downArrow = new Image(new Texture("images/ui/down_arrow_hotbar.png"));
     downArrow.setSize(scaling, (float) (0.5 * scaling));
     downArrow.setPosition((float) (0.45 * hotbarWidth), -40);
 
+    // creates all the items
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
       Image tempItem = new Image(new Texture(item.getKey()));
       tempItem.setSize(scaling, scaling);
@@ -182,8 +185,10 @@ public class HotbarDisplay extends UIComponent {
 
       itemLayers.addActor(tempItem);
     }
+    // lays out the items
     layoutUnits(startX, y, cellWidth, itemImages);
 
+    // handles the collapsing of the item hotbar
     final boolean[] isUp = {false};
     downArrow.addListener(
         new ClickListener() {
@@ -245,6 +250,7 @@ public class HotbarDisplay extends UIComponent {
    * @param startX the starting x value of the hotbar
    * @param y the y value of the hotbar
    * @param cellWidth the width of the cells to increment the x value
+   * @param array an array of images to be laid out
    */
   private void layoutUnits(float startX, float y, float cellWidth, Array<Image> array) {
     float x = startX;
