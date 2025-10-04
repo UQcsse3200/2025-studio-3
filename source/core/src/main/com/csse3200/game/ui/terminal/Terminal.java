@@ -31,6 +31,7 @@ public class Terminal extends Component {
     addCommand("skipWave", new SkipWave());
     addCommand("setWave", new SetWave());
     addCommand("spawnRobot", new SpawnRobot());
+    addCommand("errorDialogue", new ErrorDialogue());
   }
 
   /**

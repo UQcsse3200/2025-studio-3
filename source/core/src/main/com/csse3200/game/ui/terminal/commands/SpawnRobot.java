@@ -10,6 +10,10 @@ public class SpawnRobot implements Command {
 
   @Override
   public boolean action(ArrayList<String> args) {
+    if (!args.isEmpty()) {
+      logger.debug("Invalid arguments received for 'spawnRobot' command: {}", args);
+      return false;
+    }
     try {
       ServiceLocator.getWaveService().spawnEnemy(Integer.parseInt(args.getFirst()));
     } catch (NullPointerException e) {

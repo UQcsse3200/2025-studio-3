@@ -10,6 +10,10 @@ public class SetWave implements Command {
 
   @Override
   public boolean action(ArrayList<String> args) {
+    if (!args.isEmpty()) {
+      logger.debug("Invalid arguments received for 'setWave' command: {}", args);
+      return false;
+    }
     try {
       ServiceLocator.getWaveService().debugSetCurrentWave(Integer.parseInt(args.getFirst()));
     } catch (NullPointerException e) {
