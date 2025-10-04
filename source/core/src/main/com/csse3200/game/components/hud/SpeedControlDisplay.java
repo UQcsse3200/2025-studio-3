@@ -2,6 +2,7 @@ package com.csse3200.game.components.hud;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -23,6 +24,10 @@ public class SpeedControlDisplay extends UIComponent {
   private static final int BUTTON_SIZE = 60;
 
   private final float[] speeds = new float[] {1.0f, 1.5f, 2.0f};
+  private final String[] speedImages =
+      new String[] {
+        "images/ui/speedup1x.png", "images/ui/speedup15x.png", "images/ui/speedup2x.png"
+      };
   private int speedIndex = 0;
 
   private ImageButton speedButton;
@@ -37,36 +42,21 @@ public class SpeedControlDisplay extends UIComponent {
   }
 
   private void addActors() {
+    // Create speed button
     Texture speedTex =
-        ServiceLocator.getGlobalResourceService()
-            .getAsset("images/ui/settings-icon.png", Texture.class);
-    speedButton = new ImageButton(new TextureRegionDrawable(speedTex));
+        ServiceLocator.getGlobalResourceService().getAsset(speedImages[speedIndex], Texture.class);
+    speedButton = new ImageButton(new TextureRegionDrawable(new TextureRegion(speedTex)));
     speedButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
+    speedButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
 
-    // position near top-right, to the left of PauseButton
+    // Position near top-right, to the left of PauseButton
     float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
     float y = stage.getHeight() - BUTTON_SIZE - 20f;
     speedButton.setPosition(x, y);
     speedButton.setVisible(true);
     stage.addActor(speedButton);
 
-    // speed badge (text label) on top of button to show current multiplier
-    badgeLabel = new Label(formatSpeedLabel(speeds[speedIndex]), skin);
-    badgeLabel.setFontScale(0.8f);
-    badgeLabel.setPosition(
-        x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE + 4f);
-    badgeLabel.setZIndex(60);
-    stage.addActor(badgeLabel);
-
-    // tooltip on hover
-    tooltip = new Label("Speed", skin);
-    tooltip.setFontScale(0.8f);
-    tooltip.setVisible(false);
-    tooltip.setZIndex(60);
-    tooltip.setPosition(x + (BUTTON_SIZE - tooltip.getPrefWidth()) / 2f, y - 20f);
-    stage.addActor(tooltip);
-
-    // click cycles speed
+    // Add click listener
     speedButton.addListener(
         new ClickListener() {
           @Override
@@ -75,29 +65,9 @@ public class SpeedControlDisplay extends UIComponent {
           }
         });
 
-    // hover shows tooltip
-    speedButton.addListener(
-        new InputListener() {
-          @Override
-          public void enter(
-              InputEvent event,
-              float x,
-              float y,
-              int pointer,
-              com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
-            tooltip.setVisible(true);
-          }
-
-          @Override
-          public void exit(
-              InputEvent event,
-              float x,
-              float y,
-              int pointer,
-              com.badlogic.gdx.scenes.scene2d.Actor toActor) {
-            tooltip.setVisible(false);
-          }
-        });
+    createTooltip();
+    createBadge();
+    addHoverEffect();
   }
 
   private void cycleSpeed() {
@@ -105,8 +75,9 @@ public class SpeedControlDisplay extends UIComponent {
     float newScale = speeds[speedIndex];
     logger.info("[SpeedControl] Setting time scale to {}x", newScale);
     ServiceLocator.getTimeSource().setTimeScale(newScale);
+    updateButtonTexture();
     badgeLabel.setText(formatSpeedLabel(newScale));
-    reposition();
+    updatePosition();
     // Optional: broadcast event for other interested UI/components
     entity.getEvents().trigger("speed_changed");
   }
@@ -127,8 +98,89 @@ public class SpeedControlDisplay extends UIComponent {
     speedIndex = nearestIdx;
     if (badgeLabel != null) {
       badgeLabel.setText(formatSpeedLabel(nearest));
-      reposition();
+      updateButtonTexture();
+      updatePosition();
     }
+  }
+
+  /** Creates the tooltip for the speed button */
+  private void createTooltip() {
+    tooltip = new Label("Speed", skin);
+    whiten(tooltip);
+    tooltip.setFontScale(0.8f);
+
+    // Position tooltip below the button
+    float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;
+    tooltip.setPosition(x + (BUTTON_SIZE - tooltip.getPrefWidth()) / 2f, y - 20f);
+    tooltip.setVisible(false);
+    tooltip.setZIndex(60);
+    stage.addActor(tooltip);
+  }
+
+  /** Creates the speed badge label */
+  private void createBadge() {
+    badgeLabel = new Label(formatSpeedLabel(speeds[speedIndex]), skin);
+    whiten(badgeLabel);
+    badgeLabel.setFontScale(0.8f);
+
+    float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
+    float y = stage.getHeight() - BUTTON_SIZE - 20f;
+    badgeLabel.setPosition(
+        x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE - 2f);
+    badgeLabel.setZIndex(60);
+    stage.addActor(badgeLabel);
+  }
+
+  /** Adds hover effect to the speed button */
+  private void addHoverEffect() {
+    speedButton.addListener(
+        new InputListener() {
+          @Override
+          public void enter(
+              InputEvent event,
+              float x,
+              float y,
+              int pointer,
+              com.badlogic.gdx.scenes.scene2d.Actor fromActor) {
+            if (tooltip != null) {
+              tooltip.setVisible(true);
+            }
+          }
+
+          @Override
+          public void exit(
+              InputEvent event,
+              float x,
+              float y,
+              int pointer,
+              com.badlogic.gdx.scenes.scene2d.Actor toActor) {
+            if (tooltip != null) {
+              tooltip.setVisible(false);
+            }
+          }
+        });
+  }
+
+  /** Updates the button texture to match current speed */
+  private void updateButtonTexture() {
+    if (speedButton != null) {
+      Texture speedTex =
+          ServiceLocator.getGlobalResourceService()
+              .getAsset(speedImages[speedIndex], Texture.class);
+      speedButton.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(speedTex));
+    }
+  }
+
+  /**
+   * Sets the label's font color to white
+   *
+   * @param label The label to set the font color of
+   */
+  private void whiten(Label label) {
+    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
+    st.fontColor = com.badlogic.gdx.graphics.Color.WHITE;
+    label.setStyle(st);
   }
 
   private String formatSpeedLabel(float scale) {
@@ -141,20 +193,26 @@ public class SpeedControlDisplay extends UIComponent {
   @Override
   public void update() {
     super.update();
-    reposition();
+    updatePosition();
   }
 
-  private void reposition() {
-    if (speedButton == null) return;
-    float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
-    float y = stage.getHeight() - BUTTON_SIZE - 20f;
-    speedButton.setPosition(x, y);
-    if (tooltip != null) {
-      tooltip.setPosition(x + (BUTTON_SIZE - tooltip.getPrefWidth()) / 2f, y - 20f);
-    }
-    if (badgeLabel != null) {
-      badgeLabel.setPosition(
-          x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE + 4f);
+  /** Updates button, tooltip and badge position when window is resized */
+  private void updatePosition() {
+    if (speedButton != null) {
+      float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
+      float y = stage.getHeight() - BUTTON_SIZE - 20f;
+      speedButton.setPosition(x, y);
+
+      // Update tooltip position relative to button
+      if (tooltip != null) {
+        tooltip.setPosition(x + (BUTTON_SIZE - tooltip.getPrefWidth()) / 2f, y - 20f);
+      }
+
+      // Update badge position relative to button
+      if (badgeLabel != null) {
+        badgeLabel.setPosition(
+            x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE - 2f);
+      }
     }
   }
 

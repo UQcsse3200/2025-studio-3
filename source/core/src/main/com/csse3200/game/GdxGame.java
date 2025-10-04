@@ -34,7 +34,10 @@ public class GdxGame extends Game {
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
-    "images/ui/btn-blue.png"
+    "images/ui/btn-blue.png",
+    "images/ui/speedup1x.png",
+    "images/ui/speedup15x.png",
+    "images/ui/speedup2x.png"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
