@@ -41,6 +41,7 @@ public class SpeedControlDisplay extends UIComponent {
     updateSpeedFromTimeSource();
   }
 
+  /** Adds the speed control button and UI elements to the stage */
   private void addActors() {
     // Create speed button
     Texture speedTex =
@@ -70,23 +71,33 @@ public class SpeedControlDisplay extends UIComponent {
     addHoverEffect();
   }
 
+  /** Cycles through the available speed settings and updates the game time scale */
   private void cycleSpeed() {
+    // Cycle to next speed (wraps around to 0 when reaching end)
     speedIndex = (speedIndex + 1) % speeds.length;
     float newScale = speeds[speedIndex];
+
     logger.info("[SpeedControl] Setting time scale to {}x", newScale);
+    // Apply the new time scale to affect all time-dependent systems
     ServiceLocator.getTimeSource().setTimeScale(newScale);
+
+    // Update UI to reflect the new speed
     updateButtonTexture();
     badgeLabel.setText(formatSpeedLabel(newScale));
     updatePosition();
-    // Optional: broadcast event for other interested UI/components
+
+    // Notify other components that speed has changed
     entity.getEvents().trigger("speed_changed");
   }
 
+  /** Updates the current speed display to match the time source's time scale */
   private void updateSpeedFromTimeSource() {
+    // Calculate current time scale by comparing scaled vs raw delta time
     float ts =
         ServiceLocator.getTimeSource().getDeltaTime()
             / ServiceLocator.getTimeSource().getRawDeltaTime();
-    // map ts to nearest of speeds
+
+    // Find the closest matching speed from our available options
     float nearest = speeds[0];
     int nearestIdx = 0;
     for (int i = 0; i < speeds.length; i++) {
@@ -95,6 +106,8 @@ public class SpeedControlDisplay extends UIComponent {
         nearestIdx = i;
       }
     }
+
+    // Update display to match the detected speed
     speedIndex = nearestIdx;
     if (badgeLabel != null) {
       badgeLabel.setText(formatSpeedLabel(nearest));
@@ -162,7 +175,7 @@ public class SpeedControlDisplay extends UIComponent {
         });
   }
 
-  /** Updates the button texture to match current speed */
+  /** Updates the button texture to match the current speed setting */
   private void updateButtonTexture() {
     if (speedButton != null) {
       Texture speedTex =
@@ -183,10 +196,13 @@ public class SpeedControlDisplay extends UIComponent {
     label.setStyle(st);
   }
 
+  /** Formats the speed value for display in the badge label */
   private String formatSpeedLabel(float scale) {
+    // If scale is close to a whole number, display without decimal
     if (Math.abs(scale - Math.round(scale)) < 0.001f) {
       return Math.round(scale) + "x";
     }
+    // Otherwise show one decimal place (e.g., "1.5x")
     return String.format("%.1fx", scale);
   }
 
@@ -199,16 +215,17 @@ public class SpeedControlDisplay extends UIComponent {
   /** Updates button, tooltip and badge position when window is resized */
   private void updatePosition() {
     if (speedButton != null) {
+      // Position to the left of pause button (top-right area)
       float x = stage.getWidth() - BUTTON_SIZE - 20f - (BUTTON_SIZE + 12f);
       float y = stage.getHeight() - BUTTON_SIZE - 20f;
       speedButton.setPosition(x, y);
 
-      // Update tooltip position relative to button
+      // Center tooltip below the button
       if (tooltip != null) {
         tooltip.setPosition(x + (BUTTON_SIZE - tooltip.getPrefWidth()) / 2f, y - 20f);
       }
 
-      // Update badge position relative to button
+      // Center badge just above the button
       if (badgeLabel != null) {
         badgeLabel.setPosition(
             x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE - 2f);
