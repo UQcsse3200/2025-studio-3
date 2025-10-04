@@ -77,7 +77,7 @@ public class BossFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
-    animator.addAnimation("march", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("march", 0.1f, Animation.PlayMode.LOOP_REVERSED);
 //    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
 //    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
 //    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
