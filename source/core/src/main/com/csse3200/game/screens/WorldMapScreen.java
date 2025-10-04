@@ -19,12 +19,11 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.csse3200.game.ui.terminal.Terminal;
-import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +71,7 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
         .addComponent(new AnimatedDropdownMenu())
-         .addComponent(new Terminal())
+        .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay());
     return ui;

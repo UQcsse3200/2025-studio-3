@@ -6,6 +6,8 @@ import com.csse3200.game.components.achievements.AchievementsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +59,9 @@ public class AchievementsScreen extends BaseScreen {
     achievementsDisplay = new AchievementsDisplay(game);
     return new Entity()
         .addComponent(achievementsDisplay)
-        .addComponent(new InputDecorator(stage, 10));
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
   }
 }
