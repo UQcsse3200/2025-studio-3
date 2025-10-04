@@ -49,14 +49,26 @@ public class FileLoader {
       logger.error("Failed to create file handle for {}", filename);
       return null;
     }
+    return readClass(type, file);
+  }
 
+  /**
+   * Read generic Java classes from a JSON file.
+   *
+   * @param type class type
+   * @param filename file to read from
+   * @param FileHandle file to read from
+   * @param <T> Class type to read JSON into
+   * @return instance of class, may be null
+   */
+  public static <T> T readClass(Class<T> type, FileHandle file) {
     T object;
     try {
       String rawJson = file.readString();
       logger.debug("Read {} characters: {}", rawJson.length(), rawJson);
       object = json.fromJson(type, file);
     } catch (Exception e) {
-      logger.error("Error parsing JSON from file {}: {}", filename, e.getMessage());
+      logger.error("Error parsing JSON from file {}: {}", file.path(), e.getMessage());
       StringWriter sw = new StringWriter();
       e.printStackTrace(new PrintWriter(sw));
       logger.error("Full stack trace:\n{}", sw);

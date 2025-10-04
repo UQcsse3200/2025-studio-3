@@ -8,11 +8,11 @@ import com.csse3200.game.services.ServiceLocator;
 
 /** Render a static texture. */
 public class TextureRenderComponent extends RenderComponent {
-
   private final Texture texture;
 
-  // global
   /**
+   * Create a new TextureRenderComponent.
+   *
    * @param texturePath Internal path of static texture to render. Will be scaled to the entity's
    *     scale.
    */
@@ -20,8 +20,9 @@ public class TextureRenderComponent extends RenderComponent {
     this(ServiceLocator.getResourceService().getAsset(texturePath, Texture.class));
   }
 
-  // ...
   /**
+   * Create a new TextureRenderComponent.
+   *
    * @param texture Static texture to render. Will be scaled to the entity's scale.
    */
   public TextureRenderComponent(Texture texture) {
@@ -42,6 +43,11 @@ public class TextureRenderComponent extends RenderComponent {
     batch.setColor(Color.WHITE);
   }
 
+  /**
+   * Get the texture.
+   *
+   * @return the texture
+   */
   public Texture getTexture() {
     return texture;
   }

@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HotbarDisplay extends UIComponent {
-
   private Table hotbarTable;
   private final float scaling;
   private final LevelGameArea game;

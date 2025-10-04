@@ -1,15 +1,12 @@
 package com.csse3200.game.components.settingsmenu;
 
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
+import net.dermetfan.utils.Pair;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,48 +45,39 @@ public class AudioSettingsMenu extends UIComponent {
     rootTable.setFillParent(true);
     rootTable.center(); // Center the entire table content
 
-    // Create title
-    Label title = TypographyFactory.createTitle("Audio Settings");
-    rootTable.add(title).center().padTop(30f).colspan(3);
-    rootTable.row().padTop(30f);
+    // Create title with proper UI scaling
+    Label title = ui.title("Audio Settings");
+    float uiScale = ui.getUIScale();
+    rootTable.add(title).center().padTop(30f * uiScale).colspan(3);
+    rootTable.row().padTop(30f * uiScale);
 
     Settings settings = ServiceLocator.getSettingsService().getSettings();
 
-    // Create components
-    Label masterVolumeLabel = new Label("Master Volume:", skin);
-    masterVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
+    // Create components using UIFactory
+    Label masterVolumeLabel = ui.text("Master Volume:");
+    masterVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     masterVolumeSlider.setValue(settings.getMasterVolume());
-    final Label masterVolumeValueLabel =
-        new Label(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100), skin);
-    whiten(masterVolumeLabel);
-    whiten(masterVolumeValueLabel);
+    final Label masterVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100));
 
-    Label musicVolumeLabel = new Label("Music Volume:", skin);
-    musicVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
+    Label musicVolumeLabel = ui.text("Music Volume:");
+    musicVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     musicVolumeSlider.setValue(settings.getMusicVolume());
-    final Label musicVolumeValueLabel =
-        new Label(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100), skin);
-    whiten(musicVolumeLabel);
-    whiten(musicVolumeValueLabel);
+    final Label musicVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100));
 
-    Label soundVolumeLabel = new Label("Sound Volume:", skin);
-    soundVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
+    Label soundVolumeLabel = ui.text("Sound Volume:");
+    soundVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     soundVolumeSlider.setValue(settings.getSoundVolume());
-    final Label soundVolumeValueLabel =
-        new Label(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100), skin);
-    whiten(soundVolumeLabel);
-    whiten(soundVolumeValueLabel);
+    final Label soundVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100));
 
-    Label voiceVolumeLabel = new Label("Voice Volume:", skin);
-    voiceVolumeSlider = new Slider(0f, 1f, 0.01f, false, skin);
+    Label voiceVolumeLabel = ui.text("Voice Volume:");
+    voiceVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     voiceVolumeSlider.setValue(settings.getVoiceVolume());
-    final Label voiceVolumeValueLabel =
-        new Label(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100), skin);
-    whiten(voiceVolumeLabel);
-    whiten(voiceVolumeValueLabel);
+    final Label voiceVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100));
 
-    // Apply button
-    TextButton applyBtn = ButtonFactory.createButton("Apply");
+    // Create apply button using UIFactory
+    int buttonWidth = 150;
+    TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
         new ChangeListener() {
           @Override
@@ -129,32 +117,32 @@ public class AudioSettingsMenu extends UIComponent {
           return true;
         });
 
-    // Layout
-    rootTable.add(masterVolumeLabel).left().padRight(15f);
-    rootTable.add(masterVolumeSlider).width(200f).center();
-    rootTable.add(masterVolumeValueLabel).left().padLeft(10f);
-    rootTable.row().padTop(10f);
+    // Layout with proper UI scaling
+    rootTable.add(masterVolumeLabel).left().padRight(15f * uiScale);
+    rootTable.add(masterVolumeSlider).width(200f * uiScale).center();
+    rootTable.add(masterVolumeValueLabel).width(50f * uiScale).left().padLeft(10f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(musicVolumeLabel).left().padRight(15f);
-    rootTable.add(musicVolumeSlider).width(200f).center();
-    rootTable.add(musicVolumeValueLabel).left().padLeft(10f);
-    rootTable.row().padTop(10f);
+    rootTable.add(musicVolumeLabel).left().padRight(15f * uiScale);
+    rootTable.add(musicVolumeSlider).width(200f * uiScale).center();
+    rootTable.add(musicVolumeValueLabel).width(50f * uiScale).left().padLeft(10f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(soundVolumeLabel).left().padRight(15f);
-    rootTable.add(soundVolumeSlider).width(200f).center();
-    rootTable.add(soundVolumeValueLabel).left().padLeft(10f);
-    rootTable.row().padTop(10f);
+    rootTable.add(soundVolumeLabel).left().padRight(15f * uiScale);
+    rootTable.add(soundVolumeSlider).width(200f * uiScale).center();
+    rootTable.add(soundVolumeValueLabel).width(50f * uiScale).left().padLeft(10f * uiScale);
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(voiceVolumeLabel).left().padRight(15f);
-    rootTable.add(voiceVolumeSlider).width(200f).center();
-    rootTable.add(voiceVolumeValueLabel).left().padLeft(10f);
-    rootTable.row().padTop(20f);
+    rootTable.add(voiceVolumeLabel).left().padRight(15f * uiScale);
+    rootTable.add(voiceVolumeSlider).width(200f * uiScale).center();
+    rootTable.add(voiceVolumeValueLabel).width(50f * uiScale).left().padLeft(10f * uiScale);
+    rootTable.row().padTop(20f * uiScale);
 
     // Apply button bottom center
     bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f).center();
+    bottomRow.bottom().padBottom(20f * uiScale);
+    bottomRow.add(applyBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
@@ -185,26 +173,10 @@ public class AudioSettingsMenu extends UIComponent {
   }
 
   @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
-
-  @Override
   public void dispose() {
     rootTable.clear();
     bottomRow.clear();
     super.dispose();
   }
 
-  /**
-   * Whiten the label.
-   *
-   * @param label The label to whiten.
-   */
-  private static void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
-    logger.debug("Labels are white");
-  }
 }

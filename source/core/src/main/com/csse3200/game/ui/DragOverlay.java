@@ -23,7 +23,7 @@ public class DragOverlay extends UIComponent {
    *
    * @param area Area to place units in.
    */
-  public DragOverlay(com.csse3200.game.areas.AreaAPI area) {
+  public DragOverlay(AreaAPI area) {
     this.area = area;
   }
 
