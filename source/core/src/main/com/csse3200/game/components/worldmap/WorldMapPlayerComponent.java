@@ -50,7 +50,17 @@ public class WorldMapPlayerComponent extends UIComponent {
   private final Vector2 tmpPos = new Vector2();
   private final Vector2 toTarget = new Vector2();
 
-  private static final float NODE_SNAP_RADIUS = 32f;
+  private static final float NODE_SNAP_RADIUS = 36f;
+
+  private void syncPosToProfile() {
+    try {
+      var prof = ServiceLocator.getProfileService().getProfile();
+      var p = entity.getPosition();
+      prof.setWorldMapX(p.x);
+      prof.setWorldMapY(p.y);
+    } catch (Exception ignored) {
+    }
+  }
 
   public WorldMapPlayerComponent(Vector2 worldSize) {
     this.worldSize = worldSize;
