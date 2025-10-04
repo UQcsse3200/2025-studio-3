@@ -1,15 +1,19 @@
 package com.csse3200.game.entities.factories;
 
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.badlogic.gdx.physics.box2d.BodyDef;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory class for creating projectile entities for defense entities (e.g., sling shoots for sling
@@ -22,10 +26,21 @@ public class ProjectileFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 
-  public enum ProjectileType {
-    BULLET,
-    SLINGSHOT,
-    SHOCK,
+  // Static map for path to projectile type
+  private static final Map<String, ProjectileType> pathToTypeMap = new HashMap<>();
+
+  static {
+    // Initialize the mapping once
+    pathToTypeMap.put("images/effects/sling_projectile.png", ProjectileType.SLINGSHOT);
+    pathToTypeMap.put("images/effects/bullet.png", ProjectileType.BULLET);
+    pathToTypeMap.put("images/effects/harpoon_projectile.png", ProjectileType.HARPOON_PROJECTILE);
+    pathToTypeMap.put("images/effects/shock.png", ProjectileType.SHOCK);
+    // add more mappings as needed
+  }
+
+  public static ProjectileType getProjectileTypeFromPath(String path) {
+    return pathToTypeMap.getOrDefault(
+        path, ProjectileType.SLINGSHOT); // default type or handle null
   }
 
   /**
@@ -43,11 +58,13 @@ public class ProjectileFactory {
     physics.setBodyType(BodyDef.BodyType.KinematicBody); // kinematic so it moves but doesn't react
     ColliderComponent collider = new ColliderComponent();
     collider.setSensor(true);
+    ProjectileType type = getProjectileTypeFromPath(path);
     Entity proj =
         new Entity()
             .addComponent(physics)
             .addComponent(collider)
             .addComponent(hitbox)
+            .addComponent(new ProjectileTagComponent(type))
             .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 

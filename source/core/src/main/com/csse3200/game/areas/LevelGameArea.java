@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.ProjectileComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -15,6 +16,7 @@ import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -391,13 +393,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
-    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y);// + tileSize / 2f - 5f);
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y); // + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(100f); // set the height in world units
     projectile.scaleWidth(100f); // set the width in world units
 
     projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
-    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
+    if (tag != null && tag.getType() != ProjectileType.HARPOON_PROJECTILE) {
+      projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    }
     spawnEntity(projectile); // adds to area and entity service
   }
 

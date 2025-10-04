@@ -1,4 +1,8 @@
 package com.csse3200.game.entities;
 
-public class ProjectileType {
+public enum ProjectileType {
+  SLINGSHOT,
+  BULLET,
+  HARPOON_PROJECTILE,
+  SHOCK
 }
