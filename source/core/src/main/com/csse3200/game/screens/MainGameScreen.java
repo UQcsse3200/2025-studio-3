@@ -60,7 +60,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge_1.png",
     "images/effects/sling_projectile.png",
     "images/effects/sling_projectile_pad.png",
-    "images/entities/currency/scrap_metal.png"
+    "images/entities/currency/scrap_metal.png",
+    "images/entities/enemies/Scrap_titan.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",

@@ -77,12 +77,12 @@ public class BossFactory {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
-
-    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("default", 1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("march", 0.1f, Animation.PlayMode.LOOP);
+//    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+//    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+//    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
+//    animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
+//    animator.addAnimation("default", 1f, Animation.PlayMode.LOOP);
 
     ColliderComponent colliderComponent =
         new ColliderComponent()
@@ -104,8 +104,9 @@ public class BossFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
-    animator.scaleEntity();
-    animator.startAnimation("default");
+//      animator.scaleEntity();
+    animator.startAnimation("march");
+
 
     TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
     RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
@@ -120,7 +121,7 @@ public class BossFactory {
                     new Timer.Task() {
                       @Override
                       public void run() {
-                        animator.startAnimation("default");
+                        animator.startAnimation("march");
                       }
                     },
                     0.6f);
