@@ -11,10 +11,10 @@ import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
+import com.csse3200.game.components.worldmap.WorldMapPanInputComponent;
 import com.csse3200.game.components.worldmap.WorldMapPlayerComponent;
 import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
-import com.csse3200.game.components.worldmap.WorldMapPanInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ProfileService;
@@ -121,7 +121,8 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(startX, startY);
 
     // Set initial zoom on the underlying camera
-    if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+    if (camera.getCamera()
+        instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
       orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
     }
 
@@ -198,17 +199,16 @@ public class WorldMapScreen extends BaseScreen {
     }
 
     // If WASD is pressed, snap view to player center only when player is not moving
-    if (playerEntity != null &&
-        (Gdx.input.isKeyJustPressed(Input.Keys.W) ||
-         Gdx.input.isKeyJustPressed(Input.Keys.A) ||
-         Gdx.input.isKeyJustPressed(Input.Keys.S) ||
-         Gdx.input.isKeyJustPressed(Input.Keys.D))) {
+    if (playerEntity != null
+        && (Gdx.input.isKeyJustPressed(Input.Keys.W)
+            || Gdx.input.isKeyJustPressed(Input.Keys.A)
+            || Gdx.input.isKeyJustPressed(Input.Keys.S)
+            || Gdx.input.isKeyJustPressed(Input.Keys.D))) {
       WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
       if (comp != null && !comp.isCurrentlyMoving()) {
         centerCameraOnPlayer();
       }
     }
-
 
     // While moving, force auto-follow and ignore manual pan
     if (isPlayerCurrentlyMoving()) {
@@ -278,7 +278,8 @@ public class WorldMapScreen extends BaseScreen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
       zoomIdx++;
-      if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+      if (camera.getCamera()
+          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         // Clamp after zoom to avoid exposing outside-world areas
         clampCamera(camera);
@@ -288,7 +289,8 @@ public class WorldMapScreen extends BaseScreen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
       zoomIdx--;
-      if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+      if (camera.getCamera()
+          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         // Clamp after zoom to avoid exposing outside-world areas
         clampCamera(camera);
@@ -312,15 +314,14 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-
   /** Called by pan input to disable camera follow mode (manual panning). */
   public void startManualPan() {
     followCamera = false;
   }
 
   /**
-   * Pans the camera by the given screen-space delta (in pixels).
-   * Dragging moves the view with the cursor (grab-and-drag behavior).
+   * Pans the camera by the given screen-space delta (in pixels). Dragging moves the view with the
+   * cursor (grab-and-drag behavior).
    */
   public void panByScreenDelta(float deltaScreenX, float deltaScreenY) {
     CameraComponent camera = renderer.getCamera();
@@ -338,7 +339,8 @@ public class WorldMapScreen extends BaseScreen {
 
     float worldPerPixelY = (gdxCam.viewportHeight * zoom) / screenH;
 
-    // Move camera opposite on X (so content follows the cursor), same sign on Y accounting for LibGDX coords
+    // Move camera opposite on X (so content follows the cursor), same sign on Y accounting for
+    // LibGDX coords
     float dxWorld = -deltaScreenX * worldPerPixelX;
     float dyWorld = +deltaScreenY * worldPerPixelY;
 
@@ -386,5 +388,4 @@ public class WorldMapScreen extends BaseScreen {
     WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
     return comp != null && comp.isCurrentlyMoving();
   }
-
 }

@@ -184,7 +184,6 @@ public class Profile {
     this.worldMapX = worldMapX;
   }
 
-
   /** Gets the saved world map zoom step index (-1 if unset). */
   public int getWorldMapZoomIdx() {
     return worldMapZoomIdx;
@@ -194,6 +193,7 @@ public class Profile {
   public void setWorldMapZoomIdx(int worldMapZoomIdx) {
     this.worldMapZoomIdx = worldMapZoomIdx;
   }
+
   public void setWorldMapY(float worldMapY) {
     this.worldMapY = worldMapY;
   }
