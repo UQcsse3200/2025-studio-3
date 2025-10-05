@@ -365,7 +365,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     if (def == null || font == null || labelBg == null) return;
 
     // 3) Frame size
-    String name = def.next;
+    String name = resolveDisplayName(def.next);
     float old2 = font.getData().scaleX;
     font.getData().setScale(FONT_SCALE * 0.90f);
     GlyphLayout gl = new GlyphLayout(font, name);
@@ -445,6 +445,32 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       String nodeKey, String dir) {
     Map<String, com.csse3200.game.services.WorldMapService.PathDef> m = localPaths.get(nodeKey);
     return m == null ? null : m.get(dir);
+  }
+
+  /**
+   * Resolve the human-readable display name for a node key by querying the WorldMapService.
+   * Falls back to the key itself if the node cannot be found.
+   *
+   * @param nodeKey registration key from the path definition (def.next)
+   * @return display name (e.g., "Arcade", "Town", "Level 1") or the key if not found
+   */
+  private String resolveDisplayName(String nodeKey) {
+    try {
+      var worldMapService = ServiceLocator.getWorldMapService();
+      java.util.List<WorldMapNode> nodes = worldMapService.getAllNodes();
+      if (nodes != null) {
+        for (WorldMapNode n : nodes) {
+          if (n != null && nodeKey != null && nodeKey.equals(n.getRegistrationKey())) {
+            // Prefer the node's name for display
+            return n.getLabel();
+          }
+        }
+      }
+    } catch (Exception ignored) {
+      // If service not ready or any other issue, fall back to key
+    }
+    // Fallback: show the key itself so users/devs can still see where it points
+    return nodeKey != null ? nodeKey : "";
   }
 
   public String getKey() {

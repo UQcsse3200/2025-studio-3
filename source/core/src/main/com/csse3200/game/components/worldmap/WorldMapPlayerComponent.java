@@ -39,7 +39,10 @@ public class WorldMapPlayerComponent extends UIComponent {
   private WorldMapNode levelThreeNode;
   private WorldMapNode townNode;
 
-  /** Horizontal render offset (px). Positive = shift right, Negative = shift left. */
+  /**
+   * Horizontal render offset (px) to make player looks central. Positive = shift right, Negative =
+   * shift left.
+   */
   private float renderOffsetX = -15f;
 
   private CompletableFuture<WorldMapNode> proximityCheckFuture = null;
