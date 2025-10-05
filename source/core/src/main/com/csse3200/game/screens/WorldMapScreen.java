@@ -61,8 +61,9 @@ public class WorldMapScreen extends BaseScreen {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
     logger.debug("[WorldMapScreen] Initializing world map");
     loadTextures();
-    createEntities();
+    createBackground();
     createNodes();
+    createPlayer();
   }
 
   /**
@@ -83,13 +84,16 @@ public class WorldMapScreen extends BaseScreen {
     return ui;
   }
 
-  /** Creates the entities for the world map screen. */
-  private void createEntities() {
+  /** Creates the world map background entity (must be registered before nodes and player). */
+  private void createBackground() {
     // Create world map background entity
     Entity worldMapEntity = new Entity();
     worldMapEntity.addComponent(new WorldMapRenderComponent(WORLD_SIZE));
     ServiceLocator.getEntityService().register(worldMapEntity);
+  }
 
+  /** Creates and registers the world-map player entity (rendered above nodes). */
+  private void createPlayer() {
     // Create player entity
     playerEntity = new Entity();
     // Restore last saved world-map position if available; otherwise use default

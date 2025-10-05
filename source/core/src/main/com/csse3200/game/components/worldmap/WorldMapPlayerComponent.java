@@ -39,6 +39,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   private WorldMapNode levelThreeNode;
   private WorldMapNode townNode;
 
+  /** Horizontal render offset (px). Positive = shift right, Negative = shift left. */
+  private float renderOffsetX = -15f;
+
   private CompletableFuture<WorldMapNode> proximityCheckFuture = null;
   private float timeSinceLastProximityCheck = 0f;
 
@@ -64,6 +67,12 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   public WorldMapPlayerComponent(Vector2 worldSize) {
     this.worldSize = worldSize;
+  }
+
+  /** Creates a player component with an additional horizontal render offset. */
+  public WorldMapPlayerComponent(Vector2 worldSize, float renderOffsetX) {
+    this(worldSize);
+    this.renderOffsetX = renderOffsetX;
   }
 
   @Override
@@ -464,13 +473,18 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (playerTexture != null) {
       Vector2 position = entity.getPosition();
       // Make character slightly taller: 96 width x 110 height
-      batch.draw(playerTexture, position.x, position.y, 96f, 110f);
+      batch.draw(playerTexture, position.x + renderOffsetX, position.y, 96f, 110f);
     }
   }
 
   /** Returns true if the player is currently moving along a path or towards a target. */
   public boolean isCurrentlyMoving() {
     return pathMoving || isMoving;
+  }
+
+  /** Sets the horizontal render offset (pixels). Positive = right, Negative = left. */
+  public void setRenderOffsetX(float offset) {
+    this.renderOffsetX = offset;
   }
 
   /** Clean up any running background tasks when the component is disposed. */
