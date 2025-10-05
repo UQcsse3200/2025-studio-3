@@ -17,6 +17,9 @@ import net.dermetfan.utils.Pair;
  * progress.
  */
 public class Profile {
+
+    public static final java.util.Set<String> DEFAULT_UNLOCKED = java.util.Set.of("levelOne", "shop", "minigames", "Town");
+    private java.util.Set<String> unlockedNodes;
     private String name;
     private Wallet wallet; // The player's wallet (incl. coins & skill points)
     private Inventory inventory; // The player's inventory of items (not defences)
@@ -25,7 +28,6 @@ public class Profile {
     private Arsenal arsenal; // The player's arsenal of unlocked defences
     private String currentLevel; // The player's current level
     private List<String> completedNodes; // List of completed nodes/levels
-    private Set<String> unlockedNodes;   // Set of unlocked nodes
     private float worldMapX = -1f; // last saved X on world map; -1 means unset
     private float worldMapY = -1f; // last saved Y on world map; -1 means unset
     private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
@@ -40,13 +42,13 @@ public class Profile {
         this.skillset = new SkillSet();
         this.statistics = new Statistics();
         this.arsenal = new Arsenal();
-        this.currentLevel = "levelOne";
         this.completedNodes = new ArrayList<>();
         this.unlockedNodes = new HashSet<>();
         this.unlockedNodes.add("levelOne");
         this.worldMapX = -1f;
         this.worldMapY = -1f;
         this.worldMapZoomIdx = -1;
+        this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
     }
 
     /**
@@ -68,13 +70,10 @@ public class Profile {
         this.statistics = statistics != null ? statistics : new Statistics();
         this.arsenal = arsenal;
         this.completedNodes = completedNodes != null ? completedNodes : new ArrayList<>();
-        this.unlockedNodes = new HashSet<>();
+        this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED);
         if (this.currentLevel != null) {
             this.unlockedNodes.add(this.currentLevel);
         }
-        this.worldMapX = -1f;
-        this.worldMapY = -1f;
-        this.worldMapZoomIdx = -1;
     }
 
     /**
