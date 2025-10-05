@@ -71,6 +71,7 @@ public class BomberDeathExplodeComponent extends Component {
                         " at row=" + targetRow + ", col=" + targetCol);
 
                 combat.setHealth(combat.getHealth() - explosionDamage);
+                //combat.setHealth(0); // for testing only
                 combat.handleDeath();
             }
         }
