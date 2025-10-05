@@ -30,6 +30,10 @@ public class ChoiceState {
         this.choices.remove(button);
     }
 
+    public void clearChoices() {
+        this.choices.clear();
+    }
+
     public List<Button> getChoices() {
         return choices;
     }

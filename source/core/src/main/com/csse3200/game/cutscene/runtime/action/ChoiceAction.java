@@ -15,31 +15,19 @@ import com.csse3200.game.ui.ButtonFactory;
 import java.util.Objects;
 
 public class ChoiceAction implements ActionState {
+    private boolean done;
+    private CutsceneOrchestrator orchestrator;
+    private ChoiceState choiceState;
+    private DialogueState dialogueState;
+    private ChoiceData data;
 
     public ChoiceAction(CutsceneOrchestrator orchestrator, ChoiceState choiceState,
                         DialogueState dialogueState, ChoiceData data) {
-        if (!data.prompt().equals("")) {
-            dialogueState.set(data.prompt(), "");
-            dialogueState.setVisible(true);
-        }
-
-        choiceState.setActive(true);
-
-        data.choices().forEach(choice -> {
-            if (Objects.equals(choice.getCutsceneId(), "current")) {
-//                choiceState.addChoice(); // Use button factory to create buttons
-                Button button = ButtonFactory.createButton(choice.getLine());
-                button.setFillParent(false);
-                button.addListener(new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent event, Actor actor) {
-                        orchestrator.choose(choice.getEntryBeatId());
-                        orchestrator.state().getChoiceState().setActive(false);
-                    }
-                });
-                choiceState.addChoice(button);
-            }
-        });
+        this.orchestrator = orchestrator;
+        this.choiceState = choiceState;
+        this.dialogueState = dialogueState;
+        this.data = data;
+        this.done = false;
     }
 
     /**
@@ -49,7 +37,32 @@ public class ChoiceAction implements ActionState {
      */
     @Override
     public void tick(int dtMs) {
+        if (!done) {
+            if (!data.prompt().equals("")) {
+                dialogueState.set(data.prompt(), "");
+                dialogueState.setVisible(true);
+            }
 
+            choiceState.setActive(true);
+
+            data.choices().forEach(choice -> {
+                if (Objects.equals(choice.getCutsceneId(), "current")) {
+//                choiceState.addChoice(); // Use button factory to create buttons
+                    Button button = ButtonFactory.createButton(choice.getLine());
+                    button.setFillParent(false);
+                    button.addListener(new ChangeListener() {
+                        @Override
+                        public void changed(ChangeEvent event, Actor actor) {
+                            orchestrator.choose(choice.getEntryBeatId());
+                            orchestrator.state().getChoiceState().setActive(false);
+                            orchestrator.state().getChoiceState().clearChoices();
+                        }
+                    });
+                    choiceState.addChoice(button);
+                }
+            });
+            done = true;
+        }
     }
 
     /**
@@ -65,7 +78,7 @@ public class ChoiceAction implements ActionState {
      */
     @Override
     public boolean blocking() {
-        return false;
+        return true;
     }
 
     /**

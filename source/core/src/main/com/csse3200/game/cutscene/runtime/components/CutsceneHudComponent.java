@@ -13,8 +13,12 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
+import com.csse3200.game.cutscene.runtime.states.CharacterState;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class CutsceneHudComponent extends UIComponent {
   private final CutsceneOrchestrator orchestrator;
@@ -88,14 +92,14 @@ public class CutsceneHudComponent extends UIComponent {
 
     // Setup character sprites
     characterSprites = new Table();
-    leftPane = new PaneGroup();
+    leftPane = new PaneGroup(Position.LEFT);
     Image leftImage = new Image();
     leftImage.setFillParent(true);
     leftImage.setScaling(Scaling.fit);
     leftImage.setAlign(Align.bottom);
     leftPane.addActor(leftImage);
 
-    rightPane = new PaneGroup();
+    rightPane = new PaneGroup(Position.RIGHT);
     Image rightImage = new Image();
     rightImage.setFillParent(true);
     rightImage.setScaling(Scaling.fit);
@@ -202,43 +206,75 @@ public class CutsceneHudComponent extends UIComponent {
         .forEach(
             characterState -> {
               if (characterState.isOnScreen()) {
-                Image spriteImage = null;
+                Image spriteImage = characterState.getImage();
+
                 if (characterState.getPosition() == Position.LEFT) {
-                  spriteImage = (Image) leftPane.getChild(0);
                   characterState.getTexture().getSprite().setFlip(false, false);
-                  leftPane.setOffsetX(spriteImage, characterState.getxOffset());
+                  characterState.updateImage();
+                  leftPane.getImage(spriteImage).setxOffset(characterState.getxOffset());
+                  leftPane.getImage(spriteImage).setyOffset(characterState.getyOffset());
                   leftPane.relayout();
                 } else if (characterState.getPosition() == Position.RIGHT) {
-                  spriteImage = (Image) rightPane.getChild(0);
                   characterState.getTexture().getSprite().setFlip(true, false);
-                  rightPane.setOffsetX(spriteImage, -characterState.getxOffset());
+                  characterState.updateImage();
+                  rightPane.getImage(spriteImage).setxOffset(-characterState.getxOffset());
+                  rightPane.getImage(spriteImage).setyOffset(-characterState.getyOffset());
                   rightPane.relayout();
                 }
 
-                if (spriteImage != null) {
-                  spriteImage.setDrawable(characterState.getTexture());
+                if (!characterState.isOnScreen()) {
+                  if (characterState.getPosition() == Position.LEFT) {
+                    leftPane.removeImage(spriteImage);
+                  } else if (characterState.getPosition() == Position.RIGHT) {
+                    rightPane.removeImage(spriteImage);
+                  }
                 }
               }
             });
 
+    // Clean up any dead ones
+    List<Image> leftStates = orchestratorState.getCharacterStatesList().stream().filter(characterState -> characterState.getPosition() == Position.LEFT).map(characterState -> characterState.getImage()).toList();
+    List<Image> rightStates = orchestratorState.getCharacterStatesList().stream().filter(characterState -> characterState.getPosition() == Position.RIGHT).map(characterState -> characterState.getImage()).toList();
+
+    for (Image image : leftPane.getImagesKeys()) {
+      if (!leftStates.contains(image)) {
+        leftPane.removeImage(image);
+      }
+    }
+
+    for (Image image : rightPane.getImagesKeys()) {
+      if (!rightStates.contains(image)) {
+        rightPane.removeImage(image);
+      }
+    }
 
     if (orchestratorState.getChoiceState().isActive() && !choicesBound) {
       choicesGroup.setVisible(true);
       choicesLeft.clearChildren();
       choicesCenter.clearChildren();
       choicesRight.clearChildren();
+      Table choiceGroup = choicesLeft;
+
+      if (!leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
+        choiceGroup = choicesCenter;
+      } else if (leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
+        choiceGroup = choicesRight;
+      } else if (rightPane.getImagesKeys().isEmpty() && !leftPane.getImagesKeys().isEmpty()) {
+        choiceGroup = choicesLeft;
+      }
+
       for (Button button : orchestratorState.getChoiceState().getChoices()) {
         if (button instanceof TextButton tb) tb.setFillParent(false);
         if (button.getParent() == null) {
-          choicesLeft.add(button)
+          choiceGroup.add(button)
                   .minWidth(0)
-                  .prefWidth(Value.percentWidth(1f, choicesLeft))
-                  .maxWidth(Value.percentWidth(1f, choicesLeft))
+                  .prefWidth(Value.percentWidth(1f, choiceGroup))
+                  .maxWidth(Value.percentWidth(1f, choiceGroup))
                   .fillX().height(48f).row();
         }
       }
       choicesBound = true;
-    } else if (!orchestratorState.getChoiceState().isActive() && choicesCenter.hasChildren()) {
+    } else if (!orchestratorState.getChoiceState().isActive() && choicesBound) {
       choicesLeft.clearChildren();
       choicesCenter.clearChildren();
       choicesRight.clearChildren();
