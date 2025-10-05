@@ -53,6 +53,10 @@ public class WorldMapScreen extends BaseScreen {
   private int zoomIdx = 0;
   private Entity playerEntity;
   private List<String> textures = new ArrayList<>();
+  // One-shot smooth recenter flag and threshold (in world units)
+  private boolean smoothRecentering = false;
+  private static final float RECENTER_STOP_EPSILON = 2f;
+
 
   /**
    * Constructor for the world map screen.
@@ -206,7 +210,7 @@ public class WorldMapScreen extends BaseScreen {
       }
     }
 
-    // If WASD is pressed, snap view to player center only when player is not moving
+    // If WASD is pressed, smoothly recenter view to player when player is not moving
     if (playerEntity != null
         && (Gdx.input.isKeyJustPressed(Input.Keys.W)
             || Gdx.input.isKeyJustPressed(Input.Keys.A)
@@ -214,7 +218,7 @@ public class WorldMapScreen extends BaseScreen {
             || Gdx.input.isKeyJustPressed(Input.Keys.D))) {
       WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
       if (comp != null && !comp.isCurrentlyMoving()) {
-        centerCameraOnPlayer();
+        startSmoothRecenterToPlayer();
       }
     }
 
@@ -222,6 +226,9 @@ public class WorldMapScreen extends BaseScreen {
     if (isPlayerCurrentlyMoving()) {
       followCamera = true;
     }
+
+    // Run one-shot smooth recenter if requested (does not enable follow mode)
+    updateSmoothRecentering();
 
     updateCamera();
     super.render(delta);
@@ -253,6 +260,44 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(newX, newY);
     clampCamera(camera);
   }
+  /**
+   * Performs a one-shot smooth recenter of the camera toward the player's current position
+   * without enabling continuous follow mode. Stops automatically when close enough or when
+   * follow mode is enabled due to player movement.
+   */
+  private void updateSmoothRecentering() {
+    if (!smoothRecentering || playerEntity == null) return;
+    // If follow mode takes over (e.g., player started moving), cancel the one-shot recenter
+    if (followCamera) {
+      smoothRecentering = false;
+      return;
+    }
+    Vector2 playerPos = playerEntity.getPosition();
+    CameraComponent camera = renderer.getCamera();
+    Vector2 currentCameraPos = camera.getEntity().getPosition();
+
+    float deltaTime = Gdx.graphics.getDeltaTime();
+    float lerpFactor = 1.0f - (float) Math.pow(0.5, CAMERA_LERP_SPEED * deltaTime);
+
+    float newX = MathUtils.lerp(currentCameraPos.x, playerPos.x, lerpFactor);
+    float newY = MathUtils.lerp(currentCameraPos.y, playerPos.y, lerpFactor);
+
+    camera.getEntity().setPosition(newX, newY);
+    clampCamera(camera);
+
+    float dx = playerPos.x - newX;
+    float dy = playerPos.y - newY;
+    if (Math.hypot(dx, dy) <= RECENTER_STOP_EPSILON) {
+      smoothRecentering = false;
+    }
+  }
+
+  /** Request a smooth, one-shot recenter to the player's current position. */
+  public void startSmoothRecenterToPlayer() {
+    if (playerEntity == null) return;
+    smoothRecentering = true;
+  }
+
 
   /**
    * Clamps the camera to the world bounds.
@@ -325,6 +370,7 @@ public class WorldMapScreen extends BaseScreen {
   /** Called by pan input to disable camera follow mode (manual panning). */
   public void startManualPan() {
     followCamera = false;
+    smoothRecentering = false; // cancel any ongoing smooth recenter
   }
 
   /**
