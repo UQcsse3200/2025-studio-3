@@ -44,6 +44,11 @@ punch
 index:16
 bounds:260,2,768,448
 
+
+
+
+
+
 Scrap-titan2.png
 size:2048,2048
 repeat:none
@@ -89,6 +94,16 @@ bounds:772,452,768,448
 punch
 index:13
 bounds:2,2,768,448
+
+
+
+
+
+
+
+
+
+
 
 Scrap-titan3.png
 size:2048,2048
@@ -136,6 +151,15 @@ punch
 index:10
 bounds:772,452,768,448
 
+
+
+
+
+
+
+
+
+
 Scrap-titan4.png
 size:2048,2048
 repeat:none
@@ -163,6 +187,19 @@ bounds:772,452,768,448
 punch
 index:12
 bounds:772,2,768,448
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 Scrap-titan5.png
 size:2048,2048
@@ -192,6 +229,19 @@ punch
 index:9
 bounds:772,2,768,448
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 Scrap-titan6.png
 size:2048,2048
 repeat:none
@@ -210,3 +260,8 @@ bounds:2,902,768,448
 punch
 index:1
 bounds:772,452,768,448
+
+
+
+
+
