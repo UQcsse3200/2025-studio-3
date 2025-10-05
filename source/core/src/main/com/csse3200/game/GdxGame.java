@@ -102,7 +102,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Arcade",
-            new Pair<>(0.59f, 0.34f),
+            new Pair<>(0.55f, 0.395f),
             false,
             true,
             ScreenType.MINI_GAMES,
@@ -132,7 +132,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 3",
-            new Pair<>(0.45f, 0.40f),
+            new Pair<>(0.42f, 0.412f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -142,7 +142,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 4",
-            new Pair<>(0.65f, 0.60f),
+            new Pair<>(0.7f, 0.55f),
             false,
             false,
             ScreenType.MAIN_GAME,
