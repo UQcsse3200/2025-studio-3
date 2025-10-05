@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    { "id": "hero", "name": "Hero", "poses": { "normal": "hero_normal.png", "angry": "hero_angry.png" } },
+    { "id": "alice", "name": "Alice", "poses": { "hologram": "alice_hologram.png" } },
+    { "id": "rob", "name": "Rob", "poses": { "glitch": "rob_normal.png" } }
+  ],
+  "backgrounds": [
+    { "id": "lab_ruins", "image": "lab_dark.png" },
+    { "id": "holo_room", "image": "library.png" },
+    { "id": "city_night", "image": "city_night.png" }
+  ],
+  "cutscene": {
+    "id": "cutscenemid",
+    "beats": [
+      {
+        "id": "b0",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "lab_ruins", "transition": "fade", "duration": 1500, "await": true }
+        ]
+      },
+      {
+        "id": "b1",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "hero", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "hero", "text": "Alice...? Please tell me this isn’t the end.", "await": true }
+        ]
+      },
+      {
+        "id": "b2",
+        "advance": { "mode": "auto_delay", "delay": 800 },
+        "actions": [
+          { "type": "background.set", "backgroundId": "holo_room", "transition": "fade", "duration": 1200, "await": true },
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "right", "transition": "fade", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "If you're hearing this... I'm still inside. Follow the signal.", "await": true }
+        ]
+      },
+      {
+        "id": "b3",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 300, "await": true },
+          { "type": "character.enter", "characterId": "rob", "pose": "glitch", "position": "center", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "rob", "text": "You still don’t understand... she chose this.", "await": true }
+        ]
+      },
+      {
+        "id": "b4",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "hero", "text": "Then consider me your worst instability yet.", "await": true }
+        ]
+      },
+      {
+        "id": "b5",
+        "advance": { "mode": "auto_delay", "delay": 500 },
+        "actions": [
+          { "type": "background.set", "backgroundId": "city_night", "transition": "fade", "duration": 1200, "await": true },
+          { "type": "dialogue.show", "characterId": "hero", "text": "Hang on, Alice. I'll bring you back.", "await": true }
+        ]
+      }
+    ]
+  }
+}
