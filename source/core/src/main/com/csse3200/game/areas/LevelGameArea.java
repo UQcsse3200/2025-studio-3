@@ -13,6 +13,7 @@ import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -393,14 +394,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
-    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y); // + tileSize / 2f - 5f);
-    // Scale the projectile so it’s more visible
-    projectile.scaleHeight(100f); // set the height in world units
-    projectile.scaleWidth(100f); // set the width in world units
-
-    projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
-    if (tag != null && tag.getType() != ProjectileType.HARPOON_PROJECTILE) {
+    // Scale the projectile so it’s more visible
+    float size = 30f;
+    if (tag.getType() == ProjectileType.HARPOON_PROJECTILE) {
+      projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 4f);
+      size = 100f;
+    }
+    projectile.scaleHeight(size); // set the height in world units
+    projectile.scaleWidth(size); // set the width in world units
+
+    if (tag.getType() == ProjectileType.SHELL) {
+        Random random = new Random();
+        int num = random.nextInt(6) + 2; // pick random num between 2 and 7
+        projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
+    } else {
+        projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+    }
+    if (tag != null
+        && tag.getType() != ProjectileType.HARPOON_PROJECTILE
+        && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
     spawnEntity(projectile); // adds to area and entity service

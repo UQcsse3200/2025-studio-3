@@ -1,6 +1,5 @@
 package com.csse3200.game.entities.factories;
 
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -35,6 +34,7 @@ public class ProjectileFactory {
     pathToTypeMap.put("images/effects/bullet.png", ProjectileType.BULLET);
     pathToTypeMap.put("images/effects/harpoon_projectile.png", ProjectileType.HARPOON_PROJECTILE);
     pathToTypeMap.put("images/effects/shock.png", ProjectileType.SHOCK);
+    pathToTypeMap.put("images/effects/shell.png", ProjectileType.SHELL);
     // add more mappings as needed
   }
 
@@ -51,19 +51,16 @@ public class ProjectileFactory {
    * @return projectile entity
    */
   public static Entity createProjectile(String path, int damage) {
-    HitboxComponent hitbox = new HitboxComponent();
-    hitbox.setLayer(PhysicsLayer.PROJECTILE);
-    hitbox.setSensor(true);
-    PhysicsComponent physics = new PhysicsComponent();
-    physics.setBodyType(BodyDef.BodyType.KinematicBody); // kinematic so it moves but doesn't react
-    ColliderComponent collider = new ColliderComponent();
-    collider.setSensor(true);
     ProjectileType type = getProjectileTypeFromPath(path);
+    ColliderComponent collider = new ColliderComponent();
+    if (type == ProjectileType.HARPOON_PROJECTILE || type == ProjectileType.SHELL) {
+      collider.setSensor(true);
+    }
     Entity proj =
         new Entity()
-            .addComponent(physics)
+            .addComponent(new PhysicsComponent())
             .addComponent(collider)
-            .addComponent(hitbox)
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
             .addComponent(new ProjectileTagComponent(type))
             .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit

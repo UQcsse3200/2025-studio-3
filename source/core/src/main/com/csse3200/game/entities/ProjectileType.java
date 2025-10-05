@@ -4,5 +4,6 @@ public enum ProjectileType {
   SLINGSHOT,
   BULLET,
   HARPOON_PROJECTILE,
-  SHOCK
+  SHOCK,
+  SHELL
 }
