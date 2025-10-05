@@ -76,182 +76,170 @@ public class Profile {
         }
     }
 
-    /**
-     * Get the name of the profile.
-     *
-     * @return the name of the profile.
-     */
-    public String getName() {
-        return name;
+  /**
+   * Get the name of the profile.
+   *
+   * @return the name of the profile.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
+   * Change the name of the profile.
+   *
+   * @param name the new name of the profile.
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
+
+  /**
+   * Get the current level of the profile.
+   *
+   * @return the current level of the profile.
+   */
+  public String getCurrentLevel() {
+    return currentLevel;
+  }
+
+  /**
+   * Set the current level of the profile.
+   *
+   * @param currentLevel the new current level of the profile.
+   */
+  public void setCurrentLevel(String currentLevel) {
+    this.currentLevel = currentLevel;
+  }
+
+  /**
+   * Get the wallet associated with the profile.
+   *
+   * @return the wallet of the profile.
+   */
+  public Wallet getWallet() {
+    return wallet;
+  }
+
+  /**
+   * Get the inventory associated with the profile.
+   *
+   * @return the inventory of the profile.
+   */
+  public Inventory getInventory() {
+    return inventory;
+  }
+
+  /**
+   * Get the arsenal associated with the profile.
+   *
+   * @return the arsenal of the profile.
+   */
+  public Arsenal getArsenal() {
+    return arsenal;
+  }
+
+  /**
+   * Get the skillset associated with the profile.
+   *
+   * @return the skillset of the profile.
+   */
+  public SkillSet getSkillset() {
+    return skillset;
+  }
+
+  /**
+   * Get the statistics associated with the profile.
+   *
+   * @return the statistics of the profile.
+   */
+  public Statistics getStatistics() {
+    return statistics;
+  }
+
+  /**
+   * Get the completed nodes associated with the profile.
+   *
+   * @return the completed nodes of the profile.
+   */
+  public List<String> getCompletedNodes() {
+    return completedNodes;
+  }
+
+  /**
+   * Set the completed nodes associated with the profile.
+   *
+   * @param completedNodes the new completed nodes of the profile.
+   */
+  public void setCompletedNodes(List<String> completedNodes) {
+    this.completedNodes = completedNodes;
+  }
+
+  /**
+   * Add a completed node to the profile.
+   *
+   * @param node the node to add to the profile.
+   */
+  public void addCompletedNode(String node) {
+    this.completedNodes.add(node);
+  }
+
+  public float getWorldMapX() {
+    return worldMapX;
+  }
+
+  public float getWorldMapY() {
+    return worldMapY;
+  }
+
+  public void setWorldMapX(float worldMapX) {
+    this.worldMapX = worldMapX;
+  }
+
+  /** Gets the saved world map zoom step index (-1 if unset). */
+  public int getWorldMapZoomIdx() {
+    return worldMapZoomIdx;
+  }
+
+  /** Sets the saved world map zoom step index. */
+  public void setWorldMapZoomIdx(int worldMapZoomIdx) {
+    this.worldMapZoomIdx = worldMapZoomIdx;
+  }
+
+  public void setWorldMapY(float worldMapY) {
+    this.worldMapY = worldMapY;
+  }
+
+  /** Marks a node as completed and keeps it unlocked for replay. */
+  public void completeNode(String key) {
+    if (key == null || key.isEmpty()) return;
+    if (!completedNodes.contains(key)) {
+      completedNodes.add(key);
     }
+    unlockedNodes.add(key);
+  }
 
-    /**
-     * Change the name of the profile.
-     *
-     * @param name the new name of the profile.
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * Unlocks a node so the player can access it, even if not completed yet.
+   *
+   * @param key the node identifier
+   */
+  public void unlockNode(String key) {
+    if (key == null || key.isEmpty()) return;
+    unlockedNodes.add(key);
+  }
 
-    /**
-     * Get the current level of the profile.
-     *
-     * @return the current level of the profile.
-     */
-    public String getCurrentLevel() {
-        return currentLevel;
-    }
+  /** Returns true if this node has been completed. */
+  public boolean isNodeCompleted(String key) {
+    return completedNodes.contains(key);
+  }
 
-    /**
-     * Set the current level of the profile.
-     *
-     * @param currentLevel the new current level of the profile.
-     */
-    public void setCurrentLevel(String currentLevel) {
-        this.currentLevel = currentLevel;
-    }
+  /** Returns true if this node is unlocked and can be entered. */
+  public boolean isNodeUnlocked(String key) {
+    return unlockedNodes.contains(key);
+  }
 
-    /**
-     * Get the wallet associated with the profile.
-     *
-     * @return the wallet of the profile.
-     */
-    public Wallet getWallet() {
-        return wallet;
-    }
-
-    /**
-     * Get the inventory associated with the profile.
-     *
-     * @return the inventory of the profile.
-     */
-    public Inventory getInventory() {
-        return inventory;
-    }
-
-    /**
-     * Get the arsenal associated with the profile.
-     *
-     * @return the arsenal of the profile.
-     */
-    public Arsenal getArsenal() {
-        return arsenal;
-    }
-
-    /**
-     * Get the skillset associated with the profile.
-     *
-     * @return the skillset of the profile.
-     */
-    public SkillSet getSkillset() {
-        return skillset;
-    }
-
-    /**
-     * Get the statistics associated with the profile.
-     *
-     * @return the statistics of the profile.
-     */
-    public Statistics getStatistics() {
-        return statistics;
-    }
-
-    /**
-     * Get the completed nodes associated with the profile.
-     *
-     * @return the completed nodes of the profile.
-     */
-    public List<String> getCompletedNodes() {
-        return completedNodes;
-    }
-
-    /**
-     * Set the completed nodes associated with the profile.
-     *
-     * @param completedNodes the new completed nodes of the profile.
-     */
-    public void setCompletedNodes(List<String> completedNodes) {
-        this.completedNodes = completedNodes;
-    }
-
-    /**
-     * Add a completed node to the profile.
-     *
-     * @param node the node to add to the profile.
-     */
-    public void addCompletedNode(String node) {
-        this.completedNodes.add(node);
-    }
-
-    public float getWorldMapX() {
-        return worldMapX;
-    }
-
-    public float getWorldMapY() {
-        return worldMapY;
-    }
-
-    public void setWorldMapX(float worldMapX) {
-        this.worldMapX = worldMapX;
-    }
-
-    /**
-     * Gets the saved world map zoom step index (-1 if unset).
-     */
-    public int getWorldMapZoomIdx() {
-        return worldMapZoomIdx;
-    }
-
-    /**
-     * Sets the saved world map zoom step index.
-     */
-    public void setWorldMapZoomIdx(int worldMapZoomIdx) {
-        this.worldMapZoomIdx = worldMapZoomIdx;
-    }
-
-    public void setWorldMapY(float worldMapY) {
-        this.worldMapY = worldMapY;
-    }
-
-
-    /**
-     * Marks a node as completed and keeps it unlocked for replay.
-     */
-    public void completeNode(String key) {
-        if (key == null || key.isEmpty()) return;
-        if (!completedNodes.contains(key)) {
-            completedNodes.add(key);
-        }
-        unlockedNodes.add(key);
-    }
-
-    /**
-     * Unlocks a node so the player can access it, even if not completed yet.
-     *
-     * @param key the node identifier
-     */
-    public void unlockNode(String key) {
-        if (key == null || key.isEmpty()) return;
-        unlockedNodes.add(key);
-    }
-
-    /**
-     * Returns true if this node has been completed.
-     */
-    public boolean isNodeCompleted(String key) {
-        return completedNodes.contains(key);
-    }
-
-    /**
-     * Returns true if this node is unlocked and can be entered.
-     */
-    public boolean isNodeUnlocked(String key) {
-        return unlockedNodes.contains(key);
-    }
-
-    public Set<String> getUnlockedNodes() {
-        return unlockedNodes;
-    }
-
+  public Set<String> getUnlockedNodes() {
+    return unlockedNodes;
+  }
 }

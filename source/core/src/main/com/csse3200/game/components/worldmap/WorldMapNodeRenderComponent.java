@@ -326,4 +326,34 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     Map<String, com.csse3200.game.services.WorldMapService.PathDef> m = localPaths.get(nodeKey);
     return m == null ? null : m.get(dir);
   }
+
+  public String getKey() {
+    return node.getRegistrationKey();
+  }
+
+  /** Access the underlying node data object */
+  public WorldMapNode getNode() {
+    return node;
+  }
+
+  /** Center position in world coordinates (used by render & hit test) */
+  public Vector2 getCenterWorld() {
+    float x = node.getPositionX() * worldSize.x;
+    float y = node.getPositionY() * worldSize.y;
+    return new Vector2(x + nodeSize * 0.5f, y + nodeSize * 0.5f);
+  }
+
+  /** Hit radius consistent with on-node logic */
+  public float getHitRadius() {
+    return Math.max(nodeSize * 0.45f, 36f);
+  }
+
+  /** Point-in-node test in world coords */
+  public boolean hit(float worldX, float worldY) {
+    Vector2 c = getCenterWorld();
+    float r = getHitRadius();
+    float dx = worldX - c.x;
+    float dy = worldY - c.y;
+    return (dx * dx + dy * dy) <= (r * r);
+  }
 }

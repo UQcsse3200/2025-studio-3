@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.ui.WorldMapNode;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,6 +22,16 @@ public class WorldMapService {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapService.class);
   private final Map<String, WorldMapNode> nodes;
   private final List<WorldMapNodeRenderComponent> nodeRenderComponents;
+
+  private Entity playerEntity;
+
+  public void registerPlayer(Entity player) {
+    this.playerEntity = player;
+  }
+
+  public Entity getPlayerEntity() {
+    return this.playerEntity;
+  }
 
   /** Constructor for the world map service. */
   public WorldMapService() {
@@ -177,5 +188,14 @@ public class WorldMapService {
   public PathDef getPath(String currentNodeKey, String keyName) {
     Map<String, PathDef> m = pathMap.get(currentNodeKey);
     return (m == null) ? null : m.get(keyName);
+  }
+
+  public WorldMapNode findNodeAt(float x, float y) {
+    for (WorldMapNodeRenderComponent c : nodeRenderComponents) {
+      if (c.hit(x, y)) {
+        return c.getNode();
+      }
+    }
+    return null;
   }
 }
