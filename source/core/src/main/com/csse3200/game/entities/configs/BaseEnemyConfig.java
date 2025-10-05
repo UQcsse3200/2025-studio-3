@@ -13,8 +13,9 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   private float teleportCooldownSeconds;
   private float teleportChance;
   private int maxTeleports;
-  private int invulnerabilityMs;
   private int coinsRewarded;
+  private int explosionDelay;
+  private int explosionDamage;
 
   /**
    * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
@@ -54,6 +55,10 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     return maxTeleports > 0;
   }
 
+  public boolean isBomberRobot() {
+      return explosionDamage > 0;
+  }
+
   /**
    * Gets the teleport cooldown seconds value for this entity.
    *
@@ -81,14 +86,14 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     return maxTeleports;
   }
 
-  /**
-   * Gets the invulnerability ms value for this entity.
-   *
-   * @return the invulnerability ms value
-   */
-  public int getInvulnerabilityMs() {
-    return invulnerabilityMs;
+  public float getExplosionDelay() {
+      return explosionDelay;
   }
+
+  public int getExplosionDamage() {
+      return explosionDamage;
+  }
+
 
   /**
    * Gets the scale value for this entity.
@@ -108,7 +113,8 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     return coinsRewarded;
   }
 
-  /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */
+
+    /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */
   public static class DeserializedEnemyConfig {
     private HashMap<String, BaseEnemyConfig> config;
 

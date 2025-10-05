@@ -13,7 +13,9 @@
       "teleportChance": 0,
       "coinsRewarded": 1,
       "maxTeleports": 0,
-      "invulnerabilityMs": 0
+
+      "explosionDelay": 0,
+      "explosionDamage": 0
     },
     "fastRobot": {
       "name": "Fast Robot",
@@ -28,7 +30,9 @@
       "teleportChance": 0,
       "coinsRewarded": 2,
       "maxTeleports": 0,
-      "invulnerabilityMs": 0
+
+      "explosionDelay": 0,
+      "explosionDamage": 0
     },
     "tankyRobot": {
       "name": "Tanky Robot",
@@ -43,7 +47,9 @@
       "teleportChance": 0,
       "coinsRewarded": 3,
       "maxTeleports": 0,
-      "invulnerabilityMs": 0
+
+      "explosionDelay": 0,
+      "explosionDamage": 0
     },
     "bungeeRobot": {
       "name": "Bungee Robot",
@@ -56,9 +62,10 @@
       "description": "A bungee robot. Yeehaw!",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
-      "coinsRewarded": 2,
       "maxTeleports": 0,
-      "invulnerabilityMs": 0
+
+      "explosionDelay": 0,
+      "explosionDamage": 0
     },
     "teleportRobot": {
       "name": "Teleport Robot",
@@ -71,9 +78,26 @@
       "description": "A teleporting robot. Watch your back.",
       "teleportCooldownSeconds": 4,
       "teleportChance": 0.6,
-      "coinsRewarded": 2,
       "maxTeleports": 3,
-      "invulnerabilityMs": 200
+
+      "explosionDelay": 0,
+      "explosionDamage": 0
+    },
+    "bomberRobot": {
+      "name": "Bomber Robot",
+      "atlasPath": "images/entities/enemies/red_robot.atlas",
+      "assetPath": "images/entities/enemies/red_robot_default_sprite.png",
+      "health": 30,
+      "attack": 1000,
+      "movementSpeed": 30,
+      "scale": 1,
+      "description": "A robot that explodes on death .",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "maxTeleports": 0,
+
+      "explosionDelay": 2.5,
+      "explosionDamage": 10000
     }
   }
 }

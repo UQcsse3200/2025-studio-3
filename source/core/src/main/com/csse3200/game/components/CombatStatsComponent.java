@@ -56,6 +56,10 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
+    
+//    if(health <= maxHealth/2) {
+//        entity.getEvents().trigger("lowHealth");
+//    }
 
     if (entity != null) {
       if (this.health == 0) {

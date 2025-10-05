@@ -10,6 +10,7 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
+import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -41,7 +42,8 @@ public class RobotFactory {
     FAST,
     TANKY,
     BUNGEE,
-    TELEPORT
+    TELEPORT,
+      BOMBER
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -66,28 +68,9 @@ public class RobotFactory {
       case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
       case STANDARD -> config = configService.getEnemyConfig("standardRobot");
       case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
+        case BOMBER -> config = configService.getEnemyConfig("bomberRobot");
     }
     return createBaseRobot(config);
-  }
-
-  /**
-   * Creates a Teleport Robot with teleport behaviour attached.
-   *
-   * @param cfg Teleport robot config (stats and teleport params)
-   * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
-   * @return Entity with base robot components plus TeleportTask
-   */
-  public static Entity createTeleportRobot(BaseEnemyConfig cfg, float[] laneYs) {
-    Entity robot = createBaseRobot(cfg);
-    if (cfg.isTeleportRobot()) {
-      robot.addComponent(
-          new TeleportTask(
-              cfg.getTeleportCooldownSeconds(),
-              cfg.getTeleportChance(),
-              cfg.getMaxTeleports(),
-              laneYs));
-    }
-    return robot;
   }
 
   /**
@@ -156,6 +139,20 @@ public class RobotFactory {
                 laneYs));
       }
     }
+
+      // ✅ Add explosion-on-death component for bomber
+      if (config.isBomberRobot()) {
+          BomberDeathExplodeComponent explodeComp = new BomberDeathExplodeComponent(
+                  config.getExplosionDamage(),
+                  1.0f
+          );
+          robot.addComponent(explodeComp);
+          System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
+      }
+
+
+
+
 
     // Scales
     animator.scaleEntity();

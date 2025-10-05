@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
@@ -77,7 +78,10 @@ public class DefenceFactory {
         .addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
-    animator.scaleEntity();
+
+      defender.getComponent(CombatStatsComponent.class).setHealth(config.getHealth());
+
+      animator.scaleEntity();
 
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
@@ -134,7 +138,8 @@ public class DefenceFactory {
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
             .addComponent(new ColliderComponent())
-            .addComponent(new HitMarkerComponent());
+            .addComponent(new HitMarkerComponent())
+        .addComponent(new CombatStatsComponent(1, 0)) ; // placeholder health, will set real value later
 
     npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
