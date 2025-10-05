@@ -71,23 +71,14 @@ public class RobotFactory {
       case STANDARD -> config = configService.getEnemyConfig("standardRobot");
       case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
       case GUNNER -> {
-        BaseEnemyConfig gunnerConfig = configService.getEnemyConfig("gunnerRobot");
-        // check if gunner config can be found
-        if (gunnerConfig == null) {
-          return null;
-        }
-        Entity gunner = createBaseRobot(gunnerConfig);
-
-        AITaskComponent aiComponent = gunner.getComponent(AITaskComponent.class);
-        aiComponent.addTask(new MoveLeftTask(50));
-        aiComponent.addTask(new GunnerAttackTask(gunnerConfig.getAttackRange()));
-
-        gunner.getEvents().trigger("gunnerRobotCreated");
-        return gunner;
-
-
+        return createGunner();
       }
+
     }
+      if (config == null) {
+        return null;
+      }
+
     return createBaseRobot(config);
   }
 
@@ -119,10 +110,19 @@ public class RobotFactory {
    */
  public static Entity createGunner() {
    BaseEnemyConfig config = getConfigService().getEnemyConfig("gunnerRobot");
+   if (config == null) {
+     return null;
+   }
    Entity gunner = createBaseRobot(config);
 
    AITaskComponent aiComponent = gunner.getComponent(AITaskComponent.class);
-   aiComponent.addTask(new GunnerAttackTask(config.getAttackRange()));
+   if (aiComponent != null) {
+     aiComponent.clearTask();
+     aiComponent.addTask(new MoveLeftTask(50));
+     aiComponent.addTask(new GunnerAttackTask(config.getAttackRange(), PhysicsLayer.NPC));
+
+   }
+
 
    gunner.getEvents().trigger("gunnerRobotCreated");
    return gunner;

@@ -46,22 +46,13 @@ public class AITaskComponent extends Component implements TaskRunner {
   @Override
   public void update() {
     PriorityTask desiredtask = getHighestPriorityTask();
-
-    // Log the AI decision
-    logger.info("AI {} choosing task {} with priority {}",
-            this.getEntity(),
-            desiredtask,
-            desiredtask != null ? desiredtask.getPriority() : -1);
     if (desiredtask == null || desiredtask.getPriority() < 0) {
       return;
     }
-    //logger.info("Current task priority {}",desiredtask.getPriority());
 
     if (desiredtask != currentTask) {
-      //logger.info("Current task priority {}",desiredtask.getPriority());
       changeTask(desiredtask);
     }
-    //logger.info("{} Running task {}", this, desiredtask);
     currentTask.update();
   }
 
@@ -88,6 +79,17 @@ public class AITaskComponent extends Component implements TaskRunner {
     currentTask = desiredTask;
     if (desiredTask != null) {
       desiredTask.start();
+    }
+  }
+
+  /**
+   * Clear the current task.
+   */
+  public void clearTask() {
+    if (currentTask != null) {
+      logger.info("Clearing current task {}", this);
+      currentTask.stop();
+      currentTask = null; //reset to no active task
     }
   }
 }
