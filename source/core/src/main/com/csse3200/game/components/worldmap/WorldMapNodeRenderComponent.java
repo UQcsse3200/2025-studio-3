@@ -417,7 +417,12 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     JsonReader reader = new JsonReader();
     JsonValue root = reader.parse(file);
 
-    for (JsonValue nodeEntry = root.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
+    JsonValue nodesRoot = root.get("directions");
+    if (nodesRoot == null) {
+      return;
+    }
+
+    for (JsonValue nodeEntry = nodesRoot.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
       String nodeKey = nodeEntry.name();
       Map<String, com.csse3200.game.services.WorldMapService.PathDef> dirMap = new HashMap<>();
 
@@ -448,8 +453,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   }
 
   /**
-   * Resolve the human-readable display name for a node key by querying the WorldMapService.
-   * Falls back to the key itself if the node cannot be found.
+   * Resolve the human-readable display name for a node key by querying the WorldMapService. Falls
+   * back to the key itself if the node cannot be found.
    *
    * @param nodeKey registration key from the path definition (def.next)
    * @return display name (e.g., "Arcade", "Town", "Level 1") or the key if not found

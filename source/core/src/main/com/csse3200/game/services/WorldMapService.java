@@ -158,30 +158,56 @@ public class WorldMapService {
       logger.warn("[WorldMapService] path config not found: {}", internalPath);
       return;
     }
+
     pathMap.clear();
     JsonReader reader = new JsonReader();
     JsonValue root = reader.parse(file);
 
-    for (JsonValue nodeEntry = root.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
+    JsonValue nodesRoot = root.get("directions");
+    if (nodesRoot == null) {
+      return;
+    }
+
+    for (JsonValue nodeEntry = nodesRoot.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
       String curNodeKey = nodeEntry.name();
+      if (curNodeKey == null) continue;
+
       Map<String, PathDef> keyMap = new HashMap<>();
+
       for (JsonValue keyEntry = nodeEntry.child(); keyEntry != null; keyEntry = keyEntry.next()) {
         String keyName = keyEntry.name();
+        if (keyName == null) continue;
+
         PathDef def = new PathDef();
-        def.next = keyEntry.getString("next");
+
+        // Safe read of "next"
+        JsonValue nextVal = keyEntry.get("next");
+        def.next = (nextVal != null) ? nextVal.asString() : null;
+
+        // Read waypoints
         def.waypoints = new ArrayList<>();
         JsonValue pathArr = keyEntry.get("path");
         if (pathArr != null) {
           for (JsonValue p = pathArr.child(); p != null; p = p.next()) {
-            float wx = p.get(0).asFloat();
-            float wy = p.get(1).asFloat();
-            def.waypoints.add(new Vector2(wx, wy));
+            JsonValue xv = p.get(0);
+            JsonValue yv = p.get(1);
+            if (xv != null && yv != null) {
+              def.waypoints.add(new Vector2(xv.asFloat(), yv.asFloat()));
+            }
           }
         }
-        keyMap.put(keyName, def);
+
+        // Only store if it has at least next or at least one waypoint
+        if (def.next != null || (def.waypoints != null && !def.waypoints.isEmpty())) {
+          keyMap.put(keyName, def);
+        }
       }
-      pathMap.put(curNodeKey, keyMap);
+
+      if (!keyMap.isEmpty()) {
+        pathMap.put(curNodeKey, keyMap);
+      }
     }
+
     logger.info("[WorldMapService] Loaded path config for {} nodes", pathMap.size());
   }
 

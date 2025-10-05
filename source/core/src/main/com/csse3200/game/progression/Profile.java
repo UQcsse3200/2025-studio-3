@@ -7,9 +7,9 @@ import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 import net.dermetfan.utils.Pair;
 
 /**
@@ -18,63 +18,60 @@ import net.dermetfan.utils.Pair;
  */
 public class Profile {
 
-    public static final java.util.Set<String> DEFAULT_UNLOCKED = java.util.Set.of("levelOne", "shop", "minigames", "Town");
-    private java.util.Set<String> unlockedNodes;
-    private String name;
-    private Wallet wallet; // The player's wallet (incl. coins & skill points)
-    private Inventory inventory; // The player's inventory of items (not defences)
-    private SkillSet skillset; // The player's skills / skill tree
-    private Statistics statistics; // The player's statistics (includes achievements)
-    private Arsenal arsenal; // The player's arsenal of unlocked defences
-    private String currentLevel; // The player's current level
-    private List<String> completedNodes; // List of completed nodes/levels
-    private float worldMapX = -1f; // last saved X on world map; -1 means unset
-    private float worldMapY = -1f; // last saved Y on world map; -1 means unset
-    private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
+  public static final java.util.Set<String> DEFAULT_UNLOCKED =
+      java.util.Set.of("levelOne", "shop", "minigames", "Town");
+  private java.util.Set<String> unlockedNodes;
+  private String name;
+  private Wallet wallet; // The player's wallet (incl. coins & skill points)
+  private Inventory inventory; // The player's inventory of items (not defences)
+  private SkillSet skillset; // The player's skills / skill tree
+  private Statistics statistics; // The player's statistics (includes achievements)
+  private Arsenal arsenal; // The player's arsenal of unlocked defences
+  private String currentLevel; // The player's current level
+  private List<String> completedNodes; // List of completed nodes/levels
+  private float worldMapX = -1f; // last saved X on world map; -1 means unset
+  private float worldMapY = -1f; // last saved Y on world map; -1 means unset
+  private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
 
-    /**
-     * Creates a new profile with default values.
-     */
-    public Profile() {
-        this.name = Savefile.createName();
-        this.wallet = new Wallet();
-        this.inventory = new Inventory();
-        this.skillset = new SkillSet();
-        this.statistics = new Statistics();
-        this.arsenal = new Arsenal();
-        this.completedNodes = new ArrayList<>();
-        this.unlockedNodes = new HashSet<>();
-        this.unlockedNodes.add("levelOne");
-        this.worldMapX = -1f;
-        this.worldMapY = -1f;
-        this.worldMapZoomIdx = -1;
-        this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
-    }
+  /** Creates a new profile with default values. */
+  public Profile() {
+    this.name = Savefile.createName();
+    this.wallet = new Wallet();
+    this.inventory = new Inventory();
+    this.skillset = new SkillSet();
+    this.statistics = new Statistics();
+    this.arsenal = new Arsenal();
+    this.completedNodes = new ArrayList<>();
+    this.unlockedNodes = new HashSet<>();
+    this.unlockedNodes.add("levelOne");
+    this.worldMapX = -1f;
+    this.worldMapY = -1f;
+    this.worldMapZoomIdx = -1;
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
+  }
 
-    /**
-     * Initialise a profile with the provided values.
-     */
-    public Profile(
-            Pair<String, String> nameAndLevel,
-            Wallet wallet,
-            Inventory inventory,
-            SkillSet skillset,
-            Statistics statistics,
-            Arsenal arsenal,
-            List<String> completedNodes) {
-        this.name = nameAndLevel.getKey();
-        this.currentLevel = nameAndLevel.getValue();
-        this.wallet = wallet;
-        this.inventory = inventory;
-        this.skillset = skillset;
-        this.statistics = statistics != null ? statistics : new Statistics();
-        this.arsenal = arsenal;
-        this.completedNodes = completedNodes != null ? completedNodes : new ArrayList<>();
-        this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED);
-        if (this.currentLevel != null) {
-            this.unlockedNodes.add(this.currentLevel);
-        }
+  /** Initialise a profile with the provided values. */
+  public Profile(
+      Pair<String, String> nameAndLevel,
+      Wallet wallet,
+      Inventory inventory,
+      SkillSet skillset,
+      Statistics statistics,
+      Arsenal arsenal,
+      List<String> completedNodes) {
+    this.name = nameAndLevel.getKey();
+    this.currentLevel = nameAndLevel.getValue();
+    this.wallet = wallet;
+    this.inventory = inventory;
+    this.skillset = skillset;
+    this.statistics = statistics != null ? statistics : new Statistics();
+    this.arsenal = arsenal;
+    this.completedNodes = completedNodes != null ? completedNodes : new ArrayList<>();
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED);
+    if (this.currentLevel != null) {
+      this.unlockedNodes.add(this.currentLevel);
     }
+  }
 
   /**
    * Get the name of the profile.
