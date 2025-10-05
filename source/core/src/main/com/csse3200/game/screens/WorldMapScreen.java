@@ -17,13 +17,14 @@ import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
-import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -145,47 +146,45 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Creates the nodes for the world map. */
   private void createNodes() {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+      WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+      List<WorldMapNode> nodes = worldMapService.getAllNodes();
+      var ps = ServiceLocator.getProfileService();
 
-    // Get existing nodes and mark/lock according to linear progression
-    List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    ProfileService profileService = ServiceLocator.getProfileService();
-    if (profileService != null) {
-      String currentLevel = profileService.getProfile().getCurrentLevel();
+      Set<String> unlocked = java.util.Collections.emptySet();
+      java.util.List<String> completed = java.util.Collections.emptyList();
 
-      boolean reachedCurrent = false;
+      if (ps != null && ps.getProfile() != null) {
+          unlocked = ps.getProfile().getUnlockedNodes();
+          completed = ps.getProfile().getCompletedNodes();
+      }
+
       for (WorldMapNode node : nodes) {
-        String key = node.getRegistrationKey();
-        if (key.equals(currentLevel)) {
-          worldMapService.unlockNode(key);
-          reachedCurrent = true;
-          continue;
-        }
-        if (!reachedCurrent) {
-          worldMapService.completeNode(key);
-          worldMapService.lockNode(key, "This level has already been completed.");
-        }
+          String key = node.getRegistrationKey();
+          if (completed.contains(key)) {
+              worldMapService.completeNode(key);
+              worldMapService.unlockNode(key);
+          } else if (unlocked.contains(key)) {
+              worldMapService.unlockNode(key);
+          } else {
+              worldMapService.lockNode(key, "Locked until you reach this node.");
+          }
       }
-      if (currentLevel == null && !nodes.isEmpty()) {
-        worldMapService.unlockNode(nodes.get(0).getRegistrationKey());
-      }
-    }
 
-    // Create render entities for each node
-    for (WorldMapNode node : nodes) {
-      Entity nodeEntity = new Entity();
-      float worldX = node.getPositionX() * WORLD_WIDTH;
-      float worldY = node.getPositionY() * WORLD_HEIGHT;
-      nodeEntity.setPosition(worldX, worldY);
-      WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
-      nodeEntity.addComponent(comp);
-      // register render component for proximity updates
-      ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
-      ServiceLocator.getEntityService().register(nodeEntity);
-    }
+      for (WorldMapNode node : nodes) {
+          Entity nodeEntity = new Entity();
+          float worldX = node.getPositionX() * WORLD_WIDTH;
+          float worldY = node.getPositionY() * WORLD_HEIGHT;
+          nodeEntity.setPosition(worldX, worldY);
+          WorldMapNodeRenderComponent comp =
+                  new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
+          nodeEntity.addComponent(comp);
+          ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
+          ServiceLocator.getEntityService().register(nodeEntity);
+      }
   }
 
-  @Override
+
+    @Override
   public void render(float delta) {
     handleZoomInput();
 
