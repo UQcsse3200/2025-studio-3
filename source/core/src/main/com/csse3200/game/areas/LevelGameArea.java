@@ -401,10 +401,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     int spawnRow = Math.clamp(row,0,levelRows-1); // Bottom row for now
 
     float spawnX = xOffset + tileSize * spawnCol;
-    float spawnY = yOffset + tileSize * spawnRow-(tileSize/2f);
+    float spawnY = yOffset + tileSize * spawnRow-(tileSize/1.5f);
 
     boss.setPosition(spawnX, spawnY);
-    boss.scaleHeight(tileSize);
+    boss.scaleHeight(tileSize*3.0f);
 
     logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
 
@@ -728,7 +728,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       float ny = (p.y - oldY) * s + yOffset;
       r.setPosition(nx, ny);
       if(r.getComponent(HitboxComponent.class).getLayer()== PhysicsLayer.BOSS) {
-          r.scaleHeight(tileSize*2.0f);
+          r.scaleHeight(tileSize*3.0f);
       }else{
           r.scaleHeight(tileSize);
       }
