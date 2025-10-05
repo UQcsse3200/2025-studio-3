@@ -37,10 +37,11 @@ public class WorldMapScreen extends BaseScreen {
     "images/nodes/completed.png",
     "images/nodes/locked.png",
     "images/ui/glow.png",
-    "images/ui/dir_w.png",
-    "images/ui/dir_a.png",
-    "images/ui/dir_s.png",
-    "images/ui/dir_d.png",
+    "images/ui/keycap_up.png",
+    "images/ui/keycap_down.png",
+    "images/ui/keycap_left.png",
+    "images/ui/keycap_right.png",
+    "images/ui/label_bg.png",
     "images/ui/key_e.png"
   };
   private static final float WORLD_WIDTH = 3000f;
