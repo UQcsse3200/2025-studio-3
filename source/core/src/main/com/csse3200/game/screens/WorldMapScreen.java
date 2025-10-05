@@ -19,6 +19,7 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
+import com.csse3200.game.ui.tutorial.WorldMapTutorial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +69,8 @@ public class WorldMapScreen extends BaseScreen {
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new WorldMapTutorial());
     return ui;
   }
 
