@@ -124,9 +124,21 @@ public class MainGameScreen extends ScreenAdapter {
     gameArea = createGameArea();
     // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
-    waveManager.setEnemySpawnCallback(
-        (col, row, type) ->
-            gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+      waveManager.setEnemySpawnCallback(new WaveManager.EnemySpawnCallback() {
+          @Override
+          public void spawnEnemy(int col, int row, String robotType) {
+              if (gameArea != null) {
+                  gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
+              }
+          }
+
+          @Override
+          public void spawnBoss(int row) {
+              if (gameArea != null) {
+                  gameArea.spawnBoss(row);
+              }
+          }
+      });
     gameArea.create();
 
     snapCameraBottomLeft();

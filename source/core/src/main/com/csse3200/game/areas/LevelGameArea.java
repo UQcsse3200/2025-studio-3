@@ -144,7 +144,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
-    spawnBoss();
+    //spawnBoss();
   }
 
   /** Spawns the level UI */
@@ -393,17 +393,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(projectile); // adds to area and entity service
   }
 
-  public void spawnBoss() {
+  public void spawnBoss(int row) {
     logger.info("Spawning Boss");
     Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
 
-    int spawnCol = levelCols - 3;
-    int spawnRow = 1; // Bottom row for now
+    int spawnCol = levelCols ;
+    int spawnRow = Math.clamp(row,0,levelRows-1); // Bottom row for now
 
     float spawnX = xOffset + tileSize * spawnCol;
-    float spawnY = yOffset + tileSize * spawnRow;
+    float spawnY = yOffset + tileSize * spawnRow-(tileSize/1.5f);
 
     boss.setPosition(spawnX, spawnY);
+    boss.scaleHeight(tileSize*3.0f);
 
     logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
 
@@ -727,7 +728,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       float ny = (p.y - oldY) * s + yOffset;
       r.setPosition(nx, ny);
       if(r.getComponent(HitboxComponent.class).getLayer()== PhysicsLayer.BOSS) {
-          r.scaleHeight(tileSize*2.0f);
+          r.scaleHeight(tileSize*3.0f);
       }else{
           r.scaleHeight(tileSize);
       }

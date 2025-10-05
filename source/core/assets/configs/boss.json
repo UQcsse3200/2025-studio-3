@@ -4,7 +4,7 @@
     "atlasFilePath": "images/entities/enemies/boss_scrapTitan.atlas",
     "health": 500,
     "attack": 50,
-    "scale": 2.0,
-    "speed": 10
+    "scale": 3.0,
+    "speed": 15
   }
 }

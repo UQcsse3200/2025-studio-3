@@ -45,6 +45,7 @@ public class WaveManager implements WaveConfigProvider {
   // Callback interface for spawning enemies
   public interface EnemySpawnCallback {
     void spawnEnemy(int col, int row, String robotType);
+    void spawnBoss(int row);
   }
 
   // Event listener interface for wave events
@@ -115,6 +116,11 @@ public class WaveManager implements WaveConfigProvider {
     }
 
     setCurrentWave(currentWave + 1);
+
+    if(currentWave==1 && enemySpawnCallback!=null) {
+        logger.info("triggering boss spawn for wave3");
+        enemySpawnCallback.spawnBoss(2);
+    }
     waveActive = false; // Wave not active during preparation
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
