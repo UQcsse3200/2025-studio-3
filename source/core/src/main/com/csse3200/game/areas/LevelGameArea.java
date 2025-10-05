@@ -28,6 +28,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -151,7 +152,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // tutorial for Level 1
     if ("levelOne".equals(currentLevelKey)) {
       Entity tutorialEntity = new Entity();
-      tutorialEntity.addComponent(new LevelMapTutorial());
+      tutorialEntity.addComponent(new LevelMapTutorial(new GameTime()));
       spawnEntity(tutorialEntity);
     }
   }
