@@ -115,7 +115,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
       // Skip targets that are not directly to the right of the defense - OpenAI was used to only
       // consider targets to the right of defender
-      if (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1) {
+      if (targetPos.x <= from.x ) {
         continue;
       }
 

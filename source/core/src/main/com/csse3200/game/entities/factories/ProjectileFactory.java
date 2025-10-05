@@ -33,12 +33,15 @@ public class ProjectileFactory {
    * @return entity representing a sling shot projectile
    */
   public static Entity createSlingShot(int damage, float speed) {
-    Entity slingShot =
+
+      short targetlayers=(short)(PhysicsLayer.ENEMY|PhysicsLayer.BOSS);
+
+      Entity slingShot =
         new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+            .addComponent(new TouchAttackComponent(targetlayers, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
     // Add render component so it draws above the grid
