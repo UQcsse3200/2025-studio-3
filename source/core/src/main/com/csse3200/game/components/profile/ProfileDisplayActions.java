@@ -66,7 +66,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onSave() {
     logger.info("Saving game");
-      ServiceLocator.getProfileService().saveCurrentProfile();
+    ServiceLocator.getProfileService().saveCurrentProfile();
   }
 
   private void onSettings() {

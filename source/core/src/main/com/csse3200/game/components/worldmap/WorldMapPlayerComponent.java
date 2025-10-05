@@ -211,6 +211,173 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
   }
 
+  /**
+   * Move the player to a target node when clicked. Uses BFS over JSON-defined PathDefs (W/A/S/D) to
+   * find a valid route.
+   */
+  // --- REPLACE THIS METHOD ---
+  public boolean moveToNode(WorldMapNode target) {
+    // Guard clauses keep the control flow flat
+    if (target == null) {
+      return false;
+    }
+
+    WorldMapNode start = getStartNode();
+    if (start == null) {
+      return false;
+    }
+
+    boolean snapToStart = shouldSnapToStart(start);
+
+    // Resolve path steps once; if we don't need snap and no steps exist → no movement
+    List<WorldMapService.PathDef> steps =
+        findJsonPath(start.getRegistrationKey(), target.getRegistrationKey());
+    if (!snapToStart && isNullOrEmpty(steps)) {
+      return false;
+    }
+
+    // Rebuild waypoints
+    waypointQueue.clear();
+    if (snapToStart) {
+      enqueueNodeWorldPos(start);
+    }
+    enqueueSteps(steps);
+
+    if (waypointQueue.isEmpty()) {
+      return false;
+    }
+
+    resetMovementState();
+    return true;
+  }
+
+  /** Current nearest node based on the entity's position. */
+  private WorldMapNode getStartNode() {
+    Vector2 curPos = entity.getPosition();
+    return getNearestNode(curPos);
+  }
+
+  /** Whether the player is off the start node and should be snapped onto it first. */
+  private boolean shouldSnapToStart(WorldMapNode start) {
+    return !isOnNode(start, entity.getPosition());
+  }
+
+  /** Null/empty convenience check to keep conditions short. */
+  private static boolean isNullOrEmpty(List<?> list) {
+    return list == null || list.isEmpty();
+  }
+
+  /** Enqueue the world coordinates of a node. */
+  private void enqueueNodeWorldPos(WorldMapNode node) {
+    waypointQueue.add(getWorldCoords(node));
+  }
+
+  /** Enqueue all waypoints from the resolved path steps (waypoints + end nodes). */
+  private void enqueueSteps(List<WorldMapService.PathDef> steps) {
+    if (isNullOrEmpty(steps)) {
+      return;
+    }
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    for (WorldMapService.PathDef def : steps) {
+      if (def.waypoints != null) {
+        for (Vector2 p : def.waypoints) {
+          waypointQueue.add(new Vector2(p));
+        }
+      }
+      WorldMapNode end = svc.getNode(def.next);
+      if (end != null) {
+        enqueueNodeWorldPos(end);
+      }
+    }
+  }
+
+  /** Reset transient movement state before starting to follow the new waypoints. */
+  private void resetMovementState() {
+    waypointIndex = 0;
+    pathMoving = true;
+    isMoving = false;
+    targetPosition = null;
+  }
+
+  /**
+   * BFS through JSON path graph using W/A/S/D links. Returns a list of PathDefs from startKey to
+   * targetKey.
+   */
+  private static final String[] DIRS = {"W", "A", "S", "D"};
+
+  private static final class Prev {
+    final String prevKey;
+    final WorldMapService.PathDef def;
+
+    Prev(String prevKey, WorldMapService.PathDef def) {
+      this.prevKey = prevKey;
+      this.def = def;
+    }
+  }
+
+  private List<WorldMapService.PathDef> findJsonPath(String startKey, String targetKey) {
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+
+    if (svc == null || startKey == null || targetKey == null) {
+      return java.util.Collections.emptyList();
+    }
+    if (startKey.equals(targetKey)) {
+      return java.util.Collections.emptyList();
+    }
+
+    java.util.Deque<String> q = new java.util.ArrayDeque<>();
+    java.util.Map<String, Prev> prev = new java.util.HashMap<>();
+    q.addLast(startKey);
+    prev.put(startKey, new Prev(null, null));
+
+    while (!q.isEmpty() && !prev.containsKey(targetKey)) {
+      String u = q.removeFirst();
+      enqueueNeighbors(svc, u, prev, q);
+    }
+
+    if (!prev.containsKey(targetKey)) {
+      return java.util.Collections.emptyList();
+    }
+
+    return reconstructPath(prev, startKey, targetKey);
+  }
+
+  private void enqueueNeighbors(
+      WorldMapService svc, String u, java.util.Map<String, Prev> prev, java.util.Deque<String> q) {
+
+    for (String d : DIRS) {
+      WorldMapService.PathDef def = svc.getPath(u, d);
+      if (shouldSkipEdge(def, prev)) {
+        continue;
+      }
+      String v = def.next;
+      prev.put(v, new Prev(u, def));
+      q.addLast(v);
+    }
+  }
+
+  private boolean shouldSkipEdge(WorldMapService.PathDef def, java.util.Map<String, Prev> prev) {
+
+    return def == null || def.next == null || prev.containsKey(def.next);
+  }
+
+  private java.util.List<WorldMapService.PathDef> reconstructPath(
+      java.util.Map<String, Prev> prev, String startKey, String targetKey) {
+
+    java.util.LinkedList<WorldMapService.PathDef> path = new java.util.LinkedList<>();
+    String cur = targetKey;
+
+    while (!cur.equals(startKey)) {
+      Prev p = prev.get(cur);
+      if (p == null) {
+        break;
+      }
+      path.addFirst(p.def);
+      cur = p.prevKey;
+    }
+    return path;
+  }
+
   /** Build ordered path (1 -> 2 -> 3) and cache Town as the highest Y node */
   private void buildOrderedPath() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
@@ -480,6 +647,14 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Returns true if the player is currently moving along a path or towards a target. */
   public boolean isCurrentlyMoving() {
     return pathMoving || isMoving;
+  }
+
+  public Vector2 getWorldSize() {
+    return worldSize;
+  }
+
+  public float getNodeSnapRadius() {
+    return NODE_SNAP_RADIUS; // 36f
   }
 
   /** Sets the horizontal render offset (pixels). Positive = right, Negative = left. */

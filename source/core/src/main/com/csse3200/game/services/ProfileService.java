@@ -82,9 +82,9 @@ public class ProfileService {
     this.currentSlot = savefile.getSlot();
     this.isActive = true;
 
-      if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
-          profile.unlockNode(profile.getCurrentLevel());
-      }
+    if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
+      profile.unlockNode(profile.getCurrentLevel());
+    }
   }
 
   /**
@@ -100,31 +100,31 @@ public class ProfileService {
     Persistence.save(currentSlot, profile);
   }
 
-    /**
-     * Marks the given level as completed and optionally unlocks the next one.
-     * This ensures completed levels remain replayable.
-     */
-    public void markLevelComplete(String currentKey, String nextKey) {
-        if (profile == null) {
-            logger.warn("Attempted to mark level complete but profile is null.");
-            return;
-        }
-
-        // Mark the current node as completed and keep it unlocked
-        profile.completeNode(currentKey);
-
-        // Optionally unlock next level (if progression exists)
-        if (nextKey != null && !nextKey.isEmpty()) {
-            profile.unlockNode(nextKey);
-        }
-
-        // Always save immediately after modification
-        saveCurrentProfile();
-
-        logger.info("[ProfileService] Level '{}' completed. Next '{}' unlocked.", currentKey, nextKey);
+  /**
+   * Marks the given level as completed and optionally unlocks the next one. This ensures completed
+   * levels remain replayable.
+   */
+  public void markLevelComplete(String currentKey, String nextKey) {
+    if (profile == null) {
+      logger.warn("Attempted to mark level complete but profile is null.");
+      return;
     }
 
-    /**
+    // Mark the current node as completed and keep it unlocked
+    profile.completeNode(currentKey);
+
+    // Optionally unlock next level (if progression exists)
+    if (nextKey != null && !nextKey.isEmpty()) {
+      profile.unlockNode(nextKey);
+    }
+
+    // Always save immediately after modification
+    saveCurrentProfile();
+
+    logger.info("[ProfileService] Level '{}' completed. Next '{}' unlocked.", currentKey, nextKey);
+  }
+
+  /**
    * Saves the current profile to a specific slot.
    *
    * @param slot the slot to save to (1-3)

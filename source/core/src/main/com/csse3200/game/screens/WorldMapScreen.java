@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
+import com.csse3200.game.components.worldmap.WorldMapClickInputComponent;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
@@ -24,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -81,8 +81,13 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapNavigationMenuActions(game))
         .addComponent(new AnimatedDropdownMenu())
         .addComponent(new WorldMapZoomInputComponent(this, 12))
-        .addComponent(new WorldMapPanInputComponent(this, 12));
+        .addComponent(new WorldMapPanInputComponent(this, 12))
+        .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
     return ui;
+  }
+
+  public CameraComponent getCameraComponent() {
+    return renderer.getCamera();
   }
 
   /** Creates the world map background entity (must be registered before nodes and player). */
@@ -120,6 +125,7 @@ public class WorldMapScreen extends BaseScreen {
     playerEntity.setPosition(new Vector2(startX, startY));
     playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
     ServiceLocator.getEntityService().register(playerEntity);
+    ServiceLocator.getWorldMapService().registerPlayer(playerEntity);
 
     // Setup camera to follow player and start at the same place
     CameraComponent camera = renderer.getCamera();
@@ -146,45 +152,43 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Creates the nodes for the world map. */
   private void createNodes() {
-      WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-      List<WorldMapNode> nodes = worldMapService.getAllNodes();
-      var ps = ServiceLocator.getProfileService();
+    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+    List<WorldMapNode> nodes = worldMapService.getAllNodes();
+    var ps = ServiceLocator.getProfileService();
 
-      Set<String> unlocked = java.util.Collections.emptySet();
-      java.util.List<String> completed = java.util.Collections.emptyList();
+    Set<String> unlocked = java.util.Collections.emptySet();
+    java.util.List<String> completed = java.util.Collections.emptyList();
 
-      if (ps != null && ps.getProfile() != null) {
-          unlocked = ps.getProfile().getUnlockedNodes();
-          completed = ps.getProfile().getCompletedNodes();
+    if (ps != null && ps.getProfile() != null) {
+      unlocked = ps.getProfile().getUnlockedNodes();
+      completed = ps.getProfile().getCompletedNodes();
+    }
+
+    for (WorldMapNode node : nodes) {
+      String key = node.getRegistrationKey();
+      if (completed.contains(key)) {
+        worldMapService.completeNode(key);
+        worldMapService.unlockNode(key);
+      } else if (unlocked.contains(key)) {
+        worldMapService.unlockNode(key);
+      } else {
+        worldMapService.lockNode(key, "Locked until you reach this node.");
       }
+    }
 
-      for (WorldMapNode node : nodes) {
-          String key = node.getRegistrationKey();
-          if (completed.contains(key)) {
-              worldMapService.completeNode(key);
-              worldMapService.unlockNode(key);
-          } else if (unlocked.contains(key)) {
-              worldMapService.unlockNode(key);
-          } else {
-              worldMapService.lockNode(key, "Locked until you reach this node.");
-          }
-      }
-
-      for (WorldMapNode node : nodes) {
-          Entity nodeEntity = new Entity();
-          float worldX = node.getPositionX() * WORLD_WIDTH;
-          float worldY = node.getPositionY() * WORLD_HEIGHT;
-          nodeEntity.setPosition(worldX, worldY);
-          WorldMapNodeRenderComponent comp =
-                  new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
-          nodeEntity.addComponent(comp);
-          ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
-          ServiceLocator.getEntityService().register(nodeEntity);
-      }
+    for (WorldMapNode node : nodes) {
+      Entity nodeEntity = new Entity();
+      float worldX = node.getPositionX() * WORLD_WIDTH;
+      float worldY = node.getPositionY() * WORLD_HEIGHT;
+      nodeEntity.setPosition(worldX, worldY);
+      WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
+      nodeEntity.addComponent(comp);
+      ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
+      ServiceLocator.getEntityService().register(nodeEntity);
+    }
   }
 
-
-    @Override
+  @Override
   public void render(float delta) {
     handleZoomInput();
 
