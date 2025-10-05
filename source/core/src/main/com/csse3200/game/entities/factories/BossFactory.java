@@ -78,6 +78,7 @@ public class BossFactory {
         new AnimationRenderComponent(
             ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
     animator.addAnimation("march", 0.1f, Animation.PlayMode.LOOP_REVERSED);
+    animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
 //    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
 //    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
 //    animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
@@ -115,7 +116,7 @@ public class BossFactory {
           .addListener(
               "attack",
               target -> {
-                animator.startAnimation("attack");
+                animator.startAnimation("punch");
 
                 Timer.schedule(
                     new Timer.Task() {
@@ -124,7 +125,7 @@ public class BossFactory {
                         animator.startAnimation("march");
                       }
                     },
-                    0.6f);
+                    1.05f);
               });
     }
 
