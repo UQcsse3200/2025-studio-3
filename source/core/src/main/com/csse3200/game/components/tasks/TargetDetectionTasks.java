@@ -135,7 +135,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     for (Entity e : copy) {
       HitboxComponent hitbox = e.getComponent(HitboxComponent.class);
       if (hitbox != null
-          && hitbox.getLayer() == PhysicsLayer.ENEMY
+          && (hitbox.getLayer() == PhysicsLayer.ENEMY || hitbox.getLayer() == PhysicsLayer.BOSS)
           && e.getComponent(CombatStatsComponent.class) != null) {
         targets.add(e);
       }
