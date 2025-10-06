@@ -10,8 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.extensions.UIExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(UIExtension.class)
 @ExtendWith(GameExtension.class)

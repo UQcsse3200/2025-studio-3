@@ -6,8 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-import net.dermetfan.utils.Pair;
 import com.csse3200.game.ui.UIComponent;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,22 +57,26 @@ public class AudioSettingsMenu extends UIComponent {
     Label masterVolumeLabel = ui.text("Master Volume:");
     masterVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     masterVolumeSlider.setValue(settings.getMasterVolume());
-    final Label masterVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100));
+    final Label masterVolumeValueLabel =
+        ui.text(String.format(PERCENTAGE_FORMAT, settings.getMasterVolume() * 100));
 
     Label musicVolumeLabel = ui.text("Music Volume:");
     musicVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     musicVolumeSlider.setValue(settings.getMusicVolume());
-    final Label musicVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100));
+    final Label musicVolumeValueLabel =
+        ui.text(String.format(PERCENTAGE_FORMAT, settings.getMusicVolume() * 100));
 
     Label soundVolumeLabel = ui.text("Sound Volume:");
     soundVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     soundVolumeSlider.setValue(settings.getSoundVolume());
-    final Label soundVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100));
+    final Label soundVolumeValueLabel =
+        ui.text(String.format(PERCENTAGE_FORMAT, settings.getSoundVolume() * 100));
 
     Label voiceVolumeLabel = ui.text("Voice Volume:");
     voiceVolumeSlider = ui.createSlider(0f, 1f, 0.01f, false);
     voiceVolumeSlider.setValue(settings.getVoiceVolume());
-    final Label voiceVolumeValueLabel = ui.text(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100));
+    final Label voiceVolumeValueLabel =
+        ui.text(String.format(PERCENTAGE_FORMAT, settings.getVoiceVolume() * 100));
 
     // Create apply button using UIFactory
     int buttonWidth = 150;
@@ -142,7 +146,11 @@ public class AudioSettingsMenu extends UIComponent {
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f * uiScale);
-    bottomRow.add(applyBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).center();
+    bottomRow
+        .add(applyBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
@@ -178,5 +186,4 @@ public class AudioSettingsMenu extends UIComponent {
     bottomRow.clear();
     super.dispose();
   }
-
 }

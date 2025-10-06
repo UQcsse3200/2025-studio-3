@@ -10,10 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-import net.dermetfan.utils.Pair;
 import com.csse3200.game.ui.UIComponent;
 import java.util.HashMap;
 import java.util.Map;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +78,8 @@ public class GameSettingsMenu extends UIComponent {
 
     Label interactionLabel = ui.subheading("Interaction Key:");
     keybinds.put(INTERACTION_KEY, settings.getInteractionButton());
-    TextField interactionKeyText = ui.createTextField(Input.Keys.toString(settings.getInteractionButton()));
+    TextField interactionKeyText =
+        ui.createTextField(Input.Keys.toString(settings.getInteractionButton()));
     interactionKeyText.setName(INTERACTION_KEY);
     setupKeybindTextField(interactionKeyText);
 
@@ -107,7 +108,7 @@ public class GameSettingsMenu extends UIComponent {
     setupKeybindTextField(rightKeyText);
 
     Label difficultyLabel = ui.subheading("Difficulty:");
-    difficultySelect = ui.createSelectBox(new String[]{"EASY", "NORMAL", "HARD"});
+    difficultySelect = ui.createSelectBox(new String[] {"EASY", "NORMAL", "HARD"});
     difficultySelect.setSelected(settings.getDifficulty().toString());
 
     // Create apply button using UIFactory
@@ -161,7 +162,11 @@ public class GameSettingsMenu extends UIComponent {
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f * uiScale);
-    bottomRow.add(applyBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).center();
+    bottomRow
+        .add(applyBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .center();
     stage.addActor(bottomRow);
   }
 
@@ -272,5 +277,4 @@ public class GameSettingsMenu extends UIComponent {
     bottomRow.clear();
     super.dispose();
   }
-
 }

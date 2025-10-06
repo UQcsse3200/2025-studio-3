@@ -58,7 +58,7 @@ public class SettingsMenu extends UIComponent {
     TextButton displayBtn = ui.primaryButton("Display Settings", buttonWidth);
     TextButton gameBtn = ui.primaryButton("Game Settings", buttonWidth);
     TextButton audioBtn = ui.primaryButton("Audio Settings", buttonWidth);
-    
+
     // Get scaled dimensions for consistent button sizing
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
@@ -87,19 +87,19 @@ public class SettingsMenu extends UIComponent {
         });
 
     // Add buttons to the main table with proper scaling
-    rootTable.add(displayBtn)
+    rootTable
+        .add(displayBtn)
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue())
         .padBottom(20f * uiScale);
     rootTable.row();
-    rootTable.add(gameBtn)
+    rootTable
+        .add(gameBtn)
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue())
         .padBottom(20f * uiScale);
     rootTable.row();
-    rootTable.add(audioBtn)
-        .width(buttonDimensions.getKey())
-        .height(buttonDimensions.getValue());
+    rootTable.add(audioBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue());
 
     // Center the table content
     rootTable.center();
