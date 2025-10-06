@@ -42,7 +42,6 @@ public class JumpTask extends RobotTargetDetectionTasks {
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
-
     PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
     if (phys == null || phys.getBody() == null) return;
     Body body = phys.getBody();
@@ -58,7 +57,6 @@ public class JumpTask extends RobotTargetDetectionTasks {
         body.setLinearVelocity(-5000f, -2500f);
       }
       if (jumpTimer <= 0) {
-        logger.info("Finished jumping");
         isJumping = false;
         hasJumped = true;
         body.setTransform(body.getPosition().x, startY, body.getAngle());
