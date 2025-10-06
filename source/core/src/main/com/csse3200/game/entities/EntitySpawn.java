@@ -107,34 +107,114 @@ public class EntitySpawn {
   }
 
   /**
-   * Builds a spawn queue for the current wave using the new system: - Each wave has a budget
-   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
-   * by 'chance'. - Loop continues until budget runs out.
+   * Represents an enemy type's spawn configuration entry used for deterministic weighted selection.
+   * Used only by EntitySpawn's weighted round-robin algorithm.
+   */
+  private static final class TypeEntry {
+    final String name;
+    final int cost;
+    double weight;  // chance
+    double acc;     // accumulator for smooth weighted RR
+    TypeEntry(String name, int cost, double weight) {
+      this.name = name;
+      this.cost = cost;
+      this.weight = weight;
+      this.acc = 0d;
+    }
+  }
+
+  /**
+   * Builds a spawn queue for the current wave using the new system:
+   * - Each wave has a budget (waveWeight).
+   * - Each enemy type consumes budget (cost).
+   * - Enemies are picked randomly, weighted by 'chance'.
+   * - Loop continues until budget runs out.
+   * The method uses a weight-accumulation  system to distribute spawn probabilities
+   * based on each enemy type’s defined spawn chance and cost. The algorithm repeats
+   * until the wave budget is depleted or no affordable enemies remain.
    */
   public void spawnEnemiesFromConfig() {
     if (waveConfigProvider == null) {
       spawnCount = 0;
+      spawnQueue.clear();
       return;
     }
-    int budget = waveConfigProvider.getWaveWeight();
-    Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs();
 
+    Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs();
+    int waveWeight = waveConfigProvider.getWaveWeight();
+    int minCount = waveConfigProvider.getMinZombiesSpawn();
+
+    // Reset the spawn queue and count for the new wave
     spawnQueue.clear();
     spawnCount = 0;
 
-    if (configs == null || configs.isEmpty() || budget <= 0) return;
+    // If no enemy configurations exist, skip spawning
+    if (configs == null || configs.isEmpty()) return;
 
-    List<String> pattern = buildPattern(configs);
+    // Build ordered entries (stable by enemy name)
+    List<TypeEntry> entries = new ArrayList<>();
+    for (Map.Entry<String, BaseSpawnConfig> e : configs.entrySet()) {
+      BaseSpawnConfig cfg = e.getValue();
+      if (cfg == null) continue;
 
-    int i = 0;
-    while (budget > 0) {
-      String enemy = pattern.get(i % pattern.size());
-      BaseSpawnConfig cfg = configs.get(enemy);
-      if (cfg.getCost() > budget) break;
-      spawnQueue.add(enemy);
+      int cost = cfg.getCost();
+      if (cost <= 0) continue; // skip invalid/zero-cost to avoid infinite loops
+
+      double w = Math.max(0d, cfg.getChance());
+      entries.add(new TypeEntry(e.getKey(), cost, w));
+    }
+
+    // Stop if no valid enemy types are available
+    if (entries.isEmpty()) return;
+
+    // Keep spawn order stable by sorting alphabetically by name
+    entries.sort(Comparator.comparing(te -> te.name));
+
+    // Compute the cheapest cost and total positive weight
+    int cheapest = Integer.MAX_VALUE;
+    double totalWeight = 0d;
+    for (TypeEntry te : entries) {
+      cheapest = Math.min(cheapest, te.cost);
+      totalWeight += te.weight;
+    }
+
+    // Terminate if no valid costs were found
+    if (cheapest == Integer.MAX_VALUE) return;
+
+    // If all chances are zero, assign equal weights to all types
+    if (totalWeight <= 0d) {
+      for (TypeEntry te : entries) te.weight = 1d;
+      totalWeight = entries.size();
+    }
+
+    // Adjust budget to guarantee minimum spawns
+    int budget = Math.max(waveWeight, minCount * cheapest);
+
+    // Weighted spawn selection loop
+    while (budget >= cheapest) {
+      // Each zombie’s accumulator (acc) increases by its weight (chance) each cycle.
+      for (TypeEntry te : entries) {
+        te.acc += te.weight;
+      }
+
+      // Pick affordable enemy type with the highest accumulated weight
+      TypeEntry best = null;
+      for (TypeEntry te : entries) {
+        if (te.cost <= budget && (best == null || te.acc > best.acc)) {
+          best = te;
+        }
+      }
+
+      // If no remaining enemies are affordable, stop spawning
+      if (best == null) break;
+
+      // Queue the selected enemy and update counters/budget
+      spawnQueue.add(best.name);
       spawnCount++;
-      budget -= cfg.getCost();
-      i++;
+      budget -= best.cost;
+
+      // Normalize accumulator by subtracting total weight (keeps fairness)
+      best.acc -= totalWeight;
     }
   }
 }
