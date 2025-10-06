@@ -73,7 +73,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/fast_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
+    "images/entities/enemies/tanky_robot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;

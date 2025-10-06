@@ -32,8 +32,8 @@
     },
     "tankyRobot": {
       "name": "Tanky Robot",
-      "atlasPath": "images/entities/enemies/red_robot.atlas",
-      "assetPath": "images/entities/enemies/red_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/tanky_robot.atlas",
+      "assetPath": "images/entities/enemies/tanky_robot_default_sprite.png",
       "health": 60,
       "attack": 15,
       "movementSpeed": 10,
@@ -62,8 +62,8 @@
     },
     "teleportRobot": {
       "name": "Teleport Robot",
-      "atlasPath": "images/entities/enemies/red_robot.atlas",
-      "assetPath": "images/entities/enemies/red_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/tanky_robot.atlas",
+      "assetPath": "images/entities/enemies/tanky_robot_default_sprite.png",
       "health": 30,
       "attack": 10,
       "movementSpeed": 30,
