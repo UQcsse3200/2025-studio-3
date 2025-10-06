@@ -82,8 +82,8 @@
     },
     "jumperRobot": {
       "name": "Jumper Robot",
-      "atlasPath": "images/entities/enemies/blue_robot.atlas",
-      "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/fast_robot.atlas",
+      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
       "health": 50,
       "attack": 10,
       "movementSpeed": 50,
