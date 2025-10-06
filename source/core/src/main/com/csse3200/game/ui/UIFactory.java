@@ -232,8 +232,10 @@ public class UIFactory {
    * @return the configured ImageButton (not yet added to stage)
    */
   public ImageButton createImageButton(String imagePath, float baseWidth, float baseHeight) {
-    // Load the texture
-    Texture texture = ServiceLocator.getGlobalResourceService().getAsset(imagePath, Texture.class);
+    // Get the texture
+    Texture texture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset(imagePath, Texture.class); // Ensure loaded
     ImageButton button = new ImageButton(new TextureRegionDrawable(texture));
 
     // Apply UI scaling
