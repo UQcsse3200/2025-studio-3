@@ -1,14 +1,21 @@
 package com.csse3200.game.ui;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.HashMap;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory class for creating UI components with consistent styling.
@@ -17,6 +24,7 @@ import net.dermetfan.utils.Pair;
  * This allows for the UI scale to be customized and the skin to be passed in to the constructor.
  */
 public class UIFactory {
+  private static final Logger logger = LoggerFactory.getLogger(UIFactory.class);
   private final Map<String, BitmapFont> fontCache = new HashMap<>();
   private final Skin skin;
   private float uiScale;
@@ -185,6 +193,7 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
+    // textButtonPressedListener(button);
     return button;
   }
 
@@ -209,7 +218,60 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
+    //  textButtonPressedListener(button);
     return button;
+  }
+
+  /**
+   * Creates an image button consistent styling and UI scaling.
+   *
+   * @param imagePath the asset path for the button image
+   * @param baseWidth the base width
+   * @param baseHeight the base height
+   * @return the configured ImageButton (not yet added to stage)
+   */
+  public ImageButton createImageButton(String imagePath, float baseWidth, float baseHeight) {
+    // Load the texture
+    Texture texture = ServiceLocator.getGlobalResourceService().getAsset(imagePath, Texture.class);
+    ImageButton button = new ImageButton(new TextureRegionDrawable(texture));
+
+    // Apply UI scaling
+    float width = getScaledWidth(baseWidth);
+    float height = getScaledHeight(baseHeight);
+
+    button.setSize(width, height);
+    // imageButtonPressedListener(button);
+    return button;
+  }
+
+  /**
+   * Create a standard "Back" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createBackButton(EventHandler eventHandler, float stageHeight) {
+    TextButton backButton = secondaryButton("Back", 200f);
+    // Scale
+    Pair<Float, Float> dimensions = getScaledDimensions(200f);
+    backButton.setSize(dimensions.getKey(), dimensions.getValue());
+    // Position
+    backButton.setPosition(
+        20f * uiScale, // 20f padding from left
+        stageHeight - backButton.getHeight() - 20f * uiScale);
+
+    // Add listener for the back button
+    backButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Close button clicked");
+            eventHandler.trigger("back");
+            //  textButtonPressedListener(button);
+          }
+        });
+    return backButton;
   }
 
   /**
@@ -238,7 +300,7 @@ public class UIFactory {
     style.selection = skin.getDrawable("w");
     style.background = skin.getDrawable("d");
     style.focusedBackground = skin.getDrawable("d");
-    
+
     TextField textField = new TextField(placeholder, style);
     return textField;
   }
@@ -255,11 +317,10 @@ public class UIFactory {
     style.fontColor = white;
     style.checkboxOff = skin.getDrawable("e");
     style.checkboxOn = skin.getDrawable("f");
-    
+
     CheckBox checkBox = new CheckBox(text, style);
     return checkBox;
   }
-
 
   /**
    * Creates a slider with consistent styling and UI scale support.
@@ -298,7 +359,7 @@ public class UIFactory {
     style.background = skin.getDrawable("n");
     style.scrollStyle = skin.get("list", ScrollPane.ScrollPaneStyle.class);
     style.listStyle = skin.get("default", List.ListStyle.class);
-    
+
     SelectBox<T> selectBox = new SelectBox<>(style);
     selectBox.setItems(items);
     return selectBox;
@@ -328,4 +389,37 @@ public class UIFactory {
   public float getScaledHeight(float baseHeight) {
     return baseHeight * uiScale;
   }
+
+  //
+  //  public static void textButtonPressedListener(TextButton button) {
+  //        button.addListener(
+  //                new ClickListener() {
+  //                    @Override
+  //                    public void clicked(InputEvent event, float x, float y) {
+  //                        buttonPressedSound();
+  //                    }
+  //                });
+  //    }
+
+  //  public static void imageButtonPressedListener(ImageButton button) {
+  //        button.addListener(
+  //                new ClickListener() {
+  //                    @Override
+  //                    public void clicked(InputEvent event, float x, float y) {
+  //                        buttonPressedSound();
+  //                    }
+  //                });
+  //    }
+  //
+  //  public static void buttonPressedSound() {
+  //        // Play sound effect for button click
+  //        Sound buttonSound =
+  //                ServiceLocator.getGlobalResourceService()
+  //                        .getAsset("sounds/button_clicked.mp3", Sound.class);
+  //        if (buttonSound != null) {
+  //            float volume = ServiceLocator.getSettingsService().getSoundVolume();
+  //            buttonSound.play(volume);
+  //        }
+  //    }
+
 }
