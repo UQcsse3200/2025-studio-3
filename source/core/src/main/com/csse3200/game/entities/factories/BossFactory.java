@@ -79,7 +79,7 @@ public class BossFactory {
             ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
     animator.addAnimation("march", 0.1f, Animation.PlayMode.LOOP_REVERSED);
     animator.addAnimation("punch", 0.05f, Animation.PlayMode.LOOP);
-
+      animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
 
       ColliderComponent colliderComponent =
               new ColliderComponent()

@@ -228,7 +228,13 @@ public class WaveManager implements WaveConfigProvider {
       endWave(); // Only call endWave() for non-final waves
     }
   }
-
+/**
+   * Called when a boss is defeated. Ends the current wave immediately.
+   */
+  public void onBossDefeated() {
+    logger.info("Boss defeated! Ending wave {} early.", currentWave);
+    endWave();
+  }
   /**
    * @return number of enemies disposed in current wave
    */

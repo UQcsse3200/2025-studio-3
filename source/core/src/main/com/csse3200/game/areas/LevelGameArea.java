@@ -3,6 +3,8 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -23,6 +25,7 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
@@ -410,15 +413,39 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     spawnEntity(boss);
     robots.add(boss);
+      boss.getEvents().addListener(
+              "despawnRobot",
+              target -> {
+              });
+      boss.getEvents().addListener(
+              ENTITY_DEATH_EVENT,
+              () -> {
+                  logger.info("Boss death triggered");
 
-    boss.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(boss);
-              robots.remove(boss);
-              logger.info("Boss defeated");
-            });
+                  AITaskComponent ai = boss.getComponent(AITaskComponent.class);
+                  if (ai != null) {
+                      ai.dispose();
+                  }
+
+                  AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
+                  if (anim != null) {
+                      anim.startAnimation("death");
+                  }
+
+                  Timer.schedule(
+                          new Timer.Task() {
+                              @Override
+                              public void run() {
+                                  requestDespawn(boss);
+                                  robots.remove(boss);
+                                  logger.info("Boss defeated");
+                                  if (waveManager != null) {
+                                      waveManager.onBossDefeated();
+                                  }
+                              }
+                          },
+                          1.84f);
+              });
   }
 
   /**
