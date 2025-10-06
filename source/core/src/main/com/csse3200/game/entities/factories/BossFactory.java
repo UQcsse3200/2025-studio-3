@@ -58,6 +58,8 @@ public class BossFactory {
         BaseBossConfig config = null;
         switch (bossType) {
             case SCRAP_TITAN -> config = configs.scrapTitan;
+            case IRON_INFERNO -> config = configs.ironInferno;
+            case SAMURAI_BOT -> config = configs.samuraiBot;
         }
         return createBaseBoss(config);
     }
