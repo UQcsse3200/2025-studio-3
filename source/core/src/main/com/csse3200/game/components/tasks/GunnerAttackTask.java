@@ -3,6 +3,7 @@ package com.csse3200.game.components.tasks;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.DefenderStatsComponent;
+import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -83,7 +84,8 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         Array<Entity> allEntities = ServiceLocator.getEntityService().getEntities();
         List<Entity> defenses = new ArrayList<>();
         for (Entity entity : allEntities) {
-            if (entity.getComponent(DefenderStatsComponent.class) != null) {
+            if (entity.getComponent(DefenderStatsComponent.class) != null ||
+                    entity.getComponent(GeneratorStatsComponent.class) != null) {
                 defenses.add(entity);
             }
         }
