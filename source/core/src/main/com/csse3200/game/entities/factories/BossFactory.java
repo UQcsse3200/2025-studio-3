@@ -38,7 +38,9 @@ public class BossFactory {
      * file is missing or deserialization fails, this will be null.
      */
     public enum BossTypes {
-        SCRAP_TITAN
+        SCRAP_TITAN,
+        IRON_INFERNO,
+        SAMURAI_BOT
     }
 
     private static final BossConfigs configs =

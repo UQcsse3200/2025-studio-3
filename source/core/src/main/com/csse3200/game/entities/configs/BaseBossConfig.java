@@ -2,7 +2,7 @@ package com.csse3200.game.entities.configs;
 
 public class BaseBossConfig {
   public String name = "Boss";
-  public String atlasFilePath = "images/entities/enemies/Scrap-titan.atlas";
+  public String atlasFilePath = "";
   public int health = 500;
   public int attack = 50;
   public float scale = 4.0f;
