@@ -407,7 +407,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     if (tag.getType() == ProjectileType.SHELL) {
         Random random = new Random();
-        int num = random.nextInt(6) + 2; // pick random num between 2 and 7
+        int col = (int) ((spawnPos.x - xOffset) / tileSize);
+        int max_range = 9 - col;
+        int num = random.nextInt(max_range-1) + 2; // pick random num between 2 and 7
         projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
     } else {
         projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
@@ -465,7 +467,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTile(position);
-
+    if ("mortar".equals(newEntity.getProperty("unitType")) && tileX >= 1000) {
+       return;
+    }
     if (selectedTile == null) {
       logger.warn("No tile entity found at index {}", position);
       return;
