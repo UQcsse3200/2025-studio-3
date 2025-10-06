@@ -11,52 +11,72 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** Handles player movement and interaction on the world map */
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.concurrent.CompletableFuture;
+
+/**
+ * Handles player logic on the World Map:
+ *  - JSON-path based movement between nodes (W/A/S/D graph)
+ *  - Legacy directional navigation as a fallback
+ *  - Nearby-node detection & E-to-enter prompt
+ *  - Drawing the player sprite
+ *
+ * This version is refactored to reduce cognitive complexity and
+ * address common SonarQube maintainability issues.
+ */
 public class WorldMapPlayerComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapPlayerComponent.class);
+
+  // Movement/interaction constants
   private static final float PLAYER_SPEED = 200f;
   private static final float INTERACTION_DISTANCE = 150f;
-  private static final float PROXIMITY_CHECK_INTERVAL =
-      0.1f; // Check every 100ms instead of every frame
-  private final Vector2 worldSize;
-  private WorldMapNode nearbyNode = null;
-  private Texture playerTexture;
-  // Node-path navigation state
-  private boolean isMoving = false;
-  private Vector2 targetPosition = null;
-  private List<WorldMapNode> pathNodes;
-  private int currentNodeIndex = -1;
   private static final float ARRIVAL_THRESHOLD = 6f;
-  // Specific nodes for ordered path and town
-  private WorldMapNode levelOneNode;
-  private WorldMapNode levelTwoNode;
+  private static final float NODE_SNAP_RADIUS = 36f;
+
+  // Run proximity check every 100ms instead of each frame
+  private static final float PROXIMITY_CHECK_INTERVAL = 0.1f;
+
+  // BFS directions for JSON graph
+  private static final String[] DIRS = {"W", "A", "S", "D"};
+
+  private final Vector2 worldSize;
+  private Texture playerTexture;
+
+  // Nearby-node UI status
+  private WorldMapNode nearbyNode;
+
+  // Free target movement (legacy path & fallback)
+  private boolean isMoving;
+  private Vector2 targetPosition;
+
+  // Special nodes (used by legacy W/S transitions)
   private WorldMapNode levelThreeNode;
   private WorldMapNode townNode;
 
-  /**
-   * Horizontal render offset (px) to make player looks central. Positive = shift right, Negative =
-   * shift left.
-   */
+  // Screen-space rendering tweak so the sprite looks centred
   private float renderOffsetX = -15f;
 
-  private CompletableFuture<WorldMapNode> proximityCheckFuture = null;
-  private float timeSinceLastProximityCheck = 0f;
+  // Async proximity detection
+  private CompletableFuture<WorldMapNode> proximityCheckFuture;
+  private float timeSinceLastProximityCheck;
 
-  // ========== JSON path movement ==========
+  // JSON-path movement state (queue of world-space waypoints)
   private final List<Vector2> waypointQueue = new ArrayList<>();
   private int waypointIndex = -1;
-  private boolean pathMoving = false;
+  private boolean pathMoving;
 
+  // Reusable temp vectors to avoid allocations every frame
   private final Vector2 tmpPos = new Vector2();
   private final Vector2 toTarget = new Vector2();
-
-  private static final float NODE_SNAP_RADIUS = 36f;
 
   public WorldMapPlayerComponent(Vector2 worldSize) {
     this.worldSize = worldSize;
@@ -71,10 +91,13 @@ public class WorldMapPlayerComponent extends UIComponent {
   @Override
   public void create() {
     super.create();
-    playerTexture =
-        ServiceLocator.getResourceService()
-            .getAsset("images/entities/character.png", Texture.class);
-    buildOrderedPath();
+    playerTexture = ServiceLocator.getResourceService()
+        .getAsset("images/entities/character.png", Texture.class);
+
+    // Resolve a few special nodes used by legacy transitions
+    resolveSpecialNodes();
+
+    // Load graph used by JSON path-based navigation
     ServiceLocator.getWorldMapService().loadPathConfig("configs/worldmap_paths.json");
   }
 
@@ -85,7 +108,17 @@ public class WorldMapPlayerComponent extends UIComponent {
     handleNodeInteraction();
   }
 
-  /** Handles node-path navigation and smooth auto-movement. */
+  // --------------------------------------------------------------------- //
+  // Movement
+  // --------------------------------------------------------------------- //
+
+  /**
+   * Top-level movement dispatch:
+   * 1) If following a JSON path → tick once.
+   * 2) Else if moving towards a free target → tick once.
+   * 3) Else try start a JSON path from the current node based on WASD.
+   * 4) Else fallback to legacy directional navigation.
+   */
   private void handleMovement() {
     float delta = Gdx.graphics.getDeltaTime();
 
@@ -98,10 +131,12 @@ public class WorldMapPlayerComponent extends UIComponent {
     handleLegacyDirectionalNavigation();
   }
 
-  /** If currently following a JSON-defined path, advance one tick and clamp. */
+  /** If currently following a JSON-defined path, advance and clamp this frame. */
   private boolean advanceJsonPathIfMoving(float delta) {
     if (!pathMoving) return false;
     tickPathMovement(delta);
+
+    // Clamp like legacy (character is 96x110)
     Vector2 pos = entity.getPosition();
     pos.x = MathUtils.clamp(pos.x, 0, worldSize.x - 96);
     pos.y = MathUtils.clamp(pos.y, 0, worldSize.y - 110);
@@ -109,31 +144,30 @@ public class WorldMapPlayerComponent extends UIComponent {
     return true;
   }
 
-  /** If moving towards a free targetPosition, continue the movement this frame. */
+  /** If moving toward a free target position, advance one step this frame. */
   private boolean advanceActiveTarget(float delta) {
     if (!isMoving || targetPosition == null) return false;
 
-    Vector2 position = entity.getPosition();
-    Vector2 toTargetVec = targetPosition.cpy().sub(position);
-    float dist = toTargetVec.len();
+    Vector2 pos = entity.getPosition();
+    toTarget.set(targetPosition).sub(pos);
+    float dist = toTarget.len();
 
     if (dist <= ARRIVAL_THRESHOLD) {
-      position.set(targetPosition);
+      pos.set(targetPosition);
       isMoving = false;
       targetPosition = null;
     } else {
-      Vector2 step = toTargetVec.nor().scl(PLAYER_SPEED * delta);
-      if (step.len() > dist) step.setLength(dist);
-      position.add(step);
+      Vector2 step = toTarget.scl(PLAYER_SPEED * delta / Math.max(dist, 1e-4f));
+      pos.add(step);
     }
 
-    position.x = MathUtils.clamp(position.x, 0, worldSize.x - 96);
-    position.y = MathUtils.clamp(position.y, 0, worldSize.y - 110);
-    entity.setPosition(position);
+    pos.x = MathUtils.clamp(pos.x, 0, worldSize.x - 96);
+    pos.y = MathUtils.clamp(pos.y, 0, worldSize.y - 110);
+    entity.setPosition(pos);
     return true;
   }
 
-  /** Read a single WASD key edge; returns null if none pressed this frame. */
+  /** Read a single WASD edge this frame; returns null if none. */
   private String readWASDOnce() {
     if (Gdx.input.isKeyJustPressed(Input.Keys.W)) return "W";
     if (Gdx.input.isKeyJustPressed(Input.Keys.A)) return "A";
@@ -142,341 +176,250 @@ public class WorldMapPlayerComponent extends UIComponent {
     return null;
   }
 
-  /** Try to start a JSON path from the nearest node, returns true if a path was started. */
+  /**
+   * Try to start a JSON path from the node the player is currently standing on.
+   * Returns true if a path was started (and applies an initial tick for snappier feel).
+   */
   private boolean tryStartJsonPathFromNode(String pressed, float delta) {
     Vector2 cur = entity.getPosition();
     WorldMapNode at = getNearestNode(cur);
-    float dist2 = at == null ? -1f : cur.dst2(getWorldCoords(at));
-    logger.info(
-        "[WorldMap] key={}, nearest={}, dist2={}, onNode={}",
-        pressed,
-        (at == null ? "null" : at.getRegistrationKey()),
-        dist2,
-        isOnNode(at, cur));
 
-    if (!isOnNode(at, cur)) return false;
+    if (at == null || !isOnNode(at, cur)) return false;
 
     WorldMapService svc = ServiceLocator.getWorldMapService();
     WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
     if (def == null) return false;
 
     waypointQueue.clear();
+
     if (def.waypoints != null) {
       for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
     }
     WorldMapNode nextNode = svc.getNode(def.next);
     if (nextNode != null) waypointQueue.add(getWorldCoords(nextNode));
+
     if (waypointQueue.isEmpty()) return false;
 
     waypointIndex = 0;
     pathMoving = true;
-    // First tick for snappier feel
+
+    // First tick makes the reaction feel immediate
     tickPathMovement(delta);
-    Vector2 posAfterTick = entity.getPosition();
-    posAfterTick.x = MathUtils.clamp(posAfterTick.x, 0, worldSize.x - 96);
-    posAfterTick.y = MathUtils.clamp(posAfterTick.y, 0, worldSize.y - 110);
-    entity.setPosition(posAfterTick);
+
+    Vector2 posAfter = entity.getPosition();
+    posAfter.x = MathUtils.clamp(posAfter.x, 0, worldSize.x - 96);
+    posAfter.y = MathUtils.clamp(posAfter.y, 0, worldSize.y - 110);
+    entity.setPosition(posAfter);
     return true;
   }
 
-  /** Legacy directional navigation (left-right chain and town transitions). */
+  /**
+   * Fallback: legacy directional navigation.
+   * D → nearest node strictly to the right (levels only)
+   * A → nearest node strictly to the left  (levels only)
+   * W → Town if currently at Level 3
+   * S → Level 3 if currently at Town
+   */
   private void handleLegacyDirectionalNavigation() {
     Vector2 position = entity.getPosition();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-      WorldMapNode right = findDirectionalNeighbor(position, true);
-      if (right != null) {
-        targetPosition = getWorldCoords(right);
-        isMoving = true;
-        currentNodeIndex = (pathNodes != null) ? pathNodes.indexOf(right) : -1;
-      }
+      WorldMapNode right = findDirectionalNeighbor(position, /*toRight=*/true);
+      if (right != null) startFreeMoveTo(getWorldCoords(right));
       return;
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-      WorldMapNode left = findDirectionalNeighbor(position, false);
-      if (left != null) {
-        targetPosition = getWorldCoords(left);
-        isMoving = true;
-        currentNodeIndex = (pathNodes != null) ? pathNodes.indexOf(left) : -1;
-      }
+      WorldMapNode left = findDirectionalNeighbor(position, /*toRight=*/false);
+      if (left != null) startFreeMoveTo(getWorldCoords(left));
       return;
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
       if (isAtNode(levelThreeNode, position) && townNode != null) {
-        targetPosition = getWorldCoords(townNode);
-        isMoving = true;
+        startFreeMoveTo(getWorldCoords(townNode));
       }
       return;
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
       if (isAtNode(townNode, position) && levelThreeNode != null) {
-        targetPosition = getWorldCoords(levelThreeNode);
-        isMoving = true;
-        int idx = (pathNodes != null) ? pathNodes.indexOf(levelThreeNode) : 2;
-        currentNodeIndex = (idx >= 0) ? idx : 2;
+        startFreeMoveTo(getWorldCoords(levelThreeNode));
       }
     }
   }
 
+  /** Begin free movement toward a world-space target. */
+  private void startFreeMoveTo(Vector2 worldTarget) {
+    targetPosition = worldTarget;
+    isMoving = true;
+    // Cancel JSON-path movement if any
+    pathMoving = false;
+    waypointIndex = -1;
+    waypointQueue.clear();
+  }
+
+  // --------------------------------------------------------------------- //
+  // Click-to-move along JSON path graph (BFS)
+  // --------------------------------------------------------------------- //
+
   /**
-   * Move the player to a target node when clicked. Uses BFS over JSON-defined PathDefs (W/A/S/D) to
-   * find a valid route.
+   * Called by click-navigation to move to a target node along the JSON path graph.
+   * The waypoints list will be rebuilt and followed next frames.
    */
-  // --- REPLACE THIS METHOD ---
   public boolean moveToNode(WorldMapNode target) {
-    // Guard clauses keep the control flow flat
-    if (target == null) {
-      return false;
-    }
+    if (target == null) return false;
 
-    WorldMapNode start = getStartNode();
-    if (start == null) {
-      return false;
-    }
+    WorldMapNode start = getNearestNode(entity.getPosition());
+    if (start == null) return false;
 
-    boolean snapToStart = shouldSnapToStart(start);
-
-    // Resolve path steps once; if we don't need snap and no steps exist → no movement
+    boolean snapToStart = !isOnNode(start, entity.getPosition());
     List<WorldMapService.PathDef> steps =
         findJsonPath(start.getRegistrationKey(), target.getRegistrationKey());
-    if (!snapToStart && isNullOrEmpty(steps)) {
-      return false;
-    }
 
-    // Rebuild waypoints
+    if (!snapToStart && (steps == null || steps.isEmpty())) return false;
+
     waypointQueue.clear();
     if (snapToStart) {
-      enqueueNodeWorldPos(start);
+      waypointQueue.add(getWorldCoords(start));
     }
     enqueueSteps(steps);
 
-    if (waypointQueue.isEmpty()) {
-      return false;
-    }
+    if (waypointQueue.isEmpty()) return false;
 
-    resetMovementState();
-    return true;
-  }
-
-  /** Current nearest node based on the entity's position. */
-  private WorldMapNode getStartNode() {
-    Vector2 curPos = entity.getPosition();
-    return getNearestNode(curPos);
-  }
-
-  /** Whether the player is off the start node and should be snapped onto it first. */
-  private boolean shouldSnapToStart(WorldMapNode start) {
-    return !isOnNode(start, entity.getPosition());
-  }
-
-  /** Null/empty convenience check to keep conditions short. */
-  private static boolean isNullOrEmpty(List<?> list) {
-    return list == null || list.isEmpty();
-  }
-
-  /** Enqueue the world coordinates of a node. */
-  private void enqueueNodeWorldPos(WorldMapNode node) {
-    waypointQueue.add(getWorldCoords(node));
-  }
-
-  /** Enqueue all waypoints from the resolved path steps (waypoints + end nodes). */
-  private void enqueueSteps(List<WorldMapService.PathDef> steps) {
-    if (isNullOrEmpty(steps)) {
-      return;
-    }
-    WorldMapService svc = ServiceLocator.getWorldMapService();
-    for (WorldMapService.PathDef def : steps) {
-      if (def.waypoints != null) {
-        for (Vector2 p : def.waypoints) {
-          waypointQueue.add(new Vector2(p));
-        }
-      }
-      WorldMapNode end = svc.getNode(def.next);
-      if (end != null) {
-        enqueueNodeWorldPos(end);
-      }
-    }
-  }
-
-  /** Reset transient movement state before starting to follow the new waypoints. */
-  private void resetMovementState() {
     waypointIndex = 0;
     pathMoving = true;
     isMoving = false;
     targetPosition = null;
+    return true;
   }
 
-  /**
-   * BFS through JSON path graph using W/A/S/D links. Returns a list of PathDefs from startKey to
-   * targetKey.
-   */
-  private static final String[] DIRS = {"W", "A", "S", "D"};
-
-  private static final class Prev {
-    final String prevKey;
-    final WorldMapService.PathDef def;
-
-    Prev(String prevKey, WorldMapService.PathDef def) {
-      this.prevKey = prevKey;
-      this.def = def;
+  private void enqueueSteps(List<WorldMapService.PathDef> steps) {
+    if (steps == null) return;
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    for (WorldMapService.PathDef def : steps) {
+      if (def == null) continue;
+      if (def.waypoints != null) {
+        for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
+      }
+      WorldMapNode end = svc.getNode(def.next);
+      if (end != null) waypointQueue.add(getWorldCoords(end));
     }
   }
 
+  /** BFS from startKey to targetKey using W/A/S/D edges defined in the JSON. */
   private List<WorldMapService.PathDef> findJsonPath(String startKey, String targetKey) {
     WorldMapService svc = ServiceLocator.getWorldMapService();
-
-    if (svc == null || startKey == null || targetKey == null) {
-      return java.util.Collections.emptyList();
-    }
-    if (startKey.equals(targetKey)) {
+    if (svc == null || startKey == null || targetKey == null || startKey.equals(targetKey)) {
       return java.util.Collections.emptyList();
     }
 
-    java.util.Deque<String> q = new java.util.ArrayDeque<>();
-    java.util.Map<String, Prev> prev = new java.util.HashMap<>();
+    Deque<String> q = new ArrayDeque<>();
+    Map<String, Prev> prev = new HashMap<>();
     q.addLast(startKey);
     prev.put(startKey, new Prev(null, null));
 
     while (!q.isEmpty() && !prev.containsKey(targetKey)) {
       String u = q.removeFirst();
-      enqueueNeighbors(svc, u, prev, q);
-    }
-
-    if (!prev.containsKey(targetKey)) {
-      return java.util.Collections.emptyList();
-    }
-
-    return reconstructPath(prev, startKey, targetKey);
-  }
-
-  private void enqueueNeighbors(
-      WorldMapService svc, String u, java.util.Map<String, Prev> prev, java.util.Deque<String> q) {
-
-    for (String d : DIRS) {
-      WorldMapService.PathDef def = svc.getPath(u, d);
-      if (shouldSkipEdge(def, prev)) {
-        continue;
+      for (String d : DIRS) {
+        WorldMapService.PathDef def = svc.getPath(u, d);
+        if (def == null || def.next == null || prev.containsKey(def.next)) continue; // <= single continue in loop
+        prev.put(def.next, new Prev(u, def));
+        q.addLast(def.next);
       }
-      String v = def.next;
-      prev.put(v, new Prev(u, def));
-      q.addLast(v);
     }
-  }
 
-  private boolean shouldSkipEdge(WorldMapService.PathDef def, java.util.Map<String, Prev> prev) {
+    if (!prev.containsKey(targetKey)) return java.util.Collections.emptyList();
 
-    return def == null || def.next == null || prev.containsKey(def.next);
-  }
-
-  private java.util.List<WorldMapService.PathDef> reconstructPath(
-      java.util.Map<String, Prev> prev, String startKey, String targetKey) {
-
-    java.util.LinkedList<WorldMapService.PathDef> path = new java.util.LinkedList<>();
+    LinkedList<WorldMapService.PathDef> path = new LinkedList<>();
     String cur = targetKey;
-
     while (!cur.equals(startKey)) {
       Prev p = prev.get(cur);
-      if (p == null) {
-        break;
-      }
+      if (p == null) break;
       path.addFirst(p.def);
       cur = p.prevKey;
     }
     return path;
   }
 
-  /** Build ordered path (1 -> 2 -> 3) and cache Town as the highest Y node */
-  private void buildOrderedPath() {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-
-    // Resolve specific nodes by key if available
-    levelOneNode = worldMapService.getNode("levelOne");
-    levelTwoNode = worldMapService.getNode("levelTwo");
-    levelThreeNode = worldMapService.getNode("levelThree");
-
-    // Identify Town: prefer key "skills"; if absent, fall back to the highest Y node
-    townNode = worldMapService.getNode("skills");
-
-    // Main D/A path is only levels (exclude Town), in left-to-right order
-    pathNodes = new ArrayList<>();
-    if (levelOneNode != null) pathNodes.add(levelOneNode);
-    if (levelTwoNode != null) pathNodes.add(levelTwoNode);
-    if (levelThreeNode != null) pathNodes.add(levelThreeNode);
-
-    currentNodeIndex = -1; // recalc on-demand
+  /** Small holder for BFS reconstruction. */
+  private static final class Prev {
+    final String prevKey;
+    final WorldMapService.PathDef def;
+    Prev(String prevKey, WorldMapService.PathDef def) { this.prevKey = prevKey; this.def = def; }
   }
 
-  /** Find nearest neighbor strictly to the left/right (excluding Town). */
+  // --------------------------------------------------------------------- //
+  // Utilities
+  // --------------------------------------------------------------------- //
+
+  /** Resolve special nodes used by legacy W/S transitions. */
+  private void resolveSpecialNodes() {
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    levelThreeNode = svc.getNode("levelThree");
+    // Prefer explicit "skills" key as Town; fall back to highest Y node if needed
+    townNode = svc.getNode("skills");
+    if (townNode == null) {
+      float bestY = Float.NEGATIVE_INFINITY;
+      for (WorldMapNode n : svc.getAllNodes()) {
+        float y = n.getPositionY();
+        if (y > bestY) { bestY = y; townNode = n; }
+      }
+    }
+  }
+
+  /**
+   * Finds the horizontally nearest neighbour strictly to the left/right (excluding Town).
+   * Rewritten to:
+   *  - keep at most ONE 'continue' in the loop (java:S135)
+   *  - merge nested conditions (java:S1066)
+   *  - keep the control flow flat to lower complexity (java:S3776)
+   */
   private WorldMapNode findDirectionalNeighbor(Vector2 pos, boolean toRight) {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    List<WorldMapNode> all = new ArrayList<>(worldMapService.getAllNodes());
+    WorldMapService svc = ServiceLocator.getWorldMapService();
     float worldX = pos.x;
 
     WorldMapNode best = null;
-    float bestPrimary = Float.MAX_VALUE; // minimal horizontal gap |dx|
-    float bestSecondary = Float.MAX_VALUE; // tie-break by squared distance
+    float bestPrimary = Float.MAX_VALUE;   // |dx|
+    float bestSecondary = Float.MAX_VALUE; // tie-break: squared distance
 
-    for (WorldMapNode n : all) {
-      if (n == null || n == townNode) continue; // Town is only via W/S
-      float nx = n.getPositionX() * worldSize.x;
-      float ny = n.getPositionY() * worldSize.y;
+    for (WorldMapNode n : svc.getAllNodes()) {
+      // Single guard-continue: skip null/Town or wrong side in ONE place
+      float nx = (n == null) ? 0f : n.getPositionX() * worldSize.x;
+      float ny = (n == null) ? 0f : n.getPositionY() * worldSize.y;
       float dx = nx - worldX;
 
-      if (toRight) {
-        if (dx <= 0f) continue; // must be strictly to the right
-      } else {
-        if (dx >= 0f) continue; // must be strictly to the left
-        dx = -dx; // use positive gap for comparison
-      }
+      boolean wrongSide = (toRight && dx <= 0f) || (!toRight && dx >= 0f);
+      if (n == null || n == townNode || wrongSide) continue;
 
-      float primary = Math.abs(dx);
-      float secondary = pos.dst2(new Vector2(nx, ny));
+      float gap = Math.abs(dx);         // primary metric: horizontal gap
+      float d2  = pos.dst2(nx, ny);     // secondary: squared distance
 
-      if (primary < bestPrimary - 1e-3f
-          || (Math.abs(primary - bestPrimary) <= 1e-3f && secondary < bestSecondary)) {
-        bestPrimary = primary;
-        bestSecondary = secondary;
+      boolean strictlyBetter = gap < bestPrimary - 1e-3f;
+      boolean tieButCloser   = Math.abs(gap - bestPrimary) <= 1e-3f && d2 < bestSecondary;
+      if (strictlyBetter || tieButCloser) {
+        bestPrimary = gap;
+        bestSecondary = d2;
         best = n;
       }
     }
     return best;
   }
 
-  /** Convert node's normalised coordinates to world coordinates used by rendering. */
+  /** Convert a node's normalised [0..1] coordinates to world-space pixels. */
   private Vector2 getWorldCoords(WorldMapNode node) {
-    float x = node.getPositionX() * worldSize.x;
-    float y = node.getPositionY() * worldSize.y;
-    return new Vector2(x, y);
+    return new Vector2(node.getPositionX() * worldSize.x,
+                       node.getPositionY() * worldSize.y);
   }
 
-  /** Check if current position is at a given node (within arrival threshold). */
+  /** True if the position is within ARRIVAL_THRESHOLD of the node. */
   private boolean isAtNode(WorldMapNode node, Vector2 pos) {
     if (node == null) return false;
-    Vector2 nodePos = getWorldCoords(node);
-    return pos.dst2(nodePos) <= ARRIVAL_THRESHOLD * ARRIVAL_THRESHOLD;
+    Vector2 np = getWorldCoords(node);
+    return pos.dst2(np) <= ARRIVAL_THRESHOLD * ARRIVAL_THRESHOLD;
   }
 
-  /** Find the nearest node to a given world position. */
-  private WorldMapNode getNearestNode(Vector2 pos) {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    WorldMapNode best = null;
-    float bestD2 = Float.MAX_VALUE;
-    for (WorldMapNode n : nodes) {
-      Vector2 np = getWorldCoords(n);
-      float d2 = pos.dst2(np);
-      if (d2 < bestD2) {
-        bestD2 = d2;
-        best = n;
-      }
-    }
-    return best;
-  }
-
-  /** Whether the player is effectively on this node (within snap radius). */
+  /** True if the position is within NODE_SNAP_RADIUS of the node centre. */
   private boolean isOnNode(WorldMapNode node, Vector2 pos) {
     if (node == null) return false;
     Vector2 np = getWorldCoords(node);
@@ -484,128 +427,125 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /**
-   * Updates proximity checking using the job system for better performance. Checks for nearby nodes
-   * asynchronously at a reduced frequency.
+   * Finds the nearest world map node to a given position.
+   * Flat control flow, no redundant conditions, and no nested 'if' chains.
    */
+  private WorldMapNode getNearestNode(Vector2 pos) {
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    if (svc == null) return null;
+
+    WorldMapNode bestNode = null;
+    float bestDistSq = Float.MAX_VALUE;
+
+    for (WorldMapNode node : svc.getAllNodes()) {
+      if (node == null) continue; // <= only single continue point
+
+      Vector2 nodeWorldPos = getWorldCoords(node);
+      float distSq = pos.dst2(nodeWorldPos);
+
+      if (distSq < bestDistSq) {
+        bestDistSq = distSq;
+        bestNode = node;
+      }
+    }
+    return bestNode;
+  }
+
+  // --------------------------------------------------------------------- //
+  // Proximity detection (async, throttled)
+  // --------------------------------------------------------------------- //
+
   private void updateAsyncProximityCheck() {
     timeSinceLastProximityCheck += Gdx.graphics.getDeltaTime();
 
-    // Check if we should start a new proximity check
-    if (shouldStartNewProximityCheck()) {
+    boolean readyToLaunch =
+        timeSinceLastProximityCheck >= PROXIMITY_CHECK_INTERVAL &&
+        (proximityCheckFuture == null || proximityCheckFuture.isDone());
+
+    if (readyToLaunch) {
+      // Consume previous result if any
       processCompletedFutureIfExists();
-      startNewProximityCheck();
+
+      // Launch a new background job with a copy of the position
+      Vector2 playerPos = new Vector2(entity.getPosition());
+      proximityCheckFuture = JobSystem.launch(() -> checkNodeProximityAsync(playerPos));
+      timeSinceLastProximityCheck = 0f;
     }
 
-    // Process any completed futures for responsiveness
+    // Consume completed result for responsiveness
     processCompletedFutureIfExists();
   }
 
-  /** Determines if a new proximity check should be started. */
-  private boolean shouldStartNewProximityCheck() {
-    return timeSinceLastProximityCheck >= PROXIMITY_CHECK_INTERVAL
-        && (proximityCheckFuture == null || proximityCheckFuture.isDone());
-  }
-
-  /** Starts a new proximity check using the job system. */
-  private void startNewProximityCheck() {
-    Vector2 playerPos = new Vector2(entity.getPosition()); // Copy position for thread safety
-    proximityCheckFuture = JobSystem.launch(() -> checkNodeProximityAsync(playerPos));
-    timeSinceLastProximityCheck = 0f;
-  }
-
-  /** Processes a completed future if one exists, handling results and errors. */
   private void processCompletedFutureIfExists() {
-    if (proximityCheckFuture != null && proximityCheckFuture.isDone()) {
-      try {
-        WorldMapNode newNearbyNode = proximityCheckFuture.get();
-        updateNearbyNode(newNearbyNode);
-        proximityCheckFuture = null; // Clear the completed future
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        logger.warn(
-            "[WorldMapPlayerComponent] Proximity check was interrupted: {}", e.getMessage());
-        proximityCheckFuture = null;
-      } catch (Exception e) {
-        logger.warn(
-            "[WorldMapPlayerComponent] Error getting proximity check result: {}", e.getMessage());
-        proximityCheckFuture = null;
-      }
+    if (proximityCheckFuture == null || !proximityCheckFuture.isDone()) return;
+
+    try {
+      WorldMapNode result = proximityCheckFuture.get();
+      setNearbyNode(result);
+    } catch (InterruptedException ie) {
+      Thread.currentThread().interrupt();
+      logger.warn("[WorldMapPlayerComponent] Proximity check interrupted: {}", ie.getMessage());
+    } catch (Exception e) {
+      logger.warn("[WorldMapPlayerComponent] Proximity check failed: {}", e.getMessage());
+    } finally {
+      proximityCheckFuture = null;
     }
   }
 
-  /**
-   * Performs the actual proximity checking computation asynchronously. This method runs on a
-   * background thread via the JobSystem.
-   *
-   * @param playerPos The player's position (copied for thread safety)
-   * @return The nearby node, or null if none found
-   */
+  /** Background computation of the "nearby" node (if any). */
   private WorldMapNode checkNodeProximityAsync(Vector2 playerPos) {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    List<WorldMapNode> nodes = worldMapService.getAllNodes();
-
-    for (WorldMapNode node : nodes) {
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    for (WorldMapNode node : svc.getAllNodes()) {
       float nodeX = node.getPositionX() * worldSize.x;
       float nodeY = node.getPositionY() * worldSize.y;
 
-      // Use center of taller character (96w x 110h) for distance calculation
+      // Character ~96x110 → measure from centre-ish points to feel natural
       float distance = Vector2.dst(playerPos.x + 48, playerPos.y + 55, nodeX + 40, nodeY + 40);
-
-      if (distance < INTERACTION_DISTANCE) {
-        return node;
-      }
+      if (distance < INTERACTION_DISTANCE) return node; // <= single return/continue style
     }
-
-    return null; // No nearby node found
+    return null;
   }
 
-  /**
-   * Updates the nearby node and triggers UI updates if needed. This method runs on the main thread.
-   *
-   * @param newNearbyNode The new nearby node (or null)
-   */
-  private void updateNearbyNode(WorldMapNode newNearbyNode) {
-    WorldMapNode previousNearby = nearbyNode;
-    nearbyNode = newNearbyNode;
-
-    // Update node render components for prompt display if the nearby node changed
-    if (previousNearby != nearbyNode) {
-      ServiceLocator.getWorldMapService().updateNodeProximity(nearbyNode);
-    }
+  private void setNearbyNode(WorldMapNode newNearby) {
+    if (nearbyNode == newNearby) return;
+    nearbyNode = newNearby;
+    ServiceLocator.getWorldMapService().updateNodeProximity(nearbyNode);
   }
 
-  /** Handles the interaction with the nodes. */
+  // --------------------------------------------------------------------- //
+  // Interaction (press E near a node)
+  // --------------------------------------------------------------------- //
+
   private void handleNodeInteraction() {
-    if (nearbyNode != null && Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-      if (nearbyNode.isUnlocked() && !nearbyNode.isCompleted()) {
-        String message = "Do you want to enter " + nearbyNode.getLabel() + "?";
-        ServiceLocator.getDialogService()
-            .warning(
-                nearbyNode.getLabel(),
-                message,
-                dialog -> {
-                  logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
-                  entity.getEvents().trigger("enterNode", nearbyNode);
-                },
-                null);
-      } else {
-        String message =
-            nearbyNode.getLockReason() != null
-                ? nearbyNode.getLockReason()
-                : "This node is not available.";
-        ServiceLocator.getDialogService().error(nearbyNode.getLabel(), message);
-        logger.info(
-            "[WorldMapPlayerComponent] Node '{}' is not accessible: {}",
-            nearbyNode.getLabel(),
-            message);
-      }
-    }
-  }
+    if (nearbyNode == null || !Gdx.input.isKeyJustPressed(Input.Keys.E)) return;
 
-  private void tickPathMovement(float delta) {
-    if (!pathMoving || waypointIndex < 0 || waypointIndex >= waypointQueue.size()) {
+    if (nearbyNode.isUnlocked() && !nearbyNode.isCompleted()) {
+      String message = "Do you want to enter " + nearbyNode.getLabel() + "?";
+      ServiceLocator.getDialogService().warning(
+          nearbyNode.getLabel(),
+          message,
+          dialog -> {
+            logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
+            entity.getEvents().trigger("enterNode", nearbyNode);
+          },
+          null);
       return;
     }
+
+    String reason = nearbyNode.getLockReason();
+    ServiceLocator.getDialogService().error(
+        nearbyNode.getLabel(),
+        reason != null ? reason : "This node is not available.");
+    logger.info("[WorldMapPlayerComponent] Node '{}' not accessible: {}",
+        nearbyNode.getLabel(), reason);
+  }
+
+  // --------------------------------------------------------------------- //
+  // JSON-path movement ticking
+  // --------------------------------------------------------------------- //
+
+  private void tickPathMovement(float delta) {
+    if (!pathMoving || waypointIndex < 0 || waypointIndex >= waypointQueue.size()) return;
 
     Vector2 curTarget = waypointQueue.get(waypointIndex);
     tmpPos.set(entity.getPosition());
@@ -614,54 +554,45 @@ public class WorldMapPlayerComponent extends UIComponent {
     float dist = toTarget.len();
 
     if (dist <= ARRIVAL_THRESHOLD) {
-      // Reached current waypoint
+      // Reached current waypoint: go to next (or finish)
       waypointIndex++;
       if (waypointIndex >= waypointQueue.size()) {
-        // Finished the whole path
         pathMoving = false;
         waypointIndex = -1;
         waypointQueue.clear();
       }
-      // Intentionally do nothing else this frame to keep movement smooth.
-    } else {
-      // Keep moving towards the current waypoint
-      float speed = PLAYER_SPEED;
-      Vector2 step = toTarget.scl(speed * delta / Math.max(dist, 1e-4f));
-      tmpPos.add(step);
-
-      // Clamp to world bounds (account for character size 96x110 like legacy)
-      tmpPos.x = MathUtils.clamp(tmpPos.x, 0, worldSize.x - 96);
-      tmpPos.y = MathUtils.clamp(tmpPos.y, 0, worldSize.y - 110);
-      entity.setPosition(tmpPos);
+      return;
     }
+
+    // Advance towards the current waypoint
+    Vector2 step = toTarget.scl(PLAYER_SPEED * delta / Math.max(dist, 1e-4f));
+    tmpPos.add(step);
+
+    // Clamp to world bounds (character 96x110)
+    tmpPos.x = MathUtils.clamp(tmpPos.x, 0, worldSize.x - 96);
+    tmpPos.y = MathUtils.clamp(tmpPos.y, 0, worldSize.y - 110);
+    entity.setPosition(tmpPos);
   }
 
-  /**
-   * Gets the nearby node.
-   *
-   * @return the nearby node
-   */
-  public WorldMapNode getNearbyNode() {
-    return nearbyNode;
-  }
+  // --------------------------------------------------------------------- //
+  // Rendering & accessors
+  // --------------------------------------------------------------------- //
 
-  /**
-   * Draws the player texture at the world coordinates with appropriate size.
-   *
-   * @param batch the sprite batch
-   */
+  /** Draw the player sprite; slightly taller (96x110) for better proportions. */
   @Override
   protected void draw(SpriteBatch batch) {
-    if (playerTexture != null) {
-      Vector2 position = entity.getPosition();
-      // Make character slightly taller: 96 width x 110 height
-      batch.draw(playerTexture, position.x + renderOffsetX, position.y, 96f, 110f);
-    }
+    if (playerTexture == null) return;
+    Vector2 pos = entity.getPosition();
+    batch.draw(playerTexture, pos.x + renderOffsetX, pos.y, 96f, 110f);
   }
 
-  /** Returns true if the player is currently moving along a path or towards a target. */
+  /** True if the player is currently moving along a path or a free target. */
   public boolean isCurrentlyMoving() {
     return pathMoving || isMoving;
+  }
+
+  public WorldMapNode getNearbyNode() {
+    return nearbyNode;
   }
 
   public Vector2 getWorldSize() {
@@ -669,15 +600,14 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   public float getNodeSnapRadius() {
-    return NODE_SNAP_RADIUS; // 36f
+    return NODE_SNAP_RADIUS;
   }
 
-  /** Sets the horizontal render offset (pixels). Positive = right, Negative = left. */
+  /** Set horizontal render offset in pixels (positive → shift right). */
   public void setRenderOffsetX(float offset) {
     this.renderOffsetX = offset;
   }
 
-  /** Clean up any running background tasks when the component is disposed. */
   @Override
   public void dispose() {
     if (proximityCheckFuture != null && !proximityCheckFuture.isDone()) {
