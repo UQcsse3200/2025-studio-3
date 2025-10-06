@@ -94,7 +94,8 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/mortar-select.mp3",
     "sounds/shadow-select.mp3",
     "sounds/shield-select.mp3",
-    "sounds/shooter-select.mp3"
+    "sounds/shooter-select.mp3",
+    "sounds/robot-death.mp3"
   };
 
   /**

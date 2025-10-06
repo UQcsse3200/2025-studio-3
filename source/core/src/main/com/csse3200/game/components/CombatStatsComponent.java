@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -129,14 +130,21 @@ public class CombatStatsComponent extends Component {
   public void handleDeath() {
     boolean isDead = isDead();
     if (isDead || getHealth() < 0) {
+      Sound deathSound;
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
       // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
         logger.info("Human has died!");
+        deathSound =
+                ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
       } else {
         entity.getEvents().trigger("entityDeath");
+        deathSound =
+                ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
+      deathSound.play(volume);
     }
   }
 }
