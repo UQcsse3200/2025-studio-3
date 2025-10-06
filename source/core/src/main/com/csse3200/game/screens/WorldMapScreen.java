@@ -57,7 +57,6 @@ public class WorldMapScreen extends BaseScreen {
   private boolean smoothRecentering = false;
   private static final float RECENTER_STOP_EPSILON = 2f;
 
-
   /**
    * Constructor for the world map screen.
    *
@@ -260,10 +259,11 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(newX, newY);
     clampCamera(camera);
   }
+
   /**
-   * Performs a one-shot smooth recenter of the camera toward the player's current position
-   * without enabling continuous follow mode. Stops automatically when close enough or when
-   * follow mode is enabled due to player movement.
+   * Performs a one-shot smooth recenter of the camera toward the player's current position without
+   * enabling continuous follow mode. Stops automatically when close enough or when follow mode is
+   * enabled due to player movement.
    */
   private void updateSmoothRecentering() {
     if (!smoothRecentering || playerEntity == null) return;
@@ -297,7 +297,6 @@ public class WorldMapScreen extends BaseScreen {
     if (playerEntity == null) return;
     smoothRecentering = true;
   }
-
 
   /**
    * Clamps the camera to the world bounds.

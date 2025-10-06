@@ -58,16 +58,6 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   private static final float NODE_SNAP_RADIUS = 36f;
 
-  private void syncPosToProfile() {
-    try {
-      var prof = ServiceLocator.getProfileService().getProfile();
-      var p = entity.getPosition();
-      prof.setWorldMapX(p.x);
-      prof.setWorldMapY(p.y);
-    } catch (Exception ignored) {
-    }
-  }
-
   public WorldMapPlayerComponent(Vector2 worldSize) {
     this.worldSize = worldSize;
   }
@@ -98,93 +88,101 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Handles node-path navigation and smooth auto-movement. */
   private void handleMovement() {
     float delta = Gdx.graphics.getDeltaTime();
+
+    if (advanceJsonPathIfMoving(delta)) return;
+    if (advanceActiveTarget(delta)) return;
+
+    String pressed = readWASDOnce();
+    if (pressed != null && tryStartJsonPathFromNode(pressed, delta)) return;
+
+    handleLegacyDirectionalNavigation();
+  }
+
+  /** If currently following a JSON-defined path, advance one tick and clamp. */
+  private boolean advanceJsonPathIfMoving(float delta) {
+    if (!pathMoving) return false;
+    tickPathMovement(delta);
+    Vector2 pos = entity.getPosition();
+    pos.x = MathUtils.clamp(pos.x, 0, worldSize.x - 96);
+    pos.y = MathUtils.clamp(pos.y, 0, worldSize.y - 110);
+    entity.setPosition(pos);
+    return true;
+  }
+
+  /** If moving towards a free targetPosition, continue the movement this frame. */
+  private boolean advanceActiveTarget(float delta) {
+    if (!isMoving || targetPosition == null) return false;
+
+    Vector2 position = entity.getPosition();
+    Vector2 toTargetVec = targetPosition.cpy().sub(position);
+    float dist = toTargetVec.len();
+
+    if (dist <= ARRIVAL_THRESHOLD) {
+      position.set(targetPosition);
+      isMoving = false;
+      targetPosition = null;
+    } else {
+      Vector2 step = toTargetVec.nor().scl(PLAYER_SPEED * delta);
+      if (step.len() > dist) step.setLength(dist);
+      position.add(step);
+    }
+
+    position.x = MathUtils.clamp(position.x, 0, worldSize.x - 96);
+    position.y = MathUtils.clamp(position.y, 0, worldSize.y - 110);
+    entity.setPosition(position);
+    return true;
+  }
+
+  /** Read a single WASD key edge; returns null if none pressed this frame. */
+  private String readWASDOnce() {
+    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) return "W";
+    if (Gdx.input.isKeyJustPressed(Input.Keys.A)) return "A";
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S)) return "S";
+    if (Gdx.input.isKeyJustPressed(Input.Keys.D)) return "D";
+    return null;
+  }
+
+  /** Try to start a JSON path from the nearest node, returns true if a path was started. */
+  private boolean tryStartJsonPathFromNode(String pressed, float delta) {
+    Vector2 cur = entity.getPosition();
+    WorldMapNode at = getNearestNode(cur);
+    float dist2 = at == null ? -1f : cur.dst2(getWorldCoords(at));
+    logger.info(
+        "[WorldMap] key={}, nearest={}, dist2={}, onNode={}",
+        pressed,
+        (at == null ? "null" : at.getRegistrationKey()),
+        dist2,
+        isOnNode(at, cur));
+
+    if (!isOnNode(at, cur)) return false;
+
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
+    if (def == null) return false;
+
+    waypointQueue.clear();
+    if (def.waypoints != null) {
+      for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
+    }
+    WorldMapNode nextNode = svc.getNode(def.next);
+    if (nextNode != null) waypointQueue.add(getWorldCoords(nextNode));
+    if (waypointQueue.isEmpty()) return false;
+
+    waypointIndex = 0;
+    pathMoving = true;
+    // First tick for snappier feel
+    tickPathMovement(delta);
+    Vector2 posAfterTick = entity.getPosition();
+    posAfterTick.x = MathUtils.clamp(posAfterTick.x, 0, worldSize.x - 96);
+    posAfterTick.y = MathUtils.clamp(posAfterTick.y, 0, worldSize.y - 110);
+    entity.setPosition(posAfterTick);
+    return true;
+  }
+
+  /** Legacy directional navigation (left-right chain and town transitions). */
+  private void handleLegacyDirectionalNavigation() {
     Vector2 position = entity.getPosition();
 
-    // If currently following a JSON-defined path, advance it first
-    if (pathMoving) {
-      tickPathMovement(delta);
-
-      // After ticking, clamp to world bounds and update entity position
-      Vector2 posAfterTick = entity.getPosition();
-      posAfterTick.x = MathUtils.clamp(posAfterTick.x, 0, worldSize.x - 96);
-      posAfterTick.y = MathUtils.clamp(posAfterTick.y, 0, worldSize.y - 110);
-      entity.setPosition(posAfterTick);
-      return;
-    }
-
-    // If currently moving, continue towards the target
-    if (isMoving && targetPosition != null) {
-      Vector2 toTarget = targetPosition.cpy().sub(position);
-      float dist = toTarget.len();
-      if (dist <= ARRIVAL_THRESHOLD) {
-        position.set(targetPosition);
-        isMoving = false;
-        targetPosition = null;
-      } else {
-        Vector2 step = toTarget.nor().scl(PLAYER_SPEED * delta);
-        if (step.len() > dist) {
-          step.setLength(dist);
-        }
-        position.add(step);
-      }
-
-      // Clamp to world bounds (account for new character height of 110)
-      position.x = MathUtils.clamp(position.x, 0, worldSize.x - 96);
-      position.y = MathUtils.clamp(position.y, 0, worldSize.y - 110);
-
-      entity.setPosition(position);
-      return;
-    }
-
-    // Not moving: first try JSON path when on a node + key pressed
-    String pressed = null;
-    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) pressed = "W";
-    else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) pressed = "A";
-    else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) pressed = "S";
-    else if (Gdx.input.isKeyJustPressed(Input.Keys.D)) pressed = "D";
-
-    if (pressed != null) {
-      // Determine closest node and check if we are effectively "on" it
-      Vector2 cur = entity.getPosition();
-      WorldMapNode at = getNearestNode(cur);
-      float dist2 = at == null ? -1f : cur.dst2(getWorldCoords(at));
-      logger.info(
-          "[WorldMap] key={}, nearest={}, dist2={}, onNode={}",
-          pressed,
-          (at == null ? "null" : at.getRegistrationKey()),
-          dist2,
-          isOnNode(at, cur));
-      if (isOnNode(at, cur)) {
-        WorldMapService svc = ServiceLocator.getWorldMapService();
-        WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
-
-        if (def != null) {
-          WorldMapNode nextNode = svc.getNode(def.next);
-          waypointQueue.clear();
-          for (Vector2 p : def.waypoints) {
-            waypointQueue.add(new Vector2(p)); // world-space points directly
-          }
-          if (nextNode != null) {
-            waypointQueue.add(getWorldCoords(nextNode));
-          }
-          if (!waypointQueue.isEmpty()) {
-            waypointIndex = 0;
-            pathMoving = true;
-            // Tick once this frame for snappier response
-            tickPathMovement(delta);
-            Vector2 posAfterTick = entity.getPosition();
-            posAfterTick.x = MathUtils.clamp(posAfterTick.x, 0, worldSize.x - 96);
-            posAfterTick.y = MathUtils.clamp(posAfterTick.y, 0, worldSize.y - 110);
-            entity.setPosition(posAfterTick);
-            return;
-          }
-        }
-        return;
-      }
-      // If not on a node, fall through to legacy handling
-    }
-
-    // Legacy directional navigation (unchanged behaviour)
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
       WorldMapNode right = findDirectionalNeighbor(position, true);
       if (right != null) {
@@ -192,19 +190,28 @@ public class WorldMapPlayerComponent extends UIComponent {
         isMoving = true;
         currentNodeIndex = (pathNodes != null) ? pathNodes.indexOf(right) : -1;
       }
-    } else if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+      return;
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
       WorldMapNode left = findDirectionalNeighbor(position, false);
       if (left != null) {
         targetPosition = getWorldCoords(left);
         isMoving = true;
         currentNodeIndex = (pathNodes != null) ? pathNodes.indexOf(left) : -1;
       }
-    } else if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+      return;
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
       if (isAtNode(levelThreeNode, position) && townNode != null) {
         targetPosition = getWorldCoords(townNode);
         isMoving = true;
       }
-    } else if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
+      return;
+    }
+
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
       if (isAtNode(townNode, position) && levelThreeNode != null) {
         targetPosition = getWorldCoords(levelThreeNode);
         isMoving = true;
@@ -596,7 +603,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   private void tickPathMovement(float delta) {
-    if (!pathMoving || waypointIndex < 0 || waypointIndex >= waypointQueue.size()) return;
+    if (!pathMoving || waypointIndex < 0 || waypointIndex >= waypointQueue.size()) {
+      return;
+    }
 
     Vector2 curTarget = waypointQueue.get(waypointIndex);
     tmpPos.set(entity.getPosition());
@@ -605,23 +614,26 @@ public class WorldMapPlayerComponent extends UIComponent {
     float dist = toTarget.len();
 
     if (dist <= ARRIVAL_THRESHOLD) {
+      // Reached current waypoint
       waypointIndex++;
       if (waypointIndex >= waypointQueue.size()) {
+        // Finished the whole path
         pathMoving = false;
         waypointIndex = -1;
         waypointQueue.clear();
-        return;
       }
-      return;
-    }
-    float speed = PLAYER_SPEED;
-    Vector2 step = toTarget.scl(speed * delta / Math.max(dist, 1e-4f));
-    tmpPos.add(step);
+      // Intentionally do nothing else this frame to keep movement smooth.
+    } else {
+      // Keep moving towards the current waypoint
+      float speed = PLAYER_SPEED;
+      Vector2 step = toTarget.scl(speed * delta / Math.max(dist, 1e-4f));
+      tmpPos.add(step);
 
-    // Clamp to world bounds (account for character size 96x110 like legacy)
-    tmpPos.x = MathUtils.clamp(tmpPos.x, 0, worldSize.x - 96);
-    tmpPos.y = MathUtils.clamp(tmpPos.y, 0, worldSize.y - 110);
-    entity.setPosition(tmpPos);
+      // Clamp to world bounds (account for character size 96x110 like legacy)
+      tmpPos.x = MathUtils.clamp(tmpPos.x, 0, worldSize.x - 96);
+      tmpPos.y = MathUtils.clamp(tmpPos.y, 0, worldSize.y - 110);
+      entity.setPosition(tmpPos);
+    }
   }
 
   /**
