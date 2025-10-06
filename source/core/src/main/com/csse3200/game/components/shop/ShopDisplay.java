@@ -1,15 +1,12 @@
 package com.csse3200.game.components.shop;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
@@ -24,13 +21,20 @@ import org.slf4j.LoggerFactory;
 public class ShopDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(ShopDisplay.class);
   private static final float Z_INDEX = 2f;
-  private static final int ITEM_SIZE = 160;
-  private static final int COIN_ICON_SIZE = 40;
+
+  // Base dimensions
+  private static final float BACKGROUND_WIDTH = 778f;
+  private static final float BACKGROUND_HEIGHT = 564f;
+  private static final float ITEM_SIZE = 160f;
+  private static final float COIN_ICON_SIZE = 40f;
+  private static final float CLOSE_PAD = 20f;
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
   private Label timerLabel;
   private Table mainTable;
-  private ImageButton closeButton;
+  private TextButton closeButton;
+  private Image background;
+  private Image backgroundShop;
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -53,81 +57,65 @@ public class ShopDisplay extends UIComponent {
 
   /** Adds actors to the stage. */
   private void addActors() {
+    // Set bg.png as main background with fixed size
+    background =
+        new Image(
+            new TextureRegionDrawable(
+                new TextureRegion(
+                    ServiceLocator.getGlobalResourceService()
+                        .getAsset("images/backgrounds/bg.png", Texture.class))));
+    background.setFillParent(true);
+    background.setScaling(Scaling.fill);
+    stage.addActor(background);
+
+    // Get scaled background size
+    float uiScale = ui.getUIScale();
+    float backgroundWidth = BACKGROUND_WIDTH * uiScale;
+    float backgroundHeight = BACKGROUND_HEIGHT * uiScale;
+
     // Create main table with fixed dimensions
     mainTable = new Table();
-    mainTable.setSize(778f, 564f);
-    mainTable.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
+    mainTable.setSize(backgroundWidth, backgroundHeight);
 
-    // Set shop-popup.png as background with fixed size
-    Image backgroundImage =
+    // Set shop-popup.png as shop background with fixed size
+    backgroundShop =
         new Image(
             ServiceLocator.getGlobalResourceService()
                 .getAsset("images/ui/shop-popup.png", Texture.class));
-    backgroundImage.setSize(778f, 564f);
-    backgroundImage.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
-    stage.addActor(backgroundImage);
+    backgroundShop.setSize(backgroundWidth, backgroundHeight);
+
+    stage.addActor(backgroundShop);
 
     createCloseButton();
     createShopUI();
     stage.addActor(mainTable);
+
+    recenterTable();
   }
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    // Create close button using close-icon.png
-    closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
-
+    closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
-  }
-
-  /**
-   * Sets the label's font color to white
-   *
-   * @param label The label to set the font color of
-   */
-  private void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
   }
 
   /** Creates the main shop UI layout. */
   private void createShopUI() {
     mainTable.clear();
-    Label titleLabel = new Label("SHOP", skin, "title");
-    titleLabel.setColor(Color.BLACK);
-    titleLabel.setFontScale(1.5f);
-    mainTable.add(titleLabel).colspan(3).center().padTop(-40).padBottom(34f).row();
+    mainTable.top().center();
+
+    // Title
+    mainTable.add(ui.title("Shop")).colspan(3).padTop(-40f * ui.getUIScale()).padBottom(34f).row();
+
     createTimerDisplay();
-    mainTable.add(timerLabel).colspan(3).center().padBottom(30f).row();
+    mainTable.add(timerLabel).colspan(3).padBottom(30f).row();
+
     createItemSlots();
   }
 
   /** Creates and displays the reset timer. */
   private void createTimerDisplay() {
-    timerLabel = new Label("", skin);
-    whiten(timerLabel);
+    timerLabel = ui.subtext("Reset in: --:--");
     updateTimer();
   }
 
@@ -147,27 +135,35 @@ public class ShopDisplay extends UIComponent {
   private void recenterTable() {
     if (mainTable == null) return;
 
+    float uiScale = ui.getUIScale();
+    float backgroundWidth = BACKGROUND_WIDTH * uiScale;
+    float backgroundHeight = BACKGROUND_HEIGHT * uiScale;
+
     // Calculate center position for the fixed 778x564 dimensions
-    float centerX = (stage.getWidth() - 778f) / 2f;
-    float centerY = (stage.getHeight() - 564f) / 2f;
+    float centerX = (stage.getWidth() - backgroundWidth) / 2f;
+    float centerY = (stage.getHeight() - backgroundHeight) / 2f;
 
     // Recenter the main table
+    mainTable.setSize(backgroundWidth, backgroundHeight);
     mainTable.setPosition(centerX, centerY);
 
     // Update close button position
     if (closeButton != null) {
       closeButton.setPosition(
-          20f, // 20f padding from left
-          stage.getHeight() - 60f - 20f // 20f padding from top
-          );
+          CLOSE_PAD * uiScale, // 20f padding from left
+          stage.getHeight() - closeButton.getHeight() - CLOSE_PAD * uiScale);
     }
 
-    // Recenter the background image if it exists
-    for (Actor actor : stage.getActors()) {
-      if (actor instanceof Image image && image.getWidth() == 778f && image.getHeight() == 564f) {
-        image.setPosition(centerX, centerY);
-        break;
-      }
+    // Recenter the main background image if it exists
+    if (background != null) {
+      background.setFillParent(true);
+      background.setScaling(Scaling.fill);
+    }
+
+    // Recenter the shop background image if it exists
+    if (backgroundShop != null) {
+      backgroundShop.setSize(backgroundWidth, backgroundHeight);
+      backgroundShop.setPosition(centerX, centerY);
     }
   }
 
@@ -193,6 +189,9 @@ public class ShopDisplay extends UIComponent {
 
   /** Creates the item slots with prices and coin icons. */
   private void createItemSlots() {
+    float uiScale = ui.getUIScale();
+    float coinSize = COIN_ICON_SIZE * uiScale;
+
     Table itemTable = new Table();
 
     for (int i = 0; i < 3; i++) {
@@ -210,18 +209,15 @@ public class ShopDisplay extends UIComponent {
           new Image(
               ServiceLocator.getGlobalResourceService()
                   .getAsset("images/entities/currency/coins.png", Texture.class));
-      coinIcon.setSize(COIN_ICON_SIZE, COIN_ICON_SIZE);
-      priceTable.add(coinIcon).size(COIN_ICON_SIZE).padRight(8f);
+      priceTable.add(coinIcon).size(coinSize).padRight(8f * uiScale);
 
-      Label priceLabel = new Label(String.valueOf(itemConfig.getCost()), skin);
-      whiten(priceLabel);
-      priceLabel.setFontScale(1.2f);
+      Label priceLabel = ui.text(String.valueOf(itemConfig.getCost()));
       priceTable.add(priceLabel);
 
-      itemColumn.add(priceTable).padTop(25f);
+      itemColumn.add(priceTable).padTop(25f * uiScale);
 
       // Add to main item table
-      itemTable.add(itemColumn).padLeft(30f).padRight(30f);
+      itemTable.add(itemColumn).padLeft(30f * uiScale).padRight(30f * uiScale);
     }
 
     mainTable.add(itemTable).center();
@@ -235,13 +231,16 @@ public class ShopDisplay extends UIComponent {
    * @param container The container to add the slot to.
    */
   private void createItemSlot(int slotIndex, BaseItemConfig itemConfig, Table container) {
+    float uiScale = ui.getUIScale();
+    float itemSize = ITEM_SIZE * uiScale;
+
     // Load the item texture
     Texture itemTex =
         ServiceLocator.getResourceService().getAsset(itemConfig.getAssetPath(), Texture.class);
 
     // Create ImageButton with the item texture
     ImageButton slot = new ImageButton(new TextureRegionDrawable(itemTex));
-    slot.setSize(ITEM_SIZE, ITEM_SIZE);
+    slot.setSize(itemSize, itemSize);
 
     // Add click listener
     slot.addListener(
@@ -255,7 +254,7 @@ public class ShopDisplay extends UIComponent {
 
     // Store reference and add to container
     itemSlots[slotIndex] = slot;
-    container.add(slot).size(ITEM_SIZE).row();
+    container.add(slot).size(itemSize).row();
   }
 
   /**
@@ -342,11 +341,6 @@ public class ShopDisplay extends UIComponent {
         .info(
             "Purchase Successful",
             String.format("You have successfully purchased %s!", itemConfig.getName()));
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
   }
 
   @Override

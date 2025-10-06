@@ -10,11 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,10 +22,8 @@ public class ProfileDisplay extends UIComponent {
   private static final float Z_INDEX = 2f;
 
   // Use relative sizing for responsiveness
-  private static final float MAIN_BUTTON_WIDTH_RATIO = 0.16f;
-  private static final float MAIN_BUTTON_HEIGHT_RATIO = 0.2f;
-  private static final float CORNER_BUTTON_WIDTH_RATIO = 0.1f;
-  private static final float CORNER_BUTTON_HEIGHT_RATIO = 0.07f;
+  private static final float MAIN_BUTTON_WIDTH = 200f;
+  private static final float CORNER_BUTTON_WIDTH = 150f;
   private static final float PADDING_RATIO = 0.02f;
   private static final float BUTTON_SPACING_RATIO = 0.03f;
 
@@ -74,7 +70,7 @@ public class ProfileDisplay extends UIComponent {
   }
 
   private void createTitle() {
-    Label titleLabel = new Label("Profile", skin, "title");
+    Label titleLabel = ui.title("Profile");
     titleLabel.setAlignment(Align.center);
 
     mainTable.add(titleLabel).padBottom(stage.getHeight() * 0.1f).expandX().row();
@@ -87,12 +83,11 @@ public class ProfileDisplay extends UIComponent {
     Table buttonTable = new Table();
     buttonTable.defaults().spaceBottom(stage.getHeight() * BUTTON_SPACING_RATIO);
 
-    // Calculate button dimensions based on screen size
-    float buttonWidth = stage.getWidth() * MAIN_BUTTON_WIDTH_RATIO;
-    float buttonHeight = stage.getHeight() * MAIN_BUTTON_HEIGHT_RATIO;
+    // Get scaled button dimensions from UIFactory
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(MAIN_BUTTON_WIDTH);
 
     for (int i = 0; i < buttonLabels.length; i++) {
-      TextButton button = ButtonFactory.createButton(buttonLabels[i]);
+      TextButton button = ui.primaryButton(buttonLabels[i], MAIN_BUTTON_WIDTH);
       button.getLabel().setWrap(true);
 
       // Add click listener
@@ -109,8 +104,8 @@ public class ProfileDisplay extends UIComponent {
       // Add button to table with spacing
       buttonTable
           .add(button)
-          .width(buttonWidth - 30)
-          .height(buttonHeight - 30)
+          .width(buttonDimensions.getKey())
+          .height(buttonDimensions.getValue())
           .padRight(i < buttonLabels.length - 1 ? stage.getWidth() * BUTTON_SPACING_RATIO : 0);
     }
 
@@ -123,16 +118,12 @@ public class ProfileDisplay extends UIComponent {
     stage.addActor(cornerTable);
 
     // Calculate button dimensions based on screen size
-    float buttonWidth = stage.getWidth() * CORNER_BUTTON_WIDTH_RATIO;
-    float buttonHeight = stage.getHeight() * CORNER_BUTTON_HEIGHT_RATIO;
     float padding = stage.getWidth() * PADDING_RATIO;
+    // Get scaled button dimensions from UIFactory
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(CORNER_BUTTON_WIDTH);
 
     // Close button (top left)
-    ImageButton closeBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
+    ImageButton closeBtn = ui.createImageButton("images/ui/close-icon.png", 60f, 60f);
     closeBtn.addListener(
         new ChangeListener() {
           @Override
@@ -143,7 +134,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Exit button (top right)
-    TextButton exitBtn = ButtonFactory.createButton("Exit");
+    TextButton exitBtn = ui.secondaryButton("Exit", CORNER_BUTTON_WIDTH);
     exitBtn.addListener(
         new ChangeListener() {
           @Override
@@ -154,7 +145,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Save button (bottom left)
-    TextButton saveBtn = ButtonFactory.createButton("Save");
+    TextButton saveBtn = ui.secondaryButton("Save", CORNER_BUTTON_WIDTH);
     saveBtn.addListener(
         new ChangeListener() {
           @Override
@@ -165,7 +156,7 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Settings button (bottom right)
-    TextButton settingsBtn = ButtonFactory.createButton("Settings");
+    TextButton settingsBtn = ui.secondaryButton("Settings", CORNER_BUTTON_WIDTH);
     settingsBtn.addListener(
         new ChangeListener() {
           @Override
@@ -176,22 +167,34 @@ public class ProfileDisplay extends UIComponent {
         });
 
     // Position close button in top left corner
-    closeBtn.setSize(60f, 60f);
-    closeBtn.setPosition(20f, stage.getHeight() - 60f - 20f);
+    float pad = ui.getScaledWidth(20f);
+    closeBtn.setPosition(pad, stage.getHeight() - closeBtn.getHeight() - pad);
     stage.addActor(closeBtn);
 
     // Position buttons in corners using the table
     cornerTable.add().expandX();
-    cornerTable.add(exitBtn).width(buttonWidth).height(buttonHeight).pad(padding).top().right();
+    cornerTable
+        .add(exitBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .pad(padding)
+        .top()
+        .right();
     cornerTable.row();
     cornerTable.add().expandY();
     cornerTable.row();
-    cornerTable.add(saveBtn).width(buttonWidth).height(buttonHeight).pad(padding).bottom().left();
+    cornerTable
+        .add(saveBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .pad(padding)
+        .bottom()
+        .left();
     cornerTable.add().expandX();
     cornerTable
         .add(settingsBtn)
-        .width(buttonWidth)
-        .height(buttonHeight)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
         .pad(padding)
         .bottom()
         .right();
@@ -219,6 +222,7 @@ public class ProfileDisplay extends UIComponent {
   }
 
   /** Call this method when the screen is resized to update UI elements */
+  @Override
   public void resize() {
     if (mainTable != null) {
       mainTable.clear();

@@ -1,14 +1,22 @@
 package com.csse3200.game.ui;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory class for creating UI components with consistent styling.
@@ -17,6 +25,7 @@ import net.dermetfan.utils.Pair;
  * This allows for the UI scale to be customized and the skin to be passed in to the constructor.
  */
 public class UIFactory {
+  private static final Logger logger = LoggerFactory.getLogger(UIFactory.class);
   private final Map<String, BitmapFont> fontCache = new HashMap<>();
   private final Skin skin;
   private float uiScale;
@@ -185,6 +194,7 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
+    // ButtonFactory.textButtonPressedListener(button);
     return button;
   }
 
@@ -209,7 +219,90 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
+    //  ButtonFactory.textButtonPressedListener(button);
     return button;
+  }
+
+  /**
+   * Creates an image button consistent styling and UI scaling.
+   *
+   * @param imagePath the asset path for the button image
+   * @param baseWidth the base width
+   * @param baseHeight the base height
+   * @return the configured ImageButton (not yet added to stage)
+   */
+  public ImageButton createImageButton(String imagePath, float baseWidth, float baseHeight) {
+    // Get the texture
+    Texture texture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset(imagePath, Texture.class); // Ensure loaded
+    ImageButton button = new ImageButton(new TextureRegionDrawable(texture));
+
+    // Apply UI scaling
+    float width = getScaledWidth(baseWidth);
+    float height = getScaledHeight(baseHeight);
+
+    button.setSize(width, height);
+    // ButtonFactory.imageButtonPressedListener(button);
+    return button;
+  }
+
+  /**
+   * Create a standard "Back" or "Exit" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
+   * @param backOrExit the relevant text for the button
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createBackExitButton(
+      EventHandler eventHandler, float stageHeight, String backOrExit) {
+    TextButton button = secondaryButton(backOrExit, 200f);
+    // Scale
+    Pair<Float, Float> dimensions = getScaledDimensions(200f);
+    button.setSize(dimensions.getKey(), dimensions.getValue());
+    // Position
+    button.setPosition(
+        20f * uiScale, // 20f padding from left
+        stageHeight - button.getHeight() - 20f * uiScale);
+
+    // Add listener for the back button
+    button.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("{} button clicked", backOrExit);
+            eventHandler.trigger(
+                backOrExit.toLowerCase(
+                    Locale.ROOT)); // Note: must have set up a listener for this event
+          }
+        });
+    return button;
+  }
+
+  /**
+   * Create a standard "Back" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createBackButton(EventHandler eventHandler, float stageHeight) {
+    return createBackExitButton(eventHandler, stageHeight, "Back");
+  }
+
+  /**
+   * Create a standard "Exit" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createExitButton(EventHandler eventHandler, float stageHeight) {
+    return createBackExitButton(eventHandler, stageHeight, "Exit");
   }
 
   /**
@@ -219,8 +312,7 @@ public class UIFactory {
    * @return a styled Window
    */
   public Window createWindow(String title) {
-    Window window = new Window(title, skin);
-    return window;
+    return new Window(title, skin);
   }
 
   /**
@@ -239,8 +331,7 @@ public class UIFactory {
     style.background = skin.getDrawable("d");
     style.focusedBackground = skin.getDrawable("d");
 
-    TextField textField = new TextField(placeholder, style);
-    return textField;
+    return new TextField(placeholder, style);
   }
 
   /**
@@ -256,8 +347,7 @@ public class UIFactory {
     style.checkboxOff = skin.getDrawable("e");
     style.checkboxOn = skin.getDrawable("f");
 
-    CheckBox checkBox = new CheckBox(text, style);
-    return checkBox;
+    return new CheckBox(text, style);
   }
 
   /**
@@ -270,8 +360,7 @@ public class UIFactory {
    * @return a styled Slider
    */
   public Slider createSlider(float min, float max, float step, boolean vertical) {
-    Slider slider = new Slider(min, max, step, vertical, skin);
-    return slider;
+    return new Slider(min, max, step, vertical, skin);
   }
 
   /**

@@ -111,8 +111,10 @@ public class SkillTreeScreen extends ScreenAdapter {
 
     // Create UI entity with various components
     Entity ui = new Entity();
+    SkilltreeDisplay display = new SkilltreeDisplay();
     ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
+        .addComponent(display)
+        .addComponent(new SkilltreeButtons(game, display))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
         .addComponent(new AnimatedDropdownMenu());
