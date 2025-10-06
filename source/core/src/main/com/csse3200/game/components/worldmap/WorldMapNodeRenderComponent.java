@@ -23,16 +23,23 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private final Vector2 worldSize;
   private final float nodeSize;
   private boolean showPrompt = false;
-  private boolean anyPrompt = true;
-  private TextureRegion keyUpR, keyDownR, keyLeftR, keyRightR, labelBgR;
+
   private static final int KEY_INSET = 6;
   private static final int LABEL_INSET = 32;
+  // regions
+  private TextureRegion keyUpR;
+  private TextureRegion keyDownR;
+  private TextureRegion keyLeftR;
+  private TextureRegion keyRightR;
+  private TextureRegion labelBgR;
 
   // assets
   private Texture glow;
-  private Texture keyUp, keyDown, keyLeft, keyRight;
   private Texture labelBg;
-  private Texture texE;
+  private Texture keyUp;
+  private Texture keyDown;
+  private Texture keyLeft;
+  private Texture keyRight;
 
   private BitmapFont font;
   private float pulseT = 0f;
@@ -42,6 +49,13 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private static final float ARROW_OFFSET = 0.78f;
   private static final float LABEL_GAP = 5f;
   private static final float FONT_SCALE = 1.15f;
+  private static final float VISUAL_TRIM_Y = 14f;
+
+  private static final float NAME_GAP = -14f;
+  private static final float LABEL_PAD_X = 45f;
+  private static final float LABEL_PAD_Y = 36f;
+  private static final float MIN_W_FACTOR = 2.2f;
+  private static final float MIN_H_FACTOR = 1.35f;
 
   // local JSON cache: nodeKey -> (dir -> PathDef)
   private final Map<String, Map<String, com.csse3200.game.services.WorldMapService.PathDef>>
@@ -76,7 +90,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       keyLeft = rs.getAsset("images/ui/keycap_left.png", Texture.class);
       keyRight = rs.getAsset("images/ui/keycap_right.png", Texture.class);
       labelBg = rs.getAsset("images/ui/label_bg.png", Texture.class);
-      texE = rs.getAsset("images/ui/key_e.png", Texture.class);
+
       if (keyUp != null) {
         keyUpR =
             new TextureRegion(
@@ -122,43 +136,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
                 labelBg.getWidth() - 2 * LABEL_INSET,
                 labelBg.getHeight() - 2 * LABEL_INSET);
       }
-
-      keyUpR =
-          new TextureRegion(
-              keyUp,
-              KEY_INSET,
-              KEY_INSET,
-              keyUp.getWidth() - 2 * KEY_INSET,
-              keyUp.getHeight() - 2 * KEY_INSET);
-      keyDownR =
-          new TextureRegion(
-              keyDown,
-              KEY_INSET,
-              KEY_INSET,
-              keyDown.getWidth() - 2 * KEY_INSET,
-              keyDown.getHeight() - 2 * KEY_INSET);
-      keyLeftR =
-          new TextureRegion(
-              keyLeft,
-              KEY_INSET,
-              KEY_INSET,
-              keyLeft.getWidth() - 2 * KEY_INSET,
-              keyLeft.getHeight() - 2 * KEY_INSET);
-      keyRightR =
-          new TextureRegion(
-              keyRight,
-              KEY_INSET,
-              KEY_INSET,
-              keyRight.getWidth() - 2 * KEY_INSET,
-              keyRight.getHeight() - 2 * KEY_INSET);
-      labelBgR =
-          new TextureRegion(
-              labelBg,
-              LABEL_INSET,
-              LABEL_INSET,
-              labelBg.getWidth() - 2 * LABEL_INSET,
-              labelBg.getHeight() - 2 * LABEL_INSET);
     } catch (Exception ignored) {
+      // Skip missing assets
     }
 
     font = new BitmapFont();
@@ -171,7 +150,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
    * @param nearbyNode the node the player is currently near, or null if none
    */
   public void updateProximityState(WorldMapNode nearbyNode) {
-    anyPrompt = true; // light up all when someone is near
     showPrompt =
         nearbyNode != null
             && this.node.getRegistrationKey().equals(nearbyNode.getRegistrationKey());
@@ -203,33 +181,14 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       drawX -= 4f;
       drawY -= 4f;
     }
+
     // Draw node icon
     batch.draw(nodeTexture, drawX, drawY, drawSize, drawSize);
     final float cx = drawX + drawSize * 0.5f;
     final float cy = drawY + drawSize * 0.5f;
 
-    // Glow
     if (glow != null) {
-      pulseT += Gdx.graphics.getDeltaTime();
-      final float s = (MathUtils.sin(2f * MathUtils.PI * 1.2f * pulseT) + 1f) * 0.5f;
-
-      float r = showPrompt ? 0.70f : 0.65f;
-      float g = showPrompt ? 1.00f : 0.80f;
-      float b = showPrompt ? 0.55f : 1.00f;
-
-      float baseSize = drawSize + 26f;
-      float size = baseSize + 3f * s;
-
-      float baseA = showPrompt ? 0.70f : 0.50f;
-      float a = baseA + 0.25f * s;
-
-      batch.setColor(r, g, b, a);
-      batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
-
-      batch.setColor(r, g, b, a * 0.45f);
-      batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
-
-      batch.setColor(1f, 1f, 1f, 1f);
+      drawGlow(batch, cx, cy, drawSize);
     }
 
     // on-node check
@@ -237,59 +196,50 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     try {
       float px = ServiceLocator.getProfileService().getProfile().getWorldMapX();
       float py = ServiceLocator.getProfileService().getProfile().getWorldMapY();
-      float dx = px - x, dy = py - y;
+      float dx = px - x;
+      float dy = py - y;
       float r = Math.max(drawSize * 0.45f, 36f);
       onNode = dx * dx + dy * dy <= r * r;
     } catch (Exception ignored) {
+      // Skip if profile not ready
     }
     if (!onNode) return;
 
     // arrows + labels strictly by next
     String key = node.getRegistrationKey();
 
-    // （W）
+    // W
     drawDirWithLabel(
         batch,
         keyUp,
-        cx - ARROW_SIZE * 0.5f,
-        cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f,
+        new Vector2(cx - ARROW_SIZE * 0.5f, cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
         getLocalPath(key, "W"),
         "W",
-        0f,
-        +1f);
-
-    // （S）
+        new Vector2(0f, +1f));
+    // S
     drawDirWithLabel(
         batch,
         keyDown,
-        cx - ARROW_SIZE * 0.5f,
-        cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f,
+        new Vector2(cx - ARROW_SIZE * 0.5f, cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
         getLocalPath(key, "S"),
         "S",
-        0f,
-        -1f);
-
-    // （A）
+        new Vector2(0f, -1f));
+    // A
     drawDirWithLabel(
         batch,
         keyLeft,
-        cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f,
-        cy - ARROW_SIZE * 0.5f,
+        new Vector2(cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
         getLocalPath(key, "A"),
         "A",
-        -1f,
-        0f);
-
-    // （D）
+        new Vector2(-1f, 0f));
+    // D
     drawDirWithLabel(
         batch,
         keyRight,
-        cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f,
-        cy - ARROW_SIZE * 0.5f,
+        new Vector2(cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
         getLocalPath(key, "D"),
         "D",
-        +1f,
-        0f);
+        new Vector2(+1f, 0f));
 
     if (font != null && showPrompt) {
       String hint = "Press E to Enter";
@@ -313,41 +263,67 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     }
   }
 
-  public void setShowPrompt(boolean showPrompt) {
-    this.showPrompt = showPrompt;
+  private void drawGlow(SpriteBatch batch, float cx, float cy, float drawSize) {
+    pulseT += Gdx.graphics.getDeltaTime();
+    float s = (MathUtils.sin(2f * MathUtils.PI * 1.2f * pulseT) + 1f) * 0.5f;
+
+    float r = showPrompt ? 0.70f : 0.65f;
+    float g = showPrompt ? 1.00f : 0.80f;
+    float b = showPrompt ? 0.55f : 1.00f;
+
+    float baseSize = drawSize + 26f;
+    float size = baseSize + 3f * s;
+
+    float baseA = showPrompt ? 0.70f : 0.50f;
+    float a = baseA + 0.25f * s;
+
+    batch.setColor(r, g, b, a);
+    batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
+    batch.setColor(r, g, b, a * 0.45f);
+    batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
+    batch.setColor(1f, 1f, 1f, 1f);
   }
 
-  private static final float NAME_GAP = -14f;
-  private static final float LABEL_PAD_X = 45f;
-  private static final float LABEL_PAD_Y = 36f;
-  private static final float MIN_W_FACTOR = 2.2f;
-  private static final float MIN_H_FACTOR = 1.35f;
+  private void drawLabel(
+      SpriteBatch batch,
+      String name,
+      float midX,
+      float midY,
+      float bgW,
+      float bgH,
+      GlyphLayout gl) {
+    float bgX = midX - bgW * 0.5f;
+    float bgY = midY - bgH * 0.5f;
+    batch.draw(labelBgR != null ? labelBgR : new TextureRegion(labelBg), bgX, bgY, bgW, bgH);
+    font.setColor(1f, 1f, 1f, 1f);
+    float tx = midX - gl.width * 0.5f;
+    float ty = midY + gl.height * 0.35f;
+    drawOutlinedText(batch, name, tx, ty);
+  }
+
+  private TextureRegion regionFor(Texture tex) {
+    if (tex == keyUp) return keyUpR;
+    if (tex == keyDown) return keyDownR;
+    if (tex == keyLeft) return keyLeftR;
+    if (tex == keyRight) return keyRightR;
+    return null;
+  }
 
   private void drawDirWithLabel(
       SpriteBatch batch,
       Texture tex,
-      float dx,
-      float dy,
+      Vector2 pos,
       com.csse3200.game.services.WorldMapService.PathDef def,
       String dir,
-      float labelOffsetX,
-      float labelOffsetY) {
-    final float VISUAL_TRIM_Y = 14f; // Control up and down distance
-    final float VISUAL_TRIM_X = 10f; // Control left and right distance
+      Vector2 labelOffset) {
 
     if (tex == null) return;
 
     // 1) Draw keycap
     batch.setColor(1f, 1f, 1f, def == null ? 0.35f : 1f);
-    TextureRegion r =
-        (tex == keyUp)
-            ? keyUpR
-            : (tex == keyDown)
-                ? keyDownR
-                : (tex == keyLeft) ? keyLeftR : (tex == keyRight) ? keyRightR : null;
+    TextureRegion r = regionFor(tex);
 
-    batch.draw(r != null ? r : new TextureRegion(tex), dx, dy, ARROW_SIZE, ARROW_SIZE);
-
+    batch.draw(r != null ? r : new TextureRegion(tex), pos.x, pos.y, ARROW_SIZE, ARROW_SIZE);
     batch.setColor(1f, 1f, 1f, 1f);
 
     // 2) Center Letter
@@ -355,8 +331,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       float old = font.getData().scaleX;
       font.getData().setScale(FONT_SCALE * 1.10f);
       GlyphLayout g = new GlyphLayout(font, dir);
-      float cx = dx + ARROW_SIZE * 0.5f - g.width * 0.5f;
-      float cy = dy + ARROW_SIZE * 0.56f + g.height * 0.45f;
+      float cx = pos.x + ARROW_SIZE * 0.5f - g.width * 0.5f;
+      float cy = pos.y + ARROW_SIZE * 0.56f + g.height * 0.45f;
       font.setColor(1f, 1f, 1f, def == null ? 0.55f : 1f);
       drawOutlinedText(batch, dir, cx, cy);
       font.getData().setScale(old);
@@ -374,26 +350,18 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     float bgH = Math.max(gl.height + LABEL_PAD_Y * 2f, ARROW_SIZE * MIN_H_FACTOR);
 
     // 4) Edge positioning
-    float sideX = Math.signum(labelOffsetX);
-    float sideY = Math.signum(labelOffsetY);
+    float sideX = Math.signum(labelOffset.x);
+    float sideY = Math.signum(labelOffset.y);
 
-    float midX = dx + ARROW_SIZE * 0.5f;
-    float midY = dy + ARROW_SIZE * 0.5f;
+    float midX = pos.x + ARROW_SIZE * 0.5f;
+    float midY = pos.y + ARROW_SIZE * 0.5f;
 
-    if (sideX > 0f) midX = dx + ARROW_SIZE + NAME_GAP + bgW * 0.5f;
-    else if (sideX < 0f) midX = dx - NAME_GAP - bgW * 0.5f;
-    if (sideY > 0f) midY = dy + ARROW_SIZE + (NAME_GAP - VISUAL_TRIM_Y) + bgH * 0.5f;
-    else if (sideY < 0f) midY = dy - (NAME_GAP - VISUAL_TRIM_Y) - bgH * 0.5f;
+    if (sideX > 0f) midX = pos.x + ARROW_SIZE + NAME_GAP + bgW * 0.5f;
+    else if (sideX < 0f) midX = pos.x - NAME_GAP - bgW * 0.5f;
+    if (sideY > 0f) midY = pos.y + ARROW_SIZE + (NAME_GAP - VISUAL_TRIM_Y) + bgH * 0.5f;
+    else if (sideY < 0f) midY = pos.y - (NAME_GAP - VISUAL_TRIM_Y) - bgH * 0.5f;
 
-    float bgX = midX - bgW * 0.5f;
-    float bgY = midY - bgH * 0.5f;
-
-    // 5) background
-    batch.draw(labelBgR != null ? labelBgR : new TextureRegion(labelBg), bgX, bgY, bgW, bgH);
-    font.setColor(1f, 1f, 1f, 1f);
-    float tx = midX - gl.width * 0.5f;
-    float ty = midY + gl.height * 0.35f;
-    drawOutlinedText(batch, name, tx, ty);
+    drawLabel(batch, name, midX, midY, bgW, bgH, gl);
     font.getData().setScale(old2);
   }
 
