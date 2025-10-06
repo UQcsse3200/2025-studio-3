@@ -118,11 +118,11 @@ public class CombatStatsComponent extends Component {
     }
   }
 
-    /**
-     * Hit another entity, affecting their respective component
-     *
-     * @param target the combat stats component of the target
-     */
+  /**
+   * Hit another entity, affecting their respective component
+   *
+   * @param target the combat stats component of the target
+   */
   public void hit(CombatStatsComponent target) {
     int newHealth = getHealth() - target.getBaseAttack();
 
