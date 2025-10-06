@@ -1,13 +1,9 @@
 package com.csse3200.game.components.skilltree;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.progression.skilltree.SkillSet;
@@ -167,28 +163,18 @@ public class SkilltreeButtons extends UIComponent {
 
   /** Creates a "Back" button that navigates back to the profile screen. */
   private void createBackButton() {
-    // Create close button using close-icon.png
-    ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
+   // Create back button listener
+    entity
+        .getEvents()
+        .addListener(
+            "back",
+            () -> {
+              logger.debug("Back button clicked");
+              game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+            });
 
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-    closeButton.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
-
-    // Trigger an event when the button is pressed
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
-            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-          }
-        });
-
+    // Create UIFactory back button
+    TextButton closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
   }
 
@@ -237,20 +223,33 @@ public class SkilltreeButtons extends UIComponent {
     float width = stage.getViewport().getWorldWidth();
     float height = stage.getViewport().getWorldHeight();
 
+    // Base sizes as proportions of viewport, then scaled by UIFactory
+    float w;
+    float h;
+
     if (skillName.contains("Intermediate")) {
-      skillButton.setSize(width * 0.07f, height * 0.12f);
+      w = ui.getScaledWidth(width * 0.07f);
+      h = ui.getScaledHeight(height * 0.12f);
     } else if (skillName.contains("Advanced")) {
-      skillButton.setSize(width * 0.13f, height * 0.17f);
+      w = ui.getScaledWidth(width * 0.13f);
+      h = ui.getScaledHeight(height * 0.17f);
     } else if (skillName.contains("Expert")) {
-      skillButton.setSize(width * 0.08f, height * 0.35f);
+      // Defaults for Expert
+      w = ui.getScaledWidth(width * 0.08f);
+      h = ui.getScaledHeight(height * 0.35f);
       if (skillName.equals("Health Expert")) {
-        skillButton.setSize(width * 0.25f, height * 0.18f);
+        w = ui.getScaledWidth(width * 0.25f);
+        h = ui.getScaledHeight(height * 0.18f);
       } else if (skillName.equals("Currency Expert")) {
-        skillButton.setSize(width * 0.21f, height * 0.3f);
+        w = ui.getScaledWidth(width * 0.21f);
+        h = ui.getScaledHeight(height * 0.30f);
       }
     } else {
-      skillButton.setSize(width * 0.1f, height * 0.1f);
+      w = ui.getScaledWidth(width * 0.10f);
+      h = ui.getScaledHeight(height * 0.10f);
     }
+
+    skillButton.setSize(w, h);
   }
 
   /**
@@ -261,18 +260,13 @@ public class SkilltreeButtons extends UIComponent {
    * @return a Label instance positioned below the button
    */
   private Label createLabel(String label, Button button) {
-    Skin skin2 = new Skin(Gdx.files.internal("uiskin.json"));
-    Label attackLabel = new Label(label, skin2);
-    attackLabel.setColor(Color.WHITE);
+    Label attackLabel = ui.subtext(label);
+    float belowPadding = ui.getScaledHeight(20f);
     attackLabel.setPosition(
-        button.getX() + button.getWidth() / 2 - attackLabel.getWidth() / 2, button.getY() - 20);
+        button.getX() + button.getWidth() / 2f - attackLabel.getWidth() / 2f,
+        button.getY() - belowPadding);
     attackLabel.setZIndex(1); // Set z-index lower than navigation menus (3 and 10)
     return attackLabel;
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Drawing handled by stage
   }
 
   @Override
