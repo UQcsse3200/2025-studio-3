@@ -126,9 +126,9 @@ public class RobotFactory {
 
     // These are the animations that all robots should have
     animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attack", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.05f, Animation.PlayMode.LOOP);
     animator.addAnimation("moveLeftDamaged", 0.1f, Animation.PlayMode.LOOP);
-    animator.addAnimation("attackDamaged", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attackDamaged", 0.05f, Animation.PlayMode.LOOP);
     animator.addAnimation("default", 1f, Animation.PlayMode.NORMAL);
 
     ColliderComponent solid =
