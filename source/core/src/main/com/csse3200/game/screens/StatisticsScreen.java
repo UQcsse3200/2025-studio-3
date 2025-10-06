@@ -5,6 +5,9 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.statistics.StatisticsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +40,9 @@ public class StatisticsScreen extends BaseScreen {
     logger.debug("Creating statistics screen UI");
     return new Entity()
         .addComponent(new StatisticsDisplay(game))
-        .addComponent(new InputDecorator(stage, 10));
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
   }
 }
