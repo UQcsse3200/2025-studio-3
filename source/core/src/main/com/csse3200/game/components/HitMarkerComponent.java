@@ -18,7 +18,7 @@ public class HitMarkerComponent extends Component {
 
   @Override
   public void create() {
-    logger.info("HitMarkerComponent created for entity: {}", entity);
+    //    logger.info("HitMarkerComponent created for entity: {}", entity);
     entity.getEvents().addListener("hitMarker", this::onHitMarkerStart);
     render = entity.getComponent(TextureRenderComponent.class);
     if (render == null) {
@@ -41,7 +41,7 @@ public class HitMarkerComponent extends Component {
   }
 
   private void onHitMarkerStart(Entity entity) {
-    logger.info("Hit marker started for entity: {}", entity);
+    //    logger.info("Hit marker started for entity: {}", entity);
     flashTime = FLASH_DURATION;
   }
 }

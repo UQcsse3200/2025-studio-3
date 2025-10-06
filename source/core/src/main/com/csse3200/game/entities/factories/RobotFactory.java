@@ -7,6 +7,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.JumpTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
@@ -20,6 +21,7 @@ import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -36,12 +38,25 @@ public class RobotFactory {
    * Loads enemy config data from JSON. The configs object is populated at class-load time. If the
    * file is missing or deserialization fails, this will be null.
    */
+  private static final Logger logger = org.slf4j.LoggerFactory.getLogger(RobotFactory.class);
+
   public enum RobotType {
-    STANDARD,
-    FAST,
-    TANKY,
-    BUNGEE,
-    TELEPORT
+    STANDARD("standardRobot"),
+    FAST("fastRobot"),
+    TANKY("tankyRobot"),
+    BUNGEE("bungeeRobot"),
+    TELEPORT("teleportRobot"),
+    JUMPER("jumperRobot");
+
+    private final String configKey;
+
+    RobotType(String configKey) {
+      this.configKey = configKey;
+    }
+
+    public String get() {
+      return configKey;
+    }
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -59,13 +74,9 @@ public class RobotFactory {
    */
   public static Entity createRobotType(RobotType robotType) {
     ConfigService configService = getConfigService();
-    BaseEnemyConfig config = null;
-    switch (robotType) {
-      case FAST -> config = configService.getEnemyConfig("fastRobot");
-      case TANKY -> config = configService.getEnemyConfig("tankyRobot");
-      case BUNGEE -> config = configService.getEnemyConfig("bungeeRobot");
-      case STANDARD -> config = configService.getEnemyConfig("standardRobot");
-      case TELEPORT -> config = configService.getEnemyConfig("teleportRobot");
+    BaseEnemyConfig config = configService.getEnemyConfig(robotType.get());
+    if (config == null) {
+      config = configService.getEnemyConfig(RobotType.STANDARD.get());
     }
     return createBaseRobot(config);
   }
@@ -104,9 +115,7 @@ public class RobotFactory {
     }
 
     AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new MoveLeftTask(config.getMovementSpeed()))
-            .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
+        new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
 
     // Animation
     final String atlasPath = config.getAtlasPath();
@@ -144,7 +153,21 @@ public class RobotFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
-    if (config.isTeleportRobot()) {
+    // Default attack type is melee if not specified
+    if (config.getAttackType() == null) {
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+    } else if (config.getAttackType().equals("melee")) {
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+    } else {
+      // TODO Arush add your ranged attack task
+    }
+
+    // Special abilities for specific robot types
+    if (config.getName() != null && config.getName().contains("Jumper")) {
+      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
+    }
+
+    if (config.getName() != null && config.getName().contains("Teleport")) {
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
       if (laneYs.length >= 2) {
