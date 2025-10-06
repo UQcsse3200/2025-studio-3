@@ -6,5 +6,21 @@
     "attack": 50,
     "scale": 3.0,
     "speed": 18
+  },
+"samuraiBot": {
+    "name": "Samurai Bot",
+    "atlasFilePath": "images/entities/enemies/Samurai-bot.atlas",
+    "health": 189,
+    "attack": 35,
+    "scale": 2.5,
+    "speed": 22
+},
+  "ironInferno": {
+    "name": "Iron Inferno",
+    "atlasFilePath": "images/entities/enemies/Iron-inferno.atlas",
+    "health": 149,
+    "attack": 25,
+    "scale": 2.0,
+    "speed": 26
   }
-}
+  }
