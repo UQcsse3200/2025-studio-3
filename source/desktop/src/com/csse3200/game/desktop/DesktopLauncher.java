@@ -24,27 +24,27 @@ public class DesktopLauncher {
                 + "settings.json");
 
     try {
-        DeserializedSettings deserializedSettings =
-            FileLoader.readClass(DeserializedSettings.class, fileHandle);
+      DeserializedSettings deserializedSettings =
+          FileLoader.readClass(DeserializedSettings.class, fileHandle);
 
-        switch (deserializedSettings.getCurrentMode()) {
+      switch (deserializedSettings.getCurrentMode()) {
         case WINDOWED:
-            Pair<Integer, Integer> windowedRes = deserializedSettings.getWindowedResolution();
-            config.setWindowedMode(windowedRes.getKey(), windowedRes.getValue());
-            config.setResizable(false);
-            break;
+          Pair<Integer, Integer> windowedRes = deserializedSettings.getWindowedResolution();
+          config.setWindowedMode(windowedRes.getKey(), windowedRes.getValue());
+          config.setResizable(false);
+          break;
         case BORDERLESS:
-            config.setResizable(true);
-            config.setDecorated(false);
-            config.setMaximized(true);
-            break;
+          config.setResizable(true);
+          config.setDecorated(false);
+          config.setMaximized(true);
+          break;
         default:
-            config.setResizable(true);
-            config.setMaximized(true);
-        }
+          config.setResizable(true);
+          config.setMaximized(true);
+      }
     } catch (Exception e) {
-        config.setResizable(true);
-        config.setMaximized(true);
+      config.setResizable(true);
+      config.setMaximized(true);
     }
 
     new Lwjgl3Application(new GdxGame(), config);

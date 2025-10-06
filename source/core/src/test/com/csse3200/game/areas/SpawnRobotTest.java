@@ -50,7 +50,10 @@ class SpawnRobotTest {
     ensureRenderService();
     DiscordRichPresenceService discordRichPresenceService = mock(DiscordRichPresenceService.class);
     ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
-    lenient().doNothing().when(discordRichPresenceService).updateGamePresence(anyString(), anyInt());
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
   }
 
   private static void setPrivateField(Object target, String name, Object value) throws Exception {

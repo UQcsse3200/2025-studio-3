@@ -6,32 +6,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.BeforeEach;
+
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.progression.skilltree.Skill;
+import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class DefenderStatsComponentTest {
   DefenderStatsComponent defender;
-  
+
   @BeforeEach
   void beforeEach() {
     ProfileService profileService = mock(ProfileService.class, RETURNS_DEEP_STUBS);
     ServiceLocator.registerProfileService(profileService);
-    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE)).thenReturn(1.0f);
-    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.HEALTH)).thenReturn(1.0f);
-    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.FIRING_SPEED)).thenReturn(1.0f);
-    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE)).thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.HEALTH))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.FIRING_SPEED))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE))
+        .thenReturn(1.0f);
     defender = new DefenderStatsComponent(100, 50, 0, 500, 0, 3, 1);
   }
 
   @Test
   void shouldSetGetHealth() {
-
 
     assertEquals(100, defender.getHealth());
     defender.setHealth(150);

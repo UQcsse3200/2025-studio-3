@@ -62,7 +62,8 @@ public class DisplaySettingsMenu extends UIComponent {
     // Create components using UIFactory
     Label displayModeLabel = ui.text("Display Mode:");
     String[] displayModeItems = settings.getAvailableModes().values().toArray(new String[0]);
-    String[] items = Arrays.stream(displayModeItems).map(String::toUpperCase).toArray(String[]::new);
+    String[] items =
+        Arrays.stream(displayModeItems).map(String::toUpperCase).toArray(String[]::new);
     displayModeSelect = ui.createSelectBox(items);
     displayModeSelect.setSelected(settings.getCurrentMode().toString());
 
@@ -109,11 +110,11 @@ public class DisplaySettingsMenu extends UIComponent {
     previousFps = settings.getFps();
 
     Label uiScaleLabel = ui.text("UI Scale:");
-    uiScaleSelect = ui.createSelectBox(new String[]{"SMALL", "MEDIUM", "LARGE"});
+    uiScaleSelect = ui.createSelectBox(new String[] {"SMALL", "MEDIUM", "LARGE"});
     uiScaleSelect.setSelected(settings.getCurrentUIScale().toString());
 
     Label qualityLabel = ui.text("Quality:");
-    qualitySelect = ui.createSelectBox(new String[]{"LOW", "HIGH"});
+    qualitySelect = ui.createSelectBox(new String[] {"LOW", "HIGH"});
     qualitySelect.setSelected(settings.getQuality().toString());
 
     Label vsyncLabel = ui.text("VSync:");
@@ -162,7 +163,11 @@ public class DisplaySettingsMenu extends UIComponent {
     bottomRow = new Table();
     bottomRow.setFillParent(true);
     bottomRow.bottom().padBottom(20f * uiScale);
-    bottomRow.add(applyBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).center();
+    bottomRow
+        .add(applyBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .center();
     stage.addActor(bottomRow);
 
     stage.addActor(rootTable);
@@ -295,5 +300,4 @@ public class DisplaySettingsMenu extends UIComponent {
     bottomRow.clear();
     super.dispose();
   }
-
 }

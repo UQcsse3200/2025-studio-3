@@ -238,7 +238,7 @@ public class UIFactory {
     style.selection = skin.getDrawable("w");
     style.background = skin.getDrawable("d");
     style.focusedBackground = skin.getDrawable("d");
-    
+
     TextField textField = new TextField(placeholder, style);
     return textField;
   }
@@ -255,11 +255,10 @@ public class UIFactory {
     style.fontColor = white;
     style.checkboxOff = skin.getDrawable("e");
     style.checkboxOn = skin.getDrawable("f");
-    
+
     CheckBox checkBox = new CheckBox(text, style);
     return checkBox;
   }
-
 
   /**
    * Creates a slider with consistent styling and UI scale support.
@@ -298,7 +297,7 @@ public class UIFactory {
     style.background = skin.getDrawable("n");
     style.scrollStyle = skin.get("list", ScrollPane.ScrollPaneStyle.class);
     style.listStyle = skin.get("default", List.ListStyle.class);
-    
+
     SelectBox<T> selectBox = new SelectBox<>(style);
     selectBox.setItems(items);
     return selectBox;

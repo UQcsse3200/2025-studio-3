@@ -32,7 +32,7 @@ class TileStorageComponentTest {
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
   @Mock DiscordRichPresenceService discordRichPresenceService;
-  
+
   @BeforeEach
   void beforeEach() {
     ServiceLocator.registerEntityService(new EntityService());
@@ -68,7 +68,10 @@ class TileStorageComponentTest {
           }
         };
 
-    lenient().doNothing().when(discordRichPresenceService).updateGamePresence(anyString(), anyInt());
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
 
     // creates a grid
     grid = new LevelGameGrid(1, 1);
