@@ -1,10 +1,12 @@
 package com.csse3200.game.components.shop;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
@@ -12,7 +14,6 @@ import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.utils.ShopRandomizer;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,14 +28,13 @@ public class ShopDisplay extends UIComponent {
   private static final float ITEM_SIZE = 160f;
   private static final float COIN_ICON_SIZE = 40f;
   private static final float CLOSE_PAD = 20f;
-  private static final float CLOSE_WIDTH = 200f;
-  private static final float CLOSE_HEIGHT = 42f;
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
   private Label timerLabel;
   private Table mainTable;
   private TextButton closeButton;
-  private Image backgroundImage;
+  private Image background;
+  private Image backgroundShop;
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -57,6 +57,17 @@ public class ShopDisplay extends UIComponent {
 
   /** Adds actors to the stage. */
   private void addActors() {
+    // Set bg.png as main background with fixed size
+    background =
+        new Image(
+            new TextureRegionDrawable(
+                new TextureRegion(
+                    ServiceLocator.getGlobalResourceService()
+                        .getAsset("images/backgrounds/bg.png", Texture.class))));
+    background.setFillParent(true);
+    background.setScaling(Scaling.fill);
+    stage.addActor(background);
+
     // Get scaled background size
     float uiScale = ui.getUIScale();
     float backgroundWidth = BACKGROUND_WIDTH * uiScale;
@@ -66,14 +77,14 @@ public class ShopDisplay extends UIComponent {
     mainTable = new Table();
     mainTable.setSize(backgroundWidth, backgroundHeight);
 
-    // Set shop-popup.png as background with fixed size
-    backgroundImage =
+    // Set shop-popup.png as shop background with fixed size
+    backgroundShop =
         new Image(
             ServiceLocator.getGlobalResourceService()
                 .getAsset("images/ui/shop-popup.png", Texture.class));
-    backgroundImage.setSize(backgroundWidth, backgroundHeight);
-    // backgroundImage.setPosition((stage.getWidth() - BACKGROUND_WIDTH) / 2f, (stage.getHeight() - BACKGROUND_HEIGHT) / 2f);
-    stage.addActor(backgroundImage);
+    backgroundShop.setSize(backgroundWidth, backgroundHeight);
+
+    stage.addActor(backgroundShop);
 
     createCloseButton();
     createShopUI();
@@ -84,20 +95,7 @@ public class ShopDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    closeButton = ui.secondaryButton("Back", CLOSE_WIDTH);
-    Pair<Float, Float> dimensions = ui.getScaledDimensions(CLOSE_WIDTH);
-    closeButton.setSize(dimensions.getKey(), dimensions.getValue());
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
-
+    closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
   }
 
@@ -156,10 +154,16 @@ public class ShopDisplay extends UIComponent {
           stage.getHeight() - closeButton.getHeight() - CLOSE_PAD * uiScale);
     }
 
-    // Recenter the background image if it exists
-    if (backgroundImage != null) {
-        backgroundImage.setSize(backgroundWidth, backgroundHeight);
-        backgroundImage.setPosition(centerX, centerY);
+    // Recenter the main background image if it exists
+    if (background != null) {
+      background.setFillParent(true);
+      background.setScaling(Scaling.fill);
+    }
+
+    // Recenter the shop background image if it exists
+    if (backgroundShop != null) {
+      backgroundShop.setSize(backgroundWidth, backgroundHeight);
+      backgroundShop.setPosition(centerX, centerY);
     }
   }
 
