@@ -65,14 +65,14 @@ public class MainGameScreen extends ScreenAdapter {
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
-    "images/entities/enemies/basic_robot.atlas",
+    "images/entities/enemies/standard_robot.atlas",
     "images/effects/grenade.atlas",
     "images/effects/coffee.atlas",
     "images/effects/emp.atlas",
     "images/effects/buff.atlas",
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
-    "images/entities/enemies/blue_robot.atlas",
+    "images/entities/enemies/fast_robot.atlas",
     "images/entities/enemies/red_robot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
