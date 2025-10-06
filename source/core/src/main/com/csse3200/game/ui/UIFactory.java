@@ -12,6 +12,7 @@ import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
@@ -193,7 +194,7 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
-    // textButtonPressedListener(button);
+    // ButtonFactory.textButtonPressedListener(button);
     return button;
   }
 
@@ -218,7 +219,7 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
-    //  textButtonPressedListener(button);
+    //  ButtonFactory.textButtonPressedListener(button);
     return button;
   }
 
@@ -240,7 +241,41 @@ public class UIFactory {
     float height = getScaledHeight(baseHeight);
 
     button.setSize(width, height);
-    // imageButtonPressedListener(button);
+    // ButtonFactory.imageButtonPressedListener(button);
+    return button;
+  }
+
+  /**
+   * Create a standard "Back" or "Exit" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
+   * @param backOrExit the relevant text for the button
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createBackExitButton(
+      EventHandler eventHandler, float stageHeight, String backOrExit) {
+    TextButton button = secondaryButton(backOrExit, 200f);
+    // Scale
+    Pair<Float, Float> dimensions = getScaledDimensions(200f);
+    button.setSize(dimensions.getKey(), dimensions.getValue());
+    // Position
+    button.setPosition(
+        20f * uiScale, // 20f padding from left
+        stageHeight - button.getHeight() - 20f * uiScale);
+
+    // Add listener for the back button
+    button.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("{} button clicked", backOrExit);
+            eventHandler.trigger(
+                backOrExit.toLowerCase(
+                    Locale.ROOT)); // Note: must have set up a listener for this event
+          }
+        });
     return button;
   }
 
@@ -249,29 +284,23 @@ public class UIFactory {
    * consistent styling and UI scaling.
    *
    * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
    * @return the configured and positioned ImageButton (not yet added to stage)
    */
   public TextButton createBackButton(EventHandler eventHandler, float stageHeight) {
-    TextButton backButton = secondaryButton("Back", 200f);
-    // Scale
-    Pair<Float, Float> dimensions = getScaledDimensions(200f);
-    backButton.setSize(dimensions.getKey(), dimensions.getValue());
-    // Position
-    backButton.setPosition(
-        20f * uiScale, // 20f padding from left
-        stageHeight - backButton.getHeight() - 20f * uiScale);
+    return createBackExitButton(eventHandler, stageHeight, "Back");
+  }
 
-    // Add listener for the back button
-    backButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            eventHandler.trigger("back");
-            //  textButtonPressedListener(button);
-          }
-        });
-    return backButton;
+  /**
+   * Create a standard "Exit" button positioned in the top-left corner of the stage, using
+   * consistent styling and UI scaling.
+   *
+   * @param eventHandler the event handler to trigger when the button is clicked
+   * @param stageHeight the height of the stage
+   * @return the configured and positioned ImageButton (not yet added to stage)
+   */
+  public TextButton createExitButton(EventHandler eventHandler, float stageHeight) {
+    return createBackExitButton(eventHandler, stageHeight, "Exit");
   }
 
   /**
@@ -281,8 +310,7 @@ public class UIFactory {
    * @return a styled Window
    */
   public Window createWindow(String title) {
-    Window window = new Window(title, skin);
-    return window;
+    return new Window(title, skin);
   }
 
   /**
@@ -301,8 +329,7 @@ public class UIFactory {
     style.background = skin.getDrawable("d");
     style.focusedBackground = skin.getDrawable("d");
 
-    TextField textField = new TextField(placeholder, style);
-    return textField;
+    return new TextField(placeholder, style);
   }
 
   /**
@@ -318,8 +345,7 @@ public class UIFactory {
     style.checkboxOff = skin.getDrawable("e");
     style.checkboxOn = skin.getDrawable("f");
 
-    CheckBox checkBox = new CheckBox(text, style);
-    return checkBox;
+    return new CheckBox(text, style);
   }
 
   /**
@@ -332,8 +358,7 @@ public class UIFactory {
    * @return a styled Slider
    */
   public Slider createSlider(float min, float max, float step, boolean vertical) {
-    Slider slider = new Slider(min, max, step, vertical, skin);
-    return slider;
+    return new Slider(min, max, step, vertical, skin);
   }
 
   /**
@@ -389,37 +414,4 @@ public class UIFactory {
   public float getScaledHeight(float baseHeight) {
     return baseHeight * uiScale;
   }
-
-  //
-  //  public static void textButtonPressedListener(TextButton button) {
-  //        button.addListener(
-  //                new ClickListener() {
-  //                    @Override
-  //                    public void clicked(InputEvent event, float x, float y) {
-  //                        buttonPressedSound();
-  //                    }
-  //                });
-  //    }
-
-  //  public static void imageButtonPressedListener(ImageButton button) {
-  //        button.addListener(
-  //                new ClickListener() {
-  //                    @Override
-  //                    public void clicked(InputEvent event, float x, float y) {
-  //                        buttonPressedSound();
-  //                    }
-  //                });
-  //    }
-  //
-  //  public static void buttonPressedSound() {
-  //        // Play sound effect for button click
-  //        Sound buttonSound =
-  //                ServiceLocator.getGlobalResourceService()
-  //                        .getAsset("sounds/button_clicked.mp3", Sound.class);
-  //        if (buttonSound != null) {
-  //            float volume = ServiceLocator.getSettingsService().getSoundVolume();
-  //            buttonSound.play(volume);
-  //        }
-  //    }
-
 }

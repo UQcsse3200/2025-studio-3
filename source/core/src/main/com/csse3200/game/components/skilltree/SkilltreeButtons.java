@@ -163,7 +163,7 @@ public class SkilltreeButtons extends UIComponent {
 
   /** Creates a "Back" button that navigates back to the profile screen. */
   private void createBackButton() {
-   // Create back button listener
+    // Create back button listener
     entity
         .getEvents()
         .addListener(
