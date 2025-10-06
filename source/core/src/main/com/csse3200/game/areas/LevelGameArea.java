@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -30,6 +31,8 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
+
+import java.security.Provider;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -540,12 +543,47 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // set scale to render as desired
     newEntity.scaleHeight(tileSize);
 
-    // if entity is a furnace, trigger currency generation at that point
+//    if (ServiceLocator.getCurrencyService().canAfford(100)) {
+//      System.out.println("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+//      logger.debug("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+//    }
+
+
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-      spawnScrap(entityPos, spawnInterval, scrapValue);
+      int generatorCost = newEntity.getComponent(GeneratorStatsComponent.class).getCost();
+      if (ServiceLocator.getCurrencyService().canAfford(generatorCost)) {
+        // trigger currency generation at that point
+        int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+        int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+        spawnScrap(entityPos, spawnInterval, scrapValue);
+        ServiceLocator.getCurrencyService().add(-generatorCost);
+      }
+      else {
+        logger.info("Not enough scrap for this entity. Need {} but have {}", generatorCost, ServiceLocator.getCurrencyService().get());
+        return;
+      }
+    } else {
+      int defenceCost = newEntity.getComponent(DefenderStatsComponent.class).getCost();
+      if (ServiceLocator.getCurrencyService().canAfford(defenceCost)) {
+        ServiceLocator.getCurrencyService().add(-defenceCost);
+      } else {
+        logger.info("Not enough scrap for this entity. Need {} but have {}", defenceCost, ServiceLocator.getCurrencyService().get());
+        return;
+      }
     }
+
+//    newEntity.getComponent(GeneratorStatsComponent.class).getCost();
+//    System.out.println(newEntity.getComponent(DefenderStatsComponent.class).getCost());
+
+//    System.out.println(ServiceLocator.getConfigService().getDefenderConfig(newEntity.toString()).getCost());
+
+
+//    // if entity is a furnace, trigger currency generation at that point
+//    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
+//      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+//      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+//      spawnScrap(entityPos, spawnInterval, scrapValue);
+//    }
 
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities

@@ -26,6 +26,8 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private int critChance;
 
+  private int cost;
+
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
       ServiceLocator.getProfileService()
@@ -60,7 +62,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param critChance the critical hit chance
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance) {
+      int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance, int cost) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
@@ -71,6 +73,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     setState(state);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
+    setCost(cost);
   }
 
   /** Sets the type of defender. */
@@ -139,5 +142,13 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public int getCritChance() {
     return critChance;
+  }
+
+  public void setCost(int cost) {
+    this.cost = cost;
+  }
+
+  public int getCost() {
+    return cost;
   }
 }

@@ -72,7 +72,8 @@ public class DefenceFactory {
                 config.getRange(),
                 config.getAttackState(),
                 config.getAttackSpeed(),
-                config.getCritChance()))
+                config.getCritChance(),
+                    config.getCost()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
@@ -103,7 +104,7 @@ public class DefenceFactory {
     generator
         .addComponent(
             new GeneratorStatsComponent(
-                config.getHealth(), config.getInterval(), config.getScrapValue()))
+                config.getHealth(), config.getInterval(), config.getScrapValue(), config.getCost()))
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
 
