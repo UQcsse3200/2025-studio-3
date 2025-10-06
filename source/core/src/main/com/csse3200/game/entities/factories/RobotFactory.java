@@ -49,11 +49,13 @@ public class RobotFactory {
     JUMPER("jumperRobot");
 
     private final String configKey;
+
     RobotType(String configKey) {
-        this.configKey = configKey;
+      this.configKey = configKey;
     }
+
     public String get() {
-        return configKey;
+      return configKey;
     }
   }
 
@@ -74,7 +76,7 @@ public class RobotFactory {
     ConfigService configService = getConfigService();
     BaseEnemyConfig config = configService.getEnemyConfig(robotType.get());
     if (config == null) {
-        config = configService.getEnemyConfig(RobotType.STANDARD.get());
+      config = configService.getEnemyConfig(RobotType.STANDARD.get());
     }
     return createBaseRobot(config);
   }
@@ -113,9 +115,7 @@ public class RobotFactory {
     }
 
     AITaskComponent aiComponent =
-        new AITaskComponent()
-            .addTask(new MoveLeftTask(config.getMovementSpeed()))
-            .addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+        new AITaskComponent().addTask(new MoveLeftTask(config.getMovementSpeed()));
 
     // Animation
     final String atlasPath = config.getAtlasPath();
@@ -153,11 +153,21 @@ public class RobotFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
             .addComponent(animator);
 
-    if (config.getName().contains("Jumper")) {
+    // Default attack type is melee if not specified
+    if (config.getAttackType() == null) {
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+    } else if (config.getAttackType().equals("melee")) {
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+    } else {
+      // TODO Arush add your ranged attack task
+    }
+
+    // Special abilities for specific robot types
+    if (config.getName() != null && config.getName().contains("Jumper")) {
       robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
     }
 
-    if (config.isTeleportRobot()) {
+    if (config.getName() != null && config.getName().contains("Teleport")) {
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
       if (laneYs.length >= 2) {

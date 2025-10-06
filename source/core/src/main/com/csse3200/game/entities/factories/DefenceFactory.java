@@ -133,7 +133,7 @@ public class DefenceFactory {
             .addComponent(solid)
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-//            .addComponent(new ColliderComponent())
+            //            .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent());
 
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);

@@ -150,7 +150,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
-    spawnRobot(5, 2, RobotType.JUMPER);
   }
 
   /** Spawns the level UI */
