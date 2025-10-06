@@ -56,7 +56,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
     if (target == null) {
       return -1;
     }
-    return 10;
+    return 100;
   }
 
   /**
@@ -77,7 +77,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
 
       Vector2 targetPos = target.getCenterPosition();
       float distance = from.dst(targetPos);
-      if ((abs(targetPos.y - from.y) <= 10f) && (distance <= attackRange)) {
+      if ((abs(targetPos.y - from.y) <= 5f) && (distance <= attackRange)) {
         return target;
       }
     }

@@ -115,7 +115,7 @@ public class RobotFactory {
     AITaskComponent aiComponent =
         new AITaskComponent()
             .addTask(new MoveLeftTask(config.getMovementSpeed()))
-            .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
+            .addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
 
     // Animation
     final String atlasPath = config.getAtlasPath();
@@ -154,8 +154,7 @@ public class RobotFactory {
             .addComponent(animator);
 
     if (config.getName().contains("Jumper")) {
-      logger.info("Adding jumper behaviour to robot");
-      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(90f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
     }
 
     if (config.isTeleportRobot()) {

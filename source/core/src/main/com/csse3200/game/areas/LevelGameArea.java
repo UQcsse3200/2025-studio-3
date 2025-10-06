@@ -150,8 +150,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
-    spawnRobot(4, 2, RobotType.JUMPER);
-    spawnRobot(10, 2, RobotType.STANDARD);
+    spawnRobot(5, 2, RobotType.JUMPER);
   }
 
   /** Spawns the level UI */
@@ -596,7 +595,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                         requestDespawn(newEntity);
                         robots.remove(newEntity);
                       });
-              logger.info("Unit spawned at position {}", position);
+              logger.info("Projectile spawned at position {}", position);
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);

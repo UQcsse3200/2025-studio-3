@@ -79,7 +79,7 @@
       "name": "Jumper Robot",
       "atlasPath": "images/entities/enemies/blue_robot.atlas",
       "assetPath": "images/entities/enemies/blue_robot_default_sprite.png",
-      "health": 30,
+      "health": 70,
       "attack": 10,
       "movementSpeed": 50,
       "scale": 0.75,
