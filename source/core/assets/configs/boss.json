@@ -5,8 +5,7 @@
     "health": 269,
     "attack": 50,
     "scale": 3.0,
-    "speed": 18,
-    "attackType": "punch"
+    "speed": 18
   },
 "samuraiBot": {
     "name": "Samurai Bot",

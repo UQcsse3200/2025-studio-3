@@ -7,5 +7,4 @@ public class BaseBossConfig {
   public int attack = 50;
   public float scale = 4.0f;
   public float speed = 0.5f;
-  public String attackType = "punch";
 }
