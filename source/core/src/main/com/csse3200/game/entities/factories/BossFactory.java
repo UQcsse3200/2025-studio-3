@@ -38,7 +38,9 @@ public class BossFactory {
      * file is missing or deserialization fails, this will be null.
      */
     public enum BossTypes {
-        SCRAP_TITAN
+        SCRAP_TITAN,
+        IRON_INFERNO,
+        SAMURAI_BOT
     }
 
     private static final BossConfigs configs =
@@ -56,6 +58,8 @@ public class BossFactory {
         BaseBossConfig config = null;
         switch (bossType) {
             case SCRAP_TITAN -> config = configs.scrapTitan;
+            case IRON_INFERNO -> config = configs.ironInferno;
+            case SAMURAI_BOT -> config = configs.samuraiBot;
         }
         return createBaseBoss(config);
     }
