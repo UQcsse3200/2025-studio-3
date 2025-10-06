@@ -13,7 +13,9 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class RobotAttackTask extends RobotTargetDetectionTasks {
   private static final float TIME_BETWEEN_ATTACKS = 2f; // seconds
+  private  static final float TIME_BETWEEN_ATTACK_SOUNDS = 0.5f; // seconds
   private float timeLeft = 0f;
+  private float soundTimeLeft = 0f;
 
   /**
    * Creates an attack task
@@ -37,6 +39,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
       return;
     }
     timeLeft = TIME_BETWEEN_ATTACKS;
+    soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     this.owner.getEntity().getEvents().trigger("attackStart");
   }
 
@@ -49,18 +52,24 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
       stop();
       return;
     }
-    if (timeLeft - Gdx.graphics.getDeltaTime() > 0) {
-      timeLeft -= Gdx.graphics.getDeltaTime();
-      return;
+    float delta = Gdx.graphics.getDeltaTime();
+    timeLeft -= delta;
+    soundTimeLeft -= delta;
+
+    // play sound every 0.5s regardless of attack timing
+    if (soundTimeLeft - Gdx.graphics.getDeltaTime() < 0) {
+      Sound attackSound =
+              ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
+      attackSound.play(ServiceLocator.getSettingsService().getSoundVolume());
+      soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     }
-    Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
-    Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
-    this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
-    timeLeft = TIME_BETWEEN_ATTACKS;
-    Sound attackSound =
-        ServiceLocator.getResourceService().getAsset("sounds/drill_noise_slow.mp3", Sound.class);
-    float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    attackSound.play(Math.min(1.0f, volume));
+    // attack every 2s
+    if (timeLeft < 0) {
+      Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
+      Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
+      owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
+      timeLeft = TIME_BETWEEN_ATTACKS;
+    }
   }
 
   /** Stops the attack */

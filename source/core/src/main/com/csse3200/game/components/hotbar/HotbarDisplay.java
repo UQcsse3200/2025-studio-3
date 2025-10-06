@@ -93,11 +93,25 @@ public class HotbarDisplay extends UIComponent {
                         .addComponent(new TextureRenderComponent(unit.getKey()));
 
                 // play sound
-                if (unit.getKey().contains("sling_shooter")) {
-                  Sound selectSound =
-                      ServiceLocator.getResourceService().getAsset("sounds/hrgh.mp3", Sound.class);
-                  float volume = ServiceLocator.getSettingsService().getSoundVolume();
-                  selectSound.play(volume);
+                Map<String, String> soundMap =
+                    Map.of(
+                        "sling_shooter", "sounds/hrgh.mp3",
+                        "boxer", "sounds/boxer-select.mp3",
+                        "forge", "sounds/forge-select.mp3",
+                        "mortar", "sounds/mortar-select.mp3",
+                        "shadow", "sounds/shadow-select.mp3",
+                        "shield", "sounds/shield-select.mp3",
+                        "/shooter", "sounds/shooter-select.mp3");
+                // Can only identify type of enemy by file path of texture...
+                // key is contained within texture path, value is sound path
+                for (var entry : soundMap.entrySet()) {
+                  if (unit.getKey().contains(entry.getKey())) {
+                    Sound sound =
+                        ServiceLocator.getResourceService().getAsset(entry.getValue(), Sound.class);
+                    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                    sound.play(volume);
+                    break;
+                  }
                 }
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {

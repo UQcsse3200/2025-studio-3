@@ -80,12 +80,21 @@ public class MainGameScreen extends ScreenAdapter {
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
   private String level;
-  private static final String[] ITEM_SOUNDS = {
+  private static final String[] SOUNDS = {
     "sounds/item_buff.mp3",
     "sounds/item_coffee.mp3",
     "sounds/item_emp.mp3",
     "sounds/item_grenade.mp3",
-    "sounds/item_nuke.mp3"
+    "sounds/item_nuke.mp3",
+    "sounds/robot_footstep.mp3",
+    "sounds/robot-attack.mp3",
+    "sounds/hrgh.mp3",
+    "sounds/forge-select.mp3",
+    "sounds/human-death.mp3",
+    "sounds/mortar-select.mp3",
+    "sounds/shadow-select.mp3",
+    "sounds/shield-select.mp3",
+    "sounds/shooter-select.mp3"
   };
 
   /**
@@ -196,10 +205,8 @@ public class MainGameScreen extends ScreenAdapter {
 
     // Load Music & Sounds
     resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
-    resourceService.loadSounds(new String[] {"sounds/robot_footstep.mp3"});
-    resourceService.loadSounds(new String[] {"sounds/drill_noise_slow.mp3"});
-    resourceService.loadSounds(new String[] {"sounds/hrgh.mp3"});
-    resourceService.loadSounds(ITEM_SOUNDS);
+    resourceService.loadSounds(SOUNDS);
+    resourceService.loadMusic(new String[] {"sounds/background-music/level1_music.mp3"});
 
     // Load Textures
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
