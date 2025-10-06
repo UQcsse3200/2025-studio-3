@@ -12,20 +12,10 @@ public class InfiniteMoney implements Command {
   @Override
   public boolean action(ArrayList<String> args) {
     try {
-      ServiceLocator.getCurrencyService().add(999);
+      ServiceLocator.getCurrencyService().add(9999);
     } catch (NullPointerException e) {
       logger.debug("This service is not available on this screen.");
     }
     return true;
-  }
-
-  /**
-   * Validates the command arguments.
-   *
-   * @param args command arguments
-   * @return is valid
-   */
-  boolean isValid(ArrayList<String> args) {
-    return args.size() == 1;
   }
 }

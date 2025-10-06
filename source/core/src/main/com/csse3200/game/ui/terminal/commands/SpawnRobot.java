@@ -10,7 +10,7 @@ public class SpawnRobot implements Command {
 
   @Override
   public boolean action(ArrayList<String> args) {
-    if (!args.isEmpty()) {
+    if (args.isEmpty()) {
       logger.debug("Invalid arguments received for 'spawnRobot' command: {}", args);
       return false;
     }

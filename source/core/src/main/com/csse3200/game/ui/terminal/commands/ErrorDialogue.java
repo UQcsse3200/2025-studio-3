@@ -18,14 +18,4 @@ public class ErrorDialogue implements Command {
     }
     return true;
   }
-
-  /**
-   * Validates the command arguments.
-   *
-   * @param args command arguments
-   * @return is valid
-   */
-  boolean isValid(ArrayList<String> args) {
-    return args.size() == 1;
-  }
 }
