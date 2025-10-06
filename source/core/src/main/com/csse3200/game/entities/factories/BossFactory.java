@@ -84,7 +84,7 @@ public class BossFactory {
 
         // FIX: Renamed animation from "march" to "moveLeft" to match the AI task.
         animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
-        animator.addAnimation("punch", 0.05f, Animation.PlayMode.LOOP);
+        animator.addAnimation(config.attackType, 0.05f, Animation.PlayMode.LOOP);
         animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
 
         ColliderComponent colliderComponent =
@@ -117,7 +117,7 @@ public class BossFactory {
                 .addListener(
                         "attack",
                         target -> {
-                            animator.startAnimation("punch");
+                            animator.startAnimation(config.attackType);
 
                             Timer.schedule(
                                     new Timer.Task() {
