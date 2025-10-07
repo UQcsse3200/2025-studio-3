@@ -116,10 +116,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,int,java.lang.String,com.badlogic.gdx.math.Vector2)" class="member-name-link">CurrencyGeneratorComponent</a><wbr>(float&nbsp;intervalSec,
- int&nbsp;scrapValue,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;scrapTexturePath,
- com.badlogic.gdx.math.Vector2&nbsp;position)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.Entity,java.lang.String)" class="member-name-link">CurrencyGeneratorComponent</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;scrapTexturePath)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a new currency generator component with the specified parameters.</div>
 </div>
@@ -193,17 +191,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(float,int,java.lang.String,com.badlogic.gdx.math.Vector2)">
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.Entity,java.lang.String)">
 <h3>CurrencyGeneratorComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CurrencyGeneratorComponent</span><wbr><span class="parameters">(float&nbsp;intervalSec,
- int&nbsp;scrapValue,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;scrapTexturePath,
- com.badlogic.gdx.math.Vector2&nbsp;position)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">CurrencyGeneratorComponent</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;scrapTexturePath)</span></div>
 <div class="block">Creates a new currency generator component with the specified parameters.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>intervalSec</code> - seconds between spawns</dd>
-<dd><code>scrapValue</code> - currency granted per scrap</dd>
+<dd><code>entity</code> - the furnace entity associated with the currency generator</dd>
 <dd><code>scrapTexturePath</code> - texture path for the scrap image</dd>
 </dl>
 </section>

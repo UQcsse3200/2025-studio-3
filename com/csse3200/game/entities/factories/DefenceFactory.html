@@ -113,12 +113,31 @@ loadScripts(document, 'script');</script>
 <div class="block">Creates a base defender entity with default physics and collider setup.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createFurnace()" class="member-name-link">createFurnace</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createDefenceUnit(com.csse3200.game.entities.configs.BaseDefenderConfig)" class="member-name-link">createDefenceUnit</a><wbr>(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Create a defence unit based on the config class that is passed into the function, which
+ contains health, damage, range, attack speed, crit chance and asset paths</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createSlingShooter()" class="member-name-link">createSlingShooter</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createWall()" class="member-name-link">createWall</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Creates a fully configured Sling Shooter defence entity.</div>
+<div class="block">Creates a wall entity with entity collision</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnimationComponent(com.csse3200.game.entities.configs.BaseDefenderConfig)" class="member-name-link">getAnimationComponent</a><wbr>(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get the animation component to be attached to the entity</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../ai/tasks/AITaskComponent.html" title="class in com.csse3200.game.ai.tasks">AITaskComponent</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTaskComponent(com.csse3200.game.entities.configs.BaseDefenderConfig)" class="member-name-link">getTaskComponent</a><wbr>(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Construct a task component for allowing the defence to idle and attack, dependent on attack
+ speed, range and direction</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../components/DefenderStatsComponent.html" title="class in com.csse3200.game.components">DefenderStatsComponent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getUnitStats(com.csse3200.game.entities.configs.BaseDefenderConfig)" class="member-name-link">getUnitStats</a><wbr>(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Construct a stats component for the defence unit given its config class</div>
 </div>
 </div>
 </div>
@@ -138,23 +157,68 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="createSlingShooter()">
-<h3>createSlingShooter</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createSlingShooter</span>()</div>
-<div class="block">Creates a fully configured Sling Shooter defence entity.
-
- <p>The entity is composed of: - Base physics and collider setup - Stats loaded from the config
- file - Animation rendering and animation controller</div>
+<section class="detail" id="createDefenceUnit(com.csse3200.game.entities.configs.BaseDefenderConfig)">
+<h3>createDefenceUnit</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createDefenceUnit</span><wbr><span class="parameters">(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</span></div>
+<div class="block">Create a defence unit based on the config class that is passed into the function, which
+ contains health, damage, range, attack speed, crit chance and asset paths</div>
 <dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - configuration class describing the entity's stats</dd>
 <dt>Returns:</dt>
-<dd>entity representing the slingshooter</dd>
+<dd>new defence entity</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="createFurnace()">
-<h3>createFurnace</h3>
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createFurnace</span>()</div>
+<section class="detail" id="getUnitStats(com.csse3200.game.entities.configs.BaseDefenderConfig)">
+<h3>getUnitStats</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../components/DefenderStatsComponent.html" title="class in com.csse3200.game.components">DefenderStatsComponent</a></span>&nbsp;<span class="element-name">getUnitStats</span><wbr><span class="parameters">(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</span></div>
+<div class="block">Construct a stats component for the defence unit given its config class</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - class containing defence stats</dd>
+<dt>Returns:</dt>
+<dd>stats component to be added to an entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTaskComponent(com.csse3200.game.entities.configs.BaseDefenderConfig)">
+<h3>getTaskComponent</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../ai/tasks/AITaskComponent.html" title="class in com.csse3200.game.ai.tasks">AITaskComponent</a></span>&nbsp;<span class="element-name">getTaskComponent</span><wbr><span class="parameters">(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</span></div>
+<div class="block">Construct a task component for allowing the defence to idle and attack, dependent on attack
+ speed, range and direction</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - class containing all stats of the unit</dd>
+<dt>Returns:</dt>
+<dd>task component for the entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAnimationComponent(com.csse3200.game.entities.configs.BaseDefenderConfig)">
+<h3>getAnimationComponent</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></span>&nbsp;<span class="element-name">getAnimationComponent</span><wbr><span class="parameters">(<a href="../configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a>&nbsp;config)</span></div>
+<div class="block">Get the animation component to be attached to the entity</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - class containing the atlas path of the entity</dd>
+<dt>Returns:</dt>
+<dd>animation component for the entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createWall()">
+<h3>createWall</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createWall</span>()</div>
+<div class="block">Creates a wall entity with entity collision</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the wall entity to be placed</dd>
+</dl>
 </section>
 </li>
 <li>

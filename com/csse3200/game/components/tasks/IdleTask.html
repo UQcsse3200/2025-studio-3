@@ -113,6 +113,9 @@ loadScripts(document, 'script');</script>
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.csse3200.game.components.tasks.TargetDetectionTasks">Nested classes/interfaces inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></h2>
+<code><a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></code></div>
+<div class="inherited-list">
 <h2 id="nested-classes-inherited-from-class-com.csse3200.game.ai.tasks.Task">Nested classes/interfaces inherited from interface&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></h2>
 <code><a href="../../ai/tasks/Task.Status.html" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></code></div>
 </section>
@@ -123,7 +126,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.components.tasks.TargetDetectionTasks">Fields inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></h3>
-<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#debugRenderer">debugRenderer</a>, <a href="TargetDetectionTasks.html#hit">hit</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
+<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#debugRenderer">debugRenderer</a>, <a href="TargetDetectionTasks.html#direction">direction</a>, <a href="TargetDetectionTasks.html#hit">hit</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
 <code><a href="../../ai/tasks/DefaultTask.html#owner">owner</a>, <a href="../../ai/tasks/DefaultTask.html#status">status</a></code></div>
@@ -137,7 +140,8 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float)" class="member-name-link">IdleTask</a><wbr>(float&nbsp;attackRange)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">IdleTask</a><wbr>(float&nbsp;attackRange,
+ <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates an IdleTask</div>
 </div>
@@ -199,13 +203,15 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(float)">
+<section class="detail" id="&lt;init&gt;(float,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)">
 <h3>IdleTask</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IdleTask</span><wbr><span class="parameters">(float&nbsp;attackRange)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">IdleTask</span><wbr><span class="parameters">(float&nbsp;attackRange,
+ <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</span></div>
 <div class="block">Creates an IdleTask</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>attackRange</code> - the maximum distance at which the entity can attack a target</dd>
+<dd><code>direction</code> - the directiion enemies are detected from</dd>
 </dl>
 </section>
 </li>
