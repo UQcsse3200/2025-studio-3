@@ -11,35 +11,66 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.services.GameTime;
 import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
-import com.csse3200.game.services.GameTime;
-import com.badlogic.gdx.utils.Align;
 
+/**
+ * Displays a step-by-step tutorial overlay for the Level Map screen.
+ *
+ * <p>This tutorial introduces players to core gameplay mechanics such as placing defence units,
+ * resource generation and combat behaviour. It appears as a dialog box with a darkened background
+ * overlay and progresses through predefined messages when the player presses the space bar or
+ * clicks on the 'next' button which is displayed as a white arrow on the bottom-right of the dialog
+ * box.
+ *
+ * <p>The tutorial ends either after the final message or when the user clicks the "Skip Tutorial"
+ * button displayed on the bottom-right of the screen.
+ */
 public class LevelMapTutorial extends UIComponent {
+  /** Table containing the instructional dialog and next button. */
   private Table dialogTable;
+
+  /** Table containing the "Skip Tutorial" button. */
   private Table skipTable;
+
+  /** Full-screen dark overlay to dim the background. */
   private Image overlay;
+
+  /** Label displaying the current tutorial message. */
   private Label messageLabel;
-  private TextButton skipButton;
+
+    /** Reference to the game's time controller for pausing and resuming the game. */
   private final GameTime gameTime;
 
+  /** Current tutorial step index. */
   private int step = 0;
-  private boolean active = true;
-  private boolean paused = true;
-  private float alpha = 0.7f;
 
+  /** Boolean to determine whether the tutorial is active and listening for inputs. */
+  private boolean active = true;
+
+    /** Array of tutorial messages shown in sequence. */
   private final String[] tutorialMessages = {
-          "Welcome to Level 1!",
-          "Drag defence units from the hotbar onto the grid.",
-          "Furnaces produce scrap metal which can be used to recruit more human defenders.",
-          "Human defenders attack incoming robot enemies."
+    "Welcome to Level 1!",
+    "Drag defence units from the hot-bar onto the grid.",
+    "Furnaces produce scrap metal which can be used to recruit more human defenders.",
+    "Human defenders attack incoming robot enemies."
   };
 
+  /**
+   * Constructs a new LevelMapTutorial with a reference to the game time controller.
+   *
+   * @param gameTime The {@link GameTime} instance that is used to pause and resume gameplay.
+   */
   public LevelMapTutorial(GameTime gameTime) {
-      this.gameTime = gameTime;
+    this.gameTime = gameTime;
   }
 
+  /**
+   * Initialises the tutorial UI components, including the overlay, dialog box, message label, next
+   * button and skip tutorial button. Pauses the game while active.
+   */
   @Override
   public void create() {
     super.create();
@@ -53,6 +84,7 @@ public class LevelMapTutorial extends UIComponent {
     overlay = new Image(new TextureRegionDrawable(blackTex));
 
     overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    float alpha = 0.7f; // alpha transparency for the overlay
     overlay.setColor(0, 0, 0, alpha);
     overlay.setVisible(true);
     stage.addActor(overlay);
@@ -62,11 +94,11 @@ public class LevelMapTutorial extends UIComponent {
 
     dialogTable = new Table();
     dialogTable.setBackground(dialogDrawable);
-    dialogTable.setSize(Math.floorDiv(Gdx.graphics.getWidth(), 3), Math.floorDiv(Gdx.graphics.getHeight(), 5));
+    dialogTable.setSize(
+        Math.floorDiv(Gdx.graphics.getWidth(), 3), Math.floorDiv(Gdx.graphics.getHeight(), 5));
     dialogTable.setPosition(
-            (Gdx.graphics.getWidth() - dialogTable.getWidth()) / 2f,
-            (Gdx.graphics.getHeight() - dialogTable.getHeight()) / 5f
-    );
+        (Gdx.graphics.getWidth() - dialogTable.getWidth()) / 2f,
+        (Gdx.graphics.getHeight() - dialogTable.getHeight()) / 5f);
 
     Table contentTable = new Table();
     contentTable.setFillParent(true);
@@ -83,24 +115,33 @@ public class LevelMapTutorial extends UIComponent {
     Texture nextTexture = new Texture(Gdx.files.internal("images/ui/skip-icon.png"));
     Drawable nextDrawable = new TextureRegionDrawable(nextTexture);
     ImageButton nextButton = new ImageButton(nextDrawable);
-    nextButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        nextStep();
-      }
-    });
+    nextButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            nextStep();
+          }
+        });
 
-    dialogTable.add(nextButton).size(30f, 30f).expandX().right().bottom().padRight(60f).padBottom(50f);
+    dialogTable
+        .add(nextButton)
+        .size(30f, 30f)
+        .expandX()
+        .right()
+        .bottom()
+        .padRight(60f)
+        .padBottom(50f);
     stage.addActor(dialogTable);
 
-    // skip button to skip tutorial
-    skipButton = new TextButton("Skip Tutorial", skin);
-    skipButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        skipTutorial();
-      }
-    });
+    // button to skip tutorial
+      TextButton skipButton = new TextButton("Skip Tutorial", skin);
+    skipButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            skipTutorial();
+          }
+        });
 
     skipTable = new Table();
     skipTable.bottom().right().pad(20f);
@@ -111,20 +152,29 @@ public class LevelMapTutorial extends UIComponent {
     pauseGame();
   }
 
+  /**
+   * Updates the tutorial logic based on user input. Advances the tutorial when the space bar or the
+   * 'next' button is pressed. Ends the tutorial after the final step.
+   */
   @Override
   public void update() {
     if (!active) return;
 
     switch (step) {
       case 0, 1, 2 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) nextStep(); // press space bar to move onto next message
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+          nextStep(); // press space bar to move onto next message
       }
       case 3 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) endTutorial(); // press space bar to end tutorial
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
+          endTutorial(); // press space bar to end tutorial
       }
     }
   }
 
+  /**
+   * Advances to the next tutorial message. If the final message has been shown, end the tutorial.
+   */
   private void nextStep() {
     step++;
     if (step < tutorialMessages.length) {
@@ -134,32 +184,37 @@ public class LevelMapTutorial extends UIComponent {
     }
   }
 
+  /** Ends the tutorial and resumes gameplay. Hides all tutorial UI elements. */
   private void endTutorial() {
     active = false;
-    paused = false;
-    overlay.setVisible(false);
+      overlay.setVisible(false);
     dialogTable.setVisible(false);
     skipTable.setVisible(false);
     resumeGame();
   }
 
+  /**
+   * Skips the tutorial immediately and resumes gameplay. Equivalent to ending the tutorial early.
+   */
   private void skipTutorial() {
     active = false;
-    paused = false;
-    overlay.setVisible(false);
+      overlay.setVisible(false);
     dialogTable.setVisible(false);
     skipTable.setVisible(false);
     resumeGame();
   }
 
+  /** Pauses the game by setting the timescale to zero. */
   private void pauseGame() {
     gameTime.setTimeScale(0f);
   }
 
+  /** Resumes the game by restoring the timescale to normal. */
   private void resumeGame() {
     gameTime.setTimeScale(1f);
   }
 
+  /** Cleans up tutorial UI elements and removes them from the stage. */
   @Override
   public void dispose() {
     super.dispose();
@@ -168,6 +223,12 @@ public class LevelMapTutorial extends UIComponent {
     skipTable.remove();
   }
 
+  /**
+   * Draw method override from {@link UIComponent}. No manual drawing is required as Scene2D handles
+   * rendering.
+   *
+   * @param batch Batch that the SpriteBatch used for rendering.
+   */
   @Override
   protected void draw(SpriteBatch batch) {
     // Scene2D actors handle their own drawing

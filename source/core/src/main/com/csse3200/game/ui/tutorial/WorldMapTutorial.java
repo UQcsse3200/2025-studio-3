@@ -12,19 +12,52 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 
+/**
+ * Displays an interactive tutorial overlay for the World Map screen.
+ *
+ * <p>The world map tutorial guides the player through basic controls such as movement, interaction
+ * and zooming. It appears as a dialog box in the top-left corner of the screen and progresses based
+ * on user inputs. A toggle button allows the player to show or hide the tutorial, and optionally
+ * displays all steps at once. The tutorial fades out automatically after completion unless manually
+ * toggled on again.
+ *
+ * <p>Tutorial steps: 1. Move using W/A/S/D 2. Interact using E 3. Zoom using Q/K
+ */
 public class WorldMapTutorial extends UIComponent {
+  /** The main container for tutorial labels */
   private Table table;
+
+  /** The label that is currently displayed during single step display */
   private Label currentLabel;
+
+  /** Label for movement instructions */
   private Label moveLabel;
+
+  /** Label for interaction instructions */
   private Label interactLabel;
+
+  /** Label for zoom instructions */
   private Label zoomLabel;
+
+  /** Boolean to determine whether to display all tutorial labels at once */
   private boolean displayAllLabels = false;
 
+  /** Current alpha transparency for fading effect */
   private float alpha = 1f;
+
+  /** Boolean to determine whether the tutorial is currently fading out */
   private boolean fadingOut = false;
+
+  /** Whether the tutorial is active and listening for input */
   private boolean active = true;
+
+  /** Current tutorial step index */
   private int step = 0;
 
+  /**
+   * Initialises the tutorial UI, including the dialog box and toggle button. Sets up the initial
+   * label and input listener for toggling visibility.
+   */
   @Override
   public void create() {
     super.create();
@@ -35,8 +68,10 @@ public class WorldMapTutorial extends UIComponent {
     // Create a table with the image as background
     table = new Table();
     table.setBackground(backgroundDrawable);
-    table.setSize(Math.floorDiv(Gdx.graphics.getWidth(), 5), Math.floorDiv(Gdx.graphics.getHeight(), 5));
-    table.setPosition(20f, Gdx.graphics.getHeight() - table.getHeight() - 100f); // top-left with padding
+    table.setSize(
+        Math.floorDiv(Gdx.graphics.getWidth(), 5), Math.floorDiv(Gdx.graphics.getHeight(), 5));
+    table.setPosition(
+        20f, Gdx.graphics.getHeight() - table.getHeight() - 100f); // top-left with padding
     table.pad(20f); // inner padding for the label
 
     this.moveLabel = TypographyFactory.createSubtitle("Use W/A/S/D to move", Color.WHITE);
@@ -51,23 +86,24 @@ public class WorldMapTutorial extends UIComponent {
 
     // Toggle button
     TextButton toggleButton = new TextButton("Tutorial", skin);
-    toggleButton.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        boolean visible = table.isVisible();
+    toggleButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            boolean visible = table.isVisible();
 
-        if (!visible) {
-          displayAllLabels = true;
-          fadingOut = false;
-          alpha = 1f;
-          table.getColor().a = 1f;
-          resetTutorial();
-          table.setVisible(true);
-        } else {
-          table.setVisible(false);
-        }
-      }
-    });
+            if (!visible) {
+              displayAllLabels = true;
+              fadingOut = false;
+              alpha = 1f;
+              table.getColor().a = 1f;
+              resetTutorial();
+              table.setVisible(true);
+            } else {
+              table.setVisible(false);
+            }
+          }
+        });
 
     Table buttonTable = new Table();
     buttonTable.top().left().pad(20f);
@@ -76,6 +112,10 @@ public class WorldMapTutorial extends UIComponent {
     stage.addActor(buttonTable);
   }
 
+  /**
+   * Resets the tutorial state and label visibility. If {@code displayAllLabels} is true, all steps
+   * are shown simultaneously. Otherwise, only display the current step.
+   */
   private void resetTutorial() {
     step = 0;
     active = true;
@@ -109,6 +149,10 @@ public class WorldMapTutorial extends UIComponent {
     }
   }
 
+  /**
+   * Updates the tutorial logic based on player input. Advances through tutorial steps and triggers
+   * fade-out of tutorial when complete. Skips updates if inactive or displaying all labels.
+   */
   @Override
   public void update() {
     if (currentLabel != null) {
@@ -121,10 +165,10 @@ public class WorldMapTutorial extends UIComponent {
 
     switch (step) {
       case 0 -> {
-        if (Gdx.input.isKeyPressed(Input.Keys.W) ||
-                Gdx.input.isKeyPressed(Input.Keys.A) ||
-                Gdx.input.isKeyPressed(Input.Keys.S) ||
-                Gdx.input.isKeyPressed(Input.Keys.D)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.W)
+            || Gdx.input.isKeyPressed(Input.Keys.A)
+            || Gdx.input.isKeyPressed(Input.Keys.S)
+            || Gdx.input.isKeyPressed(Input.Keys.D)) {
           currentLabel = interactLabel;
           currentLabel.getStyle().fontColor.a = 1f;
           currentLabel.setVisible(true);
@@ -144,8 +188,7 @@ public class WorldMapTutorial extends UIComponent {
         }
       }
       case 2 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) ||
-                Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
           fadingOut = true;
         }
       }
@@ -164,6 +207,7 @@ public class WorldMapTutorial extends UIComponent {
     }
   }
 
+  /** Cleans up the tutorial UI and resources. Clears the table and call superclass disposal. */
   @Override
   public void dispose() {
     table.clear();
@@ -171,12 +215,13 @@ public class WorldMapTutorial extends UIComponent {
   }
 
   /**
-   * Draw the renderable. Should be called only by the renderer, not manually.
+   * Draw method overridden from {@link UIComponent}. No manual drawing is required as Scene2D
+   * handles rendering.
    *
-   * @param batch Batch to render to.
+   * @param batch Batch that the SpriteBatch used for rendering.
    */
   @Override
   protected void draw(SpriteBatch batch) {
-    // don't require manual drawing as all visuals are handled by Scene2D actors
+    // No manual drawing required
   }
 }
