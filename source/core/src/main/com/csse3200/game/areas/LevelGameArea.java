@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -64,6 +65,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
   private Entity gameOverEntity;
+  private Entity levelCompleteEntity;
+  private boolean isLevelComplete = false;
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
@@ -219,6 +222,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.gameOverEntity = new Entity();
     gameOverEntity.addComponent(new GameOverWindow());
     spawnEntity(this.gameOverEntity);
+
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
   /** Creates the game map and renders it */
@@ -726,6 +734,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+      }
+    }
+  }
+
+  /**
+   * Checks if the level is complete
+   * */
+  public void checkLevelComplete() {
+    if (isLevelComplete) {
+      return;
+      // level is already complete, don't check again
+    }
+
+    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
+    if (currentWave >= 4) {
+      isLevelComplete = true;
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
       }
     }
   }
