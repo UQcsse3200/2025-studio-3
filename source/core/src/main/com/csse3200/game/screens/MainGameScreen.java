@@ -48,7 +48,18 @@ public class MainGameScreen extends ScreenAdapter {
   private Music music;
   private List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
-    "images/backgrounds/level-1-map-v2.png",
+          "images/entities/enemies/samurai_Bot.png",
+          "images/entities/enemies/samurai_Bot2.png",
+          "images/entities/enemies/samurai_Bot3.png",
+          "images/entities/enemies/samurai_Bot4.png",
+          "images/entities/enemies/samurai_Bot5.png",
+          "images/entities/enemies/samurai_Bot6.png",
+          "images/entities/enemies/samurai_Bot7.png",
+          "images/entities/enemies/samurai_Bot8.png",
+          "images/entities/enemies/samurai_Bot9.png",
+          "images/entities/enemies/samurai_Bot10.png",
+          "images/entities/enemies/samurai_Bot11.png",
+          "images/backgrounds/level-1-map-v2.png",
     "images/backgrounds/level-2-map-v1.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
@@ -83,7 +94,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
     "images/entities/enemies/red_robot.atlas",
-    "images/entities/enemies/Scrap-titan.atlas"
+    "images/entities/enemies/Scrap-titan.atlas",
+          "images/entities/enemies/samurai_Bot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
