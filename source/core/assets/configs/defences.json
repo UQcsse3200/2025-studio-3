@@ -58,6 +58,21 @@
         "numSprites": 2,
         "attackSpeed": 0,
         "critChance": 0
+      },
+      "boxer": {
+        "health": 60,
+        "range": 100,
+        "name": "Boxer",
+        "description": "Now this guy packs a punch. He can't hit far, but he sure hits hard",
+        "assetPath": "images/entities/defences/boxer_1.png",
+        "atlasPath": "images/entities/defences/boxer.atlas",
+        "projectilePath": null,
+        "cost": 150,
+        "damage": 5,
+        "direction": "right",
+        "numSprites": 3,
+        "attackSpeed": 1,
+        "critChance": 1
       }
     },
     "generators": {

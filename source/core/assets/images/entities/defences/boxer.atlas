@@ -1,0 +1,12 @@
+boxer_1.png
+size: 602, 601
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 602, 601
+idle
+  bounds: 0, 0, 602, 601
+attack
+  bounds: 0, 0, 602, 601
