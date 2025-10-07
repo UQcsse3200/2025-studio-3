@@ -729,7 +729,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         // play game over noise
         Sound sound =
-                ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
+            ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
         float volume = ServiceLocator.getSettingsService().getSoundVolume();
         sound.play(volume);
 
