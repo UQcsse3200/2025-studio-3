@@ -1,0 +1,56 @@
+healer.png
+size: 660, 434
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 0, 0, 251, 420
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
+idle
+  bounds: 251, 0, 409, 434
