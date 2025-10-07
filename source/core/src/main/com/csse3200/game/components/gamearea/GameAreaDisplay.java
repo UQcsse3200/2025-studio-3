@@ -21,7 +21,7 @@ public class GameAreaDisplay extends UIComponent {
   }
 
   private void addActors() {
-    title = new Label(this.gameAreaName, skin, "large");
+    title = ui.heading(this.gameAreaName); // temp fix to stop crash
     stage.addActor(title);
   }
 

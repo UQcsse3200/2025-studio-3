@@ -1,6 +1,5 @@
 package com.csse3200.game.components.waves;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
@@ -66,21 +65,16 @@ public class CurrentWaveDisplay extends UIComponent {
     table.padTop(25f).padLeft(5f);
 
     // Wave text label
-    waveLabel = new Label("Current Wave:", skin, "small");
+    waveLabel = ui.text("Current Wave:");
 
     // Wave number label - start at 0 (no wave active)
-    waveNumberLabel = new Label(NO_WAVE_TEXT, skin, "small");
+    waveNumberLabel = ui.text(NO_WAVE_TEXT);
 
     // Add labels to table with some spacing
     table.add(waveLabel).padRight(10f);
     table.add(waveNumberLabel);
 
     stage.addActor(table);
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   /**

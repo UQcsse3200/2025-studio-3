@@ -18,7 +18,7 @@ public class PerformanceDisplay extends UIComponent {
   }
 
   private void addActors() {
-    profileLabel = new Label(getStats(), skin, "small");
+    profileLabel = ui.text(getStats()); // temp fix to stop crash
     stage.addActor(profileLabel);
   }
 
