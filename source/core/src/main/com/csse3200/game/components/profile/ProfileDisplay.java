@@ -2,7 +2,6 @@ package com.csse3200.game.components.profile;
 
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
@@ -201,11 +200,6 @@ public class ProfileDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
-  }
-
-  @Override
   public float getZIndex() {
     return Z_INDEX;
   }
@@ -224,6 +218,7 @@ public class ProfileDisplay extends UIComponent {
   /** Call this method when the screen is resized to update UI elements */
   @Override
   public void resize() {
+    super.resize();
     if (mainTable != null) {
       mainTable.clear();
     }
