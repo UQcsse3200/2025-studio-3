@@ -353,4 +353,10 @@ public class ShopDisplay extends UIComponent {
   public float getZIndex() {
     return Z_INDEX;
   }
+
+  @Override
+  public void resize() {
+    super.resize();
+    recenterTable();
+  }
 }
