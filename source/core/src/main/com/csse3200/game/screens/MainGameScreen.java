@@ -88,14 +88,15 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/item_nuke.mp3",
     "sounds/robot_footstep.mp3",
     "sounds/robot-attack.mp3",
-    "sounds/hrgh.mp3",
+    "sounds/slingshooter-select.mp3",
     "sounds/forge-select.mp3",
     "sounds/human-death.mp3",
     "sounds/mortar-select.mp3",
     "sounds/shadow-select.mp3",
     "sounds/shield-select.mp3",
     "sounds/shooter-select.mp3",
-    "sounds/robot-death.mp3"
+    "sounds/robot-death.mp3",
+    "sounds/game-over-voice.mp3"
   };
 
   /**

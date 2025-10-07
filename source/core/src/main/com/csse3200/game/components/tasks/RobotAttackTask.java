@@ -13,7 +13,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class RobotAttackTask extends RobotTargetDetectionTasks {
   private static final float TIME_BETWEEN_ATTACKS = 2f; // seconds
-  private  static final float TIME_BETWEEN_ATTACK_SOUNDS = 0.5f; // seconds
+  private static final float TIME_BETWEEN_ATTACK_SOUNDS = 0.5f; // seconds
   private float timeLeft = 0f;
   private float soundTimeLeft = 0f;
 
@@ -59,7 +59,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     // play sound every 0.5s regardless of attack timing
     if (soundTimeLeft - Gdx.graphics.getDeltaTime() < 0) {
       Sound attackSound =
-              ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
+          ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
       attackSound.play(ServiceLocator.getSettingsService().getSoundVolume());
       soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     }

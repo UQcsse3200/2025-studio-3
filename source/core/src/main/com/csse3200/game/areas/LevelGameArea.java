@@ -1,5 +1,6 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -725,6 +726,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (gridX <= -1) {
         isGameOver = true;
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+
+        // play game over noise
+        Sound sound =
+                ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
+        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+        sound.play(volume);
+
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
       }

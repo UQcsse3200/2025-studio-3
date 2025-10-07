@@ -138,11 +138,11 @@ public class CombatStatsComponent extends Component {
         entity.getEvents().trigger("defenceDeath");
         logger.info("Human has died!");
         deathSound =
-                ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
+            ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
       } else {
         entity.getEvents().trigger("entityDeath");
         deathSound =
-                ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
+            ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
       deathSound.play(volume);
     }

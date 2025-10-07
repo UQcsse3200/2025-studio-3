@@ -95,7 +95,7 @@ public class HotbarDisplay extends UIComponent {
                 // play sound
                 Map<String, String> soundMap =
                     Map.of(
-                        "sling_shooter", "sounds/hrgh.mp3",
+                        "sling_shooter", "sounds/slingshooter-select.mp3",
                         "boxer", "sounds/boxer-select.mp3",
                         "forge", "sounds/forge-select.mp3",
                         "mortar", "sounds/mortar-select.mp3",
