@@ -125,13 +125,11 @@ public class EntitySpawn {
   }
 
   /**
-   * Builds a spawn queue for the current wave using the new system:
-   * - Each wave has a budget (waveWeight).
-   * - Each enemy type consumes budget (cost).
-   * - Enemies are picked randomly, weighted by 'chance'.
-   * - Loop continues until budget runs out. The method uses a weight-accumulation system to
-   * distribute spawn probabilities based on each enemy type’s defined spawn chance and cost.
-   * The algorithm repeats until the wave budget is depleted or no affordable enemies remain.
+   * Builds a spawn queue for the current wave using the new system: - Each wave has a budget
+   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
+   * by 'chance'. - Loop continues until budget runs out. The method uses a weight-accumulation
+   * system to distribute spawn probabilities based on each enemy type’s defined spawn chance and
+   * cost. The algorithm repeats until the wave budget is depleted or no affordable enemies remain.
    */
   public void spawnEnemiesFromConfig() {
     if (waveConfigProvider == null) {
