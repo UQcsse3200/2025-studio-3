@@ -65,6 +65,8 @@ public class DossierDisplay extends UIComponent {
   public void create() {
     super.create();
     changeTypeListener();
+    DossierBackAction dossierBack = new DossierBackAction(game);
+    entity.getEvents().addListener("back", dossierBack::backMenu);
     addActors();
   }
 
@@ -313,29 +315,17 @@ public class DossierDisplay extends UIComponent {
   }
 
   /** Creates the close button in the top-left corner. */
+
   private void createCloseButton() {
-    ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
+      TextButton closeButton = ui.createBackExitButton(
+              entity.getEvents(),
+              stage.getHeight(),
+              "Back"
+      );
 
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            backMenu();
-          }
-        });
-
-    stage.addActor(closeButton);
+      stage.addActor(closeButton);
   }
+
 
   /**
    * Builds a table containing buttons to access different entities within either 'Human' or
@@ -372,10 +362,7 @@ public class DossierDisplay extends UIComponent {
     return buttonRow;
   }
 
-  /** Handles navigation back to the World Map Screen. */
-  private void backMenu() {
-    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-  }
+
 
 
   /**

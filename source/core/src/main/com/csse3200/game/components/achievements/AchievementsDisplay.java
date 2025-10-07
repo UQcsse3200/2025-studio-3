@@ -2,13 +2,10 @@ package com.csse3200.game.components.achievements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ConfigService;
@@ -23,10 +20,8 @@ import org.slf4j.LoggerFactory;
  * screen.
  */
 public class AchievementsDisplay extends UIComponent {
-    private static final Logger logger = LoggerFactory.getLogger(AchievementsDisplay.class);
     private final GdxGame game;
     private Table rootTable;
-    private ImageButton closeButton;
 
 
     float uiScale = ui.getUIScale();
@@ -222,44 +217,16 @@ public class AchievementsDisplay extends UIComponent {
     /** Creates the close button in the top-left corner. */
     private void createCloseButton() {
         // Create close button using close-icon.png
-        closeButton =
-                new ImageButton(
-                        new TextureRegionDrawable(
-                                ServiceLocator.getGlobalResourceService()
-                                        .getAsset("images/ui/close-icon.png", Texture.class)));
-
-        closeButton.setSize(60f, 60f);
-        updateCloseButtonPosition();
-
-        // Add listener for the close button
-        closeButton.addListener(
-                new ChangeListener() {
-                    @Override
-                    public void changed(ChangeEvent changeEvent, Actor actor) {
-                        logger.debug("[AchievementsDisplay] Close button clicked");
-                        backMenu();
-                    }
-                });
-
+        TextButton closeButton = ui.createBackExitButton(
+                entity.getEvents(),
+                stage.getHeight(),
+                "Back"
+        );
+        AchievementBackAction backAction = new AchievementBackAction(game);
+        entity.getEvents().addListener("back", backAction::backMenu);
         stage.addActor(closeButton);
     }
 
-    /** Updates the close button position based on current stage dimensions. */
-    private void updateCloseButtonPosition() {
-        if (closeButton != null && stage != null) {
-            closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-        }
-    }
-
-    /** Public method to update close button position on resize. */
-    public void updateOnResize() {
-        updateCloseButtonPosition();
-    }
-
-    /** Handles navigation back to the World Map. */
-    private void backMenu() {
-        game.setScreen(ScreenType.WORLD_MAP);
-    }
 
 
     /** Disposes of this UI component. */

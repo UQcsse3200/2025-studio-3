@@ -116,7 +116,6 @@ public class ShopDisplay extends UIComponent {
   private void createShopUI() {
     mainTable.clear();
     Label titleLabel = ui.title("SHOP");
-    //Label titleLabel = new Label("SHOP", skin, "title");
     titleLabel.setColor(Color.BLACK);
     titleLabel.setFontScale(1.5f);
     mainTable.add(titleLabel).colspan(3).center().padTop(-40).padBottom(34f).row();
