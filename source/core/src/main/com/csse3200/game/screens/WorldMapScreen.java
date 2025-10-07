@@ -69,12 +69,12 @@ public class WorldMapScreen extends BaseScreen {
       new java.util.HashSet<>(java.util.List.of("skills", "shop", "minigames"));
 
   public WorldMapScreen(GdxGame game) {
-      super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
-      logger.debug("[WorldMapScreen] Initializing world map");
-      loadTextures();
-      createBackground();
-      createNodes();
-      createPlayer();
+    super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
+    logger.debug("[WorldMapScreen] Initializing world map");
+    loadTextures();
+    createBackground();
+    createNodes();
+    createPlayer();
   }
 
   @Override
@@ -355,7 +355,6 @@ public class WorldMapScreen extends BaseScreen {
 
     updateCamera();
     super.render(delta);
-
   }
 
   private void enforceCameraZoomStep() {
@@ -544,11 +543,11 @@ public class WorldMapScreen extends BaseScreen {
   private void onNodeEnter(WorldMapNode node) {
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
-        String key = node.getRegistrationKey();
-        if (key != null && key.startsWith(LEVEL_PREFIX)) {
-            ps.getProfile().setCurrentLevel(key);
-        }
-        ps.saveCurrentProfile();
+      String key = node.getRegistrationKey();
+      if (key != null && key.startsWith(LEVEL_PREFIX)) {
+        ps.getProfile().setCurrentLevel(key);
+      }
+      ps.saveCurrentProfile();
     }
 
     logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());

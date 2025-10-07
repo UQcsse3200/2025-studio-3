@@ -106,23 +106,22 @@ public class WorldMapPlayerComponent extends UIComponent {
     handleNodeInteraction();
   }
 
+  private void persistWorldPos() {
+    var ps = ServiceLocator.getProfileService();
+    if (ps == null || ps.getProfile() == null) return;
 
-    private void persistWorldPos() {
-        var ps = ServiceLocator.getProfileService();
-        if (ps == null || ps.getProfile() == null) return;
+    var pos = entity.getPosition();
+    ps.getProfile().setWorldMapX(pos.x);
+    ps.getProfile().setWorldMapY(pos.y);
 
-        var pos = entity.getPosition();
-        ps.getProfile().setWorldMapX(pos.x);
-        ps.getProfile().setWorldMapY(pos.y);
-
-        try {
-            ps.saveCurrentProfile(); // ★ 立刻落盘
-        } catch (Exception e) {
-            logger.warn("[WorldMapPlayerComponent] Failed to save position: {}", e.getMessage());
-        }
+    try {
+      ps.saveCurrentProfile(); // ★ 立刻落盘
+    } catch (Exception e) {
+      logger.warn("[WorldMapPlayerComponent] Failed to save position: {}", e.getMessage());
     }
+  }
 
-    // --------------------------------------------------------------------- //
+  // --------------------------------------------------------------------- //
   // Movement
   // --------------------------------------------------------------------- //
 

@@ -19,7 +19,7 @@ import net.dermetfan.utils.Pair;
 public class Profile {
 
   public static final java.util.Set<String> DEFAULT_UNLOCKED =
-      java.util.Set.of( "shop", "minigames", "skills");
+      java.util.Set.of("shop", "minigames", "skills");
   private java.util.Set<String> unlockedNodes;
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
