@@ -95,6 +95,38 @@
       "coinsRewarded": 2,
       "maxTeleports": 0,
       "invulnerabilityMs": 0
+    },
+    "giantRobot": {
+      "name": "Giant Robot",
+      "atlasPath": "images/entities/enemies/tanky_robot.atlas",
+      "assetPath": "images/entities/enemies/tanky_robot_default_sprite.png",
+      "health": 180,
+      "attack": 20,
+      "movementSpeed": 8,
+      "attackType": "melee",
+      "scale": 1.5,
+      "description": "A hulking carrier that spawns a minion when low.",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 5,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
+    },
+    "miniRobot": {
+      "name": "Mini Robot",
+      "atlasPath": "images/entities/enemies/fast_robot.atlas",
+      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "health": 15,
+      "attack": 6,
+      "movementSpeed": 45,
+      "attackType": "melee",
+      "scale": 0.6,
+      "description": "A small drone spawned by the Giant.",
+      "teleportCooldownSeconds": 0,
+      "teleportChance": 0,
+      "coinsRewarded": 1,
+      "maxTeleports": 0,
+      "invulnerabilityMs": 0
     }
   }
 }
