@@ -5,23 +5,21 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.projectiles.MoveRightComponent;
+import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
-import com.csse3200.game.entities.factories.DefenceFactory;
-import com.csse3200.game.entities.factories.GridFactory;
-import com.csse3200.game.entities.factories.ItemFactory;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.RobotFactory;
+import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -30,12 +28,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,19 +151,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
-    for (String defenceKey : profile.getArsenal().getKeys()) {
-      if (defenceKey.equals("slingshooter")) {
-        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
-        if (defenderConfig != null) {
-          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createSlingShooter);
-        }
-      }
-      if (defenceKey.equals("furnace")) {
-        BaseGeneratorConfig generatorConfig = configService.getGeneratorConfig(defenceKey);
-        if (generatorConfig != null) {
-          unitList.put(generatorConfig.getAssetPath(), DefenceFactory::createFurnace);
-        }
-      }
+    for (String defenceKey : profile.getArsenal().getDefenders()) {
+      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
+      unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
+    }
+    for (String generatorKey : profile.getArsenal().getGenerators()) {
+      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
+      unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
     }
 
     Inventory inventory = profile.getInventory();
@@ -240,14 +227,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.worldWidth = bg.getWorldWidth();
 
     spawnEntity(map);
+    spawnWall();
   }
 
-  private void spawnScrap(Vector2 targetPos, int spawnInterval, int scrapValue) {
+  private void spawnWall() {
+    Entity wall = DefenceFactory.createWall();
+    float tileX = xOffset + tileSize * -1;
+    float tileY = yOffset - tileSize / 5;
+    float wallSize = tileSize * 6;
+    wall.scaleHeight(wallSize);
+    wall.setPosition(tileX, tileY);
+    spawnEntity(wall);
+    wall.getEvents().trigger("idleStart");
+  }
+
+  private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(
-            spawnInterval, scrapValue, "images/entities/currency/scrap_metal.png", targetPos);
+        new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
     scrapSpawner.addComponent(currencyGenerator);
+    // if furnace dies, dispose of its currency generator
+    entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
     spawnEntity(scrapSpawner);
   }
 
@@ -317,7 +317,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
-    logger.info("Robot {} spawned at position {} {}", robotType, col, row);
+    logger.info("Robot {} spawned at position {} {}", robotType, row, col);
   }
 
   /**
@@ -387,15 +387,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos) {
-    Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-
+  public void spawnProjectile(
+      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
-    projectile.addComponent(new MoveRightComponent()); // pass velocity
+    projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
   }
@@ -542,9 +541,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-      spawnScrap(entityPos, spawnInterval, scrapValue);
+      spawnScrap(newEntity);
     }
 
     spawnEntity(newEntity);
@@ -561,21 +558,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     newEntity
         .getEvents()
         .addListener(
-            "defenceDeath",
-            () -> {
-              requestDespawn(newEntity);
-              clearTile.run();
-            });
-    newEntity.getEvents().addListener("despawned", clearTile::run);
-
-    newEntity
-        .getEvents()
-        .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(newEntity);
+              clearTile.run();
               robots.remove(newEntity);
             });
+
+    newEntity.getEvents().addListener("despawned", clearTile::run);
 
     logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
 
@@ -583,18 +573,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .getEvents()
         .addListener(
             "fire",
-            () -> {
-              spawnProjectile(entityPos);
+            (TargetDetectionTasks.AttackDirection direction) -> {
+              spawnProjectile(
+                  entityPos,
+                  newEntity.getComponent(ProjectileComponent.class).getProjectile(),
+                  direction);
               newEntity.getEvents().trigger("attackStart");
-              newEntity
-                  .getEvents()
-                  .addListener(
-                      ENTITY_DEATH_EVENT,
-                      () -> {
-                        requestDespawn(newEntity);
-                        robots.remove(newEntity);
-                      });
-              logger.info("Unit spawned at position {}", position);
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);
@@ -613,6 +597,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("No unit at position {}", position);
       return;
     }
+    occ.getEvents().trigger("entityDespawn");
     requestDespawn(occ);
     grid.clearOccupantIndex(position);
     // Also clear the tile component (delegates to grid, stays in sync)

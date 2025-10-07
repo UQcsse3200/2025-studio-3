@@ -11,16 +11,19 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
-  private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+  private float fireCooldown; // time between attacks
   private float timeSinceLastFire = 0f;
 
   /**
    * Creates an attack task
    *
    * @param attackRange the maximum distance the entity can find a target to attack
+   * @param attackSpeed attacking speed of the entity
+   * @param direction the direction the projectile will travel
    */
-  public AttackTask(float attackRange) {
-    super(attackRange);
+  public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
+    super(attackRange, direction);
+    this.fireCooldown = attackSpeed;
   }
 
   /**
@@ -30,8 +33,9 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void start() {
     super.start();
+
     this.owner.getEntity().getEvents().trigger("attackStart");
-    owner.getEntity().getEvents().trigger("fire");
+    owner.getEntity().getEvents().trigger("fire", direction);
   }
 
   /** Updates the task each game frame */
@@ -45,9 +49,9 @@ public class AttackTask extends TargetDetectionTasks {
     if (getDistanceToTarget() <= attackRange) {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
 
-      if (timeSinceLastFire >= FIRE_COOLDOWN) {
+      if (timeSinceLastFire >= fireCooldown) {
         // tell listeners (LevelGameArea) to spawn a projectile
-        owner.getEntity().getEvents().trigger("fire"); // <-- this is the key bit
+        owner.getEntity().getEvents().trigger("fire", direction); // <-- this is the key bit
         timeSinceLastFire = 0f;
       }
     }
