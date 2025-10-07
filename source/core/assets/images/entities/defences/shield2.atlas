@@ -1,0 +1,42 @@
+shield2.png
+size: 4574, 394
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 311, 394
+idle
+  bounds: 0, 0, 311, 394
+idle
+  bounds: 311, 0, 311, 394
+attack
+  bounds: 0, 0, 311, 394
+attack
+  bounds: 311, 0, 311, 394
+attack
+  bounds: 622, 0, 298, 394
+attack
+  bounds: 920, 0, 311, 394
+attack
+  bounds: 1231, 0, 298, 394
+attack
+  bounds: 1529, 0, 298, 394
+attack
+  bounds: 1827, 0, 298, 394
+attack
+  bounds: 2125, 0, 311, 394
+attack
+  bounds: 2436, 0, 298, 394
+attack
+  bounds: 2734, 0, 311, 394
+attack
+  bounds: 3045, 0, 311, 394
+attack
+  bounds: 3356, 0, 298, 394
+attack
+  bounds: 3654, 0, 311, 394
+attack
+  bounds: 3965, 0, 311, 394
+attack
+  bounds: 4276, 0, 298, 394

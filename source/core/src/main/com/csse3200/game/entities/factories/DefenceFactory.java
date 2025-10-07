@@ -115,6 +115,50 @@ public class DefenceFactory {
     return generator;
   }
 
+  public static Entity createRiotSheild() {
+    BaseDefenderConfig config = getConfigService().getDefenderConfig("shield");
+
+    AITaskComponent enemyDetectionTasks =
+        new AITaskComponent()
+            .addTask(new AttackTask(config.getRange()))
+            .addTask(new IdleTask(config.getRange()));
+
+    // start with a base defender (physics + collider)
+    Entity defender = createBaseDefender();
+    defender.addComponent(enemyDetectionTasks);
+
+    // animation component
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(
+            ServiceLocator.getResourceService()
+                .getAsset("images/entities/defences/shield2.atlas", TextureAtlas.class));
+    
+    // define animations for idle and attack states
+    animator.addAnimation("idle", 0.1f, Animation.PlayMode.LOOP);
+    animator.addAnimation("attack", 0.04f, Animation.PlayMode.LOOP);
+    
+    // attach components to the entity
+    defender
+        .addComponent(
+            new DefenderStatsComponent(
+                config.getHealth(),
+                config.getAttack(),
+                config.getRangeType(),
+                config.getRange(),
+                config.getAttackState(),
+                config.getAttackSpeed(),
+                config.getCritChance()))
+        .addComponent(animator)
+        .addComponent(new DefenceAnimationController());
+
+    // trigger the initial attack event to kick off behaviour
+    defender.getEvents().trigger("idleStart");
+
+    // scale the entity to match animation sprite dimensions
+    defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+    return defender;
+  }
+
   /**
    * Creates a base defender entity with default physics and collider setup.
    *

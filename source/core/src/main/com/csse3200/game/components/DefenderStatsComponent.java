@@ -20,7 +20,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Current state of the defender (could represent idle, attacking, etc.). */
   private int state;
 
-  /** Rate of attacks, typically in attacks per second or ticks per attack. */
+  /** Rate of attacks */
   private int attackSpeed;
 
   /** Chance (percentage) of delivering a critical hit when attacking. */

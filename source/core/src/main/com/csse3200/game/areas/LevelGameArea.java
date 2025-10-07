@@ -167,6 +167,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           unitList.put(generatorConfig.getAssetPath(), DefenceFactory::createFurnace);
         }
       }
+      if (defenceKey.equals("shield")) {
+        BaseDefenderConfig defenderConfig = configService.getDefenderConfig(defenceKey);
+        if (defenderConfig != null) {
+          unitList.put(defenderConfig.getAssetPath(), DefenceFactory::createRiotSheild);
+        }
+      }
     }
 
     Inventory inventory = profile.getInventory();
