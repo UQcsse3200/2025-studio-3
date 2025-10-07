@@ -78,7 +78,7 @@ public class LevelCompletedWindow extends UIComponent {
     // Stage handles drawing
   }
 
-    public Window getWindow() {
-        return window;
-    }
+  public Window getWindow() {
+    return window;
+  }
 }
