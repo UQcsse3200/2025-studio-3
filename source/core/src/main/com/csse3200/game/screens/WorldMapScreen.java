@@ -18,6 +18,8 @@ import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.progression.Profile;
+import java.util.HashSet;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
@@ -144,45 +146,144 @@ public class WorldMapScreen extends BaseScreen {
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /** Creates the nodes for the world map. */
-  private void createNodes() {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    var ps = ServiceLocator.getProfileService();
+    /** Creates the nodes for the world map. */
+    private void createNodes() {
+        WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+        List<WorldMapNode> nodes = worldMapService.getAllNodes();
+        var profileService = ServiceLocator.getProfileService();
 
-    Set<String> unlocked = java.util.Collections.emptySet();
-    List<String> completed = java.util.Collections.emptyList();
+        if (profileService != null && profileService.getProfile() != null) {
+            handleProfileBasedNodeSetup(worldMapService, nodes, profileService.getProfile());
+        } else {
+            handleDefaultNodeSetup(worldMapService, nodes);
+        }
 
-    if (ps != null && ps.getProfile() != null) {
-      unlocked = ps.getProfile().getUnlockedNodes();
-      completed = ps.getProfile().getCompletedNodes();
+        registerNodeEntities(worldMapService, nodes);
     }
 
-    for (WorldMapNode node : nodes) {
-      String key = node.getRegistrationKey();
-      if (completed.contains(key)) {
-        worldMapService.completeNode(key);
-        worldMapService.unlockNode(key);
-      } else if (unlocked.contains(key)) {
-        worldMapService.unlockNode(key);
-      } else {
-        worldMapService.lockNode(key, "Locked until you reach this node.");
-      }
+    /**
+     * Handles map setup when a profile exists (normal case).
+     * Unlocks all nodes up to the current level and marks previous ones as completed.
+     * Special nodes are only unlocked, never marked completed.
+     */
+    private void handleProfileBasedNodeSetup(WorldMapService wms, List<WorldMapNode> nodes, Profile profile) {
+        String current = profile.getCurrentLevel();
+        Set<String> toUnlock = new HashSet<>(Profile.DEFAULT_UNLOCKED);
+        Set<String> toComplete = new HashSet<>();
+
+        if (current != null && !current.isEmpty()) {
+            List<String> chain = buildChainUpTo(wms, current);
+
+            unlockAndCompleteChain(chain, toUnlock, toComplete);
+            syncProfileCompletion(profile, toComplete);
+            ensureSpecialNodesUnlocked(profile);
+        }
+
+        applyNodeStates(wms, nodes, toUnlock, toComplete);
     }
 
-    for (WorldMapNode node : nodes) {
-      Entity nodeEntity = new Entity();
-      float worldX = node.getPositionX() * WORLD_WIDTH;
-      float worldY = node.getPositionY() * WORLD_HEIGHT;
-      nodeEntity.setPosition(worldX, worldY);
-      WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
-      nodeEntity.addComponent(comp);
-      ServiceLocator.getWorldMapService().registerNodeRenderComponent(comp);
-      ServiceLocator.getEntityService().register(nodeEntity);
+    /**
+     * Handles map setup when there is no active profile (first-time run or error).
+     * Only unlocks the default special nodes.
+     */
+    private void handleDefaultNodeSetup(WorldMapService wms, List<WorldMapNode> nodes) {
+        for (WorldMapNode node : nodes) {
+            String key = node.getRegistrationKey();
+            if (Profile.DEFAULT_UNLOCKED.contains(key)) {
+                wms.unlockNode(key);
+            } else {
+                wms.lockNode(key, "Locked until you reach this node.");
+            }
+        }
     }
-  }
 
-  @Override
+    /**
+     * Builds a linear chain of level keys from the first node to the given current key (inclusive).
+     * Uses WorldMapService#getAllNodes() order.
+     */
+    private List<String> buildChainUpTo(WorldMapService wms, String currentKey) {
+        List<String> chain = new ArrayList<>();
+        if (wms == null || currentKey == null || currentKey.isEmpty()) return chain;
+
+        for (WorldMapNode node : wms.getAllNodes()) {
+            String key = node.getRegistrationKey();
+            chain.add(key);
+            if (currentKey.equals(key)) break;
+        }
+
+        // If current key not found, clear
+        if (chain.isEmpty() || !currentKey.equals(chain.get(chain.size() - 1))) {
+            chain.clear();
+        }
+        return chain;
+    }
+
+    /**
+     * Marks all previous nodes in the chain as completed and unlocks all nodes up to current.
+     * Special nodes are only unlocked, not completed.
+     */
+    private void unlockAndCompleteChain(List<String> chain, Set<String> toUnlock, Set<String> toComplete) {
+        for (int i = 0; i < chain.size(); i++) {
+            String key = chain.get(i);
+            toUnlock.add(key);
+            // Mark previous ones as completed, exclude current and special nodes
+            if (i < chain.size() - 1 && !Profile.DEFAULT_UNLOCKED.contains(key)) {
+                toComplete.add(key);
+            }
+        }
+    }
+
+    /** Writes completed state back into the profile to keep persistence consistent. */
+    private void syncProfileCompletion(Profile profile, Set<String> toComplete) {
+        for (String key : toComplete) {
+            if (!profile.isNodeCompleted(key)) {
+                profile.completeNode(key);
+            }
+        }
+    }
+
+    /** Ensures the three special nodes are always unlocked (but never marked completed). */
+    private void ensureSpecialNodesUnlocked(Profile profile) {
+        for (String s : Profile.DEFAULT_UNLOCKED) {
+            profile.unlockNode(s);
+        }
+    }
+
+    /**
+     * Applies unlock/completion state to all map nodes visually and logically.
+     */
+    private void applyNodeStates(WorldMapService wms, List<WorldMapNode> nodes, Set<String> toUnlock, Set<String> toComplete) {
+        for (WorldMapNode node : nodes) {
+            String key = node.getRegistrationKey();
+            if (toComplete.contains(key)) {
+                wms.completeNode(key);
+                wms.unlockNode(key);
+            } else if (toUnlock.contains(key)) {
+                wms.unlockNode(key);
+            } else {
+                wms.lockNode(key, "Locked until you reach this node.");
+            }
+        }
+    }
+
+    /**
+     * Registers node entities for rendering on the world map.
+     */
+    private void registerNodeEntities(WorldMapService wms, List<WorldMapNode> nodes) {
+        for (WorldMapNode node : nodes) {
+            Entity nodeEntity = new Entity();
+            float worldX = node.getPositionX() * WORLD_WIDTH;
+            float worldY = node.getPositionY() * WORLD_HEIGHT;
+            nodeEntity.setPosition(worldX, worldY);
+            WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
+            nodeEntity.addComponent(comp);
+            wms.registerNodeRenderComponent(comp);
+            ServiceLocator.getEntityService().register(nodeEntity);
+        }
+    }
+
+
+    @Override
   public void render(float delta) {
     handleZoomInput();
 
@@ -222,7 +323,7 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
- 
+
   private void enforceCameraZoomStep() {
     CameraComponent cam = renderer.getCamera();
     if (!(cam.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera oc)) {
@@ -402,24 +503,33 @@ public class WorldMapScreen extends BaseScreen {
   }
 
   /** Player enters a node. */
-  private void onNodeEnter(WorldMapNode node) {
-    var ps = ServiceLocator.getProfileService();
-    if (ps != null) {
-      ps.getProfile().setCurrentLevel(node.getRegistrationKey());
-      if (playerEntity != null) {
-        var pos = playerEntity.getPosition();
-        ps.getProfile().setWorldMapX(pos.x);
-        ps.getProfile().setWorldMapY(pos.y);
-      }
-      ps.saveCurrentProfile();
+    /**
+     * Handles when player enters a node.
+     * Does NOT change currentLevel (it always points to last unlocked level).
+     * Only saves current world map position to the profile.
+     */
+    private void onNodeEnter(WorldMapNode node) {
+        var ps = ServiceLocator.getProfileService();
+        if (ps != null && ps.getProfile() != null) {
+            // Save world map position before entering the node
+            if (playerEntity != null) {
+                var pos = playerEntity.getPosition();
+                ps.getProfile().setWorldMapX(pos.x);
+                ps.getProfile().setWorldMapY(pos.y);
+                // Save current zoom level as well
+                ps.getProfile().setWorldMapZoomIdx(zoomIdx);
+            }
+
+            // Don't touch currentLevel — it always stays at the last unlocked level
+            ps.saveCurrentProfile();
+        }
+
+        logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
+        game.setScreen(node.getTargetScreen());
     }
 
-    logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
-    logger.debug("[WorldMapScreen] Set profile current level to: {}", node.getRegistrationKey());
-    game.setScreen(node.getTargetScreen());
-  }
 
-  /** Returns true if the world-map player is currently moving along a path or between nodes. */
+    /** Returns true if the world-map player is currently moving along a path or between nodes. */
   public boolean isPlayerCurrentlyMoving() {
     if (playerEntity == null) return false;
     WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
