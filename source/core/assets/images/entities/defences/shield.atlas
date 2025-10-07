@@ -15,9 +15,21 @@ attack
 attack
   bounds: 298, 0, 298, 394
 attack
-  bounds: 596, 0, 311, 394
+  bounds: 0, 0, 298, 394
 attack
-  bounds: 907, 0, 311, 394
+  bounds: 298, 0, 298, 394
+attack
+  bounds: 0, 0, 298, 394
+attack
+  bounds: 298, 0, 298, 394
+attack
+  bounds: 0, 0, 298, 394
+attack
+  bounds: 298, 0, 298, 394
+attack
+  bounds: 0, 0, 298, 394
+attack
+  bounds: 298, 0, 298, 394
 attack
   bounds: 0, 0, 298, 394
 attack
@@ -27,17 +39,21 @@ attack
 attack
   bounds: 907, 0, 311, 394
 attack
-  bounds: 0, 0, 298, 394
+  bounds: 596, 0, 311, 394
 attack
-  bounds: 298, 0, 298, 394
+  bounds: 907, 0, 311, 394
 attack
   bounds: 596, 0, 311, 394
 attack
   bounds: 907, 0, 311, 394
 attack
-  bounds: 0, 0, 298, 394
+  bounds: 596, 0, 311, 394
 attack
-  bounds: 298, 0, 298, 394
+  bounds: 907, 0, 311, 394
+attack
+  bounds: 596, 0, 311, 394
+attack
+  bounds: 907, 0, 311, 394
 attack
   bounds: 596, 0, 311, 394
 attack
