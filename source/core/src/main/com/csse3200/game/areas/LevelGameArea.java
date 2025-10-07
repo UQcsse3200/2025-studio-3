@@ -410,7 +410,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(Vector2 spawnPos) {
-    Entity projectile = ProjectileFactory.createSlingShot(5, 3f); // damage value
+    Entity projectile = ProjectileFactory.createSlingShot(2, 3f); // damage value
     projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
 
     // Scale the projectile so it’s more visible
@@ -429,11 +429,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnRobotProjectile(Vector2 spawnPos) {
     Entity projectile = ProjectileFactory.createGunnerProjectile(5, 150f);
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 3f);
+    projectile.setPosition(spawnPos.x, spawnPos.y);
 
     projectile.scaleHeight(30f);
     projectile.scaleWidth(30f);
-
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
 
     spawnEntity(projectile);

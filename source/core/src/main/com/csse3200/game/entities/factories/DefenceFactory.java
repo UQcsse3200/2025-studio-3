@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
@@ -74,6 +75,8 @@ public class DefenceFactory {
                 config.getAttackSpeed(),
                 config.getCritChance()))
         .addComponent(animator)
+        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
+        .addComponent(new HitMarkerComponent())
         .addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
