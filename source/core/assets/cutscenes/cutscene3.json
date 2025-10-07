@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {
+      "id": "player",
+      "name": "Player",
+      "poses": {
+        "normal": "cutscenes/data/characters/rob/alice_normal.png"
+      }
+    },
+    {
+      "id": "rob",
+      "name": "Rob",
+      "poses": {
+        "normal": "cutscenes/data/characters/rob/rob_normal.png",
+        "glitch": "cutscenes/data/characters/rob/rob_glitch.png"
+      }
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "poses": {
+        "hologram": "cutscenes/data/characters/rob/alice_hologram.png",
+        "normal": "cutscenes/data/characters/rob/alice_normal.png"
+      }
+    }
+  ],
+  "backgrounds": [
+    { "id": "core_entry",      "image": "cutscenes/data/backgrounds/lab_dark.png" },
+    { "id": "core_datastream", "image": "cutscenes/data/backgrounds/core_city.png" },
+    { "id": "core_overload",   "image": "cutscenes/data/backgrounds/holo_room.png" }
+  ],
+  "cutscene": {
+    "id": "level3_intro_core",
+    "beats": [
+      {
+        "id": "b0",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "background.set", "backgroundId": "core_entry", "transition": "fade", "duration": 300, "await": true }
+        ]
+      },
+      {
+        "id": "b1",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "player", "pose": "normal", "position": "left", "transition": "slide", "duration": 300, "await": true },
+          { "type": "dialogue.show", "characterId": "player", "text": "So this is it… the Core. Every heartbeat of the city runs through here.", "await": true }
+        ]
+      },
+      {
+        "id": "b2",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "rob", "pose": "glitch", "position": "right", "transition": "fade", "duration": 250, "await": true },
+          { "type": "dialogue.show", "characterId": "rob", "text": "Unauthorized entity detected. Access terminated.", "await": true }
+        ]
+      },
+      {
+        "id": "b3",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "player", "text": "Too late for that.", "await": true }
+        ]
+      },
+      {
+        "id": "b4",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "core_datastream", "transition": "fade", "duration": 250, "await": true },
+          { "type": "dialogue.show", "characterId": "player", "text": "Alice’s signal… found it.", "await": true }
+        ]
+      },
+      {
+        "id": "b5",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "left", "transition": "fade", "duration": 250, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Player… they’ve tied me to the failsafe. If the core dies— I die.", "await": true }
+        ]
+      },
+      {
+        "id": "b6",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "core_overload", "transition": "fade", "duration": 250, "await": true },
+          { "type": "dialogue.show", "characterId": "player", "text": "Hang on, Alice. One last firewall.", "await": true }
+        ]
+      },
+      {
+        "id": "b7",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true }
+        ]
+      }
+    ]
+  }
+}
