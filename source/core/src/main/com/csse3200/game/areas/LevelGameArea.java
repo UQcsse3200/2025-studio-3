@@ -76,6 +76,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
 
+  Entity ui;
+
   /**
    * Initialise this LevelGameArea for a specific level.
    *
@@ -157,7 +159,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Spawns the level UI */
   private void displayUI() {
-    Entity ui = new Entity();
+    ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
@@ -537,18 +539,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    // Add entity to tile unless it is an Item
-    selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
-
-    // set scale to render as desired
-    newEntity.scaleHeight(tileSize);
-
-//    if (ServiceLocator.getCurrencyService().canAfford(100)) {
-//      System.out.println("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-//      logger.debug("HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-//    }
-
-
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
       int generatorCost = newEntity.getComponent(GeneratorStatsComponent.class).getCost();
       if (ServiceLocator.getCurrencyService().canAfford(generatorCost)) {
@@ -557,9 +547,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
         spawnScrap(entityPos, spawnInterval, scrapValue);
         ServiceLocator.getCurrencyService().add(-generatorCost);
+
       }
       else {
         logger.info("Not enough scrap for this entity. Need {} but have {}", generatorCost, ServiceLocator.getCurrencyService().get());
+        ui.getEvents().trigger("insufficientScrap");
+
+
+        setSelectedUnit(null);
+        cancelDrag();
         return;
       }
     } else {
@@ -568,22 +564,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         ServiceLocator.getCurrencyService().add(-defenceCost);
       } else {
         logger.info("Not enough scrap for this entity. Need {} but have {}", defenceCost, ServiceLocator.getCurrencyService().get());
+        ui.getEvents().trigger("insufficientScrap");
+
+        setSelectedUnit(null);
+        cancelDrag();
         return;
       }
     }
 
-//    newEntity.getComponent(GeneratorStatsComponent.class).getCost();
-//    System.out.println(newEntity.getComponent(DefenderStatsComponent.class).getCost());
+    // Add entity to tile unless it is an Item
+    selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
 
-//    System.out.println(ServiceLocator.getConfigService().getDefenderConfig(newEntity.toString()).getCost());
-
-
-//    // if entity is a furnace, trigger currency generation at that point
-//    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-//      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-//      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-//      spawnScrap(entityPos, spawnInterval, scrapValue);
-//    }
+    // set scale to render as desired
+    newEntity.scaleHeight(tileSize);
 
     spawnEntity(newEntity);
     // trigger the animation - this will change with more entities
