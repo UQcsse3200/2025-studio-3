@@ -66,10 +66,10 @@ class SpawnRobotTest {
     for (int r = 0; r < ROWS; r++) {
       for (int c = 0; c < COLS; c++) {
         Entity tile =
-                new Entity()
-                        .addComponent(new TileStorageComponent(lvl))
-                        .addComponent(new TileHitboxComponent(5, 5, 0, 0))
-                        .addComponent(new TileInputComponent(lvl));
+            new Entity()
+                .addComponent(new TileStorageComponent(lvl))
+                .addComponent(new TileHitboxComponent(5, 5, 0, 0))
+                .addComponent(new TileInputComponent(lvl));
         tile.getComponent(TileStorageComponent.class).setPosition(r * COLS + c);
         grid.addTile(r * COLS + c, tile);
       }
@@ -116,9 +116,9 @@ class SpawnRobotTest {
       Entity e1 = new Entity();
       Entity e2 = new Entity();
       mocked
-              .when(() -> RobotFactory.createRobotType(any()))
-              .thenReturn(e1) // first call
-              .thenReturn(e2); // second call
+          .when(() -> RobotFactory.createRobotType(any()))
+          .thenReturn(e1) // first call
+          .thenReturn(e2); // second call
 
       lvl.spawnRobot(-5, -7, RobotType.STANDARD);
       assertEquals(worldX(0), e1.getPosition().x, EPS);
