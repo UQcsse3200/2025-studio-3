@@ -10,7 +10,7 @@
   },
 "samuraiBot": {
     "name": "Samurai Bot",
-    "atlasFilePath": "images/entities/enemies/Samurai-bot.atlas",
+    "atlasFilePath": "images/entities/enemies/samurai_Bot.atlas",
     "health": 189,
     "attack": 35,
     "scale": 2.5,

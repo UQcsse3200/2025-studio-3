@@ -82,11 +82,16 @@ public class BossFactory {
                 new AnimationRenderComponent(
                         ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
 
-        // FIX: Renamed animation from "march" to "moveLeft" to match the AI task.
-        animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
-        animator.addAnimation(config.attackType, 0.05f, Animation.PlayMode.LOOP);
-        animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
-
+        boolean isSamurai =config.atlasFilePath.contains("samurai");
+        if (isSamurai) {
+            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
+            animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
+        }else {
+            animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
+            animator.addAnimation("punch", 0.05f, Animation.PlayMode.LOOP);
+            animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
+        }
         ColliderComponent colliderComponent =
                 new ColliderComponent()
                         .setCollisionFilter(
@@ -108,27 +113,42 @@ public class BossFactory {
                         .addComponent(animator);
 
         // FIX: Start with the correct animation name.
-        animator.startAnimation("moveLeft");
+        if (isSamurai) {
+            animator.startAnimation("walk");
+        }
+        else{
+            animator.startAnimation("moveLeft");
+        }
+
+
 
 
         TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
         RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
-        boss.getEvents()
-                .addListener(
-                        "attack",
-                        target -> {
-                            animator.startAnimation(config.attackType);
-
-                            Timer.schedule(
-                                    new Timer.Task() {
-                                        @Override
-                                        public void run() {
-                                            // FIX: Revert to the correct movement animation name after attacking.
-                                            animator.startAnimation("moveLeft");
-                                        }
-                                    },
-                                    1.05f);
-                        });
+        boss.getEvents().addListener(
+                "attack",
+                target -> {
+                    if (isSamurai) {
+                        animator.startAnimation("slash");
+                        Timer.schedule(
+                                new Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        animator.startAnimation("walk");
+                                    }
+                                },
+                                1.8f);
+                        animator.startAnimation("punch");
+                        Timer.schedule(
+                                new Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        animator.startAnimation("march");
+                                    }
+                                },
+                                1.05f);
+                    }
+                });
 
         boss.setScale(config.scale, config.scale);
         return boss;
