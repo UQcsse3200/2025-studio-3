@@ -738,9 +738,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Checks if the level is complete
-   * */
+  /** Checks if the level is complete */
   public void checkLevelComplete() {
     if (isLevelComplete) {
       return;

@@ -13,9 +13,7 @@ public class LevelCompletedWindow extends UIComponent {
   private Window window;
   private boolean isDisplayed = false;
 
-    /**
-     * Creates the level completed window and sets up event listening for level completion.
-     */
+  /** Creates the level completed window and sets up event listening for level completion. */
   @Override
   public void create() {
     super.create();
@@ -31,7 +29,6 @@ public class LevelCompletedWindow extends UIComponent {
         (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
         (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
-
     Label message = new Label("Congratulations!\nPress E to return to the main menu.", skin);
     window.add(message).pad(10).row();
 
@@ -39,10 +36,10 @@ public class LevelCompletedWindow extends UIComponent {
     stage.addActor(window);
   }
 
-    /**
-     * Checks the status of the level completed window and handles input to close it and return to
-     * the main menu.
-     */
+  /**
+   * Checks the status of the level completed window and handles input to close it and return to the
+   * main menu.
+   */
   @Override
   public void update() {
     if (!isDisplayed) return;
@@ -61,18 +58,13 @@ public class LevelCompletedWindow extends UIComponent {
     }
   }
 
-    /**
-     * Displays the level completed window when the level is completed.
-     */
+  /** Displays the level completed window when the level is completed. */
   private void onLevelCompleted() {
     window.setVisible(true);
     isDisplayed = true;
   }
 
-
-    /**
-     * Disposes of the window when the component is disposed.
-     */
+  /** Disposes of the window when the component is disposed. */
   @Override
   public void dispose() {
     if (window != null) {
@@ -85,4 +77,8 @@ public class LevelCompletedWindow extends UIComponent {
   protected void draw(SpriteBatch batch) {
     // Stage handles drawing
   }
+
+    public Window getWindow() {
+        return window;
+    }
 }
