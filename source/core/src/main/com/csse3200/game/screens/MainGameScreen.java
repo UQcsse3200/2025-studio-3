@@ -97,6 +97,7 @@ public class MainGameScreen extends ScreenAdapter {
   private boolean doIntroPan = true;
   private final float panStartX;
   private final float panTargetX;
+  private int test;
 
   /**
    * Constructor for the main game screen.
@@ -105,6 +106,7 @@ public class MainGameScreen extends ScreenAdapter {
    */
   public MainGameScreen(GdxGame game) {
     this.game = game;
+    this.test = 1;
     logger.debug("[MainGameScreen] Initialising main game screen");
 
     level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
@@ -125,25 +127,27 @@ public class MainGameScreen extends ScreenAdapter {
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
+    ServiceLocator.registerGameAreaService(new GameAreaService(level));
 
     loadAssets();
     createUI();
 
     logger.debug("Initialising main game screen entities");
-    gameArea = createGameArea();
+    // gameArea = createGameArea();
     // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
     ServiceLocator.getWaveService()
         .setEnemySpawnCallback(
             (col, row, type) ->
-                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
-    gameArea.create();
+                ServiceLocator.getGameAreaService().getGameArea().spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+    // gameArea.create();
+    ServiceLocator.getGameAreaService().create();
     snapCameraBottomLeft();
     ServiceLocator.getWaveService().initialiseNewWave();
 
     // Setup for camera pan
     var camComp = renderer.getCamera();
     float halfVW = camComp.getCamera().viewportWidth / 2f;
-    float worldWidth = gameArea.getWorldWidth();
+    float worldWidth = ServiceLocator.getGameAreaService().getGameArea().getWorldWidth();
     panStartX = halfVW; // current
     panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
     panElapsed = 0f;
@@ -159,7 +163,7 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
-      gameArea.createWavePreview();
+      ServiceLocator.getGameAreaService().getGameArea().createWavePreview();
     }
 
     if (doIntroPan) {
@@ -181,13 +185,22 @@ public class MainGameScreen extends ScreenAdapter {
         if (t >= 1f) {
           panPhase = PanPhase.DONE;
           doIntroPan = false;
-          gameArea.clearWavePreview();
+          ServiceLocator.getGameAreaService().getGameArea().clearWavePreview();
         }
       }
     }
 
     renderer.render();
-    gameArea.checkGameOver(); // check game-over state
+    ServiceLocator.getGameAreaService().getGameArea().checkGameOver(); // check game-over state
+    test += 1;
+    if (test == 500) {
+        ServiceLocator.getGameAreaService().nextLevel();
+        ServiceLocator.getWaveService().setCurrentLevel(ServiceLocator.getConfigService().getLevelConfig(level).getNextLevel());
+        ServiceLocator.getWaveService().initialiseNewWave();
+        panElapsed = 0f;
+        panPhase = PanPhase.RIGHT;
+        doIntroPan = true;
+    }
   }
 
   @Override
@@ -195,8 +208,8 @@ public class MainGameScreen extends ScreenAdapter {
     renderer.resize(width, height);
     snapCameraBottomLeft();
     logger.trace("Resized renderer: ({} x {})", width, height);
-    if (gameArea != null) {
-      gameArea.resize();
+    if (ServiceLocator.getGameAreaService().getGameArea() != null) {
+      ServiceLocator.getGameAreaService().getGameArea().resize();
     }
   }
 

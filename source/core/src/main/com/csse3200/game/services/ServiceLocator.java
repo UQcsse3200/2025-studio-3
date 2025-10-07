@@ -32,6 +32,7 @@ public class ServiceLocator {
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
   private static WaveService waveService;
+  private static GameAreaService gameAreaService;
   private static SettingsService settingsService;
   private static DiscordRichPresenceService discordRichPresenceService;
 
@@ -169,6 +170,8 @@ public class ServiceLocator {
   public static WaveService getWaveService() {
     return waveService;
   }
+
+  public static GameAreaService getGameAreaService() { return gameAreaService; }
 
   /**
    * Gets the settings service.
@@ -409,6 +412,11 @@ public class ServiceLocator {
   public static void deregisterWaveService() {
     logger.debug("Removing wave service");
     waveService = null;
+  }
+
+  public static void registerGameAreaService(GameAreaService source) {
+    logger.debug("Registering game area service {}", source);
+    gameAreaService = source;
   }
 
   /** Clears all transient services. */
