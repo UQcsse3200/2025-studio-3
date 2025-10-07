@@ -22,7 +22,7 @@
         "name": "Riot Shield",
         "description": "They say his brain is the size of a walnut. Big shield, even bigger heart",
         "assetPath": "images/entities/defences/shield_1.png",
-        "atlasPath": "images/entities/defences/shieldf.atlas",
+        "atlasPath": "images/entities/defences/shield.atlas",
         "projectilePath": null,
         "cost": 150,
         "damage": 0,
