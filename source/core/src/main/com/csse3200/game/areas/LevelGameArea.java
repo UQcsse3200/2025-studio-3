@@ -429,7 +429,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnRobotProjectile(Vector2 spawnPos) {
     Entity projectile = ProjectileFactory.createGunnerProjectile(5, 150f);
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
+    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 3f);
 
     projectile.scaleHeight(30f);
     projectile.scaleWidth(30f);
