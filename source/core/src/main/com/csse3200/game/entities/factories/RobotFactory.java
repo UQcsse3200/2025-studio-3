@@ -162,7 +162,17 @@ public class RobotFactory {
     } else if (config.getAttackType().equals("melee")) {
       robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
     } else {
-      // TODO Arush add your ranged attack task
+      // handle gunner attack type
+      if (config.getName() != null && config.getName().contains("Gunner")) {
+        AITaskComponent ai = robot.getComponent(AITaskComponent.class);
+        if( ai != null) {
+          ai.clearTask(); // clear any existing tasks ensure no clashing in tasks priority
+          // apply gunner robot tasks
+          ai.addTask(new MoveLeftTask(config.getMovementSpeed()));
+          ai.addTask(new GunnerAttackTask(config.getAttackRange(), PhysicsLayer.NPC));
+        }
+      }
+
     }
 
     // Special abilities for specific robot types
