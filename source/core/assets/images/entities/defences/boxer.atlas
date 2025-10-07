@@ -5,18 +5,18 @@ filter: Linear, Linear
 repeat: none
 pma: false
 default
-  bounds: 390, 0, 390, 491
+  bounds: 380, 0, 380, 491
 idle
-  bounds: 390, 0, 390, 491
+  bounds: 380, 0, 380, 491
 attack
-  bounds: 390, 0, 390, 491
+  bounds: 380, 0, 380, 491
 attack
-  bounds: 390, 0, 390, 491
+  bounds: 380, 0, 380, 491
 attack
-  bounds: 390, 0, 390, 491
+  bounds: 380, 0, 380, 491
 attack
-  bounds: 0, 0, 390, 491
+  bounds: 0, 0, 380, 491
 attack
-  bounds: 0, 0, 390, 491
+  bounds: 0, 0, 380, 491
 attack
-  bounds: 0, 0, 390, 491
+  bounds: 0, 0, 380, 491
