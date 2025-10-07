@@ -3,6 +3,7 @@ package com.csse3200.game.entities;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
+import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class WaveManager implements WaveConfigProvider {
   // Callback interface for spawning enemies
   public interface EnemySpawnCallback {
     void spawnEnemy(int col, int row, String robotType);
-    void spawnBoss(int row);
+    void spawnBoss(int row, BossFactory.BossTypes bossType);
   }
 
   // Event listener interface for wave events
@@ -117,9 +118,14 @@ public class WaveManager implements WaveConfigProvider {
 
     setCurrentWave(currentWave + 1);
 
-    if(currentWave==1 && enemySpawnCallback!=null) {
-        logger.info("triggering boss spawn for wave3");
-        enemySpawnCallback.spawnBoss(2);
+    if(enemySpawnCallback!=null) {
+        if (currentWave == 1) {
+            logger.info("triggering boss spawn for wave3");
+            enemySpawnCallback.spawnBoss(2, BossFactory.BossTypes.SCRAP_TITAN);
+        } else if (currentWave == 2) {
+            logger.info("triggering SAMURAI_BOT boss spawn for wave2");
+            enemySpawnCallback.spawnBoss(2, BossFactory.BossTypes.SAMURAI_BOT);
+        }
     }
     waveActive = false; // Wave not active during preparation
     preparationPhaseActive = true;

@@ -21,6 +21,7 @@ import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputDecorator;
@@ -138,9 +139,9 @@ public class MainGameScreen extends ScreenAdapter {
           }
 
           @Override
-          public void spawnBoss(int row) {
+          public void spawnBoss(int row, BossFactory.BossTypes bossType) {
               if (gameArea != null) {
-                  gameArea.spawnBoss(row);
+                  gameArea.spawnBoss(row,bossType);
               }
           }
       });

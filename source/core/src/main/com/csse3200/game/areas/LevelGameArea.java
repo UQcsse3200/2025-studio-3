@@ -398,9 +398,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         spawnEntity(projectile); // adds to area and entity service
     }
 
-    public void spawnBoss(int row) {
-        logger.info("Spawning Boss");
-        Entity boss = BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN);
+    public void spawnBoss(int row,BossFactory.BossTypes bossType) {
+        logger.info("Spawning Boss of type {}",bossType);
+        Entity boss = BossFactory.createBossType(bossType);
 
         int spawnCol = levelCols ;
         int spawnRow = Math.clamp(row,0,levelRows-1); // Bottom row for now
