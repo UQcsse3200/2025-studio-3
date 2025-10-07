@@ -215,35 +215,41 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Setter for selected_unit</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnItem(com.csse3200.game.components.items.ItemComponent,com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnItem</a><wbr>(<a href="../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item,
+ com.badlogic.gdx.math.Vector2&nbsp;entityPos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns item at the selected tile and triggers the relevant item effect to occur.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
  int&nbsp;row,
  <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawn a robot at the specified grid location.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns a robot directly on top of an existing defence (placed unit) on the grid.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds a unit to the grid</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts stage (mouse/screen) coordinates into world (entity placement) coordinates</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts world (entity placement) coordinates into stage (mouse/screen) coordinates</div>
 </div>
 </div>
@@ -393,6 +399,19 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <dd><code><a href="AreaAPI.html#spawnUnit(int)">spawnUnit</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>position</code> - the grid tile for spawning</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnItem(com.csse3200.game.components.items.ItemComponent,com.badlogic.gdx.math.Vector2)">
+<h3>spawnItem</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnItem</span><wbr><span class="parameters">(<a href="../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item,
+ com.badlogic.gdx.math.Vector2&nbsp;entityPos)</span></div>
+<div class="block">Spawns item at the selected tile and triggers the relevant item effect to occur.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>item</code> - the specific item type (component)</dd>
+<dd><code>entityPos</code> - the tile position on which the item was placed</dd>
 </dl>
 </section>
 </li>
