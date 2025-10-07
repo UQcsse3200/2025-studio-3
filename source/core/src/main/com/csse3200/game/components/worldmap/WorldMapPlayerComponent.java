@@ -106,7 +106,23 @@ public class WorldMapPlayerComponent extends UIComponent {
     handleNodeInteraction();
   }
 
-  // --------------------------------------------------------------------- //
+
+    private void persistWorldPos() {
+        var ps = ServiceLocator.getProfileService();
+        if (ps == null || ps.getProfile() == null) return;
+
+        var pos = entity.getPosition();
+        ps.getProfile().setWorldMapX(pos.x);
+        ps.getProfile().setWorldMapY(pos.y);
+
+        try {
+            ps.saveCurrentProfile(); // ★ 立刻落盘
+        } catch (Exception e) {
+            logger.warn("[WorldMapPlayerComponent] Failed to save position: {}", e.getMessage());
+        }
+    }
+
+    // --------------------------------------------------------------------- //
   // Movement
   // --------------------------------------------------------------------- //
 
@@ -152,6 +168,7 @@ public class WorldMapPlayerComponent extends UIComponent {
       pos.set(targetPosition);
       isMoving = false;
       targetPosition = null;
+      persistWorldPos();
     } else {
       Vector2 step = toTarget.scl(PLAYER_SPEED * delta / Math.max(dist, 1e-4f));
       pos.add(step);
@@ -561,6 +578,8 @@ public class WorldMapPlayerComponent extends UIComponent {
       // Reached current waypoint: go to next (or finish)
       waypointIndex++;
       if (waypointIndex >= waypointQueue.size()) {
+        entity.setPosition(curTarget);
+        persistWorldPos();
         pathMoving = false;
         waypointIndex = -1;
         waypointQueue.clear();

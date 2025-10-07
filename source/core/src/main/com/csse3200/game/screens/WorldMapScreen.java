@@ -69,12 +69,12 @@ public class WorldMapScreen extends BaseScreen {
       new java.util.HashSet<>(java.util.List.of("skills", "shop", "minigames"));
 
   public WorldMapScreen(GdxGame game) {
-    super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
-    logger.debug("[WorldMapScreen] Initializing world map");
-    loadTextures();
-    createBackground();
-    createNodes();
-    createPlayer();
+      super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
+      logger.debug("[WorldMapScreen] Initializing world map");
+      loadTextures();
+      createBackground();
+      createNodes();
+      createPlayer();
   }
 
   @Override
@@ -356,14 +356,6 @@ public class WorldMapScreen extends BaseScreen {
     updateCamera();
     super.render(delta);
 
-    // Persist position/zoom for resume
-    var profileService = ServiceLocator.getProfileService();
-    if (profileService != null && playerEntity != null) {
-      var pos = playerEntity.getPosition();
-      profileService.getProfile().setWorldMapX(pos.x);
-      profileService.getProfile().setWorldMapY(pos.y);
-      profileService.getProfile().setWorldMapZoomIdx(zoomIdx);
-    }
   }
 
   private void enforceCameraZoomStep() {
@@ -553,14 +545,6 @@ public class WorldMapScreen extends BaseScreen {
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
       // Save world map position before entering the node
-      if (playerEntity != null) {
-        var pos = playerEntity.getPosition();
-        ps.getProfile().setWorldMapX(pos.x);
-        ps.getProfile().setWorldMapY(pos.y);
-        // Save current zoom level as well
-        ps.getProfile().setWorldMapZoomIdx(zoomIdx);
-      }
-
       // Don't touch currentLevel — it always stays at the last unlocked level
       ps.saveCurrentProfile();
     }
