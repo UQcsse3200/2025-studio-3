@@ -15,7 +15,6 @@ import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
@@ -157,7 +156,8 @@ public class DossierDisplay extends UIComponent {
 
   /** Sets up the buttons to swap between humans and robots. */
   private Table makeSwapBtn() {
-    TextButton robotsBtn = ButtonFactory.createLargeButton("Robots");
+    int swapButtonWidth = 300;
+    TextButton robotsBtn = ui.primaryButton("Robots", swapButtonWidth);
     robotsBtn.addListener(
         new ChangeListener() {
           @Override
@@ -169,7 +169,7 @@ public class DossierDisplay extends UIComponent {
           }
         });
 
-    TextButton humansBtn = ButtonFactory.createLargeButton("Humans");
+    TextButton humansBtn = ui.primaryButton("Humans", swapButtonWidth);
     humansBtn.addListener(
         new ChangeListener() {
           @Override
@@ -326,6 +326,7 @@ public class DossierDisplay extends UIComponent {
    */
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
+    buttonRow.bottom().padBottom(60f);
     ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
@@ -334,7 +335,7 @@ public class DossierDisplay extends UIComponent {
       String entityKey = entities[i];
       // Use the display name for button text
       String displayName = getEntityName(entityKey);
-      TextButton btn = ButtonFactory.createLargeButton(displayName);
+      TextButton btn = ui.secondaryButton(displayName, buttonWidth);
       group.add(btn);
       buttonRow.add(btn).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5);
 

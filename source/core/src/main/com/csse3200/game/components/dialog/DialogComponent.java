@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import net.dermetfan.utils.Pair;
@@ -142,7 +141,7 @@ public class DialogComponent extends UIComponent {
     switch (dialogType) {
       // Info dialog buttons
       case INFO:
-        TextButton okButton = ButtonFactory.createDialogButton("OK");
+        TextButton okButton = ui.secondaryButton("OK", 120f);
         okButton.addListener(
             new ClickListener() {
               @Override
@@ -161,7 +160,7 @@ public class DialogComponent extends UIComponent {
 
       // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = ButtonFactory.createDialogButton("Cancel");
+        TextButton cancelButton = ui.secondaryButton("Cancel", 150f);
         cancelButton.addListener(
             new ClickListener() {
               @Override
@@ -173,7 +172,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton continueButton = ButtonFactory.createDialogButton("Continue");
+        TextButton continueButton = ui.secondaryButton("Continue", 120f);
         continueButton.addListener(
             new ClickListener() {
               @Override
@@ -197,7 +196,7 @@ public class DialogComponent extends UIComponent {
 
       // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = ButtonFactory.createDialogButton("OK");
+        TextButton okButtonError = ui.secondaryButton("OK", 120f);
         okButtonError.addListener(
             new ClickListener() {
               @Override
@@ -216,7 +215,7 @@ public class DialogComponent extends UIComponent {
 
       // Skill dialog buttons
       case SKILL:
-        TextButton closeButton = ButtonFactory.createDialogButton("Close");
+        TextButton closeButton = ui.secondaryButton("Close", 120f);
         closeButton.addListener(
             new ClickListener() {
               @Override
@@ -228,7 +227,7 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        TextButton unlockButton = ButtonFactory.createDialogButton("Unlock");
+        TextButton unlockButton = ui.secondaryButton("Unlock", 150f);
         unlockButton.addListener(
             new ClickListener() {
               @Override
