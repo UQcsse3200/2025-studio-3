@@ -7,3 +7,4 @@
 - Generative AI was used to resolve merge conflicts
 ## Danny
 - Generative AI was used to help calculate the time difference in displaying the insufficient scrap message
+- Generative AI was used to create the mocks when testing the defender stats component tests

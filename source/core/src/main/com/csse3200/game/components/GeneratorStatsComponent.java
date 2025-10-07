@@ -68,7 +68,11 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
   }
 
   public void setCost(int cost) {
-    this.cost = cost;
+    if (cost < 0) {
+      this.cost = 0;
+    } else {
+      this.cost = cost;
+    }
   }
 
   public int getCost() {
