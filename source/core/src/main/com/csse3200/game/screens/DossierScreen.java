@@ -133,6 +133,8 @@ public class DossierScreen extends ScreenAdapter {
     logger.info("[DossierScreen] Loading {} assets for dossier screen", assets.size());
     if (!assets.isEmpty()) {
       resourceService.loadTextures(assets.toArray(new String[0]));
+      // Load page turn sound
+      resourceService.loadSounds(new String[] {"sounds/dossier_page_turn.mp3"});
       resourceService.loadAll();
     }
   }
