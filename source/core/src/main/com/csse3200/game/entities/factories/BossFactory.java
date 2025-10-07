@@ -86,6 +86,7 @@ public class BossFactory {
         if (isSamurai) {
             animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
             animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("sword", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
         }else {
             animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
@@ -112,7 +113,6 @@ public class BossFactory {
                         .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
                         .addComponent(animator);
 
-        // FIX: Start with the correct animation name.
         if (isSamurai) {
             animator.startAnimation("walk");
         }
@@ -126,21 +126,35 @@ public class BossFactory {
         TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
         RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
 
-
+final int[] samuraiAttackCount = {0};
         boss.getEvents().addListener(
                 "attack",
                 target -> {
                     if (isSamurai) {
-                        animator.startAnimation("slash");
-                        Timer.schedule(
-                                new Timer.Task() {
-                                    @Override
-                                    public void run() {
-                                        animator.startAnimation("walk");
-                                    }
-                                },
-                                1.8f);
-                    }else{
+                        samuraiAttackCount[0]++;
+
+                        if (samuraiAttackCount[0] % 3 == 0) {
+                            animator.startAnimation("slash");
+                            Timer.schedule(
+                                    new Timer.Task() {
+                                        @Override
+                                        public void run() {
+                                            animator.startAnimation("walk");
+                                        }
+                                    },
+                                    1.8f);
+                        } else {
+                            animator.startAnimation("sword");
+                            Timer.schedule(
+                                    new Timer.Task() {
+                                        @Override
+                                        public void run() {
+                                            animator.startAnimation("walk");
+                                        }
+                                    },
+                                    1.8f);
+                        }
+                    } else {
                         animator.startAnimation("punch");
                         Timer.schedule(
                                 new Timer.Task() {
