@@ -70,14 +70,13 @@ public class LevelMapTutorial extends UIComponent {
 
     Table contentTable = new Table();
     contentTable.setFillParent(true);
-    contentTable.align(Align.center);
 
     messageLabel = TypographyFactory.createSubtitle(tutorialMessages[step], Color.WHITE);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
 
     contentTable.add(messageLabel).width(dialogTable.getWidth() - 100f).expand().center().row();
-    dialogTable.add(contentTable).expand().fill().row();
+    dialogTable.add(contentTable).expand().fill();
     dialogTable.align(Align.center);
 
     // next button
