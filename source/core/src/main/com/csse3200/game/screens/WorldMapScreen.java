@@ -544,9 +544,11 @@ public class WorldMapScreen extends BaseScreen {
   private void onNodeEnter(WorldMapNode node) {
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
-      // Save world map position before entering the node
-      // Don't touch currentLevel — it always stays at the last unlocked level
-      ps.saveCurrentProfile();
+        String key = node.getRegistrationKey();
+        if (key != null && key.startsWith(LEVEL_PREFIX)) {
+            ps.getProfile().setCurrentLevel(key);
+        }
+        ps.saveCurrentProfile();
     }
 
     logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
