@@ -70,7 +70,7 @@
         "atlasPath": "images/entities/defences/shadow.atlas",
         "projectilePath": "images/effects/shock.png",
         "cost": 100,
-        "damage": 1,
+        "damage": 2,
         "direction": "left",
         "numSprites": 4,
         "attackSpeed": 1.5,

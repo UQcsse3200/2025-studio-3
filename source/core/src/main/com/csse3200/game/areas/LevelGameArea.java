@@ -3,10 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -411,6 +408,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         int max_range = 9 - col;
         int num = random.nextInt(max_range-1) + 2; // pick random num between 2 and 7
         projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
+
+        projectile.getEvents().addListener("despawnShell", (e) -> {
+            Vector2 pos = projectile.getPosition();
+            int damage = 5; // or configurable
+            float radius = tileSize; // 1 tile radius
+            damageRobotsAtPosition(pos, radius, damage);
+        });
     } else {
         projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     }
@@ -421,6 +425,51 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
     spawnEntity(projectile); // adds to area and entity service
   }
+
+    /**
+     * Deal damage to all robots in a circular area around the given world position.
+     *
+     * @param landingPos The world coordinates where the projectile landed
+     * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
+     * @param damage Amount of damage to apply
+     */
+    public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
+        if (robots.isEmpty()) return;
+
+        List<Entity> robotsToRemove = new ArrayList<>();
+
+        for (Entity robot : robots) {
+            CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
+            if (stats == null) continue;
+
+            Vector2 robotPos = robot.getPosition();
+            float dx = robotPos.x - landingPos.x;
+            float dy = robotPos.y - landingPos.y;
+            float distanceSq = dx * dx + dy * dy;
+
+            if (distanceSq <= radius * radius) {
+                // Apply damage by subtracting health
+                stats.addHealth(-damage);
+
+                logger.info(
+                        "Mortar shell hit robot at ({}, {}) for {} damage",
+                        robotPos.x,
+                        robotPos.y,
+                        damage);
+
+                // Mark robot for removal if dead
+                if (stats.isDead()) {
+                    robotsToRemove.add(robot);
+                }
+            }
+        }
+
+        // Despawn dead robots
+        for (Entity r : robotsToRemove) {
+            requestDespawn(r);
+            robots.remove(r);
+        }
+    }
 
   /**
    * Getter for selected_unit

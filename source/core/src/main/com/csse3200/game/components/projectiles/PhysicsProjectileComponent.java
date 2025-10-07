@@ -65,7 +65,14 @@ public class PhysicsProjectileComponent extends Component {
     // When it "lands" at or below the starting Y, trigger event and destroy
     if (pos.y <= startPos.y) {
       getEntity().getEvents().trigger("projectileLanded", pos);
+      handleImpact(pos);
       getEntity().dispose();
     }
   }
+
+    private void handleImpact(Vector2 impactPos) {
+        if (getEntity() != null && getEntity().getEvents() != null) {
+            getEntity().getEvents().trigger("despawnShell", impactPos);
+        }
+    }
 }
