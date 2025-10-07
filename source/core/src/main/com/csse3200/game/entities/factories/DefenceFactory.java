@@ -45,9 +45,9 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
-      if (config.getName().equals("Mortar")) {
-          defender.setProperty("unitType", "mortar");
-      }
+    if (config.getName().equals("Mortar")) {
+      defender.setProperty("unitType", "mortar");
+    }
 
     AITaskComponent tasks = getTaskComponent(config);
     defender.addComponent(tasks);

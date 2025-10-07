@@ -70,9 +70,9 @@ public class PhysicsProjectileComponent extends Component {
     }
   }
 
-    private void handleImpact(Vector2 impactPos) {
-        if (getEntity() != null && getEntity().getEvents() != null) {
-            getEntity().getEvents().trigger("despawnShell", impactPos);
-        }
+  private void handleImpact(Vector2 impactPos) {
+    if (getEntity() != null && getEntity().getEvents() != null) {
+      getEntity().getEvents().trigger("despawnShell", impactPos);
     }
+  }
 }

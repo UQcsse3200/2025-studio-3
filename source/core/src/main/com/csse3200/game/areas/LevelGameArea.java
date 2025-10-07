@@ -403,20 +403,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile.scaleWidth(size); // set the width in world units
 
     if (tag.getType() == ProjectileType.SHELL) {
-        Random random = new Random();
-        int col = (int) ((spawnPos.x - xOffset) / tileSize);
-        int max_range = 9 - col;
-        int num = random.nextInt(max_range-1) + 2; // pick random num between 2 and 7
-        projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
+      Random random = new Random();
+      int col = (int) ((spawnPos.x - xOffset) / tileSize);
+      int max_range = 9 - col;
+      int num = random.nextInt(max_range - 1) + 2; // pick random num between 2 and 7
+      projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 
-        projectile.getEvents().addListener("despawnShell", (e) -> {
-            Vector2 pos = projectile.getPosition();
-            int damage = 5; // or configurable
-            float radius = tileSize; // 1 tile radius
-            damageRobotsAtPosition(pos, radius, damage);
-        });
+      projectile
+          .getEvents()
+          .addListener(
+              "despawnShell",
+              (e) -> {
+                Vector2 pos = projectile.getPosition();
+                int damage = 5; // or configurable
+                float radius = tileSize; // 1 tile radius
+                damageRobotsAtPosition(pos, radius, damage);
+              });
     } else {
-        projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+      projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     }
     if (tag != null
         && tag.getType() != ProjectileType.HARPOON_PROJECTILE
@@ -426,50 +430,47 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(projectile); // adds to area and entity service
   }
 
-    /**
-     * Deal damage to all robots in a circular area around the given world position.
-     *
-     * @param landingPos The world coordinates where the projectile landed
-     * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
-     * @param damage Amount of damage to apply
-     */
-    public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
-        if (robots.isEmpty()) return;
+  /**
+   * Deal damage to all robots in a circular area around the given world position.
+   *
+   * @param landingPos The world coordinates where the projectile landed
+   * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
+   * @param damage Amount of damage to apply
+   */
+  public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
+    if (robots.isEmpty()) return;
 
-        List<Entity> robotsToRemove = new ArrayList<>();
+    List<Entity> robotsToRemove = new ArrayList<>();
 
-        for (Entity robot : robots) {
-            CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
-            if (stats == null) continue;
+    for (Entity robot : robots) {
+      CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
+      if (stats == null) continue;
 
-            Vector2 robotPos = robot.getPosition();
-            float dx = robotPos.x - landingPos.x;
-            float dy = robotPos.y - landingPos.y;
-            float distanceSq = dx * dx + dy * dy;
+      Vector2 robotPos = robot.getPosition();
+      float dx = robotPos.x - landingPos.x;
+      float dy = robotPos.y - landingPos.y;
+      float distanceSq = dx * dx + dy * dy;
 
-            if (distanceSq <= radius * radius) {
-                // Apply damage by subtracting health
-                stats.addHealth(-damage);
+      if (distanceSq <= radius * radius) {
+        // Apply damage by subtracting health
+        stats.addHealth(-damage);
 
-                logger.info(
-                        "Mortar shell hit robot at ({}, {}) for {} damage",
-                        robotPos.x,
-                        robotPos.y,
-                        damage);
+        logger.info(
+            "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
 
-                // Mark robot for removal if dead
-                if (stats.isDead()) {
-                    robotsToRemove.add(robot);
-                }
-            }
+        // Mark robot for removal if dead
+        if (stats.isDead()) {
+          robotsToRemove.add(robot);
         }
-
-        // Despawn dead robots
-        for (Entity r : robotsToRemove) {
-            requestDespawn(r);
-            robots.remove(r);
-        }
+      }
     }
+
+    // Despawn dead robots
+    for (Entity r : robotsToRemove) {
+      requestDespawn(r);
+      robots.remove(r);
+    }
+  }
 
   /**
    * Getter for selected_unit
@@ -517,7 +518,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Get the tile at the spawn coordinates
     Entity selectedTile = grid.getTile(position);
     if ("mortar".equals(newEntity.getProperty("unitType")) && tileX >= 1000) {
-       return;
+      return;
     }
     if (selectedTile == null) {
       logger.warn("No tile entity found at index {}", position);
