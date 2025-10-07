@@ -15,6 +15,7 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   private int maxTeleports;
   private int invulnerabilityMs;
   private int coinsRewarded;
+  private String attackType;
   private float attackRange;
   private float attackSpeed;
   private String projectileType;
@@ -56,6 +57,15 @@ public class BaseEnemyConfig extends BaseEntityConfig {
    */
   public boolean isTeleportRobot() {
     return maxTeleports > 0;
+  }
+
+  /**
+   * Gets the attack type value for this entity.
+   *
+   * @return the attack type value
+   */
+  public String getAttackType() {
+    return attackType;
   }
 
   /**

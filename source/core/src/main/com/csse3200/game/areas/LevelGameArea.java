@@ -637,7 +637,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                         requestDespawn(newEntity);
                         robots.remove(newEntity);
                       });
-              logger.info("Unit spawned at position {}", position);
+              logger.info("Projectile spawned at position {}", position);
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);
