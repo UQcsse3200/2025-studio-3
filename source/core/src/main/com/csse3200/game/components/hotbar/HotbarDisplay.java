@@ -88,26 +88,30 @@ public class HotbarDisplay extends UIComponent {
 
       slotImages.add(tempUnit);
 
+      // Get the cost of the entity
       Entity entity = unit.getValue().get();
-      int entityCost = 0;
-      if (entity.getComponent(GeneratorStatsComponent.class) != null) {
-        entityCost = entity.getComponent(GeneratorStatsComponent.class).getCost();
-      } else if (entity.getComponent(DefenderStatsComponent.class) != null) {
-        entityCost = entity.getComponent(DefenderStatsComponent.class).getCost();
+      GeneratorStatsComponent generator = entity.getComponent(GeneratorStatsComponent.class);
+      DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
+      int entityCost;
+
+      if (generator != null) {
+        entityCost = generator.getCost();
+      } else {
+        entityCost = defender.getCost();
       }
+
+      // Handles displaying the cost in the hotbar
       Label displayCost = new Label(String.valueOf(entityCost), skin);
 
       displayCost.setPosition(
               tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
-              -displayCost.getPrefHeight() - 5f
-      );
+              -displayCost.getPrefHeight() - 5f);
 
       slot.add(tempUnit).row();
       slot.add(displayCost);
       slot.setPosition(currentX, y);
 
       currentX += cellWidth;
-
 
       // listener for selection/use
       tempUnit.addListener(
@@ -211,8 +215,8 @@ public class HotbarDisplay extends UIComponent {
           }
         });
 
+    // Sets a placeholder message and an event to be called from other classes
     insufficientScrapMessage = new Label("", skin);
-    insufficientScrapMessage.setColor(Color.RED);
     insufficientScrapMessage.setVisible(false);
     hotbarTable.add(insufficientScrapMessage).padTop(5f);
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
@@ -270,12 +274,14 @@ public class HotbarDisplay extends UIComponent {
     game.cancelDrag();
   }
 
+  /** Displays a message when called and starts a timer. */
   private void insufficientScrap() {
     insufficientScrapMessage.setText("Not enough scrap!");
     insufficientScrapMessage.setVisible(true);
     insufficientScrapStartTime = ServiceLocator.getTimeSource().getTime();
-
   }
+
+  /** Handles how long the message gets displayed for. */
   @Override
   public void update() {
     // Hide message after 2 seconds

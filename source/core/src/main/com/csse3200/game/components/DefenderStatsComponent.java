@@ -26,6 +26,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private int critChance;
 
+  /** Scrap cost of the defender. */
   private int cost;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
@@ -60,6 +61,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param state the current combat/behavioural state
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
+   * @param cost the scrap cost of the defender
    */
   public DefenderStatsComponent(
       int health, int baseAttack, int type, int range, int state, int attackSpeed, int critChance, int cost) {
@@ -144,6 +146,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     return critChance;
   }
 
+  /**
+   * Sets the scrap cost of the defender. If the provided value is negative, the cost is set to 0.
+   *
+   * @param cost new cost value.
+   */
   public void setCost(int cost) {
     if (cost < 0) {
       this.cost = 0;
@@ -152,6 +159,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     }
   }
 
+  /**
+   * Returns the scrap cost of the defender.
+   *
+   * @return the cost amount.
+   */
   public int getCost() {
     return cost;
   }

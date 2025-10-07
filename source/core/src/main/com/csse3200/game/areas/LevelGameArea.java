@@ -539,37 +539,32 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      int generatorCost = newEntity.getComponent(GeneratorStatsComponent.class).getCost();
-      if (ServiceLocator.getCurrencyService().canAfford(generatorCost)) {
-        // trigger currency generation at that point
-        int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-        int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-        spawnScrap(entityPos, spawnInterval, scrapValue);
-        ServiceLocator.getCurrencyService().add(-generatorCost);
+    GeneratorStatsComponent generator =  newEntity.getComponent(GeneratorStatsComponent.class);
+    DefenderStatsComponent defence = newEntity.getComponent(DefenderStatsComponent.class);
 
-      }
-      else {
-        logger.info("Not enough scrap for this entity. Need {} but have {}", generatorCost, ServiceLocator.getCurrencyService().get());
-        ui.getEvents().trigger("insufficientScrap");
-
-
-        setSelectedUnit(null);
-        cancelDrag();
-        return;
-      }
+    // Get cost based on the entity the player clicks
+    int cost;
+    if (generator != null) {
+      cost = generator.getCost();
     } else {
-      int defenceCost = newEntity.getComponent(DefenderStatsComponent.class).getCost();
-      if (ServiceLocator.getCurrencyService().canAfford(defenceCost)) {
-        ServiceLocator.getCurrencyService().add(-defenceCost);
-      } else {
-        logger.info("Not enough scrap for this entity. Need {} but have {}", defenceCost, ServiceLocator.getCurrencyService().get());
-        ui.getEvents().trigger("insufficientScrap");
+      cost = defence.getCost();
+    }
 
-        setSelectedUnit(null);
-        cancelDrag();
-        return;
-      }
+    // Checks if the player has sufficient scrap
+    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
+      logger.info("Not enough scrap for this entity. Need {} but have {}", cost, ServiceLocator.getCurrencyService().get());
+      ui.getEvents().trigger("insufficientScrap");
+      setSelectedUnit(null);
+      cancelDrag();
+      return;
+    }
+
+    ServiceLocator.getCurrencyService().add(-cost);
+
+    if (generator != null) {
+      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+      spawnScrap(entityPos, spawnInterval, scrapValue);
     }
 
     // Add entity to tile unless it is an Item
