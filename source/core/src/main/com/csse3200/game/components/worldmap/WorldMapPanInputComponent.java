@@ -5,9 +5,9 @@ import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.screens.WorldMapScreen;
 
 /**
- * Enables grab-and-drag panning of the world map camera.
- * This component allows the user to move the camera manually when not following the player.
- * Uses a lower priority than the Stage InputDecorator so that UI elements can consume input first.
+ * Enables grab-and-drag panning of the world map camera. This component allows the user to move the
+ * camera manually when not following the player. Uses a lower priority than the Stage
+ * InputDecorator so that UI elements can consume input first.
  */
 public class WorldMapPanInputComponent extends InputComponent {
 
@@ -22,7 +22,7 @@ public class WorldMapPanInputComponent extends InputComponent {
   /**
    * Constructor.
    *
-   * @param screen   Reference to the world map screen to pan
+   * @param screen Reference to the world map screen to pan
    * @param priority Input handling priority (Stage typically uses 10)
    */
   public WorldMapPanInputComponent(WorldMapScreen screen, int priority) {
@@ -31,8 +31,8 @@ public class WorldMapPanInputComponent extends InputComponent {
   }
 
   /**
-   * Called when the user presses a mouse button or touches the screen.
-   * Starts a drag if the appropriate button is pressed.
+   * Called when the user presses a mouse button or touches the screen. Starts a drag if the
+   * appropriate button is pressed.
    *
    * @return false – event is not consumed so UI can still receive clicks.
    */
@@ -57,8 +57,8 @@ public class WorldMapPanInputComponent extends InputComponent {
   }
 
   /**
-   * Called continuously while the user drags the mouse or finger.
-   * Moves the camera view accordingly.
+   * Called continuously while the user drags the mouse or finger. Moves the camera view
+   * accordingly.
    *
    * @return false – we do not consume the event to allow UI drag events as well.
    */
@@ -85,8 +85,8 @@ public class WorldMapPanInputComponent extends InputComponent {
   }
 
   /**
-   * Called when the user releases a pressed mouse button or lifts the finger.
-   * Ends the dragging operation if active.
+   * Called when the user releases a pressed mouse button or lifts the finger. Ends the dragging
+   * operation if active.
    *
    * @return false – event is not consumed so UI receives release/clicks.
    */

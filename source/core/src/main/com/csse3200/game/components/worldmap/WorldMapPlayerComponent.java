@@ -11,27 +11,24 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.CompletableFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Handles player logic on the World Map:
- *  - JSON-path based movement between nodes (W/A/S/D graph)
- *  - Legacy directional navigation as a fallback
- *  - Nearby-node detection & E-to-enter prompt
- *  - Drawing the player sprite
+ * Handles player logic on the World Map: - JSON-path based movement between nodes (W/A/S/D graph) -
+ * Legacy directional navigation as a fallback - Nearby-node detection & E-to-enter prompt - Drawing
+ * the player sprite
  *
- * This version is refactored to reduce cognitive complexity and
- * address common SonarQube maintainability issues.
+ * <p>This version is refactored to reduce cognitive complexity and address common SonarQube
+ * maintainability issues.
  */
 public class WorldMapPlayerComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapPlayerComponent.class);
@@ -91,8 +88,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   @Override
   public void create() {
     super.create();
-    playerTexture = ServiceLocator.getResourceService()
-        .getAsset("images/entities/character.png", Texture.class);
+    playerTexture =
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class);
 
     // Resolve a few special nodes used by legacy transitions
     resolveSpecialNodes();
@@ -113,10 +111,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   // --------------------------------------------------------------------- //
 
   /**
-   * Top-level movement dispatch:
-   * 1) If following a JSON path → tick once.
-   * 2) Else if moving towards a free target → tick once.
-   * 3) Else try start a JSON path from the current node based on WASD.
+   * Top-level movement dispatch: 1) If following a JSON path → tick once. 2) Else if moving towards
+   * a free target → tick once. 3) Else try start a JSON path from the current node based on WASD.
    * 4) Else fallback to legacy directional navigation.
    */
   private void handleMovement() {
@@ -177,8 +173,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /**
-   * Try to start a JSON path from the node the player is currently standing on.
-   * Returns true if a path was started (and applies an initial tick for snappier feel).
+   * Try to start a JSON path from the node the player is currently standing on. Returns true if a
+   * path was started (and applies an initial tick for snappier feel).
    */
   private boolean tryStartJsonPathFromNode(String pressed, float delta) {
     Vector2 cur = entity.getPosition();
@@ -214,23 +210,21 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /**
-   * Fallback: legacy directional navigation.
-   * D → nearest node strictly to the right (levels only)
-   * A → nearest node strictly to the left  (levels only)
-   * W → Town if currently at Level 3
-   * S → Level 3 if currently at Town
+   * Fallback: legacy directional navigation. D → nearest node strictly to the right (levels only) A
+   * → nearest node strictly to the left (levels only) W → Town if currently at Level 3 S → Level 3
+   * if currently at Town
    */
   private void handleLegacyDirectionalNavigation() {
     Vector2 position = entity.getPosition();
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
-      WorldMapNode right = findDirectionalNeighbor(position, /*toRight=*/true);
+      WorldMapNode right = findDirectionalNeighbor(position, /* toRight= */ true);
       if (right != null) startFreeMoveTo(getWorldCoords(right));
       return;
     }
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
-      WorldMapNode left = findDirectionalNeighbor(position, /*toRight=*/false);
+      WorldMapNode left = findDirectionalNeighbor(position, /* toRight= */ false);
       if (left != null) startFreeMoveTo(getWorldCoords(left));
       return;
     }
@@ -242,10 +236,10 @@ public class WorldMapPlayerComponent extends UIComponent {
       return;
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.S)) {
-      if (isAtNode(townNode, position) && levelThreeNode != null) {
-        startFreeMoveTo(getWorldCoords(levelThreeNode));
-      }
+    if (Gdx.input.isKeyJustPressed(Input.Keys.S)
+        && isAtNode(townNode, position)
+        && levelThreeNode != null) {
+      startFreeMoveTo(getWorldCoords(levelThreeNode));
     }
   }
 
@@ -264,8 +258,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   // --------------------------------------------------------------------- //
 
   /**
-   * Called by click-navigation to move to a target node along the JSON path graph.
-   * The waypoints list will be rebuilt and followed next frames.
+   * Called by click-navigation to move to a target node along the JSON path graph. The waypoints
+   * list will be rebuilt and followed next frames.
    */
   public boolean moveToNode(WorldMapNode target) {
     if (target == null) return false;
@@ -323,7 +317,8 @@ public class WorldMapPlayerComponent extends UIComponent {
       String u = q.removeFirst();
       for (String d : DIRS) {
         WorldMapService.PathDef def = svc.getPath(u, d);
-        if (def == null || def.next == null || prev.containsKey(def.next)) continue; // <= single continue in loop
+        if (def == null || def.next == null || prev.containsKey(def.next))
+          continue; // <= single continue in loop
         prev.put(def.next, new Prev(u, def));
         q.addLast(def.next);
       }
@@ -346,7 +341,11 @@ public class WorldMapPlayerComponent extends UIComponent {
   private static final class Prev {
     final String prevKey;
     final WorldMapService.PathDef def;
-    Prev(String prevKey, WorldMapService.PathDef def) { this.prevKey = prevKey; this.def = def; }
+
+    Prev(String prevKey, WorldMapService.PathDef def) {
+      this.prevKey = prevKey;
+      this.def = def;
+    }
   }
 
   // --------------------------------------------------------------------- //
@@ -363,24 +362,25 @@ public class WorldMapPlayerComponent extends UIComponent {
       float bestY = Float.NEGATIVE_INFINITY;
       for (WorldMapNode n : svc.getAllNodes()) {
         float y = n.getPositionY();
-        if (y > bestY) { bestY = y; townNode = n; }
+        if (y > bestY) {
+          bestY = y;
+          townNode = n;
+        }
       }
     }
   }
 
   /**
-   * Finds the horizontally nearest neighbour strictly to the left/right (excluding Town).
-   * Rewritten to:
-   *  - keep at most ONE 'continue' in the loop (java:S135)
-   *  - merge nested conditions (java:S1066)
-   *  - keep the control flow flat to lower complexity (java:S3776)
+   * Finds the horizontally nearest neighbour strictly to the left/right (excluding Town). Rewritten
+   * to: - keep at most ONE 'continue' in the loop (java:S135) - merge nested conditions
+   * (java:S1066) - keep the control flow flat to lower complexity (java:S3776)
    */
   private WorldMapNode findDirectionalNeighbor(Vector2 pos, boolean toRight) {
     WorldMapService svc = ServiceLocator.getWorldMapService();
     float worldX = pos.x;
 
     WorldMapNode best = null;
-    float bestPrimary = Float.MAX_VALUE;   // |dx|
+    float bestPrimary = Float.MAX_VALUE; // |dx|
     float bestSecondary = Float.MAX_VALUE; // tie-break: squared distance
 
     for (WorldMapNode n : svc.getAllNodes()) {
@@ -392,11 +392,11 @@ public class WorldMapPlayerComponent extends UIComponent {
       boolean wrongSide = (toRight && dx <= 0f) || (!toRight && dx >= 0f);
       if (n == null || n == townNode || wrongSide) continue;
 
-      float gap = Math.abs(dx);         // primary metric: horizontal gap
-      float d2  = pos.dst2(nx, ny);     // secondary: squared distance
+      float gap = Math.abs(dx); // primary metric: horizontal gap
+      float d2 = pos.dst2(nx, ny); // secondary: squared distance
 
       boolean strictlyBetter = gap < bestPrimary - 1e-3f;
-      boolean tieButCloser   = Math.abs(gap - bestPrimary) <= 1e-3f && d2 < bestSecondary;
+      boolean tieButCloser = Math.abs(gap - bestPrimary) <= 1e-3f && d2 < bestSecondary;
       if (strictlyBetter || tieButCloser) {
         bestPrimary = gap;
         bestSecondary = d2;
@@ -408,8 +408,7 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   /** Convert a node's normalised [0..1] coordinates to world-space pixels. */
   private Vector2 getWorldCoords(WorldMapNode node) {
-    return new Vector2(node.getPositionX() * worldSize.x,
-                       node.getPositionY() * worldSize.y);
+    return new Vector2(node.getPositionX() * worldSize.x, node.getPositionY() * worldSize.y);
   }
 
   /** True if the position is within ARRIVAL_THRESHOLD of the node. */
@@ -427,8 +426,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /**
-   * Finds the nearest world map node to a given position.
-   * Flat control flow, no redundant conditions, and no nested 'if' chains.
+   * Finds the nearest world map node to a given position. Flat control flow, no redundant
+   * conditions, and no nested 'if' chains.
    */
   private WorldMapNode getNearestNode(Vector2 pos) {
     WorldMapService svc = ServiceLocator.getWorldMapService();
@@ -459,8 +458,8 @@ public class WorldMapPlayerComponent extends UIComponent {
     timeSinceLastProximityCheck += Gdx.graphics.getDeltaTime();
 
     boolean readyToLaunch =
-        timeSinceLastProximityCheck >= PROXIMITY_CHECK_INTERVAL &&
-        (proximityCheckFuture == null || proximityCheckFuture.isDone());
+        timeSinceLastProximityCheck >= PROXIMITY_CHECK_INTERVAL
+            && (proximityCheckFuture == null || proximityCheckFuture.isDone());
 
     if (readyToLaunch) {
       // Consume previous result if any
@@ -519,25 +518,30 @@ public class WorldMapPlayerComponent extends UIComponent {
   private void handleNodeInteraction() {
     if (nearbyNode == null || !Gdx.input.isKeyJustPressed(Input.Keys.E)) return;
 
-    if (nearbyNode.isUnlocked() && !nearbyNode.isCompleted()) {
-      String message = "Do you want to enter " + nearbyNode.getLabel() + "?";
-      ServiceLocator.getDialogService().warning(
-          nearbyNode.getLabel(),
-          message,
-          dialog -> {
-            logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
-            entity.getEvents().trigger("enterNode", nearbyNode);
-          },
-          null);
+    if (nearbyNode.isUnlocked()) {
+      String message =
+          nearbyNode.isCompleted()
+              ? ("You have completed this level.\nDo you want to re-enter "
+                  + nearbyNode.getLabel()
+                  + "?")
+              : ("Do you want to enter " + nearbyNode.getLabel() + "?");
+      ServiceLocator.getDialogService()
+          .warning(
+              nearbyNode.getLabel(),
+              message,
+              dialog -> {
+                logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
+                entity.getEvents().trigger("enterNode", nearbyNode);
+              },
+              null);
       return;
     }
 
     String reason = nearbyNode.getLockReason();
-    ServiceLocator.getDialogService().error(
-        nearbyNode.getLabel(),
-        reason != null ? reason : "This node is not available.");
-    logger.info("[WorldMapPlayerComponent] Node '{}' not accessible: {}",
-        nearbyNode.getLabel(), reason);
+    ServiceLocator.getDialogService()
+        .error(nearbyNode.getLabel(), reason != null ? reason : "This node is not available.");
+    logger.info(
+        "[WorldMapPlayerComponent] Node '{}' not accessible: {}", nearbyNode.getLabel(), reason);
   }
 
   // --------------------------------------------------------------------- //

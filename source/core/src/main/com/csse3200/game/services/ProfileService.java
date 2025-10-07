@@ -16,123 +16,119 @@ import org.slf4j.LoggerFactory;
  * class to provide a service-based interface.
  */
 public class ProfileService {
-    private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
-    private Profile profile;
-    private boolean isActive;
-    private int currentSlot;
+  private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
+  private Profile profile;
+  private boolean isActive;
+  private int currentSlot;
 
-    /**
-     * Creates a new ProfileService instance.
-     */
-    public ProfileService() {
-        this.profile = new Profile(); // Initialize with a dummy profile
-        this.isActive = false;
-        this.currentSlot = 0;
-        logger.debug("[ProfileService] ProfileService initialized");
+  /** Creates a new ProfileService instance. */
+  public ProfileService() {
+    this.profile = new Profile(); // Initialize with a dummy profile
+    this.isActive = false;
+    this.currentSlot = 0;
+    logger.debug("[ProfileService] ProfileService initialized");
+  }
+
+  /**
+   * Gets the current active profile.
+   *
+   * @return the current profile
+   */
+  public Profile getProfile() {
+    return profile;
+  }
+
+  /**
+   * Gets the current slot number.
+   *
+   * @return the current slot (1-3), or 0 if no slot is active
+   */
+  public int getCurrentSlot() {
+    return currentSlot;
+  }
+
+  /**
+   * Checks if a profile is currently loaded.
+   *
+   * @return true if a profile is loaded, false otherwise
+   */
+  public boolean isActive() {
+    return isActive;
+  }
+
+  /**
+   * Creates a new profile with the specified name and slot.
+   *
+   * @param profileName the name for the new profile
+   * @param slot the slot to save the profile to (1-3)
+   */
+  public void createProfile(String profileName, int slot) {
+    logger.info("[ProfileService] Creating new profile '{}' in slot {}", profileName, slot);
+    Pair<Profile, Integer> pair = Persistence.create(profileName, slot);
+    this.profile = pair.getKey();
+    this.currentSlot = pair.getValue();
+    this.isActive = true;
+  }
+
+  /**
+   * Loads a profile from the specified savefile.
+   *
+   * @param savefile the savefile to load
+   */
+  public void loadProfile(Savefile savefile) {
+    logger.info("[ProfileService] Loading profile from savefile: {}", savefile);
+    Pair<Profile, Integer> pair = Persistence.load(savefile);
+    this.profile = pair.getKey();
+    this.currentSlot = savefile.getSlot();
+    this.isActive = true;
+
+    if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
+      profile.unlockNode(profile.getCurrentLevel());
+    }
+  }
+
+  /**
+   * Saves the current profile to the current slot.
+   *
+   * @throws IllegalStateException if no profile is currently loaded
+   */
+  public void saveCurrentProfile() {
+    if (!isActive) {
+      throw new IllegalStateException("No profile loaded to save");
+    }
+    logger.info("[ProfileService] Saving current profile to slot {}", currentSlot);
+    Persistence.save(currentSlot, profile);
+  }
+
+  /**
+   * Marks the given level as completed and optionally unlocks the next one. This ensures completed
+   * levels remain replayable.
+   */
+  public void markLevelComplete(String currentKey, String nextKey) {
+    if (profile == null) {
+      logger.warn("Attempted to mark level complete but profile is null.");
+      return;
     }
 
-    /**
-     * Gets the current active profile.
-     *
-     * @return the current profile
-     */
-    public Profile getProfile() {
-        return profile;
+    // Mark current level as completed and keep it unlocked for replay
+    profile.completeNode(currentKey);
+
+    // Unlock next level if provided and update currentLevel pointer
+    if (nextKey != null && !nextKey.isEmpty()) {
+      profile.unlockNode(nextKey);
+      profile.setCurrentLevel(nextKey); // Always point to the last unlocked main level
     }
 
-    /**
-     * Gets the current slot number.
-     *
-     * @return the current slot (1-3), or 0 if no slot is active
-     */
-    public int getCurrentSlot() {
-        return currentSlot;
+    // Always ensure special nodes remain unlocked (but not completed)
+    for (String s : Profile.DEFAULT_UNLOCKED) {
+      profile.unlockNode(s);
     }
 
-    /**
-     * Checks if a profile is currently loaded.
-     *
-     * @return true if a profile is loaded, false otherwise
-     */
-    public boolean isActive() {
-        return isActive;
-    }
+    // Save changes immediately after modification
+    saveCurrentProfile();
 
-    /**
-     * Creates a new profile with the specified name and slot.
-     *
-     * @param profileName the name for the new profile
-     * @param slot        the slot to save the profile to (1-3)
-     */
-    public void createProfile(String profileName, int slot) {
-        logger.info("[ProfileService] Creating new profile '{}' in slot {}", profileName, slot);
-        Pair<Profile, Integer> pair = Persistence.create(profileName, slot);
-        this.profile = pair.getKey();
-        this.currentSlot = pair.getValue();
-        this.isActive = true;
-    }
-
-    /**
-     * Loads a profile from the specified savefile.
-     *
-     * @param savefile the savefile to load
-     */
-    public void loadProfile(Savefile savefile) {
-        logger.info("[ProfileService] Loading profile from savefile: {}", savefile);
-        Pair<Profile, Integer> pair = Persistence.load(savefile);
-        this.profile = pair.getKey();
-        this.currentSlot = savefile.getSlot();
-        this.isActive = true;
-
-        if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
-            profile.unlockNode(profile.getCurrentLevel());
-        }
-    }
-
-    /**
-     * Saves the current profile to the current slot.
-     *
-     * @throws IllegalStateException if no profile is currently loaded
-     */
-    public void saveCurrentProfile() {
-        if (!isActive) {
-            throw new IllegalStateException("No profile loaded to save");
-        }
-        logger.info("[ProfileService] Saving current profile to slot {}", currentSlot);
-        Persistence.save(currentSlot, profile);
-    }
-
-    /**
-     * Marks the given level as completed and optionally unlocks the next one. This ensures completed
-     * levels remain replayable.
-     */
-
-    public void markLevelComplete(String currentKey, String nextKey) {
-        if (profile == null) {
-            logger.warn("Attempted to mark level complete but profile is null.");
-            return;
-        }
-
-        // Mark current level as completed and keep it unlocked for replay
-        profile.completeNode(currentKey);
-
-        // Unlock next level if provided and update currentLevel pointer
-        if (nextKey != null && !nextKey.isEmpty()) {
-            profile.unlockNode(nextKey);
-            profile.setCurrentLevel(nextKey); // Always point to the last unlocked main level
-        }
-
-        // Always ensure special nodes remain unlocked (but not completed)
-        for (String s : Profile.DEFAULT_UNLOCKED) {
-            profile.unlockNode(s);
-        }
-
-        // Save changes immediately after modification
-        saveCurrentProfile();
-
-        logger.info("[ProfileService] Level '{}' completed. Next '{}' unlocked.", currentKey, nextKey);
-
-    }
+    logger.info("[ProfileService] Level '{}' completed. Next '{}' unlocked.", currentKey, nextKey);
+  }
 
   /**
    * Saves the current profile to a specific slot.
