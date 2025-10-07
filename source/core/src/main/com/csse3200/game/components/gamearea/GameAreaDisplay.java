@@ -1,6 +1,5 @@
 package com.csse3200.game.components.gamearea;
 
-
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.csse3200.game.ui.UIComponent;
@@ -9,7 +8,6 @@ import com.csse3200.game.ui.UIComponent;
 public class GameAreaDisplay extends UIComponent {
   private String gameAreaName = "";
   private Label title;
-
 
   public GameAreaDisplay(String gameAreaName) {
     this.gameAreaName = gameAreaName;

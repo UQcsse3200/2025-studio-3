@@ -1,6 +1,5 @@
 package com.csse3200.game.components.waves;
 
-
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
@@ -78,7 +77,6 @@ public class CurrentWaveDisplay extends UIComponent {
 
     stage.addActor(table);
   }
-
 
   /**
    * Updates the wave display on the UI. This method is called by the event system when

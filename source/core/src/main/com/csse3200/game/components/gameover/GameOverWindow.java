@@ -89,5 +89,4 @@ public class GameOverWindow extends UIComponent {
 
     super.dispose();
   }
-
 }

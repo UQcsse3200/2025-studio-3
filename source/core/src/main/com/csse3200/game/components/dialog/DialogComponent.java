@@ -16,7 +16,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
-
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,7 +153,10 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable
+            .add(okButton)
+            .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
         break;
 
       // Warning dialog buttons
@@ -183,8 +185,14 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(cancelButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
-        buttonTable.add(continueButton).size(cancelDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable
+            .add(cancelButton)
+            .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
+        buttonTable
+            .add(continueButton)
+            .size(cancelDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
         break;
 
       // Error dialog buttons
@@ -200,7 +208,10 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButtonError).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable
+            .add(okButtonError)
+            .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
         break;
 
       // Skill dialog buttons
@@ -229,8 +240,14 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(closeButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
-        buttonTable.add(unlockButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable
+            .add(closeButton)
+            .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
+        buttonTable
+            .add(unlockButton)
+            .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+            .pad(5f);
         break;
     }
 

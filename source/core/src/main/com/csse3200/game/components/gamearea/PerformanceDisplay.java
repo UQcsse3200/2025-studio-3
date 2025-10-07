@@ -25,15 +25,14 @@ public class PerformanceDisplay extends UIComponent {
   @Override
   public void draw(SpriteBatch batch) {
     if (ServiceLocator.getRenderService().getDebug().getActive()) {
-        profileLabel.setVisible(true);
-        profileLabel.setText(getStats());
+      profileLabel.setVisible(true);
+      profileLabel.setText(getStats());
 
-        float offsetX = 25f;
-        float offsetY = 100f;
-        profileLabel.setPosition(offsetX, offsetY);
+      float offsetX = 25f;
+      float offsetY = 100f;
+      profileLabel.setPosition(offsetX, offsetY);
     } else {
-        profileLabel.setVisible(false);
-
+      profileLabel.setVisible(false);
     }
   }
 

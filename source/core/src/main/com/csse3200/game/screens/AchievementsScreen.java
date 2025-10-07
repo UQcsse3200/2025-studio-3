@@ -40,7 +40,6 @@ public class AchievementsScreen extends BaseScreen {
     super.resize(width, height);
     // Notify DialogService to resize any active dialogs
     ServiceLocator.getDialogService().resize();
-
   }
 
   /**

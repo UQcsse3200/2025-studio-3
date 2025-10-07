@@ -18,7 +18,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
-
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,12 +72,13 @@ public class DossierDisplay extends UIComponent {
   /** Adds all tables to the stage. */
   private void addActors() {
 
-      // add background back in between changes
-      Texture bgTexture = ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
-      Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTexture)));
-      bg.setFillParent(true);
-      bg.setScaling(Scaling.fill);
-      stage.addActor(bg);
+    // add background back in between changes
+    Texture bgTexture =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
+    Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTexture)));
+    bg.setFillParent(true);
+    bg.setScaling(Scaling.fill);
+    stage.addActor(bg);
 
     Label title = ui.title("Dossier");
     createCloseButton();
@@ -104,8 +104,6 @@ public class DossierDisplay extends UIComponent {
 
     // add rootTable to stage
     stage.addActor(rootTable);
-
-
   }
 
   /** A listener to change the type of entity shown */
@@ -186,7 +184,6 @@ public class DossierDisplay extends UIComponent {
     Table table = new Table();
     table.defaults().expandX().fillX().space(50f);
     table.padTop(50f);
-
 
     float buttonWidth = 200f; // Fixed width
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
@@ -315,17 +312,11 @@ public class DossierDisplay extends UIComponent {
   }
 
   /** Creates the close button in the top-left corner. */
-
   private void createCloseButton() {
-      TextButton closeButton = ui.createBackExitButton(
-              entity.getEvents(),
-              stage.getHeight(),
-              "Back"
-      );
+    TextButton closeButton = ui.createBackExitButton(entity.getEvents(), stage.getHeight(), "Back");
 
-      stage.addActor(closeButton);
+    stage.addActor(closeButton);
   }
-
 
   /**
    * Builds a table containing buttons to access different entities within either 'Human' or
@@ -361,9 +352,6 @@ public class DossierDisplay extends UIComponent {
     }
     return buttonRow;
   }
-
-
-
 
   /**
    * Gets the display name for an entity key.

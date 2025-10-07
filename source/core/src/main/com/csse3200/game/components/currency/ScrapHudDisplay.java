@@ -14,18 +14,16 @@ public class ScrapHudDisplay extends UIComponent {
   private Table table;
   private Label amountLabel;
 
-
   @Override
   public void create() {
     super.create();
-      float width = stage.getViewport().getWorldWidth();
-      float height = stage.getViewport().getWorldHeight();
+    float width = stage.getViewport().getWorldWidth();
+    float height = stage.getViewport().getWorldHeight();
     Texture sunTex =
         ServiceLocator.getResourceService()
             .getAsset("images/entities/currency/scrap_metal.png", Texture.class);
     Image sunIcon = new Image(sunTex);
     sunIcon.setSize(22f, 22f);
-
 
     amountLabel = ui.title(String.valueOf(ServiceLocator.getCurrencyService().get()));
     amountLabel.setColor(Color.BLACK);
@@ -45,7 +43,6 @@ public class ScrapHudDisplay extends UIComponent {
     CurrencyService cs = ServiceLocator.getCurrencyService();
     amountLabel.setText(String.valueOf(cs.get()));
   }
-
 
   @Override
   public void dispose() {

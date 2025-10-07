@@ -101,8 +101,8 @@ public class AchievementDialogComponent extends UIComponent {
 
     // Tier information
     if (tier != null && !tier.isEmpty()) {
-        Label tierLabel = ui.subtext("Tier: " + tier);
-        tierLabel.setColor(Color.YELLOW);
+      Label tierLabel = ui.subtext("Tier: " + tier);
+      tierLabel.setColor(Color.YELLOW);
       tierLabel.setAlignment(Align.left);
       textTable.add(tierLabel).left().padTop(2f).row();
     }
