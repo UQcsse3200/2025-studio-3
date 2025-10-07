@@ -3,13 +3,22 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
+import com.csse3200.game.components.HitMarkerComponent;
+import com.csse3200.game.components.npc.DefenceAnimationController;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseEntityConfig;
 import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.skilltree.SkillSet;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.*;
@@ -127,14 +136,70 @@ public class DefenceFactoryTest {
     }
 
     @Test
-    void testCreateDefenceUnit() {
+    void testCreateDefenceUnitNotNull() {
         // create each defence entity
         for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
             Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
             assertNotNull(defender, () -> "DefenceFactory.createDefenceUnit(" + defense + ") returned null");
-
-            // check expected components and layers
-
         }
     }
+
+    @Test
+    void testDefenceUnitHasPhysicsComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(PhysicsComponent.class), () -> defense + ": missing PhysicsComponent");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasColliderComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(ColliderComponent.class), () -> defense + ": missing ColliderComponent");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasHitBoxComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(HitboxComponent.class), () -> defense + ": missing HitBoxComponent");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasDefenderStatsComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(DefenderStatsComponent.class), () -> defense + ": missing DefenderStatsComponent");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasTasksComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(AITaskComponent.class), () -> defense + ": missing AITasksComponent");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasAnimator() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(AnimationRenderComponent.class), () -> defense + ": missing Animator");
+            assertNotNull(defender.getComponent(DefenceAnimationController.class), () -> defense + "missing DefenceAnimationController");
+        }
+    }
+
+    @Test
+    void testDefenceUnitHasHitMarkerComponent() {
+        for (String defense : new String[]{"slingshooter", "armyguy", "shadow"}) {
+            Entity defender = DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+            assertNotNull(defender.getComponent(HitMarkerComponent.class), () -> defense + ": missing HitMarkerComponent");
+        }
+    }
+
+
 }
