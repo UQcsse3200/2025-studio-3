@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -129,7 +130,13 @@ public class ButtonFactory {
     return button;
   }
 
-  public static void buttonPressedListener(TextButton button) {
+  /**
+   * Registers a click listener to the specified button. When the button is clicked, a sound effect
+   * is triggered.
+   *
+   * @param button the Button instance to which the click listener will be added.
+   */
+  public static void buttonPressedListener(Button button) {
     button.addListener(
         new ClickListener() {
           @Override
@@ -139,6 +146,7 @@ public class ButtonFactory {
         });
   }
 
+  /** Plays a sound effect when a button is pressed at the current sound volume. */
   public static void buttonPressedSound() {
     // Play sound effect for button click
     Sound buttonSound =
