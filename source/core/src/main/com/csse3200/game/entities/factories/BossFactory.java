@@ -89,7 +89,7 @@ public class BossFactory {
             animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
         }else {
             animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
-            animator.addAnimation("punch", 0.05f, Animation.PlayMode.LOOP);
+            animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
         }
         ColliderComponent colliderComponent =
@@ -125,6 +125,8 @@ public class BossFactory {
 
         TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
         RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
+
+
         boss.getEvents().addListener(
                 "attack",
                 target -> {
@@ -138,12 +140,13 @@ public class BossFactory {
                                     }
                                 },
                                 1.8f);
+                    }else{
                         animator.startAnimation("punch");
                         Timer.schedule(
                                 new Timer.Task() {
                                     @Override
                                     public void run() {
-                                        animator.startAnimation("march");
+                                        animator.startAnimation("moveLeft");
                                     }
                                 },
                                 1.05f);
