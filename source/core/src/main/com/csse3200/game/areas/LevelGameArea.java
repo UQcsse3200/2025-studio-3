@@ -573,8 +573,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                           entityPos,
                           newEntity.getComponent(ProjectileComponent.class).getProjectile(),
                           direction);
-                  newEntity.getEvents().trigger("attackStart");
               }
+              newEntity.getEvents().trigger("attackStart");
             });
     setIsCharacterSelected(false);
     setSelectedUnit(null);

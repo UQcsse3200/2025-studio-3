@@ -1,12 +1,32 @@
-boxer_1.png
-size: 602, 601
+boxer.png
+size: 1568, 567
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 pma: false
 default
-  bounds: 0, 0, 602, 601
-idle
-  bounds: 0, 0, 602, 601
+  bounds: 0, 0, 441, 567
 attack
-  bounds: 0, 0, 602, 601
+  bounds: 882, 0, 343, 563
+attack
+  bounds: 1225, 0, 343, 563
+attack
+  bounds: 882, 0, 343, 563
+attack
+  bounds: 1225, 0, 343, 563
+attack
+  bounds: 882, 0, 343, 563
+attack
+  bounds: 1225, 0, 343, 563
+attack
+  bounds: 0, 0, 441, 567
+attack
+  bounds: 441, 0, 441, 567
+attack
+  bounds: 882, 0, 343, 563
+attack
+  bounds: 1225, 0, 343, 563
+idle
+  bounds: 882, 0, 343, 563
+idle
+  bounds: 1225, 0, 343, 563
