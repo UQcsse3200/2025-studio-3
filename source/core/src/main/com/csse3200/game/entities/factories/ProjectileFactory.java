@@ -72,7 +72,7 @@ public class ProjectileFactory {
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
             .addComponent(new CombatStatsComponent(1, damage))
             .addComponent(new MoveLeftComponent(speed))
-            .addComponent(new TextureRenderComponent("images/effects/sling_projectile.png"));
+            .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
 
     gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
