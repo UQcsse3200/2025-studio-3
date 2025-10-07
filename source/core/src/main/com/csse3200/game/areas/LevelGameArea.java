@@ -77,6 +77,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     loadLevelConfiguration(); // rows, cols, and mapFilePath
     setScaling();
     selectedUnit = null;
+
+    // TODO: Add dynamic updates when wave is changed.
+    ServiceLocator.getDiscordRichPresenceService()
+        .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
 
   /** Loads level configuration from ConfigService. */
@@ -238,20 +242,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   private void spawnScrap(Entity entity) {
-    int spawnInterval = entity.getComponent(GeneratorStatsComponent.class).getInterval();
-    int scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(
-            spawnInterval,
-            scrapValue,
-            "images/entities/currency/scrap_metal.png",
-            entity.getPosition());
+        new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
-    entity.getEvents().addListener("defenceDeath", scrapSpawner::dispose);
-
+    entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
     spawnEntity(scrapSpawner);
   }
 
@@ -318,6 +314,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
     logger.info("Robot {} spawned at position {} {}", robotType, row, col);
@@ -382,6 +379,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             ENTITY_DEATH_EVENT,
             () -> {
               requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));
@@ -599,6 +597,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("No unit at position {}", position);
       return;
     }
+    occ.getEvents().trigger("entityDespawn");
     requestDespawn(occ);
     grid.clearOccupantIndex(position);
     // Also clear the tile component (delegates to grid, stays in sync)
