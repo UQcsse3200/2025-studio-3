@@ -113,8 +113,9 @@ public class EntitySpawn {
   private static final class TypeEntry {
     final String name;
     final int cost;
-    double weight;  // chance
-    double acc;     // accumulator for smooth weighted RR
+    double weight; // chance
+    double acc; // accumulator for smooth weighted RR
+
     TypeEntry(String name, int cost, double weight) {
       this.name = name;
       this.cost = cost;
@@ -128,10 +129,9 @@ public class EntitySpawn {
    * - Each wave has a budget (waveWeight).
    * - Each enemy type consumes budget (cost).
    * - Enemies are picked randomly, weighted by 'chance'.
-   * - Loop continues until budget runs out.
-   * The method uses a weight-accumulation  system to distribute spawn probabilities
-   * based on each enemy type’s defined spawn chance and cost. The algorithm repeats
-   * until the wave budget is depleted or no affordable enemies remain.
+   * - Loop continues until budget runs out. The method uses a weight-accumulation system to
+   * distribute spawn probabilities based on each enemy type’s defined spawn chance and cost.
+   * The algorithm repeats until the wave budget is depleted or no affordable enemies remain.
    */
   public void spawnEnemiesFromConfig() {
     if (waveConfigProvider == null) {
