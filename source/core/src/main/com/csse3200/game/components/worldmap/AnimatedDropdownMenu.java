@@ -4,7 +4,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,8 +61,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     menuButtons = new TextButton[buttonTexts.length];
 
     for (int i = 0; i < buttonTexts.length; i++) {
-      TextButton button = ButtonFactory.createButton(buttonTexts[i], 1.0f);
-      button.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+      TextButton button = ui.secondaryButton(buttonTexts[i], BUTTON_WIDTH);
 
       // Position buttons below trigger button, initially hidden
       float buttonX = startX - BUTTON_WIDTH + 57f;
@@ -144,44 +142,44 @@ public class AnimatedDropdownMenu extends UIComponent {
     logger.info("Menu clicked: {}", buttonText);
     closeMenu();
     switch (buttonText) {
-      case "Quicksave":
+      case "Quicksave" -> {
         logger.debug("Quicksave button clicked");
         entity.getEvents().trigger("quicksave");
-        break;
-      case "Save Game":
+      }
+      case "Save Game" -> {
         logger.debug("Save game button clicked");
         entity.getEvents().trigger("savegame");
-        break;
-      case "Load Game":
+      }
+      case "Load Game" -> {
         logger.debug("Load game button clicked");
         entity.getEvents().trigger("loadgame");
-        break;
-      case "Statistics":
+      }
+      case "Statistics" -> {
         logger.debug("Statistics button clicked");
         entity.getEvents().trigger("open_statistics");
-        break;
-      case "Achievements":
+      }
+      case "Achievements" -> {
         logger.debug("Achievements button clicked");
         entity.getEvents().trigger("open_achievements");
-        break;
-      case "Dossier":
+      }
+      case "Dossier" -> {
         logger.debug("Dossier button clicked");
         entity.getEvents().trigger("open_dossier");
-        break;
-      case "Inventory":
+      }
+      case "Inventory" -> {
         logger.debug("Inventory button clicked");
         entity.getEvents().trigger("open_inventory");
-        break;
-      case "Main Menu":
+      }
+      case "Main Menu" -> {
         logger.debug("Main menu button clicked");
         entity.getEvents().trigger("main_menu");
-        break;
-      case "Exit Game":
+      }
+      case "Exit Game" -> {
         logger.debug("Exit game button clicked");
         entity.getEvents().trigger("exit");
-        break;
-      default:
-        break;
+      }
+      default -> { // no default case
+      }
     }
   }
 

@@ -65,7 +65,6 @@ public class CurrentWaveDisplay extends UIComponent {
     table.padTop(100f).padLeft(30f);
 
     // Wave text label
-
     waveLabel = ui.text("Current Wave: ");
 
     // Wave number label - start at 0 (no wave active)
