@@ -2,7 +2,10 @@ package com.csse3200.game.components;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
@@ -10,7 +13,10 @@ import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.CurrencyService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +27,22 @@ class TouchAttackComponentTest {
   void beforeEach() {
     ServiceLocator.registerPhysicsService(new PhysicsService());
     ServiceLocator.registerCurrencyService(new CurrencyService(0, Integer.MAX_VALUE));
+    // Mock resource and settings services
+    ResourceService resources = mock(ResourceService.class);
+    ServiceLocator.registerResourceService(resources);
+    SettingsService mockSettingsService = mock(SettingsService.class);
+    ServiceLocator.registerSettingsService(mockSettingsService);
+    when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
+
+    Sound mockSound = mock(Sound.class);
+    // Mock the sound assets that CombatStatsComponent might request
+    when(resources.getAsset("sounds/human-death.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/robot-death.mp3", Sound.class)).thenReturn(mockSound);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.clear();
   }
 
   @Test
