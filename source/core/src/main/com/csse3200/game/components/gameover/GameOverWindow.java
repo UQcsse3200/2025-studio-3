@@ -2,7 +2,6 @@ package com.csse3200.game.components.gameover;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
@@ -17,6 +16,7 @@ public class GameOverWindow extends UIComponent {
   private Window window;
   // Tracks the display status of the window.
   boolean isDisplayed = false;
+  private float uiScale = ui.getUIScale();
 
   /** Creates the game over window. */
   @Override
@@ -29,13 +29,15 @@ public class GameOverWindow extends UIComponent {
     // Creates popup display.
     window = new Window("Game over.", skin);
     window.setMovable(false);
-    window.setSize(500, 500);
+    window.setSize(500 * uiScale, 500 * uiScale);
     window.setPosition(
         (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
         (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
     // Adds text in the popup display.
-    Label message = new Label("Game over.\n Press E to go back to main menu.", skin);
+    Label gameOverHeading = ui.heading("Game Over!");
+    Label message = ui.text("Press E to go back to main menu.");
+    window.add(gameOverHeading).pad(20).row();
     window.add(message).pad(10).row();
 
     // Sets popup display to false when created.
@@ -88,13 +90,4 @@ public class GameOverWindow extends UIComponent {
     super.dispose();
   }
 
-  /**
-   * Draws a sprite batch.
-   *
-   * @param batch Batch to render to.
-   */
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
 }

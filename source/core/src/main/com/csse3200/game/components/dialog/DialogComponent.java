@@ -14,9 +14,10 @@ import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
+
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,12 +73,13 @@ public class DialogComponent extends UIComponent {
     Table contentTable = new Table();
     contentTable.pad(20f);
     Color titleColor = getTextColor();
-    Label titleLabel = TypographyFactory.createSubtitle(title, titleColor);
+    Label titleLabel = ui.title(title);
+    titleLabel.setColor(titleColor);
     titleLabel.setAlignment(Align.center);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
 
     // Add message label
-    Label messageLabel = TypographyFactory.createParagraph(message, Color.WHITE);
+    Label messageLabel = ui.text(message);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
@@ -135,6 +137,8 @@ public class DialogComponent extends UIComponent {
   /** Adds appropriate buttons to the dialog based on its type. */
   private void addButtons(Table contentTable) {
     Table buttonTable = new Table();
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
+    Pair<Float, Float> cancelDimensions = ui.getScaledDimensions(150f);
 
     switch (dialogType) {
       // Info dialog buttons
@@ -150,7 +154,7 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButton).size(120f, 60f).pad(5f);
+        buttonTable.add(okButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
         break;
 
       // Warning dialog buttons
@@ -179,8 +183,8 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(cancelButton).size(120f, 60f).pad(5f);
-        buttonTable.add(continueButton).size(150f, 60f).pad(5f);
+        buttonTable.add(cancelButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable.add(continueButton).size(cancelDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
         break;
 
       // Error dialog buttons
@@ -196,7 +200,7 @@ public class DialogComponent extends UIComponent {
                 }
               }
             });
-        buttonTable.add(okButtonError).size(120f, 60f).pad(5f);
+        buttonTable.add(okButtonError).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
         break;
 
       // Skill dialog buttons
@@ -225,8 +229,8 @@ public class DialogComponent extends UIComponent {
               }
             });
 
-        buttonTable.add(closeButton).size(120f, 60f).pad(5f);
-        buttonTable.add(unlockButton).size(120f, 60f).pad(5f);
+        buttonTable.add(closeButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+        buttonTable.add(unlockButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
         break;
     }
 
@@ -241,6 +245,7 @@ public class DialogComponent extends UIComponent {
   }
 
   /** Handles window resize by re-centering the dialog. */
+  @Override
   public void resize() {
     if (dialog != null && isVisible) {
       centerDialog();

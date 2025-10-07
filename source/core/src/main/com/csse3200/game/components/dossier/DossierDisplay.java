@@ -1,8 +1,8 @@
 package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,9 +16,10 @@ import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
+
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,15 @@ public class DossierDisplay extends UIComponent {
 
   /** Adds all tables to the stage. */
   private void addActors() {
-    Label title = TypographyFactory.createTitle("Dossier");
+
+      // add background back in between changes
+      Texture bgTexture = ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
+      Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTexture)));
+      bg.setFillParent(true);
+      bg.setScaling(Scaling.fill);
+      stage.addActor(bg);
+
+    Label title = ui.title("Dossier");
     createCloseButton();
 
     // create rootTable
@@ -93,6 +102,8 @@ public class DossierDisplay extends UIComponent {
 
     // add rootTable to stage
     stage.addActor(rootTable);
+
+
   }
 
   /** A listener to change the type of entity shown */
@@ -174,11 +185,12 @@ public class DossierDisplay extends UIComponent {
     table.defaults().expandX().fillX().space(50f);
     table.padTop(50f);
 
-    float buttonWidth = 200f; // Fixed width
-    float buttonHeight = 50f;
 
-    table.add(humansBtn).size(buttonWidth, buttonHeight);
-    table.add(robotsBtn).size(buttonWidth, buttonHeight);
+    float buttonWidth = 200f; // Fixed width
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+
+    table.add(humansBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
+    table.add(robotsBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
 
     table.row();
 
@@ -255,12 +267,14 @@ public class DossierDisplay extends UIComponent {
     Table infoTable = new Table(skin);
 
     String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
-    Label entityNameLabel = TypographyFactory.createSubtitle(name);
+    Label entityNameLabel = ui.subheading(name);
+    entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
     infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
 
     String info = entities.length > 0 ? getEntityInfo(currentEntityKey) : "";
-    Label entityInfoLabel = TypographyFactory.createParagraph(info);
+    Label entityInfoLabel = ui.text(info);
+    entityInfoLabel.setColor(Color.BLACK);
     entityInfoLabel.setWrap(true);
     entityInfoLabel.setAlignment(Align.left);
     infoTable
@@ -332,6 +346,8 @@ public class DossierDisplay extends UIComponent {
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
     ButtonGroup<TextButton> group = new ButtonGroup<>();
+    float buttonWidth = 280f;
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
       String entityKey = entities[i];
@@ -339,7 +355,7 @@ public class DossierDisplay extends UIComponent {
       String displayName = getEntityName(entityKey);
       TextButton btn = ButtonFactory.createLargeButton(displayName);
       group.add(btn);
-      buttonRow.add(btn).size(100f, 35f).pad(5);
+      buttonRow.add(btn).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5);
 
       btn.addListener(
           new ChangeListener() {
@@ -361,10 +377,6 @@ public class DossierDisplay extends UIComponent {
     game.setScreen(GdxGame.ScreenType.WORLD_MAP);
   }
 
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
 
   /**
    * Gets the display name for an entity key.
