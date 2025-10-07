@@ -125,6 +125,9 @@ public class WaveManager implements WaveConfigProvider {
         } else if (currentWave == 2) {
             logger.info("triggering SAMURAI_BOT boss spawn for wave2");
             enemySpawnCallback.spawnBoss(2, BossFactory.BossTypes.SAMURAI_BOT);
+        }else if (currentWave == 3) {
+            logger.info("triggering GUN_BOT boss spawn for wave3");
+            enemySpawnCallback.spawnBoss(2,BossFactory.BossTypes.GUN_BOT);
         }
     }
     waveActive = false; // Wave not active during preparation

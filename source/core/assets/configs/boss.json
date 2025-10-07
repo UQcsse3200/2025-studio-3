@@ -16,10 +16,10 @@
     "scale": 2.5,
     "speed": 22
 },
-  "ironInferno": {
-    "name": "Iron Inferno",
-    "atlasFilePath": "images/entities/enemies/Iron-inferno.atlas",
-    "health": 149,
+  "gunBot": {
+    "name": "Gun Bot",
+    "atlasFilePath": "images/entities/enemies/gun_Bot.atlas",
+    "health": 70,
     "attack": 25,
     "scale": 2.0,
     "speed": 26

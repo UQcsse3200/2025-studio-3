@@ -39,7 +39,7 @@ public class BossFactory {
      */
     public enum BossTypes {
         SCRAP_TITAN,
-        IRON_INFERNO,
+        GUN_BOT,
         SAMURAI_BOT
     }
 
@@ -58,7 +58,7 @@ public class BossFactory {
         BaseBossConfig config = null;
         switch (bossType) {
             case SCRAP_TITAN -> config = configs.scrapTitan;
-            case IRON_INFERNO -> config = configs.ironInferno;
+            case GUN_BOT-> config = configs.gunBot;
             case SAMURAI_BOT -> config = configs.samuraiBot;
         }
         return createBaseBoss(config);
@@ -83,12 +83,18 @@ public class BossFactory {
                         ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
 
         boolean isSamurai =config.atlasFilePath.contains("samurai");
+        boolean isGunBot=config.atlasFilePath.contains("gun_Bot");
         if (isSamurai) {
             animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
             animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("sword", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
-        }else {
+        }else if(isGunBot){
+            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
+            animator.addAnimation("gun", 0.08f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
+        }
+        else {
             animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
             animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
@@ -114,6 +120,8 @@ public class BossFactory {
                         .addComponent(animator);
 
         if (isSamurai) {
+            animator.startAnimation("walk");
+        }else if(isGunBot){
             animator.startAnimation("walk");
         }
         else{
@@ -143,7 +151,8 @@ final int[] samuraiAttackCount = {0};
                                         }
                                     },
                                     1.8f);
-                        } else {
+                        }
+                        else {
                             animator.startAnimation("sword");
                             Timer.schedule(
                                     new Timer.Task() {
@@ -154,7 +163,18 @@ final int[] samuraiAttackCount = {0};
                                     },
                                     1.8f);
                         }
-                    } else {
+                    }else if(isGunBot){
+                        animator.startAnimation("gun");
+                        Timer.schedule(
+                                new  Timer.Task() {
+                                    @Override
+                                    public void run() {
+                                        animator.startAnimation("walk");
+                                    }
+                                },
+                                1.5f);
+                    }
+                    else {
                         animator.startAnimation("punch");
                         Timer.schedule(
                                 new Timer.Task() {
