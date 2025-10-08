@@ -543,15 +543,19 @@ public class WorldMapScreen extends BaseScreen {
   private void onNodeEnter(WorldMapNode node) {
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
-      String key = node.getRegistrationKey();
-      if (key != null && key.startsWith(LEVEL_PREFIX)) {
-        ps.getProfile().setCurrentLevel(key);
-      }
       ps.saveCurrentProfile();
     }
 
-    logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
-    game.setScreen(node.getTargetScreen());
+    logger.info(
+        "[WorldMapScreen] Entering node: {} (key={})", node.getLabel(), node.getRegistrationKey());
+
+    // If this node targets the main game, pass the registration key as the level override.
+    if (node.getTargetScreen() == GdxGame.ScreenType.MAIN_GAME) {
+      String levelKey = node.getRegistrationKey();
+      game.setScreen(GdxGame.ScreenType.MAIN_GAME, levelKey);
+    } else {
+      game.setScreen(node.getTargetScreen());
+    }
   }
 
   /** Returns true if the world-map player is currently moving along a path or between nodes. */
