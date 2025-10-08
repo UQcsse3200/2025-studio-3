@@ -10,6 +10,11 @@ public class ErrorDialogue implements Command {
   private static final Logger logger = LoggerFactory.getLogger(ErrorDialogue.class);
 
   @Override
+  /**
+   * Creates a placeholder error dialogue box.
+   *
+   * @return true when successful
+   */
   public boolean action(ArrayList<String> args) {
     try {
       ServiceLocator.getDialogService().error("Debug!", "If you see this error, things work.");

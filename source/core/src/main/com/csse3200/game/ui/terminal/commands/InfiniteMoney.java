@@ -10,6 +10,11 @@ public class InfiniteMoney implements Command {
   private static final Logger logger = LoggerFactory.getLogger(InfiniteMoney.class);
 
   @Override
+  /**
+   * Grants the user 9999 scrap inside the level.
+   *
+   * @return true when successful
+   */
   public boolean action(ArrayList<String> args) {
     try {
       ServiceLocator.getCurrencyService().add(9999);
