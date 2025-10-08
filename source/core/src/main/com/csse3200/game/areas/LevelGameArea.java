@@ -529,12 +529,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     ServiceLocator.getCurrencyService().add(-cost);
 
-    if (generator != null) {
-      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
-      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-      spawnScrap(newEntity);
-    }
-
     // Add entity to tile unless it is an Item
     selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
 
