@@ -23,6 +23,6 @@
     "attack": 10,
     "scale": 2.0,
     "speed": 10,
-    "range": 10.0
+    "range": 250.0
   }
   }

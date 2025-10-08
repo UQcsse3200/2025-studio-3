@@ -8,7 +8,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
-import com.csse3200.game.components.tasks.AttackTask;
+import com.csse3200.game.components.tasks.BossAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
@@ -86,7 +86,7 @@ public class BossFactory {
         if(isGunBot){
             aiComponent =
                     new AITaskComponent()
-                            .addTask(new AttackTask(config.getRange()))
+                            .addTask(new BossAttackTask(config.getRange()))
                             .addTask(new MoveLeftTask(config.speed));
         }
         else{ aiComponent =
@@ -104,7 +104,7 @@ public class BossFactory {
             animator.addAnimation("sword", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
         }else if(isGunBot){
-            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
+            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP_REVERSED);
             animator.addAnimation("gun", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
         }
