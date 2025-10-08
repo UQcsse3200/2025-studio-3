@@ -9,3 +9,6 @@
 * ChatGPT was used to merge main into feat/levels-extension to combine improved spawn logic with refactored EntitySpawn class due to level preview
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.
+
+## Noah Trevena
+*ChatGPT was used to assist in debugging and creating unit tests for the LevelCompletedWindowTest.java
