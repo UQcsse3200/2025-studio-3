@@ -1,0 +1,19 @@
+fail_fast: true
+
+repos:
+- repo: local
+  hooks:
+    - id: format-check
+      name: Gradle Format check
+      entry: ./source/gradlew
+      args: [-p, source, formatCheck]
+      language: system
+      types: [java]
+      pass_filenames: false
+    - id: test
+      name: Gradle Test
+      entry: ./source/gradlew
+      args: [-p, source, test]
+      language: system
+      types: [java]
+      pass_filenames: false
