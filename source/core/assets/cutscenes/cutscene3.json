@@ -50,7 +50,6 @@
         ]
       },
 
-      /* Rob speaks ALONE */
       {
         "id": "prep_rob_line",
         "advance": { "mode": "auto" },
@@ -76,7 +75,6 @@
         ]
       },
 
-      /* Background change: clear first */
       {
         "id": "bg_to_datastream",
         "advance": { "mode": "auto" },
@@ -85,7 +83,6 @@
         ]
       },
 
-      /* Danny speaks ALONE */
       {
         "id": "danny_found_signal",
         "advance": { "mode": "input" },
@@ -95,7 +92,7 @@
         ]
       },
 
-      /* Switch to Alice: remove Danny first */
+
       {
         "id": "clear_for_alice",
         "advance": { "mode": "auto" },
@@ -113,7 +110,6 @@
         ]
       },
 
-      /* Switch back to Danny: remove Alice first */
       {
         "id": "clear_for_danny_reply",
         "advance": { "mode": "auto" },
@@ -131,7 +127,6 @@
         ]
       },
 
-      /* Clear & final background */
       {
         "id": "prep_final_bg",
         "advance": { "mode": "auto" },
