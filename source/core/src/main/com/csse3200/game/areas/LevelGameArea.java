@@ -504,7 +504,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    GeneratorStatsComponent generator =  newEntity.getComponent(GeneratorStatsComponent.class);
+    GeneratorStatsComponent generator = newEntity.getComponent(GeneratorStatsComponent.class);
     DefenderStatsComponent defence = newEntity.getComponent(DefenderStatsComponent.class);
 
     // Get cost based on the entity the player clicks
@@ -517,7 +517,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Checks if the player has sufficient scrap
     if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
-      logger.info("Not enough scrap for this entity. Need {} but have {}", cost, ServiceLocator.getCurrencyService().get());
+      logger.info(
+          "Not enough scrap for this entity. Need {} but have {}",
+          cost,
+          ServiceLocator.getCurrencyService().get());
       ui.getEvents().trigger("insufficientScrap");
       setSelectedUnit(null);
       cancelDrag();

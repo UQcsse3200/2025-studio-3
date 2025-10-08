@@ -9,8 +9,8 @@ public class SpawnRobot implements Command {
   private static final Logger logger = LoggerFactory.getLogger(SpawnRobot.class);
 
   /**
-   * Spawns the next robot in the spawn queue in the lane
-   * corresponding to the first argument expressed as an int.
+   * Spawns the next robot in the spawn queue in the lane corresponding to the first argument
+   * expressed as an int.
    *
    * @return true when successful, otherwise false
    */

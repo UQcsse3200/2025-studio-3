@@ -105,12 +105,13 @@ class DefenderStatsComponentTest {
   void testCritChanceSetterGetter() {
     DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 50);
     defender.setCritChance(25);
-    assertEquals(26, defender.getCritChance()); // Because of the upgrade of 1, it gets added to become 26
+    assertEquals(
+        26, defender.getCritChance()); // Because of the upgrade of 1, it gets added to become 26
   }
 
   @Test
   void testCostGetter() {
-      DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 100);
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 100);
     defender.setCost(150);
     assertEquals(150, defender.getCost());
   }

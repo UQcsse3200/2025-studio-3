@@ -1,10 +1,8 @@
 package com.csse3200.game.components.hotbar;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -40,7 +38,7 @@ public class HotbarDisplay extends UIComponent {
   private final Array<Image> slotImages = new Array<>();
   private float cellWidth;
   private Label insufficientScrapMessage;
-  private long insufficientScrapStartTime = -1;  // -1 means not active
+  private long insufficientScrapStartTime = -1; // -1 means not active
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
 
   public HotbarDisplay(
@@ -104,8 +102,8 @@ public class HotbarDisplay extends UIComponent {
       Label displayCost = new Label(String.valueOf(entityCost), skin);
 
       displayCost.setPosition(
-              tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
-              -displayCost.getPrefHeight() - 5f);
+          tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
+          -displayCost.getPrefHeight() - 5f);
 
       slot.add(tempUnit).row();
       slot.add(displayCost);
