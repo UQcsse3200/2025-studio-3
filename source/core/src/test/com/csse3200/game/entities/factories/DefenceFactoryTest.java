@@ -94,9 +94,9 @@ public class DefenceFactoryTest {
         mockConfigService = mock(ConfigService.class);
 
         // fake configs for each defender
-        when(mockConfigService.getDefenderConfig("slingshooter")).thenReturn(cfg(50, 500, "images/entities/defences/sling_shooter.atlas", "images/entities/defences/sling_shooter_1.png", "images/effects/sling_projectile.png", 100, 1, 1, 1, "right"));
-        when(mockConfigService.getDefenderConfig("armyguy")).thenReturn(cfg(80, 1000, "images/entities/defences/machine_gun.atlas", "images/entities/defences/army_guy_1.png", "images/effects/bullet.png", 100, 1, 1, 0.5f, "right"));
-        when(mockConfigService.getDefenderConfig("shadow")).thenReturn(cfg(20, 250, "images/entities/defences/shadow.atlas", "images/entities/defences/shadow_idle1.png", "images/effects/shock.png", 100, 1, 1, 1.5f, "left"));
+        when(mockConfigService.getDefenderConfig("slingshooter")).thenReturn(cfg("slingshooter", 50, 500, "images/entities/defences/sling_shooter.atlas", "images/entities/defences/sling_shooter_1.png", "images/effects/sling_projectile.png", 100, 1, 1, 1, "right"));
+        when(mockConfigService.getDefenderConfig("armyguy")).thenReturn(cfg("armyguy", 80, 1000, "images/entities/defences/machine_gun.atlas", "images/entities/defences/army_guy_1.png", "images/effects/bullet.png", 100, 1, 1, 0.5f, "right"));
+        when(mockConfigService.getDefenderConfig("shadow")).thenReturn(cfg("shadow" ,20, 250, "images/entities/defences/shadow.atlas", "images/entities/defences/shadow_idle1.png", "images/effects/shock.png", 100, 1, 1, 1.5f, "left"));
     }
 
     @AfterEach
@@ -106,7 +106,7 @@ public class DefenceFactoryTest {
 
 
     private static BaseDefenderConfig cfg(
-            int health, int range, String atlas, String asset, String projectile, int cost, int damage, float critChance, float attackSpeed, String direction) {
+            String name, int health, int range, String atlas, String asset, String projectile, int cost, int damage, float critChance, float attackSpeed, String direction) {
         BaseDefenderConfig c = new BaseDefenderConfig();
         try {
             java.lang.reflect.Field healthField = BaseDefenderConfig.class.getSuperclass().getDeclaredField("health");
@@ -223,7 +223,7 @@ public class DefenceFactoryTest {
 
     @Test
     void testGetTaskComponentLeft() {
-        BaseDefenderConfig leftConfig = cfg(50, 200, "", "", "", 0, 20, 1, 1, "left");
+        BaseDefenderConfig leftConfig = cfg("", 50, 200, "", "", "", 0, 20, 1, 1, "left");
         AITaskComponent tasksComponent = DefenceFactory.getTaskComponent(leftConfig);
 
         // OpenAI was used to help create these tests
@@ -264,7 +264,7 @@ public class DefenceFactoryTest {
 
     @Test
     void testGetTaskComponentRight() {
-        BaseDefenderConfig rightConfig = cfg(50, 200, "", "", "", 0, 20, 1, 1, "right");
+        BaseDefenderConfig rightConfig = cfg("", 50, 200, "", "", "", 0, 20, 1, 1, "right");
         AITaskComponent tasksComponent = DefenceFactory.getTaskComponent(rightConfig);
 
         try {
@@ -303,7 +303,7 @@ public class DefenceFactoryTest {
 
     @Test
     void testGetAnimation() {
-        BaseDefenderConfig shadow = cfg(20, 250, "images/entities/defences/shadow.atlas", "images/entities/defences/shadow_idle1.png", "images/effects/shock.png", 100, 1, 1, 1.5f,"left");
+        BaseDefenderConfig shadow = cfg("", 20, 250, "images/entities/defences/shadow.atlas", "images/entities/defences/shadow_idle1.png", "images/effects/shock.png", 100, 1, 1, 1.5f,"left");
         AnimationRenderComponent animator = DefenceFactory.getAnimationComponent(shadow);
         assertNotNull(animator);
         assertTrue(animator.hasAnimation("idle"), "Should have idle animation");
