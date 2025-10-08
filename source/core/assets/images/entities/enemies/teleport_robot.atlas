@@ -221,3 +221,5 @@ teleportDamaged
 	bounds: 384, 266, 64, 64
 invalid
 	bounds: 384, 2, 64, 64
+explosion
+    bounds: 384, 2, 64, 64

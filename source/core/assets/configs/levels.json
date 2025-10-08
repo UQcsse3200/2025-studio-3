@@ -16,6 +16,7 @@
             "tanky": { "cost": 5, "chance": 0.15 },
             "bungee": { "cost": 4, "chance": 0.05 },
             "teleport": { "cost": 6, "chance": 0.05 },
+            "bomber": { "cost": 6, "chance": 0.05 },
             "gunner": { "cost": 6, "chance": 0.05 },
             "giant": { "cost": 10, "chance": 0.1 }
 
@@ -31,6 +32,7 @@
             "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.05 },
             "teleport": { "cost": 6, "chance": 0.1 },
+            "bomber": { "cost": 6, "chance": 0.1 },
             "gunner": { "cost": 6, "chance": 0.15 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -45,6 +47,7 @@
             "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.1 },
             "teleport": { "cost": 6, "chance": 0.15 },
+            "bomber": { "cost": 6, "chance": 0.15 },
             "gunner": { "cost": 6, "chance": 0.35 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -67,6 +70,7 @@
             "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.1 },
             "teleport": { "cost": 6, "chance": 0.05 },
+            "bomber": { "cost": 6, "chance": 0.05 },
             "gunner": { "cost": 6, "chance": 0.05 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -80,6 +84,7 @@
             "tanky": { "cost": 5, "chance": 0.25 },
             "bungee": { "cost": 4, "chance": 0.15 },
             "teleport": { "cost": 6, "chance": 0.1 },
+            "bomber": { "cost": 6, "chance": 0.1 },
             "gunner": { "cost": 6, "chance": 0.1 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -93,6 +98,7 @@
             "tanky": { "cost": 5, "chance": 0.25 },
             "bungee": { "cost": 4, "chance": 0.15 },
             "teleport": { "cost": 6, "chance": 0.12 },
+            "bomber": { "cost": 6, "chance": 0.12 },
             "gunner": { "cost": 6, "chance": 0.15 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -106,6 +112,7 @@
             "tanky": { "cost": 5, "chance": 0.3 },
             "bungee": { "cost": 4, "chance": 0.2 },
             "teleport": { "cost": 6, "chance": 0.15 },
+            "bomber": { "cost": 6, "chance": 0.15 },
             "gunner": { "cost": 6, "chance": 0.15 },
             "giant": { "cost": 10, "chance": 0.1}
           }
@@ -119,6 +126,7 @@
             "tanky": { "cost": 5, "chance": 0.3 },
             "bungee": { "cost": 4, "chance": 0.2 },
             "teleport": { "cost": 6, "chance": 0.2 },
+            "bomber": { "cost": 6, "chance": 0.2 },
             "gunner": { "cost": 6, "chance": 0.15 },
             "giant": { "cost": 10, "chance": 0.1}
           }
