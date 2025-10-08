@@ -31,6 +31,7 @@ public class DefenceFactory {
   private static final String IDLE = "idle";
   private static final String BUFF = "doubleDamage";
   private static final String UNBUFF = "doubleDamageStop";
+  private static final String HEAL = "heal";
 
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
@@ -76,6 +77,8 @@ public class DefenceFactory {
         () -> defender.getComponent(DefenderStatsComponent.class).buff());
     defender.getEvents().addListener(UNBUFF, 
         () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
+    defender.getEvents().addListener(HEAL,
+        () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
 
     return defender;
   }
@@ -172,7 +175,6 @@ public class DefenceFactory {
             .addComponent(solid)
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            // .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent());
 
     npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);

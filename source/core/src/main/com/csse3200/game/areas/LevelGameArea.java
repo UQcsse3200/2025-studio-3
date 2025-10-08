@@ -49,6 +49,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float Y_MARGIN_TILES = 1f;
   private static final float MAP_HEIGHT_TILES = 8f;
   private static final String ENTITY_DEATH_EVENT = "entityDeath";
+  private static final String HEAL = "heal";
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private float xOffset;
   private float yOffset;
@@ -578,6 +579,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
+        healDefences();
+        // remove the healer after its animation
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
@@ -626,6 +629,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
+  }
+
+  private void healDefences() {
+    if (grid == null) {
+      logger.warn("Grid not initialised; cannot heal defences.");
+      return;
+    }
+
+    final int rows = grid.getRows();
+    final int cols = grid.getCols();
+    final int total = rows * cols;
+
+    // Find all occupied cells (a placed defence or generator)
+    for (int i = 0; i < total; i++) {
+      Entity occ = grid.getOccupantIndex(i);
+      if (occ == null) continue;
+
+      logger.info("Healing entity at grid index {}", i);
+      occ.getEvents().trigger(HEAL);
+    }
   }
 
   /**

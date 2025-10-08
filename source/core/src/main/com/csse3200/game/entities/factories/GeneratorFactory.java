@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.npc.DefenceAnimationController;
@@ -19,6 +20,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class GeneratorFactory {
   private static final String HIT = "hit";
   private static final String IDLE = "idle";
+  private static final String HEAL = "heal";
 
   public static Entity createGeneratorUnit(BaseGeneratorConfig config) {
     // start with a base defender (physics + collider)
@@ -36,6 +38,9 @@ public class GeneratorFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    defender.getEvents().addListener(HEAL,
+        () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
     return defender;
   }
 
