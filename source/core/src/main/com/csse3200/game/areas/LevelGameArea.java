@@ -212,7 +212,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     ui.addComponent(
             new GameAreaDisplay(
-                "Level: " + ServiceLocator.getProfileService().getProfile().getCurrentLevel()))
+                "Level "
+                    + (ServiceLocator.getProfileService().getProfile().getCurrentLevel())
+                        .split("level")[1]))
         .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
 
     spawnEntity(ui);
