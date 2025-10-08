@@ -17,7 +17,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   private final float chance;
   private final int maxTeleports;
   private final float[] laneYs;
-  private final int priority = 10;
+  private final int priority = 5; // Priority is higher than walk, but lower than attack
 
   private float timer;
   private int teleportsDone;
@@ -86,6 +86,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     if (Math.abs(targetY - currentY) <= 1e-3f) return;
 
     // ✅ Teleport using owner entity
+    owner.getEntity().getEvents().trigger("teleportStart");
     entity.setPosition(pos.x, targetY);
     teleportsDone++;
   }

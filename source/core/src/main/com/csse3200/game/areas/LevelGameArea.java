@@ -152,7 +152,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnGrid(levelRows, levelCols);
 
     // 🧪 TEMP: Spawn a bomber in the top-right corner for testing
-    spawnRobot(levelCols - 1, levelRows - 1, RobotFactory.RobotType.BOMBER);
+    spawnRobot(levelCols - 1, levelRows - 1, RobotType.TELEPORT);
 
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
