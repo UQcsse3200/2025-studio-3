@@ -1,33 +1,23 @@
-package com.csse3200.game.entities;
+package com.csse3200.game.services;
 
+import com.csse3200.game.entities.EntitySpawn;
+import com.csse3200.game.entities.WaveConfigProvider;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.services.ServiceLocator;
+=======
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
 import java.util.*;
 import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Manages the lifecycle of enemy waves and schedules spawns over time.
- *
- * <p>WaveManager is a lightweight coordinator:
- *
- * <ul>
- *   <li>Tracks the current wave number and whether a wave is active.
- *   <li>Determines spawn cadence and a fair, shuffled lane sequence.
- *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should produce and which type
- *       to spawn next.
- *   <li>Delegates the actual entity creation and placement via callback interface.
- * </ul>
- *
- * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
- * request a spawn.
- */
-public class WaveManager implements WaveConfigProvider {
-  private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
+public class WaveService implements WaveConfigProvider {
+
+  private static final Logger logger = LoggerFactory.getLogger(WaveService.class);
 
   private int currentWave = 0;
   private String currentLevelKey = "LevelOne";
@@ -39,7 +29,7 @@ public class WaveManager implements WaveConfigProvider {
   private boolean waveActive = false;
 
   private boolean preparationPhaseActive = false;
-  private float preparationPhaseDuration = 10.0f;
+  private static final float PREPERATION_PHASE_DURATION = 5.0f;
   private float preparationPhaseTimer = 0.0f;
   private final EntitySpawn entitySpawn;
 
@@ -66,10 +56,15 @@ public class WaveManager implements WaveConfigProvider {
   private boolean levelComplete = false;
   private BaseLevelConfig levelConfig;
 
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
   private boolean bossActive = false;
   private final Queue<BossFactory.BossTypes> bossSpawnQueue = new LinkedList<>();
 
   public WaveManager(String levelKey) {
+=======
+  /** Creates new WaveService that creates its own WaveService */
+  public WaveService() {
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
@@ -78,7 +73,7 @@ public class WaveManager implements WaveConfigProvider {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
-    this.currentLevelKey = levelKey != null ? levelKey : "levelOne";
+    this.currentLevelKey = "levelOne";
     resetToInitialState();
     Collections.shuffle(laneOrder);
     this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
@@ -86,15 +81,10 @@ public class WaveManager implements WaveConfigProvider {
       logger.warn("Level config not found for level {}", this.currentLevelKey);
       this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("levelOne");
     }
+    logger.debug("[WaveService] Wave service created.");
   }
 
-  /**
-   * Test-only constructor to inject a preconfigured {@link EntitySpawn}. Useful for unit tests that
-   * avoid LibGDX file IO.
-   *
-   * @param entitySpawn spawn helper used by this manager
-   */
-  public WaveManager(EntitySpawn entitySpawn) {
+  public WaveService(EntitySpawn entitySpawn) {
     this.timeSinceLastSpawn = 0f;
     this.waveLaneSequence = new ArrayList<>();
     this.waveLanePointer = 0;
@@ -108,9 +98,47 @@ public class WaveManager implements WaveConfigProvider {
   }
 
   /**
-   * Advances to the next wave, resets internal state and lane sequence, and computes the number of
-   * enemies to spawn for this wave. Starts with a preparation phase.
+   * Update function to be called by main game loop. Handles preparation phase timer and enemy
+   * spawning.
+   *
+   * @param deltaTime time elapsed since last update in seconds
    */
+  public void update(float deltaTime) {
+    if (preparationPhaseActive) {
+      preparationPhaseTimer += deltaTime;
+      if (preparationPhaseTimer >= PREPERATION_PHASE_DURATION) {
+        startWave();
+      }
+      return;
+    }
+
+    if (waveActive) {
+      timeSinceLastSpawn += deltaTime;
+      float spawnInterval = 5.0f;
+      if (timeSinceLastSpawn >= spawnInterval) {
+        spawnEnemy(getLane());
+        timeSinceLastSpawn -= spawnInterval;
+      }
+    }
+  }
+
+  /**
+   * @return The current wave being spawned by WaveService
+   */
+  public int getCurrentWave() {
+    return currentWave;
+  }
+
+  /**
+   * Set the current wave in WaveService to the provided one
+   *
+   * @param wave the wave to set
+   */
+  public void setCurrentWave(int wave) {
+    currentWave = wave;
+  }
+
+  /** Tells WaveService to start spawning the next wave */
   public void initialiseNewWave() {
     if (levelComplete) {
       logger.info("Level complete - no more waves will spawn");
@@ -118,6 +146,7 @@ public class WaveManager implements WaveConfigProvider {
     }
 
     setCurrentWave(currentWave + 1);
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
 
     if (currentWave == 1) {
       logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
@@ -133,6 +162,8 @@ public class WaveManager implements WaveConfigProvider {
       bossActive = true;
     }
 
+=======
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -151,6 +182,7 @@ public class WaveManager implements WaveConfigProvider {
     }
   }
 
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
   /** Ends the current wave and immediately begins the next one. */
   public void endWave() {
     waveActive = false;
@@ -167,6 +199,8 @@ public class WaveManager implements WaveConfigProvider {
     }
   }
 
+=======
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
   public void setEnemySpawnCallback(EnemySpawnCallback callback) {
     this.enemySpawnCallback = callback;
   }
@@ -175,6 +209,7 @@ public class WaveManager implements WaveConfigProvider {
     this.waveEventListener = listener;
   }
 
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
   public int getCurrentWave() {
     return currentWave;
   }
@@ -199,6 +234,10 @@ public class WaveManager implements WaveConfigProvider {
   }
 
   public void onEnemyDisposed() {
+=======
+  /** Method to be called when an enemy dies, to track wave end conditions */
+  public void onEnemyDispose() {
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
     enemiesDisposed++;
     logger.debug(
         "Enemy disposed. Count: {}/{} (spawned: {})",
@@ -206,6 +245,7 @@ public class WaveManager implements WaveConfigProvider {
         enemiesToSpawn,
         currentEnemyPos);
 
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
     if (enemiesDisposed >= enemiesToSpawn
         && currentEnemyPos >= enemiesToSpawn
         && waveActive
@@ -228,6 +268,50 @@ public class WaveManager implements WaveConfigProvider {
     }
 
     endWave();
+=======
+    if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
+      logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
+
+      int maxWaves = getCurrentLevelWaveCount();
+      if (currentWave >= maxWaves) {
+        logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
+        levelComplete = true;
+        waveActive = false;
+      }
+
+      endWave();
+    }
+  }
+
+  public void endWave() {
+    waveActive = false;
+    initialiseNewWave();
+  }
+
+  private void startWave() {
+    waveActive = true;
+    preparationPhaseActive = false;
+    timeSinceLastSpawn = 0.0f;
+
+    if (waveEventListener != null) {
+      waveEventListener.onWaveStarted(currentWave);
+    }
+  }
+
+  public boolean isPreparationPhaseActive() {
+    return preparationPhaseActive;
+  }
+
+  public float getPreparationPhaseRemainingTime() {
+    if (!preparationPhaseActive) {
+      return 0.0f;
+    }
+    return Math.max(0.0f, PREPERATION_PHASE_DURATION - preparationPhaseTimer);
+  }
+
+  public float getPreparationPhaseDuration() {
+    return PREPERATION_PHASE_DURATION;
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
   }
 
   public int getEnemiesDisposed() {
@@ -270,9 +354,13 @@ public class WaveManager implements WaveConfigProvider {
     waveLaneSequence.clear();
     waveLanePointer = 0;
     Collections.shuffle(laneOrder);
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
     bossActive = false;
     bossSpawnQueue.clear();
     logger.info("WaveManager reset to initial state - ready for new game");
+=======
+    logger.info("WaveService reset to initial state - ready for new game");
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
   }
 
   public int getEnemiesRemaining() {
@@ -294,6 +382,7 @@ public class WaveManager implements WaveConfigProvider {
     logger.info("Level set to {}", levelKey);
   }
 
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
   public void update(float deltaTime) {
     if (!bossSpawnQueue.isEmpty()) {
       BossFactory.BossTypes bossToSpawn = bossSpawnQueue.poll();
@@ -320,6 +409,8 @@ public class WaveManager implements WaveConfigProvider {
     }
   }
 
+=======
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
   public int getLane() {
     if (waveLaneSequence.isEmpty()) {
       waveLaneSequence = new ArrayList<>(List.of(0, 1, 2, 3, 4));
@@ -372,6 +463,10 @@ public class WaveManager implements WaveConfigProvider {
     if (wave == null || wave.getSpawnConfigs() == null) {
       return new java.util.HashMap<>();
     }
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
+=======
+
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
     return wave.getSpawnConfigs();
   }
 
@@ -385,6 +480,10 @@ public class WaveManager implements WaveConfigProvider {
         && waveIndex < levelConfig.getWaves().size()) {
       return levelConfig.getWaves().get(waveIndex);
     }
+<<<<<<< HEAD:source/core/src/main/com/csse3200/game/entities/WaveManager.java
+=======
+
+>>>>>>> main:source/core/src/main/com/csse3200/game/services/WaveService.java
     return new BaseWaveConfig();
   }
 }
