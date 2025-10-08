@@ -45,12 +45,26 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
-    if (config.getName().equals("Mortar")) {
+    if (config.getName() != null && config.getName().equals("mortar")) {
       defender.setProperty("unitType", "mortar");
     }
 
-    AITaskComponent tasks = getTaskComponent(config);
+    // --- Create and attach task component ---
+    TargetDetectionTasks.AttackDirection dir = TargetDetectionTasks.AttackDirection.RIGHT;
+    if (config.getDirection().equals("left")) {
+      dir = TargetDetectionTasks.AttackDirection.LEFT;
+    }
+
+    AttackTask attackTask = new AttackTask(config.getRange(), config.getAttackSpeed(), dir);
+    IdleTask idleTask = new IdleTask(config.getRange(), dir);
+    AITaskComponent tasks = new AITaskComponent().addTask(attackTask).addTask(idleTask);
+
+    // Attach AI tasks
     defender.addComponent(tasks);
+
+    // ✅ Wire up fire-rate event listeners directly — no iteration
+    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
+    defender.getEvents().addListener("resetFireRate", attackTask::resetFireRate);
     // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
     // stats component
