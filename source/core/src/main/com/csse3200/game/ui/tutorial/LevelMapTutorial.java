@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.GameTime;
@@ -31,6 +30,7 @@ import com.csse3200.game.ui.UIComponent;
 public class LevelMapTutorial extends UIComponent {
   /** Table containing the instructional dialog and next button. */
   private Table dialogTable;
+
   /** Table containing the hint message to progress through the tutorial messages. */
   private Table messageTable;
 
@@ -48,6 +48,7 @@ public class LevelMapTutorial extends UIComponent {
 
   /** Current tutorial step index. */
   private int step = 0;
+
   /** Bottom padding for hint message. */
   private static final float HINT_BOTTOM_PAD = 20f;
 
