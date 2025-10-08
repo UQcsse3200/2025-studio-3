@@ -20,8 +20,8 @@ public class Arsenal {
                 //"boxer",
                 "shield",
                 //"harpoon",
-                "mortar")); // Default defences
-    generators = new ArrayList<>(Arrays.asList("furnace"));
+                "mortar")); // Default defences       
+    generators = new ArrayList<>(Arrays.asList("furnace", "healer"));
   }
 
   /**

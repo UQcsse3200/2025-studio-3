@@ -130,6 +130,16 @@
         "interval": 12,
         "scrapValue": 25,
         "cost": 50
+      },
+      "healer": {
+        "name": "Healer",
+        "description": "Skibidi",
+        "assetPath": "images/entities/defences/healer_1.png",
+        "atlasPath": "images/entities/defences/healer.atlas",
+        "health": 50,
+        "interval": 0,
+        "scrapValue": 0,
+        "cost": 200
       }
     }
   }

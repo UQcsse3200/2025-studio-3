@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.CombatStatsComponent;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
@@ -572,7 +573,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      spawnScrap(newEntity);
+      if (newEntity.getComponent(GeneratorStatsComponent.class).getInterval() > 0) {
+        spawnScrap(newEntity);
+      } else {
+        // healer entity, no scrap & kills itself after one animation cycle
+        logger.info("Healer placed");
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(
+                Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position))));
+      }
     }
 
     spawnEntity(newEntity);
