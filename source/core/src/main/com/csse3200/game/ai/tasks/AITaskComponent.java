@@ -82,14 +82,12 @@ public class AITaskComponent extends Component implements TaskRunner {
     }
   }
 
-  /**
-   * Clear the current task.
-   */
+  /** Clear the current task. */
   public void clearTask() {
     if (currentTask != null) {
       logger.info("Clearing current task {}", this);
       currentTask.stop();
-      currentTask = null; //reset to no active task
+      currentTask = null; // reset to no active task
     }
   }
 }

@@ -81,8 +81,6 @@ class EntitySpawnTest {
             when(gunnerRobotConfig.getChance()).thenReturn(0.0f);
             configs.put("gunnerRobot", gunnerRobotConfig);
 
-
-
             return configs;
           }
         };

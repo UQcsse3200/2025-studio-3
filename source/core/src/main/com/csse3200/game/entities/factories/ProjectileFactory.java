@@ -55,9 +55,9 @@ public class ProjectileFactory {
   /**
    * Creates a gunner robot projectile entity.
    *
-   * <p>The bullet shot is designed to be used by robot entities such as gunner robot. It
-   *  includes components for physics, collision, attack damage, and rendering. The projectile is set
-   *   to deal damage to enemies and is destroyed upon impact.
+   * <p>The bullet shot is designed to be used by robot entities such as gunner robot. It includes
+   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
+   * damage to enemies and is destroyed upon impact.
    *
    * @param damage amount of damage dealt to an enemy entity
    * @param speed the speed the bullet shot moves at
@@ -65,7 +65,7 @@ public class ProjectileFactory {
    */
   public static Entity createGunnerProjectile(int damage, float speed) {
     Entity gunnerProjectile =
-            new Entity()
+        new Entity()
             .addComponent(new PhysicsComponent())
             .addComponent(new ColliderComponent())
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
@@ -78,5 +78,4 @@ public class ProjectileFactory {
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
     return gunnerProjectile;
   }
-
 }

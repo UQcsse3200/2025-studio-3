@@ -37,7 +37,7 @@ public class AttackTask extends TargetDetectionTasks {
     owner.getEntity().getEvents().trigger("fire");
   }
 
-  /** Updates the task each game frame*/
+  /** Updates the task each game frame */
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
