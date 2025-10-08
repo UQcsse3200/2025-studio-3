@@ -3,10 +3,9 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -30,7 +29,11 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,21 +55,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float stageToWorldRatio;
   private LevelGameGrid grid;
   private Entity selectedUnit;
-  private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
-  protected Entity gameOverEntity;
+
+  Entity gameOverEntity;
+  private Entity levelCompleteEntity;
+  private boolean isLevelComplete = false;
+  private boolean isGameOver = false;
+
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
-
-  // Level configuration
-  private String currentLevelKey;
+  private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+  private final ItemHandler itemHandler = new ItemHandler(this);
+  private final WavePreviewManager wavePreview = new WavePreviewManager(this);
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -80,7 +87,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setScaling();
     selectedUnit = null;
 
-    // TODO: Add dynamic updates when wave is changed.
     ServiceLocator.getDiscordRichPresenceService()
         .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
@@ -103,7 +109,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
       if (mapFilePath == null || mapFilePath.isEmpty()) {
-        mapFilePath = "images/backgrounds/level-1-map-v2.png";
+        mapFilePath = "images/backgrounds/level_map_grass.png";
       }
       logger.info(
           "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
@@ -147,99 +153,104 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
   }
 
-  /** Spawns the level UI */
+  /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   protected void displayUI() {
-    Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
-    for (String defenceKey : profile.getArsenal().getDefenders()) {
-      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
-      unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
-    }
-    for (String generatorKey : profile.getArsenal().getGenerators()) {
-      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
-      unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
-    }
+    populateUnitList(profile, configService);
+    populateItemList(profile.getInventory(), configService);
 
-    Inventory inventory = profile.getInventory();
-
-    if (inventory.contains("grenade")) {
-      BaseItemConfig grenadeConfig = configService.getItemConfig("grenade");
-      if (grenadeConfig != null) {
-        itemList.put(grenadeConfig.getAssetPath(), ItemFactory::createGrenade);
-      }
-    }
-    if (inventory.contains("coffee")) {
-      BaseItemConfig coffeeConfig = configService.getItemConfig("coffee");
-      if (coffeeConfig != null) {
-        itemList.put(coffeeConfig.getAssetPath(), ItemFactory::createCoffee);
-      }
-    }
-    if (inventory.contains("buff")) {
-      BaseItemConfig buffConfig = configService.getItemConfig("buff");
-      if (buffConfig != null) {
-        itemList.put(buffConfig.getAssetPath(), ItemFactory::createBuff);
-      }
-    }
-    if (inventory.contains("emp")) {
-      BaseItemConfig empConfig = configService.getItemConfig("emp");
-      if (empConfig != null) {
-        itemList.put(empConfig.getAssetPath(), ItemFactory::createEmp);
-      }
-    }
-    if (inventory.contains("nuke")) {
-      BaseItemConfig nukeConfig = configService.getItemConfig("nuke");
-      if (nukeConfig != null) {
-        itemList.put(nukeConfig.getAssetPath(), ItemFactory::createNuke);
-      }
-    }
-
-    ui.addComponent(new GameAreaDisplay("Level One"))
-        .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
-
+    Entity ui =
+        new Entity()
+            .addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
-    // Creates a game over entity to handle the game over window UI
-    this.gameOverEntity = new Entity();
-    gameOverEntity.addComponent(new GameOverWindow());
-    spawnEntity(this.gameOverEntity);
+    createGameOverEntity();
+
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
-  /** Creates the game map and renders it */
-  private void spawnMap() {
-    // Compute world height (viewport height)
-    float viewportHeight = stageHeight * stageToWorldRatio;
-
-    // Load texture from level config
-    Texture tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
-    if (tex == null) {
-      // Ensure it’s loaded via MainGameScreen (already loaded backgrounds) or load on demand
-      ServiceLocator.getResourceService().loadTextures(new String[] {mapFilePath});
-      ServiceLocator.getResourceService().loadAll();
-      tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
+  /** Populates unitList with all available defenders and generators from the player's arsenal. */
+  private void populateUnitList(Profile profile, ConfigService configService) {
+    for (String defenceKey : profile.getArsenal().getDefenders()) {
+      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
+      if (config != null) {
+        unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
+      } else {
+        logger.warn("Missing defender config for key {}", defenceKey);
+      }
     }
 
-    // Create background entity
-    Entity map = new Entity();
-    BackgroundMapComponent bg = new BackgroundMapComponent(tex, viewportHeight);
-    map.addComponent(bg);
-    map.setPosition(0f, 0f); // left-aligned world
+    for (String generatorKey : profile.getArsenal().getGenerators()) {
+      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
+      if (config != null) {
+        unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
+      } else {
+        logger.warn("Missing generator config for key {}", generatorKey);
+      }
+    }
+  }
 
-    // Let LevelGameArea expose world width for clamping/panning
-    this.worldWidth = bg.getWorldWidth();
+  /** Populates itemList for all items in inventory that have corresponding configs. */
+  private void populateItemList(Inventory inventory, ConfigService configService) {
+    Map<String, Supplier<Entity>> itemFactories =
+        Map.of(
+            "grenade", ItemFactory::createGrenade,
+            "coffee", ItemFactory::createCoffee,
+            "buff", ItemFactory::createBuff,
+            "emp", ItemFactory::createEmp,
+            "nuke", ItemFactory::createNuke);
+
+    for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
+      String key = entry.getKey();
+      if (inventory.contains(key)) {
+        BaseItemConfig config = configService.getItemConfig(key);
+        if (config != null && config.getAssetPath() != null) {
+          itemList.put(config.getAssetPath(), entry.getValue());
+        } else {
+          logger.warn("Item config missing or invalid for {}", key);
+        }
+      }
+    }
+  }
+
+  /** Creates and spawns the game-over UI entity. */
+  void createGameOverEntity() {
+    gameOverEntity = new Entity().addComponent(new GameOverWindow());
+    spawnEntity(gameOverEntity);
+  }
+
+  /** Creates and spawns the game background map and its boundary wall. */
+  private void spawnMap() {
+    Texture texture = loadMapTexture(mapFilePath);
+    float viewportHeight = stageHeight * stageToWorldRatio;
+
+    Entity map = new Entity();
+    map.addComponent(new BackgroundMapComponent(texture, viewportHeight));
+    map.setPosition(0f, 0f);
 
     spawnEntity(map);
+
+    // Cache world width from component for camera/clamping
+    this.worldWidth = map.getComponent(BackgroundMapComponent.class).getWorldWidth();
+
     spawnWall();
   }
 
+  /** Spawns a static defensive wall at the left edge of the map. */
   private void spawnWall() {
-    Entity wall = DefenceFactory.createWall();
-    float tileX = xOffset + tileSize * -1;
     float tileY = yOffset - tileSize / 5;
     float wallSize = tileSize * 6;
+
+    Entity wall = DefenceFactory.createWall();
+    wall.setPosition(xOffset + tileSize * -1, tileY);
     wall.scaleHeight(wallSize);
-    wall.setPosition(tileX, tileY);
+
     spawnEntity(wall);
     wall.getEvents().trigger("idleStart");
   }
@@ -254,40 +265,36 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(scrapSpawner);
   }
 
-  /**
-   * Spawns the grid of tiles for the game
-   *
-   * @param rows an int that is the number of rows wanted for the grid
-   * @param cols an int that is the number of columns wanted for the grid
-   */
+  /** Creates the tiled grid for the playable area. */
   private void spawnGrid(int rows, int cols) {
     grid = new LevelGameGrid(rows, cols);
-    for (int i = 0; i < rows * cols; i++) {
-      Entity tile;
-      // Calc tile position
-      float tileX = xOffset + tileSize * (i % cols);
-      int col = i / cols;
-      float tileY = yOffset + tileSize * col;
 
-      tile = GridFactory.createTile(tileSize, tileX, tileY, this);
-      tile.setPosition(tileX, tileY);
-      tile.getComponent(TileStorageComponent.class).setPosition(i);
-      grid.addTile(i, tile);
-      spawnEntity(tile);
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        float tileX = xOffset + tileSize * col;
+        float tileY = yOffset + tileSize * row;
+
+        Entity tile = GridFactory.createTile(tileSize, tileX, tileY, this);
+        tile.setPosition(tileX, tileY);
+
+        tile.getComponent(TileStorageComponent.class).setPosition(row * cols + col);
+
+        grid.addTile(row * cols + col, tile);
+        spawnEntity(tile);
+      }
     }
   }
 
-  /**
-   * Getter for grid
-   *
-   * @return grid
-   */
-  public LevelGameGrid getGrid() {
-    return grid;
-  }
-
-  public void setGrid(LevelGameGrid newGrid) {
-    this.grid = newGrid;
+  /** Loads a map texture safely, ensuring it exists in the resource service. */
+  private Texture loadMapTexture(String path) {
+    Texture tex = ServiceLocator.getResourceService().getAsset(path, Texture.class);
+    if (tex == null) {
+      logger.warn("Map texture '{}' not preloaded, loading dynamically.", path);
+      ServiceLocator.getResourceService().loadTextures(new String[] {path});
+      ServiceLocator.getResourceService().loadAll();
+      tex = ServiceLocator.getResourceService().getAsset(path, Texture.class);
+    }
+    return tex;
   }
 
   public void spawnRobot(int col, int row, RobotType robotType) {
@@ -296,30 +303,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    Entity unit = RobotFactory.createRobotType(robotType);
-
-    // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
 
-    // place on that grid cell (bottom-left of the tile)
-    float tileX = xOffset + tileSize * col;
-    float tileY = yOffset + tileSize * row;
+    Vector2 pos = tileToWorld(col, row);
+    registerRobot(robotType, pos.x, pos.y);
 
-    unit.setPosition(tileX, tileY);
-    unit.scaleHeight(tileSize);
-
-    spawnEntity(unit);
-    robots.add(unit);
-
-    unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
-              robots.remove(unit);
-            });
     logger.info("Robot {} spawned at position {} {}", robotType, row, col);
   }
 
@@ -333,44 +322,35 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    final int rows = grid.getRows();
-    final int cols = grid.getCols();
-    final int total = rows * cols;
-
-    int bestRow = -1;
-    int bestCol = -1;
-
-    // Find the RIGHT-MOST occupied cell (a placed defence)
-    for (int i = 0; i < total; i++) {
-      Entity occ = grid.getOccupantIndex(i);
-      if (occ == null) continue;
-
-      int row = i / cols;
-      int col = i % cols;
-      if (col > bestCol) {
-        bestCol = col;
-        bestRow = row;
-      }
-    }
-
-    // No defences found -> do nothing (test expects no robot to be created)
-    if (bestCol < 0) {
+    GridPoint2 rc = findRightmostDefenceCell(); // x = col, y = row
+    if (rc == null) {
       logger.info("No defence tiles found to spawn {} robot on.", robotType);
       return;
     }
 
-    // Create the robot and place it slightly to the right of the right-most defence
-    Entity unit = RobotFactory.createRobotType(robotType);
-    if (unit == null) {
-      logger.error("spawnRobotOnDefence: RobotFactory returned null for {}", robotType);
-      return;
-    }
+    int bestCol = rc.x;
+    int bestRow = rc.y;
+    int cols = grid.getCols();
 
-    // Clamp just inside the right edge to avoid spawning off-map
+    // Place slightly to the right of the right-most defence, but clamp inside the map
     float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);
     float worldX = xOffset + tileSize * spawnCol;
     float worldY = yOffset + tileSize * bestRow;
 
+    registerRobot(robotType, worldX, worldY);
+    logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
+  }
+
+  /** Convert tile grid coordinates to world coordinates (bottom-left of tile). */
+  private Vector2 tileToWorld(int col, int row) {
+    float x = xOffset + tileSize * col;
+    float y = yOffset + tileSize * row;
+    return new Vector2(x, y);
+  }
+
+  /** Shared creation, placement, scaling, spawning, and listener wiring for robots. */
+  private void registerRobot(RobotType type, float worldX, float worldY) {
+    Entity unit = RobotFactory.createRobotType(type);
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
 
@@ -385,20 +365,55 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
-    unit.getEvents().addListener("despawned", () -> robots.remove(unit));
 
-    logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
+    // Keep list in sync if something else despawns the robot
+    unit.getEvents().addListener("despawned", () -> robots.remove(unit));
+  }
+
+  /**
+   * Finds the right-most occupied grid cell (i.e., a placed defence).
+   *
+   * @return GridPoint2(col, row), or null if none exist.
+   */
+  private GridPoint2 findRightmostDefenceCell() {
+    int rows = grid.getRows();
+    int cols = grid.getCols();
+    int total = rows * cols;
+
+    int bestCol = -1;
+    int bestRow = -1;
+
+    for (int i = 0; i < total; i++) {
+      Entity occ = grid.getOccupantIndex(i);
+      if (occ == null) continue;
+
+      int row = i / cols;
+      int col = i % cols;
+      if (col > bestCol) {
+        bestCol = col;
+        bestRow = row;
+      }
+    }
+    return (bestCol >= 0) ? new GridPoint2(bestCol, bestRow) : null;
   }
 
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+    // Safety check
+    if (projectile == null || spawnPos == null || direction == null) {
+      logger.warn("Invalid projectile spawn parameters");
+      return;
+    }
+
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+
     spawnEntity(projectile); // adds to area and entity service
   }
 
@@ -429,201 +444,127 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
-    // Resolve world position from tile index
-    final int col = position % levelCols;
-    final int row = position / levelCols;
-    final float tileX = xOffset + tileSize * col;
-    final float tileY = yOffset + tileSize * row;
-    final Vector2 entityPos = new Vector2(tileX, tileY);
-
-    Supplier<Entity> entitySupplier =
-        selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
-    Entity newEntity = entitySupplier.get();
-    if (newEntity == null) {
-      logger.error("Entity fetched was NULL");
-      return;
-    }
-    newEntity.setPosition(entityPos);
-
-    // Get the tile at the spawn coordinates
-    Entity selectedTile = grid.getTile(position);
-
-    if (selectedTile == null) {
+    // --- Step 1: Resolve grid/tile/selected entity ---
+    Entity tile = grid.getTile(position);
+    if (tile == null) {
       logger.warn("No tile entity found at index {}", position);
       return;
     }
 
-    // ---------- ITEM PATH  (to be moved to a different method in future) ----------
-
-    // Where entity to be spawned is an Item and the player has such item in their inventory
-    ItemComponent item = newEntity.getComponent(ItemComponent.class);
-    if (item != null
-        && !ServiceLocator.getProfileService()
-            .getProfile()
-            .getInventory()
-            .contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
-      // Clear Item from tile storage
-      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-      String itemType = item.getType().toString();
-      logger.info("Not spawning item {} since none in player's inventory", itemType);
-      return;
-    }
-    if (item != null) {
-      spawnItem(item, entityPos);
-
-      // Clear Item from tile storage
-      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-      // Clear drag/selection after using an item
-      setIsCharacterSelected(false);
-      setSelectedUnit(null);
-      cancelDrag();
+    Entity newEntity = getSelectedEntity();
+    if (newEntity == null) {
+      logger.warn("No selected entity to spawn");
       return;
     }
 
-    // ---------- DEFENCE/UNIT PATH (single source of truth = GRID) ----------
+    Vector2 worldPos = resolveWorldPosition(position);
+    newEntity.setPosition(worldPos);
 
+    // --- Step 2: Item path ---
+    if (trySpawnItem(newEntity, tile, worldPos)) {
+      resetSelectionUI();
+      return;
+    }
+
+    // --- Step 3: Defence / Generator path ---
     if (grid.isOccupiedIndex(position)) {
       logger.info("Tile {} already occupied", position);
+      resetSelectionUI();
       return;
     }
 
-    // Add entity to tile unless it is an Item
-    selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
+    placeDefenceUnit(position, tile, newEntity, worldPos);
+    resetSelectionUI();
+  }
 
-    // set scale to render as desired
-    newEntity.scaleHeight(tileSize);
+  /** Safely obtain the selected entity's supplier and create it. */
+  private Entity getSelectedEntity() {
+    if (selectedUnit == null) return null;
+    DeckInputComponent deck = selectedUnit.getComponent(DeckInputComponent.class);
+    return (deck != null) ? deck.getEntitySupplier().get() : null;
+  }
 
-    // if entity is a furnace, trigger currency generation at that point
-    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      spawnScrap(newEntity);
-    }
-
-    spawnEntity(newEntity);
-    // trigger the animation - this will change with more entities
-    newEntity.getEvents().trigger("idleStart");
-
-    // Ensure grid slot frees when unit leaves
-    Runnable clearTile =
-        () -> {
-          grid.removeOccupantIfMatchIndex(position, newEntity);
-          selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-        };
-
-    newEntity
-        .getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(newEntity);
-              clearTile.run();
-              robots.remove(newEntity);
-            });
-
-    newEntity.getEvents().addListener("despawned", clearTile::run);
-
-    logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
-
-    newEntity
-        .getEvents()
-        .addListener(
-            "fire",
-            (TargetDetectionTasks.AttackDirection direction) -> {
-              spawnProjectile(
-                  entityPos,
-                  newEntity.getComponent(ProjectileComponent.class).getProjectile(),
-                  direction);
-              newEntity.getEvents().trigger("attackStart");
-            });
-    setIsCharacterSelected(false);
-    setSelectedUnit(null);
-    cancelDrag();
+  /** Convert a tile index into its world position. */
+  private Vector2 resolveWorldPosition(int position) {
+    int col = position % levelCols;
+    int row = position / levelCols;
+    return new Vector2(xOffset + tileSize * col, yOffset + tileSize * row);
   }
 
   /**
-   * Spawns item at the selected tile and triggers the relevant item effect to occur.
-   *
-   * @param item the specific item type (component)
-   * @param entityPos the tile position on which the item was placed
+   * Handle spawning an item (grenade, coffee, etc.) if applicable. Returns true if an item was
+   * spawned and handled.
    */
-  public void spawnItem(ItemComponent item, Vector2 entityPos) {
-    String itemType = item.getType().toString();
-    logger.info("Spawning item {}", itemType);
-    String key = item.getType().toString().toLowerCase(Locale.ROOT);
+  private boolean trySpawnItem(Entity entity, Entity tile, Vector2 worldPos) {
+    ItemComponent item = entity.getComponent(ItemComponent.class);
+    if (item == null) return false;
 
-    // Remove one instance of the Item from the inventory
-    ServiceLocator.getProfileService().getProfile().getInventory().removeItem(key);
-    logger.info("One {} item used", key);
+    String itemKey = item.getType().toString().toLowerCase(Locale.ROOT);
+    Inventory inv = ServiceLocator.getProfileService().getProfile().getInventory();
 
-    // Spawn effect
-    // Currently just effect displays, not entity itself then effect after a delay
-    ServiceLocator.getItemEffectsService()
-        .playEffect(
-            key,
-            entityPos,
-            (int) tileSize,
-            new Vector2(
-                (float) (xOffset * 0.25 + levelCols * tileSize), (float) (tileSize * -0.75)));
-
-    // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
-    Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");
-    if (damagingItems.contains(item.getType().toString())) {
-      // Window query (3x3)
-      float radius = 1.5f * tileSize;
-
-      List<Entity> toRemove = new ArrayList<>(); // targets
-      for (Entity r : robots) {
-        Vector2 pos = r.getPosition();
-        if (Math.abs(entityPos.x - pos.x) <= radius && Math.abs(entityPos.y - pos.y) <= radius) {
-          // for logger
-          int grenadeCol = (int) ((entityPos.x - xOffset) / tileSize);
-          int grenadeRow = (int) ((entityPos.y - yOffset) / tileSize);
-          int robotCol = (int) ((pos.x - xOffset) / tileSize);
-          int robotRow = (int) ((pos.y - yOffset) / tileSize);
-          logger.info(
-              "Grenade at ({}, {}) hits robot at ({}, {})",
-              grenadeCol,
-              grenadeRow,
-              robotCol,
-              robotRow);
-          toRemove.add(r);
-        }
-      }
-      // can't remove from a list while iterating through it
-      for (Entity r : toRemove) {
-        // trigger entityDeath does NOT work
-        requestDespawn(r);
-        robots.remove(r);
-      }
-      return;
+    if (!inv.contains(itemKey)) {
+      logger.info("Cannot spawn item {}, not in player's inventory", itemKey);
+      tile.getComponent(TileStorageComponent.class).removeTileUnit();
+      return true; // handled: do nothing
     }
 
-    // For other items trigger impact on defences
-    String itemTrigger = ServiceLocator.getConfigService().getItemConfig(key).getTrigger();
-    final int total = grid.getRows() * grid.getCols();
+    itemHandler.handleItemUse(item, worldPos);
+    tile.getComponent(TileStorageComponent.class).removeTileUnit();
+    return true;
+  }
 
-    // Send trigger on each currently placed defence
-    for (int i = 0; i < total; i++) {
-      // Get entity on the grid tile
-      Entity entity = grid.getOccupantIndex(i);
-      // Check whether there is an entity and whether it is a defence
-      if (entity != null
-          && (entity.getComponent(DefenderStatsComponent.class) != null
-              || entity.getComponent(GeneratorStatsComponent.class) != null)) {
-        // Send start trigger
-        entity.getEvents().trigger(itemTrigger);
-        logger.info("Start {} on {}", itemTrigger, entity);
-        // Create a timer to be able to send a trigger to stop after 30 seconds
-        final Timer.Task repeatTask =
-            new Timer.Task() {
-              @Override
-              public void run() {
-                entity.getEvents().trigger(itemTrigger + "Stop");
-                logger.info("Stop {}", itemTrigger);
-              }
-            };
-        Timer.schedule(repeatTask, 30f);
-      }
+  /**
+   * Place a non-item (defence or generator) unit on the grid, wire its events, and spawn into the
+   * world.
+   */
+  private void placeDefenceUnit(int position, Entity tile, Entity unit, Vector2 worldPos) {
+    tile.getComponent(TileStorageComponent.class).setTileUnit(unit);
+    unit.scaleHeight(tileSize);
+
+    if (unit.getComponent(GeneratorStatsComponent.class) != null) {
+      spawnScrap(unit);
     }
+
+    spawnEntity(unit);
+    unit.getEvents().trigger("idleStart");
+
+    Runnable clearTile =
+        () -> {
+          grid.removeOccupantIfMatchIndex(position, unit);
+          tile.getComponent(TileStorageComponent.class).removeTileUnit();
+        };
+
+    unit.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              requestDespawn(unit);
+              clearTile.run();
+              robots.remove(unit);
+            });
+    unit.getEvents().addListener("despawned", clearTile::run);
+
+    unit.getEvents()
+        .addListener(
+            "fire",
+            (TargetDetectionTasks.AttackDirection dir) -> {
+              spawnProjectile(
+                  worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+              unit.getEvents().trigger("attackStart");
+            });
+
+    logger.info(
+        "Unit spawned at position {} (r={}, c={})",
+        position,
+        position / levelCols,
+        position % levelCols);
+  }
+
+  /** Reset drag state and selection after any placement. */
+  private void resetSelectionUI() {
+    setIsCharacterSelected(false);
+    setSelectedUnit(null);
+    cancelDrag();
   }
 
   /**
@@ -647,16 +588,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       tile.getComponent(TileStorageComponent.class).removeTileUnit();
     }
     logger.info("Unit deleted at position {}", position);
-  }
-
-  /**
-   * Getter for tile size in world units
-   *
-   * @return tileSize the size of the tiles
-   */
-  @Override
-  public float getTileSize() {
-    return tileSize;
   }
 
   /**
@@ -686,53 +617,63 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new GridPoint2((int) x, (int) y);
   }
 
-  /** Method to reset game entity size/position on window resize. */
+  /** Adjusts all entities after a window resize by recalculating world scale and layout. */
   public void resize() {
     float oldTile = tileSize;
     float oldX = xOffset;
     float oldY = yOffset;
 
-    setScaling(); // recompute sizes from renderer/stage
-    relayoutAfterScaling(oldTile, oldX, oldY);
+    // Recalculate scale values
+    setScaling();
+
+    // Reposition and rescale all entities relative to new scale
+    relayoutTiles();
+    relayoutPlacedUnits();
+    relayoutRobots(oldTile, oldX, oldY);
   }
 
-  private void relayoutAfterScaling(float oldTile, float oldX, float oldY) {
-    // 1) Move all tiles to their new positions
-    for (int i = 0; i < levelRows * levelCols; i++) {
-      int col = i % levelCols;
-      int row = i / levelCols;
-      float tileX = xOffset + tileSize * col;
-      float tileY = yOffset + tileSize * row;
+  /** Updates the position of all tiles based on the new scaling. */
+  private void relayoutTiles() {
+    for (int row = 0; row < levelRows; row++) {
+      for (int col = 0; col < levelCols; col++) {
+        int index = row * levelCols + col;
+        Entity tile = grid.getTile(index);
+        if (tile == null) continue;
 
-      // Assuming LevelGameGrid exposes getTile(i). If not, add it.
-      Entity tile = grid.getTile(i);
-      if (tile != null) {
+        float tileX = xOffset + tileSize * col;
+        float tileY = yOffset + tileSize * row;
         tile.setPosition(tileX, tileY);
       }
     }
+  }
 
-    // Move all placed units to their tile’s new position and re-scale
-    for (int i = 0; i < levelRows * levelCols; i++) {
-      Entity u = grid.getOccupantIndex(i);
-      if (u == null) continue;
+  /** Moves and rescales all units that are placed on tiles. */
+  private void relayoutPlacedUnits() {
+    for (int row = 0; row < levelRows; row++) {
+      for (int col = 0; col < levelCols; col++) {
+        int index = row * levelCols + col;
+        Entity unit = grid.getOccupantIndex(index);
+        if (unit == null) continue;
 
-      int col = i % levelCols;
-      int row = i / levelCols;
-      float nx = xOffset + tileSize * col;
-      float ny = yOffset + tileSize * row;
-
-      u.setPosition(nx, ny);
-      u.scaleHeight(tileSize);
+        float newX = xOffset + tileSize * col;
+        float newY = yOffset + tileSize * row;
+        unit.setPosition(newX, newY);
+        unit.scaleHeight(tileSize);
+      }
     }
+  }
 
-    // Continuously positioned robots: scale & offset from old → new
-    float s = tileSize / oldTile;
-    for (Entity r : robots) {
-      Vector2 p = r.getPosition();
-      float nx = (p.x - oldX) * s + xOffset;
-      float ny = (p.y - oldY) * s + yOffset;
-      r.setPosition(nx, ny);
-      r.scaleHeight(tileSize);
+  /** Adjusts free-floating robots (not grid-bound) based on proportional scaling. */
+  private void relayoutRobots(float oldTile, float oldX, float oldY) {
+    float scaleRatio = tileSize / oldTile;
+
+    for (Entity robot : robots) {
+      Vector2 oldPos = robot.getPosition();
+      float newX = (oldPos.x - oldX) * scaleRatio + xOffset;
+      float newY = (oldPos.y - oldY) * scaleRatio + yOffset;
+
+      robot.setPosition(newX, newY);
+      robot.scaleHeight(tileSize);
     }
   }
 
@@ -753,6 +694,23 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+      }
+    }
+  }
+
+  /** Checks if the level is complete */
+  public void checkLevelComplete() {
+    if (isLevelComplete) {
+      return;
+      // level is already complete, don't check again
+    }
+
+    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
+    if (currentWave >= 4) {
+      logger.info("Level is complete!");
+      isLevelComplete = true;
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
       }
     }
   }
@@ -795,7 +753,98 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return characterSelected;
   }
 
+  /**
+   * Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
+   * per row just off the right edge. These are visual only and removed after the intro camera pan.
+   */
+  public void createWavePreview() {
+    wavePreview.createWavePreview();
+  }
+
+  /** Remove preview entities created for the intro camera pan. */
+  public void clearWavePreview() {
+    wavePreview.clearWavePreview();
+  }
+
+  /**
+   * Getter for grid
+   *
+   * @return grid
+   */
+  public LevelGameGrid getGrid() {
+    return grid;
+  }
+
+  /**
+   * gets worldWidth currently used by LevelGameArea
+   *
+   * @return worldWidth
+   */
   public float getWorldWidth() {
     return worldWidth;
+  }
+
+  /**
+   * Getter for xOffset
+   *
+   * @return xOffset
+   */
+  public float getXOffset() {
+    return xOffset;
+  }
+
+  /**
+   * Getter for levelRows
+   *
+   * @return levelRows
+   */
+  public int getLevelRows() {
+    return levelRows;
+  }
+
+  /**
+   * Getter for yOffset
+   *
+   * @return yOffset
+   */
+  public float getYOffset() {
+    return yOffset;
+  }
+
+  /**
+   * Getter for levelCols
+   *
+   * @return levelCols
+   */
+  public int getLevelCols() {
+    return levelCols;
+  }
+
+  /**
+   * Getter for robots
+   *
+   * @return robots list
+   */
+  public List<Entity> getRobots() {
+    return robots;
+  }
+
+  /**
+   * Getter for tile size in world units
+   *
+   * @return tileSize the size of the tiles
+   */
+  @Override
+  public float getTileSize() {
+    return tileSize;
+  }
+
+  /**
+   * Setter to set grid in LevelGameArea
+   *
+   * @param newGrid the grid to be set
+   */
+  public void setGrid(LevelGameGrid newGrid) {
+    this.grid = newGrid;
   }
 }

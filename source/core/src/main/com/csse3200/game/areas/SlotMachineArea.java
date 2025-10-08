@@ -1,11 +1,8 @@
 package com.csse3200.game.areas;
 
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
-import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Represents a dedicated game area for the slot machine level. Handles loading and unloading of
@@ -13,14 +10,6 @@ import com.csse3200.game.services.ServiceLocator;
  * relevant to the slot machine gameplay.
  */
 public class SlotMachineArea extends LevelGameArea {
-  private static final String[] SLOT_TEXTURE_ATLASES = {
-    "images/entities/slotmachine/slot_frame.atlas",
-    "images/entities/slotmachine/slot_reels.atlas",
-    "images/entities/slotmachine/pie_filled.atlas",
-  };
-  private static final String[] SLOT_TEXTURES = {
-    "images/entities/slotmachine/slot_reels_background.png",
-  };
 
   /**
    * Creates a new SlotMachineArea with the level key.
@@ -31,28 +20,6 @@ public class SlotMachineArea extends LevelGameArea {
     super(levelKey);
   }
 
-  /** Initializes the slot machine area by loading assets and adding the HUD. */
-  @Override
-  public void create() {
-    loadSlotAssets();
-    super.create();
-  }
-
-  /** Unloads slot machine assets and disposes of the area. */
-  @Override
-  public void dispose() {
-    unloadSlotAssets();
-    super.dispose();
-  }
-
-  /** Loads all textures and atlases required for the slot machine. */
-  private void loadSlotAssets() {
-    ResourceService rs = ServiceLocator.getResourceService();
-    rs.loadTextureAtlases(SLOT_TEXTURE_ATLASES);
-    rs.loadTextures(SLOT_TEXTURES);
-    rs.loadAll();
-  }
-
   @Override
   protected void displayUI() {
     // Only add Slot UI; no defence hotbar on the slot level
@@ -61,18 +28,6 @@ public class SlotMachineArea extends LevelGameArea {
     ui.addComponent(new SlotMachineDisplay(this));
     spawnEntity(ui);
 
-    // Ensure gameOverEntity exists so LevelGameArea.checkGameOver() won't NPE
-    this.gameOverEntity = new Entity();
-    this.gameOverEntity.addComponent(new GameOverWindow());
-    spawnEntity(this.gameOverEntity);
-  }
-
-  /** Unloads all slot machine textures and atlases to free memory. */
-  private void unloadSlotAssets() {
-    ResourceService rs = ServiceLocator.getResourceService();
-    if (rs != null) {
-      rs.unloadAssets(SLOT_TEXTURE_ATLASES);
-      rs.unloadAssets(SLOT_TEXTURES);
-    }
+    createGameOverEntity();
   }
 }

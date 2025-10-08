@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -39,15 +40,17 @@ import org.slf4j.LoggerFactory;
 /**
  * The game screen containing the main game.
  *
- * <p>Details on libGDX screens: https://happycoding.io/tutorials/libgdx/game-screens
+ * <p>Details on libGDX screens: <a
+ * href="https://happycoding.io/tutorials/libgdx/game-screens">...</a>
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
   private Music music;
-  private List<String> textureAtlases = new ArrayList<>();
+  private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
-    "images/backgrounds/level-1-map-v2.png",
-    "images/backgrounds/level-2-map-v1.png",
+    "images/backgrounds/level_map_grass.png",
+    "images/backgrounds/level_map_town.png",
+    "images/backgrounds/level_map_final.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/shadow_idle1.png",
@@ -63,7 +66,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/bullet.png",
     "images/effects/shock.png",
     "images/effects/sling_projectile_pad.png",
-    "images/entities/currency/scrap_metal.png"
+    "images/entities/currency/scrap_metal.png",
+    "images/entities/slotmachine/slot_reels_background.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
@@ -76,7 +80,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
+    "images/entities/enemies/red_robot.atlas",
+    "images/entities/slotmachine/slot_frame.atlas",
+    "images/entities/slotmachine/slot_reels.atlas",
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
@@ -84,12 +90,24 @@ public class MainGameScreen extends ScreenAdapter {
   protected final PhysicsEngine physicsEngine;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
-  private List<String> textures = new ArrayList<>();
+  private final List<String> textures = new ArrayList<>();
+  private final String level;
+
+  private enum PanPhase {
+    RIGHT,
+    LEFT,
+    DONE
+  }
+
+  private PanPhase panPhase;
+  private float panElapsed;
+  private static final float PAN_DURATION = 3f; // seconds
+  private boolean doIntroPan = true;
+  private final float panStartX;
+  private final float panTargetX;
 
   /** Optional override for which level to load. If null, fall back to profile.currentLevel */
   private final String overrideLevelKey;
-
-  private String level;
 
   /**
    * Constructor for the main game screen. Falls back to profile.currentLevel.
@@ -115,8 +133,8 @@ public class MainGameScreen extends ScreenAdapter {
     // Resolve which level to load
     this.level = resolveLevelToLoad();
     logger.debug("[MainGameScreen] Effective level to load: '{}'", level);
-
     logger.debug("[MainGameScreen] Initialising main game screen services");
+
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
@@ -128,7 +146,6 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
     ServiceLocator.registerWaveService(new WaveService());
-
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -144,9 +161,17 @@ public class MainGameScreen extends ScreenAdapter {
             (col, row, type) ->
                 gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
     gameArea.create();
-
     snapCameraBottomLeft();
     ServiceLocator.getWaveService().initialiseNewWave();
+
+    // Setup for camera pan
+    var camComp = renderer.getCamera();
+    float halfVW = camComp.getCamera().viewportWidth / 2f;
+    float worldWidth = gameArea.getWorldWidth();
+    panStartX = halfVW; // current
+    panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
+    panElapsed = 0f;
+    panPhase = PanPhase.RIGHT;
   }
 
   /**
@@ -180,8 +205,37 @@ public class MainGameScreen extends ScreenAdapter {
       ServiceLocator.getWaveService().update(delta);
     }
 
+    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+      gameArea.createWavePreview();
+    }
+
+    if (doIntroPan) {
+      panElapsed += delta;
+      float t = Math.min(1f, panElapsed / PAN_DURATION);
+      var cam = renderer.getCamera().getCamera();
+
+      if (panPhase == PanPhase.RIGHT) {
+        cam.position.x = Interpolation.smoother.apply(panStartX, panTargetX, t);
+        cam.update();
+        if (t >= 1f) {
+          // switch to left pan
+          panPhase = PanPhase.LEFT;
+          panElapsed = 0f;
+        }
+      } else if (panPhase == PanPhase.LEFT) {
+        cam.position.x = Interpolation.smoother.apply(panTargetX, panStartX, t);
+        cam.update();
+        if (t >= 1f) {
+          panPhase = PanPhase.DONE;
+          doIntroPan = false;
+          gameArea.clearWavePreview();
+        }
+      }
+    }
+
     renderer.render();
     gameArea.checkGameOver(); // check game-over state
+    gameArea.checkLevelComplete(); // check level-complete state
   }
 
   @Override
