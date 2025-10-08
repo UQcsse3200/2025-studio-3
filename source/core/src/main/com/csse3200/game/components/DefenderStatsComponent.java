@@ -70,20 +70,36 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     setCritChance(critChance);
   }
 
-  public void buff() {
+  // unused atm
+  public void healthBuff() {
     int newHealth = (int) Math.ceil(getMaxHealth() * 2);
     setMaxHealth(newHealth);
     heal(newHealth);
     logger.info("Defender buffed! New max health: " + getMaxHealth());
   }
 
-  public void unbuff() {
+  // unused atm
+  public void healthUnBuff() {
     int newHealth = (int) Math.ceil(getMaxHealth() / 2);
     setMaxHealth(newHealth);
     if (getHealth() > newHealth) {
       setHealth(newHealth);
     }
     logger.info("Defender unbuffed! New max health: " + getMaxHealth());
+  }
+
+  public void buff() {
+    // Double attack damage
+    int newAttack = getBaseAttack() * 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender buffed! New attack: " + getBaseAttack());
+  }
+
+  public void unbuff() {
+    // Halve attack damage
+    int newAttack = getBaseAttack() / 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender unbuffed! New attack: " + getBaseAttack());
   }
   
   private int getMaxHealth() {

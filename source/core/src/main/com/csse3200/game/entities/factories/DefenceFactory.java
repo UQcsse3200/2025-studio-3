@@ -29,7 +29,8 @@ import com.csse3200.game.services.ServiceLocator;
 public class DefenceFactory {
   private static final String ATTACK = "attack";
   private static final String IDLE = "idle";
-  private static final String BUFF = "BUFF";
+  private static final String BUFF = "doubleDamage";
+  private static final String UNBUFF = "doubleDamageStop";
 
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
@@ -73,7 +74,7 @@ public class DefenceFactory {
     // add event listener for buffing the defence when a buff item is used on it
     defender.getEvents().addListener(BUFF, 
         () -> defender.getComponent(DefenderStatsComponent.class).buff());
-    defender.getEvents().addListener("UNBUFF", 
+    defender.getEvents().addListener(UNBUFF, 
         () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
 
     return defender;
