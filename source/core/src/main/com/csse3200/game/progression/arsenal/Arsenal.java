@@ -14,10 +14,10 @@ public class Arsenal {
     defences =
         new ArrayList<>(
             Arrays.asList(
-                "slingshooter",
+                //"slingshooter",
                 "armyguy",
-                "shadow",
-                "boxer",
+                //"shadow",
+                //"boxer",
                 "shield",
                 "harpoon",
                 "mortar")); // Default defences
