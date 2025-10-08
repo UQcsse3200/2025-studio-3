@@ -68,34 +68,31 @@ public class CombatStatsComponent extends Component {
       this.health = 0;
     }
 
-    if (entity != null) {
-      if (this.health == 0) {
-        // Add coins & update statistics
-        // TODO: use config passed into the entity
-        int extraCoins = 3;
-        ProfileService profileService = ServiceLocator.getProfileService();
-        if (profileService != null && profileService.isActive()) {
-          int before = profileService.getProfile().getWallet().getCoins();
-          profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
-          profileService.getProfile().getWallet().addCoins(extraCoins);
-          profileService
-              .getProfile()
-              .getStatistics()
-              .incrementStatistic("coinsCollected", extraCoins);
-          logger.info(
-              "[Death] wallet: {} + {} -> {}",
-              before,
-              extraCoins,
-              profileService.getProfile().getWallet().getCoins());
-        } else {
-          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
-        }
+    if (entity == null) return;
 
-        // despawn entity
-        entity.getEvents().trigger("despawnRobot", entity);
+    if (this.health == 0) {
+      // Add coins & update statistics
+      // TODO: use config passed into the entity
+      int extraCoins = 3;
+      ProfileService profileService = ServiceLocator.getProfileService();
+      if (profileService != null && profileService.isActive()) {
+        int before = profileService.getProfile().getWallet().getCoins();
+        profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+        profileService.getProfile().getWallet().addCoins(extraCoins);
+        profileService
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("coinsCollected", extraCoins);
+        logger.info(
+            "[Death] wallet: {} + {} -> {}",
+            before,
+            extraCoins,
+            profileService.getProfile().getWallet().getCoins());
+      } else {
+        logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
       }
-      entity.getEvents().trigger("updateHealth", this.health, this.maxHealth);
     }
+    entity.getEvents().trigger("updateHealth", this.health, this.maxHealth);
   }
 
   /**
@@ -148,6 +145,8 @@ public class CombatStatsComponent extends Component {
       return;
     } // Stops NPE if component has no entity.
     // Sends a different event depending on the entity type
+    if (entity.getDeathFlag()) return;
+
     if (isDead || getHealth() < 0) {
       entity.getEvents().trigger("entityDeath");
     }

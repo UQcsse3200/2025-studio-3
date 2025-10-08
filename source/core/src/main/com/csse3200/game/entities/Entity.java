@@ -42,6 +42,7 @@ public class Entity {
   private Vector2 scale = new Vector2(1, 1);
   private Array<Component> createdComponents;
   private boolean disposed = false;
+  private boolean deathFlag = false;
 
   public Entity() {
     id = nextId;
@@ -49,6 +50,14 @@ public class Entity {
 
     components = new IntMap<>(4);
     eventHandler = new EventHandler();
+  }
+
+  public void setDeathFlag() {
+    this.deathFlag = true;
+  }
+
+  public boolean getDeathFlag() {
+      return this.deathFlag;
   }
 
   /**
