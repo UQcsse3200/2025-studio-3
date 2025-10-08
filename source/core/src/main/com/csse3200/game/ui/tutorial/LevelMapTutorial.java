@@ -2,7 +2,6 @@ package com.csse3200.game.ui.tutorial;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -58,6 +57,21 @@ public class LevelMapTutorial extends UIComponent {
     "Human defenders attack incoming robot enemies."
   };
 
+  /** Alpha transparency value for the overlay. */
+  private static final float OVERLAY_ALPHA = 0.7f;
+
+  /** Button size for the next button. */
+  private static final float BUTTON_SIZE = 30f;
+
+  /** Right padding for the next button. */
+  private static final float BUTTON_RIGHT_PAD = 60f;
+
+  /** Bottom padding for the next button. */
+  private static final float BUTTON_BOTTOM_PAD = 50f;
+
+  /** Dialog width padding. */
+  private static final float DIALOG_WIDTH_PAD = 100f;
+
   /**
    * Constructs a new LevelMapTutorial with a reference to the game time controller.
    *
@@ -84,8 +98,7 @@ public class LevelMapTutorial extends UIComponent {
     overlay = new Image(new TextureRegionDrawable(blackTex));
 
     overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    float alpha = 0.7f; // alpha transparency for the overlay
-    overlay.setColor(0, 0, 0, alpha);
+    overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
     overlay.setVisible(true);
     stage.addActor(overlay);
 
@@ -103,11 +116,18 @@ public class LevelMapTutorial extends UIComponent {
     Table contentTable = new Table();
     contentTable.setFillParent(true);
 
-    messageLabel = TypographyFactory.createSubtitle(tutorialMessages[step], Color.WHITE);
+    messageLabel =
+        TypographyFactory.createSubtitle(
+            tutorialMessages[step], com.badlogic.gdx.graphics.Color.WHITE);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
 
-    contentTable.add(messageLabel).width(dialogTable.getWidth() - 100f).expand().center().row();
+    contentTable
+        .add(messageLabel)
+        .width(dialogTable.getWidth() - DIALOG_WIDTH_PAD)
+        .expand()
+        .center()
+        .row();
     dialogTable.add(contentTable).expand().fill();
     dialogTable.align(Align.center);
 
@@ -125,12 +145,12 @@ public class LevelMapTutorial extends UIComponent {
 
     dialogTable
         .add(nextButton)
-        .size(30f, 30f)
+        .size(BUTTON_SIZE, BUTTON_SIZE)
         .expandX()
         .right()
         .bottom()
-        .padRight(60f)
-        .padBottom(50f);
+        .padRight(BUTTON_RIGHT_PAD)
+        .padBottom(BUTTON_BOTTOM_PAD);
     stage.addActor(dialogTable);
 
     // button to skip tutorial
@@ -160,14 +180,11 @@ public class LevelMapTutorial extends UIComponent {
   public void update() {
     if (!active) return;
 
-    switch (step) {
-      case 0, 1, 2 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-          nextStep(); // press space bar to move onto next message
-      }
-      case 3 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE))
-          endTutorial(); // press space bar to end tutorial
+    if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+      if (step < tutorialMessages.length - 1) {
+        nextStep(); // press space bar to move onto next message
+      } else {
+        endTutorial(); // press space bar to end tutorial
       }
     }
   }
@@ -197,11 +214,7 @@ public class LevelMapTutorial extends UIComponent {
    * Skips the tutorial immediately and resumes gameplay. Equivalent to ending the tutorial early.
    */
   private void skipTutorial() {
-    active = false;
-    overlay.setVisible(false);
-    dialogTable.setVisible(false);
-    skipTable.setVisible(false);
-    resumeGame();
+    endTutorial();
   }
 
   /** Pauses the game by setting the timescale to zero. */

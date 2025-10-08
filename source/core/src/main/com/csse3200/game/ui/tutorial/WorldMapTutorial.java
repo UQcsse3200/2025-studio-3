@@ -2,7 +2,6 @@ package com.csse3200.game.ui.tutorial;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -54,6 +53,18 @@ public class WorldMapTutorial extends UIComponent {
   /** Current tutorial step index */
   private int step = 0;
 
+  /** Fade out speed for the tutorial. */
+  private static final float FADE_SPEED = 0.6f;
+
+  /** Table padding value. */
+  private static final float TABLE_PAD = 20f;
+
+  /** Label bottom padding. */
+  private static final float LABEL_BOTTOM_PAD = 20f;
+
+  /** Table position offset from top. */
+  private static final float TABLE_TOP_OFFSET = 100f;
+
   /**
    * Initialises the tutorial UI, including the dialog box and toggle button. Sets up the initial
    * label and input listener for toggling visibility.
@@ -71,12 +82,19 @@ public class WorldMapTutorial extends UIComponent {
     table.setSize(
         Math.floorDiv(Gdx.graphics.getWidth(), 5), Math.floorDiv(Gdx.graphics.getHeight(), 5));
     table.setPosition(
-        20f, Gdx.graphics.getHeight() - table.getHeight() - 100f); // top-left with padding
-    table.pad(20f); // inner padding for the label
+        TABLE_PAD,
+        Gdx.graphics.getHeight() - table.getHeight() - TABLE_TOP_OFFSET); // top-left with padding
+    table.pad(TABLE_PAD); // inner padding for the label
 
-    this.moveLabel = TypographyFactory.createSubtitle("Use W/A/S/D to move", Color.WHITE);
-    this.interactLabel = TypographyFactory.createSubtitle("Press E to interact", Color.WHITE);
-    this.zoomLabel = TypographyFactory.createSubtitle("Press Q/K to zoom", Color.WHITE);
+    this.moveLabel =
+        TypographyFactory.createSubtitle(
+            "Use W/A/S/D to move", com.badlogic.gdx.graphics.Color.WHITE);
+    this.interactLabel =
+        TypographyFactory.createSubtitle(
+            "Press E to interact", com.badlogic.gdx.graphics.Color.WHITE);
+    this.zoomLabel =
+        TypographyFactory.createSubtitle(
+            "Press Q/K to zoom", com.badlogic.gdx.graphics.Color.WHITE);
     currentLabel = moveLabel;
 
     table.add(currentLabel).left();
@@ -106,7 +124,7 @@ public class WorldMapTutorial extends UIComponent {
         });
 
     Table buttonTable = new Table();
-    buttonTable.top().left().pad(20f);
+    buttonTable.top().left().pad(TABLE_PAD);
     buttonTable.setFillParent(true);
     buttonTable.add(toggleButton).left();
     stage.addActor(buttonTable);
@@ -137,8 +155,8 @@ public class WorldMapTutorial extends UIComponent {
       moveLabel.setVisible(true);
       interactLabel.setVisible(true);
       zoomLabel.setVisible(true);
-      table.add(moveLabel).left().padBottom(20f).row();
-      table.add(interactLabel).left().padBottom(20f).row();
+      table.add(moveLabel).left().padBottom(LABEL_BOTTOM_PAD).row();
+      table.add(interactLabel).left().padBottom(LABEL_BOTTOM_PAD).row();
       table.add(zoomLabel).left();
     } else {
       moveLabel.setVisible(true);
@@ -159,51 +177,88 @@ public class WorldMapTutorial extends UIComponent {
       currentLabel.getStyle().fontColor.a = 1f;
     }
 
-    if (!active) return;
-
-    if (displayAllLabels) return;
-
-    switch (step) {
-      case 0 -> {
-        if (Gdx.input.isKeyPressed(Input.Keys.W)
-            || Gdx.input.isKeyPressed(Input.Keys.A)
-            || Gdx.input.isKeyPressed(Input.Keys.S)
-            || Gdx.input.isKeyPressed(Input.Keys.D)) {
-          currentLabel = interactLabel;
-          currentLabel.getStyle().fontColor.a = 1f;
-          currentLabel.setVisible(true);
-          table.clearChildren();
-          table.add(interactLabel).left();
-          step++;
-        }
-      }
-      case 1 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
-          currentLabel = zoomLabel;
-          currentLabel.getStyle().fontColor.a = 1f;
-          currentLabel.setVisible(true);
-          table.clearChildren();
-          table.add(currentLabel).left();
-          step++;
-        }
-      }
-      case 2 -> {
-        if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-          fadingOut = true;
-        }
-      }
+    if (!active || displayAllLabels) {
+      return;
     }
 
-    if (fadingOut) {
-      alpha -= Gdx.graphics.getDeltaTime() * 0.6f;
-      if (alpha <= 0) {
-        alpha = 0;
-        active = false;
-        table.setVisible(false);
-        table.clearChildren();
-      } else {
-        table.getColor().a = alpha;
+    updateTutorialStep();
+    updateFadeOut();
+  }
+
+  /** Updates the current tutorial step based on user input. */
+  private void updateTutorialStep() {
+    switch (step) {
+      case 0 -> handleMovementStep();
+      case 1 -> handleInteractionStep();
+      case 2 -> handleZoomStep();
+      default -> {
+        // No action needed for unknown steps
       }
+    }
+  }
+
+  /** Handles the movement tutorial step (step 0). */
+  private void handleMovementStep() {
+    if (isMovementKeyPressed()) {
+      advanceToStep(interactLabel, 1);
+    }
+  }
+
+  /** Handles the interaction tutorial step (step 1). */
+  private void handleInteractionStep() {
+    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+      advanceToStep(zoomLabel, 2);
+    }
+  }
+
+  /** Handles the zoom tutorial step (step 2). */
+  private void handleZoomStep() {
+    if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
+      fadingOut = true;
+    }
+  }
+
+  /**
+   * Checks if any movement key is currently pressed.
+   *
+   * @return true if a movement key is pressed, false otherwise
+   */
+  private boolean isMovementKeyPressed() {
+    return Gdx.input.isKeyPressed(Input.Keys.W)
+        || Gdx.input.isKeyPressed(Input.Keys.A)
+        || Gdx.input.isKeyPressed(Input.Keys.S)
+        || Gdx.input.isKeyPressed(Input.Keys.D);
+  }
+
+  /**
+   * Advances to the next tutorial step with the given label.
+   *
+   * @param newLabel the label to display for the next step
+   * @param nextStep the step number to advance to
+   */
+  private void advanceToStep(Label newLabel, int nextStep) {
+    currentLabel = newLabel;
+    currentLabel.getStyle().fontColor.a = 1f;
+    currentLabel.setVisible(true);
+    table.clearChildren();
+    table.add(currentLabel).left();
+    step = nextStep;
+  }
+
+  /** Updates the fade-out effect if active. */
+  private void updateFadeOut() {
+    if (!fadingOut) {
+      return;
+    }
+
+    alpha -= Gdx.graphics.getDeltaTime() * FADE_SPEED;
+    if (alpha <= 0) {
+      alpha = 0;
+      active = false;
+      table.setVisible(false);
+      table.clearChildren();
+    } else {
+      table.getColor().a = alpha;
     }
   }
 
