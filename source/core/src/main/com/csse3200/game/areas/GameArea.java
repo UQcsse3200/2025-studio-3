@@ -29,7 +29,7 @@ public abstract class GameArea implements Disposable {
   /** Dispose of all internal entities in the area */
   public void dispose() {
     for (Entity entity : areaEntities) {
-      entity.dispose();
+      entity.setDeathFlag();
     }
   }
 
@@ -54,7 +54,7 @@ public abstract class GameArea implements Disposable {
 
   public void requestDespawn(Entity entity) {
     if (entity == null) return;
-    Gdx.app.postRunnable(() -> despawnEntity(entity));
+    entity.setDeathFlag();
   }
 
   /**

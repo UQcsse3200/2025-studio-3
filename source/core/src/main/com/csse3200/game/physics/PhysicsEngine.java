@@ -3,6 +3,8 @@ package com.csse3200.game.physics;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
+import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.raycast.AllHitCallback;
 import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.physics.raycast.SingleHitCallback;
@@ -52,6 +54,20 @@ public class PhysicsEngine implements Disposable {
     while (accumulator >= PHYSICS_TIMESTEP) {
       world.step(PHYSICS_TIMESTEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
       accumulator -= PHYSICS_TIMESTEP;
+    }
+
+    // NEW CHANGES: guaranteed disposal of entities with physics bodies after physics step
+    for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
+      if (!entity.getDeathFlag()) {
+        continue;
+      }
+      PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
+       if (pc == null || pc.getBody() == null) {
+         continue;
+       }
+       entity.dispose();
+       ServiceLocator.getEntityService().unregister(entity);
+
     }
   }
 

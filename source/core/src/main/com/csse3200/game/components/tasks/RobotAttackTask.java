@@ -53,6 +53,13 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     }
     Fixture meFixture = owner.getEntity().getComponent(HitboxComponent.class).getFixture();
     Fixture targetFixture = target.getComponent(HitboxComponent.class).getFixture();
+    if (meFixture == null || targetFixture == null) {
+      return;
+    }
+
+    if (target.getDeathFlag()) {
+      return;
+    }
     this.owner.getEntity().getEvents().trigger("collisionStart", meFixture, targetFixture);
     timeLeft = TIME_BETWEEN_ATTACKS;
   }
