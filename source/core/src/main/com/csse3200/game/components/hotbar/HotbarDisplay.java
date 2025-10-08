@@ -162,6 +162,7 @@ public class HotbarDisplay extends UIComponent {
     // changes size to fit screen
     hotbarTable.add(layered).size(layered.getWidth() * scale, layered.getHeight() * scale);
 
+
     stage.addActor(hotbarTable);
     hotbarTable.toBack();
 
@@ -176,6 +177,12 @@ public class HotbarDisplay extends UIComponent {
             return false;
           }
         });
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
   }
 
   /**
@@ -204,11 +211,6 @@ public class HotbarDisplay extends UIComponent {
       img.setPosition(x, y);
       x += cellWidth;
     }
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

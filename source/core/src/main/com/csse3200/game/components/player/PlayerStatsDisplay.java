@@ -21,16 +21,11 @@ public class PlayerStatsDisplay extends UIComponent {
    * @see Table for positioning options
    */
   private void addActors() {
-    table = new Table();
+    table =  new Table();
     table.top().left();
     table.setFillParent(true);
-    table.padTop(45f).padLeft(5f);
-
+    table.padTop(ui.getScaledHeight(45f)).padLeft(ui.getScaledWidth(5f));
     stage.addActor(table);
   }
 
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
-  }
 }

@@ -18,6 +18,7 @@ import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.ui.UIFactory;
 
 /** A UI component for displaying the load menu with current saves. */
 public class LoadMenuDisplay extends UIComponent {
@@ -31,6 +32,8 @@ public class LoadMenuDisplay extends UIComponent {
     super.create();
     saveFiles = Persistence.fetch();
     addActors();
+
+
   }
 
   /** Add the actors to the table. */
@@ -40,15 +43,7 @@ public class LoadMenuDisplay extends UIComponent {
 
     // Back button positioned at top-left with close icon
     ImageButton backBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-    backBtn.setSize(60f, 60f);
-    backBtn.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
+            ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
     backBtn.addListener(
         new ChangeListener() {
           @Override
@@ -59,7 +54,8 @@ public class LoadMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = TypographyFactory.createTitle("LOAD GAME");
+    Label titleLabel = ui.heading("LOAD GAME");
+
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
@@ -68,7 +64,7 @@ public class LoadMenuDisplay extends UIComponent {
         // Active save slot
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -92,7 +88,7 @@ public class LoadMenuDisplay extends UIComponent {
     contentTable.setFillParent(true);
     contentTable.center();
 
-    contentTable.add(titleLabel).padBottom(50f);
+    contentTable.add(titleLabel).padBottom(ui.getScaledHeight(50f));
     contentTable.row();
 
     // Add save slots with consistent sizing and spacing
@@ -107,8 +103,9 @@ public class LoadMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
   }
 
   @Override

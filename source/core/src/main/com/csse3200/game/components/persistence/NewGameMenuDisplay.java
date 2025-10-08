@@ -56,15 +56,7 @@ public class NewGameMenuDisplay extends UIComponent {
 
     // Back button positioned at top-left with close icon
     ImageButton backBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-    backBtn.setSize(60f, 60f);
-    backBtn.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
+            ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
     backBtn.addListener(
         new ChangeListener() {
           @Override
@@ -75,10 +67,10 @@ public class NewGameMenuDisplay extends UIComponent {
         });
 
     // Title
-    Label titleLabel = TypographyFactory.createTitle("NEW GAME");
+    Label titleLabel = ui.title("NEW GAME");
 
     // Name input field (initially hidden)
-    nameLabel = TypographyFactory.createSubtitle("Enter Save Name:");
+    nameLabel = ui.text("Enter Save Name:");
 
     // Create TextField with custom font
     TextField.TextFieldStyle textFieldStyle =
@@ -98,7 +90,7 @@ public class NewGameMenuDisplay extends UIComponent {
         // Active save slot - show existing save info
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -192,8 +184,9 @@ public class NewGameMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
   }
 
   @Override

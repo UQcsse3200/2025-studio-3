@@ -48,7 +48,7 @@ public class InventoryDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Inventory screen. */
   private void addActors() {
-    Label title = new Label("Inventory", skin, "title");
+    Label title = ui.heading("Inventory");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
 
     rootTable = new Table();
@@ -70,7 +70,7 @@ public class InventoryDisplay extends UIComponent {
     Table gridTable = new Table();
 
     if (inventoryItems.isEmpty()) {
-      Label emptyLabel = new Label("No items in inventory", skin);
+      Label emptyLabel = ui.text("No items in inventory.");
       gridTable.add(emptyLabel).center();
     } else {
       int itemCount = 0;
@@ -128,7 +128,7 @@ public class InventoryDisplay extends UIComponent {
 
     // Add item name below the image
     slot.row();
-    Label nameLabel = new Label(itemConfig.getName(), skin);
+    Label nameLabel = ui.text(itemConfig.getName());
     nameLabel.setFontScale(0.8f);
     slot.add(nameLabel).center().padTop(5f);
 
@@ -147,14 +147,7 @@ public class InventoryDisplay extends UIComponent {
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
     ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
+        ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
 
     // Add listener for the close button
     closeButton.addListener(
@@ -184,11 +177,6 @@ public class InventoryDisplay extends UIComponent {
   private void backMenu() {
     logger.debug("[InventoryDisplay] Back menu clicked");
     game.setScreen(ScreenType.WORLD_MAP);
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

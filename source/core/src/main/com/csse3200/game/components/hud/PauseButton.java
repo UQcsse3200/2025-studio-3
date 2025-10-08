@@ -114,6 +114,12 @@ public class PauseButton extends UIComponent {
     updatePosition();
   }
 
+  @Override
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
+  }
+
   /** Updates button and tooltip position when window is resized */
   private void updatePosition() {
     if (pauseButtonComponent != null) {
@@ -128,10 +134,7 @@ public class PauseButton extends UIComponent {
     }
   }
 
-  @Override
-  public void draw(com.badlogic.gdx.graphics.g2d.SpriteBatch batch) {
-    // Draw is handled by the stage
-  }
+
 
   @Override
   public float getZIndex() {
