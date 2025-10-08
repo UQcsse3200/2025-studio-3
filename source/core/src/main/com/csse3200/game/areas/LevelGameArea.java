@@ -56,7 +56,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final ArrayList<Entity> robots = new ArrayList<>();
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
-  private Entity gameOverEntity;
+  protected Entity gameOverEntity;
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
@@ -148,7 +148,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawns the level UI */
-  private void displayUI() {
+  protected void displayUI() {
     Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
