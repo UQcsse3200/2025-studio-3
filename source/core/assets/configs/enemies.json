@@ -74,8 +74,8 @@
     },
     "teleportRobot": {
       "name": "Teleport Robot",
-      "atlasPath": "images/entities/enemies/bungee_robot.atlas",
-      "assetPath": "images/entities/enemies/bungee_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/teleport_robot.atlas",
+      "assetPath": "images/entities/enemies/teleport_robot_default_sprite.png",
       "health": 32,
       "attack": 8,
       "movementSpeed": 28,

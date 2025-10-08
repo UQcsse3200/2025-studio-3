@@ -29,10 +29,10 @@ attackDamaged
 	index: 2
 	bounds: 192, 0, 64, 64
 attackDamaged
-	index: 1
+	index: 3
 	bounds: 192, 0, 64, 64
 attackDamaged
-	index: 3
+	index: 1
 	bounds: 192, 0, 64, 64
 attackDamaged
 	index: 4
@@ -44,10 +44,10 @@ attackDamaged
 	index: 7
 	bounds: 320, 0, 64, 64
 attackDamaged
-	index: 6
+	index: 5
 	bounds: 320, 0, 64, 64
 attackDamaged
-	index: 5
+	index: 6
 	bounds: 320, 0, 64, 64
 moveLeft
 	index: 0
@@ -128,3 +128,5 @@ teleport
 	bounds: 448, 192, 64, 64
 invalid
 	bounds: 384, 0, 64, 64
+teleportDamaged
+    bounds: 384, 0, 64, 64
