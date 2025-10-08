@@ -224,40 +224,32 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(gameOverEntity);
   }
 
-  /** Creates the game map and renders it */
+  /** Creates and spawns the game background map and its boundary wall. */
   private void spawnMap() {
-    // Compute world height (viewport height)
+    Texture texture = loadMapTexture(mapFilePath);
     float viewportHeight = stageHeight * stageToWorldRatio;
 
-    // Load texture from level config
-    Texture tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
-    if (tex == null) {
-      // Ensure it’s loaded via MainGameScreen (already loaded backgrounds) or load on demand
-      ServiceLocator.getResourceService().loadTextures(new String[] {mapFilePath});
-      ServiceLocator.getResourceService().loadAll();
-      tex = ServiceLocator.getResourceService().getAsset(mapFilePath, Texture.class);
-    }
-
-    // Create background entity
     Entity map = new Entity();
-    BackgroundMapComponent bg = new BackgroundMapComponent(tex, viewportHeight);
-    map.addComponent(bg);
-    map.setPosition(0f, 0f); // left-aligned world
-
-    // Let LevelGameArea expose world width for clamping/panning
-    this.worldWidth = bg.getWorldWidth();
+    map.addComponent(new BackgroundMapComponent(texture, viewportHeight));
+    map.setPosition(0f, 0f);
 
     spawnEntity(map);
+
+    // Cache world width from component for camera/clamping
+    this.worldWidth = map.getComponent(BackgroundMapComponent.class).getWorldWidth();
+
     spawnWall();
   }
 
+  /** Spawns a static defensive wall at the left edge of the map. */
   private void spawnWall() {
-    Entity wall = DefenceFactory.createWall();
-    float tileX = xOffset + tileSize * -1;
     float tileY = yOffset - tileSize / 5;
     float wallSize = tileSize * 6;
+
+    Entity wall = DefenceFactory.createWall();
+    wall.setPosition(xOffset + tileSize * -1, tileY);
     wall.scaleHeight(wallSize);
-    wall.setPosition(tileX, tileY);
+
     spawnEntity(wall);
     wall.getEvents().trigger("idleStart");
   }
@@ -272,27 +264,36 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(scrapSpawner);
   }
 
-  /**
-   * Spawns the grid of tiles for the game
-   *
-   * @param rows an int that is the number of rows wanted for the grid
-   * @param cols an int that is the number of columns wanted for the grid
-   */
+  /** Creates the tiled grid for the playable area. */
   private void spawnGrid(int rows, int cols) {
     grid = new LevelGameGrid(rows, cols);
-    for (int i = 0; i < rows * cols; i++) {
-      Entity tile;
-      // Calc tile position
-      float tileX = xOffset + tileSize * (i % cols);
-      int col = i / cols;
-      float tileY = yOffset + tileSize * col;
 
-      tile = GridFactory.createTile(tileSize, tileX, tileY, this);
-      tile.setPosition(tileX, tileY);
-      tile.getComponent(TileStorageComponent.class).setPosition(i);
-      grid.addTile(i, tile);
-      spawnEntity(tile);
+    for (int row = 0; row < rows; row++) {
+      for (int col = 0; col < cols; col++) {
+        float tileX = xOffset + tileSize * col;
+        float tileY = yOffset + tileSize * row;
+
+        Entity tile = GridFactory.createTile(tileSize, tileX, tileY, this);
+        tile.setPosition(tileX, tileY);
+
+        tile.getComponent(TileStorageComponent.class).setPosition(row * cols + col);
+
+        grid.addTile(row * cols + col, tile);
+        spawnEntity(tile);
+      }
     }
+  }
+
+  /** Loads a map texture safely, ensuring it exists in the resource service. */
+  private Texture loadMapTexture(String path) {
+    Texture tex = ServiceLocator.getResourceService().getAsset(path, Texture.class);
+    if (tex == null) {
+      logger.warn("Map texture '{}' not preloaded, loading dynamically.", path);
+      ServiceLocator.getResourceService().loadTextures(new String[] {path});
+      ServiceLocator.getResourceService().loadAll();
+      tex = ServiceLocator.getResourceService().getAsset(path, Texture.class);
+    }
+    return tex;
   }
 
   /**
