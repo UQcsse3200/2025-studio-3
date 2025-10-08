@@ -70,8 +70,8 @@ public class TouchAttackComponent extends Component {
     if (targetStats == null) {
       targetStats = target.getComponent(DefenderStatsComponent.class);
     }
-    if (targetStats==null){
-        targetStats = target.getComponent(GeneratorStatsComponent.class);
+    if (targetStats == null) {
+      targetStats = target.getComponent(GeneratorStatsComponent.class);
     }
 
     if (targetStats != null) {

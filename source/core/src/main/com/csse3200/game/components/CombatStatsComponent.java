@@ -12,129 +12,129 @@ import org.slf4j.LoggerFactory;
  */
 public class CombatStatsComponent extends Component {
 
-    private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
-    private int health;
-    private int baseAttack;
+  private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
+  private int health;
+  private int baseAttack;
 
-    /**
-     * Creates a new combat stats component with the specified health and attack values.
-     *
-     * @param health the initial health value
-     * @param baseAttack the base attack value
-     */
-    public CombatStatsComponent(int health, int baseAttack) {
-        setHealth(health);
-        setBaseAttack(baseAttack);
+  /**
+   * Creates a new combat stats component with the specified health and attack values.
+   *
+   * @param health the initial health value
+   * @param baseAttack the base attack value
+   */
+  public CombatStatsComponent(int health, int baseAttack) {
+    setHealth(health);
+    setBaseAttack(baseAttack);
+  }
+
+  /**
+   * Returns true if the entity's has 0 health, otherwise false.
+   *
+   * @return is player dead
+   */
+  public Boolean isDead() {
+    return health == 0;
+  }
+
+  /**
+   * Returns the entity's health.
+   *
+   * @return entity's health
+   */
+  public int getHealth() {
+    return health;
+  }
+
+  /**
+   * Sets the entity's health. Health has a minimum bound of 0.
+   *
+   * @param health health
+   */
+  public void setHealth(int health) {
+    if (this.health <= 0 && health <= 0) {
+      return;
     }
 
-    /**
-     * Returns true if the entity's has 0 health, otherwise false.
-     *
-     * @return is player dead
-     */
-    public Boolean isDead() {
-        return health == 0;
+    if (health >= 0) {
+      this.health = health;
+    } else {
+      this.health = 0;
     }
 
-    /**
-     * Returns the entity's health.
-     *
-     * @return entity's health
-     */
-    public int getHealth() {
-        return health;
-    }
+    if (entity != null) {
+      entity.getEvents().trigger("updateHealth", this.health);
 
-    /**
-     * Sets the entity's health. Health has a minimum bound of 0.
-     *
-     * @param health health
-     */
-    public void setHealth(int health) {
-        if (this.health <= 0 && health <= 0) {
-            return;
-        }
-
-        if (health >= 0) {
-            this.health = health;
+      if (this.health == 0) {
+        int extraCoins = 3;
+        ProfileService profileService = ServiceLocator.getProfileService();
+        if (profileService != null && profileService.isActive()) {
+          int before = profileService.getProfile().getWallet().getCoins();
+          profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+          profileService.getProfile().getWallet().addCoins(extraCoins);
+          profileService
+              .getProfile()
+              .getStatistics()
+              .incrementStatistic("coinsCollected", extraCoins);
+          logger.info(
+              "[Death] wallet: {} + {} -> {}",
+              before,
+              extraCoins,
+              profileService.getProfile().getWallet().getCoins());
         } else {
-            this.health = 0;
+          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
-        if (entity != null) {
-            entity.getEvents().trigger("updateHealth", this.health);
-
-            if (this.health == 0) {
-                int extraCoins = 3;
-                ProfileService profileService = ServiceLocator.getProfileService();
-                if (profileService != null && profileService.isActive()) {
-                    int before = profileService.getProfile().getWallet().getCoins();
-                    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
-                    profileService.getProfile().getWallet().addCoins(extraCoins);
-                    profileService
-                            .getProfile()
-                            .getStatistics()
-                            .incrementStatistic("coinsCollected", extraCoins);
-                    logger.info(
-                            "[Death] wallet: {} + {} -> {}",
-                            before,
-                            extraCoins,
-                            profileService.getProfile().getWallet().getCoins());
-                } else {
-                    logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
-                }
-
-                handleDeath();
-            }
-        }
+        handleDeath();
+      }
     }
+  }
 
-    /**
-     * Adds to the player's health. The amount added can be negative.
-     *
-     * @param health health to add
-     */
-    public void addHealth(int health) {
-        setHealth(this.health + health);
-    }
+  /**
+   * Adds to the player's health. The amount added can be negative.
+   *
+   * @param health health to add
+   */
+  public void addHealth(int health) {
+    setHealth(this.health + health);
+  }
 
-    /**
-     * Returns the entity's base attack damage.
-     *
-     * @return base attack damage
-     */
-    public int getBaseAttack() {
-        return baseAttack;
-    }
+  /**
+   * Returns the entity's base attack damage.
+   *
+   * @return base attack damage
+   */
+  public int getBaseAttack() {
+    return baseAttack;
+  }
 
-    /**
-     * Sets the entity's attack damage. Attack damage has a minimum bound of 0.
-     *
-     * @param attack Attack damage
-     */
-    public void setBaseAttack(int attack) {
-        if (attack >= 0) {
-            this.baseAttack = attack;
-        } else {
-            logger.error("Can not set base attack to a negative attack value");
-        }
+  /**
+   * Sets the entity's attack damage. Attack damage has a minimum bound of 0.
+   *
+   * @param attack Attack damage
+   */
+  public void setBaseAttack(int attack) {
+    if (attack >= 0) {
+      this.baseAttack = attack;
+    } else {
+      logger.error("Can not set base attack to a negative attack value");
     }
+  }
 
-    public void hit(CombatStatsComponent attacker) {
-        int newHealth = getHealth() - attacker.getBaseAttack();
-        setHealth(newHealth);
-    }
+  public void hit(CombatStatsComponent attacker) {
+    int newHealth = getHealth() - attacker.getBaseAttack();
+    setHealth(newHealth);
+  }
 
-    /** Triggers death event handlers if a hit causes an entity to die. */
-    public void handleDeath() {
-        if (isDead()) {
-            if (entity.getComponent(DefenderStatsComponent.class) != null
-                    || entity.getComponent(GeneratorStatsComponent.class) != null) {
-                entity.getEvents().trigger("defenceDeath");
-                logger.info("Human has died!");
-            } else {
-                entity.getEvents().trigger("entityDeath");
-            }
-        }
+  /** Triggers death event handlers if a hit causes an entity to die. */
+  public void handleDeath() {
+    if (isDead()) {
+      if (entity.getComponent(DefenderStatsComponent.class) != null
+          || entity.getComponent(GeneratorStatsComponent.class) != null) {
+        entity.getEvents().trigger("defenceDeath");
+        logger.info("Human has died!");
+      } else {
+        entity.getEvents().trigger("entityDeath");
+      }
     }
+  }
 }
