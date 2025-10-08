@@ -12,3 +12,6 @@
 
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.
+
+## Noah Trevena
+*ChatGPT was used to assist in debugging and creating unit tests for the LevelCompletedWindowTest.java
