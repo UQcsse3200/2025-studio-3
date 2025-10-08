@@ -12,6 +12,8 @@
 
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.
+* ChatGPT was used to create the image of the down arrow for the hotbar.
+* ChatGPT was used to give possible solutions for how to fix z indexing issue with the two hotbars.
 
 ## Noah Trevena
-*ChatGPT was used to assist in debugging and creating unit tests for the LevelCompletedWindowTest.java
+* ChatGPT was used to assist in debugging and creating unit tests for the LevelCompletedWindowTest.java
