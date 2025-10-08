@@ -82,6 +82,10 @@ public class LevelCompletedWindow extends UIComponent {
     // Stage handles drawing
   }
 
+  /**
+   * Called when level is completed, before changing back to world map screen and update's the
+   * profile's current level to the following level.
+   */
   public void updateLevel() {
     String currentLevel = profileService.getProfile().getCurrentLevel();
     String nextLevel =
