@@ -3,17 +3,30 @@ package com.csse3200.game.components.gameover;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
+import com.csse3200.game.services.DialogService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class to create and display a window when the game ends. This should probably be changed for a
  * custom dialog.
  */
 public class GameOverWindow extends UIComponent {
-  // Initialises the game over window.
+    private String levelKey;
+
+    public GameOverWindow(String levelKey) {
+        this.levelKey = levelKey;
+    }
+    // Initialises the game over window.
   private Window window;
   // Tracks the display status of the window.
   boolean isDisplayed = false;
@@ -74,8 +87,31 @@ public class GameOverWindow extends UIComponent {
 
   /** Activates the popup display when game over event is listened for. */
   private void onGameOver() {
-    window.setVisible(true);
+      DialogService dialogService = ServiceLocator.getDialogService();
+
+      displayNewEntity(dialogService);
+      window.setVisible(true);
     isDisplayed = true;
+  }
+
+  private void displayNewEntity(DialogService dialogService) {
+      String unlockedDefences = unlockEntity();
+      dialogService.info(
+              "Congratulations!",
+              "You have unlocked a new entity: " + unlockedDefences +
+                      "\n Go to the dossier to check him out!");
+  }
+
+  private String unlockEntity() {
+      Profile profile = ServiceLocator.getProfileService().getProfile();
+      String unlockedDefences = "";
+      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+          if (Arsenal.ALL_DEFENCES.get(key) == levelKey && !profile.getArsenal().contains(key)) {
+              profile.getArsenal().unlockDefence(key);
+              unlockedDefences += key;
+          }
+      }
+      return unlockedDefences;
   }
 
   /** Frees the memory. */

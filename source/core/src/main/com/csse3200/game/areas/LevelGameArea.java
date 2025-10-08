@@ -22,10 +22,12 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import java.util.*;
@@ -195,7 +197,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Creates a game over entity to handle the game over window UI
     this.gameOverEntity = new Entity();
-    gameOverEntity.addComponent(new GameOverWindow());
+    gameOverEntity.addComponent(new GameOverWindow(currentLevelKey));
     spawnEntity(this.gameOverEntity);
   }
 
