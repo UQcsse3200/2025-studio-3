@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 
@@ -72,13 +73,10 @@ public class LevelMapTutorial extends UIComponent {
   /** Dialog width padding. */
   private static final float DIALOG_WIDTH_PAD = 100f;
 
-  /**
-   * Constructs a new LevelMapTutorial with a reference to the game time controller.
-   *
-   * @param gameTime The {@link GameTime} instance that is used to pause and resume gameplay.
-   */
-  public LevelMapTutorial(GameTime gameTime) {
-    this.gameTime = gameTime;
+  /** Constructs a new LevelMapTutorial with a reference to the game time controller. */
+  public LevelMapTutorial() {
+    this.gameTime = ServiceLocator.getTimeSource();
+    this.gameTime.setTimeScale(0);
   }
 
   /**
@@ -207,6 +205,7 @@ public class LevelMapTutorial extends UIComponent {
     overlay.setVisible(false);
     dialogTable.setVisible(false);
     skipTable.setVisible(false);
+    this.gameTime.setTimeScale(1);
     resumeGame();
   }
 
