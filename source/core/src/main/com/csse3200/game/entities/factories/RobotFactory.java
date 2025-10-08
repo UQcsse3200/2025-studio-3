@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -50,7 +51,8 @@ public class RobotFactory {
     JUMPER("jumperRobot"),
     GUNNER("gunnerRobot"),
     GIANT("giantRobot"),
-    MINI("miniRobot");
+    MINI("miniRobot"),
+    BOMBER("bomberRobot");
 
     private final String configKey;
 
@@ -196,6 +198,14 @@ public class RobotFactory {
                 config.getMaxTeleports(),
                 laneYs));
       }
+    }
+
+    // ✅ Add explosion-on-death component for bomber
+    if (config.isBomberRobot()) {
+      BomberDeathExplodeComponent explodeComp =
+          new BomberDeathExplodeComponent(config.getExplosionDamage(), 1.0f);
+      robot.addComponent(explodeComp);
+      System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
     }
 
     // Scales

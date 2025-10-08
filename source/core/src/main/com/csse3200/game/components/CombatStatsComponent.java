@@ -67,6 +67,7 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
+
     if (entity != null) {
       if (this.health == 0) {
         // Add coins & update statistics
@@ -128,8 +129,13 @@ public class CombatStatsComponent extends Component {
     }
   }
 
-  public void hit(CombatStatsComponent attacker) {
-    int newHealth = getHealth() - attacker.getBaseAttack();
+  /**
+   * Hit another entity, affecting their respective component
+   *
+   * @param target the combat stats component of the target
+   */
+  public void hit(CombatStatsComponent target) {
+    int newHealth = getHealth() - target.getBaseAttack();
 
     setHealth(newHealth);
     handleDeath();
@@ -143,14 +149,7 @@ public class CombatStatsComponent extends Component {
     } // Stops NPE if component has no entity.
     // Sends a different event depending on the entity type
     if (isDead || getHealth() < 0) {
-      // checks for components unique to defenders
-      if (entity.getComponent(DefenderStatsComponent.class) != null
-          || entity.getComponent(GeneratorStatsComponent.class) != null) {
-        entity.getEvents().trigger("defenceDeath");
-        logger.info("Human has died!");
-      } else {
-        entity.getEvents().trigger("entityDeath");
-      }
+      entity.getEvents().trigger("entityDeath");
     }
   }
 }
