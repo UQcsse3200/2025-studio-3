@@ -58,8 +58,6 @@ public class DefenceFactory {
     defender
         .addComponent(stats)
         .addComponent(animator)
-        .addComponent(new CombatStatsComponent(config.getHealth(), config.getAttack()))
-        .addComponent(new HitMarkerComponent())
         .addComponent(new DefenceAnimationController());
 
     if (config.getProjectilePath() != null) {

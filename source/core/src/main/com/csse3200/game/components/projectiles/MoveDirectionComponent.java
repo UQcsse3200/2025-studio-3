@@ -7,12 +7,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
 public class MoveDirectionComponent extends Component {
-  private float speed = 150f;
+  private float speed;
   private boolean shoot = false;
   private TargetDetectionTasks.AttackDirection direction;
 
-  public MoveDirectionComponent(TargetDetectionTasks.AttackDirection direction) {
+  public MoveDirectionComponent(TargetDetectionTasks.AttackDirection direction, float speed) {
     this.direction = direction;
+    this.speed = speed;
   }
 
   @Override

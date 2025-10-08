@@ -16,7 +16,6 @@ import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
-import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
@@ -454,15 +453,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
   }
 
-  public void spawnProjectile(Vector2 spawnPos) {
-    Entity projectile = ProjectileFactory.createSlingShot(2, 3f); // damage value
-    projectile.setPosition(spawnPos.x, spawnPos.y + tileSize / 2f);
-
+  public void spawnProjectile(
+          Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+    projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
-    projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+    projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     spawnEntity(projectile); // adds to area and entity service
   }
