@@ -455,7 +455,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     return node;
   }
 
-  /** Center position in world coordinates (used by render & hit test) */
+  /** Center position in world coordinates (used by render and hit test) */
   public Vector2 getCenterWorld() {
     float x = node.getPositionX() * worldSize.x;
     float y = node.getPositionY() * worldSize.y;

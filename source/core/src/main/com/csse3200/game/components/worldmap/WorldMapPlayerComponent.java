@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handles player logic on the World Map: - JSON-path based movement between nodes (W/A/S/D graph) -
- * Legacy directional navigation as a fallback - Nearby-node detection & E-to-enter prompt - Drawing
- * the player sprite
+ * Legacy directional navigation as a fallback - Nearby-node detection and E-to-enter prompt -
+ * Drawing the player sprite
  *
  * <p>This version is refactored to reduce cognitive complexity and address common SonarQube
  * maintainability issues.
