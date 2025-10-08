@@ -48,10 +48,13 @@ public class MainGameScreen extends ScreenAdapter {
   private Music music;
   private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
-    "images/backgrounds/level-1-map-v2.png",
-    "images/backgrounds/level-2-map-v1.png",
+    "images/backgrounds/level_map_grass.png",
+    "images/backgrounds/level_map_town.png",
+    "images/backgrounds/level_map_final.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
+    "images/entities/defences/shadow_idle1.png",
+    "images/entities/defences/army_guy_1.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -60,8 +63,11 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/nuke.png",
     "images/entities/defences/forge_1.png",
     "images/effects/sling_projectile.png",
+    "images/effects/bullet.png",
+    "images/effects/shock.png",
     "images/effects/sling_projectile_pad.png",
-    "images/entities/currency/scrap_metal.png"
+    "images/entities/currency/scrap_metal.png",
+    "images/entities/slotmachine/slot_reels_background.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
@@ -74,7 +80,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
+    "images/entities/enemies/red_robot.atlas",
+    "images/entities/slotmachine/slot_frame.atlas",
+    "images/entities/slotmachine/slot_reels.atlas",
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
@@ -83,7 +91,7 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
   private final List<String> textures = new ArrayList<>();
-  private final String level;
+  private String level;
 
   private enum PanPhase {
     RIGHT,
@@ -192,14 +200,18 @@ public class MainGameScreen extends ScreenAdapter {
 
     renderer.render();
     ServiceLocator.getGameAreaService().getGameArea().checkGameOver(); // check game-over state
+    // ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete(); // check level-complete state
     test += 1;
+    // if (ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete()) {
     if (test == 500) {
         ServiceLocator.getGameAreaService().nextLevel();
         ServiceLocator.getWaveService().setCurrentLevel(ServiceLocator.getConfigService().getLevelConfig(level).getNextLevel());
+        level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
         ServiceLocator.getWaveService().initialiseNewWave();
         panElapsed = 0f;
         panPhase = PanPhase.RIGHT;
         doIntroPan = true;
+        test = 0;
     }
   }
 
