@@ -51,6 +51,7 @@ public class WorldMapScreen extends BaseScreen {
   private static final Vector2 WORLD_SIZE = new Vector2(WORLD_WIDTH, WORLD_HEIGHT);
   private static final float[] ZOOM_STEPS = {1.20f, 1.35f, 1.50f, 1.70f, 1.90f};
   private static final float CAMERA_LERP_SPEED = 8.0f;
+  private static final String LOG_ZOOM_SAVE_FAIL = "[WorldMapScreen] Failed to save zoom idx: {}";
 
   private boolean followCamera = true; // When false, manual panning is active
   private int zoomIdx = 0;
@@ -215,8 +216,12 @@ public class WorldMapScreen extends BaseScreen {
     if (wms == null || currentKey == null || currentKey.isEmpty()) {
       return chain;
     }
+    List<String> levelKeys = getSortedLevelKeys(wms);
+    return collectChainUntil(levelKeys, currentKey);
+  }
 
-    // Collect level-like keys and sort deterministically by progression index
+  /** Returns all level-like keys sorted deterministically by progression index. */
+  private List<String> getSortedLevelKeys(WorldMapService wms) {
     List<String> levelKeys = new ArrayList<>();
     for (WorldMapNode node : wms.getAllNodes()) {
       String key = node.getRegistrationKey();
@@ -224,11 +229,13 @@ public class WorldMapScreen extends BaseScreen {
         levelKeys.add(key);
       }
     }
-
-    // Sort by parsed numeric order (supports "levelOne/Two/Three/Four/Five" and "level1/2/3/...")
     levelKeys.sort((a, b) -> Integer.compare(parseLevelIndex(a), parseLevelIndex(b)));
+    return levelKeys;
+  }
 
-    // Build chain from the beginning until we hit currentKey (inclusive)
+  /** Builds a chain from the beginning until the currentKey (inclusive). Returns empty if not found. */
+  private List<String> collectChainUntil(List<String> levelKeys, String currentKey) {
+    List<String> chain = new ArrayList<>();
     boolean found = false;
     for (String key : levelKeys) {
       chain.add(key);
@@ -237,7 +244,6 @@ public class WorldMapScreen extends BaseScreen {
         break;
       }
     }
-
     if (!found) {
       chain.clear();
     }
@@ -453,6 +459,19 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(newX, newY);
   }
 
+  /** Persist the current zoom step index to the active profile, if available. */
+  private void persistZoomIdx() {
+    var ps = ServiceLocator.getProfileService();
+    if (ps != null && ps.getProfile() != null) {
+      ps.getProfile().setWorldMapZoomIdx(zoomIdx);
+      try {
+        ps.saveCurrentProfile();
+      } catch (Exception e) {
+        logger.debug(LOG_ZOOM_SAVE_FAIL, e.getMessage());
+      }
+    }
+  }
+
   /** Handles the zoom input. */
   private void handleZoomInput() {
     CameraComponent camera = renderer.getCamera();
@@ -464,6 +483,7 @@ public class WorldMapScreen extends BaseScreen {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom OUT → {}", ZOOM_STEPS[zoomIdx]);
+        persistZoomIdx();
       }
     }
 
@@ -474,6 +494,7 @@ public class WorldMapScreen extends BaseScreen {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom IN → {}", ZOOM_STEPS[zoomIdx]);
+        persistZoomIdx();
       }
     }
   }
@@ -489,6 +510,7 @@ public class WorldMapScreen extends BaseScreen {
     if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera oc) {
       oc.zoom = ZOOM_STEPS[zoomIdx];
       clampCamera(camera);
+      persistZoomIdx();
     }
   }
 
