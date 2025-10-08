@@ -306,32 +306,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    Entity unit = RobotFactory.createRobotType(robotType);
-
-    // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
 
-    // place on that grid cell (bottom-left of the tile)
-    float tileX = xOffset + tileSize * col;
-    float tileY = yOffset + tileSize * row;
+    Vector2 pos = tileToWorld(col, row);
+    registerRobot(robotType, pos.x, pos.y);
 
-    unit.setPosition(tileX, tileY);
-    unit.scaleHeight(tileSize);
-
-    spawnEntity(unit);
-    robots.add(unit);
-
-    unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
-              robots.remove(unit);
-            });
     logger.info("Robot {} spawned at position {} {}", robotType, row, col);
   }
+
 
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
@@ -343,14 +326,65 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    final int rows = grid.getRows();
-    final int cols = grid.getCols();
-    final int total = rows * cols;
+    GridPoint2 rc = findRightmostDefenceCell(); // x = col, y = row
+    if (rc == null) {
+      logger.info("No defence tiles found to spawn {} robot on.", robotType);
+      return;
+    }
 
-    int bestRow = -1;
+    int bestCol = rc.x;
+    int bestRow = rc.y;
+    int cols = grid.getCols();
+
+    // Place slightly to the right of the right-most defence, but clamp inside the map
+    float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);
+    float worldX = xOffset + tileSize * spawnCol;
+    float worldY = yOffset + tileSize * bestRow;
+
+    registerRobot(robotType, worldX, worldY);
+    logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
+  }
+
+  /** Convert tile grid coordinates to world coordinates (bottom-left of tile). */
+  private Vector2 tileToWorld(int col, int row) {
+    float x = xOffset + tileSize * col;
+    float y = yOffset + tileSize * row;
+    return new Vector2(x, y);
+  }
+
+  /**
+   * Shared creation, placement, scaling, spawning, and listener wiring for robots.
+   */
+  private void registerRobot(RobotType type, float worldX, float worldY) {
+    Entity unit = RobotFactory.createRobotType(type);
+    unit.setPosition(worldX, worldY);
+    unit.scaleHeight(tileSize);
+
+    spawnEntity(unit);
+    robots.add(unit);
+
+    unit.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
+      requestDespawn(unit);
+      ServiceLocator.getWaveService().onEnemyDispose();
+      robots.remove(unit);
+    });
+
+    // Keep list in sync if something else despawns the robot
+    unit.getEvents().addListener("despawned", () -> robots.remove(unit));
+  }
+
+  /**
+   * Finds the right-most occupied grid cell (i.e., a placed defence).
+   * @return GridPoint2(col, row), or null if none exist.
+   */
+  private GridPoint2 findRightmostDefenceCell() {
+    int rows = grid.getRows();
+    int cols = grid.getCols();
+    int total = rows * cols;
+
     int bestCol = -1;
+    int bestRow = -1;
 
-    // Find the RIGHT-MOST occupied cell (a placed defence)
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
       if (occ == null) continue;
@@ -362,38 +396,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         bestRow = row;
       }
     }
-
-    // No defences found -> do nothing (test expects no robot to be created)
-    if (bestCol < 0) {
-      logger.info("No defence tiles found to spawn {} robot on.", robotType);
-      return;
-    }
-
-    // Create the robot and place it slightly to the right of the right-most defence
-    Entity unit = RobotFactory.createRobotType(robotType);
-
-    // Clamp just inside the right edge to avoid spawning off-map
-    float spawnCol = Math.min(bestCol + 0.5f, cols - 0.01f);
-    float worldX = xOffset + tileSize * spawnCol;
-    float worldY = yOffset + tileSize * bestRow;
-
-    unit.setPosition(worldX, worldY);
-    unit.scaleHeight(tileSize);
-
-    spawnEntity(unit);
-    robots.add(unit);
-
-    unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
-              robots.remove(unit);
-            });
-    unit.getEvents().addListener("despawned", () -> robots.remove(unit));
-
-    logger.info("Spawned {} robot at row={}, col+0.5={}", robotType, bestRow, spawnCol);
+    return (bestCol >= 0) ? new GridPoint2(bestCol, bestRow) : null;
   }
 
   public void spawnProjectile(
