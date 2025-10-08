@@ -2,7 +2,8 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
-import com.csse3200.game.components.projectiles.MoveLeftComponent;
+import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -72,7 +73,8 @@ public class ProjectileFactory {
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
             .addComponent(new CombatStatsComponent(1, damage))
-            .addComponent(new MoveLeftComponent(speed))
+            .addComponent(
+                new MoveDirectionComponent(TargetDetectionTasks.AttackDirection.LEFT, speed))
             .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
 
     gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();

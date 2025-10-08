@@ -1,6 +1,7 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -44,7 +45,25 @@ public class BomberDeathExplodeComponent extends Component {
   public void create() {
     super.create();
     System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
-    getEntity().getEvents().addListener("entityDeath", this::explode);
+    getEntity().getEvents().addListener("entityDeath", this::onDeath);
+  }
+
+  /**
+   * Handles what happens when the entity dies: first trigger the pre-explosion animation event,
+   * then schedule or directly call explode().
+   */
+  private void onDeath() {
+    getEntity().getEvents().trigger("bomberPreExplode");
+
+    // Schedule explosion after 0.5 seconds
+    Timer.schedule(
+        new Timer.Task() {
+          @Override
+          public void run() {
+            explode();
+          }
+        },
+        0.5f);
   }
 
   /**
@@ -63,27 +82,22 @@ public class BomberDeathExplodeComponent extends Component {
   private void explode() {
     System.out.println("[BomberExplosion] Triggered for " + entity.getId());
 
-    // 1. Get the world position of the bomber. If it's not set, abort.
     Vector2 center = entity.getPosition();
     if (center == null) return;
 
-    // 2. Grid configuration — should match LevelGameArea grid.
     final int rows = 5;
     final int cols = 10;
     final float gridHeight = 450f;
     final float gridWidth = 990f;
 
-    float tileWidth = gridWidth / cols; // e.g., ≈ 99 world units per tile in x
-    float tileHeight = gridHeight / rows; // e.g., ≈ 90 world units per tile in y
+    float tileWidth = gridWidth / cols;
+    float tileHeight = gridHeight / rows;
 
-    // 3. Convert bomber's world position into tile indices.
-    // Using floor ensures consistent tile mapping and avoids rounding up at edges.
     int centerCol = (int) Math.floor(center.x / tileWidth);
     int centerRow = (int) Math.floor(center.y / tileHeight);
 
     System.out.println("[BomberExplosion] Tile center row=" + centerRow + " col=" + centerCol);
 
-    // 4. Loop through all entities in the game world.
     for (Entity target : ServiceLocator.getEntityService().getEntities()) {
 
       // Skip the bomber itself.
@@ -101,10 +115,8 @@ public class BomberDeathExplodeComponent extends Component {
       int dCol = Math.abs(targetCol - centerCol);
       int dRow = Math.abs(targetRow - centerRow);
 
-      // 5. If within the explosion radius (measured in tiles) apply damage.
       if (dCol <= explosionRadiusTiles && dRow <= explosionRadiusTiles) {
 
-        // Get the target's combat stats to modify health.
         CombatStatsComponent combat = target.getComponent(CombatStatsComponent.class);
         if (combat == null) continue;
 
@@ -116,7 +128,6 @@ public class BomberDeathExplodeComponent extends Component {
                 + ", col="
                 + targetCol);
 
-        // Apply damage and trigger death handling. This allows defences to be destroyed.
         combat.setHealth(combat.getHealth() - explosionDamage);
         combat.handleDeath();
       }
