@@ -200,10 +200,12 @@ public class MainGameScreen extends ScreenAdapter {
 
     renderer.render();
     ServiceLocator.getGameAreaService().getGameArea().checkGameOver(); // check game-over state
-    // ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete(); // check level-complete state
     test += 1;
-    // if (ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete()) {
-    if (test == 500) {
+    ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete(test); // check level-complete state
+//    if (ServiceLocator.getGameAreaService().getGameArea().checkLevelComplete(test)) {
+//
+//    }
+    if (test == 1000) {
         ServiceLocator.getGameAreaService().nextLevel();
         ServiceLocator.getWaveService().setCurrentLevel(ServiceLocator.getConfigService().getLevelConfig(level).getNextLevel());
         level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();

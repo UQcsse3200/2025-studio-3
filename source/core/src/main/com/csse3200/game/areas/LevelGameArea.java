@@ -770,14 +770,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Checks if the level is complete */
-  public boolean checkLevelComplete() {
+  public boolean checkLevelComplete(int test) {
     if (isLevelComplete) {
       return true;
       // level is already complete, don't check again
     }
 
     int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    if (currentWave >= 2) {
+    int waveNum = ServiceLocator.getConfigService().getLevelConfig(ServiceLocator.getProfileService().getProfile().getCurrentLevel()).getWaves().size();
+    // if (currentWave >= waveNum + 1) {
+    if (test == 500) {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
