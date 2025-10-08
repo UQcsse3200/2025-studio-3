@@ -8,6 +8,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
+import com.csse3200.game.components.tasks.AttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.entities.Entity;
@@ -74,16 +75,25 @@ public class BossFactory {
         if (config == null) {
             throw new IllegalArgumentException("Robot config cannot be null");
         }
-        AITaskComponent aiComponent =
+
+        boolean isSamurai =config.atlasFilePath.contains("samurai");
+        boolean isGunBot=config.atlasFilePath.contains("gun_Bot");
+        AITaskComponent aiComponent;
+        if(isGunBot){
+            aiComponent =
+                    new AITaskComponent()
+                            .addTask(new AttackTask(config.getRange()))
+                            .addTask(new MoveLeftTask(config.speed));
+        }
+        else{ aiComponent =
                 new AITaskComponent()
-                        .addTask(new MoveLeftTask(config.speed))
-                        .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
+            .addTask(new MoveLeftTask(config.speed))
+                .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));}
+
         AnimationRenderComponent animator =
                 new AnimationRenderComponent(
                         ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
 
-        boolean isSamurai =config.atlasFilePath.contains("samurai");
-        boolean isGunBot=config.atlasFilePath.contains("gun_Bot");
         if (isSamurai) {
             animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
             animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
@@ -118,6 +128,9 @@ public class BossFactory {
                         .addComponent(new HitMarkerComponent())
                         .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
                         .addComponent(animator);
+if(!isGunBot){
+        boss.addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f));
+}
 
         if (isSamurai) {
             animator.startAnimation("walk");
@@ -165,14 +178,19 @@ final int[] samuraiAttackCount = {0};
                         }
                     }else if(isGunBot){
                         animator.startAnimation("gun");
-                        Timer.schedule(
-                                new  Timer.Task() {
-                                    @Override
-                                    public void run() {
-                                        animator.startAnimation("walk");
-                                    }
-                                },
-                                1.5f);
+                        Timer.schedule(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                boss.getEvents().trigger("fireProjectile", boss);
+                            }
+                        }, 0.5f);
+
+                        Timer.schedule(new Timer.Task() {
+                            @Override
+                            public void run() {
+                                animator.startAnimation("walk");
+                            }
+                        }, 1.5f);
                     }
                     else {
                         animator.startAnimation("punch");
