@@ -53,6 +53,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/shadow_idle1.png",
     "images/entities/defences/army_guy_1.png",
+    "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -65,7 +66,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/shock.png",
     "images/effects/default_projectile.png",
     "images/effects/sling_projectile_pad.png",
-    "images/entities/currency/scrap_metal.png"
+    "images/effects/harpoon_projectile.png",
+    "images/entities/currency/scrap_metal.png",
+    "images/effects/shell.png"
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
@@ -78,7 +81,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
+    "images/entities/enemies/red_robot.atlas",
+    "images/entities/defences/mortar.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;

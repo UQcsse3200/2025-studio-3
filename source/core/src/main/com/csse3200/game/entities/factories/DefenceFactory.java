@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.ProjectileComponent;
@@ -45,6 +46,10 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
+    defender.addComponent(new CombatStatsComponent(config.getHealth(), config.getDamage()));
+    if (config.getName().equals("Mortar")) {
+      defender.setProperty("unitType", "mortar");
+    }
 
     AITaskComponent tasks = getTaskComponent(config);
     defender.addComponent(tasks);
@@ -58,7 +63,6 @@ public class DefenceFactory {
         .addComponent(stats)
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
-
     if (config.getProjectilePath() != null) {
       defender.addComponent(
           new ProjectileComponent(config.getProjectilePath(), config.getDamage()));

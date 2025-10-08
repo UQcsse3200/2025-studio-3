@@ -1,14 +1,18 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory class for creating projectile entities for defense entities (e.g., sling shoots for sling
@@ -21,10 +25,22 @@ public class ProjectileFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 
-  public enum ProjectileType {
-    BULLET,
-    SLINGSHOT,
-    SHOCK
+  // Static map for path to projectile type
+  private static final Map<String, ProjectileType> pathToTypeMap = new HashMap<>();
+
+  static {
+    // Initialize the mapping once
+    pathToTypeMap.put("images/effects/sling_projectile.png", ProjectileType.SLINGSHOT);
+    pathToTypeMap.put("images/effects/bullet.png", ProjectileType.BULLET);
+    pathToTypeMap.put("images/effects/harpoon_projectile.png", ProjectileType.HARPOON_PROJECTILE);
+    pathToTypeMap.put("images/effects/shock.png", ProjectileType.SHOCK);
+    pathToTypeMap.put("images/effects/shell.png", ProjectileType.SHELL);
+    // add more mappings as needed
+  }
+
+  public static ProjectileType getProjectileTypeFromPath(String path) {
+    return pathToTypeMap.getOrDefault(
+        path, ProjectileType.SLINGSHOT); // default type or handle null
   }
 
   /**
@@ -35,11 +51,17 @@ public class ProjectileFactory {
    * @return projectile entity
    */
   public static Entity createProjectile(String path, int damage) {
+    ProjectileType type = getProjectileTypeFromPath(path);
+    ColliderComponent collider = new ColliderComponent();
+    if (type == ProjectileType.HARPOON_PROJECTILE || type == ProjectileType.SHELL) {
+      collider.setSensor(true);
+    }
     Entity proj =
         new Entity()
             .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
+            .addComponent(collider)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new ProjectileTagComponent(type))
             .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
             .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
 
