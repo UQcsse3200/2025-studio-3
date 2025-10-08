@@ -29,6 +29,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class DefenceFactory {
   private static final String ATTACK = "attack";
   private static final String IDLE = "idle";
+  private static final String BUFF = "BUFF";
 
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
@@ -45,6 +46,9 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
+    if (config.getName().equals("Mortar")) {
+      defender.setProperty("unitType", "mortar");
+    }
 
     AITaskComponent tasks = getTaskComponent(config);
     defender.addComponent(tasks);
@@ -58,7 +62,6 @@ public class DefenceFactory {
         .addComponent(stats)
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
-
     if (config.getProjectilePath() != null) {
       defender.addComponent(
           new ProjectileComponent(config.getProjectilePath(), config.getDamage()));
@@ -66,6 +69,13 @@ public class DefenceFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    // add event listener for buffing the defence when a buff item is used on it
+    defender.getEvents().addListener(BUFF, 
+        () -> defender.getComponent(DefenderStatsComponent.class).buff());
+    defender.getEvents().addListener("UNBUFF", 
+        () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
+
     return defender;
   }
 
@@ -161,7 +171,7 @@ public class DefenceFactory {
             .addComponent(solid)
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new ColliderComponent())
+            // .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent());
 
     npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);

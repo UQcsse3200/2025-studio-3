@@ -16,6 +16,21 @@
         "attackSpeed": 1,
         "critChance": 1
       },
+      "shield": {
+        "health": 200,
+        "range": 90,
+        "name": "Riot Shield",
+        "description": "They say his brain is the size of a walnut. Big shield, even bigger heart",
+        "assetPath": "images/entities/defences/shield_1.png",
+        "atlasPath": "images/entities/defences/shield.atlas",
+        "projectilePath": null,
+        "cost": 150,
+        "damage": 0,
+        "direction": "right",
+        "numSprites": 4,
+        "attackSpeed": 1,
+        "critChance": 0
+      },
       "armyguy" : {
         "health": 80,
         "range": 1000,
@@ -31,6 +46,36 @@
         "attackSpeed": 0.5,
         "critChance": 1
       },
+      "harpoon" : {
+        "health": 50,
+        "range": 750,
+        "name": "Harpoon",
+        "description": "",
+        "assetPath": "images/entities/defences/harpoon0.png",
+        "atlasPath": "images/entities/defences/harpoon.atlas",
+        "projectilePath": "images/effects/harpoon_projectile.png",
+        "cost": 100,
+        "damage": 1,
+        "direction": "right",
+        "numSprites": 26,
+        "attackSpeed": 1,
+        "critChance": 1
+      },
+      "mortar" : {
+        "health": 100,
+        "range": 1000,
+        "name": "Mortar",
+        "description": "",
+        "assetPath": "images/entities/defences/mortar0.png",
+        "atlasPath": "images/entities/defences/mortar.atlas",
+        "projectilePath": "images/effects/shell.png",
+        "cost": 100,
+        "damage": 5,
+        "direction": "right",
+        "numSprites": 43,
+        "attackSpeed": 1,
+        "critChance": 1
+      },
       "shadow" : {
         "health": 20,
         "range": 250,
@@ -40,7 +85,7 @@
         "atlasPath": "images/entities/defences/shadow.atlas",
         "projectilePath": "images/effects/shock.png",
         "cost": 100,
-        "damage": 1,
+        "damage": 2,
         "direction": "left",
         "numSprites": 4,
         "attackSpeed": 1.5,
@@ -58,6 +103,21 @@
         "numSprites": 2,
         "attackSpeed": 0,
         "critChance": 0
+      },
+      "boxer": {
+        "health": 60,
+        "range": 100,
+        "name": "Boxer",
+        "description": "Now this guy packs a punch. He can't hit far, but he sure hits hard",
+        "assetPath": "images/entities/defences/boxer_1.png",
+        "atlasPath": "images/entities/defences/boxer.atlas",
+        "projectilePath": "images/effects/default_projectile.png",
+        "cost": 150,
+        "damage": 5,
+        "direction": "right",
+        "numSprites": 3,
+        "attackSpeed": 1,
+        "critChance": 1
       }
     },
     "generators": {

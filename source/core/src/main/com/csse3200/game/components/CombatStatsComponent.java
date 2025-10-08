@@ -125,7 +125,7 @@ public class CombatStatsComponent extends Component {
    */
   public void hit(CombatStatsComponent target) {
     int newHealth = getHealth() - target.getBaseAttack();
-
+    logger.info("{} was attacked with {}", entity.getId(), newHealth);
     setHealth(newHealth);
     handleDeath();
   }

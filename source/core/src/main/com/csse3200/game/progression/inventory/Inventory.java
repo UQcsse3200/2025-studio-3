@@ -4,6 +4,7 @@ import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,7 @@ public class Inventory {
 
   /** Constructor for the Inventory class. */
   public Inventory() {
-    items = new ArrayList<>();
+    items = new ArrayList<>(Arrays.asList("buff", "buff"));
   }
 
   /**
