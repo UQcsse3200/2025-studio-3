@@ -2,6 +2,8 @@ package com.csse3200.game.components.tasks;
 
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 // TODO : integrate with attack system team
 
@@ -13,6 +15,7 @@ public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
   private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
   private float timeSinceLastFire = 0f;
+  private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   /**
    * Creates an attack task
@@ -34,7 +37,7 @@ public class AttackTask extends TargetDetectionTasks {
     owner.getEntity().getEvents().trigger("fire");
   }
 
-  /** Updates the task each game frame */
+  /** Updates the task each game frame*/
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();

@@ -13,6 +13,7 @@ dialog box, the achievement box, the coins icon, the skill points icon, the sett
 animation of the dialog box and the animation of the achievement box.
 - Generative AI was used sporadically to assist with identifying where
 code coverage was missing and how to fix it.
+- AI was used to assist with the creation and writing tests of the Settings system.
 
 ## Jackie
 

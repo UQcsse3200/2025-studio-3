@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
@@ -50,4 +51,32 @@ public class ProjectileFactory {
     PhysicsUtils.setScaledCollider(slingShot, 0.1f, 0.1f);
     return slingShot;
   }
+
+  /**
+   * Creates a gunner robot projectile entity.
+   *
+   * <p>The bullet shot is designed to be used by robot entities such as gunner robot. It
+   *  includes components for physics, collision, attack damage, and rendering. The projectile is set
+   *   to deal damage to enemies and is destroyed upon impact.
+   *
+   * @param damage amount of damage dealt to an enemy entity
+   * @param speed the speed the bullet shot moves at
+   * @return entity representing a bullet shot projectile
+   */
+  public static Entity createGunnerProjectile(int damage, float speed) {
+    Entity gunnerProjectile =
+            new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
+            .addComponent(new CombatStatsComponent(1, damage))
+            .addComponent(new MoveLeftComponent(speed))
+            .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
+
+    gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
+    return gunnerProjectile;
+  }
+
 }

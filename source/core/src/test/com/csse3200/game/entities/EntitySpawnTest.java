@@ -9,6 +9,7 @@ import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.WaveService;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -37,9 +38,9 @@ class EntitySpawnTest {
 
   @Test
   void spawnEnemiesCheckWeightAndMinimum() {
-    // Create a mock WaveManager for testing
-    WaveManager mockWaveManager =
-        new WaveManager("levelOne") {
+    // Create a mock WaveService for testing
+    WaveService mockWaveService =
+        new WaveService() {
           @Override
           public int getWaveWeight() {
             return 10;
@@ -75,11 +76,18 @@ class EntitySpawnTest {
             when(bungeeConfig.getChance()).thenReturn(0.0f);
             configs.put("bungee", bungeeConfig);
 
+            BaseSpawnConfig gunnerRobotConfig = mock(BaseSpawnConfig.class);
+            when(gunnerRobotConfig.getCost()).thenReturn(2);
+            when(gunnerRobotConfig.getChance()).thenReturn(0.0f);
+            configs.put("gunnerRobot", gunnerRobotConfig);
+
+
+
             return configs;
           }
         };
 
-    EntitySpawn spawner = new EntitySpawn(mockWaveManager, 2); // robotWeight = 2
+    EntitySpawn spawner = new EntitySpawn(mockWaveService, 2); // robotWeight = 2
     // Use the new method that works with the level-based system
     spawner.spawnEnemiesFromConfig();
     assertEquals(5, spawner.getSpawnCount());

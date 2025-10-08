@@ -81,6 +81,8 @@ class RobotFactoryTest {
         .thenReturn(cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
     when(mockConfigService.getEnemyConfig("teleportRobot"))
         .thenReturn(cfg(30, 5, 1.0f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
+    when(mockConfigService.getEnemyConfig("gunnerRobot"))
+        .thenReturn(cfg(25, 6, 1.2f, "images/entities/enemies/robot_placeholder.atlas", 1.0f));
   }
 
   @AfterEach

@@ -14,16 +14,18 @@ public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
+  private final int maxHealth;
   private int baseAttack;
 
   /**
    * Creates a new combat stats component with the specified health and attack values.
    *
-   * @param health the initial health value
+   * @param maxHealth the initial health value
    * @param baseAttack the base attack value
    */
-  public CombatStatsComponent(int health, int baseAttack) {
-    setHealth(health);
+  public CombatStatsComponent(int maxHealth, int baseAttack) {
+    setHealth(maxHealth);
+    this.maxHealth = this.health; // setHealth will handle processing this
     setBaseAttack(baseAttack);
   }
 
@@ -46,6 +48,15 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
+   * Returns the entity's maximum health.
+   *
+   * @return entity's maximum health
+   */
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+
+  /**
    * Sets the entity's health. Health has a minimum bound of 0.
    *
    * @param health health
@@ -56,7 +67,6 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-
     if (entity != null) {
       if (this.health == 0) {
         // Add coins & update statistics
@@ -83,7 +93,7 @@ public class CombatStatsComponent extends Component {
         // despawn entity
         entity.getEvents().trigger("despawnRobot", entity);
       }
-      entity.getEvents().trigger("updateHealth", this.health);
+      entity.getEvents().trigger("updateHealth", this.health, this.maxHealth);
     }
   }
 
@@ -128,6 +138,10 @@ public class CombatStatsComponent extends Component {
   /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
     boolean isDead = isDead();
+    if (entity == null) {
+      return;
+    } // Stops NPE if component has no entity.
+    // Sends a different event depending on the entity type
     if (isDead || getHealth() < 0) {
       // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null
