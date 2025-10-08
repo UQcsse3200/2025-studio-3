@@ -30,6 +30,8 @@ import com.csse3200.game.ui.UIComponent;
 public class LevelMapTutorial extends UIComponent {
   /** Table containing the instructional dialog and next button. */
   private Table dialogTable;
+  /** Table containing the hint message to progress through the tutorial messages. */
+  private Table messageTable;
 
   /** Table containing the "Skip Tutorial" button. */
   private Table skipTable;
@@ -45,6 +47,8 @@ public class LevelMapTutorial extends UIComponent {
 
   /** Current tutorial step index. */
   private int step = 0;
+  /** Bottom padding for hint message. */
+  private static final float HINT_BOTTOM_PAD = 20f;
 
   /** Boolean to determine whether the tutorial is active and listening for inputs. */
   private boolean active = true;
@@ -59,15 +63,6 @@ public class LevelMapTutorial extends UIComponent {
 
   /** Alpha transparency value for the overlay. */
   private static final float OVERLAY_ALPHA = 0.7f;
-
-  /** Button size for the next button. */
-  private static final float BUTTON_SIZE = 30f;
-
-  /** Right padding for the next button. */
-  private static final float BUTTON_RIGHT_PAD = 60f;
-
-  /** Bottom padding for the next button. */
-  private static final float BUTTON_BOTTOM_PAD = 50f;
 
   /** Dialog width padding. */
   private static final float DIALOG_WIDTH_PAD = 100f;
@@ -131,27 +126,14 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable.add(contentTable).expand().fill();
     dialogTable.align(Align.center);
 
-    // next button
-    Texture nextTexture = new Texture(Gdx.files.internal("images/ui/skip-icon.png"));
-    Drawable nextDrawable = new TextureRegionDrawable(nextTexture);
-    ImageButton nextButton = new ImageButton(nextDrawable);
-    nextButton.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            nextStep();
-          }
-        });
-
-    dialogTable
-        .add(nextButton)
-        .size(BUTTON_SIZE, BUTTON_SIZE)
-        .expandX()
-        .right()
-        .bottom()
-        .padRight(BUTTON_RIGHT_PAD)
-        .padBottom(BUTTON_BOTTOM_PAD);
     stage.addActor(dialogTable);
+
+    Label hintLabel = TypographyFactory.createParagraph("Press SPACE to continue");
+
+    messageTable = new Table();
+    messageTable.setFillParent(true);
+    messageTable.add(hintLabel).expandY().bottom().padBottom(HINT_BOTTOM_PAD);
+    stage.addActor(messageTable);
 
     // button to skip tutorial
     TextButton skipButton = new TextButton("Skip Tutorial", skin);
@@ -206,6 +188,7 @@ public class LevelMapTutorial extends UIComponent {
     active = false;
     overlay.setVisible(false);
     dialogTable.setVisible(false);
+    messageTable.setVisible((false));
     skipTable.setVisible(false);
     resumeGame();
   }
@@ -233,6 +216,7 @@ public class LevelMapTutorial extends UIComponent {
     super.dispose();
     overlay.remove();
     dialogTable.remove();
+    messageTable.remove();
     skipTable.remove();
   }
 
