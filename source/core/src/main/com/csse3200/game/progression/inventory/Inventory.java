@@ -15,7 +15,7 @@ public class Inventory {
 
   /** Constructor for the Inventory class. */
   public Inventory() {
-    items = new ArrayList<>(Arrays.asList("buff"));
+    items = new ArrayList<>(Arrays.asList("buff", "buff"));
   }
 
   /**

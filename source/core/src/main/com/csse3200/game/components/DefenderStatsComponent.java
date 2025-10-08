@@ -76,6 +76,15 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     heal(newHealth);
     logger.info("Defender buffed! New max health: " + getMaxHealth());
   }
+
+  public void unbuff() {
+    int newHealth = (int) Math.ceil(getMaxHealth() / 2);
+    setMaxHealth(newHealth);
+    if (getHealth() > newHealth) {
+      setHealth(newHealth);
+    }
+    logger.info("Defender unbuffed! New max health: " + getMaxHealth());
+  }
   
   private int getMaxHealth() {
     return maxHealth;

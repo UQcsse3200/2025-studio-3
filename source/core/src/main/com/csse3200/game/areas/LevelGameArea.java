@@ -551,6 +551,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               (int) tileSize,
               new Vector2(
                   (float) (xOffset * 0.25 + levelCols * tileSize), (float) (tileSize * -0.75)));
+      
+      // ~ Apply item effects ~
+      if ("BUFF".equals(itemType)) {
+        // buff defences at position
+        Entity occ = grid.getOccupantIndex(position);
+        if (occ != null) { 
+          occ.getEvents().trigger("BUFF");
+        };
+      }
 
       // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
       Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");

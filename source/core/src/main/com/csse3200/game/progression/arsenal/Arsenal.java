@@ -19,7 +19,7 @@ public class Arsenal {
                 //"shadow",
                 //"boxer",
                 "shield",
-                "harpoon",
+                //"harpoon",
                 "mortar")); // Default defences
     generators = new ArrayList<>(Arrays.asList("furnace"));
   }
