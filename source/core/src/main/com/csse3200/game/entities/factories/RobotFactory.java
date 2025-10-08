@@ -94,18 +94,6 @@ public class RobotFactory {
    * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
    * @return Entity with base robot components plus TeleportTask
    */
-  public static Entity createTeleportRobot(BaseEnemyConfig cfg, float[] laneYs) {
-    Entity robot = createBaseRobot(cfg);
-    if (cfg.isTeleportRobot()) {
-      robot.addComponent(
-          new TeleportTask(
-              cfg.getTeleportCooldownSeconds(),
-              cfg.getTeleportChance(),
-              cfg.getMaxTeleports(),
-              laneYs));
-    }
-    return robot;
-  }
 
   /**
    * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
@@ -189,14 +177,16 @@ public class RobotFactory {
     if (config.getName() != null && config.getName().contains("Teleport")) {
       animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
-      // Only attach if we found at least two distinct lanes
       if (laneYs.length >= 2) {
-        robot.addComponent(
-            new TeleportTask(
-                config.getTeleportCooldownSeconds(),
-                config.getTeleportChance(),
-                config.getMaxTeleports(),
-                laneYs));
+        AITaskComponent ai = robot.getComponent(AITaskComponent.class);
+        if (ai != null) {
+          ai.addTask(
+              new TeleportTask(
+                  config.getTeleportCooldownSeconds(),
+                  config.getTeleportChance(),
+                  config.getMaxTeleports(),
+                  laneYs));
+        }
       }
     }
 

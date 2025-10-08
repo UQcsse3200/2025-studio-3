@@ -2,7 +2,9 @@ package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.csse3200.game.components.Component;
+import com.csse3200.game.ai.tasks.DefaultTask;
+import com.csse3200.game.ai.tasks.PriorityTask;
+import com.csse3200.game.ai.tasks.TaskRunner;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -10,11 +12,12 @@ import com.csse3200.game.services.ServiceLocator;
  * Teleport behaviour component for enemies. Every fixed cooldown, roll a chance and (if successful)
  * jump to a different lane Y. Keeps X constant; chooses Y from the provided laneYs[].
  */
-public class TeleportTask extends Component {
+public class TeleportTask extends DefaultTask implements PriorityTask {
   private final float cooldownSec;
   private final float chance;
   private final int maxTeleports;
   private final float[] laneYs;
+  private final int priority = 10;
 
   private float timer;
   private int teleportsDone;
@@ -32,8 +35,21 @@ public class TeleportTask extends Component {
   }
 
   @Override
-  public void create() {
+  public int getPriority() {
+    return priority;
+  }
+
+  @Override
+  public void create(TaskRunner taskRunner) {
+    super.create(taskRunner);
+    this.timer = cooldownSec;
+  }
+
+  @Override
+  public void start() {
+    super.start();
     timer = cooldownSec;
+    teleportsDone = 0;
   }
 
   @Override
@@ -49,7 +65,10 @@ public class TeleportTask extends Component {
     timer = cooldownSec; // reset for next attempt
     if (MathUtils.random() > chance) return;
 
-    // Get current position from the entity.
+    // ✅ Get current position through the owner
+    var entity = owner.getEntity();
+    if (entity == null) return;
+
     Vector2 pos = entity.getPosition();
     if (pos == null) return;
 
@@ -64,9 +83,9 @@ public class TeleportTask extends Component {
         break;
       }
     }
-    if (Math.abs(targetY - currentY) <= 1e-3f) return; // no different lane found
+    if (Math.abs(targetY - currentY) <= 1e-3f) return;
 
-    // Teleport: keep X, change Y.
+    // ✅ Teleport using owner entity
     entity.setPosition(pos.x, targetY);
     teleportsDone++;
   }
