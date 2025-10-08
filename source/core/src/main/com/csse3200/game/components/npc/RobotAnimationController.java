@@ -15,6 +15,7 @@ public class RobotAnimationController extends Component {
   private enum State {
     MOVE_LEFT,
     ATTACK,
+    TELEPORT,
     NONE
   }
 
@@ -29,6 +30,7 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("moveLeftStart", this::animateMoveLeft);
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
+    entity.getEvents().addListener("teleportStart", this::animateTeleport);
   }
 
   void animateMoveLeft() {
@@ -37,6 +39,15 @@ public class RobotAnimationController extends Component {
       animator.startAnimation("moveLeft");
     } else {
       animator.startAnimation("moveLeftDamaged");
+    }
+  }
+
+  void animateTeleport() {
+    currentState = State.TELEPORT;
+    if (!belowHalfHealth) {
+      animator.startAnimation("teleport");
+    } else {
+      animator.startAnimation("teleport");
     }
   }
 

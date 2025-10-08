@@ -180,7 +180,12 @@ public class RobotFactory {
       robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
     }
 
+    if (config.getName() != null && config.getName().contains("Bungee")) {
+      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
+    }
+
     if (config.getName() != null && config.getName().contains("Teleport")) {
+      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
       // Only attach if we found at least two distinct lanes
       if (laneYs.length >= 2) {
