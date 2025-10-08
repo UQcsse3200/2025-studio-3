@@ -315,7 +315,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     logger.info("Robot {} spawned at position {} {}", robotType, row, col);
   }
 
-
   /**
    * Spawns a robot directly on top of an existing defence (placed unit) on the grid. If no defence
    * exists, does nothing and logs a warning.
@@ -352,9 +351,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new Vector2(x, y);
   }
 
-  /**
-   * Shared creation, placement, scaling, spawning, and listener wiring for robots.
-   */
+  /** Shared creation, placement, scaling, spawning, and listener wiring for robots. */
   private void registerRobot(RobotType type, float worldX, float worldY) {
     Entity unit = RobotFactory.createRobotType(type);
     unit.setPosition(worldX, worldY);
@@ -363,11 +360,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
-    unit.getEvents().addListener(ENTITY_DEATH_EVENT, () -> {
-      requestDespawn(unit);
-      ServiceLocator.getWaveService().onEnemyDispose();
-      robots.remove(unit);
-    });
+    unit.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
+              robots.remove(unit);
+            });
 
     // Keep list in sync if something else despawns the robot
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));
@@ -375,6 +375,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /**
    * Finds the right-most occupied grid cell (i.e., a placed defence).
+   *
    * @return GridPoint2(col, row), or null if none exist.
    */
   private GridPoint2 findRightmostDefenceCell() {
@@ -401,13 +402,21 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+    // Safety check
+    if (projectile == null || spawnPos == null || direction == null) {
+      logger.warn("Invalid projectile spawn parameters");
+      return;
+    }
+
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units
     projectile.scaleWidth(30f); // set the width in world units
 
     projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+
     spawnEntity(projectile); // adds to area and entity service
   }
 
@@ -438,111 +447,124 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
-    // Resolve world position from tile index
-    final int col = position % levelCols;
-    final int row = position / levelCols;
-    final float tileX = xOffset + tileSize * col;
-    final float tileY = yOffset + tileSize * row;
-    final Vector2 entityPos = new Vector2(tileX, tileY);
-
-    Supplier<Entity> entitySupplier =
-        selectedUnit.getComponent(DeckInputComponent.class).getEntitySupplier();
-    Entity newEntity = entitySupplier.get();
-    if (newEntity == null) {
-      logger.error("Entity fetched was NULL");
-      return;
-    }
-    newEntity.setPosition(entityPos);
-
-    // Get the tile at the spawn coordinates
-    Entity selectedTile = grid.getTile(position);
-
-    if (selectedTile == null) {
+    // --- Step 1: Resolve grid/tile/selected entity ---
+    Entity tile = grid.getTile(position);
+    if (tile == null) {
       logger.warn("No tile entity found at index {}", position);
       return;
     }
 
-    // ---------- ITEM PATH  (to be moved to a different method in future) ----------
-
-    // Where entity to be spawned is an Item and the player has such item in their inventory
-    ItemComponent item = newEntity.getComponent(ItemComponent.class);
-    if (item != null
-        && !ServiceLocator.getProfileService()
-            .getProfile()
-            .getInventory()
-            .contains(item.getType().toString().toLowerCase(Locale.ROOT))) {
-      // Clear Item from tile storage
-      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-      String itemType = item.getType().toString();
-      logger.info("Not spawning item {} since none in player's inventory", itemType);
-      return;
-    }
-    if (item != null) {
-      spawnItem(item, entityPos);
-
-      // Clear Item from tile storage
-      selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
-      // Clear drag/selection after using an item
-      setIsCharacterSelected(false);
-      setSelectedUnit(null);
-      cancelDrag();
+    Entity newEntity = getSelectedEntity();
+    if (newEntity == null) {
+      logger.warn("No selected entity to spawn");
       return;
     }
 
-    // ---------- DEFENCE/UNIT PATH (single source of truth = GRID) ----------
+    Vector2 worldPos = resolveWorldPosition(position);
+    newEntity.setPosition(worldPos);
 
+    // --- Step 2: Item path ---
+    if (trySpawnItem(newEntity, tile, worldPos)) {
+      resetSelectionUI();
+      return;
+    }
+
+    // --- Step 3: Defence / Generator path ---
     if (grid.isOccupiedIndex(position)) {
       logger.info("Tile {} already occupied", position);
+      resetSelectionUI();
       return;
     }
 
-    // Add entity to tile unless it is an Item
-    selectedTile.getComponent(TileStorageComponent.class).setTileUnit(newEntity);
+    placeDefenceUnit(position, tile, newEntity, worldPos);
+    resetSelectionUI();
+  }
 
-    // set scale to render as desired
-    newEntity.scaleHeight(tileSize);
+  /** Safely obtain the selected entity's supplier and create it. */
+  private Entity getSelectedEntity() {
+    if (selectedUnit == null) return null;
+    DeckInputComponent deck = selectedUnit.getComponent(DeckInputComponent.class);
+    return (deck != null) ? deck.getEntitySupplier().get() : null;
+  }
 
-    // if entity is a furnace, trigger currency generation at that point
-    if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
-      spawnScrap(newEntity);
+  /** Convert a tile index into its world position. */
+  private Vector2 resolveWorldPosition(int position) {
+    int col = position % levelCols;
+    int row = position / levelCols;
+    return new Vector2(xOffset + tileSize * col, yOffset + tileSize * row);
+  }
+
+  /**
+   * Handle spawning an item (grenade, coffee, etc.) if applicable. Returns true if an item was
+   * spawned and handled.
+   */
+  private boolean trySpawnItem(Entity entity, Entity tile, Vector2 worldPos) {
+    ItemComponent item = entity.getComponent(ItemComponent.class);
+    if (item == null) return false;
+
+    String itemKey = item.getType().toString().toLowerCase(Locale.ROOT);
+    Inventory inv = ServiceLocator.getProfileService().getProfile().getInventory();
+
+    if (!inv.contains(itemKey)) {
+      logger.info("Cannot spawn item {}, not in player's inventory", itemKey);
+      tile.getComponent(TileStorageComponent.class).removeTileUnit();
+      return true; // handled: do nothing
     }
 
-    spawnEntity(newEntity);
-    // trigger the animation - this will change with more entities
-    newEntity.getEvents().trigger("idleStart");
+    spawnItem(item, worldPos);
+    tile.getComponent(TileStorageComponent.class).removeTileUnit();
+    return true;
+  }
 
-    // Ensure grid slot frees when unit leaves
+  /**
+   * Place a non-item (defence or generator) unit on the grid, wire its events, and spawn into the
+   * world.
+   */
+  private void placeDefenceUnit(int position, Entity tile, Entity unit, Vector2 worldPos) {
+    tile.getComponent(TileStorageComponent.class).setTileUnit(unit);
+    unit.scaleHeight(tileSize);
+
+    if (unit.getComponent(GeneratorStatsComponent.class) != null) {
+      spawnScrap(unit);
+    }
+
+    spawnEntity(unit);
+    unit.getEvents().trigger("idleStart");
+
     Runnable clearTile =
         () -> {
-          grid.removeOccupantIfMatchIndex(position, newEntity);
-          selectedTile.getComponent(TileStorageComponent.class).removeTileUnit();
+          grid.removeOccupantIfMatchIndex(position, unit);
+          tile.getComponent(TileStorageComponent.class).removeTileUnit();
         };
 
-    newEntity
-        .getEvents()
+    unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
-              requestDespawn(newEntity);
+              requestDespawn(unit);
               clearTile.run();
-              robots.remove(newEntity);
+              robots.remove(unit);
             });
+    unit.getEvents().addListener("despawned", clearTile::run);
 
-    newEntity.getEvents().addListener("despawned", clearTile::run);
-
-    logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
-
-    newEntity
-        .getEvents()
+    unit.getEvents()
         .addListener(
             "fire",
-            (TargetDetectionTasks.AttackDirection direction) -> {
+            (TargetDetectionTasks.AttackDirection dir) -> {
               spawnProjectile(
-                  entityPos,
-                  newEntity.getComponent(ProjectileComponent.class).getProjectile(),
-                  direction);
-              newEntity.getEvents().trigger("attackStart");
+                  worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+              unit.getEvents().trigger("attackStart");
             });
+
+    logger.info(
+        "Unit spawned at position {} (r={}, c={})",
+        position,
+        position / levelCols,
+        position % levelCols);
+  }
+
+  /** Reset drag state and selection after any placement. */
+  private void resetSelectionUI() {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
