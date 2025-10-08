@@ -157,63 +157,71 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
   }
 
-  /** Spawns the level UI */
+  /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   private void displayUI() {
-    Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
-    for (String defenceKey : profile.getArsenal().getDefenders()) {
-      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
-      unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
-    }
-    for (String generatorKey : profile.getArsenal().getGenerators()) {
-      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
-      unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
-    }
+    populateUnitList(profile, configService);
+    populateItemList(profile.getInventory(), configService);
 
-    Inventory inventory = profile.getInventory();
-
-    if (inventory.contains("grenade")) {
-      BaseItemConfig grenadeConfig = configService.getItemConfig("grenade");
-      if (grenadeConfig != null) {
-        itemList.put(grenadeConfig.getAssetPath(), ItemFactory::createGrenade);
-      }
-    }
-    if (inventory.contains("coffee")) {
-      BaseItemConfig coffeeConfig = configService.getItemConfig("coffee");
-      if (coffeeConfig != null) {
-        itemList.put(coffeeConfig.getAssetPath(), ItemFactory::createCoffee);
-      }
-    }
-    if (inventory.contains("buff")) {
-      BaseItemConfig buffConfig = configService.getItemConfig("buff");
-      if (buffConfig != null) {
-        itemList.put(buffConfig.getAssetPath(), ItemFactory::createBuff);
-      }
-    }
-    if (inventory.contains("emp")) {
-      BaseItemConfig empConfig = configService.getItemConfig("emp");
-      if (empConfig != null) {
-        itemList.put(empConfig.getAssetPath(), ItemFactory::createEmp);
-      }
-    }
-    if (inventory.contains("nuke")) {
-      BaseItemConfig nukeConfig = configService.getItemConfig("nuke");
-      if (nukeConfig != null) {
-        itemList.put(nukeConfig.getAssetPath(), ItemFactory::createNuke);
-      }
-    }
-
-    ui.addComponent(new GameAreaDisplay("Level One"))
-        .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
-
+    Entity ui =
+        new Entity()
+            .addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
-    // Creates a game over entity to handle the game over window UI
-    this.gameOverEntity = new Entity();
-    gameOverEntity.addComponent(new GameOverWindow());
-    spawnEntity(this.gameOverEntity);
+    createGameOverEntity();
+  }
+
+  /** Populates unitList with all available defenders and generators from the player's arsenal. */
+  private void populateUnitList(Profile profile, ConfigService configService) {
+    for (String defenceKey : profile.getArsenal().getDefenders()) {
+      BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
+      if (config != null) {
+        unitList.put(config.getAssetPath(), () -> DefenceFactory.createDefenceUnit(config));
+      } else {
+        logger.warn("Missing defender config for key {}", defenceKey);
+      }
+    }
+
+    for (String generatorKey : profile.getArsenal().getGenerators()) {
+      BaseGeneratorConfig config = configService.getGeneratorConfig(generatorKey);
+      if (config != null) {
+        unitList.put(config.getAssetPath(), () -> GeneratorFactory.createGeneratorUnit(config));
+      } else {
+        logger.warn("Missing generator config for key {}", generatorKey);
+      }
+    }
+  }
+
+  /** Populates itemList for all items in inventory that have corresponding configs. */
+  private void populateItemList(Inventory inventory, ConfigService configService) {
+    Map<String, Supplier<Entity>> itemFactories =
+        Map.of(
+            "grenade", ItemFactory::createGrenade,
+            "coffee", ItemFactory::createCoffee,
+            "buff", ItemFactory::createBuff,
+            "emp", ItemFactory::createEmp,
+            "nuke", ItemFactory::createNuke);
+
+    for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
+      String key = entry.getKey();
+      if (inventory.contains(key)) {
+        BaseItemConfig config = configService.getItemConfig(key);
+        if (config != null && config.getAssetPath() != null) {
+          itemList.put(config.getAssetPath(), entry.getValue());
+        } else {
+          logger.warn("Item config missing or invalid for {}", key);
+        }
+      }
+    }
+  }
+
+  /** Creates and spawns the game-over UI entity. */
+  private void createGameOverEntity() {
+    gameOverEntity = new Entity().addComponent(new GameOverWindow());
+    spawnEntity(gameOverEntity);
   }
 
   /** Creates the game map and renders it */
