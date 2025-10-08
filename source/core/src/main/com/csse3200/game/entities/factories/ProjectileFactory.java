@@ -57,12 +57,14 @@ public class ProjectileFactory {
       collider.setSensor(true);
     }
     Entity proj = new Entity();
-    if (type != ProjectileType.SHELL) { //the mortar shell projectile doesn't get physics, its purely visual
-        proj.addComponent(new PhysicsComponent())
-                .addComponent(collider)
-                .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-                .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
-                .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
+    if (type
+        != ProjectileType
+            .SHELL) { // the mortar shell projectile doesn't get physics, its purely visual
+      proj.addComponent(new PhysicsComponent())
+          .addComponent(collider)
+          .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+          .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+          .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
     }
 
     // Add render component so it draws above the grid
@@ -71,9 +73,9 @@ public class ProjectileFactory {
     proj.addComponent(new ProjectileTagComponent(type));
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly
-      if (type != ProjectileType.SHELL) { //no collider for the mortar shell
-          PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
-      }
+    if (type != ProjectileType.SHELL) { // no collider for the mortar shell
+      PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
+    }
     return proj;
   }
 }
