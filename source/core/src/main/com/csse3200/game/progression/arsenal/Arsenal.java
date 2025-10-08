@@ -13,7 +13,7 @@ public class Arsenal {
   /* Constant list of all unlockable defences coupled with the level that they are unlocked on
    * 0 indicates level 1 is initialised with three defences. This will be used to track which
    * defences should be unlocked on each level */
-  private final String INITIAL_DEFENCE = "level0";
+  private static final String INITIAL_DEFENCE = "level0";
   public static final HashMap<String, String> ALL_DEFENCES = new HashMap<>();
 
   static {
@@ -22,7 +22,8 @@ public class Arsenal {
     ALL_DEFENCES.put("shield", "level0");
     ALL_DEFENCES.put("armyguy", "levelOne");
     ALL_DEFENCES.put("boxer", "levelTwo");
-    // ALL_DEFENCES.put("mortar", "levelThree");
+    ALL_DEFENCES.put("harpoon", "levelTwo");
+    ALL_DEFENCES.put("mortar", "levelThree");
     ALL_DEFENCES.put("shadow", "levelFour");
   }
 
