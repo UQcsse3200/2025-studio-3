@@ -88,6 +88,7 @@ public class MainGameScreen extends ScreenAdapter {
           "images/entities/enemies/Scrap-titan4.png",
           "images/entities/enemies/Scrap-titan5.png",
           "images/entities/enemies/Scrap-titan6.png",
+            "images/effects/gun_bot_fireball.png",
 
 
   };

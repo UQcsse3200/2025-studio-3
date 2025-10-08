@@ -72,7 +72,7 @@ public class ProjectileFactory {
                         .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS_PROJECTILE))
                         .addComponent(new TouchAttackComponent(targetLayers, 0f))
                         .addComponent(new CombatStatsComponent(1, damage));
-        bossProjectile.addComponent(new TextureRenderComponent("images/effects/sling_projectile.png"));
+        bossProjectile.addComponent(new TextureRenderComponent("images/effects/gun_bot_fireball.png"));
         bossProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
         PhysicsUtils.setScaledCollider(bossProjectile, 0.2f, 0.2f);
         return bossProjectile;
