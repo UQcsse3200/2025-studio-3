@@ -9,22 +9,30 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Teleport behaviour component for enemies. Every fixed cooldown, roll a chance and (if successful)
- * jump to a different lane Y. Keeps X constant; chooses Y from the provided laneYs[].
+ * Teleport behaviour component for enemies. After a cooldown, roll a chance and (if successful)
+ * play teleport animation, then teleport to a different lane Y. Keeps X constant; chooses Y from
+ * the provided laneYs[].
  */
 public class TeleportTask extends DefaultTask implements PriorityTask {
   private final float cooldownSec;
   private final float chance;
   private final int maxTeleports;
   private final float[] laneYs;
-  private final int priority = 5; // Priority is higher than walk, but lower than attack
 
+  // Priority during teleporting is higher than walking but lower than attacks
+  private final int teleportPriority = 50;
+
+  // Timing and state
   private float timer;
   private int teleportsDone;
+  private boolean isTeleporting = false;
+  private float animTimer = 0.5f;
+  private final float teleportAnimTime = 2f; // Duration to hold animation before teleport happens
 
   /**
-   * @param cooldownSec constant seconds between teleport attempts
-   * @param chance probability 0..1 when cooldown elapses
+   * @param cooldownSec seconds between teleport attempts
+   * @param chance probability (0..1) to teleport when cooldown elapses
+   * @param maxTeleports max number of teleports (0 = unlimited)
    * @param laneYs array of lane Y positions; must contain at least 2 distinct values
    */
   public TeleportTask(float cooldownSec, float chance, int maxTeleports, float[] laneYs) {
@@ -32,11 +40,6 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     this.chance = MathUtils.clamp(chance, 0f, 1f);
     this.maxTeleports = maxTeleports;
     this.laneYs = laneYs != null ? laneYs.clone() : null;
-  }
-
-  @Override
-  public int getPriority() {
-    return priority;
   }
 
   @Override
@@ -50,49 +53,88 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     super.start();
     timer = cooldownSec;
     teleportsDone = 0;
+    isTeleporting = false;
+  }
+
+  /**
+   * Return priority dynamically: - High priority during the teleport animation phase - High
+   * priority when ready to teleport - -1 otherwise (lets MoveLeftTask run)
+   */
+  @Override
+  public int getPriority() {
+    if (maxTeleports > 0 && teleportsDone >= maxTeleports) {
+      return -1;
+    }
+    if (isTeleporting) {
+      return teleportPriority;
+    }
+    return readyToTeleport() ? teleportPriority : -1;
   }
 
   @Override
   public void update() {
-    if (laneYs == null || laneYs.length < 2) return;
-    if (maxTeleports > 0 && teleportsDone >= maxTeleports) return;
+    if (maxTeleports > 0 && teleportsDone >= maxTeleports) {
+      return;
+    }
+
+    GameTime time = ServiceLocator.getTimeSource();
+    float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
+
+    if (isTeleporting) {
+      animTimer -= dt;
+      if (animTimer <= 0f) {
+        performTeleport();
+        isTeleporting = false;
+      }
+      return;
+    }
+
+    isTeleporting = true;
+    animTimer = teleportAnimTime;
+    owner.getEntity().getEvents().trigger("teleportStart");
+  }
+
+  /** Check if teleport conditions are met (cooldown elapsed, chance succeeded, etc.). */
+  private boolean readyToTeleport() {
+    if (laneYs == null || laneYs.length < 2) return false;
+    if (maxTeleports > 0 && teleportsDone >= maxTeleports) return false;
 
     GameTime time = ServiceLocator.getTimeSource();
     float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
     timer -= dt;
-    if (timer > 0f) return;
 
-    timer = cooldownSec; // reset for next attempt
-    if (MathUtils.random() > chance) return;
+    if (timer > 0f) return false;
+    return MathUtils.random() <= chance;
+  }
 
-    // ✅ Get current position through the owner
+  /** Actually performs the teleport after animation finishes. */
+  private void performTeleport() {
     var entity = owner.getEntity();
     if (entity == null) return;
 
     Vector2 pos = entity.getPosition();
     if (pos == null) return;
 
-    // Choose a different lane Y
     float currentY = pos.y;
+    float targetY = pickDifferentLaneY(currentY);
+    if (Math.abs(targetY - currentY) <= 1e-3f) return;
+
+    entity.setPosition(pos.x, targetY);
+    teleportsDone++;
+    timer = cooldownSec;
+  }
+
+  /** Picks a lane Y from laneYs that is different from currentY. */
+  private float pickDifferentLaneY(float currentY) {
     float targetY = currentY;
     int attempts = 6;
     while (attempts-- > 0) {
-      float cand = laneYs[MathUtils.random(0, laneYs.length - 1)];
-      if (Math.abs(cand - currentY) > 1e-3f) {
-        targetY = cand;
+      float candidate = laneYs[MathUtils.random(0, laneYs.length - 1)];
+      if (Math.abs(candidate - currentY) > 1e-3f) {
+        targetY = candidate;
         break;
       }
     }
-    if (Math.abs(targetY - currentY) <= 1e-3f) return;
-
-    // ✅ Teleport using owner entity
-    owner.getEntity().getEvents().trigger("teleportStart");
-    entity.setPosition(pos.x, targetY);
-    teleportsDone++;
+    return targetY;
   }
-
-  /**
-   * Returns true if no other entity is already occupying roughly (x,targetY). Uses the entity's
-   * scaled height as a proxy for tile size to derive tolerances.
-   */
 }
