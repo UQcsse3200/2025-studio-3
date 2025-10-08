@@ -97,8 +97,12 @@ loadScripts(document, 'script');</script>
  triple reels of that event id. Otherwise, return a non-triple reels array. 3) Effect handling
 
  <p>* Output for UI: * - <code>SpinResult#getReels(): int[3]</code> of ids in [0..7] * - <code>
- SpinResult#isEffectTriggered(): boolean</code> * - <code>SpinResult#getEffect():
- Optional&amp;lt;Effect&amp;gt;</code></div>
+ SpinResult#isEffectTriggered(): boolean</code> * - <code>
+ SpinResult#getEffect():Optional&amp;lt;Effect&amp;gt;</code>
+
+ <p><b>New:</b> Spin Credits * Start with 5 credits by default (configurable). * Automatically +1
+ credit every 5 seconds (configurable). * <a href="#spin()"><code>spin()</code></a> consumes 1 credit each time. * When no
+ credits left, return a non-triple result with no effect, and log a warning.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -163,7 +167,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyEffect(com.csse3200.game.components.slot.SlotEngine.SpinResult)" class="member-name-link">applyEffect</a><wbr>(<a href="SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a>&nbsp;res)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addSpins(int)" class="member-name-link">addSpins</a><wbr>(int&nbsp;delta)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyEffect(com.csse3200.game.components.slot.SlotEngine.SpinResult)" class="member-name-link">applyEffect</a><wbr>(<a href="SlotEngine.SpinResult.html" title="class in com.csse3200.game.components.slot">SlotEngine.SpinResult</a>&nbsp;res)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#canSpin()" class="member-name-link">canSpin</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRemainingSpins()" class="member-name-link">getRemainingSpins</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSlotMachineArea(com.csse3200.game.areas.SlotMachineArea)" class="member-name-link">setSlotMachineArea</a><wbr>(<a href="../../areas/SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a>&nbsp;area)</code></div>
@@ -173,6 +189,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform one spin: - If triggered: return triple reels and call effect.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startAutoRefill()" class="member-name-link">startAutoRefill</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stopAutoRefill()" class="member-name-link">stopAutoRefill</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -223,6 +245,42 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setSlotMachineArea(com.csse3200.game.areas.SlotMachineArea)">
 <h3>setSlotMachineArea</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setSlotMachineArea</span><wbr><span class="parameters">(<a href="../../areas/SlotMachineArea.html" title="class in com.csse3200.game.areas">SlotMachineArea</a>&nbsp;area)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="getRemainingSpins()">
+<h3>getRemainingSpins</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRemainingSpins</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="canSpin()">
+<h3>canSpin</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">canSpin</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="addSpins(int)">
+<h3>addSpins</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">addSpins</span><wbr><span class="parameters">(int&nbsp;delta)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="startAutoRefill()">
+<h3>startAutoRefill</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startAutoRefill</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stopAutoRefill()">
+<h3>stopAutoRefill</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stopAutoRefill</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="dispose()">
+<h3>dispose</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
 </section>
 </li>
 <li>

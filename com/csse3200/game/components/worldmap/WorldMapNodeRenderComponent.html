@@ -158,9 +158,30 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Draw the renderable.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShowPrompt(boolean)" class="member-name-link">setShowPrompt</a><wbr>(boolean&nbsp;showPrompt)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCenterWorld()" class="member-name-link">getCenterWorld</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Center position in world coordinates (used by render and hit test)</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHitRadius()" class="member-name-link">getHitRadius</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Hit radius consistent with on-node logic</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKey()" class="member-name-link">getKey</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode()" class="member-name-link">getNode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Access the underlying node data object</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hit(float,float)" class="member-name-link">hit</a><wbr>(float&nbsp;worldX,
+ float&nbsp;worldY)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Point-in-node test in world coords</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateProximityState(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateProximityState</a><wbr>(<a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;nearbyNode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -254,9 +275,38 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="setShowPrompt(boolean)">
-<h3>setShowPrompt</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setShowPrompt</span><wbr><span class="parameters">(boolean&nbsp;showPrompt)</span></div>
+<section class="detail" id="getKey()">
+<h3>getKey</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getKey</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNode()">
+<h3>getNode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></span>&nbsp;<span class="element-name">getNode</span>()</div>
+<div class="block">Access the underlying node data object</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCenterWorld()">
+<h3>getCenterWorld</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">getCenterWorld</span>()</div>
+<div class="block">Center position in world coordinates (used by render and hit test)</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getHitRadius()">
+<h3>getHitRadius</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getHitRadius</span>()</div>
+<div class="block">Hit radius consistent with on-node logic</div>
+</section>
+</li>
+<li>
+<section class="detail" id="hit(float,float)">
+<h3>hit</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">hit</span><wbr><span class="parameters">(float&nbsp;worldX,
+ float&nbsp;worldY)</span></div>
+<div class="block">Point-in-node test in world coords</div>
 </section>
 </li>
 </ul>

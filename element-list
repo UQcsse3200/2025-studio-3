@@ -4,7 +4,6 @@ com.csse3200.game.ai.tasks
 com.csse3200.game.areas
 com.csse3200.game.components
 com.csse3200.game.components.achievements
-com.csse3200.game.components.cards
 com.csse3200.game.components.currency
 com.csse3200.game.components.dialog
 com.csse3200.game.components.dossier

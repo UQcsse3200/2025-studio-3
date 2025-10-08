@@ -134,9 +134,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame)" class="member-name-link">WorldMapScreen</a><wbr>(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</code></div>
-<div class="col-last even-row-color">
-<div class="block">Constructor for the world map screen.</div>
-</div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -151,14 +149,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#constructEntity(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">constructEntity</a><wbr>(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#centerCameraOnPlayer()" class="member-name-link">centerCameraOnPlayer</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Constructs the UI entity for the world map screen.</div>
+<div class="block">Immediately centers the camera on the player without enabling auto-follow.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#constructEntity(com.badlogic.gdx.scenes.scene2d.Stage)" class="member-name-link">constructEntity</a><wbr>(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Constructs the UI entity for the base screen.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCameraComponent()" class="member-name-link">getCameraComponent</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPlayerCurrentlyMoving()" class="member-name-link">isPlayerCurrentlyMoving</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns true if the world-map player is currently moving along a path or between nodes.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#panByScreenDelta(float,float)" class="member-name-link">panByScreenDelta</a><wbr>(float&nbsp;deltaScreenX,
+ float&nbsp;deltaScreenY)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Pans the camera by the given screen-space delta (in pixels).</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -166,6 +183,21 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize(int,int)" class="member-name-link">resize</a><wbr>(int&nbsp;width,
  int&nbsp;height)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startManualPan()" class="member-name-link">startManualPan</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called by pan input to disable camera follow mode (manual panning).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#startSmoothRecenterToPlayer()" class="member-name-link">startSmoothRecenterToPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Request a smooth, one-shot recenter to the player's current position.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stepZoom(int)" class="member-name-link">stepZoom</a><wbr>(int&nbsp;steps)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out).</div>
+</div>
 </div>
 </div>
 </div>
@@ -222,11 +254,6 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>WorldMapScreen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WorldMapScreen</span><wbr><span class="parameters">(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
-<div class="block">Constructor for the world map screen.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>game</code> - the game instance</dd>
-</dl>
 </section>
 </li>
 </ul>
@@ -241,13 +268,19 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="constructEntity(com.badlogic.gdx.scenes.scene2d.Stage)">
 <h3>constructEntity</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">constructEntity</span><wbr><span class="parameters">(com.badlogic.gdx.scenes.scene2d.Stage&nbsp;stage)</span></div>
-<div class="block">Constructs the UI entity for the world map screen.</div>
+<div class="block">Constructs the UI entity for the base screen.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>stage</code> - the stage to create the UI screen on</dd>
 <dt>Returns:</dt>
 <dd>the UI entity</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCameraComponent()">
+<h3>getCameraComponent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a></span>&nbsp;<span class="element-name">getCameraComponent</span>()</div>
 </section>
 </li>
 <li>
@@ -258,6 +291,50 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code>render</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.Screen</code></dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="startSmoothRecenterToPlayer()">
+<h3>startSmoothRecenterToPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startSmoothRecenterToPlayer</span>()</div>
+<div class="block">Request a smooth, one-shot recenter to the player's current position.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="stepZoom(int)">
+<h3>stepZoom</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stepZoom</span><wbr><span class="parameters">(int&nbsp;steps)</span></div>
+<div class="block">Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="startManualPan()">
+<h3>startManualPan</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">startManualPan</span>()</div>
+<div class="block">Called by pan input to disable camera follow mode (manual panning).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="panByScreenDelta(float,float)">
+<h3>panByScreenDelta</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">panByScreenDelta</span><wbr><span class="parameters">(float&nbsp;deltaScreenX,
+ float&nbsp;deltaScreenY)</span></div>
+<div class="block">Pans the camera by the given screen-space delta (in pixels). Dragging moves the view with the
+ cursor (grab-and-drag behavior).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="centerCameraOnPlayer()">
+<h3>centerCameraOnPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">centerCameraOnPlayer</span>()</div>
+<div class="block">Immediately centers the camera on the player without enabling auto-follow.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isPlayerCurrentlyMoving()">
+<h3>isPlayerCurrentlyMoving</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPlayerCurrentlyMoving</span>()</div>
+<div class="block">Returns true if the world-map player is currently moving along a path or between nodes.</div>
 </section>
 </li>
 <li>

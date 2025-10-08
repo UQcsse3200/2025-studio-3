@@ -142,6 +142,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Constructor for the main game screen.</div>
 </div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.GdxGame,java.lang.String)" class="member-name-link">MainGameScreen</a><wbr>(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Constructor for the main game screen with an explicit level key.</div>
+</div>
 </div>
 </section>
 </li>
@@ -239,10 +244,24 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame)">
 <h3>MainGameScreen</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MainGameScreen</span><wbr><span class="parameters">(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game)</span></div>
-<div class="block">Constructor for the main game screen.</div>
+<div class="block">Constructor for the main game screen. Falls back to profile.currentLevel.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>game</code> - the game instance</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.csse3200.game.GdxGame,java.lang.String)">
+<h3>MainGameScreen</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">MainGameScreen</span><wbr><span class="parameters">(<a href="../GdxGame.html" title="class in com.csse3200.game">GdxGame</a>&nbsp;game,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</span></div>
+<div class="block">Constructor for the main game screen with an explicit level key. If <code>levelKey</code> is null or
+ blank, the screen will fall back to using the current profile's currentLevel.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>game</code> - the game instance</dd>
+<dd><code>levelKey</code> - the explicit level key to load (e.g., "levelThree")</dd>
 </dl>
 </section>
 </li>

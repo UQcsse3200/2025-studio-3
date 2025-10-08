@@ -101,7 +101,12 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WorldMapPlayerComponent</span>
 <span class="extends-implements">extends <a href="../../ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></span></div>
-<div class="block">Handles player movement and interaction on the world map</div>
+<div class="block">Handles player logic on the World Map: - JSON-path based movement between nodes (W/A/S/D graph) -
+ Legacy directional navigation as a fallback - Nearby-node detection and E-to-enter prompt -
+ Drawing the player sprite
+
+ <p>This version is refactored to reduce cognitive complexity and address common SonarQube
+ maintainability issues.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -130,6 +135,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.math.Vector2)" class="member-name-link">WorldMapPlayerComponent</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;worldSize)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(com.badlogic.gdx.math.Vector2,float)" class="member-name-link">WorldMapPlayerComponent</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;worldSize,
+ float&nbsp;renderOffsetX)</code></div>
+<div class="col-last odd-row-color">
+<div class="block">Creates a player component with an additional horizontal render offset.</div>
+</div>
 </div>
 </section>
 </li>
@@ -152,21 +162,40 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Clean up any running background tasks when the component is disposed.</div>
+<div class="block">Called when the component is disposed.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw</a><wbr>(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Draws the player texture at the world coordinates with appropriate size.</div>
+<div class="block">Draw the player sprite; slightly taller (96x110) for better proportions.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNearbyNode()" class="member-name-link">getNearbyNode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodeSnapRadius()" class="member-name-link">getNodeSnapRadius</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.Vector2</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldSize()" class="member-name-link">getWorldSize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCurrentlyMoving()" class="member-name-link">isCurrentlyMoving</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">True if the player is currently moving along a path or a free target.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#moveToNode(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">moveToNode</a><wbr>(<a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;target)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the nearby node.</div>
+<div class="block">Called by click-navigation to move to a target node along the JSON path graph.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRenderOffsetX(float)" class="member-name-link">setRenderOffsetX</a><wbr>(float&nbsp;offset)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set horizontal render offset in pixels (positive → shift right).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Called once per frame of the game, and should be used for most component logic.</div>
 </div>
 </div>
@@ -199,6 +228,14 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.badlogic.gdx.math.Vector2)">
 <h3>WorldMapPlayerComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WorldMapPlayerComponent</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;worldSize)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(com.badlogic.gdx.math.Vector2,float)">
+<h3>WorldMapPlayerComponent</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">WorldMapPlayerComponent</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;worldSize,
+ float&nbsp;renderOffsetX)</span></div>
+<div class="block">Creates a player component with an additional horizontal render offset.</div>
 </section>
 </li>
 </ul>
@@ -236,34 +273,64 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getNearbyNode()">
-<h3>getNearbyNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></span>&nbsp;<span class="element-name">getNearbyNode</span>()</div>
-<div class="block">Gets the nearby node.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>the nearby node</dd>
-</dl>
+<section class="detail" id="moveToNode(com.csse3200.game.ui.WorldMapNode)">
+<h3>moveToNode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">moveToNode</span><wbr><span class="parameters">(<a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;target)</span></div>
+<div class="block">Called by click-navigation to move to a target node along the JSON path graph. The waypoints
+ list will be rebuilt and followed next frames.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">
 <h3>draw</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">draw</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.SpriteBatch&nbsp;batch)</span></div>
-<div class="block">Draws the player texture at the world coordinates with appropriate size.</div>
+<div class="block">Draw the player sprite; slightly taller (96x110) for better proportions.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../rendering/RenderComponent.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)">draw</a></code>&nbsp;in class&nbsp;<code><a href="../../rendering/RenderComponent.html" title="class in com.csse3200.game.rendering">RenderComponent</a></code></dd>
 <dt>Parameters:</dt>
-<dd><code>batch</code> - the sprite batch</dd>
+<dd><code>batch</code> - Batch to render to.</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="isCurrentlyMoving()">
+<h3>isCurrentlyMoving</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isCurrentlyMoving</span>()</div>
+<div class="block">True if the player is currently moving along a path or a free target.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNearbyNode()">
+<h3>getNearbyNode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></span>&nbsp;<span class="element-name">getNearbyNode</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getWorldSize()">
+<h3>getWorldSize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">com.badlogic.gdx.math.Vector2</span>&nbsp;<span class="element-name">getWorldSize</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getNodeSnapRadius()">
+<h3>getNodeSnapRadius</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getNodeSnapRadius</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setRenderOffsetX(float)">
+<h3>setRenderOffsetX</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRenderOffsetX</span><wbr><span class="parameters">(float&nbsp;offset)</span></div>
+<div class="block">Set horizontal render offset in pixels (positive → shift right).</div>
 </section>
 </li>
 <li>
 <section class="detail" id="dispose()">
 <h3>dispose</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">dispose</span>()</div>
-<div class="block">Clean up any running background tasks when the component is disposed.</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="../Component.html#dispose()">Component</a></code></span></div>
+<div class="block">Called when the component is disposed. Dispose of any internal resources here.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code>dispose</code>&nbsp;in interface&nbsp;<code>com.badlogic.gdx.utils.Disposable</code></dd>
