@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
- * Tests for world map progression focusing on markLevelcomplete().
+ * Tests for world map progression focusing on markLevelComplete() advancing only currentLevel.
  *
  * <p>NOTE: - Replace TODOs to match your concrete classes: - WorldMapProgress (service/controller
  * that holds save + level states) - LevelState enum (LOCKED/UNLOCKED/COMPLETED) - Method/field
@@ -46,8 +46,8 @@ class WorldMapProgressTest {
   }
 
   @Test
-  void shouldMarkCurrentAsCompletedAndUnlockNext_onMarkLevelcomplete() throws Exception {
-    // Use real ProfileService + Profile to verify behavior
+  void shouldAdvanceCurrentLevelOnly_onMarkLevelComplete() throws Exception {
+    // Use real ProfileService + Profile to verify new behavior: only currentLevel advances
     com.csse3200.game.services.ProfileService svc = new com.csse3200.game.services.ProfileService();
     com.csse3200.game.progression.Profile profile = new com.csse3200.game.progression.Profile();
 
@@ -65,13 +65,9 @@ class WorldMapProgressTest {
     fActive.setBoolean(svc, true);
 
     // Act
-    svc.markLevelComplete("levelThree", "levelFour");
+    svc.markLevelComplete("levelThree");
 
-    // Assert
-    assertTrue(
-        profile.getCompletedNodes().contains("levelThree"),
-        "Current level should be recorded as COMPLETED");
-    assertTrue(profile.getUnlockedNodes().contains("levelFour"), "Next level should be UNLOCKED");
+    // Assert: only currentLevel advanced; unlocked/completed nodes are not written
     assertEquals(
         "levelFour", profile.getCurrentLevel(), "currentLevel should advance to the next level");
   }
