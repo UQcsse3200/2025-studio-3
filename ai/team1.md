@@ -22,6 +22,8 @@ ChatGPT was used for slot machine logic design-probability model and triple-matc
 
 ChatGPT was used for writing unit tests for effect coverage and non-trigger cases.
 
+ChatGPT was used for writing the pathfinding and movement logic.
+
 ## Yihan Ge
 
 ChatGPT was used for implementing the Freeze Enemy effect.
@@ -39,3 +41,7 @@ Chatgpt was used to create card problems.
 Chatgpt was used to solve the problem of making card animations.
 
 Chatgpt was used to resolve conflict issues.
+
+Chatgpt is used to adjust and generate special image components and help insert related content to assist in implementation.
+
+Chatgpt is used to help solve code problems.
