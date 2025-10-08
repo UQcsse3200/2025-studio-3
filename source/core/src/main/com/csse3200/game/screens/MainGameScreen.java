@@ -48,8 +48,9 @@ public class MainGameScreen extends ScreenAdapter {
   private Music music;
   private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
-    "images/backgrounds/level-1-map-v2.png",
-    "images/backgrounds/level-2-map-v1.png",
+    "images/backgrounds/level_map_grass.png",
+    "images/backgrounds/level_map_town.png",
+    "images/backgrounds/level_map_final.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/shadow_idle1.png",
@@ -65,7 +66,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/bullet.png",
     "images/effects/shock.png",
     "images/effects/sling_projectile_pad.png",
-    "images/entities/currency/scrap_metal.png"
+    "images/entities/currency/scrap_metal.png",
+    "images/entities/slotmachine/slot_reels_background.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
@@ -78,7 +80,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas"
+    "images/entities/enemies/red_robot.atlas",
+    "images/entities/slotmachine/slot_frame.atlas",
+    "images/entities/slotmachine/slot_reels.atlas",
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
