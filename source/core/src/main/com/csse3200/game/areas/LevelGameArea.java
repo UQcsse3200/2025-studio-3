@@ -208,7 +208,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     // Creates a game over entity to handle the game over window UI
     this.gameOverEntity = new Entity();
-    gameOverEntity.addComponent(new GameOverWindow());
+    gameOverEntity.addComponent(new GameOverWindow(currentLevelKey));
     spawnEntity(this.gameOverEntity);
   }
 

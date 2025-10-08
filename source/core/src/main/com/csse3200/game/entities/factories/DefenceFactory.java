@@ -48,7 +48,7 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
-    if (config.getName().equals("Mortar")) {
+    if (config.getName() != null && config.getName().equals("Mortar")) {
       defender.setProperty("unitType", "mortar");
     }
 

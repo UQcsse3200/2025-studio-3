@@ -11,6 +11,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(GameExtension.class)
 class ArsenalTest {
   private Arsenal arsenal;
+  private final Integer NUM_INITIAL_DEFENCES = 2;
+  private final Integer NUM_INITIAL_GENERATORS = 1;
 
   @BeforeEach
   void setUp() {
@@ -21,10 +23,10 @@ class ArsenalTest {
   void shouldCreate() {
     List<String> defences = arsenal.getDefenders();
     List<String> generators = arsenal.getGenerators();
-    assertEquals(7, defences.size());
-    assertEquals(1, generators.size());
+    assertEquals(NUM_INITIAL_DEFENCES, defences.size());
+    assertEquals(NUM_INITIAL_GENERATORS, generators.size());
     assertTrue(defences.contains("slingshooter"));
-    assertTrue(defences.contains("armyguy"));
+    assertTrue(defences.contains("shield"));
     assertTrue(generators.contains("furnace"));
   }
 
@@ -32,7 +34,7 @@ class ArsenalTest {
   void shouldUnlockDefence() {
     arsenal.unlockDefence("turret");
     assertTrue(arsenal.contains("turret"));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
   }
 
   @Test
@@ -40,7 +42,8 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
     arsenal.unlockDefence("wall");
     arsenal.unlockDefence("cannon");
-    assertEquals(10, arsenal.getDefenders().size());
+
+    assertEquals(NUM_INITIAL_DEFENCES + 3, arsenal.getDefenders().size());
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
     assertTrue(arsenal.contains("cannon"));
@@ -53,7 +56,7 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
 
     // Should have 3 entries (List allows duplicates)
-    assertEquals(10, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 3, arsenal.getDefenders().size());
     assertTrue(arsenal.contains("turret"));
   }
 
@@ -64,13 +67,13 @@ class ArsenalTest {
 
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
-    assertEquals(9, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 2, arsenal.getDefenders().size());
 
     arsenal.lockDefence("turret");
 
     assertFalse(arsenal.contains("turret"));
     assertTrue(arsenal.contains("wall"));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
   }
 
   @Test
@@ -79,13 +82,13 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
     arsenal.unlockDefence("turret");
 
-    assertEquals(10, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 3, arsenal.getDefenders().size());
 
     arsenal.lockDefence("turret");
 
     // Should still contain turret (but only 2 instances)
     assertTrue(arsenal.contains("turret"));
-    assertEquals(9, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 2, arsenal.getDefenders().size());
   }
 
   @Test
@@ -97,7 +100,7 @@ class ArsenalTest {
 
     // Original defence should still be there
     assertTrue(arsenal.contains("turret"));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
   }
 
   @Test
@@ -106,7 +109,7 @@ class ArsenalTest {
     arsenal.lockDefence("turret");
 
     // Should remain empty
-    assertEquals(7, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES, arsenal.getDefenders().size());
     assertFalse(arsenal.contains("turret"));
   }
 
@@ -131,12 +134,12 @@ class ArsenalTest {
     // Test unlocking null
     arsenal.unlockDefence(null);
     assertTrue(arsenal.contains(null));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
 
     // Test locking null
     arsenal.lockDefence(null);
     assertFalse(arsenal.contains(null));
-    assertEquals(7, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES, arsenal.getDefenders().size());
   }
 
   @Test
@@ -144,11 +147,11 @@ class ArsenalTest {
     arsenal.unlockDefence("");
 
     assertTrue(arsenal.contains(""));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
 
     arsenal.lockDefence("");
     assertFalse(arsenal.contains(""));
-    assertEquals(7, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES, arsenal.getDefenders().size());
   }
 
   @Test
@@ -157,7 +160,7 @@ class ArsenalTest {
     arsenal.unlockDefence("turret");
     arsenal.unlockDefence("TURRET");
 
-    assertEquals(10, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 3, arsenal.getDefenders().size());
     assertTrue(arsenal.contains("Turret"));
     assertTrue(arsenal.contains("turret"));
     assertTrue(arsenal.contains("TURRET"));
@@ -172,7 +175,7 @@ class ArsenalTest {
     arsenal.unlockDefence(specialKey);
 
     assertTrue(arsenal.contains(specialKey));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
   }
 
   @Test
@@ -181,7 +184,7 @@ class ArsenalTest {
     arsenal.unlockDefence(longKey);
 
     assertTrue(arsenal.contains(longKey));
-    assertEquals(8, arsenal.getDefenders().size());
+    assertEquals(NUM_INITIAL_DEFENCES + 1, arsenal.getDefenders().size());
   }
 
   @Test
@@ -190,7 +193,8 @@ class ArsenalTest {
     for (int i = 0; i < 1000; i++) {
       arsenal.unlockDefence("defence" + i);
     }
-    assertEquals(1007, arsenal.getDefenders().size());
+
+    assertEquals(NUM_INITIAL_DEFENCES + 1000, arsenal.getDefenders().size());
     assertTrue(arsenal.contains("defence0"));
     assertTrue(arsenal.contains("defence500"));
     assertTrue(arsenal.contains("defence999"));
