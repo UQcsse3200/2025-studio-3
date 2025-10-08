@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -54,11 +55,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float stageToWorldRatio;
   private LevelGameGrid grid;
   private Entity selectedUnit;
-  private boolean isGameOver = false;
   private final ArrayList<Entity> robots = new ArrayList<>();
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
   private Entity gameOverEntity;
+  private Entity levelCompleteEntity;
+  private boolean isLevelComplete = false;
+  private boolean isGameOver = false;
+
+  // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
   private final String currentLevelKey;
@@ -162,6 +167,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(ui);
 
     createGameOverEntity();
+
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
   /** Populates unitList with all available defenders and generators from the player's arsenal. */
@@ -683,6 +693,23 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+      }
+    }
+  }
+
+  /** Checks if the level is complete */
+  public void checkLevelComplete() {
+    if (isLevelComplete) {
+      return;
+      // level is already complete, don't check again
+    }
+
+    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
+    if (currentWave >= 4) {
+      logger.info("Level is complete!");
+      isLevelComplete = true;
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
       }
     }
   }

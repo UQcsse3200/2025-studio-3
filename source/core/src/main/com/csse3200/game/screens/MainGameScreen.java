@@ -196,6 +196,7 @@ public class MainGameScreen extends ScreenAdapter {
 
     renderer.render();
     gameArea.checkGameOver(); // check game-over state
+    gameArea.checkLevelComplete(); // check level-complete state
   }
 
   @Override
