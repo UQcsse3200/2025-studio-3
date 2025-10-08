@@ -38,6 +38,8 @@ class TouchAttackComponentTest {
     // Mock the sound assets that CombatStatsComponent might request
     when(resources.getAsset("sounds/human-death.mp3", Sound.class)).thenReturn(mockSound);
     when(resources.getAsset("sounds/robot-death.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/damage.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/generator-death.mp3", Sound.class)).thenReturn(mockSound);
   }
 
   @AfterEach

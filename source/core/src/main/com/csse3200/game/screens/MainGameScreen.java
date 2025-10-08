@@ -86,7 +86,7 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/item_emp.mp3",
     "sounds/item_grenade.mp3",
     "sounds/item_nuke.mp3",
-    "sounds/robot_footstep.mp3",
+    "sounds/damage.mp3",
     "sounds/robot-attack.mp3",
     "sounds/slingshooter-place.mp3",
     "sounds/forge-place.mp3",
@@ -96,6 +96,7 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/shield-place.mp3",
     "sounds/shooter-place.mp3",
     "sounds/robot-death.mp3",
+    "sounds/generator-death.mp3",
     "sounds/game-over-voice.mp3"
   };
 

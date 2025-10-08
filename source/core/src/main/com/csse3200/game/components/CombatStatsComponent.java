@@ -122,6 +122,12 @@ public class CombatStatsComponent extends Component {
   public void hit(CombatStatsComponent attacker) {
     int newHealth = getHealth() - attacker.getBaseAttack();
 
+    // Play damage sound
+    Sound damageSound =
+        ServiceLocator.getResourceService().getAsset("sounds/damage.mp3", Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    damageSound.play(0.5f * volume);
+
     setHealth(newHealth);
     handleDeath();
   }
@@ -133,18 +139,22 @@ public class CombatStatsComponent extends Component {
       Sound deathSound;
       float volume = ServiceLocator.getSettingsService().getSoundVolume();
       // checks for components unique to defenders
-      if (entity.getComponent(DefenderStatsComponent.class) != null
-          || entity.getComponent(GeneratorStatsComponent.class) != null) {
+      if (entity.getComponent(DefenderStatsComponent.class) != null) {
         entity.getEvents().trigger("defenceDeath");
-        logger.info("Human has died!");
+        logger.info("Defence has died!");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
+      } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+        entity.getEvents().trigger("defenceDeath");
+        logger.info("Generator has died!");
+        deathSound =
+            ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
       } else {
         entity.getEvents().trigger("entityDeath");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
-      deathSound.play(volume);
+      deathSound.play(0.3f * volume);
     }
   }
 }

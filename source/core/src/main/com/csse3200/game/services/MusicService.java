@@ -31,7 +31,7 @@ public class MusicService {
     resourceService.loadAll();
     currentMusic = resourceService.getAsset(path, Music.class);
     currentMusic.setLooping(true);
-    currentMusic.setVolume(volume);
+    currentMusic.setVolume(0.5f * volume);
     currentMusic.play();
     currentPath = path;
   }
@@ -68,7 +68,7 @@ public class MusicService {
   /** Updates the volume of the currently playing music to match the current settings. */
   public void updateVolume(float volume) {
     if (currentMusic != null) {
-      currentMusic.setVolume(volume);
+      currentMusic.setVolume(volume * 0.5f);
     }
   }
 }

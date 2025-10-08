@@ -60,7 +60,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     if (soundTimeLeft - Gdx.graphics.getDeltaTime() < 0) {
       Sound attackSound =
           ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
-      attackSound.play(ServiceLocator.getSettingsService().getSoundVolume());
+      attackSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.3f);
       soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     }
     // attack every 2s
