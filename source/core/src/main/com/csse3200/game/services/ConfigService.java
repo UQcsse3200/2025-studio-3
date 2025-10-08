@@ -57,14 +57,9 @@ public class ConfigService {
     this.levelConfigs = loadLevelConfigs(LEVEL_CONFIG_FILE);
     logger.info("[ConfigService] Loaded {} levels", this.levelConfigs.size());
 
-    logger.info(
-        "[ConfigService] ConfigService initialization complete. Total configs - Enemies: {}, Defenders: {}, Generators: {}, Items: {}, Achievements: {}, Levels: {}",
-        this.enemyConfigs.size(),
-        this.defendersConfigs.size(),
-        this.generatorsConfigs.size(),
-        this.itemConfigs.size(),
-        this.achievementConfigs.size(),
-        this.levelConfigs.size());
+    logger.info("[ConfigService] ConfigService initialization complete");
+    String configString = toString();
+    logger.info(configString);
   }
 
   /**
@@ -419,5 +414,37 @@ public class ConfigService {
    */
   public BaseAchievementConfig[] getAchievementConfigValues() {
     return achievementConfigs.values().toArray(new BaseAchievementConfig[0]);
+  }
+
+  /**
+   * Creates a string representation of the configs.
+   *
+   * @return A string representation of the configs.
+   */
+  public String toString() {
+    return "\n"
+        + "Configs Loaded"
+        + "\n"
+        + "--------"
+        + "\n"
+        + "Defenders: "
+        + defendersConfigs.size()
+        + "\n"
+        + "Generators: "
+        + generatorsConfigs.size()
+        + "\n"
+        + "Enemies: "
+        + enemyConfigs.size()
+        + "\n"
+        + "Items: "
+        + itemConfigs.size()
+        + "\n"
+        + "Achievements: "
+        + achievementConfigs.size()
+        + "\n"
+        + "Levels: "
+        + levelConfigs.size()
+        + "\n"
+        + "--------";
   }
 }

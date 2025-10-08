@@ -13,6 +13,7 @@ dialog box, the achievement box, the coins icon, the skill points icon, the sett
 animation of the dialog box and the animation of the achievement box.
 - Generative AI was used sporadically to assist with identifying where
 code coverage was missing and how to fix it.
+- AI was used to assist with the creation and writing tests of the Settings system.
 
 ## Jackie
 
@@ -23,3 +24,4 @@ code coverage was missing and how to fix it.
 
 - Generative AI was used to understand and help implement ItemEffectsService tests.
 - Generative AI was used to generate sprite sheets and associated atlases for the item effect animations.
+- Generative AI was used to understand and help implement Timers in LevelGameArea as well as tests for the new Item triggers in LevelGameAreaTest.

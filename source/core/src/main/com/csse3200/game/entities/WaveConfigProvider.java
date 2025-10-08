@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Interface for providing wave configuration data to avoid circular dependencies. This allows
- * EntitySpawn to depend on an abstraction rather than WaveManager directly.
+ * EntitySpawn to depend on an abstraction rather than WaveService directly.
  */
 public interface WaveConfigProvider {
   /**
@@ -28,4 +28,12 @@ public interface WaveConfigProvider {
    * @return map of enemy type to spawn configuration
    */
   Map<String, BaseSpawnConfig> getEnemyConfigs();
+
+  int getTotalWaves();
+
+  int getWaveWeight(int waveIndex);
+
+  int getMinZombiesSpawn(int waveIndex);
+
+  Map<String, BaseSpawnConfig> getEnemyConfigs(int waveIndex);
 }
