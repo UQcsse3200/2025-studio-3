@@ -11,6 +11,8 @@ public class DesktopLauncher {
 
     config.setWindowIcon("app.png");
     config.setTitle("The Day We Fought Back");
+    config.setMaximized(true);
+    config.setResizable(true);
 
     new Lwjgl3Application(new GdxGame(), config);
   }
