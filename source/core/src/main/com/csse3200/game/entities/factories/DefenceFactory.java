@@ -65,9 +65,6 @@ public class DefenceFactory {
     // Attach AI tasks
     defender.addComponent(tasks);
 
-    // ✅ Wire up fire-rate event listeners directly — no iteration
-    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
-    defender.getEvents().addListener("resetFireRate", attackTask::resetFireRate);
     // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
     // stats component
@@ -96,6 +93,10 @@ public class DefenceFactory {
     defender
         .getEvents()
         .addListener(HEAL, () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
+
+    // Wire up fire-rate event listeners directly — no iteration
+    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
+    defender.getEvents().addListener("doubleFireRateStop", attackTask::resetFireRate);
 
     return defender;
   }

@@ -88,9 +88,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender unbuffed! New max health: " + getMaxHealth());
   }
 
-  /**
-   * Doubles the defender's attack damage.
-   */
+  /** Doubles the defender's attack damage. */
   public void buff() {
     // Double attack damage
     int newAttack = getBaseAttack() * 2;
@@ -98,9 +96,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender buffed! New attack: " + getBaseAttack());
   }
 
-  /**
-   * Halves the defender's attack damage.
-   */
+  /** Halves the defender's attack damage. */
   public void unbuff() {
     // Halve attack damage
     int newAttack = getBaseAttack() / 2;
@@ -110,6 +106,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /**
    * gets the defenders maximum health.
+   *
    * @return maxhealth
    */
   private int getMaxHealth() {
