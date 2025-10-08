@@ -19,10 +19,6 @@ import com.csse3200.game.ui.UIComponent;
 public class GameOverWindow extends UIComponent {
   private String levelKey;
 
-  public GameOverWindow(String levelKey) {
-    this.levelKey = levelKey;
-  }
-
   // Initialises the game over window.
   private Window window;
   // Tracks the display status of the window.
