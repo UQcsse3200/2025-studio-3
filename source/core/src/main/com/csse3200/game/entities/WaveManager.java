@@ -6,13 +6,25 @@ import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
-import java.util.LinkedList; // Import LinkedList for the queue
+import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Manages the lifecycle of enemy waves and schedules spawns over time.
- * ... (rest of javadoc)
+ *
+ * <p>WaveManager is a lightweight coordinator:
+ *
+ * <ul>
+ *   <li>Tracks the current wave number and whether a wave is active.
+ *   <li>Determines spawn cadence and a fair, shuffled lane sequence.
+ *   <li>Asks {@link EntitySpawn} to compute how many enemies a wave should produce and which type
+ *       to spawn next.
+ *   <li>Delegates the actual entity creation and placement via callback interface.
+ * </ul>
+ *
+ * <p>This class does not construct enemies nor touch rendering; it only orchestrates when/where to
+ * request a spawn.
  */
 public class WaveManager implements WaveConfigProvider {
     private static final Logger logger = LoggerFactory.getLogger(WaveManager.class);
@@ -26,24 +38,19 @@ public class WaveManager implements WaveConfigProvider {
     private float timeSinceLastSpawn;
     private boolean waveActive = false;
 
-    // Preparation phase variables
     private boolean preparationPhaseActive = false;
     private float preparationPhaseDuration = 10.0f;
     private float preparationPhaseTimer = 0.0f;
     private final EntitySpawn entitySpawn;
 
-    // Callback interface for spawning enemies
     public interface EnemySpawnCallback {
         void spawnEnemy(int col, int row, String robotType);
         void spawnBoss(int row, BossFactory.BossTypes bossType);
     }
 
-    // Event listener interface for wave events
     public interface WaveEventListener {
         void onPreparationPhaseStarted(int waveNumber);
-
         void onWaveChanged(int waveNumber);
-
         void onWaveStarted(int waveNumber);
     }
 
@@ -53,11 +60,9 @@ public class WaveManager implements WaveConfigProvider {
     private List<Integer> waveLaneSequence;
     private int waveLanePointer;
 
-    // Wave configuration management
     private boolean levelComplete = false;
     private BaseLevelConfig levelConfig;
 
-    // --- ADDED FOR BOSS MANAGEMENT ---
     private boolean bossActive = false;
     private final Queue<BossFactory.BossTypes> bossSpawnQueue = new LinkedList<>();
 
@@ -104,7 +109,6 @@ public class WaveManager implements WaveConfigProvider {
      * enemies to spawn for this wave. Starts with a preparation phase.
      */
     public void initialiseNewWave() {
-        // Don't start new waves if level is complete
         if (levelComplete) {
             logger.info("Level complete - no more waves will spawn");
             return;
@@ -112,8 +116,6 @@ public class WaveManager implements WaveConfigProvider {
 
         setCurrentWave(currentWave + 1);
 
-        // --- MODIFIED BOSS SPAWNING LOGIC ---
-        // Instead of spawning directly, queue the boss and set a flag.
         if (currentWave == 1) {
             logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
             bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
@@ -128,11 +130,11 @@ public class WaveManager implements WaveConfigProvider {
             bossActive = true;
         }
 
-        waveActive = false; // Wave not active during preparation
+        waveActive = false;
         preparationPhaseActive = true;
         preparationPhaseTimer = 0.0f;
         currentEnemyPos = 0;
-        enemiesDisposed = 0; // Reset disposed counter for new wave
+        enemiesDisposed = 0;
         int maxLanes = Math.min(currentWave + 1, 5);
 
         entitySpawn.spawnEnemiesFromConfig();
@@ -147,19 +149,17 @@ public class WaveManager implements WaveConfigProvider {
     }
 
     /**
-     * Ends the current wave and immediately begins the next one. External systems listen to wave
-     * change events for UI updates.
+     * Ends the current wave and immediately begins the next one.
      */
     public void endWave() {
         waveActive = false;
         initialiseNewWave();
     }
 
-    /** Starts the actual wave after preparation phase ends. */
     private void startWave() {
         waveActive = true;
         preparationPhaseActive = false;
-        timeSinceLastSpawn = 0.0f; // Reset spawn timer for new wave
+        timeSinceLastSpawn = 0.0f;
 
         if (waveEventListener != null) {
             waveEventListener.onWaveStarted(currentWave);
@@ -197,10 +197,6 @@ public class WaveManager implements WaveConfigProvider {
         return preparationPhaseDuration;
     }
 
-    /**
-     * Called when an enemy is disposed/destroyed. Updates the disposed counter and checks if the wave
-     * should end.
-     */
     public void onEnemyDisposed() {
         enemiesDisposed++;
         logger.debug(
@@ -209,34 +205,27 @@ public class WaveManager implements WaveConfigProvider {
                 enemiesToSpawn,
                 currentEnemyPos);
 
-        // --- MODIFIED WAVE COMPLETION LOGIC ---
-        // Wave can only end if all enemies are spawned AND disposed AND no boss is active.
         if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive && !bossActive) {
-            logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
-
-            int maxWaves = getCurrentLevelWaveCount();
-            if (currentWave >= maxWaves) {
-                logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
-                levelComplete = true;
-                waveActive = false;
-            } else {
-                endWave(); // Only call endWave() for non-final waves
-            }
+            logger.info("Wave {} completed! All MINIONS spawned and disposed.", currentWave);
         }
     }
 
     /**
-     * Called when a boss is defeated. This is the new progression gate.
+     * Called when a boss is defeated. This immediately ends the current wave and starts the next.
      */
     public void onBossDefeated() {
-        logger.info("Boss defeated! Ending wave {} early.", currentWave);
-        bossActive = false; // The gate is now open.
+        logger.info("Boss defeated! Wave {} is now complete.", currentWave);
+        bossActive = false;
 
-        // Check if the rest of the wave was already cleared. If so, end the wave now.
-        if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
-            logger.info("All minions were already cleared. Proceeding to next wave.");
-            endWave();
+        int maxWaves = getCurrentLevelWaveCount();
+        if (currentWave >= maxWaves) {
+            logger.info("Final boss defeated! Level complete!");
+            levelComplete = true;
+            waveActive = false;
+            return;
         }
+
+        endWave();
     }
 
     public int getEnemiesDisposed() {
@@ -261,7 +250,6 @@ public class WaveManager implements WaveConfigProvider {
         currentEnemyPos = 0;
         waveLaneSequence.clear();
         waveLanePointer = 0;
-        // --- ADDED ---
         bossActive = false;
         bossSpawnQueue.clear();
         logger.info("Level reset - ready for new level");
@@ -280,7 +268,6 @@ public class WaveManager implements WaveConfigProvider {
         waveLaneSequence.clear();
         waveLanePointer = 0;
         Collections.shuffle(laneOrder);
-        // --- ADDED ---
         bossActive = false;
         bossSpawnQueue.clear();
         logger.info("WaveManager reset to initial state - ready for new game");
@@ -305,15 +292,7 @@ public class WaveManager implements WaveConfigProvider {
         logger.info("Level set to {}", levelKey);
     }
 
-    /**
-     * Update function to be called by main game loop. Handles preparation phase timer and enemy
-     * spawning.
-     *
-     * @param deltaTime time elapsed since last update in seconds
-     */
     public void update(float deltaTime) {
-        // --- ADDED BOSS SPAWNING LOGIC ---
-        // Safely spawn bosses from the queue, outside the physics step.
         if (!bossSpawnQueue.isEmpty()) {
             BossFactory.BossTypes bossToSpawn = bossSpawnQueue.poll();
             if (enemySpawnCallback != null) {
@@ -321,16 +300,14 @@ public class WaveManager implements WaveConfigProvider {
             }
         }
 
-        // Handle preparation phase
         if (preparationPhaseActive) {
             preparationPhaseTimer += deltaTime;
             if (preparationPhaseTimer >= preparationPhaseDuration) {
                 startWave();
             }
-            return; // Don't spawn enemies during preparation phase
+            return;
         }
 
-        // Handle wave spawning
         if (waveActive) {
             timeSinceLastSpawn += deltaTime;
             float spawnInterval = 5.0f;

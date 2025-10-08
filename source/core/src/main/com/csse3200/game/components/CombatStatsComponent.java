@@ -52,7 +52,7 @@ public class CombatStatsComponent extends Component {
      */
     public void setHealth(int health) {
         if (this.health <= 0 && health <= 0) {
-            return; // Already dead, do nothing.
+            return;
         }
 
         if (health >= 0) {
@@ -65,8 +65,6 @@ public class CombatStatsComponent extends Component {
             entity.getEvents().trigger("updateHealth", this.health);
 
             if (this.health == 0) {
-                // Add coins & update statistics
-                // TODO: use config passed into the entity
                 int extraCoins = 3;
                 ProfileService profileService = ServiceLocator.getProfileService();
                 if (profileService != null && profileService.isActive()) {
@@ -86,7 +84,6 @@ public class CombatStatsComponent extends Component {
                     logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
                 }
 
-                // Call death handler which triggers events
                 handleDeath();
             }
         }
@@ -131,7 +128,6 @@ public class CombatStatsComponent extends Component {
     /** Triggers death event handlers if a hit causes an entity to die. */
     public void handleDeath() {
         if (isDead()) {
-            // checks for components unique to defenders
             if (entity.getComponent(DefenderStatsComponent.class) != null
                     || entity.getComponent(GeneratorStatsComponent.class) != null) {
                 entity.getEvents().trigger("defenceDeath");
