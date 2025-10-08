@@ -94,7 +94,7 @@ public class LevelCompletedWindow extends UIComponent {
           case "levelTwo" -> "levelThree";
           case "levelThree" -> "levelFour";
           case "levelFour" -> "levelFive";
-          default -> "error";
+          default -> "end";
         };
     profileService.getProfile().setCurrentLevel(nextLevel);
   }
