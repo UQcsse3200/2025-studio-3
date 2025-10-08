@@ -48,8 +48,9 @@ public class MainGameScreen extends ScreenAdapter {
   private Music music;
   private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
-    "images/backgrounds/level-1-map-v2.png",
-    "images/backgrounds/level-2-map-v1.png",
+    "images/backgrounds/level_map_grass.png",
+    "images/backgrounds/level_map_town.png",
+    "images/backgrounds/level_map_final.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/sling_shooter_front.png",

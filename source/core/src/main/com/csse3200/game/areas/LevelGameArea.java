@@ -113,7 +113,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
       if (mapFilePath == null || mapFilePath.isEmpty()) {
-        mapFilePath = "images/backgrounds/level-1-map-v2.png";
+        mapFilePath = "images/backgrounds/level_map_grass.png";
       }
       logger.info(
           "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
