@@ -6,12 +6,15 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
 /** Class to create and display a window when the level is completed. */
 public class LevelCompletedWindow extends UIComponent {
   private Window window;
   private boolean isDisplayed = false;
+  private final ProfileService profileService = ServiceLocator.getProfileService();
 
   /** Creates the level completed window and sets up event listening for level completion. */
   @Override
@@ -48,7 +51,10 @@ public class LevelCompletedWindow extends UIComponent {
     if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
       window.setVisible(false);
       isDisplayed = false;
-
+      // Unlock the next level before changing screens
+      String currentLevel = profileService.getProfile().getCurrentLevel();
+      String nextLevel = getNextLevel(currentLevel);
+      profileService.getProfile().setCurrentLevel(nextLevel);
       // Return to main menu (world map) safely
       Gdx.app.postRunnable(
           () -> {
@@ -76,6 +82,16 @@ public class LevelCompletedWindow extends UIComponent {
   @Override
   protected void draw(SpriteBatch batch) {
     // Stage handles drawing
+  }
+
+  protected String getNextLevel(String level) {
+    return switch (level) {
+      case "levelOne" -> "levelTwo";
+      case "levelTwo" -> "levelThree";
+      case "levelThree" -> "levelFour";
+      case "levelFour" -> "levelFive";
+      default -> "error";
+    };
   }
 
   public Window getWindow() {
