@@ -11,7 +11,7 @@ import com.csse3200.game.services.ServiceLocator;
  * distance from its start.
  */
 public class PhysicsProjectileComponent extends Component {
-  private final float gravity = 9.8f * 50; // scaled gravity for game feel
+  private static final float gravity = 9.8f * 50; // scaled gravity for game feel
   private Vector2 velocity;
   private Vector2 startPos;
   private final AttackDirection direction;

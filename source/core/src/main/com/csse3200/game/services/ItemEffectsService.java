@@ -81,12 +81,12 @@ public class ItemEffectsService {
             if (movingAnimation && !arrived) {
               // Movement phase starts after 1 second at initial position
               if (age <= 1f) {
-                // logger.info("Moving animation {} - waiting phase", animatorName);
+                logger.info("Moving animation {} - waiting phase", animatorName);
                 return;
               }
 
               // Move linearly to the lower right corner over 1 second duration
-              // logger.info("Moving animation {} - movement phase", animatorName);
+              logger.info("Moving animation {} - movement phase", animatorName);
               float t = Math.min((age - 1f), 1f);
               float x = position.x + (finalPosition.x - position.x) * t;
               float y = position.y + (finalPosition.y - position.y) * t;

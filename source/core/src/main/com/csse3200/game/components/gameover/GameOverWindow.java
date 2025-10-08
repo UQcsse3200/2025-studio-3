@@ -98,14 +98,14 @@ public class GameOverWindow extends UIComponent {
 
   private String unlockEntity() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
-    String unlockedDefences = "";
+    StringBuilder unlockedDefences = new StringBuilder();
     for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-      if (Arsenal.ALL_DEFENCES.get(key) == levelKey && !profile.getArsenal().contains(key)) {
+      if (Arsenal.ALL_DEFENCES.get(key).equals(levelKey) && !profile.getArsenal().contains(key)) {
         profile.getArsenal().unlockDefence(key);
-        unlockedDefences += key;
+        unlockedDefences.append(key);
       }
     }
-    return unlockedDefences;
+    return unlockedDefences.toString();
   }
 
   /** Frees the memory. */

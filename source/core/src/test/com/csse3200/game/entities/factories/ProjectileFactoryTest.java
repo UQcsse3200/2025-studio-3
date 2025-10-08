@@ -25,7 +25,7 @@ import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.Test;
 
-public class ProjectileFactoryTest {
+class ProjectileFactoryTest {
   @Test
   void testCreateProjectile() {
     ServiceLocator.registerTimeSource(new GameTime());
@@ -47,7 +47,7 @@ public class ProjectileFactoryTest {
     Texture mockTexture = mock(Texture.class);
     when(mockTexture.getWidth()).thenReturn(16);
     when(mockTexture.getHeight()).thenReturn(16);
-    when(mockResourceService.getAsset(eq("images/effects/bullet.png"), eq(Texture.class)))
+    when(mockResourceService.getAsset("images/effects/bullet.png", Texture.class))
         .thenReturn(mockTexture);
 
     Entity proj = ProjectileFactory.createProjectile("images/effects/bullet.png", 1);

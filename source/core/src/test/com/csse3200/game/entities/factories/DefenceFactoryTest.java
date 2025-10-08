@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class DefenceFactoryTest {
+class DefenceFactoryTest {
   private ConfigService mockConfigService;
 
   @BeforeEach
@@ -146,6 +146,11 @@ public class DefenceFactoryTest {
       String direction) {
     BaseDefenderConfig c = new BaseDefenderConfig();
     try {
+      java.lang.reflect.Field nameField =
+          BaseDefenderConfig.class.getSuperclass().getDeclaredField("name");
+      nameField.setAccessible(true);
+      nameField.set(c, name);
+
       java.lang.reflect.Field healthField =
           BaseDefenderConfig.class.getSuperclass().getDeclaredField("health");
       healthField.setAccessible(true);

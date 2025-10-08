@@ -69,7 +69,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private boolean characterSelected = false;
 
   // Level configuration
-  private String currentLevelKey;
+  private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
@@ -157,29 +157,33 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
   }
 
+  /** Unlocks all entities that are listed as playing on the current game level */
+  private void unlockAllEntities(Profile profile) {
+    for (String level : levelOrder) {
+      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+        if (Arsenal.ALL_DEFENCES.get(key).equals(level) && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockDefence(key);
+        }
+      }
+      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
+        if (Arsenal.ALL_GENERATORS.get(key).equals(level) && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockGenerator(key);
+        }
+      }
+      if (level.equals(currentLevelKey)) {
+        break;
+      }
+    }
+  }
+
   /** Spawns the level UI */
   protected void displayUI() {
     Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
-    this.currentLevelKey = "levelThree";
     // Unlocks all the required entities
-    for (String level : levelOrder) {
-      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-        if (Arsenal.ALL_DEFENCES.get(key) == level && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockDefence(key);
-        }
-      }
-      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-        if (Arsenal.ALL_GENERATORS.get(key) == level && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockGenerator(key);
-        }
-      }
-      if (level == currentLevelKey) {
-        break;
-      }
-    }
+    unlockAllEntities(profile);
 
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
@@ -434,15 +438,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (tag.getType() == ProjectileType.SHELL) {
       Random random = new Random();
       int col = (int) ((spawnPos.x - xOffset) / tileSize);
-      int max_range = 9 - col;
-      int num = random.nextInt(max_range - 1) + 2; // pick random num between 2 and 7
+      int maxRange = 9 - col;
+      int num = random.nextInt(maxRange - 1) + 2; // pick random num between 2 and 7
       projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 
       projectile
           .getEvents()
           .addListener(
               "despawnShell",
-              (e) -> {
+              e -> {
                 Vector2 pos = projectile.getPosition();
                 int damage = 5; // or configurable
                 float radius = tileSize; // 1 tile radius
@@ -451,8 +455,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     } else {
       projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
     }
-    if (tag != null
-        && tag.getType() != ProjectileType.HARPOON_PROJECTILE
+    if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
@@ -488,7 +491,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
 
         // Mark robot for removal if dead
-        if (stats.isDead()) {
+        boolean mark = stats.isDead();
+        if (mark) {
           robotsToRemove.add(robot);
         }
       }

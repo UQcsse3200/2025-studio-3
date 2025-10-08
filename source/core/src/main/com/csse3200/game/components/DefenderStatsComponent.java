@@ -72,20 +72,20 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   // unused atm
   public void healthBuff() {
-    int newHealth = (int) Math.ceil(getMaxHealth() * 2);
+    int newHealth = getMaxHealth() * 2;
     setMaxHealth(newHealth);
     heal(newHealth);
-    logger.info("Defender buffed! New max health: " + getMaxHealth());
+    logger.info("Defender buffed! New max health: {}", getMaxHealth());
   }
 
   // unused atm
   public void healthUnBuff() {
-    int newHealth = (int) Math.ceil(getMaxHealth() / 2);
+    int newHealth = getMaxHealth() / 2;
     setMaxHealth(newHealth);
     if (getHealth() > newHealth) {
       setHealth(newHealth);
     }
-    logger.info("Defender unbuffed! New max health: " + getMaxHealth());
+    logger.info("Defender unbuffed! New max health: {}", getMaxHealth());
   }
 
   /** Doubles the defender's attack damage. */
@@ -101,7 +101,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     // Halve attack damage
     int newAttack = getBaseAttack() / 2;
     setBaseAttack(newAttack);
-    logger.info("Defender unbuffed! New attack: " + getBaseAttack());
+    logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
   }
 
   /**

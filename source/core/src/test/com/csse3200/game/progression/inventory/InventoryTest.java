@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class InventoryTest {
   private Inventory inventory;
 
-  private Integer NUM_INITIAL_INVENTORY = 0;
+  private Integer numInitialInventory = 0;
 
   @BeforeEach
   void setUp() {
@@ -38,7 +38,7 @@ class InventoryTest {
     inventory.addItem("sword");
 
     assertTrue(inventory.contains("sword"));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
     assertEquals("sword", inventory.getKeys().get(0));
   }
 
@@ -48,7 +48,7 @@ class InventoryTest {
     inventory.addItem("shield");
     inventory.addItem("potion");
 
-    assertEquals(NUM_INITIAL_INVENTORY + 3, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 3, inventory.getKeys().size());
     assertTrue(inventory.contains("sword"));
     assertTrue(inventory.contains("shield"));
     assertTrue(inventory.contains("potion"));
@@ -61,7 +61,7 @@ class InventoryTest {
     inventory.addItem("potion");
 
     // Should have 3 entries (List allows duplicates)
-    assertEquals(NUM_INITIAL_INVENTORY + 3, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 3, inventory.getKeys().size());
     assertTrue(inventory.contains("potion"));
 
     // All entries should be the same item
@@ -78,13 +78,13 @@ class InventoryTest {
 
     assertTrue(inventory.contains("sword"));
     assertTrue(inventory.contains("shield"));
-    assertEquals(NUM_INITIAL_INVENTORY + 2, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 2, inventory.getKeys().size());
 
     inventory.removeItem("sword");
 
     assertFalse(inventory.contains("sword"));
     assertTrue(inventory.contains("shield"));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
   }
 
   @Test
@@ -93,13 +93,13 @@ class InventoryTest {
     inventory.addItem("potion");
     inventory.addItem("potion");
 
-    assertEquals(NUM_INITIAL_INVENTORY + 3, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 3, inventory.getKeys().size());
 
     inventory.removeItem("potion");
 
     // Should still contain potion (but only 2 instances)
     assertTrue(inventory.contains("potion"));
-    assertEquals(NUM_INITIAL_INVENTORY + 2, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 2, inventory.getKeys().size());
   }
 
   @Test
@@ -111,7 +111,7 @@ class InventoryTest {
 
     // Original item should still be there
     assertTrue(inventory.contains("sword"));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
   }
 
   @Test
@@ -145,7 +145,7 @@ class InventoryTest {
     // Test adding null
     inventory.addItem(null);
     assertTrue(inventory.contains(null));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
 
     // Test removing null
     inventory.removeItem(null);
@@ -158,7 +158,7 @@ class InventoryTest {
     inventory.addItem("");
 
     assertTrue(inventory.contains(""));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
     assertEquals("", inventory.getKeys().get(0));
 
     inventory.removeItem("");
@@ -190,7 +190,7 @@ class InventoryTest {
     inventory.removeItem("second");
 
     List<String> items = inventory.getKeys();
-    assertEquals(NUM_INITIAL_INVENTORY + 3, items.size());
+    assertEquals(numInitialInventory + 3, items.size());
     assertEquals("first", items.get(0));
     assertEquals("third", items.get(1));
     assertEquals("fourth", items.get(2));
@@ -217,7 +217,7 @@ class InventoryTest {
     inventory.addItem(specialKey);
 
     assertTrue(inventory.contains(specialKey));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
     assertEquals(specialKey, inventory.getKeys().get(0));
   }
 
@@ -227,7 +227,7 @@ class InventoryTest {
     inventory.addItem(longKey);
 
     assertTrue(inventory.contains(longKey));
-    assertEquals(NUM_INITIAL_INVENTORY + 1, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1, inventory.getKeys().size());
     assertEquals(longKey, inventory.getKeys().get(0));
   }
 
@@ -238,7 +238,7 @@ class InventoryTest {
       inventory.addItem("item" + i);
     }
 
-    assertEquals(NUM_INITIAL_INVENTORY + 1000, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 1000, inventory.getKeys().size());
     assertTrue(inventory.contains("item0"));
     assertTrue(inventory.contains("item500"));
     assertTrue(inventory.contains("item999"));
@@ -251,7 +251,7 @@ class InventoryTest {
     inventory.addItem("shield");
     inventory.addItem("potion");
 
-    assertEquals(NUM_INITIAL_INVENTORY + 3, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 3, inventory.getKeys().size());
 
     inventory.removeItem("sword");
     inventory.removeItem("shield");
@@ -271,12 +271,12 @@ class InventoryTest {
     inventory.addItem("shield");
     inventory.addItem("potion");
 
-    assertEquals(NUM_INITIAL_INVENTORY + 5, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 5, inventory.getKeys().size());
 
     // Remove one potion
     inventory.removeItem("potion");
 
-    assertEquals(NUM_INITIAL_INVENTORY + 4, inventory.getKeys().size());
+    assertEquals(numInitialInventory + 4, inventory.getKeys().size());
     assertTrue(inventory.contains("potion")); // Still has potions
     assertTrue(inventory.contains("sword"));
     assertTrue(inventory.contains("shield"));
