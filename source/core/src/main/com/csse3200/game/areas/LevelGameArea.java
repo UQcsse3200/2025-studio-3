@@ -537,13 +537,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // if entity is a furnace, trigger currency generation at that point
     if (newEntity.getComponent(GeneratorStatsComponent.class) != null) {
       if (newEntity.getComponent(GeneratorStatsComponent.class).getInterval() > 0) {
-          spawnScrap(newEntity);
+        spawnScrap(newEntity);
       } else {
-        // healer entity, no scrap
+        // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
-        ServiceLocator.getRenderService().getStage().addAction(
-          Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position)))
-        );
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(
+                Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position))));
       }
     }
 

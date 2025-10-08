@@ -48,7 +48,7 @@ public class BaseEntityConfig {
    *
    * @return the asset path of the entity
    */
-  public String getAssetPath() {  
+  public String getAssetPath() {
     return assetPath;
   }
 
