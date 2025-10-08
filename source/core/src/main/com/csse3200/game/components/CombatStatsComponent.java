@@ -67,7 +67,6 @@ public class CombatStatsComponent extends Component {
     } else {
       this.health = 0;
     }
-
     if (entity != null) {
       if (this.health == 0) {
         // Add coins & update statistics

@@ -16,6 +16,10 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   private int invulnerabilityMs;
   private int coinsRewarded;
   private String attackType;
+  private float attackRange;
+  private float attackSpeed;
+  private String projectileType;
+  private String targetLayer;
 
   /**
    * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
@@ -116,6 +120,41 @@ public class BaseEnemyConfig extends BaseEntityConfig {
    */
   public int getCoinsRewarded() {
     return coinsRewarded;
+  }
+
+  /**
+   * Gets the attack range for this entity
+   * @return the attack range
+   */
+  public float getAttackRange() {
+    return attackRange;
+  }
+
+  /**
+   * Gets the attack speed for this entity
+   * @return attack speed
+   */
+
+  public float getAttackSpeed() {
+    return attackSpeed;
+  }
+
+  /**
+   * Gets the projectile type for this entity
+   * @return the projectile type
+   */
+
+  public String getProjectileType() {
+    return projectileType;
+  }
+
+  /**
+   * Gets the intended target for this entity
+   * @return the intended target for this entity
+   */
+
+  public String getTargetLayer() {
+    return targetLayer;
   }
 
   /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */

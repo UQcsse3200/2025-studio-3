@@ -2,12 +2,14 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.JumpTask;
+import com.csse3200.game.components.tasks.GunnerAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
@@ -47,6 +49,7 @@ public class RobotFactory {
     BUNGEE("bungeeRobot"),
     TELEPORT("teleportRobot"),
     JUMPER("jumperRobot"),
+    GUNNER("gunnerRobot"),
     GIANT("giantRobot"),
     MINI("miniRobot");
 
@@ -161,7 +164,17 @@ public class RobotFactory {
     } else if (config.getAttackType().equals("melee")) {
       robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
     } else {
-      // TODO Arush add your ranged attack task
+      // handle gunner attack type
+      if (config.getName() != null && config.getName().contains("Gunner")) {
+        AITaskComponent ai = robot.getComponent(AITaskComponent.class);
+        if( ai != null) {
+          ai.clearTask(); // clear any existing tasks ensure no clashing in tasks priority
+          // apply gunner robot tasks
+          ai.addTask(new MoveLeftTask(config.getMovementSpeed()));
+          ai.addTask(new GunnerAttackTask(config.getAttackRange(), PhysicsLayer.NPC));
+        }
+      }
+
     }
 
     // Special abilities for specific robot types

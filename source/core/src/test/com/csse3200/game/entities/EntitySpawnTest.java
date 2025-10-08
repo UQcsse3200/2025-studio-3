@@ -76,6 +76,13 @@ class EntitySpawnTest {
             when(bungeeConfig.getChance()).thenReturn(0.0f);
             configs.put("bungee", bungeeConfig);
 
+            BaseSpawnConfig gunnerRobotConfig = mock(BaseSpawnConfig.class);
+            when(gunnerRobotConfig.getCost()).thenReturn(2);
+            when(gunnerRobotConfig.getChance()).thenReturn(0.0f);
+            configs.put("gunnerRobot", gunnerRobotConfig);
+
+
+
             return configs;
           }
         };
