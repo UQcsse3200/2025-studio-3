@@ -12,6 +12,7 @@ import com.csse3200.game.components.tasks.JumpTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
+import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -50,7 +51,8 @@ public class RobotFactory {
     JUMPER("jumperRobot"),
     GUNNER("gunnerRobot"),
     GIANT("giantRobot"),
-    MINI("miniRobot");
+    MINI("miniRobot"),
+      BOMBER("bomberRobot");
 
     private final String configKey;
 
@@ -192,6 +194,20 @@ public class RobotFactory {
                 laneYs));
       }
     }
+
+      // ✅ Add explosion-on-death component for bomber
+      if (config.isBomberRobot()) {
+          BomberDeathExplodeComponent explodeComp = new BomberDeathExplodeComponent(
+                  config.getExplosionDamage(),
+                  1.0f
+          );
+          robot.addComponent(explodeComp);
+          System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
+      }
+
+
+
+
 
     // Scales
     animator.scaleEntity();

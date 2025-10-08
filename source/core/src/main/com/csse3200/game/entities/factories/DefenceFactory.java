@@ -139,6 +139,7 @@ public class DefenceFactory {
             //            .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent());
 
+    npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);
     PhysicsUtils.setScaledCollider(npc, 0.9f, 0.4f);
     return npc;
   }
