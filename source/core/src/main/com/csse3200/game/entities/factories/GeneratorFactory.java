@@ -40,7 +40,7 @@ public class GeneratorFactory {
     animator.scaleEntity();
 
     defender.getEvents().addListener(HEAL,
-        () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
+        () -> defender.getComponent(GeneratorStatsComponent.class).addHealth(20));
     return defender;
   }
 
