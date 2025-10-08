@@ -15,6 +15,7 @@ import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
@@ -71,8 +72,6 @@ public class MainGameScreen extends ScreenAdapter {
     "images/backgrounds/level-2-map-v1.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
-    "images/entities/defences/shadow_idle1.png",
-    "images/entities/defences/army_guy_1.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -81,8 +80,6 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/nuke.png",
     "images/entities/defences/forge_1.png",
     "images/effects/sling_projectile.png",
-    "images/effects/bullet.png",
-    "images/effects/shock.png",
     "images/effects/sling_projectile_pad.png",
     "images/entities/currency/scrap_metal.png",
     "images/entities/enemies/Scrap-titan.png",
@@ -113,40 +110,24 @@ public class MainGameScreen extends ScreenAdapter {
   protected final GdxGame game;
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
+  protected final WaveManager waveManager;
   protected LevelGameArea gameArea;
   protected boolean isPaused = false;
   private List<String> textures = new ArrayList<>();
-
-  /** Optional override for which level to load. If null, fall back to profile.currentLevel */
-  private final String overrideLevelKey;
-
   private String level;
 
   /**
-   * Constructor for the main game screen. Falls back to profile.currentLevel.
+   * Constructor for the main game screen.
    *
    * @param game the game instance
    */
   public MainGameScreen(GdxGame game) {
-    this(game, null);
-  }
-
-  /**
-   * Constructor for the main game screen with an explicit level key. If {@code levelKey} is null or
-   * blank, the screen will fall back to using the current profile's currentLevel.
-   *
-   * @param game the game instance
-   * @param levelKey the explicit level key to load (e.g., "levelThree")
-   */
-  public MainGameScreen(GdxGame game, String levelKey) {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
-    this.overrideLevelKey = (levelKey != null && !levelKey.isBlank()) ? levelKey : null;
-
-    // Resolve which level to load
-    this.level = resolveLevelToLoad();
-    logger.debug("[MainGameScreen] Effective level to load: '{}'", level);
-
+    level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
+    logger.debug("[MainGameScreen] Profile current level: '{}'", level);
+    logger.debug("[MainGameScreen] Converted to level key: '{}'", level);
+    this.waveManager = new WaveManager(level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
     ServiceLocator.registerTimeSource(new GameTime());
     PhysicsService physicsService = new PhysicsService();
@@ -158,7 +139,6 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
     ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
-    ServiceLocator.registerWaveService(new WaveService());
 
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
@@ -169,7 +149,6 @@ public class MainGameScreen extends ScreenAdapter {
 
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
-<<<<<<< HEAD
     // Wire WaveManager spawn callback to LevelGameArea.spawnRobot with enum
     // conversion
     waveManager.setEnemySpawnCallback(
@@ -189,40 +168,10 @@ public class MainGameScreen extends ScreenAdapter {
             }
           }
         });
-=======
-    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
-    ServiceLocator.getWaveService()
-        .setEnemySpawnCallback(
-            (col, row, type) ->
-                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
->>>>>>> main
     gameArea.create();
 
     snapCameraBottomLeft();
-    ServiceLocator.getWaveService().initialiseNewWave();
-  }
-
-  /**
-   * Determine which level should be loaded. Preference order: 1) An explicit override supplied to
-   * the constructor. 2) The current profile's currentLevel, if available. 3) Fallback to
-   * "levelOne".
-   */
-  private String resolveLevelToLoad() {
-    try {
-      if (overrideLevelKey != null) {
-        return overrideLevelKey; // manual selection takes precedence
-      }
-      var ps = ServiceLocator.getProfileService();
-      if (ps != null && ps.getProfile() != null) {
-        String cur = ps.getProfile().getCurrentLevel();
-        if (cur != null && !cur.isBlank()) {
-          return cur;
-        }
-      }
-    } catch (Exception e) {
-      logger.warn("[MainGameScreen] Failed to read currentLevel: {}", e.getMessage());
-    }
-    return "levelOne";
+    waveManager.initialiseNewWave();
   }
 
   @Override
@@ -230,7 +179,7 @@ public class MainGameScreen extends ScreenAdapter {
     if (!isPaused) {
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(delta);
+      waveManager.update(delta);
     }
 
     renderer.render();
@@ -316,9 +265,6 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
-    BaseLevelConfig cfgForUi = ServiceLocator.getConfigService().getLevelConfig(level);
-    boolean isSlotLevel = cfgForUi != null && cfgForUi.isSlotMachine();
-
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
@@ -328,35 +274,31 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
-
-    if (!isSlotLevel) {
-      ui.addComponent(new ScrapHudDisplay());
-    }
+        .addComponent(new CurrentWaveDisplay(waveManager))
+        .addComponent(new ScrapHudDisplay());
 
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
 
-    // Connect the CurrentWaveDisplay to the WaveService for event listening
-    ServiceLocator.getWaveService()
-        .setWaveEventListener(
-            new WaveService.WaveEventListener() {
-              @Override
-              public void onPreparationPhaseStarted(int waveNumber) {
-                // CurrentWaveDisplay will handle this internally
-              }
+    // Connect the CurrentWaveDisplay to the WaveManager for event listening
+    waveManager.setWaveEventListener(
+        new WaveManager.WaveEventListener() {
+          @Override
+          public void onPreparationPhaseStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
 
-              @Override
-              public void onWaveChanged(int waveNumber) {
-                // CurrentWaveDisplay will handle this internally
-              }
+          @Override
+          public void onWaveChanged(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
 
-              @Override
-              public void onWaveStarted(int waveNumber) {
-                // CurrentWaveDisplay will handle this internally
-              }
-            });
+          @Override
+          public void onWaveStarted(int waveNumber) {
+            // CurrentWaveDisplay will handle this internally
+          }
+        });
 
     ServiceLocator.getEntityService().register(ui);
   }
@@ -368,9 +310,13 @@ public class MainGameScreen extends ScreenAdapter {
   protected LevelGameArea createGameArea() {
     BaseLevelConfig cfg = ServiceLocator.getConfigService().getLevelConfig(level);
     if (cfg != null && cfg.isSlotMachine()) {
-      return new SlotMachineArea(level);
+      var slot = new SlotMachineArea(level);
+      slot.setWaveManager(this.waveManager);
+      return slot;
     } else {
-      return new LevelGameArea(level);
+      var area = new LevelGameArea(level);
+      area.setWaveManager(this.waveManager);
+      return area;
     }
   }
 

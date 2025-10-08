@@ -470,7 +470,7 @@ public class DossierDisplay extends UIComponent {
             + HEALTH_LABEL
             + defenderConfig.getHealth()
             + ATTACK_LABEL
-            + defenderConfig.getDamage();
+            + defenderConfig.getAttack();
       }
 
       BaseGeneratorConfig generatorConfig = generatorConfigs.get(entityKey);

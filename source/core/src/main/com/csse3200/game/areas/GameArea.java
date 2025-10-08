@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.services.ServiceLocator;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 public abstract class GameArea implements Disposable {
   protected List<Entity> areaEntities;
+  protected WaveManager waveManager;
 
   protected GameArea() {
     areaEntities = new ArrayList<>();
@@ -50,10 +52,16 @@ public abstract class GameArea implements Disposable {
     ServiceLocator.getEntityService().unregister(entity);
     entity.dispose();
     areaEntities.remove(entity);
+
+    // Notify WaveManager of entity disposal (for wave tracking)
+    if (waveManager != null) {
+      waveManager.onEnemyDisposed();
+    }
   }
 
   public void requestDespawn(Entity entity) {
     if (entity == null) return;
+    this.waveManager.onEnemyDisposed();
     Gdx.app.postRunnable(() -> despawnEntity(entity));
   }
 
@@ -120,5 +128,14 @@ public abstract class GameArea implements Disposable {
     robot.setPosition(x, y);
     spawnEntity(robot);
     return robot;
+  }
+
+  /**
+   * Sets the WaveManager reference for disposal tracking
+   *
+   * @param waveManager the WaveManager instance
+   */
+  public void setWaveManager(WaveManager waveManager) {
+    this.waveManager = waveManager;
   }
 }

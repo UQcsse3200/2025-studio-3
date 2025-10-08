@@ -3,13 +3,12 @@ package com.csse3200.game.entities.configs;
 /** Defines a set of properties for all defenders. */
 public class BaseDefenderConfig extends BaseEntityConfig {
   private int cost;
+  private int rangeType; // what is this???
   private int range;
-  private float attackSpeed;
-  private float critChance;
-  private int damage;
-  private String direction;
-  private int numSprites;
-  private String projectilePath;
+  private int state; // what is this???
+  private int attackSpeed;
+  private int critChance;
+  private int attack;
 
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
@@ -26,6 +25,15 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   }
 
   /**
+   * Gets the range type of the defender.
+   *
+   * @return the range type value
+   */
+  public int getRangeType() {
+    return rangeType;
+  }
+
+  /**
    * Gets the range value for this entity.
    *
    * @return the range value
@@ -35,11 +43,20 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   }
 
   /**
-   * Gets the attack value for this entity (measured in seconds/attack, like an attack 'period')
+   * Gets the state value for this entity.
+   *
+   * @return the state value
+   */
+  public int getAttackState() {
+    return state;
+  }
+
+  /**
+   * Gets the attack value for this entity.
    *
    * @return the attack value
    */
-  public float getAttackSpeed() {
+  public int getAttackSpeed() {
     return attackSpeed;
   }
 
@@ -48,43 +65,16 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    *
    * @return the attack speed value
    */
-  public float getCritChance() {
+  public int getCritChance() {
     return critChance;
   }
 
   /**
-   * Gets the damage value for this entity.
+   * Gets the attack value for this entity.
    *
-   * @return the damage value
+   * @return the attack value
    */
-  public int getDamage() {
-    return damage;
-  }
-
-  /**
-   * Get the direction the entity faces
-   *
-   * @return attacking direction of the entity
-   */
-  public String getDirection() {
-    return direction;
-  }
-
-  /**
-   * Gets the number of sprites in the enitity's sprite sheet
-   *
-   * @return the number of sprites
-   */
-  public int getNumSprites() {
-    return numSprites;
-  }
-
-  /**
-   * Gets the file location for the projectile for this entity.
-   *
-   * @return the projectile path
-   */
-  public String getProjectilePath() {
-    return projectilePath;
+  public int getAttack() {
+    return attack;
   }
 }

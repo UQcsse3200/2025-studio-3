@@ -41,9 +41,6 @@ class SavefileTest {
     String saveString = "TestSave$1704067200000";
     Savefile result = Savefile.fromString(saveString);
     assertNull(result);
-    String saveString2 = "TestSave$17040672000x0$1";
-    Savefile result2 = Savefile.fromString(saveString2);
-    assertNull(result2);
   }
 
   @Test

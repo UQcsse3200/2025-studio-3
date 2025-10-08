@@ -30,10 +30,7 @@ public class PauseMenuActions extends Component {
         .warning(
             "Quit Level",
             "Are you sure you want to quit this level? Your progress will not be saved.",
-            dialog -> {
-              game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-              ServiceLocator.getDiscordRichPresenceService().setPresence(null);
-            },
+            dialog -> game.setScreen(GdxGame.ScreenType.WORLD_MAP),
             null);
   }
 
@@ -46,7 +43,6 @@ public class PauseMenuActions extends Component {
             dialog -> {
               game.setScreen(GdxGame.ScreenType.MAIN_MENU);
               ServiceLocator.getProfileService().clear();
-              ServiceLocator.getDiscordRichPresenceService().setPresence(null);
             },
             null);
   }
@@ -57,10 +53,7 @@ public class PauseMenuActions extends Component {
         .warning(
             "Exit Game",
             "Are you sure you want to exit the game? Your progress will not be saved.",
-            dialog -> {
-              game.exit();
-              ServiceLocator.getDiscordRichPresenceService().setPresence(null);
-            },
+            dialog -> game.exit(),
             null);
   }
 }

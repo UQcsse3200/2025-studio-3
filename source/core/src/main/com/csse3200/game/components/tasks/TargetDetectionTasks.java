@@ -17,26 +17,12 @@ import java.util.List;
 
 public abstract class TargetDetectionTasks extends DefaultTask implements PriorityTask {
   protected final float attackRange;
-  protected final AttackDirection direction;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
   protected final RaycastHit hit = new RaycastHit();
 
-  public enum AttackDirection {
-    LEFT,
-    RIGHT,
-  }
-
-  /**
-   * Creates a TargetDirection task to detect an enemy entity in the specified direction and attack
-   * range
-   *
-   * @param attackRange, the range an enemey is detected from
-   * @param direction the attack direction, left or right
-   */
-  protected TargetDetectionTasks(float attackRange, AttackDirection direction) {
+  protected TargetDetectionTasks(float attackRange) {
     this.attackRange = attackRange;
-    this.direction = direction;
     physics = ServiceLocator.getPhysicsService().getPhysics();
     debugRenderer = ServiceLocator.getRenderService().getDebug();
   }
@@ -127,13 +113,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     for (Entity target : targets) {
       Vector2 targetPos = target.getCenterPosition();
 
-      // Skip targets that are not directly to the DIRECTION of the defense - OpenAI was used to
-      // only
+      // Skip targets that are not directly to the right of the defense - OpenAI was used to only
       // consider targets to the right of defender
-      if (direction == AttackDirection.RIGHT
-              && (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1)
-          || direction == AttackDirection.LEFT
-              && (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 1)) {
+      if (targetPos.x <= from.x) {
         continue;
       }
 

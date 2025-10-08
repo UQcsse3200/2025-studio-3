@@ -2,7 +2,8 @@ package com.csse3200.game.components.profile;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.progression.Profile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +67,7 @@ public class ProfileDisplayActions extends Component {
 
   private void onSave() {
     logger.info("Saving game");
-    ServiceLocator.getProfileService().saveCurrentProfile();
+    Persistence.save(1, new Profile());
   }
 
   private void onSettings() {

@@ -1,9 +1,7 @@
 slot_frame.png
-size:2048,256
+size:1024,256
 repeat:none
 slot_frame_down
-bounds:706,2,350,172
-slot_frame_locked
 bounds:354,2,350,172
 slot_frame_up
 bounds:2,2,350,172

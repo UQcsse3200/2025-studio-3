@@ -5,7 +5,7 @@ import java.util.Map;
 
 /**
  * Interface for providing wave configuration data to avoid circular dependencies. This allows
- * EntitySpawn to depend on an abstraction rather than WaveService directly.
+ * EntitySpawn to depend on an abstraction rather than WaveManager directly.
  */
 public interface WaveConfigProvider {
   /**

@@ -28,12 +28,11 @@ public class CameraComponent extends Component {
   @Override
   public void update() {
     Vector2 position = entity.getPosition();
-    if (!lastPosition.epsilonEquals(position)) {
+    if (!lastPosition.epsilonEquals(entity.getPosition())) {
       camera.position.set(position.x, position.y, 0f);
       lastPosition = position;
+      camera.update();
     }
-    // Always update the camera so changes to zoom/viewport are applied immediately
-    camera.update();
   }
 
   /**

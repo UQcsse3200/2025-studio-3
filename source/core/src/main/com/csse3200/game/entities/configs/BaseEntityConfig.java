@@ -19,7 +19,7 @@ public class BaseEntityConfig {
   /**
    * Gets the name of the entity.
    *
-   * @return the name of the entity
+   * @return
    */
   public String getName() {
     return name;

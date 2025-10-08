@@ -16,10 +16,9 @@ public class IdleTask extends TargetDetectionTasks {
    * Creates an IdleTask
    *
    * @param attackRange the maximum distance at which the entity can attack a target
-   * @param direction the directiion enemies are detected from
    */
-  public IdleTask(float attackRange, AttackDirection direction) {
-    super(attackRange, direction);
+  public IdleTask(float attackRange) {
+    super(attackRange);
   }
 
   @Override

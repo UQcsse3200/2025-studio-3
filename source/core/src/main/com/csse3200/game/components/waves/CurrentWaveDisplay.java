@@ -3,13 +3,12 @@ package com.csse3200.game.components.waves;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.WaveService;
+import com.csse3200.game.entities.WaveManager;
 import com.csse3200.game.ui.UIComponent;
 
 /**
  * A UI component for displaying the current wave number. Shows the current wave and can be updated
- * when waves change. Now integrated with the WaveService system.
+ * when waves change. Now integrated with the WaveManager system.
  */
 public class CurrentWaveDisplay extends UIComponent {
 
@@ -23,35 +22,45 @@ public class CurrentWaveDisplay extends UIComponent {
   private Label waveLabel;
   private Label waveNumberLabel;
   private int currentWave = 0;
+  private WaveManager waveManager;
 
-  /** Creates a new current wave display component. */
+  /**
+   * Creates a new current wave display component.
+   *
+   * @param waveManager the WaveManager to listen to for wave events
+   */
+  public CurrentWaveDisplay(WaveManager waveManager) {
+    this.waveManager = waveManager;
+  }
+
   @Override
   public void create() {
     super.create();
     addActors();
 
-    // Listen directly to WaveService events
-    ServiceLocator.getWaveService()
-        .setWaveEventListener(
-            new WaveService.WaveEventListener() {
-              @Override
-              public void onPreparationPhaseStarted(int waveNumber) {
-                updateWaveDisplay(waveNumber);
-              }
+    // Listen directly to WaveManager events
+    if (waveManager != null) {
+      waveManager.setWaveEventListener(
+          new WaveManager.WaveEventListener() {
+            @Override
+            public void onPreparationPhaseStarted(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
 
-              @Override
-              public void onWaveChanged(int waveNumber) {
-                updateWaveDisplay(waveNumber);
-              }
+            @Override
+            public void onWaveChanged(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
 
-              @Override
-              public void onWaveStarted(int waveNumber) {
-                updateWaveDisplay(waveNumber);
-              }
-            });
+            @Override
+            public void onWaveStarted(int waveNumber) {
+              updateWaveDisplay(waveNumber);
+            }
+          });
+    }
 
-    // Initialize with current wave from WaveService (starts at 0, shows "No Wave Active")
-    updateWaveDisplay(ServiceLocator.getWaveService().getCurrentWave());
+    // Initialize with current wave from WaveManager (starts at 0, shows "No Wave Active")
+    updateWaveDisplay(waveManager != null ? waveManager.getCurrentWave() : 0);
   }
 
   /**

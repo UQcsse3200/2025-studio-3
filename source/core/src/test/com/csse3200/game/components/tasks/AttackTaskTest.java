@@ -9,8 +9,6 @@ import static org.mockito.Mockito.when;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.areas.LevelGameArea; // <<< CHANGE HERE (1): ADD IMPORT
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.events.listeners.EventListener0;
-import com.csse3200.game.events.listeners.EventListener1;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
@@ -49,8 +47,11 @@ class AttackTaskTest {
 
   @Test
   void attackWhenInRange() {
+    // AI was used to help create this method
+    float attackRange = 5f;
+
     AttackTask attackTask =
-        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(attackRange) {
           @Override
           protected boolean isTargetVisible(Entity target) {
             return true;
@@ -83,9 +84,10 @@ class AttackTaskTest {
 
   @Test
   void noAttackWhenOutOfRange() {
+    float attackRange = 5f;
     float targetDistance = 10f;
     AttackTask attackTask =
-        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(attackRange) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -102,7 +104,8 @@ class AttackTaskTest {
 
   @Test
   void startTriggersAttackStartAndFire() {
-    AttackTask attackTask = new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT);
+    float attackRange = 5f;
+    AttackTask attackTask = new AttackTask(attackRange);
 
     Entity attacker = new Entity();
     AITaskComponent aiTaskComponent = new AITaskComponent();
@@ -112,11 +115,8 @@ class AttackTaskTest {
 
     AtomicBoolean attackStarted = new AtomicBoolean(false);
     AtomicBoolean fired = new AtomicBoolean(false);
-    // OpenAI was used to patch these
-    attacker
-        .getEvents()
-        .addListener("attackStart", (EventListener0) (() -> attackStarted.set(true)));
-    attacker.getEvents().addListener("fire", (EventListener1<?>) (e -> fired.set(true)));
+    attacker.getEvents().addListener("attackStart", () -> attackStarted.set(true));
+    attacker.getEvents().addListener("fire", () -> fired.set(true));
 
     attackTask.start();
 
@@ -127,7 +127,7 @@ class AttackTaskTest {
   @Test
   void updateDoesNothingWithoutTarget() {
     AttackTask attackTask =
-        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return null; // no target
@@ -158,8 +158,9 @@ class AttackTaskTest {
     when(gameTime.getDeltaTime()).thenReturn(0f); // start with 0 delta
     ServiceLocator.registerTimeSource(gameTime);
 
+    float attackRange = 5f;
     AttackTask attackTask =
-        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(attackRange) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -178,19 +179,15 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     // Listen to "fire" events
-    defender.getEvents().addListener("fire", event -> fireCount.incrementAndGet());
+    defender.getEvents().addListener("fire", fireCount::incrementAndGet);
 
     // Trigger start -> should fire immediately
     attackTask.start();
     assertEquals(1, fireCount.get(), "Should fire immediately on start");
 
     // Update with delta < cooldown -> should NOT fire
-<<<<<<< HEAD
     // Cooldown is 0.95s, so 0.5s is not enough
     when(gameTime.getDeltaTime()).thenReturn(0.5f);
-=======
-    when(gameTime.getDeltaTime()).thenReturn(0.4f);
->>>>>>> main
     attackTask.update();
     assertEquals(1, fireCount.get(), "Should not fire before cooldown");
 
@@ -206,7 +203,7 @@ class AttackTaskTest {
     when(gameTime.getDeltaTime()).thenReturn(1f); // Each update call simulates 1 second
 
     AttackTask attackTask =
-        new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
+        new AttackTask(5f) {
           @Override
           protected Entity getNearestVisibleTarget() {
             return target;
@@ -225,7 +222,7 @@ class AttackTaskTest {
     aiTaskComponent.create();
 
     AtomicInteger fireCount = new AtomicInteger(0);
-    attacker.getEvents().addListener("fire", event -> fireCount.incrementAndGet());
+    attacker.getEvents().addListener("fire", fireCount::incrementAndGet);
 
     // Start the task to get the first shot and initialize the timer
     attackTask.start();

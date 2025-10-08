@@ -1,7 +1,7 @@
 package com.csse3200.game.services;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
@@ -30,8 +30,6 @@ class ServiceLocatorTest {
   private DialogService dialogService;
   private ResourceService globalResourceService;
   private ConfigService configService;
-  private SettingsService settingsService;
-  private DiscordRichPresenceService discordRichPresenceService;
 
   @BeforeEach
   void setUp() {
@@ -51,45 +49,11 @@ class ServiceLocatorTest {
     dialogService = new DialogService();
     globalResourceService = new ResourceService();
     configService = new ConfigService();
-    settingsService = mock(SettingsService.class);
-    discordRichPresenceService = new DiscordRichPresenceService();
   }
 
   @AfterEach
   void tearDown() {
     ServiceLocator.clear();
-
-    if (discordRichPresenceService != null) {
-      ServiceLocator.deregisterDiscordRichPresenceService();
-    }
-
-    if (configService != null) {
-      ServiceLocator.deregisterConfigService();
-    }
-
-    if (dialogService != null) {
-      ServiceLocator.deregisterDialogService();
-    }
-
-    if (globalResourceService != null) {
-      ServiceLocator.deregisterGlobalResourceService();
-    }
-
-    if (profileService != null) {
-      ServiceLocator.deregisterProfileService();
-    }
-
-    if (worldMapService != null) {
-      ServiceLocator.deregisterWorldMapService();
-    }
-
-    if (cutsceneService != null) {
-      ServiceLocator.deregisterCutsceneService();
-    }
-
-    if (settingsService != null) {
-      ServiceLocator.deregisterSettingsService();
-    }
   }
 
   @Test
@@ -113,6 +77,7 @@ class ServiceLocatorTest {
     assertNull(ServiceLocator.getResourceService());
     assertNull(ServiceLocator.getCurrencyService());
     assertNull(ServiceLocator.getItemEffectsService());
+
     // Persistent services should remain after clear
     assertNotNull(ServiceLocator.getCutsceneService());
     assertNotNull(ServiceLocator.getWorldMapService());
@@ -120,8 +85,6 @@ class ServiceLocatorTest {
     assertNotNull(ServiceLocator.getGlobalResourceService());
     assertNotNull(ServiceLocator.getConfigService());
     assertNotNull(ServiceLocator.getProfileService());
-    assertNotNull(ServiceLocator.getSettingsService());
-    assertNotNull(ServiceLocator.getDiscordRichPresenceService());
   }
 
   @Test
@@ -142,15 +105,6 @@ class ServiceLocatorTest {
 
     ServiceLocator.deregisterWorldMapService();
     assertNull(ServiceLocator.getWorldMapService());
-
-    ServiceLocator.deregisterDiscordRichPresenceService();
-    assertNull(ServiceLocator.getDiscordRichPresenceService());
-
-    ServiceLocator.deregisterCutsceneService();
-    assertNull(ServiceLocator.getCutsceneService());
-
-    ServiceLocator.deregisterSettingsService();
-    assertNull(ServiceLocator.getSettingsService());
   }
 
   private void registerAllServices() {
@@ -168,8 +122,6 @@ class ServiceLocatorTest {
     ServiceLocator.registerDialogService(dialogService);
     ServiceLocator.registerConfigService(configService);
     ServiceLocator.registerGlobalResourceService(globalResourceService);
-    ServiceLocator.registerSettingsService(settingsService);
-    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
   }
 
   private void assertAllServicesRegistered() {
@@ -187,7 +139,5 @@ class ServiceLocatorTest {
     assertEquals(dialogService, ServiceLocator.getDialogService());
     assertEquals(globalResourceService, ServiceLocator.getGlobalResourceService());
     assertEquals(configService, ServiceLocator.getConfigService());
-    assertEquals(discordRichPresenceService, ServiceLocator.getDiscordRichPresenceService());
-    assertEquals(settingsService, ServiceLocator.getSettingsService());
   }
 }
