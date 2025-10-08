@@ -68,6 +68,11 @@ public class DefenceFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    // add event listener for buffing the defence when a buff item is used on it
+    defender.getEvents().addListener("BUFF", 
+        () -> defender.getComponent(DefenderStatsComponent.class).buff());
+
     return defender;
   }
 
