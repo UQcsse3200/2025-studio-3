@@ -1,0 +1,100 @@
+sling_shooter.png
+size: 204, 1632
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 68, 102
+idle
+  bounds: 0, 0, 68, 102
+idle
+  bounds: 68, 0, 68, 102
+idle
+  bounds: 136, 0, 68, 102
+idle
+  bounds: 0, 102, 68, 102
+idle
+  bounds: 68, 102, 68, 102
+idle
+  bounds: 136, 102, 68, 102
+idle
+  bounds: 0, 204, 68, 102
+idle
+  bounds: 68, 204, 68, 102
+idle
+  bounds: 136, 204, 68, 102
+idle
+  bounds: 0, 306, 68, 102
+idle
+  bounds: 68, 306, 68, 102
+idle
+  bounds: 136, 306, 68, 102
+idle
+  bounds: 0, 408, 68, 102
+idle
+  bounds: 68, 408, 68, 102
+idle
+  bounds: 136, 408, 68, 102
+idle
+  bounds: 0, 510, 68, 102
+idle
+  bounds: 68, 510, 68, 102
+idle
+  bounds: 136, 510, 68, 102
+idle
+  bounds: 0, 612, 68, 102
+idle
+  bounds: 68, 612, 68, 102
+idle
+  bounds: 136, 612, 68, 102
+idle
+  bounds: 0, 714, 68, 102
+attack
+  bounds: 136, 1428, 68, 102
+attack
+  bounds: 0, 1530, 68, 102
+attack
+  bounds: 68, 714, 68, 102
+attack
+  bounds: 136, 714, 68, 102
+attack
+  bounds: 0, 816, 68, 102
+attack
+  bounds: 68, 816, 68, 102
+attack
+  bounds: 136, 816, 68, 102
+attack
+  bounds: 0, 918, 68, 102
+attack
+  bounds: 68, 918, 68, 102
+attack
+  bounds: 136, 918, 68, 102
+attack
+  bounds: 0, 1020, 68, 102
+attack
+  bounds: 68, 1020, 68, 102
+attack
+  bounds: 136, 1020, 68, 102
+attack
+  bounds: 0, 1122, 68, 102
+attack
+  bounds: 68, 1122, 68, 102
+attack
+  bounds: 136, 1122, 68, 102
+attack
+  bounds: 0, 1224, 68, 102
+attack
+  bounds: 68, 1224, 68, 102
+attack
+  bounds: 136, 1224, 68, 102
+attack
+  bounds: 0, 1326, 68, 102
+attack
+  bounds: 68, 1326, 68, 102
+attack
+  bounds: 136, 1326, 68, 102
+attack
+  bounds: 0, 1428, 68, 102
+attack
+  bounds: 68, 1428, 68, 102

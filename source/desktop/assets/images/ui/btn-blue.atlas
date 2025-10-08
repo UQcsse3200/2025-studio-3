@@ -1,0 +1,12 @@
+btn-blue.png
+size: 1536, 509
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+default
+  rotate: false
+  xy: 0, 0
+  size: 1536, 509
+  orig: 1536, 509
+  offset: 0, 0
+  index: 0
