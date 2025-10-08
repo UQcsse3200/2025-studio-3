@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -12,6 +13,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
@@ -415,6 +417,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         spawnEntity(boss);
         robots.add(boss);
+        boss.getEvents().addListener("fireProjectile",this::spawnBossProjectile);
         boss.getEvents().addListener(
                 "despawnRobot",
                 target -> {
@@ -459,7 +462,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 });
         // --- BUG FIX ENDS HERE ---
     }
-
+public void spawnBossProjectile(Entity boss){
+    Entity projectile = ProjectileFactory.createBossProjectile(5);
+        Vector2 spawnPos = boss.getPosition().cpy();
+        spawnPos.x-=1.0f;
+        spawnPos.y+=0.5f;
+        projectile.setPosition(spawnPos);
+        projectile.scaleHeight(0.5f*tileSize);
+        projectile.scaleWidth(0.5f*tileSize);
+        projectile.addComponent(new MoveLeftComponent(150f));
+    projectile.getEvents().addListener("despawn", () -> requestDespawn(projectile));
+    spawnEntity(projectile);
+    logger.info("Boss fired projectile from position {}", spawnPos);
+    }
     /**
      * Getter for selected_unit
      *

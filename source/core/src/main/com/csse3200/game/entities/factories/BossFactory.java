@@ -34,6 +34,7 @@ import java.awt.*;
  * similar characteristics.
  */
 public class BossFactory {
+
     /**
      * Loads boss config data from JSON. The configs object is populated at class-load time. If the
      * file is missing or deserialization fails, this will be null.
@@ -151,6 +152,7 @@ final int[] samuraiAttackCount = {0};
         boss.getEvents().addListener(
                 "attack",
                 target -> {
+
                     if (isSamurai) {
                         samuraiAttackCount[0]++;
 
