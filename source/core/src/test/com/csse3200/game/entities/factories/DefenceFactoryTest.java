@@ -86,6 +86,7 @@ public class DefenceFactoryTest {
     when(mockConfigService.getDefenderConfig("slingshooter"))
         .thenReturn(
             cfg(
+                "slingshooter",
                 50,
                 500,
                 "images/entities/defences/sling_shooter.atlas",
@@ -99,6 +100,7 @@ public class DefenceFactoryTest {
     when(mockConfigService.getDefenderConfig("armyguy"))
         .thenReturn(
             cfg(
+                "armyguy",
                 80,
                 1000,
                 "images/entities/defences/machine_gun.atlas",
@@ -112,6 +114,7 @@ public class DefenceFactoryTest {
     when(mockConfigService.getDefenderConfig("shadow"))
         .thenReturn(
             cfg(
+                "shadow",
                 20,
                 250,
                 "images/entities/defences/shadow.atlas",
@@ -130,6 +133,7 @@ public class DefenceFactoryTest {
   }
 
   private static BaseDefenderConfig cfg(
+      String name,
       int health,
       int range,
       String atlas,
@@ -286,7 +290,7 @@ public class DefenceFactoryTest {
 
   @Test
   void testGetTaskComponentLeft() {
-    BaseDefenderConfig leftConfig = cfg(50, 200, "", "", "", 0, 20, 1, 1, "left");
+    BaseDefenderConfig leftConfig = cfg("", 50, 200, "", "", "", 0, 20, 1, 1, "left");
     AITaskComponent tasksComponent = DefenceFactory.getTaskComponent(leftConfig);
 
     // OpenAI was used to help create these tests
@@ -331,7 +335,7 @@ public class DefenceFactoryTest {
 
   @Test
   void testGetTaskComponentRight() {
-    BaseDefenderConfig rightConfig = cfg(50, 200, "", "", "", 0, 20, 1, 1, "right");
+    BaseDefenderConfig rightConfig = cfg("", 50, 200, "", "", "", 0, 20, 1, 1, "right");
     AITaskComponent tasksComponent = DefenceFactory.getTaskComponent(rightConfig);
 
     try {
@@ -377,6 +381,7 @@ public class DefenceFactoryTest {
   void testGetAnimation() {
     BaseDefenderConfig shadow =
         cfg(
+            "",
             20,
             250,
             "images/entities/defences/shadow.atlas",
