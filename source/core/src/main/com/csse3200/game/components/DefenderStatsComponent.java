@@ -1,10 +1,9 @@
 package com.csse3200.game.components;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
@@ -14,6 +13,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class DefenderStatsComponent extends CombatStatsComponent {
   private static final Logger logger = LoggerFactory.getLogger(DefenderStatsComponent.class);
+
   /** Maximum range (in game units) at which the defender can engage targets. */
   private int range;
 
@@ -59,7 +59,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public DefenderStatsComponent(
       int health, int baseAttack, int range, float attackSpeed, float critChance) {
-      
+
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
@@ -101,7 +101,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     setBaseAttack(newAttack);
     logger.info("Defender unbuffed! New attack: " + getBaseAttack());
   }
-  
+
   private int getMaxHealth() {
     return maxHealth;
   }
@@ -114,7 +114,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     int newHealth = Math.min(getHealth() + amount, getMaxHealth());
     setHealth(newHealth);
   }
-
 
   /** Sets the defender's attack range. */
   public void setRange(int range) {

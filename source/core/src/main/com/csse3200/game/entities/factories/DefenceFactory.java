@@ -73,12 +73,15 @@ public class DefenceFactory {
     animator.scaleEntity();
 
     // add event listener for buffing the defence when a buff item is used on it
-    defender.getEvents().addListener(BUFF, 
-        () -> defender.getComponent(DefenderStatsComponent.class).buff());
-    defender.getEvents().addListener(UNBUFF, 
-        () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
-    defender.getEvents().addListener(HEAL,
-        () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
+    defender
+        .getEvents()
+        .addListener(BUFF, () -> defender.getComponent(DefenderStatsComponent.class).buff());
+    defender
+        .getEvents()
+        .addListener(UNBUFF, () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
+    defender
+        .getEvents()
+        .addListener(HEAL, () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
 
     return defender;
   }

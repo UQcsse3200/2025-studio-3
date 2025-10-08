@@ -14,15 +14,17 @@ public class Arsenal {
     defences =
         new ArrayList<>(
             Arrays.asList(
-                //"slingshooter",
+                // "slingshooter",
                 "armyguy",
-                //"shadow",
-                //"boxer",
+                // "shadow",
+                // "boxer",
                 "shield",
-                //"harpoon",
-                "mortar")); // Default defences       
-    generators = new ArrayList<>(Arrays.asList(//"furnace", 
-    "healer"));
+                // "harpoon",
+                "mortar")); // Default defences
+    generators =
+        new ArrayList<>(
+            Arrays.asList( // "furnace",
+                "healer"));
   }
 
   /**
