@@ -3,9 +3,7 @@ package com.csse3200.game.areas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -36,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -77,6 +74,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   // Wave preview placeholders
   final ArrayList<Entity> previewEntities = new ArrayList<>();
   boolean wavePreviewActive = false;
+  private final ItemHandler itemHandler = new ItemHandler(this);
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -305,6 +303,33 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return grid;
   }
 
+  /**
+   * Getter for xOffset
+   *
+   * @return xOffset
+   */
+  public float getXOffset() {
+    return xOffset;
+  }
+
+  /**
+   * Getter for levelCols
+   *
+   * @return levelCols
+   */
+  public int getLevelCols() {
+    return levelCols;
+  }
+
+  /**
+   * Getter for robots
+   *
+   * @return robots list
+   */
+  public List<Entity> getRobots() {
+    return robots;
+  }
+
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
   }
@@ -520,7 +545,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return true; // handled: do nothing
     }
 
-    spawnItem(item, worldPos);
+    itemHandler.handleItemUse(item, worldPos);
     tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
@@ -577,93 +602,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
-  }
-
-  /**
-   * Spawns item at the selected tile and triggers the relevant item effect to occur.
-   *
-   * @param item the specific item type (component)
-   * @param entityPos the tile position on which the item was placed
-   */
-  public void spawnItem(ItemComponent item, Vector2 entityPos) {
-    String itemType = item.getType().toString();
-    logger.info("Spawning item {}", itemType);
-    String key = item.getType().toString().toLowerCase(Locale.ROOT);
-
-    // Remove one instance of the Item from the inventory
-    ServiceLocator.getProfileService().getProfile().getInventory().removeItem(key);
-    logger.info("One {} item used", key);
-
-    // Spawn effect
-    // Currently just effect displays, not entity itself then effect after a delay
-    ServiceLocator.getItemEffectsService()
-        .playEffect(
-            key,
-            entityPos,
-            (int) tileSize,
-            new Vector2(
-                (float) (xOffset * 0.25 + levelCols * tileSize), (float) (tileSize * -0.75)));
-
-    // ~ HANDLE DAMAGING ROBOTS (WHEN APPLICABLE) ~
-    Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");
-    if (damagingItems.contains(item.getType().toString())) {
-      // Window query (3x3)
-      float radius = 1.5f * tileSize;
-
-      List<Entity> toRemove = new ArrayList<>(); // targets
-      for (Entity r : robots) {
-        Vector2 pos = r.getPosition();
-        if (Math.abs(entityPos.x - pos.x) <= radius && Math.abs(entityPos.y - pos.y) <= radius) {
-          // for logger
-          int grenadeCol = (int) ((entityPos.x - xOffset) / tileSize);
-          int grenadeRow = (int) ((entityPos.y - yOffset) / tileSize);
-          int robotCol = (int) ((pos.x - xOffset) / tileSize);
-          int robotRow = (int) ((pos.y - yOffset) / tileSize);
-          logger.info(
-              "Grenade at ({}, {}) hits robot at ({}, {})",
-              grenadeCol,
-              grenadeRow,
-              robotCol,
-              robotRow);
-          toRemove.add(r);
-        }
-      }
-      // can't remove from a list while iterating through it
-      for (Entity r : toRemove) {
-        // trigger entityDeath does NOT work
-        requestDespawn(r);
-        robots.remove(r);
-      }
-      return;
-    }
-
-    // For other items trigger impact on defences
-    String itemTrigger = ServiceLocator.getConfigService().getItemConfig(key).getTrigger();
-    final int total = grid.getRows() * grid.getCols();
-
-    // Send trigger on each currently placed defence
-    for (int i = 0; i < total; i++) {
-      // Get entity on the grid tile
-      Entity entity = grid.getOccupantIndex(i);
-      // Check whether there is an entity and whether it is a defence
-      if (entity != null
-          && (entity.getComponent(DefenderStatsComponent.class) != null
-              || entity.getComponent(GeneratorStatsComponent.class) != null)) {
-        // Send start trigger
-        entity.getEvents().trigger(itemTrigger);
-        logger.info("Start {} on {}", itemTrigger, entity);
-        // Create a timer to be able to send a trigger to stop after 30 seconds
-        final Timer.Task repeatTask =
-            new Timer.Task() {
-              @Override
-              public void run() {
-                entity.getEvents().trigger(itemTrigger + "Stop");
-                logger.info("Stop {}", itemTrigger);
-              }
-            };
-        Timer.schedule(repeatTask, 30f);
-      }
-    }
   }
 
   /**
