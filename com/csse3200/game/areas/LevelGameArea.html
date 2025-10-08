@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li><a href="#field-detail">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -64,7 +64,7 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -111,15 +111,6 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <li>
 <section class="field-summary" id="field-summary">
 <h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>protected <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color"><code><a href="#gameOverEntity" class="member-name-link">gameOverEntity</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.areas.GameArea">Fields inherited from class&nbsp;com.csse3200.game.areas.<a href="GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></h3>
 <code><a href="GameArea.html#areaEntities">areaEntities</a></code></div>
@@ -167,19 +158,49 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Checks the game over condition when a robot reaches the end of the grid</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkLevelComplete()" class="member-name-link">checkLevelComplete</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Checks if the level is complete</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearWavePreview()" class="member-name-link">clearWavePreview</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Remove preview entities created for the intro camera pan.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#create()" class="member-name-link">create</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Creates the game area by calling helper methods as required.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#displayUI()" class="member-name-link">displayUI</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createWavePreview()" class="member-name-link">createWavePreview</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Spawns the level UI</div>
+<div class="block">Create symbolic entities to preview the upcoming wave.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#displayUI()" class="member-name-link">displayUI</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns the level UI, including hotbar, item/defence lists, and game-over window.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGrid()" class="member-name-link">getGrid</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Getter for grid</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevelCols()" class="member-name-link">getLevelCols</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for levelCols</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevelRows()" class="member-name-link">getLevelRows</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for levelRows</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRobots()" class="member-name-link">getRobots</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for robots</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSelectedUnit()" class="member-name-link">getSelectedUnit</a>()</code></div>
@@ -193,7 +214,19 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldWidth()" class="member-name-link">getWorldWidth</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">gets worldWidth currently used by LevelGameArea</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getXOffset()" class="member-name-link">getXOffset</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for xOffset</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getYOffset()" class="member-name-link">getYOffset</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Getter for yOffset</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isCharacterSelected()" class="member-name-link">isCharacterSelected</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -207,11 +240,13 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Method to reset game entity size/position on window resize.</div>
+<div class="block">Adjusts all entities after a window resize by recalculating world scale and layout.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Setter to set grid in LevelGameArea</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsCharacterSelected(boolean)" class="member-name-link">setIsCharacterSelected</a><wbr>(boolean&nbsp;status)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -229,41 +264,35 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Setter for selected_unit</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnItem(com.csse3200.game.components.items.ItemComponent,com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnItem</a><wbr>(<a href="../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item,
- com.badlogic.gdx.math.Vector2&nbsp;entityPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Spawns item at the selected tile and triggers the relevant item effect to occur.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
  int&nbsp;row,
  <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawn a robot at the specified grid location.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns a robot directly on top of an existing defence (placed unit) on the grid.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds a unit to the grid</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts stage (mouse/screen) coordinates into world (entity placement) coordinates</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts world (entity placement) coordinates into stage (mouse/screen) coordinates</div>
 </div>
 </div>
@@ -281,20 +310,6 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="gameOverEntity">
-<h3>gameOverEntity</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">gameOverEntity</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -342,26 +357,7 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <section class="detail" id="displayUI()">
 <h3>displayUI</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">displayUI</span>()</div>
-<div class="block">Spawns the level UI</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getGrid()">
-<h3>getGrid</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></span>&nbsp;<span class="element-name">getGrid</span>()</div>
-<div class="block">Getter for grid</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="AreaAPI.html#getGrid()">getGrid</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
-<dt>Returns:</dt>
-<dd>grid</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setGrid(com.csse3200.game.areas.LevelGameGrid)">
-<h3>setGrid</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setGrid</span><wbr><span class="parameters">(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</span></div>
+<div class="block">Spawns the level UI, including hotbar, item/defence lists, and game-over window.</div>
 </section>
 </li>
 <li>
@@ -438,19 +434,6 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </section>
 </li>
 <li>
-<section class="detail" id="spawnItem(com.csse3200.game.components.items.ItemComponent,com.badlogic.gdx.math.Vector2)">
-<h3>spawnItem</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnItem</span><wbr><span class="parameters">(<a href="../components/items/ItemComponent.html" title="class in com.csse3200.game.components.items">ItemComponent</a>&nbsp;item,
- com.badlogic.gdx.math.Vector2&nbsp;entityPos)</span></div>
-<div class="block">Spawns item at the selected tile and triggers the relevant item effect to occur.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>item</code> - the specific item type (component)</dd>
-<dd><code>entityPos</code> - the tile position on which the item was placed</dd>
-</dl>
-</section>
-</li>
-<li>
 <section class="detail" id="removeUnit(int)">
 <h3>removeUnit</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removeUnit</span><wbr><span class="parameters">(int&nbsp;position)</span></div>
@@ -460,19 +443,6 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <dd><code><a href="AreaAPI.html#removeUnit(int)">removeUnit</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>position</code> - of the tile</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getTileSize()">
-<h3>getTileSize</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getTileSize</span>()</div>
-<div class="block">Getter for tile size in world units</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="AreaAPI.html#getTileSize()">getTileSize</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
-<dt>Returns:</dt>
-<dd>tileSize the size of the tiles</dd>
 </dl>
 </section>
 </li>
@@ -510,7 +480,7 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <section class="detail" id="resize()">
 <h3>resize</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resize</span>()</div>
-<div class="block">Method to reset game entity size/position on window resize.</div>
+<div class="block">Adjusts all entities after a window resize by recalculating world scale and layout.</div>
 </section>
 </li>
 <li>
@@ -518,6 +488,13 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <h3>checkGameOver</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkGameOver</span>()</div>
 <div class="block">Checks the game over condition when a robot reaches the end of the grid</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkLevelComplete()">
+<h3>checkLevelComplete</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkLevelComplete</span>()</div>
+<div class="block">Checks if the level is complete</div>
 </section>
 </li>
 <li>
@@ -571,9 +548,121 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 </section>
 </li>
 <li>
+<section class="detail" id="createWavePreview()">
+<h3>createWavePreview</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createWavePreview</span>()</div>
+<div class="block">Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
+ per row just off the right edge. These are visual only and removed after the intro camera pan.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearWavePreview()">
+<h3>clearWavePreview</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearWavePreview</span>()</div>
+<div class="block">Remove preview entities created for the intro camera pan.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getGrid()">
+<h3>getGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></span>&nbsp;<span class="element-name">getGrid</span>()</div>
+<div class="block">Getter for grid</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#getGrid()">getGrid</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dt>Returns:</dt>
+<dd>grid</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getWorldWidth()">
 <h3>getWorldWidth</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getWorldWidth</span>()</div>
+<div class="block">gets worldWidth currently used by LevelGameArea</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>worldWidth</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getXOffset()">
+<h3>getXOffset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getXOffset</span>()</div>
+<div class="block">Getter for xOffset</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>xOffset</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getLevelRows()">
+<h3>getLevelRows</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLevelRows</span>()</div>
+<div class="block">Getter for levelRows</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>levelRows</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getYOffset()">
+<h3>getYOffset</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getYOffset</span>()</div>
+<div class="block">Getter for yOffset</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>yOffset</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getLevelCols()">
+<h3>getLevelCols</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getLevelCols</span>()</div>
+<div class="block">Getter for levelCols</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>levelCols</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getRobots()">
+<h3>getRobots</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</span>&nbsp;<span class="element-name">getRobots</span>()</div>
+<div class="block">Getter for robots</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>robots list</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTileSize()">
+<h3>getTileSize</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getTileSize</span>()</div>
+<div class="block">Getter for tile size in world units</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="AreaAPI.html#getTileSize()">getTileSize</a></code>&nbsp;in interface&nbsp;<code><a href="AreaAPI.html" title="interface in com.csse3200.game.areas">AreaAPI</a></code></dd>
+<dt>Returns:</dt>
+<dd>tileSize the size of the tiles</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setGrid(com.csse3200.game.areas.LevelGameGrid)">
+<h3>setGrid</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setGrid</span><wbr><span class="parameters">(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</span></div>
+<div class="block">Setter to set grid in LevelGameArea</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>newGrid</code> - the grid to be set</dd>
+</dl>
 </section>
 </li>
 </ul>

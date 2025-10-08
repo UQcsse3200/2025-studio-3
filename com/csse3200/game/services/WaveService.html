@@ -171,14 +171,20 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the enemy configuration map for the current wave.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLane()" class="member-name-link">getLane</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../entities/configs/BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemyConfigs(int)" class="member-name-link">getEnemyConfigs</a><wbr>(int&nbsp;waveIndex)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn()" class="member-name-link">getMinZombiesSpawn</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLane()" class="member-name-link">getLane</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn()" class="member-name-link">getMinZombiesSpawn</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the minimum number of zombies to spawn for the current wave.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn(int)" class="member-name-link">getMinZombiesSpawn</a><wbr>(int&nbsp;waveIndex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPreparationPhaseDuration()" class="member-name-link">getPreparationPhaseDuration</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -186,13 +192,19 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPreparationPhaseRemainingTime()" class="member-name-link">getPreparationPhaseRemainingTime</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveCountForLevel(java.lang.String)" class="member-name-link">getWaveCountForLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTotalWaves()" class="member-name-link">getTotalWaves</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight()" class="member-name-link">getWaveWeight</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveCountForLevel(java.lang.String)" class="member-name-link">getWaveCountForLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight()" class="member-name-link">getWaveWeight</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the configured weight/budget for the current wave.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight(int)" class="member-name-link">getWaveWeight</a><wbr>(int&nbsp;waveIndex)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#initialiseNewWave()" class="member-name-link">initialiseNewWave</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -469,6 +481,46 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <dd><code><a href="../entities/WaveConfigProvider.html#getEnemyConfigs()">getEnemyConfigs</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
 <dt>Returns:</dt>
 <dd>map of enemy type to spawn configuration</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getTotalWaves()">
+<h3>getTotalWaves</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTotalWaves</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../entities/WaveConfigProvider.html#getTotalWaves()">getTotalWaves</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getWaveWeight(int)">
+<h3>getWaveWeight</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getWaveWeight</span><wbr><span class="parameters">(int&nbsp;waveIndex)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../entities/WaveConfigProvider.html#getWaveWeight(int)">getWaveWeight</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getMinZombiesSpawn(int)">
+<h3>getMinZombiesSpawn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMinZombiesSpawn</span><wbr><span class="parameters">(int&nbsp;waveIndex)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../entities/WaveConfigProvider.html#getMinZombiesSpawn(int)">getMinZombiesSpawn</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getEnemyConfigs(int)">
+<h3>getEnemyConfigs</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../entities/configs/BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</span>&nbsp;<span class="element-name">getEnemyConfigs</span><wbr><span class="parameters">(int&nbsp;waveIndex)</span></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../entities/WaveConfigProvider.html#getEnemyConfigs(int)">getEnemyConfigs</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
 </dl>
 </section>
 </li>

@@ -137,6 +137,14 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSpawnCount()" class="member-name-link">getSpawnCount</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#previewAllWaves()" class="member-name-link">previewAllWaves</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Preview all waves for the level.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#previewEnemiesForCurrentWave()" class="member-name-link">previewEnemiesForCurrentWave</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWaveConfigProvider(com.csse3200.game.entities.WaveConfigProvider)" class="member-name-link">setWaveConfigProvider</a><wbr>(<a href="WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a>&nbsp;waveConfigProvider)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -256,10 +264,25 @@ loadScripts(document, 'script');</script>
 <h3>spawnEnemiesFromConfig</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemiesFromConfig</span>()</div>
 <div class="block">Builds a spawn queue for the current wave using the new system: - Each wave has a budget
- (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
- by 'chance'. - Loop continues until budget runs out. The method uses a weight-accumulation
- system to distribute spawn probabilities based on each enemy type’s defined spawn chance and
- cost. The algorithm repeats until the wave budget is depleted or no affordable enemies remain.</div>
+ (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked using weighted
+ fairness by 'chance'. - Loop continues until budget runs out or no affordable enemies remain.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="previewEnemiesForCurrentWave()">
+<h3>previewEnemiesForCurrentWave</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">previewEnemiesForCurrentWave</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>preview list for the current wave</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="previewAllWaves()">
+<h3>previewAllWaves</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">previewAllWaves</span>()</div>
+<div class="block">Preview all waves for the level.</div>
 </section>
 </li>
 </ul>

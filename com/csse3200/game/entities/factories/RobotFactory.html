@@ -144,14 +144,19 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotType(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">createRobotType</a><wbr>(<a href="RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createPreviewRobot(java.lang.String)" class="member-name-link">createPreviewRobot</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">A basic function to create a specific type of robot depending on the input.</div>
+<div class="block">Creates a single preview entity for a given robot type.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTeleportRobot(com.csse3200.game.entities.configs.BaseEnemyConfig,float%5B%5D)" class="member-name-link">createTeleportRobot</a><wbr>(<a href="../configs/BaseEnemyConfig.html" title="class in com.csse3200.game.entities.configs">BaseEnemyConfig</a>&nbsp;cfg,
- float[]&nbsp;laneYs)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createRobotType(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">createRobotType</a><wbr>(<a href="RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">A basic function to create a specific type of robot depending on the input.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTeleportRobot(com.csse3200.game.entities.configs.BaseEnemyConfig,float%5B%5D)" class="member-name-link">createTeleportRobot</a><wbr>(<a href="../configs/BaseEnemyConfig.html" title="class in com.csse3200.game.entities.configs">BaseEnemyConfig</a>&nbsp;cfg,
+ float[]&nbsp;laneYs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates a Teleport Robot with teleport behaviour attached.</div>
 </div>
 </div>
@@ -212,6 +217,20 @@ loadScripts(document, 'script');</script>
 <dd><code>laneYs</code> - Candidate lane Y positions to teleport between (must contain at least 2)</dd>
 <dt>Returns:</dt>
 <dd>Entity with base robot components plus TeleportTask</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createPreviewRobot(java.lang.String)">
+<h3>createPreviewRobot</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createPreviewRobot</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;robotType)</span></div>
+<div class="block">Creates a single preview entity for a given robot type. This is a lightweight entity: only
+ AnimationRenderComponent, no AI/physics/collision.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>robotType</code> - the robot type key from the spawn preview</dd>
+<dt>Returns:</dt>
+<dd>a simple entity with an animation for display</dd>
 </dl>
 </section>
 </li>
