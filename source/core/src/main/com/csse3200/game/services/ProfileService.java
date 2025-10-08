@@ -110,24 +110,39 @@ public class ProfileService {
       return;
     }
 
-    // Mark current level as completed and keep it unlocked for replay
+    // Always mark the played level as completed (replayable)
     profile.completeNode(currentKey);
 
-    // Unlock next level if provided and update currentLevel pointer
+    // Cache the current mainline pointer before any updates
+    final String tip = profile.getCurrentLevel();
+
+    // Unlock next main level if provided
     if (nextKey != null && !nextKey.isEmpty()) {
       profile.unlockNode(nextKey);
-      profile.setCurrentLevel(nextKey); // Always point to the last unlocked main level
+
+      // Advance the mainline pointer ONLY when the player just cleared the current tip.
+      // This prevents regressions when replaying earlier levels (e.g., clearing levelTwo
+      // after already reaching levelFour should NOT move currentLevel backward).
+      if (tip == null || tip.equals(currentKey)) {
+        profile.setCurrentLevel(nextKey);
+      } else {
+        logger.debug(
+            "[ProfileService] Replay detected: keep currentLevel at '{}' (completed '{}'), just unlocked '{}'.",
+            tip,
+            currentKey,
+            nextKey);
+      }
     }
 
-    // Always ensure special nodes remain unlocked (but not completed)
+    // Ensure special nodes remain unlocked (not completed)
     for (String s : Profile.DEFAULT_UNLOCKED) {
       profile.unlockNode(s);
     }
 
-    // Save changes immediately after modification
+    // Persist immediately
     saveCurrentProfile();
 
-    logger.info("[ProfileService] Level '{}' completed. Next '{}' unlocked.", currentKey, nextKey);
+    logger.info("[ProfileService] Level '{}' completed. Next '{}' processed.", currentKey, nextKey);
   }
 
   /**

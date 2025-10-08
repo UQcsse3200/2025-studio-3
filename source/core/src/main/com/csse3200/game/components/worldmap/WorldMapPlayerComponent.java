@@ -24,8 +24,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handles player logic on the World Map: - JSON-path based movement between nodes (W/A/S/D graph) -
- * Legacy directional navigation as a fallback - Nearby-node detection & E-to-enter prompt - Drawing
- * the player sprite
+ * Legacy directional navigation as a fallback - Nearby-node detection and E-to-enter prompt -
+ * Drawing the player sprite
  *
  * <p>This version is refactored to reduce cognitive complexity and address common SonarQube
  * maintainability issues.
@@ -127,8 +127,9 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   /**
    * Top-level movement dispatch: 1) If following a JSON path → tick once. 2) Else if moving towards
-   * a free target → tick once. 3) Else try start a JSON path from the current node based on WASD.
-   * 4) Else fallback to legacy directional navigation.
+   * a free target → tick once. 3) Else if a WASD key is pressed and on a node, only allow movement
+   * if that direction exists in the JSON graph. Otherwise, block movement. 4) Else fallback to
+   * legacy directional navigation.
    */
   private void handleMovement() {
     float delta = Gdx.graphics.getDeltaTime();
@@ -137,9 +138,75 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (advanceActiveTarget(delta)) return;
 
     String pressed = readWASDOnce();
-    if (pressed != null && tryStartJsonPathFromNode(pressed, delta)) return;
 
+    // If a WASD key was pressed, and the player is on a node, only allow movement
+    // if that direction exists in the JSON graph. Otherwise, BLOCK movement.
+    if (pressed != null && handleWASDFromNode(pressed, delta)) {
+      // Either started a JSON path, or intentionally blocked movement (invalid direction on node)
+      return;
+    }
+
+    // No valid JSON path started (or no key pressed) → allow legacy fallback
     handleLegacyDirectionalNavigation();
+  }
+
+  /**
+   * If currently standing on a node, only allow WASD movement when that direction is defined in the
+   * JSON graph for that node. If the direction is undefined, consume the key and block movement
+   * (return true). If not on a node, return false so legacy navigation may proceed.
+   *
+   * @return true if movement was handled (either started JSON path or intentionally blocked); false
+   *     if not on a node, so caller may run legacy fallback.
+   */
+  private boolean handleWASDFromNode(String pressed, float delta) {
+    Vector2 cur = entity.getPosition();
+    WorldMapNode at = getNearestNode(cur);
+    if (at == null || !isOnNode(at, cur)) {
+      // Not on a node → let caller proceed with legacy behavior
+      return false;
+    }
+
+    WorldMapService svc = ServiceLocator.getWorldMapService();
+    WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
+
+    if (def == null) {
+      // On a node but this direction is NOT defined → block movement this frame
+      logger.debug(
+          "[WorldMap] Blocked movement: '{}' from '{}' not defined in JSON",
+          pressed,
+          at.getRegistrationKey());
+      return true;
+    }
+
+    // Start JSON path from this node using the defined PathDef
+    waypointQueue.clear();
+    if (def.getWaypoints() != null) {
+      for (Vector2 p : def.getWaypoints()) {
+        waypointQueue.add(new Vector2(p));
+      }
+    }
+    WorldMapNode nextNode = svc.getNode(def.getNext());
+    if (nextNode != null) {
+      waypointQueue.add(getWorldCoords(nextNode));
+    }
+    if (waypointQueue.isEmpty()) {
+      // Nothing to do, but still consume the key and block legacy movement for consistency
+      return true;
+    }
+
+    waypointIndex = 0;
+    pathMoving = true;
+
+    // First tick for immediacy
+    tickPathMovement(delta);
+
+    // Clamp post-tick like elsewhere
+    Vector2 posAfter = entity.getPosition();
+    posAfter.x = MathUtils.clamp(posAfter.x, 0, worldSize.x - 96);
+    posAfter.y = MathUtils.clamp(posAfter.y, 0, worldSize.y - 110);
+    entity.setPosition(posAfter);
+
+    return true;
   }
 
   /** If currently following a JSON-defined path, advance and clamp this frame. */
@@ -186,43 +253,6 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (Gdx.input.isKeyJustPressed(Input.Keys.S)) return "S";
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) return "D";
     return null;
-  }
-
-  /**
-   * Try to start a JSON path from the node the player is currently standing on. Returns true if a
-   * path was started (and applies an initial tick for snappier feel).
-   */
-  private boolean tryStartJsonPathFromNode(String pressed, float delta) {
-    Vector2 cur = entity.getPosition();
-    WorldMapNode at = getNearestNode(cur);
-
-    if (at == null || !isOnNode(at, cur)) return false;
-
-    WorldMapService svc = ServiceLocator.getWorldMapService();
-    WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
-    if (def == null) return false;
-
-    waypointQueue.clear();
-
-    if (def.waypoints != null) {
-      for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
-    }
-    WorldMapNode nextNode = svc.getNode(def.next);
-    if (nextNode != null) waypointQueue.add(getWorldCoords(nextNode));
-
-    if (waypointQueue.isEmpty()) return false;
-
-    waypointIndex = 0;
-    pathMoving = true;
-
-    // First tick makes the reaction feel immediate
-    tickPathMovement(delta);
-
-    Vector2 posAfter = entity.getPosition();
-    posAfter.x = MathUtils.clamp(posAfter.x, 0, worldSize.x - 96);
-    posAfter.y = MathUtils.clamp(posAfter.y, 0, worldSize.y - 110);
-    entity.setPosition(posAfter);
-    return true;
   }
 
   /**
@@ -309,10 +339,10 @@ public class WorldMapPlayerComponent extends UIComponent {
     WorldMapService svc = ServiceLocator.getWorldMapService();
     for (WorldMapService.PathDef def : steps) {
       if (def == null) continue;
-      if (def.waypoints != null) {
-        for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
+      if (def.getWaypoints() != null) {
+        for (Vector2 p : def.getWaypoints()) waypointQueue.add(new Vector2(p));
       }
-      WorldMapNode end = svc.getNode(def.next);
+      WorldMapNode end = svc.getNode(def.getNext());
       if (end != null) waypointQueue.add(getWorldCoords(end));
     }
   }
@@ -333,10 +363,10 @@ public class WorldMapPlayerComponent extends UIComponent {
       String u = q.removeFirst();
       for (String d : DIRS) {
         WorldMapService.PathDef def = svc.getPath(u, d);
-        if (def == null || def.next == null || prev.containsKey(def.next))
+        if (def == null || def.getNext() == null || prev.containsKey(def.getNext()))
           continue; // <= single continue in loop
-        prev.put(def.next, new Prev(u, def));
-        q.addLast(def.next);
+        prev.put(def.getNext(), new Prev(u, def));
+        q.addLast(def.getNext());
       }
     }
 

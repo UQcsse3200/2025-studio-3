@@ -48,7 +48,11 @@ public final class SlotCardEntity {
     return Math.max(0, activeCount);
   }
 
-  // Added: General card specifications
+  private static synchronized void incActiveCount() {
+    activeCount++;
+  }
+
+  // General card specifications
   public static final class CardSpec {
     public final String atlasRegion; // Atlas Area Name (Map)
     public final Supplier<Entity> factory; // The factory that produces the unit
@@ -63,10 +67,7 @@ public final class SlotCardEntity {
     }
   }
 
-  /**
-   * [Original] Only trebuchet version (retain compatibility); [Modified] Internally call the
-   * general entry
-   */
+  /** Only trebuchet version (retain compatibility); internally calls the general entry */
   public static void dropSlingShooterCard(
       Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
     dropCard(
@@ -80,7 +81,7 @@ public final class SlotCardEntity {
                     ServiceLocator.getConfigService().getDefenderConfig("slingshooter"))));
   }
 
-  // New: Universal drop entrance
+  // Universal drop entrance
   public static void dropCard(
       Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area, CardSpec spec) {
     if (uiStage == null || uiReelsPane == null || area == null || spec == null) {
@@ -105,8 +106,7 @@ public final class SlotCardEntity {
     float stageH = uiStage.getHeight();
     float padding = Math.max(DROP_PADDING_MIN, stageH * DROP_PADDING_PCT);
 
-    // 【Past】DraggableCard(uiStage, cardsAtlas, "Card_SlingShooter", area);
-    // 【New】Pass in spec, and Image also uses spec to get the texture
+    // Pass in spec, and Image also uses spec to get the texture
     DraggableCard card = new DraggableCard(uiStage, cardsAtlas, spec, area);
 
     float desiredWpx =
@@ -138,31 +138,36 @@ public final class SlotCardEntity {
                   float px = targetCx / stageW;
                   float py = targetCy / stageH;
                   card.setPercentPosition(px, py);
-                  activeCount++; // +1 on drop complete
+                  incActiveCount(); // +1 on drop complete
                   logger.info("[CardCount] after drop = {}", getActiveCardCount());
                 })));
   }
 
   /** Inner draggable card class. */
   private static final class DraggableCard extends Image {
+    /** Decrement the outer active card count. */
+    private static void decActiveCount() {
+      synchronized (SlotCardEntity.class) {
+        if (activeCount > 0) {
+          activeCount--;
+        }
+      }
+    }
+
     private final Stage stage;
     private final LevelGameArea currentArea;
-    // New: Save specifications to facilitate selecting the right factory when placing
+    // Save specifications to facilitate selecting the right factory when placing
     private final CardSpec spec;
     private float percentW = 0.12f;
     private float posPx = 0.50f;
     private float posPy = 0.25f;
-    private int lastW = -1, lastH = -1;
+    private int lastW = -1;
+    private int lastH = -1;
 
-    // 【Past】DraggableCard(Stage stage, TextureAtlas atlas, String regionName, LevelGameArea area)
-    // 【New】Pass in CardSpec instead
     DraggableCard(Stage stage, TextureAtlas atlas, CardSpec spec, LevelGameArea area) {
-      // 【Past】super(new TextureRegionDrawable(atlas.findRegion(regionName)));
-      // 【New】Get the texture from spec.atlasRegion
       super(new TextureRegionDrawable(atlas.findRegion(spec.atlasRegion)));
       if (getDrawable() == null)
-        // 【Past】throw new IllegalArgumentException("Region not found: " + regionName);
-        // 【New】Error message synchronization spec
+        // Error message synchronization spec
         throw new IllegalArgumentException("Region not found: " + spec.atlasRegion);
       this.stage = stage;
       this.currentArea = area;
@@ -191,18 +196,21 @@ public final class SlotCardEntity {
     @Override
     public void act(float delta) {
       super.act(delta);
-      int sw = (int) stage.getWidth(), sh = (int) stage.getHeight();
+      int sw = (int) stage.getWidth();
+      int sh = (int) stage.getHeight();
       if (sw != lastW || sh != lastH) applyLayout();
     }
 
     private void applyLayout() {
-      int sw = (int) stage.getWidth(), sh = (int) stage.getHeight();
+      int sw = (int) stage.getWidth();
+      int sh = (int) stage.getHeight();
       if (sw <= 0 || sh <= 0 || getDrawable() == null) return;
       float targetW = sw * percentW;
       float aspect = getDrawable().getMinHeight() / getDrawable().getMinWidth();
       float targetH = targetW * aspect;
       setSize(targetW, targetH);
-      float cx = sw * posPx, cy = sh * posPy;
+      float cx = sw * posPx;
+      float cy = sh * posPy;
       setPosition(cx - targetW / 2f, cy - targetH / 2f);
       lastW = sw;
       lastH = sh;
@@ -211,7 +219,8 @@ public final class SlotCardEntity {
     private void addDrag() {
       addListener(
           new DragListener() {
-            float grabX, grabY;
+            float grabX;
+            float grabY;
 
             @Override
             public void dragStart(
@@ -224,7 +233,8 @@ public final class SlotCardEntity {
             @Override
             public void drag(
                 com.badlogic.gdx.scenes.scene2d.InputEvent e, float x, float y, int p) {
-              float nx = getX() + (x - grabX), ny = getY() + (y - grabY);
+              float nx = getX() + (x - grabX);
+              float ny = getY() + (y - grabY);
               setPosition(nx, ny);
               posPx = (nx + getWidth() / 2f) / stage.getWidth();
               posPy = (ny + getHeight() / 2f) / stage.getHeight();
@@ -247,7 +257,8 @@ public final class SlotCardEntity {
       com.badlogic.gdx.math.GridPoint2 worldPx =
           currentArea.stageToWorld(
               new com.badlogic.gdx.math.GridPoint2((int) screen.x, (int) screen.y));
-      float wx = worldPx.x, wy = worldPx.y;
+      float wx = worldPx.x;
+      float wy = worldPx.y;
 
       LevelGameGrid grid = currentArea.getGrid();
       if (grid == null || grid.getRows() <= 0 || grid.getCols() <= 0) return;
@@ -277,7 +288,7 @@ public final class SlotCardEntity {
       boolean occupiedAfter = grid.isOccupiedIndex(pos);
       if (!occupiedBefore && occupiedAfter) {
         remove();
-        activeCount = Math.max(0, activeCount - 1); // -1 on successful placement
+        decActiveCount(); // -1 on successful placement
         logger.info("[CardCount] after placement = {}", getActiveCardCount());
         logger.info(
             "[SlotCardEntity] Placed '{}' at row={}, col={}, pos={}",

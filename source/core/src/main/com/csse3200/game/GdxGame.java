@@ -182,6 +182,20 @@ public class GdxGame extends Game {
     setScreen(newScreen(screenType));
   }
 
+  /** Sets the game screen to the provided type, with an explicit level key for MAIN_GAME. */
+  public void setScreen(ScreenType screenType, String levelKey) {
+    logger.info("[GdxGame] Setting game screen to {} with levelKey={}", screenType, levelKey);
+    Screen currentScreen = getScreen();
+    if (currentScreen != null) {
+      currentScreen.dispose();
+    }
+    if (screenType == ScreenType.MAIN_GAME) {
+      setScreen(new MainGameScreen(this, levelKey));
+    } else {
+      setScreen(newScreen(screenType));
+    }
+  }
+
   @Override
   public void render() {
     super.render();

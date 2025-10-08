@@ -49,17 +49,8 @@ public final class SlotEffect {
   }
 
   // Card asset
-  private static final String CARDS_ATLAS_PATH = "images/ui_cards/ui_cards.atlas";
   private static TextureAtlas cardsAtlas;
   private static boolean ownsCardsAtlas = false;
-
-  // Card drop params (moved from Display)
-  private static final float CARD_SCREEN_W_RATIO = 0.06f;
-  private static final float CARD_SLOT_W_RATIO = 0.22f;
-  private static final float DROP_FADE_SEC = 0.15f;
-  private static final float DROP_MOVE_SEC = 0.35f;
-  private static final float DROP_PADDING_PCT = 0.02f;
-  private static final float DROP_PADDING_MIN = 8f;
 
   private SlotEffect() {}
 
@@ -80,7 +71,7 @@ public final class SlotEffect {
    */
   public static void executeByEffect(SlotEngine.Effect effect, SlotMachineArea area) {
     logger.info("[SlotEffect] effect={} on {}", effect, area.getClass().getSimpleName());
-    currentArea = (area instanceof LevelGameArea) ? (LevelGameArea) area : null;
+    currentArea = (area instanceof LevelGameArea lga) ? lga : null;
 
     if (effect == null) {
       logger.warn("executeByEffect skipped: effect={} area={}", effect, area);
@@ -179,7 +170,6 @@ public final class SlotEffect {
     // ===== New logic: forward to card module, then return =====
     if (uiStage != null && uiReelsPane != null && currentArea != null) {
       SlotCardEntity.dropSlingShooterCard(uiStage, uiReelsPane, currentArea);
-      return;
     }
   }
 
