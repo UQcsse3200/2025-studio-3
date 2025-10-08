@@ -554,6 +554,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               unit.getEvents().trigger("attackStart");
             });
 
+    // play appropriate sound
+    try {
+      String soundPath = unit.getProperty("soundPath").toString();
+      Sound sound = ServiceLocator.getResourceService().getAsset(soundPath, Sound.class);
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      sound.play(volume);
+      logger.info("Playing sound: {}", soundPath);
+    } catch (Exception e) {
+      logger.info("No soundPath property found on this entity");
+    }
+
     logger.info(
         "Unit spawned at position {} (r={}, c={})",
         position,
