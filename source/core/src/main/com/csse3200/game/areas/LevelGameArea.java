@@ -59,11 +59,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
   private Entity gameOverEntity;
-  // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
-
-  // Level configuration
   private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
@@ -84,7 +81,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setScaling();
     selectedUnit = null;
 
-    // TODO: Add dynamic updates when wave is changed.
     ServiceLocator.getDiscordRichPresenceService()
         .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
@@ -288,64 +284,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       tex = ServiceLocator.getResourceService().getAsset(path, Texture.class);
     }
     return tex;
-  }
-
-  /**
-   * Getter for grid
-   *
-   * @return grid
-   */
-  public LevelGameGrid getGrid() {
-    return grid;
-  }
-
-  /**
-   * Getter for xOffset
-   *
-   * @return xOffset
-   */
-  public float getXOffset() {
-    return xOffset;
-  }
-
-  /**
-   * Getter for levelRows
-   *
-   * @return levelRows
-   */
-  public int getLevelRows() {
-    return levelRows;
-  }
-
-  /**
-   * Getter for yOffset
-   *
-   * @return yOffset
-   */
-  public float getYOffset() {
-    return yOffset;
-  }
-
-  /**
-   * Getter for levelCols
-   *
-   * @return levelCols
-   */
-  public int getLevelCols() {
-    return levelCols;
-  }
-
-  /**
-   * Getter for robots
-   *
-   * @return robots list
-   */
-  public List<Entity> getRobots() {
-    return robots;
-  }
-
-  public void setGrid(LevelGameGrid newGrid) {
-    this.grid = newGrid;
   }
 
   public void spawnRobot(int col, int row, RobotType robotType) {
@@ -642,16 +580,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Getter for tile size in world units
-   *
-   * @return tileSize the size of the tiles
-   */
-  @Override
-  public float getTileSize() {
-    return tileSize;
-  }
-
-  /**
    * Converts stage (mouse/screen) coordinates into world (entity placement) coordinates
    *
    * @param pos a and y coordinates in the stage
@@ -797,10 +725,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return characterSelected;
   }
 
-  public float getWorldWidth() {
-    return worldWidth;
-  }
-
   /**
    * Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
    * per row just off the right edge. These are visual only and removed after the intro camera pan.
@@ -812,5 +736,87 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Remove preview entities created for the intro camera pan. */
   public void clearWavePreview() {
     wavePreview.clearWavePreview();
+  }
+
+  /**
+   * Getter for grid
+   *
+   * @return grid
+   */
+  public LevelGameGrid getGrid() {
+    return grid;
+  }
+
+  /**
+   * gets worldWidth currently used by LevelGameArea
+   *
+   * @return worldWidth
+   */
+  public float getWorldWidth() {
+    return worldWidth;
+  }
+
+  /**
+   * Getter for xOffset
+   *
+   * @return xOffset
+   */
+  public float getXOffset() {
+    return xOffset;
+  }
+
+  /**
+   * Getter for levelRows
+   *
+   * @return levelRows
+   */
+  public int getLevelRows() {
+    return levelRows;
+  }
+
+  /**
+   * Getter for yOffset
+   *
+   * @return yOffset
+   */
+  public float getYOffset() {
+    return yOffset;
+  }
+
+  /**
+   * Getter for levelCols
+   *
+   * @return levelCols
+   */
+  public int getLevelCols() {
+    return levelCols;
+  }
+
+  /**
+   * Getter for robots
+   *
+   * @return robots list
+   */
+  public List<Entity> getRobots() {
+    return robots;
+  }
+
+  /**
+   * Getter for tile size in world units
+   *
+   * @return tileSize the size of the tiles
+   */
+  @Override
+  public float getTileSize() {
+    return tileSize;
+  }
+
+  /**
+   * Setter to set grid in LevelGameArea
+   *
+   * @param newGrid the grid to be set
+   */
+  public void setGrid(LevelGameGrid newGrid) {
+    this.grid = newGrid;
   }
 }
