@@ -754,6 +754,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Factory class for creating standardized buttons using the btn-blue texture atlas.</div>
 </dd>
+<dt><a href="com/csse3200/game/ui/ButtonFactory.html#buttonPressedListener(com.badlogic.gdx.scenes.scene2d.ui.Button)" class="member-name-link">buttonPressedListener(Button)</a> - Static method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/ButtonFactory.html" title="class in com.csse3200.game.ui">ButtonFactory</a></dt>
+<dd>
+<div class="block">Registers a click listener to the specified button.</div>
+</dd>
+<dt><a href="com/csse3200/game/ui/ButtonFactory.html#buttonPressedSound()" class="member-name-link">buttonPressedSound()</a> - Static method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/ButtonFactory.html" title="class in com.csse3200.game.ui">ButtonFactory</a></dt>
+<dd>
+<div class="block">Plays a sound effect when a button is pressed at the current sound volume.</div>
+</dd>
 </dl>
 <h2 class="title" id="I:C">C</h2>
 <dl class="index">
@@ -1340,12 +1348,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.persistence.<a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html" title="class in com.csse3200.game.components.persistence">SaveGameMenuDisplay</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerActions.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
-<dd>
-<div class="block">Creates reusable ui styles and adds actors to the stage.</div>
-</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplay.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplay.html" title="class in com.csse3200.game.components.profile">ProfileDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplayActions.html#create()" class="member-name-link">create()</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplayActions.html" title="class in com.csse3200.game.components.profile">ProfileDisplayActions</a></dt>
@@ -2318,8 +2320,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.persistence.<a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html" title="class in com.csse3200.game.components.persistence">SaveGameMenuDisplay</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/profile/ProfileDisplay.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.profile.<a href="com/csse3200/game/components/profile/ProfileDisplay.html" title="class in com.csse3200.game.components.profile">ProfileDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html#draw(com.badlogic.gdx.graphics.g2d.SpriteBatch)" class="member-name-link">draw(SpriteBatch)</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/AudioSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">AudioSettingsMenu</a></dt>
@@ -3046,6 +3046,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the name of the animation currently being played.</div>
 </dd>
+<dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#getCurrentAnimationPlayTime()" class="member-name-link">getCurrentAnimationPlayTime()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
+<dd>
+<div class="block">Get the play time of the animation currently being played.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html#getCurrentCharacter()" class="member-name-link">getCurrentCharacter()</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/DialogueState.html" title="class in com.csse3200.game.cutscene.runtime.states">DialogueState</a></dt>
 <dd>
 <div class="block">Get the character at the current progress</div>
@@ -3608,6 +3612,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html#getMoving()" class="member-name-link">getMoving()</a> - Method in class com.csse3200.game.physics.components.<a href="com/csse3200/game/physics/components/PhysicsMovementComponent.html" title="class in com.csse3200.game.physics.components">PhysicsMovementComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#getMusicService()" class="member-name-link">getMusicService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Gets the world map service.</div>
+</dd>
 <dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getMusicVolume()" class="member-name-link">getMusicVolume()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
 <dd>
 <div class="block">Gets the music volume.</div>
@@ -4011,6 +4019,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/cutscene/CutsceneCompiler.html#getSound(java.lang.String)" class="member-name-link">getSound(String)</a> - Method in class com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneCompiler.html" title="class in com.csse3200.game.cutscene">CutsceneCompiler</a></dt>
 <dd>
 <div class="block">Gets a sound by its id.</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseDefenderConfig.html#getSoundPath()" class="member-name-link">getSoundPath()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseDefenderConfig.html" title="class in com.csse3200.game.entities.configs">BaseDefenderConfig</a></dt>
+<dd>
+<div class="block">Gets the path to the sound that plays on placement</div>
+</dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseGeneratorConfig.html#getSoundPath()" class="member-name-link">getSoundPath()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a></dt>
+<dd>
+<div class="block">Gets the path to the sound that plays on placement</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Cutscene.html#getSounds()" class="member-name-link">getSounds()</a> - Method in class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object">Cutscene</a></dt>
 <dd>&nbsp;</dd>
@@ -4753,6 +4769,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns true if the world-map player is currently moving along a path or between nodes.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#isPlaying()" class="member-name-link">isPlaying()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Returns true if a music track is currently playing.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/WaveService.html#isPreparationPhaseActive()" class="member-name-link">isPreparationPhaseActive()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html#isRuning()" class="member-name-link">isRuning()</a> - Method in interface com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></dt>
@@ -5299,6 +5319,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">For long-lasting and (usually) looping soundtracks.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/MusicService.html" class="type-name-link" title="class in com.csse3200.game.services">MusicService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">MusicService manages background music playback across the game.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#%3Cinit%3E()" class="member-name-link">MusicService()</a> - Constructor for class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:N">N</h2>
 <dl class="index">
@@ -5471,6 +5497,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/ShopScreen.html#pause()" class="member-name-link">pause()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/ShopScreen.html" title="class in com.csse3200.game.screens">ShopScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#pause()" class="member-name-link">pause()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Pauses the currently playing music, if any.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/hud/PauseButton.html" class="type-name-link" title="class in com.csse3200.game.components.hud">PauseButton</a> - Class in <a href="com/csse3200/game/components/hud/package-summary.html">com.csse3200.game.components.hud</a></dt>
 <dd>
 <div class="block">A pause button component that displays a pause icon.</div>
@@ -5597,6 +5627,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Starts a cutscene</div>
 </dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#play(java.lang.String)" class="member-name-link">play(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Plays the specified music track.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/CutsceneService.html#playCutscene(java.lang.String,java.util.function.Consumer)" class="member-name-link">playCutscene(String, Consumer&lt;String&gt;)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/CutsceneService.html" title="class in com.csse3200.game.services">CutsceneService</a></dt>
 <dd>
 <div class="block">runs a cutscene from its name</div>
@@ -5608,18 +5642,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/physics/PhysicsLayer.html#PLAYER" class="member-name-link">PLAYER</a> - Static variable in class com.csse3200.game.physics.<a href="com/csse3200/game/physics/PhysicsLayer.html" title="class in com.csse3200.game.physics">PhysicsLayer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/minigame/LaneConfig.html#PLAYER_Y" class="member-name-link">PLAYER_Y</a> - Static variable in class com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/LaneConfig.html" title="class in com.csse3200.game.minigame">LaneConfig</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerActions.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerActions</a> - Class in <a href="com/csse3200/game/components/player/package-summary.html">com.csse3200.game.components.player</a></dt>
-<dd>
-<div class="block">Action component for interacting with the player.</div>
-</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerActions.html#%3Cinit%3E()" class="member-name-link">PlayerActions()</a> - Constructor for class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a> - Class in <a href="com/csse3200/game/components/player/package-summary.html">com.csse3200.game.components.player</a></dt>
-<dd>
-<div class="block">A ui component for displaying player stats, e.g.</div>
-</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerStatsDisplay.html#%3Cinit%3E()" class="member-name-link">PlayerStatsDisplay()</a> - Constructor for class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerStatsDisplay.html" title="class in com.csse3200.game.components.player">PlayerStatsDisplay</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/Transition.html#POP" class="member-name-link">POP</a> - Enum constant in enum class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Transition.html" title="enum class in com.csse3200.game.cutscene.models.object">Transition</a></dt>
 <dd>
@@ -5828,6 +5850,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerItemEffectsService(com.csse3200.game.services.ItemEffectsService)" class="member-name-link">registerItemEffectsService(ItemEffectsService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Registers the item effects service.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#registerMusicService(com.csse3200.game.services.MusicService)" class="member-name-link">registerMusicService(MusicService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Registers music service</div>
 </dd>
 <dt><a href="com/csse3200/game/services/WorldMapService.html#registerNode(com.csse3200.game.ui.WorldMapNode,java.lang.String)" class="member-name-link">registerNode(WorldMapNode, String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>
@@ -6107,6 +6133,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/ShopScreen.html#resume()" class="member-name-link">resume()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/ShopScreen.html" title="class in com.csse3200.game.screens">ShopScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#resume()" class="member-name-link">resume()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Resumes the currently paused music, if any.</div>
+</dd>
 <dt><a href="com/csse3200/game/minigame/BallComponent.html#reverseY()" class="member-name-link">reverseY()</a> - Method in class com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/BallComponent.html" title="class in com.csse3200.game.minigame">BallComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.AttackDirection.html#RIGHT" class="member-name-link">RIGHT</a> - Enum constant in enum class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></dt>
@@ -7451,6 +7481,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Permanently stops execution, required load to restart cutscene</div>
 </dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#stop()" class="member-name-link">stop()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Stops the currently playing music and disposes of it.</div>
+</dd>
 <dt><a href="com/csse3200/game/rendering/AnimationRenderComponent.html#stopAnimation()" class="member-name-link">stopAnimation()</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></dt>
 <dd>
 <div class="block">Stop the currently running animation.</div>
@@ -7946,8 +7980,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.persistence.<a href="com/csse3200/game/components/persistence/SaveGameMenuDisplay.html" title="class in com.csse3200.game.components.persistence">SaveGameMenuDisplay</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/player/PlayerActions.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/PlayerActions.html" title="class in com.csse3200.game.components.player">PlayerActions</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/projectiles/MoveDirectionComponent.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.projectiles.<a href="com/csse3200/game/components/projectiles/MoveDirectionComponent.html" title="class in com.csse3200.game.components.projectiles">MoveDirectionComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/SettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">SettingsMenu</a></dt>
@@ -8056,6 +8088,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/worldmap/WorldMapNodeRenderComponent.html#updateProximityState(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateProximityState(WorldMapNode)</a> - Method in class com.csse3200.game.components.worldmap.<a href="com/csse3200/game/components/worldmap/WorldMapNodeRenderComponent.html" title="class in com.csse3200.game.components.worldmap">WorldMapNodeRenderComponent</a></dt>
 <dd>
 <div class="block">Updates the proximity state for this node.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/MusicService.html#updateVolume(float)" class="member-name-link">updateVolume(float)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/MusicService.html" title="class in com.csse3200.game.services">MusicService</a></dt>
+<dd>
+<div class="block">Updates the volume of the currently playing music to match the current settings.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html#updateWaveDisplay(int)" class="member-name-link">updateWaveDisplay(int)</a> - Method in class com.csse3200.game.components.waves.<a href="com/csse3200/game/components/waves/CurrentWaveDisplay.html" title="class in com.csse3200.game.components.waves">CurrentWaveDisplay</a></dt>
 <dd>
