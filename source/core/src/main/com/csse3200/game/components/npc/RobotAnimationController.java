@@ -31,10 +31,14 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
     entity.getEvents().addListener("teleportStart", this::animateTeleport);
+    // Explosion will have to be added later.
   }
 
   void animateMoveLeft() {
     currentState = State.MOVE_LEFT;
+    // Once teleporting task priority is fixed,
+    // this may have to check if the current state is
+    // TELEPORT, and if it is, wait until teleport is done to start walking.
     if (!belowHalfHealth) {
       animator.startAnimation("moveLeft");
     } else {
@@ -47,11 +51,14 @@ public class RobotAnimationController extends Component {
     if (!belowHalfHealth) {
       animator.startAnimation("teleport");
     } else {
-      animator.startAnimation("teleport");
+      animator.startAnimation("teleportDamaged");
     }
   }
 
   void animateAttack() {
+    // Once teleporting task priority is fixed,
+    // this may have to check if the current state is
+    // TELEPORT, and if it is, wait until teleport is done to start attacking.
     currentState = State.ATTACK;
     if (!belowHalfHealth) {
       animator.startAnimation("attack");
@@ -67,6 +74,9 @@ public class RobotAnimationController extends Component {
       switch (currentState) {
         case MOVE_LEFT:
           animateMoveLeft();
+          break;
+        case TELEPORT:
+          animateTeleport();
           break;
         case ATTACK:
           animateAttack();
