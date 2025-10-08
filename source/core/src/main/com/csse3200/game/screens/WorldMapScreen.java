@@ -146,7 +146,7 @@ public class WorldMapScreen extends BaseScreen {
         handleZoomInput();
         updateCamera();
 
-        // DEV hotkey: press M to play the cutscene
+        // DEV hotkey: press N to play the cutscene
         handleDevHotkey();
 
         super.render(delta);
