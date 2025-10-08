@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -12,7 +13,6 @@ import com.csse3200.game.components.tasks.JumpTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
-import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -52,7 +52,7 @@ public class RobotFactory {
     GUNNER("gunnerRobot"),
     GIANT("giantRobot"),
     MINI("miniRobot"),
-      BOMBER("bomberRobot");
+    BOMBER("bomberRobot");
 
     private final String configKey;
 
@@ -195,19 +195,13 @@ public class RobotFactory {
       }
     }
 
-      // ✅ Add explosion-on-death component for bomber
-      if (config.isBomberRobot()) {
-          BomberDeathExplodeComponent explodeComp = new BomberDeathExplodeComponent(
-                  config.getExplosionDamage(),
-                  1.0f
-          );
-          robot.addComponent(explodeComp);
-          System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
-      }
-
-
-
-
+    // ✅ Add explosion-on-death component for bomber
+    if (config.isBomberRobot()) {
+      BomberDeathExplodeComponent explodeComp =
+          new BomberDeathExplodeComponent(config.getExplosionDamage(), 1.0f);
+      robot.addComponent(explodeComp);
+      System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
+    }
 
     // Scales
     animator.scaleEntity();

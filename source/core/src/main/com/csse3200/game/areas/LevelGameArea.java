@@ -147,8 +147,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnMap();
     spawnGrid(levelRows, levelCols);
 
-      // 🧪 TEMP: Spawn a bomber in the top-right corner for testing
-      spawnRobot(levelCols - 1, levelRows - 1, RobotFactory.RobotType.BOMBER);
+    // 🧪 TEMP: Spawn a bomber in the top-right corner for testing
+    spawnRobot(levelCols - 1, levelRows - 1, RobotFactory.RobotType.BOMBER);
 
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
@@ -360,8 +360,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     spawnEntity(unit);
     robots.add(unit);
-
-
 
     unit.getEvents()
         .addListener(

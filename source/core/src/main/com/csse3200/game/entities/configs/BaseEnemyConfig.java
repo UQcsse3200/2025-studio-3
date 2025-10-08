@@ -71,7 +71,7 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   }
 
   public boolean isBomberRobot() {
-      return explosionDamage > 0;
+    return explosionDamage > 0;
   }
 
   /**
@@ -102,13 +102,12 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   }
 
   public float getExplosionDelay() {
-      return explosionDelay;
+    return explosionDelay;
   }
 
   public int getExplosionDamage() {
-      return explosionDamage;
+    return explosionDamage;
   }
-
 
   /**
    * Gets the scale value for this entity.
