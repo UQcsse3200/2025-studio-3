@@ -62,12 +62,11 @@ public class PhysicsEngine implements Disposable {
         continue;
       }
       PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
-       if (pc == null || pc.getBody() == null) {
-         continue;
-       }
-       entity.dispose();
-       ServiceLocator.getEntityService().unregister(entity);
-
+      if (pc == null || pc.getBody() == null) {
+        continue;
+      }
+      entity.dispose();
+      ServiceLocator.getEntityService().unregister(entity);
     }
   }
 

@@ -57,7 +57,7 @@ public class Entity {
   }
 
   public boolean getDeathFlag() {
-      return this.deathFlag;
+    return this.deathFlag;
   }
 
   /**
