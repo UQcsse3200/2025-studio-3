@@ -177,6 +177,11 @@ public class GdxGame extends Game {
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 
+  /** Used for backward compatibility. */
+  public void setScreen(ScreenType screenType) {
+    setScreen(screenType, null);
+  }
+
   /** Sets the game screen to the provided type. */
   public void setScreen(ScreenType screenType, String levelKey) {
     logger.info("[GdxGame] Setting game screen to {}", screenType);
