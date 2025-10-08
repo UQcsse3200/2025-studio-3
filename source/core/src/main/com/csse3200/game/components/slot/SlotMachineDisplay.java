@@ -1,6 +1,8 @@
 package com.csse3200.game.components.slot;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.TemporalAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -37,6 +40,7 @@ import org.slf4j.LoggerFactory;
  *   <li>Handle user click to trigger a spin.
  *   <li>Animate continuous scrolling and smooth stop on target indices.
  *   <li>Bridge to {@link SlotEngine} to compute outcomes and apply effects.
+ *   <li>Display a responsive HUD on the right: remaining spins + pie progress(atlas frames).
  * </ul>
  */
 public class SlotMachineDisplay extends UIComponent {
@@ -99,6 +103,9 @@ public class SlotMachineDisplay extends UIComponent {
   /** Whether any spin sequence is currently active. */
   private boolean isSpinning = false;
 
+  /** Maximum number of cards allowed on the field to permit a spin. */
+  private static final int MAX_ACTIVE_CARDS = 5;
+
   /** Count of columns that have fully stopped in the current sequence. */
   private int stoppedCount = 0;
 
@@ -141,8 +148,35 @@ public class SlotMachineDisplay extends UIComponent {
   /** Drawable for pressed frame state (atlas region). */
   private TextureRegionDrawable frameDownDrawable;
 
+  /** Drawable for locked frame state (atlas region). */
+  private TextureRegionDrawable frameLockedDrawable;
+
+  /** Cache last available state to avoid redundant swaps. */
+  private boolean lastAvailable = true;
+
   /** Ordered list of symbol regions forming one cycle. */
   private List<TextureAtlas.AtlasRegion> symbolRegions;
+
+  /** Remaining spins text label. */
+  private Label spinsLabel;
+
+  /** Pie progress image (frame-swapped from atlas). */
+  private Image pieImage;
+
+  /** Pie progress frames sorted by name (pie_filled_000..100). */
+  private List<TextureAtlas.AtlasRegion> pieRegions = new ArrayList<>();
+
+  /** Cache of the last selected pie frame index to avoid redundant Drawable swaps. */
+  private int currentPieIndex = -1;
+
+  /** Keep in sync with engine default: auto +1 credit every 5s (configurable in engine). */
+  private static final int REFILL_PERIOD_SECONDS = 10;
+
+  /** Epoch (ms) when we last observed a +1 refill tick. */
+  private long lastRefillEpochMs = System.currentTimeMillis();
+
+  /** Snapshot of last seen remaining spins to detect +1 ticks. */
+  private int lastSeenSpins = -1;
 
   // ---------- Constructors ---------
 
@@ -162,11 +196,16 @@ public class SlotMachineDisplay extends UIComponent {
     super.create();
     initTopBar();
     loadSymbols();
+    loadPieRegions();
+    initSpinsHud();
     computeSizes();
     applyLayout();
     randomizeReels();
     lastStageW = stage.getWidth();
     lastStageH = stage.getHeight();
+    lastSeenSpins = slotEngine.getRemainingSpins();
+    lastRefillEpochMs = System.currentTimeMillis();
+    updateAvailabilityVisual();
   }
 
   /**
@@ -187,11 +226,17 @@ public class SlotMachineDisplay extends UIComponent {
             .getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
+    TextureRegion lockedRegion = atlas.findRegion("slot_frame_locked");
+    if (lockedRegion == null) {
+      logger.warn("slot_frame_locked not found in atlas; falling back to up state.");
+      lockedRegion = upRegion;
+    }
     for (Texture tex : atlas.getTextures()) {
       tex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     }
     frameUpDrawable = new TextureRegionDrawable(upRegion);
     frameDownDrawable = new TextureRegionDrawable(downRegion);
+    frameLockedDrawable = new TextureRegionDrawable(lockedRegion);
 
     Texture reelsBgTex =
         ServiceLocator.getResourceService()
@@ -219,6 +264,23 @@ public class SlotMachineDisplay extends UIComponent {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             if (isSpinning) return;
+            int remaining = slotEngine.getRemainingSpins();
+            int activeCards = SlotEffect.getActiveCardCount();
+            if (remaining <= 0 || activeCards >= MAX_ACTIVE_CARDS) {
+              logger.info(
+                  "Spin blocked: credits={}, fieldCards={} (limit={})",
+                  remaining,
+                  activeCards,
+                  MAX_ACTIVE_CARDS);
+              frameImage.clearActions();
+              frameImage.setDrawable(frameDownDrawable);
+              frameImage.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.08f),
+                      Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
+              return;
+            }
+
             logger.info("Topbar slot clicked");
             pendingResult = slotEngine.spin();
             targetIndices = pendingResult.getReels();
@@ -247,6 +309,46 @@ public class SlotMachineDisplay extends UIComponent {
     if (symbolRegions.isEmpty()) {
       logger.warn("No symbol regions found.");
     }
+  }
+
+  /** Loads the pie progress atlas and sorts regions by name (pie_filled_000..100). */
+  private void loadPieRegions() {
+    // Ensure this asset is registered during the game's asset-loading phase:
+    TextureAtlas pieAtlas =
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/pie_filled.atlas", TextureAtlas.class);
+    pieRegions.clear();
+    for (TextureAtlas.AtlasRegion r : pieAtlas.getRegions()) {
+      pieRegions.add(r);
+    }
+    pieRegions.sort(Comparator.comparing(a -> a.name));
+    for (Texture t : pieAtlas.getTextures()) {
+      t.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+    }
+    if (pieRegions.isEmpty()) {
+      logger.warn("No pie progress regions found.");
+    }
+  }
+
+  /** Creates the right-side HUD showing remaining spins and pie progress. */
+  private void initSpinsHud() {
+    if (barGroup == null) return;
+
+    // Pie image (start from the first region if available)
+    TextureRegion first = (pieRegions.isEmpty() ? null : pieRegions.get(0));
+    pieImage = new Image(first);
+    pieImage.setTouchable(Touchable.disabled);
+    pieImage.setScaling(Scaling.fit);
+    pieImage.setAlign(Align.center);
+    barGroup.addActor(pieImage);
+
+    // Remaining spins label
+    Color amber = new Color(1.0f, 0.70f, 0.00f, 1.0f);
+    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), amber);
+    spinsLabel = new Label("0", style);
+    spinsLabel.setAlignment(Align.center);
+    spinsLabel.setTouchable(Touchable.disabled);
+    barGroup.addActor(spinsLabel);
   }
 
   /**
@@ -351,6 +453,19 @@ public class SlotMachineDisplay extends UIComponent {
     }
   }
 
+  private void layoutPie(float visX, float visW, float barX, float barY, float barH) {
+    float gap = marginPx * 0.6f;
+    float pieSize = barH * 0.35f;
+    float preferredPieX = visX + visW + gap;
+    float pieY = barY + (barH - pieSize) * 0.5f;
+
+    if (pieImage != null) {
+      pieImage.setSize(pieSize, pieSize);
+      pieImage.setPosition(preferredPieX - barX, pieY - barY);
+    }
+    centerSpinsLabelOverPie();
+  }
+
   /**
    * Applies positions/sizes for the top bar frame, the reels area, and then rebuilds reels. This is
    * responsive and should be called on create and whenever the stage size changes.
@@ -421,6 +536,7 @@ public class SlotMachineDisplay extends UIComponent {
       buildReels(areaX, areaY, areaW, areaH);
       randomizeReels();
       isSpinning = false;
+      layoutPie(visX, visW, barX, barY, barH);
     }
   }
 
@@ -547,7 +663,94 @@ public class SlotMachineDisplay extends UIComponent {
       lastStageH = h;
       computeSizes();
       applyLayout();
+      centerSpinsLabelOverPie();
     }
+    updateSpinsHud();
+    updateAvailabilityVisual();
+  }
+
+  /** Updates remaining spins text and swaps pie frame based on refill progress. */
+  private void updateSpinsHud() {
+    // 1) Remaining spins
+    int cur = slotEngine.getRemainingSpins();
+    if (spinsLabel != null) {
+      spinsLabel.setText(String.valueOf(cur));
+      centerSpinsLabelOverPie();
+    }
+
+    // Detect auto-refill tick (remaining spins increased)
+    if (lastSeenSpins >= 0 && cur > lastSeenSpins) {
+      lastRefillEpochMs = System.currentTimeMillis();
+    }
+    lastSeenSpins = cur;
+
+    // 2) Pie frame by time since last tick
+    if (pieImage != null && !pieRegions.isEmpty()) {
+      long now = System.currentTimeMillis();
+      double periodMs = Math.max(1.0, REFILL_PERIOD_SECONDS * 1000.0);
+      double f = (now - lastRefillEpochMs) / periodMs; // 0..1
+      if (f < 0) f = 0;
+      if (f > 1) f = 1;
+
+      int n = pieRegions.size();
+      int idx = (int) Math.floor(f * (n - 1) + 1e-6);
+      if (idx < 0) idx = 0;
+      if (idx >= n) idx = n - 1;
+
+      if (idx != currentPieIndex) {
+        currentPieIndex = idx;
+        pieImage.setDrawable(new TextureRegionDrawable(pieRegions.get(idx)));
+      }
+    }
+  }
+
+  /** Swap the frame image to locked/unlocked depending on availability. */
+  private void updateAvailabilityVisual() {
+    if (frameImage == null) return;
+    if (isSpinning || frameImage.hasActions()) return;
+
+    int remaining = slotEngine.getRemainingSpins();
+    int activeCards = SlotEffect.getActiveCardCount();
+    boolean available = (remaining > 0) && (activeCards < MAX_ACTIVE_CARDS);
+
+    if (available != lastAvailable) {
+      if (available) {
+        frameImage.setDrawable(frameUpDrawable);
+        frameImage.setTouchable(Touchable.enabled);
+      } else {
+        frameImage.setDrawable(frameLockedDrawable);
+        frameImage.setTouchable(Touchable.disabled);
+      }
+      lastAvailable = available;
+    }
+  }
+
+  /** Keep the spinsLabel centered over the pieImage regardless of scaling/resizing. */
+  private void centerSpinsLabelOverPie() {
+    if (spinsLabel == null || pieImage == null) return;
+
+    final float pieW = pieImage.getWidth();
+    final float pieH = pieImage.getHeight();
+    final float targetPx = pieW * 0.65f;
+    final float base = 32f;
+    final float scale = Math.clamp(targetPx / base, 0.8f, 3.5f);
+    spinsLabel.setFontScale(scale);
+    spinsLabel.setAlignment(Align.center);
+    spinsLabel.invalidateHierarchy();
+    spinsLabel.pack();
+
+    final float w = spinsLabel.getPrefWidth();
+    final float h = spinsLabel.getPrefHeight();
+
+    final float cx = pieImage.getX() + pieW * 0.5f;
+    final float cy = pieImage.getY() + pieH * 0.5f;
+
+    final float offsetX = 0.00f * pieW;
+    final float offsetY = 0.10f * pieH;
+
+    spinsLabel.setSize(w, h);
+    spinsLabel.setPosition(Math.round(cx - w / 2f + offsetX), Math.round(cy - h / 2f + offsetY));
+    spinsLabel.toFront();
   }
 
   @Override

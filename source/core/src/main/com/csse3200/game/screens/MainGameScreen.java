@@ -106,17 +106,33 @@ public class MainGameScreen extends ScreenAdapter {
   private final float panStartX;
   private final float panTargetX;
 
+  /** Optional override for which level to load. If null, fall back to profile.currentLevel */
+  private final String overrideLevelKey;
+
   /**
-   * Constructor for the main game screen.
+   * Constructor for the main game screen. Falls back to profile.currentLevel.
    *
    * @param game the game instance
    */
   public MainGameScreen(GdxGame game) {
+    this(game, null);
+  }
+
+  /**
+   * Constructor for the main game screen with an explicit level key. If {@code levelKey} is null or
+   * blank, the screen will fall back to using the current profile's currentLevel.
+   *
+   * @param game the game instance
+   * @param levelKey the explicit level key to load (e.g., "levelThree")
+   */
+  public MainGameScreen(GdxGame game, String levelKey) {
     this.game = game;
     logger.debug("[MainGameScreen] Initialising main game screen");
+    this.overrideLevelKey = (levelKey != null && !levelKey.isBlank()) ? levelKey : null;
 
-    level = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
-    logger.debug("[MainGameScreen] Profile current level: '{}'", level);
+    // Resolve which level to load
+    this.level = resolveLevelToLoad();
+    logger.debug("[MainGameScreen] Effective level to load: '{}'", level);
     logger.debug("[MainGameScreen] Initialising main game screen services");
 
     ServiceLocator.registerTimeSource(new GameTime());
@@ -156,6 +172,29 @@ public class MainGameScreen extends ScreenAdapter {
     panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
     panElapsed = 0f;
     panPhase = PanPhase.RIGHT;
+  }
+
+  /**
+   * Determine which level should be loaded. Preference order: 1) An explicit override supplied to
+   * the constructor. 2) The current profile's currentLevel, if available. 3) Fallback to
+   * "levelOne".
+   */
+  private String resolveLevelToLoad() {
+    try {
+      if (overrideLevelKey != null) {
+        return overrideLevelKey; // manual selection takes precedence
+      }
+      var ps = ServiceLocator.getProfileService();
+      if (ps != null && ps.getProfile() != null) {
+        String cur = ps.getProfile().getCurrentLevel();
+        if (cur != null && !cur.isBlank()) {
+          return cur;
+        }
+      }
+    } catch (Exception e) {
+      logger.warn("[MainGameScreen] Failed to read currentLevel: {}", e.getMessage());
+    }
+    return "levelOne";
   }
 
   @Override
@@ -278,6 +317,9 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
 
+    BaseLevelConfig cfgForUi = ServiceLocator.getConfigService().getLevelConfig(level);
+    boolean isSlotLevel = cfgForUi != null && cfgForUi.isSlotMachine();
+
     Entity ui = new Entity();
     ui.addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
@@ -287,8 +329,11 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay())
-        .addComponent(new ScrapHudDisplay());
+        .addComponent(new CurrentWaveDisplay());
+
+    if (!isSlotLevel) {
+      ui.addComponent(new ScrapHudDisplay());
+    }
 
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);

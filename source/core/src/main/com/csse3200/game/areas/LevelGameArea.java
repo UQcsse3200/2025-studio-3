@@ -58,7 +58,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final ArrayList<Entity> robots = new ArrayList<>();
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
-  private Entity gameOverEntity;
+
+  Entity gameOverEntity;
   private Entity levelCompleteEntity;
   private boolean isLevelComplete = false;
   private boolean isGameOver = false;
@@ -153,7 +154,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
-  private void displayUI() {
+  protected void displayUI() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
@@ -219,7 +220,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Creates and spawns the game-over UI entity. */
-  private void createGameOverEntity() {
+  void createGameOverEntity() {
     gameOverEntity = new Entity().addComponent(new GameOverWindow());
     spawnEntity(gameOverEntity);
   }

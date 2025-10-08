@@ -20,18 +20,14 @@ public class SlotMachineArea extends LevelGameArea {
     super(levelKey);
   }
 
-  /** Initializes the slot machine area by loading assets and adding the HUD. */
   @Override
-  public void create() {
-    super.create();
-    addSlotHudTopBar();
-  }
-
-  /** Adds the slot machine HUD and display elements to the top bar. */
-  private void addSlotHudTopBar() {
+  protected void displayUI() {
+    // Only add Slot UI; no defence hotbar on the slot level
     Entity ui = new Entity();
     ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
     ui.addComponent(new SlotMachineDisplay(this));
     spawnEntity(ui);
+
+    createGameOverEntity();
   }
 }
