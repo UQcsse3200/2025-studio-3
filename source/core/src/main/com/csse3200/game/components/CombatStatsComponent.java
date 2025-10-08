@@ -160,7 +160,6 @@ public class CombatStatsComponent extends Component {
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
       deathSound.play(0.3f * volume);
-      entity.getEvents().trigger("entityDeath");
     }
   }
 }
