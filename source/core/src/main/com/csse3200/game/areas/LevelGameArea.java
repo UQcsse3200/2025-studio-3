@@ -466,7 +466,7 @@ public void spawnBossProjectile(Entity boss){
     Entity projectile = ProjectileFactory.createBossProjectile(5);
         Vector2 spawnPos = boss.getCenterPosition().cpy();
         spawnPos.x-=1.0f;
-        spawnPos.y-=0.3f;
+        spawnPos.y-=(tileSize/2f);
 
     projectile.setPosition(spawnPos.x, spawnPos.y);
         projectile.scaleHeight(0.5f*tileSize);
