@@ -93,7 +93,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     // Double attack damage
     int newAttack = getBaseAttack() * 2;
     setBaseAttack(newAttack);
-    logger.info("Defender buffed! New attack: " + getBaseAttack());
+    logger.info("Defender buffed! New attack: {}", getBaseAttack());
   }
 
   /** Halves the defender's attack damage. */

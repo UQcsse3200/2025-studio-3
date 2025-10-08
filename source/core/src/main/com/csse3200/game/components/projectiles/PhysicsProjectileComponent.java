@@ -11,7 +11,7 @@ import com.csse3200.game.services.ServiceLocator;
  * distance from its start.
  */
 public class PhysicsProjectileComponent extends Component {
-  private static final float gravity = 9.8f * 50; // scaled gravity for game feel
+  private static final float GRAVITY = 9.8f * 50; // scaled gravity for game feel
   private Vector2 velocity;
   private Vector2 startPos;
   private final AttackDirection direction;
@@ -34,7 +34,7 @@ public class PhysicsProjectileComponent extends Component {
     float angleRad = (float) Math.toRadians(45);
 
     // Compute initial speed required for given range (R = v^2 * sin(2θ) / g)
-    float v = (float) Math.sqrt(distance * gravity / Math.sin(2 * angleRad));
+    float v = (float) Math.sqrt(distance * GRAVITY / Math.sin(2 * angleRad));
 
     // Components of velocity
     float vx = v * (float) Math.cos(angleRad);
@@ -54,7 +54,7 @@ public class PhysicsProjectileComponent extends Component {
     Vector2 pos = getEntity().getPosition();
 
     // Apply gravity to vertical velocity
-    velocity.y -= gravity * dt;
+    velocity.y -= GRAVITY * dt;
 
     // Update position with velocity
     pos.x += velocity.x * dt;
