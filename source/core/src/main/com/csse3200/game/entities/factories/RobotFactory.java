@@ -170,20 +170,20 @@ public class RobotFactory {
       robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
     }
 
-      if (config.getName() != null && config.getName().contains("Teleport")) {
-          float[] laneYs = discoverLaneYsFromTiles();
-          if (laneYs.length >= 2) {
-              AITaskComponent ai = robot.getComponent(AITaskComponent.class);
-              if (ai != null) {
-                  ai.addTask(
-                          new TeleportTask(
-                                  config.getTeleportCooldownSeconds(),
-                                  config.getTeleportChance(),
-                                  config.getMaxTeleports(),
-                                  laneYs));
-              }
-          }
+    if (config.getName() != null && config.getName().contains("Teleport")) {
+      float[] laneYs = discoverLaneYsFromTiles();
+      if (laneYs.length >= 2) {
+        AITaskComponent ai = robot.getComponent(AITaskComponent.class);
+        if (ai != null) {
+          ai.addTask(
+              new TeleportTask(
+                  config.getTeleportCooldownSeconds(),
+                  config.getTeleportChance(),
+                  config.getMaxTeleports(),
+                  laneYs));
+        }
       }
+    }
 
     // ✅ Add explosion-on-death component for bomber
     if (config.isBomberRobot()) {

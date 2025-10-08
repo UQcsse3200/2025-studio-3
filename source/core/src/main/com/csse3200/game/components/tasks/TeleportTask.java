@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.TaskRunner;
-import com.csse3200.game.components.Component;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -35,61 +34,61 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     this.laneYs = laneYs != null ? laneYs.clone() : null;
   }
 
-    @Override
-    public int getPriority() {
-        return priority;
+  @Override
+  public int getPriority() {
+    return priority;
+  }
+
+  @Override
+  public void create(TaskRunner taskRunner) {
+    super.create(taskRunner);
+    this.timer = cooldownSec;
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    timer = cooldownSec;
+    teleportsDone = 0;
+  }
+
+  @Override
+  public void update() {
+    if (laneYs == null || laneYs.length < 2) return;
+    if (maxTeleports > 0 && teleportsDone >= maxTeleports) return;
+
+    GameTime time = ServiceLocator.getTimeSource();
+    float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
+    timer -= dt;
+    if (timer > 0f) return;
+
+    timer = cooldownSec; // reset for next attempt
+    if (MathUtils.random() > chance) return;
+
+    // ✅ Get current position through the owner
+    var entity = owner.getEntity();
+    if (entity == null) return;
+
+    Vector2 pos = entity.getPosition();
+    if (pos == null) return;
+
+    // Choose a different lane Y
+    float currentY = pos.y;
+    float targetY = currentY;
+    int attempts = 6;
+    while (attempts-- > 0) {
+      float cand = laneYs[MathUtils.random(0, laneYs.length - 1)];
+      if (Math.abs(cand - currentY) > 1e-3f) {
+        targetY = cand;
+        break;
+      }
     }
+    if (Math.abs(targetY - currentY) <= 1e-3f) return;
 
-    @Override
-    public void create(TaskRunner taskRunner) {
-        super.create(taskRunner);
-        this.timer = cooldownSec;
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        timer = cooldownSec;
-        teleportsDone = 0;
-    }
-
-    @Override
-    public void update() {
-        if (laneYs == null || laneYs.length < 2) return;
-        if (maxTeleports > 0 && teleportsDone >= maxTeleports) return;
-
-        GameTime time = ServiceLocator.getTimeSource();
-        float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
-        timer -= dt;
-        if (timer > 0f) return;
-
-        timer = cooldownSec; // reset for next attempt
-        if (MathUtils.random() > chance) return;
-
-        // ✅ Get current position through the owner
-        var entity = owner.getEntity();
-        if (entity == null) return;
-
-        Vector2 pos = entity.getPosition();
-        if (pos == null) return;
-
-        // Choose a different lane Y
-        float currentY = pos.y;
-        float targetY = currentY;
-        int attempts = 6;
-        while (attempts-- > 0) {
-            float cand = laneYs[MathUtils.random(0, laneYs.length - 1)];
-            if (Math.abs(cand - currentY) > 1e-3f) {
-                targetY = cand;
-                break;
-            }
-        }
-        if (Math.abs(targetY - currentY) <= 1e-3f) return;
-
-        // ✅ Teleport using owner entity
-        entity.setPosition(pos.x, targetY);
-        teleportsDone++;
-    }
+    // ✅ Teleport using owner entity
+    entity.setPosition(pos.x, targetY);
+    teleportsDone++;
+  }
 
   /**
    * Returns true if no other entity is already occupying roughly (x,targetY). Uses the entity's
