@@ -631,6 +631,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     cancelDrag();
   }
 
+  /**
+   * Adds 20 health points to all placed defences and generators on the grid.
+   */
   private void healDefences() {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot heal defences.");

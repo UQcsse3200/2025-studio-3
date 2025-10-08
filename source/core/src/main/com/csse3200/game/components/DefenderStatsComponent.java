@@ -23,7 +23,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
 
-  // TODO : add comments etc
+  /** Maxhealth upper bound */
   private int maxHealth;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
@@ -88,6 +88,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender unbuffed! New max health: " + getMaxHealth());
   }
 
+  /**
+   * Doubles the defender's attack damage.
+   */
   public void buff() {
     // Double attack damage
     int newAttack = getBaseAttack() * 2;
@@ -95,6 +98,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender buffed! New attack: " + getBaseAttack());
   }
 
+  /**
+   * Halves the defender's attack damage.
+   */
   public void unbuff() {
     // Halve attack damage
     int newAttack = getBaseAttack() / 2;
@@ -102,14 +108,20 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender unbuffed! New attack: " + getBaseAttack());
   }
 
+  /**
+   * gets the defenders maximum health.
+   * @return maxhealth
+   */
   private int getMaxHealth() {
     return maxHealth;
   }
 
+  /** Sets the defender's max health limit */
   private void setMaxHealth(int newHealth) {
     this.maxHealth = newHealth;
   }
 
+  /** Heals the defender by the specified amount, up to its maximum health. */
   private void heal(int amount) {
     int newHealth = Math.min(getHealth() + amount, getMaxHealth());
     setHealth(newHealth);
