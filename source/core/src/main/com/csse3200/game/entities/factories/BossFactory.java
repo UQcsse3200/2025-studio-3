@@ -79,6 +79,9 @@ public class BossFactory {
 
         boolean isSamurai =config.atlasFilePath.contains("samurai");
         boolean isGunBot=config.atlasFilePath.contains("gun_Bot");
+        System.out.println("DEBUG: isGunBot = " + isGunBot + " for atlas: " + config.atlasFilePath);
+
+
         AITaskComponent aiComponent;
         if(isGunBot){
             aiComponent =
@@ -127,7 +130,6 @@ public class BossFactory {
                         .addComponent(aiComponent)
                         .addComponent(new RobotAnimationController())
                         .addComponent(new HitMarkerComponent())
-                        .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
                         .addComponent(animator);
 if(!isGunBot){
         boss.addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f));
@@ -147,6 +149,24 @@ if(!isGunBot){
 
         TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
         RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
+        boss.getEvents().addListener("fire", () -> {
+            if (isGunBot) {
+                animator.startAnimation("gun");
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        boss.getEvents().trigger("fireProjectile", boss);
+                    }
+                }, 0.3f);
+
+                Timer.schedule(new Timer.Task() {
+                    @Override
+                    public void run() {
+                        animator.startAnimation("walk");
+                    }
+                }, 1.2f);
+            }
+        });
 
 final int[] samuraiAttackCount = {0};
         boss.getEvents().addListener(
@@ -178,21 +198,6 @@ final int[] samuraiAttackCount = {0};
                                     },
                                     1.8f);
                         }
-                    }else if(isGunBot){
-                        animator.startAnimation("gun");
-                        Timer.schedule(new Timer.Task() {
-                            @Override
-                            public void run() {
-                                boss.getEvents().trigger("fireProjectile", boss);
-                            }
-                        }, 0.5f);
-
-                        Timer.schedule(new Timer.Task() {
-                            @Override
-                            public void run() {
-                                animator.startAnimation("walk");
-                            }
-                        }, 1.5f);
                     }
                     else {
                         animator.startAnimation("punch");
