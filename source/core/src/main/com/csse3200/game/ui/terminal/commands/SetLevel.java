@@ -9,6 +9,13 @@ import org.slf4j.LoggerFactory;
 public class SetLevel implements Command {
   private static final Logger logger = LoggerFactory.getLogger(SetLevel.class);
 
+  /**
+   * Sets the internal variable for current level.
+   * First argument must be a string corresponding to the name of the level
+   * Levels are named levelOne, levelTwo etc.
+   *
+   * @return true when successful, false if unsuccessful
+   */
   @Override
   public boolean action(ArrayList<String> args) {
     if (args.isEmpty()) {

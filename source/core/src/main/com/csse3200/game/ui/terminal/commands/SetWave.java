@@ -8,6 +8,12 @@ import org.slf4j.LoggerFactory;
 public class SetWave implements Command {
   private static final Logger logger = LoggerFactory.getLogger(SetWave.class);
 
+  /**
+   * Sets the current wave inside the level to the first argument,
+   * expressed as an integer.
+   *
+   * @return true when successful, false when unsuccessful
+   */
   @Override
   public boolean action(ArrayList<String> args) {
     if (args.isEmpty()) {

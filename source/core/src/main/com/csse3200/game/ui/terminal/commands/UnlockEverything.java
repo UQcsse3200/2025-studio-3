@@ -10,6 +10,12 @@ import org.slf4j.LoggerFactory;
 public class UnlockEverything implements Command {
   private static final Logger logger = LoggerFactory.getLogger(UnlockEverything.class);
 
+  /**
+   * Grants the user a large number of skill points, coins,
+   * and unlocks every available level.
+   *
+   * @return true when successful, otherwise false
+   */
   @Override
   public boolean action(ArrayList<String> args) {
     try {
