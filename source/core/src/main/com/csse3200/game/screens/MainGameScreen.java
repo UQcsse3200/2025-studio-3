@@ -211,7 +211,6 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Load Music & Sounds
-    resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
     resourceService.loadSounds(SOUNDS);
     resourceService.loadMusic(new String[] {"sounds/background-music/level1_music.mp3"});
 
