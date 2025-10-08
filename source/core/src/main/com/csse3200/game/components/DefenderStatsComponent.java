@@ -102,7 +102,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(float critChance) {
-    this.critChance = (int) (critChance + CRIT_UPGRADE);
+    this.critChance = critChance;
   }
 
   /**

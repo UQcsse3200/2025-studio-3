@@ -103,10 +103,9 @@ class DefenderStatsComponentTest {
 
   @Test
   void testCritChanceSetterGetter() {
-    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 50);
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 1f, 50);
     defender.setCritChance(25);
-    assertEquals(
-        26, defender.getCritChance()); // Because of the upgrade of 1, it gets added to become 26
+    assertEquals(25, defender.getCritChance()); // Crit chance should not be getting upgraded
   }
 
   @Test
