@@ -1,17 +1,22 @@
 package com.csse3200.game.components.hotbar;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
+import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -34,6 +39,9 @@ public class HotbarDisplay extends UIComponent {
   // a list of all the images for the slots
   private final Array<Image> slotImages = new Array<>();
   private float cellWidth;
+  private Label insufficientScrapMessage;
+  private long insufficientScrapStartTime = -1;  // -1 means not active
+  private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -69,13 +77,41 @@ public class HotbarDisplay extends UIComponent {
     cellWidth = hotbarWidth / 6;
     float startX = cellWidth / 4;
     float y = 30;
+    float currentX = startX;
 
     // creates unit images and places in slots
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
+      Table slot = new Table();
+
       Image tempUnit = new Image(new Texture(unit.getKey()));
       tempUnit.setSize(scaling, scaling);
 
       slotImages.add(tempUnit);
+
+      // Get the cost of the entity
+      Entity entity = unit.getValue().get();
+      GeneratorStatsComponent generator = entity.getComponent(GeneratorStatsComponent.class);
+      DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
+      int entityCost;
+
+      if (generator != null) {
+        entityCost = generator.getCost();
+      } else {
+        entityCost = defender.getCost();
+      }
+
+      // Handles displaying the cost in the hotbar
+      Label displayCost = new Label(String.valueOf(entityCost), skin);
+
+      displayCost.setPosition(
+              tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
+              -displayCost.getPrefHeight() - 5f);
+
+      slot.add(tempUnit).row();
+      slot.add(displayCost);
+      slot.setPosition(currentX, y);
+
+      currentX += cellWidth;
 
       // listener for selection/use
       tempUnit.addListener(
@@ -98,6 +134,7 @@ public class HotbarDisplay extends UIComponent {
             }
           });
       layered.addActor(tempUnit);
+      layered.addActor(slot);
     }
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
       Image tempItem = new Image(new Texture(item.getKey()));
@@ -161,7 +198,7 @@ public class HotbarDisplay extends UIComponent {
     hotbarTable.setTouchable(Touchable.childrenOnly);
 
     // changes size to fit screen
-    hotbarTable.add(layered).size(layered.getWidth() * scale, layered.getHeight() * scale);
+    hotbarTable.add(layered).size(layered.getWidth() * scale, layered.getHeight() * scale).row();
 
     stage.addActor(hotbarTable);
     hotbarTable.toBack();
@@ -177,6 +214,12 @@ public class HotbarDisplay extends UIComponent {
             return false;
           }
         });
+
+    // Sets a placeholder message and an event to be called from other classes
+    insufficientScrapMessage = new Label("", skin);
+    insufficientScrapMessage.setVisible(false);
+    hotbarTable.add(insufficientScrapMessage).padTop(5f);
+    entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
   }
 
   /**
@@ -204,6 +247,9 @@ public class HotbarDisplay extends UIComponent {
     for (Image img : slotImages) {
       img.setPosition(x, y);
       x += cellWidth;
+      Label a = new Label("hey", skin);
+      a.setFontScale(5f);
+      a.setPosition(x, y - 10);
     }
   }
 
@@ -226,5 +272,25 @@ public class HotbarDisplay extends UIComponent {
     game.setIsCharacterSelected(false);
     game.setSelectedUnit(null);
     game.cancelDrag();
+  }
+
+  /** Displays a message when called and starts a timer. */
+  private void insufficientScrap() {
+    insufficientScrapMessage.setText("Not enough scrap!");
+    insufficientScrapMessage.setVisible(true);
+    insufficientScrapStartTime = ServiceLocator.getTimeSource().getTime();
+  }
+
+  /** Handles how long the message gets displayed for. */
+  @Override
+  public void update() {
+    // Hide message after 2 seconds
+    if (insufficientScrapStartTime != -1) {
+      long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
+      if (elapsed >= SCRAP_MESSAGE_DURATION) {
+        insufficientScrapMessage.setVisible(false);
+        insufficientScrapStartTime = -1; // reset timer
+      }
+    }
   }
 }

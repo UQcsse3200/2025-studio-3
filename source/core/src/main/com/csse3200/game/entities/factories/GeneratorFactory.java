@@ -41,7 +41,7 @@ public class GeneratorFactory {
 
   public static GeneratorStatsComponent getUnitStats(BaseGeneratorConfig config) {
     return new GeneratorStatsComponent(
-        config.getHealth(), config.getInterval(), config.getScrapValue());
+        config.getHealth(), config.getInterval(), config.getScrapValue(), config.getCost());
   }
 
   public static AnimationRenderComponent getAnimationComponent(BaseGeneratorConfig config) {

@@ -76,6 +76,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
 
+  Entity ui;
+
   /**
    * Initialise this LevelGameArea for a specific level.
    *
@@ -164,7 +166,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Spawns the level UI */
   private void displayUI() {
-    Entity ui = new Entity();
+    ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
 
@@ -500,6 +502,34 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (grid.isOccupiedIndex(position)) {
       logger.info("Tile {} already occupied", position);
       return;
+    }
+
+    GeneratorStatsComponent generator =  newEntity.getComponent(GeneratorStatsComponent.class);
+    DefenderStatsComponent defence = newEntity.getComponent(DefenderStatsComponent.class);
+
+    // Get cost based on the entity the player clicks
+    int cost;
+    if (generator != null) {
+      cost = generator.getCost();
+    } else {
+      cost = defence.getCost();
+    }
+
+    // Checks if the player has sufficient scrap
+    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
+      logger.info("Not enough scrap for this entity. Need {} but have {}", cost, ServiceLocator.getCurrencyService().get());
+      ui.getEvents().trigger("insufficientScrap");
+      setSelectedUnit(null);
+      cancelDrag();
+      return;
+    }
+
+    ServiceLocator.getCurrencyService().add(-cost);
+
+    if (generator != null) {
+      int spawnInterval = newEntity.getComponent(GeneratorStatsComponent.class).getInterval();
+      int scrapValue = newEntity.getComponent(GeneratorStatsComponent.class).getScrapValue();
+      spawnScrap(newEntity);
     }
 
     // Add entity to tile unless it is an Item

@@ -81,7 +81,8 @@ public class DefenceFactory {
         config.getDamage(),
         config.getRange(),
         config.getAttackSpeed(),
-        config.getCritChance());
+        config.getCritChance(),
+            config.getCost());
   }
 
   /**
