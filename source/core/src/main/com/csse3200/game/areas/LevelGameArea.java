@@ -15,7 +15,6 @@ import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.EntitySpawn;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -34,7 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,10 +69,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
-  // Wave preview placeholders
-  final ArrayList<Entity> previewEntities = new ArrayList<>();
-  boolean wavePreviewActive = false;
   private final ItemHandler itemHandler = new ItemHandler(this);
+  private final WavePreviewManager wavePreview = new WavePreviewManager(this);
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -310,6 +306,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   public float getXOffset() {
     return xOffset;
+  }
+
+  /**
+   * Getter for levelRows
+   *
+   * @return levelRows
+   */
+  public int getLevelRows() {
+    return levelRows;
+  }
+
+  /**
+   * Getter for yOffset
+   *
+   * @return yOffset
+   */
+  public float getYOffset() {
+    return yOffset;
   }
 
   /**
@@ -664,51 +678,63 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new GridPoint2((int) x, (int) y);
   }
 
-  /** Method to reset game entity size/position on window resize. */
+  /** Adjusts all entities after a window resize by recalculating world scale and layout. */
   public void resize() {
     float oldTile = tileSize;
     float oldX = xOffset;
     float oldY = yOffset;
 
-    setScaling(); // recompute sizes from renderer/stage
-    relayoutAfterScaling(oldTile, oldX, oldY);
+    // Recalculate scale values
+    setScaling();
+
+    // Reposition and rescale all entities relative to new scale
+    relayoutTiles();
+    relayoutPlacedUnits();
+    relayoutRobots(oldTile, oldX, oldY);
   }
 
-  private void relayoutAfterScaling(float oldTile, float oldX, float oldY) {
-    // 1) Move all tiles to their new positions
-    for (int i = 0; i < levelRows * levelCols; i++) {
-      int col = i % levelCols;
-      int row = i / levelCols;
-      float tileX = xOffset + tileSize * col;
-      float tileY = yOffset + tileSize * row;
-      Entity tile = grid.getTile(i);
-      if (tile != null) {
+  /** Updates the position of all tiles based on the new scaling. */
+  private void relayoutTiles() {
+    for (int row = 0; row < levelRows; row++) {
+      for (int col = 0; col < levelCols; col++) {
+        int index = row * levelCols + col;
+        Entity tile = grid.getTile(index);
+        if (tile == null) continue;
+
+        float tileX = xOffset + tileSize * col;
+        float tileY = yOffset + tileSize * row;
         tile.setPosition(tileX, tileY);
       }
     }
+  }
 
-    // Move all placed units to their tile’s new position and re-scale
-    for (int i = 0; i < levelRows * levelCols; i++) {
-      Entity u = grid.getOccupantIndex(i);
-      if (u == null) continue;
+  /** Moves and rescales all units that are placed on tiles. */
+  private void relayoutPlacedUnits() {
+    for (int row = 0; row < levelRows; row++) {
+      for (int col = 0; col < levelCols; col++) {
+        int index = row * levelCols + col;
+        Entity unit = grid.getOccupantIndex(index);
+        if (unit == null) continue;
 
-      int col = i % levelCols;
-      int row = i / levelCols;
-      float nx = xOffset + tileSize * col;
-      float ny = yOffset + tileSize * row;
-
-      u.setPosition(nx, ny);
-      u.scaleHeight(tileSize);
+        float newX = xOffset + tileSize * col;
+        float newY = yOffset + tileSize * row;
+        unit.setPosition(newX, newY);
+        unit.scaleHeight(tileSize);
+      }
     }
+  }
 
-    // Continuously positioned robots: scale & offset from old → new
-    float s = tileSize / oldTile;
-    for (Entity r : robots) {
-      Vector2 p = r.getPosition();
-      float nx = (p.x - oldX) * s + xOffset;
-      float ny = (p.y - oldY) * s + yOffset;
-      r.setPosition(nx, ny);
-      r.scaleHeight(tileSize);
+  /** Adjusts free-floating robots (not grid-bound) based on proportional scaling. */
+  private void relayoutRobots(float oldTile, float oldX, float oldY) {
+    float scaleRatio = tileSize / oldTile;
+
+    for (Entity robot : robots) {
+      Vector2 oldPos = robot.getPosition();
+      float newX = (oldPos.x - oldX) * scaleRatio + xOffset;
+      float newY = (oldPos.y - oldY) * scaleRatio + yOffset;
+
+      robot.setPosition(newX, newY);
+      robot.scaleHeight(tileSize);
     }
   }
 
@@ -780,45 +806,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    * per row just off the right edge. These are visual only and removed after the intro camera pan.
    */
   public void createWavePreview() {
-    if (wavePreviewActive) return;
-    wavePreviewActive = true;
-
-    int rows = this.levelRows; // number of rows in the map
-    int cols = this.levelCols; // number of columns in the map
-
-    EntitySpawn spawner = new EntitySpawn();
-    spawner.setWaveConfigProvider(ServiceLocator.getWaveService());
-
-    Map<Integer, List<String>> plan = spawner.previewAllWaves();
-    for (Map.Entry<Integer, List<String>> entry : plan.entrySet()) {
-      int wave = entry.getKey();
-      List<String> enemies = entry.getValue();
-
-      for (String type : enemies) {
-        // Random horizontal placement within wave group
-        float xSpread = ThreadLocalRandom.current().nextFloat(tileSize);
-        float x = xOffset + (cols * tileSize) + (wave * 1.15f * tileSize) + xSpread;
-
-        // Pick a random row
-        int row = ThreadLocalRandom.current().nextInt(rows);
-        float y = yOffset + row * tileSize;
-
-        Entity preview = RobotFactory.createPreviewRobot(type);
-        preview.setPosition(x, y);
-        preview.scaleHeight(tileSize);
-        spawnEntity(preview);
-        previewEntities.add(preview);
-      }
-    }
+    wavePreview.createWavePreview();
   }
 
   /** Remove preview entities created for the intro camera pan. */
   public void clearWavePreview() {
-    if (!wavePreviewActive) return;
-    for (Entity e : new ArrayList<>(previewEntities)) {
-      requestDespawn(e);
-    }
-    previewEntities.clear();
-    wavePreviewActive = false;
+    wavePreview.clearWavePreview();
   }
 }
