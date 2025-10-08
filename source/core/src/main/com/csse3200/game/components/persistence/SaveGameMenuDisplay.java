@@ -56,7 +56,7 @@ public class SaveGameMenuDisplay extends UIComponent {
 
     // Back button positioned at top-left with close icon
     ImageButton backBtn =
-            ui.createImageButton("images/ui/close-icon.png", 60f, 60f);
+            ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
     backBtn.addListener(
         new ChangeListener() {
           @Override

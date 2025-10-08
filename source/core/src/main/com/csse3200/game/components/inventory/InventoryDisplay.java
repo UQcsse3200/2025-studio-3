@@ -147,7 +147,7 @@ public class InventoryDisplay extends UIComponent {
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
     ImageButton closeButton =
-        ui.createImageButton("images/ui/close-icon.png", 60f, 60f);
+        ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
 
     // Add listener for the close button
     closeButton.addListener(
