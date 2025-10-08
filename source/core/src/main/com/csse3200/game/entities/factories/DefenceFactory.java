@@ -81,6 +81,9 @@ public class DefenceFactory {
 
     // scale the entity to match animation sprite dimensions
     defender.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    // add sound path
+    defender.setProperty("soundPath", "sounds/slingshooter-place.mp3");
     return defender;
   }
 
@@ -112,6 +115,9 @@ public class DefenceFactory {
 
     // scale the entity to match animation sprite dimensions
     generator.getComponent(AnimationRenderComponent.class).scaleEntity();
+
+    // add sound path
+    generator.setProperty("soundPath", config.getSoundPath());
     return generator;
   }
 

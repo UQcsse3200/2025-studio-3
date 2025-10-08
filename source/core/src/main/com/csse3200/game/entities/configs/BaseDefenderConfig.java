@@ -9,6 +9,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   private int attackSpeed;
   private int critChance;
   private int attack;
+  private String soundPath;
 
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
@@ -76,5 +77,14 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    */
   public int getAttack() {
     return attack;
+  }
+
+  /**
+   * Gets the path to the sound that plays on placement
+   *
+   * @return the path to the sound
+   */
+  public String getSoundPath() {
+    return soundPath;
   }
 }

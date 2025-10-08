@@ -13,7 +13,8 @@
         "state": 0,
         "attack": 1,
         "attackSpeed": 3,
-        "critChance": 1
+        "critChance": 1,
+        "soundPath": "sounds/slingshooter-place.mp3"
       }
     },
     "generators": {
@@ -25,7 +26,8 @@
         "health": 50,
         "interval": 12,
         "scrapValue": 25,
-        "cost": 50
+        "cost": 50,
+        "soundPath": "sounds/forge-place.mp3"
       }
     }
   }

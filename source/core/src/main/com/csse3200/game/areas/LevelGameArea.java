@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
@@ -579,6 +580,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             });
 
     logger.info("Unit spawned at position {} (r={}, c={})", position, row, col);
+
+    // play appropriate sound
+    String soundPath = newEntity.getProperty("soundPath").toString();
+    Sound sound = ServiceLocator.getResourceService().getAsset(soundPath, Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    sound.play(volume);
+    logger.info("Playing sound: {}", soundPath);
 
     newEntity
         .getEvents()
