@@ -128,7 +128,8 @@ public class WorldMapPlayerComponent extends UIComponent {
   /**
    * Top-level movement dispatch: 1) If following a JSON path → tick once. 2) Else if moving towards
    * a free target → tick once. 3) Else if a WASD key is pressed and on a node, only allow movement
-   * if that direction exists in the JSON graph. Otherwise, block movement. 4) Else fallback to legacy directional navigation.
+   * if that direction exists in the JSON graph. Otherwise, block movement. 4) Else fallback to
+   * legacy directional navigation.
    */
   private void handleMovement() {
     float delta = Gdx.graphics.getDeltaTime();
@@ -140,9 +141,9 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     // If a WASD key was pressed, and the player is on a node, only allow movement
     // if that direction exists in the JSON graph. Otherwise, BLOCK movement.
-    if (pressed != null &&handleWASDFromNode(pressed, delta)) {
-        // Either started a JSON path, or intentionally blocked movement (invalid direction on node)
-        return;
+    if (pressed != null && handleWASDFromNode(pressed, delta)) {
+      // Either started a JSON path, or intentionally blocked movement (invalid direction on node)
+      return;
     }
 
     // No valid JSON path started (or no key pressed) → allow legacy fallback
@@ -150,12 +151,12 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /**
-   * If currently standing on a node, only allow WASD movement when that direction is defined
-   * in the JSON graph for that node. If the direction is undefined, consume the key and block
-   * movement (return true). If not on a node, return false so legacy navigation may proceed.
+   * If currently standing on a node, only allow WASD movement when that direction is defined in the
+   * JSON graph for that node. If the direction is undefined, consume the key and block movement
+   * (return true). If not on a node, return false so legacy navigation may proceed.
    *
-   * @return true if movement was handled (either started JSON path or intentionally blocked);
-   *         false if not on a node, so caller may run legacy fallback.
+   * @return true if movement was handled (either started JSON path or intentionally blocked); false
+   *     if not on a node, so caller may run legacy fallback.
    */
   private boolean handleWASDFromNode(String pressed, float delta) {
     Vector2 cur = entity.getPosition();
@@ -170,8 +171,10 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     if (def == null) {
       // On a node but this direction is NOT defined → block movement this frame
-      logger.debug("[WorldMap] Blocked movement: '{}' from '{}' not defined in JSON",
-          pressed, at.getRegistrationKey());
+      logger.debug(
+          "[WorldMap] Blocked movement: '{}' from '{}' not defined in JSON",
+          pressed,
+          at.getRegistrationKey());
       return true;
     }
 
@@ -251,7 +254,6 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (Gdx.input.isKeyJustPressed(Input.Keys.D)) return "D";
     return null;
   }
-
 
   /**
    * Fallback: legacy directional navigation. D → nearest node strictly to the right (levels only) A

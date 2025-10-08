@@ -55,10 +55,12 @@ class WorldMapProgressTest {
     profile.setCurrentLevel("levelThree");
 
     // Inject the profile into the service and activate it (avoid touching Persistence)
-    java.lang.reflect.Field fProfile = com.csse3200.game.services.ProfileService.class.getDeclaredField("profile");
+    java.lang.reflect.Field fProfile =
+        com.csse3200.game.services.ProfileService.class.getDeclaredField("profile");
     fProfile.setAccessible(true);
     fProfile.set(svc, profile);
-    java.lang.reflect.Field fActive = com.csse3200.game.services.ProfileService.class.getDeclaredField("isActive");
+    java.lang.reflect.Field fActive =
+        com.csse3200.game.services.ProfileService.class.getDeclaredField("isActive");
     fActive.setAccessible(true);
     fActive.setBoolean(svc, true);
 
@@ -66,9 +68,12 @@ class WorldMapProgressTest {
     svc.markLevelComplete("levelThree", "levelFour");
 
     // Assert
-    assertTrue(profile.getCompletedNodes().contains("levelThree"), "Current level should be recorded as COMPLETED");
+    assertTrue(
+        profile.getCompletedNodes().contains("levelThree"),
+        "Current level should be recorded as COMPLETED");
     assertTrue(profile.getUnlockedNodes().contains("levelFour"), "Next level should be UNLOCKED");
-    assertEquals("levelFour", profile.getCurrentLevel(), "currentLevel should advance to the next level");
+    assertEquals(
+        "levelFour", profile.getCurrentLevel(), "currentLevel should advance to the next level");
   }
 
   @Test

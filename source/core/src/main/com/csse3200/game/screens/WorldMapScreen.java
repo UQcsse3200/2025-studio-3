@@ -233,7 +233,9 @@ public class WorldMapScreen extends BaseScreen {
     return levelKeys;
   }
 
-  /** Builds a chain from the beginning until the currentKey (inclusive). Returns empty if not found. */
+  /**
+   * Builds a chain from the beginning until the currentKey (inclusive). Returns empty if not found.
+   */
   private List<String> collectChainUntil(List<String> levelKeys, String currentKey) {
     List<String> chain = new ArrayList<>();
     boolean found = false;
