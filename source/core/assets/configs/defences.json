@@ -107,7 +107,7 @@
         "assetPath": "images/entities/defences/healer_1.png",
         "atlasPath": "images/entities/defences/healer.atlas",
         "health": 50,
-        "interval": 10000000,
+        "interval": 0,
         "scrapValue": 0,
         "cost": 200
       }

@@ -1,56 +1,68 @@
 healer.png
-size: 660, 434
+size: 818, 434
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 pma: false
 default
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 0, 0, 251, 420
+  bounds: 0, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
 idle
-  bounds: 251, 0, 409, 434
+  bounds: 409, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
+idle
+  bounds: 0, 0, 409, 434
