@@ -13,6 +13,7 @@ import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveLeftComponent;
+import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
 import com.csse3200.game.components.projectiles.MoveRightComponent;
 import com.csse3200.game.components.tasks.GunnerAttackTask;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -316,6 +317,34 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     //Entity unit = RobotFactory.createRobotType(robotType);
 
+    if (robotType == RobotType.GIANT) {
+      unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+
+      unit.getEvents()
+          .addListener(
+              "spawnMinion",
+              () -> {
+                Entity mini = RobotFactory.createRobotType(RobotType.MINI);
+
+                // spawn half a tile ahead, same lane
+                float aheadX = unit.getPosition().x - 0.5f * tileSize;
+                float spawnY = unit.getPosition().y;
+
+                mini.setPosition(aheadX, spawnY);
+                mini.scaleHeight(tileSize);
+
+                spawnEntity(mini);
+                robots.add(mini);
+
+                mini.getEvents()
+                    .addListener(
+                        ENTITY_DEATH_EVENT,
+                        () -> {
+                          requestDespawn(mini);
+                          robots.remove(mini);
+                        });
+              });
+    }
     // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);

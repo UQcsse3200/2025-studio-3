@@ -49,7 +49,9 @@ public class RobotFactory {
     BUNGEE("bungeeRobot"),
     TELEPORT("teleportRobot"),
     JUMPER("jumperRobot"),
-    GUNNER("gunnerRobot");
+    GUNNER("gunnerRobot"),
+    GIANT("giantRobot"),
+    MINI("miniRobot");
 
     private final String configKey;
 
