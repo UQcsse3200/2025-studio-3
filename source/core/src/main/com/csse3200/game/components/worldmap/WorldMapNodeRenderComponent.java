@@ -341,7 +341,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     if (def == null || font == null || labelBg == null) return;
 
     // 3) Frame size
-    String name = resolveDisplayName(def.next);
+    String name = resolveDisplayName(def.getNext());
     float old2 = font.getData().scaleX;
     font.getData().setScale(FONT_SCALE * 0.90f);
     GlyphLayout gl = new GlyphLayout(font, name);
@@ -397,14 +397,14 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       for (JsonValue keyEntry = nodeEntry.child(); keyEntry != null; keyEntry = keyEntry.next()) {
         String dir = keyEntry.name();
         var def = new com.csse3200.game.services.WorldMapService.PathDef();
-        def.next = keyEntry.getString("next");
-        def.waypoints = new ArrayList<>();
+        def.setNext(keyEntry.getString("next"));
+        def.setWaypoints(new ArrayList<>());
         JsonValue pathArr = keyEntry.get("path");
         if (pathArr != null) {
           for (JsonValue p = pathArr.child(); p != null; p = p.next()) {
             float wx = p.get(0).asFloat();
             float wy = p.get(1).asFloat();
-            def.waypoints.add(new Vector2(wx, wy));
+            def.getWaypoints().add(new Vector2(wx, wy));
           }
         }
         dirMap.put(dir, def);

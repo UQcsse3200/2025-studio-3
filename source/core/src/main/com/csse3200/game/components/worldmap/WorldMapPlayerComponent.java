@@ -204,10 +204,10 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     waypointQueue.clear();
 
-    if (def.waypoints != null) {
-      for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
+    if (def.getWaypoints() != null) {
+      for (Vector2 p : def.getWaypoints()) waypointQueue.add(new Vector2(p));
     }
-    WorldMapNode nextNode = svc.getNode(def.next);
+    WorldMapNode nextNode = svc.getNode(def.getNext());
     if (nextNode != null) waypointQueue.add(getWorldCoords(nextNode));
 
     if (waypointQueue.isEmpty()) return false;
@@ -309,10 +309,10 @@ public class WorldMapPlayerComponent extends UIComponent {
     WorldMapService svc = ServiceLocator.getWorldMapService();
     for (WorldMapService.PathDef def : steps) {
       if (def == null) continue;
-      if (def.waypoints != null) {
-        for (Vector2 p : def.waypoints) waypointQueue.add(new Vector2(p));
+      if (def.getWaypoints() != null) {
+        for (Vector2 p : def.getWaypoints()) waypointQueue.add(new Vector2(p));
       }
-      WorldMapNode end = svc.getNode(def.next);
+      WorldMapNode end = svc.getNode(def.getNext());
       if (end != null) waypointQueue.add(getWorldCoords(end));
     }
   }
@@ -333,10 +333,10 @@ public class WorldMapPlayerComponent extends UIComponent {
       String u = q.removeFirst();
       for (String d : DIRS) {
         WorldMapService.PathDef def = svc.getPath(u, d);
-        if (def == null || def.next == null || prev.containsKey(def.next))
+        if (def == null || def.getNext() == null || prev.containsKey(def.getNext()))
           continue; // <= single continue in loop
-        prev.put(def.next, new Prev(u, def));
-        q.addLast(def.next);
+        prev.put(def.getNext(), new Prev(u, def));
+        q.addLast(def.getNext());
       }
     }
 
