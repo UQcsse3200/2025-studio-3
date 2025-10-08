@@ -563,7 +563,6 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   private void handleNodeInteraction() {
     if (nearbyNode == null || !Gdx.input.isKeyJustPressed(Input.Keys.E)) return;
-    ServiceLocator.getProfileService().markLevelComplete("levelTwo");
     if (nearbyNode.isUnlocked()) {
       String message =
           nearbyNode.isCompleted()
