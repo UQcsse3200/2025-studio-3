@@ -536,22 +536,10 @@ public class WorldMapScreen extends BaseScreen {
   }
 
   /** Player enters a node. */
-  /**
-   * Handles when player enters a node. Does NOT change currentLevel (it always points to last
-   * unlocked level). Only saves current world map position to the profile.
-   */
-  private void onNodeEnter(WorldMapNode node) {
-    var ps = ServiceLocator.getProfileService();
-    if (ps != null && ps.getProfile() != null) {
-      String key = node.getRegistrationKey();
-      if (key != null && key.startsWith(LEVEL_PREFIX)) {
-        ps.getProfile().setCurrentLevel(key);
-      }
-      ps.saveCurrentProfile();
-    }
-
-    logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
-    game.setScreen(node.getTargetScreen());
+  private void onNodeEnter(WorldMapNode node)
+  {
+      logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
+      game.setScreen(node.getTargetScreen());
   }
 
   /** Returns true if the world-map player is currently moving along a path or between nodes. */
