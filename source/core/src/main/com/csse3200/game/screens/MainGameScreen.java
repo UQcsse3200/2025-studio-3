@@ -64,6 +64,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/sling_projectile.png",
     "images/effects/bullet.png",
     "images/effects/shock.png",
+    "images/effects/default_projectile.png",
     "images/effects/sling_projectile_pad.png",
     "images/effects/harpoon_projectile.png",
     "images/entities/currency/scrap_metal.png",
