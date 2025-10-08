@@ -40,12 +40,6 @@ public class Arsenal {
     generators = new ArrayList<>(Arrays.asList("furnace"));
   }
 
-  //    defences =
-  //        new ArrayList<>(
-  //            Arrays.asList("slingshooter", "armyguy", "shadow", "boxer", "shield")); // Default
-  // defences
-  //    generators = new ArrayList<>(Arrays.asList("furnace"));
-
   /**
    * Adds a defence to the arsenal.
    *
