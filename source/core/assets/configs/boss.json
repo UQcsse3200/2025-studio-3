@@ -22,6 +22,7 @@
     "health": 269,
     "attack": 25,
     "scale": 2.0,
-    "speed": 26
+    "speed": 26,
+    "range": 5.0
   }
   }

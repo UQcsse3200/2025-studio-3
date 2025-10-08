@@ -8,4 +8,8 @@ public class BaseBossConfig {
   public float scale = 4.0f;
   public float speed = 0.5f;
   public String attackType = "";
+  public float range = 0f;
+  public float getRange() {
+    return range;
+  }
 }
