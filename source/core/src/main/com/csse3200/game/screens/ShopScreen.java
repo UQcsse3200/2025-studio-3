@@ -29,6 +29,7 @@ public class ShopScreen extends ScreenAdapter {
     "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
   };
   private String[] itemTextures;
+  private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
 
   /**
    * Initialises the shop screen.
@@ -82,6 +83,8 @@ public class ShopScreen extends ScreenAdapter {
   /** Loads the shop screen's assets. */
   private void loadAssets() {
     ServiceLocator.getResourceService().loadTextures(shopTextures);
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+    ServiceLocator.getResourceService().loadSounds(SHOP_SOUNDS);
     logger.debug("Loading shop assets");
     ConfigService configService = ServiceLocator.getConfigService();
     if (configService == null) {
