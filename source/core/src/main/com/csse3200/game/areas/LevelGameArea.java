@@ -16,23 +16,21 @@ import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
-import com.csse3200.game.components.tile.TileStorageComponent;
-import com.csse3200.game.entities.Entity;
-import com.csse3200.game.entities.configs.*;
-import com.csse3200.game.entities.factories.DefenceFactory;
-import com.csse3200.game.entities.factories.GridFactory;
-import com.csse3200.game.entities.factories.ItemFactory;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.factories.DefenceFactory;
+import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.inventory.Inventory;
@@ -454,7 +452,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-          Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
     // Scale the projectile so it’s more visible
     projectile.scaleHeight(30f); // set the height in world units

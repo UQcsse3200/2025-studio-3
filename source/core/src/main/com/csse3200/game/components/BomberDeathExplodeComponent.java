@@ -1,9 +1,9 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
-import com.badlogic.gdx.utils.Timer;
 
 /**
  * Component that causes the entity to deal AOE (area-of-effect) damage to nearby entities upon
@@ -45,24 +45,26 @@ public class BomberDeathExplodeComponent extends Component {
   public void create() {
     super.create();
     System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
-      getEntity().getEvents().addListener("entityDeath", this::onDeath);
+    getEntity().getEvents().addListener("entityDeath", this::onDeath);
   }
 
-    /**
-     * Handles what happens when the entity dies: first trigger the pre-explosion animation event,
-     * then schedule or directly call explode().
-     */
-    private void onDeath() {
-        getEntity().getEvents().trigger("bomberPreExplode");
+  /**
+   * Handles what happens when the entity dies: first trigger the pre-explosion animation event,
+   * then schedule or directly call explode().
+   */
+  private void onDeath() {
+    getEntity().getEvents().trigger("bomberPreExplode");
 
-        // Schedule explosion after 0.5 seconds
-        Timer.schedule(new Timer.Task() {
-            @Override
-            public void run() {
-                explode();
-            }
-        }, 0.5f);
-    }
+    // Schedule explosion after 0.5 seconds
+    Timer.schedule(
+        new Timer.Task() {
+          @Override
+          public void run() {
+            explode();
+          }
+        },
+        0.5f);
+  }
 
   /**
    * Triggers an explosion centered at the bomber's current tile position.
