@@ -13,7 +13,14 @@ public class Arsenal {
   public Arsenal() {
     defences =
         new ArrayList<>(
-            Arrays.asList("slingshooter", "armyguy", "shadow", "boxer", "shield", "harpoon", "mortar")); // Default defences
+            Arrays.asList(
+                "slingshooter",
+                "armyguy",
+                "shadow",
+                "boxer",
+                "shield",
+                "harpoon",
+                "mortar")); // Default defences
     generators = new ArrayList<>(Arrays.asList("furnace"));
   }
 
