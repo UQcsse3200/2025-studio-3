@@ -41,7 +41,7 @@ public class LevelMapTutorial extends UIComponent {
   /** Label displaying the current tutorial message. */
   private Label messageLabel;
 
-    /** Reference to the game's time controller for pausing and resuming the game. */
+  /** Reference to the game's time controller for pausing and resuming the game. */
   private final GameTime gameTime;
 
   /** Current tutorial step index. */
@@ -50,7 +50,7 @@ public class LevelMapTutorial extends UIComponent {
   /** Boolean to determine whether the tutorial is active and listening for inputs. */
   private boolean active = true;
 
-    /** Array of tutorial messages shown in sequence. */
+  /** Array of tutorial messages shown in sequence. */
   private final String[] tutorialMessages = {
     "Welcome to Level 1!",
     "Drag defence units from the hot-bar onto the grid.",
@@ -134,7 +134,7 @@ public class LevelMapTutorial extends UIComponent {
     stage.addActor(dialogTable);
 
     // button to skip tutorial
-      TextButton skipButton = new TextButton("Skip Tutorial", skin);
+    TextButton skipButton = new TextButton("Skip Tutorial", skin);
     skipButton.addListener(
         new ClickListener() {
           @Override
@@ -187,7 +187,7 @@ public class LevelMapTutorial extends UIComponent {
   /** Ends the tutorial and resumes gameplay. Hides all tutorial UI elements. */
   private void endTutorial() {
     active = false;
-      overlay.setVisible(false);
+    overlay.setVisible(false);
     dialogTable.setVisible(false);
     skipTable.setVisible(false);
     resumeGame();
@@ -198,7 +198,7 @@ public class LevelMapTutorial extends UIComponent {
    */
   private void skipTutorial() {
     active = false;
-      overlay.setVisible(false);
+    overlay.setVisible(false);
     dialogTable.setVisible(false);
     skipTable.setVisible(false);
     resumeGame();
