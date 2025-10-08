@@ -78,7 +78,7 @@ public class GdxGame extends Game {
     loadNodes();
     Gdx.gl.glClearColor(0f / 255f, 0f / 255f, 0f / 255f, 1);
     setCursor();
-    setScreen(ScreenType.MAIN_MENU);
+    setScreen(ScreenType.MAIN_MENU, null);
   }
 
   /** Registers the nodes on the world map. */
@@ -107,7 +107,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Arcade",
-            new Pair<>(0.59f, 0.34f),
+            new Pair<>(0.55f, 0.395f),
             false,
             true,
             ScreenType.MINI_GAMES,
@@ -137,7 +137,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 3",
-            new Pair<>(0.45f, 0.40f),
+            new Pair<>(0.42f, 0.412f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -147,7 +147,7 @@ public class GdxGame extends Game {
     worldMapService.registerNode(
         new WorldMapNode(
             "Level 4",
-            new Pair<>(0.65f, 0.60f),
+            new Pair<>(0.7f, 0.55f),
             false,
             false,
             ScreenType.MAIN_GAME,
@@ -178,11 +178,19 @@ public class GdxGame extends Game {
   }
 
   /** Sets the game screen to the provided type. */
-  public void setScreen(ScreenType screenType) {
+  public void setScreen(ScreenType screenType, String levelKey) {
     logger.info("[GdxGame] Setting game screen to {}", screenType);
     Screen currentScreen = getScreen();
     if (currentScreen != null) {
       currentScreen.dispose();
+    }
+    if (screenType == ScreenType.MAIN_GAME) {
+      if (levelKey == null) {
+        throw new IllegalArgumentException("Level key cannot be null for MAIN_GAME");
+      }
+      setScreen(new MainGameScreen(this, levelKey));
+    } else {
+      setScreen(newScreen(screenType));
     }
     setScreen(newScreen(screenType));
   }

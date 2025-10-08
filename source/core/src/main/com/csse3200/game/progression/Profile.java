@@ -7,7 +7,9 @@ import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import net.dermetfan.utils.Pair;
 
 /**
@@ -15,6 +17,10 @@ import net.dermetfan.utils.Pair;
  * progress.
  */
 public class Profile {
+
+  public static final java.util.Set<String> DEFAULT_UNLOCKED =
+      java.util.Set.of("shop", "minigames", "skills");
+  private java.util.Set<String> unlockedNodes;
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
@@ -22,7 +28,10 @@ public class Profile {
   private Statistics statistics; // The player's statistics (includes achievements)
   private Arsenal arsenal; // The player's arsenal of unlocked defences
   private String currentLevel; // The player's current level
-  private List<String> completedNodes; // The player's completed nodes
+  private List<String> completedNodes; // List of completed nodes/levels
+  private float worldMapX = -1f; // last saved X on world map; -1 means unset
+  private float worldMapY = -1f; // last saved Y on world map; -1 means unset
+  private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -32,8 +41,14 @@ public class Profile {
     this.skillset = new SkillSet();
     this.statistics = new Statistics();
     this.arsenal = new Arsenal();
-    this.currentLevel = "levelOne";
     this.completedNodes = new ArrayList<>();
+    this.unlockedNodes = new HashSet<>();
+    this.unlockedNodes.add("levelOne");
+    this.worldMapX = -1f;
+    this.worldMapY = -1f;
+    this.worldMapZoomIdx = -1;
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
+    this.currentLevel = "levelOne";
   }
 
   /** Initialise a profile with the provided values. */
@@ -52,7 +67,11 @@ public class Profile {
     this.skillset = skillset;
     this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
-    this.completedNodes = completedNodes;
+    this.completedNodes = completedNodes != null ? completedNodes : new ArrayList<>();
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED);
+    if (this.currentLevel != null) {
+      this.unlockedNodes.add(this.currentLevel);
+    }
   }
 
   /**
@@ -161,5 +180,64 @@ public class Profile {
    */
   public void addCompletedNode(String node) {
     this.completedNodes.add(node);
+  }
+
+  public float getWorldMapX() {
+    return worldMapX;
+  }
+
+  public float getWorldMapY() {
+    return worldMapY;
+  }
+
+  public void setWorldMapX(float worldMapX) {
+    this.worldMapX = worldMapX;
+  }
+
+  /** Gets the saved world map zoom step index (-1 if unset). */
+  public int getWorldMapZoomIdx() {
+    return worldMapZoomIdx;
+  }
+
+  /** Sets the saved world map zoom step index. */
+  public void setWorldMapZoomIdx(int worldMapZoomIdx) {
+    this.worldMapZoomIdx = worldMapZoomIdx;
+  }
+
+  public void setWorldMapY(float worldMapY) {
+    this.worldMapY = worldMapY;
+  }
+
+  /** Marks a node as completed and keeps it unlocked for replay. */
+  public void completeNode(String key) {
+    if (key == null || key.isEmpty()) return;
+    if (!completedNodes.contains(key)) {
+      completedNodes.add(key);
+    }
+    unlockedNodes.add(key);
+  }
+
+  /**
+   * Unlocks a node so the player can access it, even if not completed yet.
+   *
+   * @param key the node identifier
+   */
+  public void unlockNode(String key) {
+    if (key == null || key.isEmpty()) return;
+    unlockedNodes.add(key);
+  }
+
+  /** Returns true if this node has been completed. */
+  public boolean isNodeCompleted(String key) {
+    return completedNodes.contains(key);
+  }
+
+  /** Returns true if this node is unlocked and can be entered. */
+  public boolean isNodeUnlocked(String key) {
+    return unlockedNodes.contains(key);
+  }
+
+  public Set<String> getUnlockedNodes() {
+    return unlockedNodes;
   }
 }

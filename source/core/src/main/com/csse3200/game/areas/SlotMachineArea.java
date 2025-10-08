@@ -1,6 +1,7 @@
 package com.csse3200.game.areas;
 
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
+import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ResourceService;
@@ -13,10 +14,12 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class SlotMachineArea extends LevelGameArea {
   private static final String[] SLOT_TEXTURE_ATLASES = {
-    "images/slot_frame.atlas", "images/slot_reels.atlas",
+    "images/entities/slotmachine/slot_frame.atlas",
+    "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/slotmachine/pie_filled.atlas",
   };
   private static final String[] SLOT_TEXTURES = {
-    "images/slot_reels_background.png",
+    "images/entities/slotmachine/slot_reels_background.png",
   };
 
   /**
@@ -31,9 +34,8 @@ public class SlotMachineArea extends LevelGameArea {
   /** Initializes the slot machine area by loading assets and adding the HUD. */
   @Override
   public void create() {
-    super.create();
     loadSlotAssets();
-    addSlotHudTopBar();
+    super.create();
   }
 
   /** Unloads slot machine assets and disposes of the area. */
@@ -43,20 +45,26 @@ public class SlotMachineArea extends LevelGameArea {
     super.dispose();
   }
 
-  /** Adds the slot machine HUD and display elements to the top bar. */
-  private void addSlotHudTopBar() {
-    Entity ui = new Entity();
-    ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
-    ui.addComponent(new SlotMachineDisplay(this));
-    spawnEntity(ui);
-  }
-
   /** Loads all textures and atlases required for the slot machine. */
   private void loadSlotAssets() {
     ResourceService rs = ServiceLocator.getResourceService();
     rs.loadTextureAtlases(SLOT_TEXTURE_ATLASES);
     rs.loadTextures(SLOT_TEXTURES);
     rs.loadAll();
+  }
+
+  @Override
+  protected void displayUI() {
+    // Only add Slot UI; no defence hotbar on the slot level
+    Entity ui = new Entity();
+    ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
+    ui.addComponent(new SlotMachineDisplay(this));
+    spawnEntity(ui);
+
+    // Ensure gameOverEntity exists so LevelGameArea.checkGameOver() won't NPE
+    this.gameOverEntity = new Entity();
+    this.gameOverEntity.addComponent(new GameOverWindow());
+    spawnEntity(this.gameOverEntity);
   }
 
   /** Unloads all slot machine textures and atlases to free memory. */

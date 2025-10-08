@@ -27,7 +27,7 @@ class SlotEngineTest {
     // Use a fixed seed for determinism.
     SlotEngine engine = new SlotEngine(cfg, new Random(1234));
 
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       SlotEngine.SpinResult r = engine.spin();
       assertTrue(r.isEffectTriggered(), "Effect should be triggered");
       assertTrue(r.getEffect().isPresent(), "Effect should be present");

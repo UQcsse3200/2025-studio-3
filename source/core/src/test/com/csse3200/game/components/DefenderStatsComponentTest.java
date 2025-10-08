@@ -17,8 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class DefenderStatsComponentTest {
-  DefenderStatsComponent defender;
-
   @BeforeEach
   void beforeEach() {
     ProfileService profileService = mock(ProfileService.class, RETURNS_DEEP_STUBS);
@@ -31,11 +29,11 @@ class DefenderStatsComponentTest {
         .thenReturn(1.0f);
     when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE))
         .thenReturn(1.0f);
-    defender = new DefenderStatsComponent(100, 50, 0, 500, 0, 3, 1);
   }
 
   @Test
   void shouldSetGetHealth() {
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
 
     assertEquals(100, defender.getHealth());
     defender.setHealth(150);
@@ -46,7 +44,7 @@ class DefenderStatsComponentTest {
 
   @Test
   void shouldCheckIsDead() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     assertFalse(defender.isDead());
 
     defender.setHealth(0);
@@ -55,7 +53,7 @@ class DefenderStatsComponentTest {
 
   @Test
   void shouldSetGetBaseAttack() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     assertEquals(50, defender.getBaseAttack());
 
     defender.setBaseAttack(150);
@@ -64,52 +62,37 @@ class DefenderStatsComponentTest {
     defender.setBaseAttack(-50);
     assertEquals(150, defender.getBaseAttack());
   }
-
-  @Test
-  void testTypeSetterGetter() {
-
-    defender.setType(5);
-    assertEquals(5, defender.getType());
-  }
-
   @Test
   void testRangeSetterGetter_Positive() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     defender.setRange(10);
     assertEquals(10, defender.getRange());
   }
 
   @Test
   void testRangeSetterGetter_Negative() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     defender.setRange(-5); // should clamp to 0
     assertEquals(0, defender.getRange());
   }
 
   @Test
-  void testStateSetterGetter() {
-
-    defender.setState(2);
-    assertEquals(2, defender.getState());
-  }
-
-  @Test
   void testAttackSpeedSetterGetter() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     defender.setAttackSpeed(15);
     assertEquals(15, defender.getAttackSpeed());
   }
 
   @Test
   void testAttackSpeedSetterGetter_Negative() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     defender.setAttackSpeed(-5); // should clamp to 0
     assertEquals(0, defender.getAttackSpeed());
   }
 
   @Test
   void testCritChanceSetterGetter() {
-
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);
     defender.setCritChance(25);
     assertEquals(26, defender.getCritChance());
   }

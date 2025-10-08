@@ -27,7 +27,12 @@ public class Component {
   /** Creates a new component with default settings. */
   public Component() {}
 
-  /** Creates a component with a specific priority */
+  /**
+   * Creates a component with a specific priority.
+   *
+   * @param priority the priority for this component; affects creation/loading order during {@link
+   *     com.csse3200.game.entities.Entity#create()}.
+   */
   public Component(ComponentPriority priority) {
     this.priority = priority;
   }
