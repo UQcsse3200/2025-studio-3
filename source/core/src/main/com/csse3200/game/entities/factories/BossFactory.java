@@ -88,16 +88,16 @@ public class BossFactory {
             animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
             animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
             animator.addAnimation("sword", 0.08f, Animation.PlayMode.NORMAL);
-            animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
         }else if(isGunBot){
             animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
             animator.addAnimation("gun", 0.08f, Animation.PlayMode.NORMAL);
-            animator.addAnimation("death", 0.1f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
         }
         else {
             animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
             animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
-            animator.addAnimation("death", 0.08f, Animation.PlayMode.NORMAL);
+            animator.addAnimation("death", 0.08f, Animation.PlayMode.REVERSED);
         }
         ColliderComponent colliderComponent =
                 new ColliderComponent()
