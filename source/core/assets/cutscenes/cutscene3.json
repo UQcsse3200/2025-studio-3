@@ -2,10 +2,10 @@
   "schemaVersion": 1,
   "characters": [
     {
-      "id": "player",
-      "name": "Player",
+      "id": "danny",
+      "name": "Danny",
       "poses": {
-        "normal": "cutscenes/data/characters/rob/alice_normal.png"
+        "normal": "cutscenes/data/characters/rob/danny_normal.png"
       }
     },
     {
@@ -34,63 +34,130 @@
     "id": "level3_intro_core",
     "beats": [
       {
-        "id": "b0",
+        "id": "show_core_entry",
+        "advance": { "mode": "auto_delay", "delay": 600 },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "background.set", "backgroundId": "core_entry", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+      {
+        "id": "danny_intro",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 500, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "So this is it… the Core. Every heartbeat of the city runs through here.", "await": true }
+        ]
+      },
+
+      /* Rob speaks ALONE */
+      {
+        "id": "prep_rob_line",
         "advance": { "mode": "auto" },
         "actions": [
           { "type": "dialogue.hide", "await": true },
-          { "type": "background.set", "backgroundId": "core_entry", "transition": "fade", "duration": 300, "await": true }
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 400, "await": true }
         ]
       },
       {
-        "id": "b1",
+        "id": "rob_activation",
         "advance": { "mode": "input" },
         "actions": [
-          { "type": "character.enter", "characterId": "player", "pose": "normal", "position": "left", "transition": "slide", "duration": 300, "await": true },
-          { "type": "dialogue.show", "characterId": "player", "text": "So this is it… the Core. Every heartbeat of the city runs through here.", "await": true }
-        ]
-      },
-      {
-        "id": "b2",
-        "advance": { "mode": "input" },
-        "actions": [
-          { "type": "character.enter", "characterId": "rob", "pose": "glitch", "position": "right", "transition": "fade", "duration": 250, "await": true },
+          { "type": "character.enter", "characterId": "rob", "pose": "glitch", "position": "right", "transition": "fade", "duration": 400, "await": true },
           { "type": "dialogue.show", "characterId": "rob", "text": "Unauthorized entity detected. Access terminated.", "await": true }
         ]
       },
       {
-        "id": "b3",
-        "advance": { "mode": "input" },
-        "actions": [
-          { "type": "dialogue.show", "characterId": "player", "text": "Too late for that.", "await": true }
-        ]
-      },
-      {
-        "id": "b4",
-        "advance": { "mode": "input" },
-        "actions": [
-          { "type": "background.set", "backgroundId": "core_datastream", "transition": "fade", "duration": 250, "await": true },
-          { "type": "dialogue.show", "characterId": "player", "text": "Alice’s signal… found it.", "await": true }
-        ]
-      },
-      {
-        "id": "b5",
-        "advance": { "mode": "input" },
-        "actions": [
-          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "left", "transition": "fade", "duration": 250, "await": true },
-          { "type": "dialogue.show", "characterId": "alice", "text": "Player… they’ve tied me to the failsafe. If the core dies— I die.", "await": true }
-        ]
-      },
-      {
-        "id": "b6",
-        "advance": { "mode": "input" },
-        "actions": [
-          { "type": "background.set", "backgroundId": "core_overload", "transition": "fade", "duration": 250, "await": true },
-          { "type": "dialogue.show", "characterId": "player", "text": "Hang on, Alice. One last firewall.", "await": true }
-        ]
-      },
-      {
-        "id": "b7",
+        "id": "clear_after_rob",
         "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "rob", "transition": "slide", "duration": 400, "await": true }
+        ]
+      },
+
+      /* Background change: clear first */
+      {
+        "id": "bg_to_datastream",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "core_datastream", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+
+      /* Danny speaks ALONE */
+      {
+        "id": "danny_found_signal",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 500, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Alice’s signal… found it.", "await": true }
+        ]
+      },
+
+      /* Switch to Alice: remove Danny first */
+      {
+        "id": "clear_for_alice",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 400, "await": true }
+        ]
+      },
+      {
+        "id": "alice_hologram",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "right", "transition": "fade", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Danny… they’ve tied me to the failsafe. If the core dies— I die.", "await": true }
+        ]
+      },
+
+      /* Switch back to Danny: remove Alice first */
+      {
+        "id": "clear_for_danny_reply",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 300, "await": true }
+        ]
+      },
+      {
+        "id": "danny_reply",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Then we’ll rewrite the code.", "await": true }
+        ]
+      },
+
+      /* Clear & final background */
+      {
+        "id": "prep_final_bg",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 400, "await": true }
+        ]
+      },
+      {
+        "id": "bg_to_overload",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "core_overload", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+      {
+        "id": "final_line",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Hang on, Alice. One last firewall.", "await": true }
+        ]
+      },
+      {
+        "id": "cutscene_end",
+        "advance": { "mode": "auto_delay", "delay": 600 },
         "actions": [
           { "type": "dialogue.hide", "await": true }
         ]
