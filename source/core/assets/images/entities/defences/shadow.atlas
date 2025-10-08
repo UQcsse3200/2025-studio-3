@@ -1,0 +1,16 @@
+shadow.png
+size: 2000, 500
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 1500, 0, 500, 500
+attack
+  bounds: 0, 0, 500, 500
+attack
+  bounds: 500, 0, 500, 500
+idle
+  bounds: 1000, 0, 500, 500
+idle
+  bounds: 1500, 0, 500, 500
