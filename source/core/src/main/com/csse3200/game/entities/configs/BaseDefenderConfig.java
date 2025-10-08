@@ -97,13 +97,4 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   public String getSoundPath() {
     return soundPath;
   }
-
-  /**
-   * Gets the path to the sound that plays on placement
-   *
-   * @return the path to the sound
-   */
-  public String getSoundPath() {
-    return soundPath;
-  }
 }
