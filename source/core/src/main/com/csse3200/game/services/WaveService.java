@@ -15,7 +15,7 @@ public class WaveService implements WaveConfigProvider {
 
   private int currentWave = 0;
   private String currentLevelKey = "LevelOne";
-  private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
+  private final List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
   private int enemiesDisposed = 0;
@@ -23,7 +23,7 @@ public class WaveService implements WaveConfigProvider {
   private boolean waveActive = false;
 
   private boolean preparationPhaseActive = false;
-  private static final float PREPERATION_PHASE_DURATION = 5.0f;
+  private static final float PREPARATION_PHASE_DURATION = 5.0f;
   private float preparationPhaseTimer = 0.0f;
   private final EntitySpawn entitySpawn;
 
@@ -91,7 +91,7 @@ public class WaveService implements WaveConfigProvider {
   public void update(float deltaTime) {
     if (preparationPhaseActive) {
       preparationPhaseTimer += deltaTime;
-      if (preparationPhaseTimer >= PREPERATION_PHASE_DURATION) {
+      if (preparationPhaseTimer >= PREPARATION_PHASE_DURATION) {
         startWave();
       }
       return;
@@ -207,11 +207,11 @@ public class WaveService implements WaveConfigProvider {
     if (!preparationPhaseActive) {
       return 0.0f;
     }
-    return Math.max(0.0f, PREPERATION_PHASE_DURATION - preparationPhaseTimer);
+    return Math.max(0.0f, PREPARATION_PHASE_DURATION - preparationPhaseTimer);
   }
 
   public float getPreparationPhaseDuration() {
-    return PREPERATION_PHASE_DURATION;
+    return PREPARATION_PHASE_DURATION;
   }
 
   public int getEnemiesDisposed() {
@@ -328,6 +328,54 @@ public class WaveService implements WaveConfigProvider {
     }
 
     return wave.getSpawnConfigs();
+  }
+
+  @Override
+  public int getTotalWaves() {
+    if (levelConfig != null && levelConfig.getWaves() != null) {
+      return levelConfig.getWaves().size();
+    }
+    return 0;
+  }
+
+  @Override
+  public int getWaveWeight(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      return levelConfig.getWaves().get(waveIndex).getWaveWeight();
+    }
+    // Fallback default
+    return 20;
+  }
+
+  @Override
+  public int getMinZombiesSpawn(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      return levelConfig.getWaves().get(waveIndex).getMinZombiesSpawn();
+    }
+    // Fallback default
+    return 5;
+  }
+
+  @Override
+  public Map<String, BaseSpawnConfig> getEnemyConfigs(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      Map<String, BaseSpawnConfig> configs =
+          levelConfig.getWaves().get(waveIndex).getSpawnConfigs();
+      if (configs != null) {
+        return configs;
+      }
+    }
+    // Safe empty map if missing
+    return new HashMap<>();
   }
 
   private BaseWaveConfig getCurrentWaveConfig() {
