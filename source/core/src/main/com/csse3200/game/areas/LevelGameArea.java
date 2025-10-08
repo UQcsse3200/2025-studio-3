@@ -29,6 +29,7 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
@@ -73,6 +74,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+
+  private static final List<String> levelOrder =
+      List.of("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -158,6 +162,24 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Entity ui = new Entity();
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
+
+    this.currentLevelKey = "levelThree";
+    // Unlocks all the required entities
+    for (String level : levelOrder) {
+      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+        if (Arsenal.ALL_DEFENCES.get(key) == level && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockDefence(key);
+        }
+      }
+      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
+        if (Arsenal.ALL_GENERATORS.get(key) == level && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockGenerator(key);
+        }
+      }
+      if (level == currentLevelKey) {
+        break;
+      }
+    }
 
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
