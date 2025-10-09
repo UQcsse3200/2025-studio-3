@@ -1,6 +1,9 @@
 package com.csse3200.game.tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -8,14 +11,23 @@ import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.tile.TileHitboxComponent;
 import com.csse3200.game.components.tile.TileInputComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.CurrencyService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ItemEffectsService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.WaveService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -55,6 +67,30 @@ class TileStorageComponentTest {
     lenient().doNothing().when(inputService).unregister(any());
     ServiceLocator.registerInputService(inputService);
 
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+
+    // creates mock profile service with skillset chain for DefenderStatsComponent static init
+    ProfileService profileService = mock(ProfileService.class);
+    Profile mockProfile = mock(Profile.class);
+    SkillSet mockSkillset = mock(SkillSet.class);
+    lenient().when(profileService.getProfile()).thenReturn(mockProfile);
+    lenient().when(mockProfile.getSkillset()).thenReturn(mockSkillset);
+    lenient().when(mockSkillset.getUpgradeValue(any())).thenReturn(1.0f);
+    ServiceLocator.registerProfileService(profileService);
+
+    // creates mock discord rich presence service
+    DiscordRichPresenceService discordService = mock(DiscordRichPresenceService.class);
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
+
+    // creates currency/item/wave services used by spawnUnit
+    CurrencyService currencyService = new CurrencyService(1000, 1000);
+    ServiceLocator.registerCurrencyService(currencyService);
+    ItemEffectsService itemEffectsService = mock(ItemEffectsService.class);
+    ServiceLocator.registerItemEffectsService(itemEffectsService);
+    WaveService waveService = mock(WaveService.class);
+    ServiceLocator.registerWaveService(waveService);
+
     levelGameArea =
         new LevelGameArea("levelOne") {
           @Override
@@ -72,7 +108,14 @@ class TileStorageComponentTest {
     Entity selected =
         new Entity()
             .addComponent(new TextureRenderComponent(mock(Texture.class)))
-            .addComponent(new DeckInputComponent(levelGameArea, Entity::new));
+            .addComponent(
+                new DeckInputComponent(
+                    levelGameArea,
+                    () -> {
+                      Entity entity = new Entity();
+                      entity.addComponent(new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 50));
+                      return entity;
+                    }));
     levelGameArea.setSelectedUnit(selected);
   }
 
@@ -86,7 +129,14 @@ class TileStorageComponentTest {
     levelGameArea.setSelectedUnit(
         new Entity()
             .addComponent(new TextureRenderComponent(mock(Texture.class)))
-            .addComponent(new DeckInputComponent(levelGameArea, Entity::new)));
+            .addComponent(
+                new DeckInputComponent(
+                    levelGameArea,
+                    () -> {
+                      Entity entity = new Entity();
+                      entity.addComponent(new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 50));
+                      return entity;
+                    })));
     levelGameArea.spawnUnit(tileStorageComponent.getPosition());
     int afterSecondTriggerId = tileStorageComponent.getTileUnit().getId();
 

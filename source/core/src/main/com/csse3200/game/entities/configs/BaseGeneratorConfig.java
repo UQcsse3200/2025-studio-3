@@ -9,6 +9,7 @@ public class BaseGeneratorConfig extends BaseEntityConfig {
   private int scrapValue;
 
   private int cost;
+  private String soundPath;
 
   /** Creates a new BaseGeneratorConfig with default values. */
   public BaseGeneratorConfig() {
@@ -40,5 +41,14 @@ public class BaseGeneratorConfig extends BaseEntityConfig {
    */
   public int getCost() {
     return cost;
+  }
+
+  /**
+   * Gets the path to the sound that plays on placement
+   *
+   * @return the path to the sound
+   */
+  public String getSoundPath() {
+    return soundPath;
   }
 }

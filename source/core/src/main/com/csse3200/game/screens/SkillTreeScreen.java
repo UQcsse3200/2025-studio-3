@@ -22,6 +22,8 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,7 +74,9 @@ public class SkillTreeScreen extends ScreenAdapter {
   /** Loads necessary game assets */
   private void loadAssets() {
     logger.debug("Loading assets");
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/button_unlock_skill.mp3"});
     ServiceLocator.getResourceService().loadAll();
+    ServiceLocator.getMusicService().play("sounds/background-music/skilltree_background.mp3");
   }
 
   @Override
@@ -116,7 +120,10 @@ public class SkillTreeScreen extends ScreenAdapter {
         .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }

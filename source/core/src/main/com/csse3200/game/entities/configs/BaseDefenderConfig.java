@@ -10,6 +10,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   private String direction;
   private int numSprites;
   private String projectilePath;
+  private String soundPath;
 
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
@@ -86,5 +87,14 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    */
   public String getProjectilePath() {
     return projectilePath;
+  }
+
+  /**
+   * Gets the path to the sound that plays on placement
+   *
+   * @return the path to the sound
+   */
+  public String getSoundPath() {
+    return soundPath;
   }
 }

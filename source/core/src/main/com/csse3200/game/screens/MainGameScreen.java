@@ -1,7 +1,6 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -13,6 +12,7 @@ import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
+import com.csse3200.game.components.hud.SpeedControlDisplay;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -45,16 +45,18 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private Music music;
-  private final List<String> textureAtlases = new ArrayList<>();
+  private List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level_map_grass.png",
     "images/backgrounds/level_map_town.png",
     "images/backgrounds/level_map_final.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
+    "images/entities/defences/shield_1.png",
+    "images/entities/defences/healer_1.png",
     "images/entities/defences/shadow_idle1.png",
     "images/entities/defences/army_guy_1.png",
+    "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -65,12 +67,18 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/sling_projectile.png",
     "images/effects/bullet.png",
     "images/effects/shock.png",
+    "images/effects/default_projectile.png",
     "images/effects/sling_projectile_pad.png",
+    "images/effects/harpoon_projectile.png",
+    "images/entities/currency/scrap_metal.png",
+    "images/effects/shell.png",
     "images/entities/currency/scrap_metal.png",
     "images/entities/slotmachine/slot_reels_background.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
+    "images/entities/defences/shield.atlas",
+    "images/entities/defences/healer.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
     "images/entities/enemies/basic_robot.atlas",
     "images/effects/grenade.atlas",
@@ -81,6 +89,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/nuke.atlas",
     "images/entities/enemies/blue_robot.atlas",
     "images/entities/enemies/red_robot.atlas",
+    "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
   };
@@ -108,6 +117,26 @@ public class MainGameScreen extends ScreenAdapter {
 
   /** Optional override for which level to load. If null, fall back to profile.currentLevel */
   private final String overrideLevelKey;
+
+  private static final String[] SOUNDS = {
+    "sounds/item_buff.mp3",
+    "sounds/item_coffee.mp3",
+    "sounds/item_emp.mp3",
+    "sounds/item_grenade.mp3",
+    "sounds/item_nuke.mp3",
+    "sounds/damage.mp3",
+    "sounds/robot-attack.mp3",
+    "sounds/slingshooter-place.mp3",
+    "sounds/forge-place.mp3",
+    "sounds/human-death.mp3",
+    "sounds/mortar-place.mp3",
+    "sounds/shadow-place.mp3",
+    "sounds/shield-place.mp3",
+    "sounds/shooter-place.mp3",
+    "sounds/robot-death.mp3",
+    "sounds/generator-death.mp3",
+    "sounds/game-over-voice.mp3"
+  };
 
   /**
    * Constructor for the main game screen. Falls back to profile.currentLevel.
@@ -200,9 +229,11 @@ public class MainGameScreen extends ScreenAdapter {
   @Override
   public void render(float delta) {
     if (!isPaused) {
+      // Use scaled delta for systems that accept it
+      float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(delta);
+      ServiceLocator.getWaveService().update(scaledDelta);
     }
 
     if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
@@ -288,8 +319,8 @@ public class MainGameScreen extends ScreenAdapter {
     }
 
     // Load Music & Sounds
-    resourceService.loadMusic(new String[] {"sounds/BGM_03_mp3.mp3"});
-    resourceService.loadSounds(new String[] {"sounds/Impact4.ogg"});
+    resourceService.loadSounds(SOUNDS);
+    resourceService.loadMusic(new String[] {"sounds/background-music/level1_music.mp3"});
 
     // Load Textures
     resourceService.loadTextures(MAIN_GAME_TEXTURES);
@@ -297,10 +328,7 @@ public class MainGameScreen extends ScreenAdapter {
     resourceService.loadTextureAtlases(MAIN_GAME_TEXTURE_ATLASES);
     resourceService.loadTextureAtlases(textureAtlases.toArray(new String[0]));
     ServiceLocator.getResourceService().loadAll();
-    music = ServiceLocator.getResourceService().getAsset("sounds/BGM_03_mp3.mp3", Music.class);
-    music.setLooping(true);
-    music.setVolume(0.3f);
-    music.play();
+    ServiceLocator.getMusicService().play("sounds/background-music/level1_music.mp3");
   }
 
   private void unloadAssets() {
@@ -325,6 +353,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new PerformanceDisplay())
         .addComponent(new PauseButton())
         .addComponent(new PauseMenu())
+        .addComponent(new SpeedControlDisplay())
         .addComponent(new PauseMenuActions(this.game))
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
@@ -388,14 +417,14 @@ public class MainGameScreen extends ScreenAdapter {
   /** Event handler for pause events */
   private void handlePause() {
     logger.info("[MainGameScreen] Game paused");
-    music.pause();
+    ServiceLocator.getMusicService().pause();
     // Pause currency generation, pause wave manager, pause generators.
   }
 
   /** Event handler for resume events */
   private void handleResume() {
     logger.info("[MainGameScreen] Game resumed");
-    music.play();
+    ServiceLocator.getMusicService().resume();
     // Resume currency generation, resume wave manager, resume generators.
   }
 }
