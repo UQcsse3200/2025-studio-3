@@ -108,6 +108,7 @@ public class ProjectileFactory {
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
     return gunnerProjectile;
   }
+
   public static Entity createBossProjectile(int damage) {
     short targetLayers = PhysicsLayer.NPC;
     ColliderComponent collider = new ColliderComponent();
