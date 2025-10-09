@@ -19,6 +19,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class GeneratorFactory {
   private static final String HIT = "hit";
   private static final String IDLE = "idle";
+  private static final String HEAL = "heal";
 
   public static Entity createGeneratorUnit(BaseGeneratorConfig config) {
     // start with a base defender (physics + collider)
@@ -36,6 +37,11 @@ public class GeneratorFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    defender
+        .getEvents()
+        .addListener(
+            HEAL, () -> defender.getComponent(GeneratorStatsComponent.class).addHealth(20));
     return defender;
   }
 
