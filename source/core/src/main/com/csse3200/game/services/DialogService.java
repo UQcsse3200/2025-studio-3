@@ -309,7 +309,8 @@ public class DialogService {
     }
     achievementUnlockSound.play(volume);
     AchievementDialogComponent dialogComponent =
-        new AchievementDialogComponent(name, description, skillPoints, tier != null ? tier : "T1");
+        new AchievementDialogComponent(
+            name.toUpperCase(), description.toUpperCase(), skillPoints, tier != null ? tier : "T1");
     Entity dialogEntity = new Entity();
     dialogEntity.addComponent(dialogComponent);
     ServiceLocator.getEntityService().register(dialogEntity);

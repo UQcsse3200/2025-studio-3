@@ -63,7 +63,7 @@ public class WorldMapNavigationMenuActions extends Component {
     logger.info("[WorldMapNavigationMenuActions] Returning to main menu");
     ServiceLocator.getDialogService()
         .warning(
-            "Return to Main Menu",
+            "WARNING",
             "Are you sure you want to return to the main menu? Progress will not be saved.",
             dialog -> {
               game.setScreen(GdxGame.ScreenType.MAIN_MENU);

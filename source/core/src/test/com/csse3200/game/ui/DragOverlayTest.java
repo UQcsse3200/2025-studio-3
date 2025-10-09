@@ -7,9 +7,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.extensions.UIExtension;
+import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -77,8 +80,12 @@ class DragOverlayTest {
     overlay.update();
 
     Image img = getImage();
-    assertEquals(100 - img.getWidth() / 2f, img.getX(), 0.1f);
-    assertEquals(720 - 50 - img.getHeight() / 2f, img.getY(), 0.1f);
+    // Compute expected using the Stage's screen-to-stage conversion
+    Stage stage = ServiceLocator.getRenderService().getStage();
+    Vector2 p = new Vector2(100, 50);
+    stage.screenToStageCoordinates(p);
+    assertEquals(p.x - img.getWidth() / 2f, img.getX(), 0.1f);
+    assertEquals(p.y - img.getHeight() / 2f, img.getY(), 0.1f);
   }
 
   @Test

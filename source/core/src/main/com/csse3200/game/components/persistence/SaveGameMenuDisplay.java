@@ -1,8 +1,6 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -34,48 +32,20 @@ public class SaveGameMenuDisplay extends UIComponent {
     addActors();
   }
 
-  @Override
-  public void update() {
-    // Update label text based on overwrite flag
-    if (overwrite) {
-      nameLabel.setText("Enter Save Name (overwriting existing save):");
-    } else {
-      nameLabel.setText("Enter Save Name:");
-    }
-  }
-
   /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
 
-    // Back button positioned at top-left with close icon
-    ImageButton backBtn = ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
-    backBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
+    // Back button positioned at top-left
+    TextButton backBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
 
     // Title
     Label titleLabel = ui.title("SAVE GAME");
 
     // Name input field (initially hidden)
-    nameLabel = ui.text("Enter Save Name:");
-
-    // Create TextField with custom font
-    TextField.TextFieldStyle textFieldStyle =
-        new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
-    BitmapFont customFont =
-        ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
-    if (customFont != null) {
-      textFieldStyle.font = customFont;
-    }
-    nameInput = new TextField("", textFieldStyle);
-    nameInput.setMessageText("");
+    nameLabel = ui.subheading("ENTER SAVE NAME:");
+    nameInput = ui.createTextField("");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];

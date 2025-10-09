@@ -1,12 +1,15 @@
 package com.csse3200.game.ui;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.persistence.Settings;
@@ -27,18 +30,12 @@ import org.slf4j.LoggerFactory;
 public class UIFactory {
   private static final Logger logger = LoggerFactory.getLogger(UIFactory.class);
   private final Map<String, BitmapFont> fontCache = new HashMap<>();
+  private Sound buttonSound;
   private final Skin skin;
   private float uiScale;
   private Color white;
-  private Color offWhite;
   private Color gray;
-  private Color red;
   private Color cyan;
-  private Color gold;
-  private Color orange;
-  private Color yellow;
-  private Color black;
-  private Color clear;
 
   /**
    * Creates a UIFactory with the provided skin.
@@ -50,15 +47,15 @@ public class UIFactory {
     this.skin = skin;
     setUIScale(currentUIScale);
     white = skin.getColor("white");
-    offWhite = skin.getColor("off-white");
     gray = skin.getColor("gray");
-    red = skin.getColor("red");
     cyan = skin.getColor("cyan");
-    gold = skin.getColor("gold");
-    orange = skin.getColor("orange");
-    yellow = skin.getColor("yellow");
-    black = skin.getColor("black");
-    clear = skin.getColor("clear");
+    try {
+      buttonSound =
+          ServiceLocator.getGlobalResourceService()
+              .getAsset("sounds/button_clicked.mp3", Sound.class);
+    } catch (Exception e) {
+      logger.error("Failed to load button sound", e);
+    }
   }
 
   /**
@@ -187,14 +184,25 @@ public class UIFactory {
     TextButtonStyle style = new TextButtonStyle();
     style.font = createFont(32);
     style.fontColor = white;
-    style.overFontColor = cyan;
+    style.overFontColor = gray;
     style.up = skin.getDrawable("b");
     style.down = skin.getDrawable("a");
     TextButton button = new TextButton(text.toUpperCase(), style);
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
-    // ButtonFactory.textButtonPressedListener(button);
+
+    button.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (buttonSound != null) {
+              float volume = ServiceLocator.getSettingsService().getSoundVolume();
+              buttonSound.play(volume);
+            }
+          }
+        });
+
     return button;
   }
 
@@ -219,7 +227,18 @@ public class UIFactory {
     button.setWidth(width * uiScale);
     button.setHeight(42f * uiScale);
     button.getLabelCell().center();
-    //  ButtonFactory.textButtonPressedListener(button);
+
+    button.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (buttonSound != null) {
+              float volume = ServiceLocator.getSettingsService().getSoundVolume();
+              buttonSound.play(volume);
+            }
+          }
+        });
+
     return button;
   }
 
@@ -241,9 +260,20 @@ public class UIFactory {
     // Apply UI scaling
     float width = getScaledWidth(baseWidth);
     float height = getScaledHeight(baseHeight);
-
     button.setSize(width, height);
-    // ButtonFactory.imageButtonPressedListener(button);
+
+    // Add button sound
+    button.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (buttonSound != null) {
+              float volume = ServiceLocator.getSettingsService().getSoundVolume();
+              buttonSound.play(volume);
+            }
+          }
+        });
+
     return button;
   }
 
@@ -273,6 +303,12 @@ public class UIFactory {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("{} button clicked", backOrExit);
+
+            if (buttonSound != null) {
+              float volume = ServiceLocator.getSettingsService().getSoundVolume();
+              buttonSound.play(volume);
+            }
+
             eventHandler.trigger(
                 backOrExit.toLowerCase(
                     Locale.ROOT)); // Note: must have set up a listener for this event

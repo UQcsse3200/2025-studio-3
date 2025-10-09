@@ -1,8 +1,6 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -35,48 +32,20 @@ public class NewGameMenuDisplay extends UIComponent {
     addActors();
   }
 
-  @Override
-  public void update() {
-    // Update label text based on overwrite flag
-    if (overwrite) {
-      nameLabel.setText("Enter Save Name (overwriting existing save):");
-    } else {
-      nameLabel.setText("Enter Save Name:");
-    }
-  }
-
   /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
 
-    // Back button positioned at top-left with close icon
-    ImageButton backBtn = ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
-    backBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
+    // Back button positioned at top-left
+    TextButton backBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
 
     // Title
     Label titleLabel = ui.title("NEW GAME");
 
     // Name input field (initially hidden)
-    nameLabel = ui.text("Enter Save Name:");
-
-    // Create TextField with custom font
-    TextField.TextFieldStyle textFieldStyle =
-        new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
-    BitmapFont customFont =
-        ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
-    if (customFont != null) {
-      textFieldStyle.font = customFont;
-    }
-    nameInput = new TextField("", textFieldStyle);
-    nameInput.setMessageText("");
+    nameLabel = ui.subheading("ENTER SAVE NAME");
+    nameInput = ui.createTextField("");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
@@ -101,7 +70,7 @@ public class NewGameMenuDisplay extends UIComponent {
       } else {
         // Empty save slot
         String buttonText = "Empty";
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -118,7 +87,7 @@ public class NewGameMenuDisplay extends UIComponent {
     }
 
     // Start game button
-    startButton = ButtonFactory.createButton("Start Game");
+    startButton = ui.primaryButton("Start Game", 60f);
     startButton.addListener(
         new ChangeListener() {
           @Override
@@ -143,7 +112,6 @@ public class NewGameMenuDisplay extends UIComponent {
         });
 
     // Add back button directly to stage (no table needed for positioning)
-
     Table contentTable = new Table();
     contentTable.setFillParent(true);
     contentTable.center();
@@ -176,12 +144,6 @@ public class NewGameMenuDisplay extends UIComponent {
     nameLabel.setVisible(false);
     nameInput.setVisible(false);
     startButton.setVisible(false);
-  }
-
-  @Override
-  public void resize() {
-    super.resize();
-    // Future: handle dynamic resizing if required
   }
 
   @Override

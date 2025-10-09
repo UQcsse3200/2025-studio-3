@@ -16,6 +16,8 @@ public class GameAreaDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    entity.getEvents().addListener("pause", this::handlePause);
+    entity.getEvents().addListener("resume", this::handleResume);
     addActors();
   }
 
@@ -32,6 +34,20 @@ public class GameAreaDisplay extends UIComponent {
     float offsetY = 0.08f * height;
 
     title.setPosition(offsetX, height - offsetY);
+  }
+
+  /** Handles pause events to dim the HUD */
+  private void handlePause() {
+    if (title != null) {
+      title.getColor().a = 0.3f; // Dim to 30% opacity
+    }
+  }
+
+  /** Handles resume events to restore the HUD */
+  private void handleResume() {
+    if (title != null) {
+      title.getColor().a = 1.0f; // Restore to 100% opacity
+    }
   }
 
   @Override

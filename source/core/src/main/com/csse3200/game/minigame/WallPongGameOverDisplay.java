@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +46,8 @@ public class WallPongGameOverDisplay extends UIComponent {
     Label ballsHitLabel = new Label("Balls Hit: " + ballsHit, skin);
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
-    TextButton playAgainBtn = ButtonFactory.createButton("Play Again");
-    TextButton returnToArcadeBtn = ButtonFactory.createButton("Return to Arcade");
+    TextButton playAgainBtn = ui.primaryButton("Play Again", 60f);
+    TextButton returnToArcadeBtn = ui.primaryButton("Return to Arcade", 60f);
 
     playAgainBtn.addListener(
         new ChangeListener() {

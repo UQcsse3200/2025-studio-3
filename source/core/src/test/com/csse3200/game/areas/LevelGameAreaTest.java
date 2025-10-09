@@ -78,6 +78,10 @@ class LevelGameAreaTest {
     // second value allows testing of resize
     lenient().when(stage.getWidth()).thenReturn(1920f);
     lenient().when(stage.getHeight()).thenReturn(1080f);
+    // For tests, map screen coords directly to stage coords by default
+    lenient()
+        .when(stage.screenToStageCoordinates(any(Vector2.class)))
+        .thenAnswer(inv -> inv.getArgument(0));
 
     lenient()
         .when(resourceService.getAsset(anyString(), eq(Texture.class)))
@@ -151,8 +155,8 @@ class LevelGameAreaTest {
     assertEquals(s.x, back.x, 2);
     assertEquals(s.y, back.y, 2);
 
-    // y values should be flipped
-    assertNotEquals(s.y, world.y);
+    // With stage-based conversion, Y is no longer flipped relative to stage coords
+    assertEquals(s.y, back.y, 2);
   }
 
   @Test

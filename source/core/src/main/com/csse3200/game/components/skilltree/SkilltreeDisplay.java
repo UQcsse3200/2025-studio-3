@@ -94,7 +94,7 @@ public class SkilltreeDisplay extends UIComponent {
   /** Adds actors to the stage. */
   private void addActors() {
     // Title label centered at top
-    Label titleLabel = ui.title("Skill Tree");
+    Label titleLabel = ui.title("Town");
     float pad = ui.getScaledHeight(24f);
     titleLabel.setPosition(
         stage.getViewport().getWorldWidth() / 2f - titleLabel.getWidth() / 2f,

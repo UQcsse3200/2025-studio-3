@@ -1,25 +1,20 @@
 package com.csse3200.game.components.settingsmenu;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import net.dermetfan.utils.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** Main settings menu component. */
 public class SettingsMenu extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(SettingsMenu.class);
   private final GdxGame game;
   private Table rootTable;
-  private Table exitBtn;
+  private TextButton exitBtn;
 
   /**
    * Constructor for SettingsMenu.
@@ -35,6 +30,7 @@ public class SettingsMenu extends UIComponent {
   public void create() {
     super.create();
     addActors();
+    entity.getEvents().addListener("back", this::exitMenu);
     entity.getEvents().addListener("backtosettingsmenu", this::showMenu);
     entity.getEvents().addListener("gamesettings", this::hideMenu);
     entity.getEvents().addListener("displaysettings", this::hideMenu);
@@ -109,22 +105,7 @@ public class SettingsMenu extends UIComponent {
 
   /** Make the close button. */
   private void makeCloseBtn() {
-    float uiScale = ui.getUIScale();
-    exitBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-    exitBtn.setSize(60f * uiScale, 60f * uiScale);
-    exitBtn.setPosition(20f * uiScale, stage.getHeight() - 60f * uiScale - 20f * uiScale);
-    exitBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Exit button clicked");
-            exitMenu();
-          }
-        });
+    exitBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(exitBtn);
   }
 
@@ -152,13 +133,6 @@ public class SettingsMenu extends UIComponent {
   @Override
   protected void draw(SpriteBatch batch) {
     // draw
-  }
-
-  @Override
-  public void update() {
-    super.update();
-    float uiScale = ui.getUIScale();
-    exitBtn.setPosition(20f * uiScale, stage.getHeight() - 60f * uiScale - 20f * uiScale);
   }
 
   @Override
