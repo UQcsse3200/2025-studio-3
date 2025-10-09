@@ -38,7 +38,7 @@ public class Arsenal {
       }
     }
 
-    generators = new ArrayList<>(Arrays.asList("furnace"));
+    generators = new ArrayList<>(Arrays.asList("furnace", "healer"));
   }
 
   /**

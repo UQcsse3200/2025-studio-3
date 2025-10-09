@@ -648,6 +648,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
+      if (occ.getComponent(DefenderStatsComponent.class) != null) {
+        logger.info("new health = {}", occ.getComponent(DefenderStatsComponent.class).getHealth());
+      } else {
+        logger.info("new health = {}", occ.getComponent(GeneratorStatsComponent.class).getHealth());
+      }
     }
   }
 
