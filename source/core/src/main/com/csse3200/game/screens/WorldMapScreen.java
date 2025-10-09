@@ -20,6 +20,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
 import com.csse3200.game.ui.terminal.Terminal;
@@ -351,15 +352,17 @@ public class WorldMapScreen extends BaseScreen {
     // 统一在每帧强制相机缩放到当前 step，避免不同步（提取为独立方法以降低嵌套/复杂度）
     enforceCameraZoomStep();
 
-    // If WASD is pressed, smoothly recenter view to player when player is not moving
-    if (playerEntity != null
-        && (Gdx.input.isKeyJustPressed(Input.Keys.W)
-            || Gdx.input.isKeyJustPressed(Input.Keys.A)
-            || Gdx.input.isKeyJustPressed(Input.Keys.S)
-            || Gdx.input.isKeyJustPressed(Input.Keys.D))) {
-      WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
-      if (comp != null && !comp.isCurrentlyMoving()) {
-        startSmoothRecenterToPlayer();
+    // If movement keys are pressed, smoothly recenter view to player when player is not moving
+    if (playerEntity != null) {
+      SettingsService settingsService = ServiceLocator.getSettingsService();
+      if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getUpButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getDownButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getLeftButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getRightButton())) {
+        WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
+        if (comp != null && !comp.isCurrentlyMoving()) {
+          startSmoothRecenterToPlayer();
+        }
       }
     }
 

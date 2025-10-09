@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.csse3200.game.areas.GameArea; // <-- IMPORT ADDED
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.physics.PhysicsService;
@@ -35,6 +36,9 @@ public class ServiceLocator {
   private static WaveService waveService;
   private static SettingsService settingsService;
   private static DiscordRichPresenceService discordRichPresenceService;
+
+  // --- NEW FIELD ADDED ---
+  private static GameArea gameArea;
 
   /**
    * Gets the entity service.
@@ -160,6 +164,16 @@ public class ServiceLocator {
    */
   public static WorldMapService getWorldMapService() {
     return worldMapService;
+  }
+
+  // --- NEW GETTER ADDED ---
+  /**
+   * Gets the active game area.
+   *
+   * @return the game area
+   */
+  public static GameArea getGameArea() {
+    return gameArea;
   }
 
   /**
@@ -370,6 +384,23 @@ public class ServiceLocator {
     worldMapService = source;
   }
 
+  // --- NEW REGISTRATION METHODS ADDED ---
+  /**
+   * Registers the game area.
+   *
+   * @param area the game area
+   */
+  public static void registerGameArea(GameArea area) {
+    logger.debug("Registering game area {}", area.getClass().getSimpleName());
+    gameArea = area;
+  }
+
+  /** Deregisters the game area. */
+  public static void deregisterGameArea() {
+    logger.debug("Deregistering game area");
+    gameArea = null;
+  }
+
   /** Deregisters the world map service. */
   public static void deregisterWorldMapService() {
     logger.debug("Removing world map service");
@@ -437,6 +468,7 @@ public class ServiceLocator {
     resourceService = null;
     currencyService = null;
     itemEffectsService = null;
+    gameArea = null; // <-- ADDED TO CLEAR METHOD
   }
 
   /** Private constructor to prevent instantiation. */

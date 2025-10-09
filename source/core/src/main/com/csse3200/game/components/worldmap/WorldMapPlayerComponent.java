@@ -1,13 +1,13 @@
 package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.concurrency.JobSystem;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
@@ -115,7 +115,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     ps.getProfile().setWorldMapY(pos.y);
 
     try {
-      ps.saveCurrentProfile(); // ★ 立刻落盘
+      ps.saveCurrentProfile();
     } catch (Exception e) {
       logger.warn("[WorldMapPlayerComponent] Failed to save position: {}", e.getMessage());
     }
@@ -246,43 +246,45 @@ public class WorldMapPlayerComponent extends UIComponent {
     return true;
   }
 
-  /** Read a single WASD edge this frame; returns null if none. */
+  /** Read a single movement key this frame; returns null if none. */
   private String readWASDOnce() {
-    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) return "W";
-    if (Gdx.input.isKeyJustPressed(Input.Keys.A)) return "A";
-    if (Gdx.input.isKeyJustPressed(Input.Keys.S)) return "S";
-    if (Gdx.input.isKeyJustPressed(Input.Keys.D)) return "D";
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getUpButton())) return "W";
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getLeftButton())) return "A";
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getDownButton())) return "S";
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getRightButton())) return "D";
     return null;
   }
 
   /**
-   * Fallback: legacy directional navigation. D → nearest node strictly to the right (levels only) A
-   * → nearest node strictly to the left (levels only) W → Town if currently at Level 3 S → Level 3
-   * if currently at Town
+   * Fallback: legacy directional navigation. Right → nearest node strictly to the right (levels
+   * only) Left → nearest node strictly to the left (levels only) Up → Town if currently at Level 3
+   * Down → Level 3 if currently at Town
    */
   private void handleLegacyDirectionalNavigation() {
     Vector2 position = entity.getPosition();
+    SettingsService settingsService = ServiceLocator.getSettingsService();
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.D)) {
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getRightButton())) {
       WorldMapNode right = findDirectionalNeighbor(position, /* toRight= */ true);
       if (right != null) startFreeMoveTo(getWorldCoords(right));
       return;
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.A)) {
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getLeftButton())) {
       WorldMapNode left = findDirectionalNeighbor(position, /* toRight= */ false);
       if (left != null) startFreeMoveTo(getWorldCoords(left));
       return;
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.W)) {
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getUpButton())) {
       if (isAtNode(levelThreeNode, position) && townNode != null) {
         startFreeMoveTo(getWorldCoords(townNode));
       }
       return;
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.S)
+    if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getDownButton())
         && isAtNode(townNode, position)
         && levelThreeNode != null) {
       startFreeMoveTo(getWorldCoords(levelThreeNode));
@@ -336,50 +338,93 @@ public class WorldMapPlayerComponent extends UIComponent {
 
   private void enqueueSteps(List<WorldMapService.PathDef> steps) {
     if (steps == null) return;
-    WorldMapService svc = ServiceLocator.getWorldMapService();
-    for (WorldMapService.PathDef def : steps) {
-      if (def == null) continue;
-      if (def.getWaypoints() != null) {
-        for (Vector2 p : def.getWaypoints()) waypointQueue.add(new Vector2(p));
+
+    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+    for (WorldMapService.PathDef pathDef : steps) {
+      if (pathDef == null) continue;
+
+      enqueueWaypoints(pathDef);
+      enqueueEndNode(worldMapService, pathDef);
+    }
+  }
+
+  private void enqueueWaypoints(WorldMapService.PathDef pathDef) {
+    if (pathDef.getWaypoints() != null) {
+      for (Vector2 waypoint : pathDef.getWaypoints()) {
+        waypointQueue.add(new Vector2(waypoint));
       }
-      WorldMapNode end = svc.getNode(def.getNext());
-      if (end != null) waypointQueue.add(getWorldCoords(end));
+    }
+  }
+
+  private void enqueueEndNode(WorldMapService worldMapService, WorldMapService.PathDef pathDef) {
+    WorldMapNode endNode = worldMapService.getNode(pathDef.getNext());
+    if (endNode != null) {
+      waypointQueue.add(getWorldCoords(endNode));
     }
   }
 
   /** BFS from startKey to targetKey using W/A/S/D edges defined in the JSON. */
   private List<WorldMapService.PathDef> findJsonPath(String startKey, String targetKey) {
-    WorldMapService svc = ServiceLocator.getWorldMapService();
-    if (svc == null || startKey == null || targetKey == null || startKey.equals(targetKey)) {
+    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
+    if (worldMapService == null
+        || startKey == null
+        || targetKey == null
+        || startKey.equals(targetKey)) {
       return java.util.Collections.emptyList();
     }
 
-    Deque<String> q = new ArrayDeque<>();
-    Map<String, Prev> prev = new HashMap<>();
-    q.addLast(startKey);
-    prev.put(startKey, new Prev(null, null));
+    return performBreadthFirstSearch(worldMapService, startKey, targetKey);
+  }
 
-    while (!q.isEmpty() && !prev.containsKey(targetKey)) {
-      String u = q.removeFirst();
-      for (String d : DIRS) {
-        WorldMapService.PathDef def = svc.getPath(u, d);
-        if (def == null || def.getNext() == null || prev.containsKey(def.getNext()))
-          continue; // <= single continue in loop
-        prev.put(def.getNext(), new Prev(u, def));
-        q.addLast(def.getNext());
+  private List<WorldMapService.PathDef> performBreadthFirstSearch(
+      WorldMapService worldMapService, String startKey, String targetKey) {
+    Deque<String> queue = new ArrayDeque<>();
+    Map<String, Prev> previousNodes = new HashMap<>();
+
+    queue.addLast(startKey);
+    previousNodes.put(startKey, new Prev(null, null));
+
+    while (!queue.isEmpty() && !previousNodes.containsKey(targetKey)) {
+      String currentNode = queue.removeFirst();
+      exploreNeighbors(worldMapService, currentNode, queue, previousNodes);
+    }
+
+    if (!previousNodes.containsKey(targetKey)) {
+      return java.util.Collections.emptyList();
+    }
+
+    return reconstructPath(previousNodes, startKey, targetKey);
+  }
+
+  private void exploreNeighbors(
+      WorldMapService worldMapService,
+      String currentNode,
+      Deque<String> queue,
+      Map<String, Prev> previousNodes) {
+    for (String direction : DIRS) {
+      WorldMapService.PathDef pathDef = worldMapService.getPath(currentNode, direction);
+      if (pathDef == null
+          || pathDef.getNext() == null
+          || previousNodes.containsKey(pathDef.getNext())) {
+        continue;
       }
+      previousNodes.put(pathDef.getNext(), new Prev(currentNode, pathDef));
+      queue.addLast(pathDef.getNext());
     }
+  }
 
-    if (!prev.containsKey(targetKey)) return java.util.Collections.emptyList();
-
+  private List<WorldMapService.PathDef> reconstructPath(
+      Map<String, Prev> previousNodes, String startKey, String targetKey) {
     LinkedList<WorldMapService.PathDef> path = new LinkedList<>();
-    String cur = targetKey;
-    while (!cur.equals(startKey)) {
-      Prev p = prev.get(cur);
-      if (p == null) break;
-      path.addFirst(p.def);
-      cur = p.prevKey;
+    String currentNode = targetKey;
+
+    while (!currentNode.equals(startKey)) {
+      Prev previousNode = previousNodes.get(currentNode);
+      if (previousNode == null) break;
+      path.addFirst(previousNode.def);
+      currentNode = previousNode.prevKey;
     }
+
     return path;
   }
 
@@ -562,7 +607,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   // --------------------------------------------------------------------- //
 
   private void handleNodeInteraction() {
-    if (nearbyNode == null || !Gdx.input.isKeyJustPressed(Input.Keys.E)) return;
+    if (nearbyNode == null) return;
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    if (!Gdx.input.isKeyJustPressed(settingsService.getSettings().getInteractionButton())) return;
     if (nearbyNode.isUnlocked()) {
       String message =
           nearbyNode.isCompleted()

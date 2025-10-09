@@ -21,6 +21,7 @@ import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RenderFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.input.InputDecorator;
@@ -50,6 +51,26 @@ public class MainGameScreen extends ScreenAdapter {
     "images/backgrounds/level_map_grass.png",
     "images/backgrounds/level_map_town.png",
     "images/backgrounds/level_map_final.png",
+    "images/entities/enemies/samurai_Bot.png",
+    "images/entities/enemies/samurai_Bot2.png",
+    "images/entities/enemies/samurai_Bot3.png",
+    "images/entities/enemies/samurai_Bot4.png",
+    "images/entities/enemies/samurai_Bot5.png",
+    "images/entities/enemies/samurai_Bot6.png",
+    "images/entities/enemies/samurai_Bot7.png",
+    "images/entities/enemies/samurai_Bot8.png",
+    "images/entities/enemies/samurai_Bot9.png",
+    "images/entities/enemies/samurai_Bot10.png",
+    "images/entities/enemies/samurai_Bot11.png",
+    "images/entities/enemies/gun_Bot.png",
+    "images/entities/enemies/gun_Bot2.png",
+    "images/entities/enemies/gun_Bot3.png",
+    "images/entities/enemies/gun_Bot4.png",
+    "images/entities/enemies/gun_Bot5.png",
+    "images/entities/enemies/gun_Bot6.png",
+    "images/entities/enemies/gun_Bot7.png",
+    "images/entities/enemies/gun_Bot8.png",
+    "images/entities/enemies/gun_Bot9.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
     "images/entities/defences/shield_1.png",
@@ -74,6 +95,13 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/shell.png",
     "images/entities/currency/scrap_metal.png",
     "images/entities/slotmachine/slot_reels_background.png",
+    "images/entities/enemies/Scrap-titan.png",
+    "images/entities/enemies/Scrap-titan2.png",
+    "images/entities/enemies/Scrap-titan3.png",
+    "images/entities/enemies/Scrap-titan4.png",
+    "images/entities/enemies/Scrap-titan5.png",
+    "images/entities/enemies/Scrap-titan6.png",
+    "images/effects/gun_bot_fireball.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
@@ -87,6 +115,12 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/buff.atlas",
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
+    "images/entities/enemies/blue_robot.atlas",
+    "images/entities/enemies/red_robot.atlas",
+    "images/entities/enemies/Scrap-titan.atlas",
+    "images/entities/enemies/samurai_Bot.atlas",
+    "images/entities/enemies/gun_Bot.atlas",
+    "images/entities/enemies/red_robot.atlas",
     "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
@@ -185,10 +219,21 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
     // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
     ServiceLocator.getWaveService()
         .setEnemySpawnCallback(
-            (col, row, type) ->
-                gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(type.toUpperCase())));
+            new WaveService.EnemySpawnCallback() {
+              @Override
+              public void spawnEnemy(int col, int row, String robotType) {
+                gameArea.spawnRobot(
+                    col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
+              }
+
+              @Override
+              public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+                gameArea.spawnBoss(row, bossType);
+              }
+            });
     gameArea.create();
     snapCameraBottomLeft();
     ServiceLocator.getWaveService().initialiseNewWave();

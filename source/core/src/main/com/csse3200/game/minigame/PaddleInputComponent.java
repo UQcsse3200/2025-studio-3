@@ -15,10 +15,15 @@ public class PaddleInputComponent extends Component {
   @Override
   public void update() {
     float delta = Gdx.graphics.getDeltaTime();
-    if (Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.A)) {
+    int left = Input.Keys.LEFT;
+    int altLeft = Input.Keys.A;
+    // Note: Paddle controls are minigame-specific; no settings mapping provided, keep defaults
+    if (Gdx.input.isKeyPressed(left) || Gdx.input.isKeyPressed(altLeft)) {
       paddle.moveLeft(delta);
     }
-    if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) || Gdx.input.isKeyPressed(Input.Keys.D)) {
+    int right = Input.Keys.RIGHT;
+    int altRight = Input.Keys.D;
+    if (Gdx.input.isKeyPressed(right) || Gdx.input.isKeyPressed(altRight)) {
       paddle.moveRight(delta);
     }
   }

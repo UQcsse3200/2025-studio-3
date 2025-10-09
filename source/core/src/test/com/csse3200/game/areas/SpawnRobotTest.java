@@ -14,6 +14,7 @@ import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,6 +48,12 @@ class SpawnRobotTest {
     ServiceLocator.clear();
     ServiceLocator.registerEntityService(new EntityService());
     ensureRenderService();
+    DiscordRichPresenceService discordRichPresenceService = mock(DiscordRichPresenceService.class);
+    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
   }
 
   private static void setPrivateField(Object target, String name, Object value) throws Exception {

@@ -38,8 +38,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final Texture background;
   private final SpriteBatch batch;
-  protected static final Skin skin =
-      new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+  protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
 
   /**
    * Constructs a SkillTreeScreen, initializing all necessary services and rendering components.
@@ -116,8 +115,10 @@ public class SkillTreeScreen extends ScreenAdapter {
 
     // Create UI entity with various components
     Entity ui = new Entity();
+    SkilltreeDisplay display = new SkilltreeDisplay();
     ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
+        .addComponent(display)
+        .addComponent(new SkilltreeButtons(game, display))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
         .addComponent(new AnimatedDropdownMenu())

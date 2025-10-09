@@ -1,15 +1,10 @@
 package com.csse3200.game.minigame;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +26,8 @@ public class MiniGameDisplay extends UIComponent {
     table = new Table();
     table.setFillParent(true);
 
-    TextButton laneRunnerBtn = ButtonFactory.createButton("Lane Runner");
-    TextButton wallPongBtn = ButtonFactory.createButton("Wall Pong");
+    TextButton laneRunnerBtn = ui.primaryButton("Lane Runner", 60f);
+    TextButton wallPongBtn = ui.primaryButton("Wall Pong", 60f);
 
     // Triggers an event when the button is pressed
     laneRunnerBtn.addListener(
@@ -64,26 +59,7 @@ public class MiniGameDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
-
+    TextButton closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
   }
 

@@ -52,10 +52,20 @@ public abstract class RenderComponent extends Component implements Renderable, D
    */
   protected abstract void draw(SpriteBatch batch);
 
+  /**
+   * Get the colour of the renderable.
+   *
+   * @return the colour
+   */
   public Color getColour() {
     return colour;
   }
 
+  /**
+   * Set the colour of the renderable.
+   *
+   * @param colour the colour
+   */
   public void setColour(Color colour) {
     this.colour = colour;
   }

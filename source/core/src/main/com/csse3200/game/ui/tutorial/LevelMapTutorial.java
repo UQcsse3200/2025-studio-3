@@ -12,7 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.TypographyFactory;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -110,9 +110,7 @@ public class LevelMapTutorial extends UIComponent {
     Table contentTable = new Table();
     contentTable.setFillParent(true);
 
-    messageLabel =
-        TypographyFactory.createSubtitle(
-            tutorialMessages[step], com.badlogic.gdx.graphics.Color.WHITE);
+    messageLabel = ui.text(tutorialMessages[step]);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
 
@@ -127,7 +125,9 @@ public class LevelMapTutorial extends UIComponent {
 
     stage.addActor(dialogTable);
 
-    Label hintLabel = TypographyFactory.createParagraph("Press SPACE to continue");
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    String skipKeyName = Input.Keys.toString(settingsService.getSettings().getSkipButton());
+    Label hintLabel = ui.text("Press " + skipKeyName + " to continue");
 
     messageTable = new Table();
     messageTable.setFillParent(true);
@@ -135,7 +135,7 @@ public class LevelMapTutorial extends UIComponent {
     stage.addActor(messageTable);
 
     // button to skip tutorial
-    TextButton skipButton = new TextButton("Skip Tutorial", skin);
+    TextButton skipButton = ui.primaryButton("SKIP TUTORIAL", 100);
     skipButton.addListener(
         new ClickListener() {
           @Override
@@ -161,7 +161,8 @@ public class LevelMapTutorial extends UIComponent {
   public void update() {
     if (!active) return;
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
+    if (Gdx.input.isKeyJustPressed(skipKey)) {
       if (step < tutorialMessages.length - 1) {
         nextStep(); // press space bar to move onto next message
       } else {

@@ -2,7 +2,6 @@ package com.csse3200.game.components.hotbar;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -20,7 +19,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Locale;
 import java.util.Map;
@@ -274,13 +272,19 @@ public class HotbarDisplay extends UIComponent {
 
     // Sets a placeholder message and an event to be called from other classes
 
-    insufficientScrapMessage = TypographyFactory.createParagraph("Insufficient Scrap");
+    insufficientScrapMessage = ui.text("Insufficient Scrap");
     insufficientScrapMessage.setVisible(false);
     Table messageTable = new Table();
     messageTable.setFillParent(true);
     messageTable.add(insufficientScrapMessage).expandY().bottom().padBottom(20f);
     stage.addActor(messageTable);
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
   }
 
   /**
@@ -313,11 +317,6 @@ public class HotbarDisplay extends UIComponent {
       a.setFontScale(5f);
       a.setPosition(x, y - 10);
     }
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

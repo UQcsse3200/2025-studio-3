@@ -3,6 +3,7 @@ package com.csse3200.game.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.areas.AreaAPI;
@@ -23,7 +24,7 @@ public class DragOverlay extends UIComponent {
    *
    * @param area Area to place units in.
    */
-  public DragOverlay(com.csse3200.game.areas.AreaAPI area) {
+  public DragOverlay(AreaAPI area) {
     this.area = area;
   }
 
@@ -85,14 +86,13 @@ public class DragOverlay extends UIComponent {
   public void update() {
     if (!active) return;
 
-    float stageH = ServiceLocator.getRenderService().getStage().getHeight();
-    float mx = Gdx.input.getX();
-    float my = Gdx.input.getY();
+    // Convert from screen (pixels, origin top-left) to stage coordinates (world UI units)
+    var stage = ServiceLocator.getRenderService().getStage();
+    Vector2 p = new Vector2(Gdx.input.getX(), Gdx.input.getY());
+    stage.screenToStageCoordinates(p);
 
-    // Center the image on the cursor
-    float x = mx - image.getWidth() / 2f;
-    float y = (stageH - my) - image.getHeight() / 2f;
-    image.setPosition(x, y);
+    // Center the drag image on the pointer
+    image.setPosition(p.x - image.getWidth() / 2f, p.y - image.getHeight() / 2f);
   }
 
   /** Cancels a drag in progress. */

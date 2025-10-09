@@ -48,7 +48,7 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
-    if (config.getName() != null && config.getName().equals("mortar")) {
+    if (config.getName() != null && config.getName().equals("Mortar")) {
       defender.setProperty("unitType", "mortar");
     }
 
@@ -189,7 +189,11 @@ public class DefenceFactory {
         new ColliderComponent()
             .setCollisionFilter(
                 PhysicsLayer.NPC,
-                (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY));
+                (short)
+                    (PhysicsLayer.DEFAULT
+                        | PhysicsLayer.OBSTACLE
+                        | PhysicsLayer.ENEMY
+                        | PhysicsLayer.BOSS));
 
     Entity npc =
         new Entity()

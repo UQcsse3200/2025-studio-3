@@ -108,4 +108,20 @@ public class ProjectileFactory {
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
     return gunnerProjectile;
   }
+  public static Entity createBossProjectile(int damage) {
+    short targetLayers = PhysicsLayer.NPC;
+    ColliderComponent collider = new ColliderComponent();
+    collider.setCollisionFilter(PhysicsLayer.BOSS_PROJECTILE, targetLayers);
+    Entity bossProjectile =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(collider)
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS_PROJECTILE))
+            .addComponent(new TouchAttackComponent(targetLayers, 0f))
+            .addComponent(new CombatStatsComponent(1, damage));
+    bossProjectile.addComponent(new TextureRenderComponent("images/effects/gun_bot_fireball.png"));
+    bossProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(bossProjectile, 0.2f, 0.2f);
+    return bossProjectile;
+  }
 }

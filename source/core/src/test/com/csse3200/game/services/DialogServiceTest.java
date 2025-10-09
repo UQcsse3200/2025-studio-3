@@ -4,20 +4,15 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.dialog.AchievementDialogComponent;
 import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
-import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.extensions.UIExtension;
 import java.util.List;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.AfterEach;
@@ -31,31 +26,18 @@ import org.slf4j.LoggerFactory;
 
 /** Test class for DialogService. */
 @ExtendWith(GameExtension.class)
+@ExtendWith(UIExtension.class)
 class DialogServiceTest {
   private static final Logger logger = LoggerFactory.getLogger(DialogServiceTest.class);
-  @Mock private GL20 mockGL20;
-  @Mock private Stage mockStage;
   @Mock private EntityService mockEntityService;
-
-  private RenderService renderService;
+  @Mock private Stage mockStage;
   private ResourceService resourceService;
   private DialogService dialogService;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-
-    // Initialize headless application for testing
-    if (Gdx.app == null) {
-      HeadlessApplicationConfiguration config = new HeadlessApplicationConfiguration();
-      new HeadlessApplication(new GdxGame(), config);
-    }
-
-    // Mock Gdx.gl
-    Gdx.gl = mockGL20;
-
     // Create real services
-    renderService = new RenderService();
     resourceService = mock(ResourceService.class); // use field so we register the same instance
     Texture mockTexture = mock(Texture.class);
     when(resourceService.getAsset(any(), eq(Texture.class))).thenReturn(mockTexture);
@@ -67,20 +49,7 @@ class DialogServiceTest {
     when(resourceService.getAsset("sounds/achievement_unlock.mp3", Sound.class))
         .thenReturn(mockSound);
 
-    // Mock the stage
-    when(mockStage.getWidth()).thenReturn(800f);
-    when(mockStage.getHeight()).thenReturn(600f);
-
-    SettingsService mockSettingsService = mock(SettingsService.class);
-    when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
-    // Set the stage on the render service
-    renderService.setStage(mockStage);
-
-    // Ensure a clean slate then register all required services (order matters before DialogService
-    // creation)
-    ServiceLocator.clear();
-    ServiceLocator.registerSettingsService(mockSettingsService);
-    ServiceLocator.registerRenderService(renderService);
+    // Register services (UIExtension will handle SettingsService and RenderService)
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerGlobalResourceService(resourceService);
     ServiceLocator.registerEntityService(mockEntityService);

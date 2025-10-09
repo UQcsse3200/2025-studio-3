@@ -65,6 +65,10 @@ public class CombatStatsComponent extends Component {
    * @param health health
    */
   public void setHealth(int health) {
+    if (this.health <= 0 && health <= 0) {
+      return;
+    }
+
     if (health >= 0) {
       this.health = health;
     } else {
@@ -178,7 +182,6 @@ public class CombatStatsComponent extends Component {
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
-      deathSound.play(0.3f * volume);
     }
   }
 }

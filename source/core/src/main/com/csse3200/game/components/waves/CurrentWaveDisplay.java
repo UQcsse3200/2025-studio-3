@@ -1,6 +1,5 @@
 package com.csse3200.game.components.waves;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
@@ -28,6 +27,8 @@ public class CurrentWaveDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    entity.getEvents().addListener("pause", this::handlePause);
+    entity.getEvents().addListener("resume", this::handleResume);
     addActors();
 
     // Listen directly to WaveService events
@@ -63,24 +64,19 @@ public class CurrentWaveDisplay extends UIComponent {
     Table table = new Table();
     table.top().left();
     table.setFillParent(true);
-    table.padTop(25f).padLeft(5f);
+    table.padTop(73f).padLeft(30f);
 
     // Wave text label
-    waveLabel = new Label("Current Wave:", skin, "small");
+    waveLabel = ui.text("CURRENT WAVE: ");
 
     // Wave number label - start at 0 (no wave active)
-    waveNumberLabel = new Label(NO_WAVE_TEXT, skin, "small");
+    waveNumberLabel = ui.text(NO_WAVE_TEXT);
 
     // Add labels to table with some spacing
     table.add(waveLabel).padRight(10f);
     table.add(waveNumberLabel);
 
     stage.addActor(table);
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   /**
@@ -92,7 +88,7 @@ public class CurrentWaveDisplay extends UIComponent {
   public void updateWaveDisplay(int waveNumber) {
     currentWave = waveNumber;
     if (waveNumber > 0) {
-      waveNumberLabel.setText("Wave " + waveNumber);
+      waveNumberLabel.setText("" + waveNumber);
     } else {
       waveNumberLabel.setText(NO_WAVE_TEXT);
     }
@@ -127,6 +123,26 @@ public class CurrentWaveDisplay extends UIComponent {
    */
   public void setWave(int waveNumber) {
     updateWaveDisplay(waveNumber);
+  }
+
+  /** Handles pause events to dim the HUD */
+  private void handlePause() {
+    if (waveLabel != null) {
+      waveLabel.getColor().a = 0.3f; // Dim to 30% opacity
+    }
+    if (waveNumberLabel != null) {
+      waveNumberLabel.getColor().a = 0.3f; // Dim to 30% opacity
+    }
+  }
+
+  /** Handles resume events to restore the HUD */
+  private void handleResume() {
+    if (waveLabel != null) {
+      waveLabel.getColor().a = 1.0f; // Restore to 100% opacity
+    }
+    if (waveNumberLabel != null) {
+      waveNumberLabel.getColor().a = 1.0f; // Restore to 100% opacity
+    }
   }
 
   @Override
