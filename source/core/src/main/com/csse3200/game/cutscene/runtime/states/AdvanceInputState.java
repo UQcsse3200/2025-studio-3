@@ -18,6 +18,14 @@ public class AdvanceInputState implements ActionState, SupportsAdvance {
   }
 
   /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    // Not implemented
+  }
+
+  /**
    * Checks if the action is blocking till completion (false if async)
    *
    * @return True if the action is blocking till completion (false if async)

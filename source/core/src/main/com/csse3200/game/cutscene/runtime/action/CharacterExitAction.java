@@ -46,6 +46,17 @@ public class CharacterExitAction implements ActionState {
   }
 
   /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    characterState.setOnScreen(false);
+    characterState.setxOffset(-1f);
+    characterState.setOpacity(1f);
+    done = true;
+  }
+
+  /**
    * @return True if the action is blocking till completion (false if async)
    */
   @Override

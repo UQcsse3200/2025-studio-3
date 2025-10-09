@@ -15,6 +15,7 @@ public class CharacterEnterAction implements ActionState {
   private final int transitionDurationMs;
   private final boolean await;
   private boolean done;
+  private boolean startedOffScreen;
 
   public CharacterEnterAction(
       CharacterState characterState, CharacterEnterData characterEnterData) {
@@ -30,9 +31,14 @@ public class CharacterEnterAction implements ActionState {
                 new Texture(
                     characterEnterData.character().getPoses().get(characterEnterData.pose())))));
 
+    this.startedOffScreen = !characterState.isOnScreen();
+
     if (!characterState.isOnScreen() && characterEnterData.transition() == Transition.SLIDE) {
       characterState.setxOffset(-1);
     }
+
+    characterState.setScale(1f);
+    characterState.setRotation(0f);
 
     characterState.setPosition(characterEnterData.position());
     characterState.setOnScreen(true);
@@ -50,10 +56,15 @@ public class CharacterEnterAction implements ActionState {
 
       switch (characterEnterData.transition()) {
         case SLIDE -> {
-          characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
+          if (startedOffScreen) {
+            characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
+          }
         }
         case FADE -> {
           characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
+        }
+        case POP -> {
+          characterState.setScale(0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
         }
         default -> {
           // do nothing
@@ -61,9 +72,26 @@ public class CharacterEnterAction implements ActionState {
       }
     } else {
       characterState.setxOffset(0);
+      characterState.setyOffset(0);
       characterState.setOpacity(1);
       done = true;
     }
+  }
+
+  public float sineGauss(float x, float turningPoints) {
+    return (float) ((float) Math.exp(-Math.pow((x-0.5f), 2f)/(2*Math.pow(0.12f, 2f))) * Math.sin(turningPoints * x * Math.PI));
+  }
+
+  /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    switch (characterEnterData.transition()) {
+      case SLIDE -> characterState.setxOffset(0f);
+      case FADE -> characterState.setOpacity(1f);
+    }
+    done = true;
   }
 
   /**

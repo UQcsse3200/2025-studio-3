@@ -1,0 +1,110 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {
+      "id": "danny",
+      "name": "Danny",
+      "poses": {
+        "normal": "cutscenes/data/characters/danny/danny_normal.png"
+      }
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "poses": {
+        "normal": "cutscenes/data/characters/alice/alice_normal.png",
+        "sad": "cutscenes/data/characters/alice/alice_sad.png"
+      }
+    },
+    {
+      "id": "rob",
+      "name": "Rob",
+      "poses": {
+        "glitch": "cutscenes/data/characters/rob/rob_glitch.png"
+      }
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "core_collapse",
+      "image": "cutscenes/data/backgrounds/core_collapse.png"
+    },
+    {
+      "id": "city_dawn",
+      "image": "cutscenes/data/backgrounds/city_dawn.png"
+    }
+  ],
+  "cutscene": {
+    "id": "cutscene3_the_choice",
+    "beats": [
+      {
+        "id": "core_falling_apart",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "core_collapse", "transition": "fade", "duration": 800, "await": true },
+          { "type": "character.enter", "characterId": "alice", "pose": "sad", "position": "right", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "It’s falling apart! Disconnect now!", "await": true },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Not without you.", "await": true }
+        ]
+      },
+      {
+        "id": "the_decision",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "rob", "pose": "glitch", "position": "center", "transition": "glitch", "duration": 500, "await": true },
+          { "type": "dialogue.show", "characterId": "rob", "text": "Remove her code… and you live. Save her… and you both crash.", "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Please, don’t— I’m not worth the whole network.", "await": true },
+          {
+            "type": "choice",
+            "prompt": "Choose your fate:",
+            "choices": [
+              { "type": "goto", "line": "Save Alice", "cutsceneId": "current", "entryBeatId": "save_alice" },
+              { "type": "goto", "line": "Save the World", "cutsceneId": "current", "entryBeatId": "save_world" }
+            ],
+            "await": true
+          }
+        ]
+      },
+      {
+        "id": "save_alice",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "danny", "text": "I made you a promise.", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 800, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "You kept your promise.", "await": true },
+          { "type": "transition.fade", "color": "#ffffff", "duration": 1200, "await": true },
+          { "type": "goto", "cutsceneId": "current", "entryBeatId": "epilogue_saved" }
+        ]
+      },
+      {
+        "id": "save_world",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "danny", "text": "Goodbye, Alice.", "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Thank you…", "await": true },
+          { "type": "transition.fade", "color": "#000000", "duration": 1200, "await": true },
+          { "type": "goto", "cutsceneId": "current", "entryBeatId": "epilogue_saved_world" }
+        ]
+      },
+      {
+        "id": "epilogue_saved",
+        "advance": { "mode": "auto_delay", "delay": 1000 },
+        "actions": [
+          { "type": "background.set", "backgroundId": "city_dawn", "transition": "fade", "duration": 1200, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Every signal leaves an echo. Ours became a heartbeat.", "await": true },
+          { "type": "transition.fade", "color": "#000000", "duration": 2000, "await": true }
+        ]
+      },
+      {
+        "id": "epilogue_saved_world",
+        "advance": { "mode": "auto_delay", "delay": 1000 },
+        "actions": [
+          { "type": "background.set", "backgroundId": "city_dawn", "transition": "fade", "duration": 1200, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Every signal leaves an echo. Hers became a heartbeat.", "await": true },
+          { "type": "transition.fade", "color": "#000000", "duration": 2000, "await": true }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "config": {
+    "levelOne": {
+      "levelNumber": 1,
+      "mapFile": "images/backgrounds/level-1-map-v2.png",
+      "rows": 5,
+      "cols": 10,
+      "waves": [
+        {
+          "waveWeight": 20,
+          "minZombiesSpawn": 5,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.5 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.15 },
+            "bungee": { "cost": 4, "chance": 0.05 },
+            "teleport": { "cost": 6, "chance": 0.05 }
+          }
+        },
+        {
+          "waveWeight": 50,
+          "minZombiesSpawn": 10,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.4 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.2 },
+            "bungee": { "cost": 4, "chance": 0.05 },
+            "teleport": { "cost": 6, "chance": 0.1 }
+          }
+        },
+        {
+          "waveWeight": 75,
+          "minZombiesSpawn": 15,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.35 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.2 },
+            "bungee": { "cost": 4, "chance": 0.1 },
+            "teleport": { "cost": 6, "chance": 0.15 }
+          }
+        }
+      ],
+      "nextLevel": "levelTwo"
+    },
+    "levelTwo": {
+      "levelNumber": 2,
+      "mapFile": "images/backgrounds/level-2-map-v1.png",
+      "rows": 5,
+      "cols": 10,
+      "waves": [
+        {
+          "waveWeight": 25,
+          "minZombiesSpawn": 8,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.3 },
+            "fast": { "cost": 3, "chance": 0.4 },
+            "tanky": { "cost": 5, "chance": 0.2 },
+            "bungee": { "cost": 4, "chance": 0.1 },
+            "teleport": { "cost": 6, "chance": 0.05 }
+          }
+        },
+        {
+          "waveWeight": 45,
+          "minZombiesSpawn": 10,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.25 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.1 }
+          }
+        },
+        {
+          "waveWeight": 60,
+          "minZombiesSpawn": 12,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.25 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.12 }
+          }
+        },
+        {
+          "waveWeight": 80,
+          "minZombiesSpawn": 15,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.15 }
+          }
+        },
+        {
+          "waveWeight": 100,
+          "minZombiesSpawn": 18,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.2 }
+          }
+        }
+      ],
+      "nextLevel": "levelThree",
+      "isSlotMachine": true
+    }
+  }
+}

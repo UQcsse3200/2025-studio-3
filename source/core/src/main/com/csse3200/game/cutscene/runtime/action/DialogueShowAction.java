@@ -13,8 +13,6 @@ public class DialogueShowAction implements ActionState {
   private int nextCharMsCountdown;
   private boolean done;
 
-  // TODO: Add appearing logic
-
   public DialogueShowAction(DialogueState dialogueState, DialogueShowData dialogueShowData) {
     this.dialogueState = dialogueState;
     this.speaker = dialogueShowData.character().getName();
@@ -42,17 +40,54 @@ public class DialogueShowAction implements ActionState {
       nextCharMsCountdown -= dtMs;
     } else if (text.length() >= charsShown) {
       dialogueState.set(speaker, text.substring(0, charsShown));
+      char nextCharIfExists;
+      if (charsShown == text.length()) {
+        nextCharIfExists = '\0';
+      } else {
+        nextCharIfExists = text.charAt(charsShown);
+      }
       nextCharMsCountdown =
           switch (text.charAt(Math.max(charsShown - 1, 0))) {
-            case ',' -> 300;
-            case '.' -> 1000;
-            case '-' -> 500;
-            default -> 20;
+            case ',' -> 150;
+            case '.' -> {
+              if (nextCharIfExists == '.') {
+                yield 50;
+              } else {
+                yield 360;
+              }
+            }
+            case '-' -> 200;
+            case ':' -> 240;
+            case '!' -> {
+              if (text.charAt(charsShown - 2) == '?') {
+                yield 500;
+              } else {
+                yield 340;
+              }
+            }
+            case '?' -> {
+              if (nextCharIfExists == '!') {
+                yield 10;
+              } else {
+                yield 380;
+              }
+            }
+            default -> 32;
           };
       charsShown++;
     } else {
       done = true;
     }
+  }
+
+  /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
+  @Override
+  public void skip() {
+    dialogueState.setVisible(true);
+    dialogueState.set(speaker, text);
+    done = true;
   }
 
   /**

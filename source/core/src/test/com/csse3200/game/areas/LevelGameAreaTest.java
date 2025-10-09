@@ -32,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.quality.Strictness;
 
@@ -48,6 +49,8 @@ class LevelGameAreaTest {
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
+
+  private MockedStatic<com.badlogic.gdx.utils.Timer> timerMock;
 
   /** A class to capture spawned entities without needing a full ECS */
   static class CapturingLevelGameArea extends LevelGameArea {
@@ -104,6 +107,23 @@ class LevelGameAreaTest {
 
     persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
     // Note: Persistence.profile() no longer exists in the reworked system
+
+    // Make Timer.schedule(task, delay) run the task immediately
+    timerMock =
+        mockStatic(
+            com.badlogic.gdx.utils.Timer.class, withSettings().strictness(Strictness.LENIENT));
+    timerMock
+        .when(
+            () ->
+                com.badlogic.gdx.utils.Timer.schedule(
+                    Mockito.<com.badlogic.gdx.utils.Timer.Task>any(), Mockito.anyFloat()))
+        .thenAnswer(
+            inv -> {
+              com.badlogic.gdx.utils.Timer.Task task = inv.getArgument(0);
+              // run the Stop task immediately so your test can assert synchronously
+              task.run();
+              return null;
+            });
   }
 
   @AfterEach
@@ -113,6 +133,7 @@ class LevelGameAreaTest {
       if (persistenceMock != null) {
         persistenceMock.close();
       }
+      if (timerMock != null) timerMock.close();
     } catch (Throwable ignored) {
       // Ignore throwable and continue to next test
     }
