@@ -351,8 +351,8 @@ public class WaveService implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-      String robotType = entitySpawn.getNextRobotType();
-      enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
+    String robotType = entitySpawn.getNextRobotType();
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
   }
 

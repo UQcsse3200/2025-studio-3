@@ -220,24 +220,24 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("Initialising main game screen entities");
     gameArea = createGameArea();
     // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
-      // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
-      ServiceLocator.getWaveService()
-              .setEnemySpawnCallback(
-                      new WaveService.EnemySpawnCallback() {
-                          @Override
-                          public void spawnEnemy(int col, int row, String robotType) {
-                              gameArea.spawnRobot(col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
-                          }
+    // Wire WaveService spawn callback to LevelGameArea.spawnRobot with enum conversion
+    ServiceLocator.getWaveService()
+        .setEnemySpawnCallback(
+            new WaveService.EnemySpawnCallback() {
+              @Override
+              public void spawnEnemy(int col, int row, String robotType) {
+                gameArea.spawnRobot(
+                    col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
+              }
 
-                          @Override
-                          public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-                              gameArea.spawnBoss(row, bossType);
-                          }
-                      });
+              @Override
+              public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+                gameArea.spawnBoss(row, bossType);
+              }
+            });
     gameArea.create();
     snapCameraBottomLeft();
     ServiceLocator.getWaveService().initialiseNewWave();
-
 
     // Setup for camera pan
     var camComp = renderer.getCamera();
