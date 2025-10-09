@@ -424,7 +424,8 @@ class DefenceFactoryTest {
 
     ColliderComponent collider = baseDefender.getComponent(ColliderComponent.class);
     short expectedFilter =
-        (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY);
+        (short)
+            (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY | PhysicsLayer.BOSS);
     assertEquals(
         PhysicsLayer.NPC,
         collider.getFixture().getFilterData().categoryBits,
