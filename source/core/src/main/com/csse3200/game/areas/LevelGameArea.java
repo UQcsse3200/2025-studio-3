@@ -19,6 +19,7 @@ import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
+import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
@@ -26,11 +27,17 @@ import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.factories.DefenceFactory;
+import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
@@ -39,6 +46,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -103,8 +111,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setScaling();
     selectedUnit = null;
 
-    ServiceLocator.getDiscordRichPresenceService()
-        .updateGamePresence(currentLevelKey.split("level")[1], 1);
+    DiscordRichPresenceService discord = ServiceLocator.getDiscordRichPresenceService();
+    if (discord != null) {
+      discord.updateGamePresence(currentLevelKey.split("level")[1], 1);
+    }
   }
 
   /** Loads level configuration from ConfigService. */
@@ -166,6 +176,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     displayUI();
     spawnMap();
     spawnGrid(levelRows, levelCols);
+
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
@@ -349,6 +360,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
+    // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
 
@@ -394,9 +406,64 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new Vector2(x, y);
   }
 
+  private void addGunnerRobotTask(Entity unit) {
+    // ensure gunner attacks immediately
+    unit.getEvents()
+        .addListener(
+            "fire",
+            () -> {
+              // spawn a projectile every tick
+              Vector2 spawnPos = unit.getPosition().cpy();
+              logger.info("spawnRobotProjectile called at {}", spawnPos);
+              spawnRobotProjectile(spawnPos);
+              logger.info("Gunner fired projectile at position {}", spawnPos);
+            });
+  }
+
+  private void addMinion(Entity unit) {
+    unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+
+    unit.getEvents()
+        .addListener(
+            "spawnMinion",
+            () -> {
+              Entity mini = RobotFactory.createRobotType(RobotType.MINI);
+
+              // spawn half a tile ahead, same lane
+              // TODO replace this stuff with the newer LevelGameArea code used for the other
+              // robots.
+              // E.g. registerRobot
+              float aheadX = unit.getPosition().x - 0.5f * tileSize;
+              float spawnY = unit.getPosition().y;
+
+              mini.setPosition(aheadX, spawnY);
+              mini.scaleHeight(tileSize);
+
+              spawnEntity(mini);
+              robots.add(mini);
+
+              mini.getEvents()
+                  .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                        requestDespawn(mini);
+                        robots.remove(mini);
+                      });
+            });
+  }
+
   /** Shared creation, placement, scaling, spawning, and listener wiring for robots. */
   private void registerRobot(RobotType type, float worldX, float worldY) {
     Entity unit = RobotFactory.createRobotType(type);
+
+    // Handles adding additional tasks for robots who spawn entities
+    // I don't think these can be added to robot factory because they spawn entities
+    if (type == RobotType.GIANT) {
+      addMinion(unit);
+    } else if (type == RobotType.GUNNER) {
+      addGunnerRobotTask(unit);
+    }
+
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
 
@@ -481,13 +548,30 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 damageRobotsAtPosition(pos, radius, damage);
               });
     } else {
-      projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+      projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
     }
     if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
     spawnEntity(projectile); // adds to area and entity service
+  }
+
+  /**
+   * Spawns a projectile (bullet) for the gunner robot type
+   *
+   * @param spawnPos the position to spawn the projectile at
+   */
+  public void spawnRobotProjectile(Vector2 spawnPos) {
+    Entity projectile = ProjectileFactory.createGunnerProjectile(5, 150f);
+    projectile.setPosition(spawnPos.x, spawnPos.y);
+
+    projectile.scaleHeight(30f);
+    projectile.scaleWidth(30f);
+    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+
+    spawnEntity(projectile);
+    logger.info("Gunner projectile spawned at {}", spawnPos);
   }
 
   /**

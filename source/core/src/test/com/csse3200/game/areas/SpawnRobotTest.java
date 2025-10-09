@@ -143,6 +143,7 @@ class SpawnRobotTest {
     ServiceLocator.clear();
     EntityService es = mock(EntityService.class);
     ServiceLocator.registerEntityService(es);
+    ensureRenderService();
 
     LevelGameArea lvl = newLevelAreaWithGeometry();
 
@@ -199,6 +200,83 @@ class SpawnRobotTest {
       float spawnCol = Math.min(9 + 0.5f, COLS - 0.01f);
       assertEquals(worldX(spawnCol), spawned.getPosition().x, EPS);
       assertEquals(worldY(4), spawned.getPosition().y, EPS);
+    }
+  }
+
+  // ===== New tests for the GIANT/MINI wiring and BUNGEE delegation =====
+
+  @Test
+  void spawnRobot_giant_wiresWatcher_andSpawnsMiniOnEvent() throws Exception {
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    Entity giant = new Entity();
+    Entity mini = spy(new Entity());
+
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      rf.when(() -> RobotFactory.createRobotType(RobotType.GIANT)).thenReturn(giant);
+      rf.when(() -> RobotFactory.createRobotType(RobotType.MINI)).thenReturn(mini);
+
+      int col = 4, row = 2;
+      lvl.spawnRobot(col, row, RobotType.GIANT);
+
+      // Giant position & scale
+      assertEquals(worldX(col), giant.getPosition().x, EPS);
+      assertEquals(worldY(row), giant.getPosition().y, EPS);
+      assertEquals(CELL, giant.getScale().y, EPS);
+
+      // Trigger the minion-spawn event (what the watcher/listener listens for)
+      giant.getEvents().trigger("spawnMinion");
+
+      // Mini should spawn half a tile to the left, same lane, and be scaled to tile height
+      float expectedMiniX = worldX(col) - 0.5f * CELL;
+      float expectedMiniY = worldY(row);
+      assertEquals(expectedMiniX, mini.getPosition().x, EPS);
+      assertEquals(expectedMiniY, mini.getPosition().y, EPS);
+      assertEquals(CELL, mini.getScale().y, EPS);
+    }
+  }
+
+  @Test
+  void spawnRobot_giant_registersMiniOnEvent() throws Exception {
+    // Use a mocked EntityService to count registrations and avoid external side effects
+    ServiceLocator.clear();
+    EntityService es = mock(EntityService.class);
+    ServiceLocator.registerEntityService(es);
+    ensureRenderService();
+
+    LevelGameArea lvl = newLevelAreaWithGeometry();
+
+    Entity giant = new Entity();
+    Entity mini = new Entity();
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      rf.when(() -> RobotFactory.createRobotType(RobotType.GIANT)).thenReturn(giant);
+      rf.when(() -> RobotFactory.createRobotType(RobotType.MINI)).thenReturn(mini);
+
+      lvl.spawnRobot(4, 2, RobotType.GIANT);
+
+      // Giant registered once
+      verify(es, times(1)).register(same(giant));
+
+      // Trigger spawn event for the mini
+      giant.getEvents().trigger("spawnMinion");
+
+      // Mini registered once; total register calls now 2
+      verify(es, times(1)).register(same(mini));
+      verify(es, times(2)).register(any(Entity.class));
+    }
+  }
+
+  @Test
+  void spawnRobot_bungee_delegatesToSpawnRobotOnDefence() throws Exception {
+    LevelGameArea real = newLevelAreaWithGeometry();
+    LevelGameArea spyArea = spy(real);
+
+    try (MockedStatic<RobotFactory> rf = mockStatic(RobotFactory.class)) {
+      spyArea.spawnRobot(3, 1, RobotType.BUNGEE);
+
+      // Delegation should happen; grid is empty so no RobotFactory call is expected here
+      verify(spyArea, times(1)).spawnRobotOnDefence(RobotType.BUNGEE);
+      rf.verifyNoInteractions();
     }
   }
 }

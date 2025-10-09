@@ -108,7 +108,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/shield.atlas",
     "images/entities/defences/healer.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
-    "images/entities/enemies/basic_robot.atlas",
+    "images/entities/enemies/standard_robot.atlas",
     "images/effects/grenade.atlas",
     "images/effects/coffee.atlas",
     "images/effects/emp.atlas",
@@ -124,6 +124,8 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/enemies/fast_robot.atlas",
+    "images/entities/enemies/tanky_robot.atlas"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;

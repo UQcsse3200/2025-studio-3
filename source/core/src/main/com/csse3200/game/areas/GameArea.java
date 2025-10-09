@@ -1,6 +1,5 @@
 package com.csse3200.game.areas;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.entities.Entity;
@@ -26,7 +25,11 @@ public abstract class GameArea implements Disposable {
   /** Create the game area in the world. */
   public abstract void create();
 
-  /** Dispose of all internal entities in the area */
+  /**
+   * Dispose of all internal entities in the area. We have had issues where disposing during physics
+   * steps caused crashes. However, this will presumably only be called to dispose the entire area,
+   * so no more physics steps should be caused.
+   */
   public void dispose() {
     for (Entity entity : areaEntities) {
       entity.dispose();
@@ -54,7 +57,7 @@ public abstract class GameArea implements Disposable {
 
   public void requestDespawn(Entity entity) {
     if (entity == null) return;
-    Gdx.app.postRunnable(() -> despawnEntity(entity));
+    entity.setDeathFlag();
   }
 
   /**

@@ -3,6 +3,8 @@ package com.csse3200.game.components.tasks;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Allows an entity to attack the closest target entity from a list of potential targets. This task
@@ -13,6 +15,7 @@ public class AttackTask extends TargetDetectionTasks {
   private final float baseFireCooldown;
   private float fireCooldown; // time between attacks
   private float timeSinceLastFire = 0f;
+  private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   /**
    * Creates an attack task

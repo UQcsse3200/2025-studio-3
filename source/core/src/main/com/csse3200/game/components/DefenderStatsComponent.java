@@ -109,15 +109,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
   }
 
-  /**
-   * gets the defenders maximum health.
-   *
-   * @return maxhealth
-   */
-  private int getMaxHealth() {
-    return maxHealth;
-  }
-
   /** Sets the defender's max health limit */
   private void setMaxHealth(int newHealth) {
     this.maxHealth = newHealth;
