@@ -4,19 +4,24 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -24,17 +29,14 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +50,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float Y_MARGIN_TILES = 1f;
   private static final float MAP_HEIGHT_TILES = 8f;
   private static final String ENTITY_DEATH_EVENT = "entityDeath";
+  private static final String HEAL = "heal";
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private float xOffset;
   private float yOffset;
@@ -68,6 +71,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
+
+  // Level configuration
   private final String currentLevelKey;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
@@ -75,6 +80,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private String mapFilePath; // from level config
   private final ItemHandler itemHandler = new ItemHandler(this);
   private final WavePreviewManager wavePreview = new WavePreviewManager(this);
+
+  private static final List<String> levelOrder =
+      List.of("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -176,8 +184,28 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(this.levelCompleteEntity);
   }
 
+  /** Unlocks all entities that are listed as playing on the current game level */
+  private void unlockAllEntities(Profile profile) {
+    for (String level : levelOrder) {
+      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+        if (Arsenal.ALL_DEFENCES.get(key).equals(level) && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockDefence(key);
+        }
+      }
+      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
+        if (Arsenal.ALL_GENERATORS.get(key).equals(level) && !profile.getArsenal().contains(key)) {
+          profile.getArsenal().unlockGenerator(key);
+        }
+      }
+      if (level.equals(currentLevelKey)) {
+        break;
+      }
+    }
+  }
+
   /** Populates unitList with all available defenders and generators from the player's arsenal. */
   private void populateUnitList(Profile profile, ConfigService configService) {
+    unlockAllEntities(profile);
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
       if (config != null) {
@@ -407,15 +435,85 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
 
     // Scale the projectile so it’s more visible
-    projectile.scaleHeight(30f); // set the height in world units
-    projectile.scaleWidth(30f); // set the width in world units
+    float size = 30f;
+    if (tag.getType() == ProjectileType.HARPOON_PROJECTILE) {
+      projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 4f);
+      size = 100f;
+    }
+    projectile.scaleHeight(size); // set the height in world units
+    projectile.scaleWidth(size); // set the width in world units
 
-    projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
-    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    if (tag.getType() == ProjectileType.SHELL) {
+      Random random = new Random();
+      int col = (int) ((spawnPos.x - xOffset) / tileSize);
+      int maxRange = 9 - col;
+      int num = random.nextInt(maxRange - 1) + 2; // pick random num between 2 and 7
+      projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 
+      projectile
+          .getEvents()
+          .addListener(
+              "despawnShell",
+              e -> {
+                Vector2 pos = projectile.getPosition();
+                int damage = 5; // or configurable
+                float radius = tileSize; // 1 tile radius
+                damageRobotsAtPosition(pos, radius, damage);
+              });
+    } else {
+      projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+    }
+    if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
+        && tag.getType() != ProjectileType.SHELL) {
+      projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    }
     spawnEntity(projectile); // adds to area and entity service
+  }
+
+  /**
+   * Deal damage to all robots in a circular area around the given world position.
+   *
+   * @param landingPos The world coordinates where the projectile landed
+   * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
+   * @param damage Amount of damage to apply
+   */
+  public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
+    if (robots.isEmpty()) return;
+
+    List<Entity> robotsToRemove = new ArrayList<>();
+
+    for (Entity robot : robots) {
+      CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
+      if (stats == null) continue;
+
+      Vector2 robotPos = robot.getPosition();
+      float dx = robotPos.x - landingPos.x;
+      float dy = robotPos.y - landingPos.y;
+      float distanceSq = dx * dx + dy * dy;
+
+      if (distanceSq <= radius * radius) {
+        // Apply damage by subtracting health
+        stats.addHealth(-damage);
+
+        logger.info(
+            "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
+
+        // Mark robot for removal if dead
+        boolean mark = stats.isDead();
+        if (mark) {
+          robotsToRemove.add(robot);
+        }
+      }
+    }
+
+    // Despawn dead robots
+    for (Entity r : robotsToRemove) {
+      requestDespawn(r);
+      robots.remove(r);
+    }
   }
 
   /**
@@ -447,6 +545,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void spawnUnit(int position) {
     // --- Step 1: Resolve grid/tile/selected entity ---
     Entity tile = grid.getTile(position);
+
     if (tile == null) {
       logger.warn("No tile entity found at index {}", position);
       return;
@@ -460,6 +559,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Vector2 worldPos = resolveWorldPosition(position);
     newEntity.setPosition(worldPos);
+    if ("mortar".equals(newEntity.getProperty("unitType")) && worldPos.x >= 1000) {
+      return;
+    }
 
     // --- Step 2: Item path ---
     if (trySpawnItem(newEntity, tile, worldPos)) {
@@ -485,11 +587,39 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return (deck != null) ? deck.getEntitySupplier().get() : null;
   }
 
+  /** Reset drag state and selection after any placement. */
+  private void resetSelectionUI() {
+    setIsCharacterSelected(false);
+    setSelectedUnit(null);
+    cancelDrag();
+  }
+
   /** Convert a tile index into its world position. */
   private Vector2 resolveWorldPosition(int position) {
     int col = position % levelCols;
     int row = position / levelCols;
     return new Vector2(xOffset + tileSize * col, yOffset + tileSize * row);
+  }
+
+  /** Adds 20 health points to all placed defences and generators on the grid. */
+  private void healDefences() {
+    if (grid == null) {
+      logger.warn("Grid not initialised; cannot heal defences.");
+      return;
+    }
+
+    final int rows = grid.getRows();
+    final int cols = grid.getCols();
+    final int total = rows * cols;
+
+    // Find all occupied cells (a placed defence or generator)
+    for (int i = 0; i < total; i++) {
+      Entity occ = grid.getOccupantIndex(i);
+      if (occ == null) continue;
+
+      logger.info("Healing entity at grid index {}", i);
+      occ.getEvents().trigger(HEAL);
+    }
   }
 
   /**
@@ -523,7 +653,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     unit.scaleHeight(tileSize);
 
     if (unit.getComponent(GeneratorStatsComponent.class) != null) {
-      spawnScrap(unit);
+      if (unit.getComponent(GeneratorStatsComponent.class).getInterval() > 0) {
+        spawnScrap(unit);
+      } else {
+        // healer entity, no scrap & kills itself after one animation cycle
+        logger.info("Healer placed");
+        healDefences();
+        // remove the healer after its animation
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(
+                Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position))));
+      }
     }
 
     spawnEntity(unit);
@@ -549,8 +690,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "fire",
             (TargetDetectionTasks.AttackDirection dir) -> {
-              spawnProjectile(
-                  worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+              if (unit.getComponent(ProjectileComponent.class) != null) {
+                spawnProjectile(
+                    worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+              }
               unit.getEvents().trigger("attackStart");
             });
 
@@ -570,13 +713,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         position,
         position / levelCols,
         position % levelCols);
-  }
-
-  /** Reset drag state and selection after any placement. */
-  private void resetSelectionUI() {
-    setIsCharacterSelected(false);
-    setSelectedUnit(null);
-    cancelDrag();
   }
 
   /**
