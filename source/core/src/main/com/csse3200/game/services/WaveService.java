@@ -136,6 +136,11 @@ public class WaveService implements WaveConfigProvider {
     currentWave = wave;
   }
 
+  public void debugSetCurrentWave(int wave) {
+    currentWave = wave - 1;
+    initialiseNewWave();
+  }
+
   /** Tells WaveService to start spawning the next wave */
   public void initialiseNewWave() {
     // Don't start new waves if level is complete

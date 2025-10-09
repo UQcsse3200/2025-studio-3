@@ -6,18 +6,22 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
 
   private int scrapValue;
 
+  private int cost;
+
   /**
    * Creates a new GeneratorStatsComponent with the given stats
    *
    * @param health the maximum health of the generator
    * @param interval the currency generation rate
    * @param scrapValue the value of the scrap generated
+   * @param cost the scrap cost of the generator
    */
-  public GeneratorStatsComponent(int health, int interval, int scrapValue) {
+  public GeneratorStatsComponent(int health, int interval, int scrapValue, int cost) {
     super(health, 0); // no attack stat
 
     setInterval(interval);
     setScrapValue(scrapValue);
+    setCost(cost);
   }
 
   /**
@@ -62,5 +66,27 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
     } else {
       this.scrapValue = scrapValue;
     }
+  }
+
+  /**
+   * Sets the scrap cost of the generator. If the provided value is negative, the cost is set to 0.
+   *
+   * @param cost new cost value.
+   */
+  public void setCost(int cost) {
+    if (cost < 0) {
+      this.cost = 0;
+    } else {
+      this.cost = cost;
+    }
+  }
+
+  /**
+   * Returns the scrap cost of the generator.
+   *
+   * @return the cost amount.
+   */
+  public int getCost() {
+    return cost;
   }
 }

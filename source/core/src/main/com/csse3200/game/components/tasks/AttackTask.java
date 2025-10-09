@@ -10,6 +10,7 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
+  private final float baseFireCooldown;
   private float fireCooldown; // time between attacks
   private float timeSinceLastFire = 0f;
 
@@ -22,7 +23,20 @@ public class AttackTask extends TargetDetectionTasks {
    */
   public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
     super(attackRange, direction);
+    this.baseFireCooldown = attackSpeed;
     this.fireCooldown = attackSpeed;
+  }
+
+  /** Doubles the entity's fire rate (half cooldown). */
+  public void enableDoubleFireRate() {
+    fireCooldown = baseFireCooldown / 2f;
+    owner.getEntity().getEvents().trigger("doubleAttackStart");
+  }
+
+  /** Resets the fire rate to its original value. */
+  public void resetFireRate() {
+    fireCooldown = baseFireCooldown;
+    owner.getEntity().getEvents().trigger("attackStart");
   }
 
   /**

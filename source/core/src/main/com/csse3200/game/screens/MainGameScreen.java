@@ -12,6 +12,7 @@ import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
+import com.csse3200.game.components.hud.SpeedControlDisplay;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -74,8 +75,11 @@ public class MainGameScreen extends ScreenAdapter {
     "images/backgrounds/level-2-map-v1.png",
     "images/entities/minigames/selected_star.png",
     "images/entities/defences/sling_shooter_1.png",
+    "images/entities/defences/shield_1.png",
+    "images/entities/defences/healer_1.png",
     "images/entities/defences/shadow_idle1.png",
     "images/entities/defences/army_guy_1.png",
+    "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
     "images/effects/grenade.png",
     "images/effects/coffee.png",
@@ -86,7 +90,11 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/sling_projectile.png",
     "images/effects/bullet.png",
     "images/effects/shock.png",
+    "images/effects/default_projectile.png",
     "images/effects/sling_projectile_pad.png",
+    "images/effects/harpoon_projectile.png",
+    "images/entities/currency/scrap_metal.png",
+    "images/effects/shell.png",
     "images/entities/currency/scrap_metal.png",
     "images/entities/slotmachine/slot_reels_background.png",
     "images/entities/currency/scrap_metal.png",
@@ -100,6 +108,8 @@ public class MainGameScreen extends ScreenAdapter {
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
     "images/entities/defences/sling_shooter.atlas",
+    "images/entities/defences/shield.atlas",
+    "images/entities/defences/healer.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
     "images/entities/enemies/basic_robot.atlas",
     "images/effects/grenade.atlas",
@@ -114,6 +124,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/enemies/samurai_Bot.atlas",
     "images/entities/enemies/gun_Bot.atlas",
     "images/entities/enemies/red_robot.atlas",
+    "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
   };
@@ -264,9 +275,11 @@ public class MainGameScreen extends ScreenAdapter {
   @Override
   public void render(float delta) {
     if (!isPaused) {
+      // Use scaled delta for systems that accept it
+      float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(delta);
+      ServiceLocator.getWaveService().update(scaledDelta);
     }
 
     if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
@@ -386,6 +399,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new PerformanceDisplay())
         .addComponent(new PauseButton())
         .addComponent(new PauseMenu())
+        .addComponent(new SpeedControlDisplay())
         .addComponent(new PauseMenuActions(this.game))
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
