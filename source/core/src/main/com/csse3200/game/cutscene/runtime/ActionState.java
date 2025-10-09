@@ -9,7 +9,9 @@ public interface ActionState {
    */
   void tick(int dtMs);
 
-  /** Triggered on skip, will fast track any logic to its final state */
+  /**
+   * Triggered on skip, will fast track any logic to its final state
+   */
   void skip();
 
   /**

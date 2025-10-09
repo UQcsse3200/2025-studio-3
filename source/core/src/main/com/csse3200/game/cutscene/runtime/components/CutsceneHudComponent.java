@@ -13,8 +13,12 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
+import com.csse3200.game.cutscene.runtime.states.CharacterState;
+import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class CutsceneHudComponent extends UIComponent {
   private final CutsceneOrchestrator orchestrator;
@@ -148,7 +152,7 @@ public class CutsceneHudComponent extends UIComponent {
 
     root.add(choicesGroup).growX().bottom().pad(0f, 1f, 12f, 1f).row();
 
-    //     TODO: root.add(choicesGroup).growX().fillX().row();
+//     TODO: root.add(choicesGroup).growX().fillX().row();
 
     // Make dialogue panel
     dialogueBox = new Table();
@@ -229,16 +233,8 @@ public class CutsceneHudComponent extends UIComponent {
             });
 
     // Clean up any dead ones
-    List<Image> leftStates =
-        orchestratorState.getCharacterStatesList().stream()
-            .filter(characterState -> characterState.getPosition() == Position.LEFT)
-            .map(characterState -> characterState.getImage())
-            .toList();
-    List<Image> rightStates =
-        orchestratorState.getCharacterStatesList().stream()
-            .filter(characterState -> characterState.getPosition() == Position.RIGHT)
-            .map(characterState -> characterState.getImage())
-            .toList();
+    List<Image> leftStates = orchestratorState.getCharacterStatesList().stream().filter(characterState -> characterState.getPosition() == Position.LEFT).map(characterState -> characterState.getImage()).toList();
+    List<Image> rightStates = orchestratorState.getCharacterStatesList().stream().filter(characterState -> characterState.getPosition() == Position.RIGHT).map(characterState -> characterState.getImage()).toList();
 
     for (Image image : leftPane.getImagesKeys()) {
       if (!leftStates.contains(image)) {
@@ -270,14 +266,11 @@ public class CutsceneHudComponent extends UIComponent {
       for (Button button : orchestratorState.getChoiceState().getChoices()) {
         if (button instanceof TextButton tb) tb.setFillParent(false);
         if (button.getParent() == null) {
-          choiceGroup
-              .add(button)
-              .minWidth(0)
-              .prefWidth(Value.percentWidth(1f, choiceGroup))
-              .maxWidth(Value.percentWidth(1f, choiceGroup))
-              .fillX()
-              .height(48f)
-              .row();
+          choiceGroup.add(button)
+                  .minWidth(0)
+                  .prefWidth(Value.percentWidth(1f, choiceGroup))
+                  .maxWidth(Value.percentWidth(1f, choiceGroup))
+                  .fillX().height(48f).row();
         }
       }
       choicesBound = true;

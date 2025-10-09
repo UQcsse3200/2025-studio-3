@@ -21,7 +21,6 @@ public interface CutsceneOrchestrator {
 
   /**
    * Get the {@link ActionState} from the given {@link ActionData}
-   *
    * @param actionData the data to get the corresponding state for
    * @return an {@link ActionState} for the given actionData
    */
@@ -39,7 +38,6 @@ public interface CutsceneOrchestrator {
 
   /**
    * Goto a specific beat from the beats ID
-   *
    * @param id the ID of the beat to jump to
    */
   void gotoBeat(String id);

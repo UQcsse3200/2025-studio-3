@@ -4,12 +4,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.csse3200.game.cutscene.models.object.Position;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class PaneGroup extends WidgetGroup {
   private static final Logger logger = LoggerFactory.getLogger(PaneGroup.class);
@@ -61,9 +62,9 @@ public class PaneGroup extends WidgetGroup {
       int z = images.size() - images.get(image).getzIndex();
       if (offsetX > -1 && offsetX < 1) {
         if (offsetX <= 0) {
-          offsetX = (1 + z * zOverlapOffset) * offsetX + z * zOverlapOffset;
+          offsetX = (1+z*zOverlapOffset)*offsetX + z*zOverlapOffset;
         } else {
-          offsetX = (1 - z * zOverlapOffset) * offsetX - z * zOverlapOffset;
+          offsetX = (1-z*zOverlapOffset)*offsetX - z*zOverlapOffset;
         }
       }
       float offsetY = images.get(image).getyOffset();
