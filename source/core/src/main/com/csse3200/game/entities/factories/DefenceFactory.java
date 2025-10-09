@@ -66,6 +66,9 @@ public class DefenceFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    // add sound path
+    defender.setProperty("soundPath", config.getSoundPath());
     return defender;
   }
 

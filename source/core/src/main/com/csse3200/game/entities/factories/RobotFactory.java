@@ -236,4 +236,32 @@ public class RobotFactory {
     for (Integer yi : yInts) ys[i++] = yi / 1000f;
     return ys;
   }
+
+  /**
+   * Creates a single preview entity for a given robot type. This is a lightweight entity: only
+   * AnimationRenderComponent, no AI/physics/collision.
+   *
+   * @param robotType the robot type key from the spawn preview
+   * @return a simple entity with an animation for display
+   */
+  public static Entity createPreviewRobot(String robotType) {
+    ConfigService configService = getConfigService();
+    BaseEnemyConfig config = configService.getEnemyConfig(robotType + "Robot");
+    if (config == null) {
+      config = configService.getEnemyConfig("standardRobot");
+    }
+
+    final String atlasPath = config.getAtlasPath();
+    var rs = ServiceLocator.getResourceService();
+    AnimationRenderComponent animator =
+        new AnimationRenderComponent(rs.getAsset(atlasPath, TextureAtlas.class));
+
+    animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP);
+
+    Entity preview = new Entity().addComponent(animator);
+    animator.scaleEntity();
+    animator.startAnimation("moveLeft");
+
+    return preview;
+  }
 }

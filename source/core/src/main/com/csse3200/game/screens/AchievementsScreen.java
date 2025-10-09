@@ -5,6 +5,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.achievements.AchievementsDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class AchievementsScreen extends BaseScreen {
    */
   public AchievementsScreen(GdxGame gdxGame) {
     super(gdxGame, Optional.of("images/backgrounds/bg.png"), Optional.empty());
+    ServiceLocator.registerResourceService(new ResourceService());
   }
 
   /**
@@ -55,6 +57,7 @@ public class AchievementsScreen extends BaseScreen {
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating achievements screen UI");
     achievementsDisplay = new AchievementsDisplay(game);
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     return new Entity()
         .addComponent(achievementsDisplay)
         .addComponent(new InputDecorator(stage, 10));

@@ -5,6 +5,7 @@ import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 
 /**
  * Wander around by moving a random position within a range of the starting position. Wait a little
@@ -42,6 +43,12 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
 
     // Horizontal-only: move left, never allow vertical drift
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
+
+    AnimationRenderComponent anim = owner.getEntity().getComponent(AnimationRenderComponent.class);
+    // defensive programming
+    if (anim == null) {
+      return;
+    }
   }
 
   // This was used to switch between moving and waiting when this was wanderTask.
