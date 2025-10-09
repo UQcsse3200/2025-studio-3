@@ -77,10 +77,9 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Exposes the camera component to input components. */
   public CameraComponent getCameraComponent() {
-      ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
-      return renderer.getCamera();
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+    return renderer.getCamera();
   }
-
 
   @Override
   protected Entity constructEntity(Stage stage) {
@@ -89,19 +88,18 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
         .addComponent(new AnimatedDropdownMenu())
-    // Input handlers (safe even if playerEntity is null during init)
-.addComponent(new WorldMapZoomInputComponent(this, 5))
-.addComponent(new WorldMapPanInputComponent(this, 6))
-
-.addComponent(new Terminal())
-.addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
-.addComponent(new TerminalDisplay())
-.addComponent(new AnimatedDropdownMenu())
-.addComponent(new WorldMapTutorial())
-.addComponent(new AnimatedDropdownMenu())
-.addComponent(new WorldMapZoomInputComponent(this, 12))
-.addComponent(new WorldMapPanInputComponent(this, 12))
-.addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+        // Input handlers (safe even if playerEntity is null during init)
+        .addComponent(new WorldMapZoomInputComponent(this, 5))
+        .addComponent(new WorldMapPanInputComponent(this, 6))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay())
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new WorldMapTutorial())
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new WorldMapZoomInputComponent(this, 12))
+        .addComponent(new WorldMapPanInputComponent(this, 12))
+        .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
 
     return ui;
   }
