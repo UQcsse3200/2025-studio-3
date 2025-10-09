@@ -13,12 +13,11 @@ com.csse3200.game.components.hotbar
 com.csse3200.game.components.hud
 com.csse3200.game.components.inventory
 com.csse3200.game.components.items
-com.csse3200.game.components.LevelCompleted
+com.csse3200.game.components.lvlcompleted
 com.csse3200.game.components.mainmenu
 com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
-com.csse3200.game.components.profile
 com.csse3200.game.components.projectiles
 com.csse3200.game.components.settingsmenu
 com.csse3200.game.components.shop
