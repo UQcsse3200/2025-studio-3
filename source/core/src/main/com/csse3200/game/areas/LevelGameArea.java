@@ -182,7 +182,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     ui =
         new Entity()
-            .addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new GameAreaDisplay(this.currentLevelKey))
             .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
@@ -282,7 +282,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawns a static defensive wall at the left edge of the map. */
-  private void spawnWall() {
+  void spawnWall() {
     float tileY = yOffset - tileSize / 5;
     float wallSize = tileSize * 6;
 
