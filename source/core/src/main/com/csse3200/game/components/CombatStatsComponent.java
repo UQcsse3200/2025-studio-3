@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -125,7 +126,13 @@ public class CombatStatsComponent extends Component {
    */
   public void hit(CombatStatsComponent target) {
     int newHealth = getHealth() - target.getBaseAttack();
-    logger.info("{} was attacked with {}", entity.getId(), newHealth);
+
+    // Play damage sound
+    Sound damageSound =
+        ServiceLocator.getResourceService().getAsset("sounds/damage.mp3", Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    damageSound.play(0.5f * volume);
+
     setHealth(newHealth);
     handleDeath();
   }
@@ -134,7 +141,25 @@ public class CombatStatsComponent extends Component {
   public void handleDeath() {
     boolean isDead = isDead();
     if (isDead || getHealth() < 0) {
-      entity.getEvents().trigger("entityDeath");
+      Sound deathSound;
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      // checks for components unique to defenders
+      if (entity.getComponent(DefenderStatsComponent.class) != null) {
+        entity.getEvents().trigger("entityDeath");
+        logger.info("Defence has died!");
+        deathSound =
+            ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
+      } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+        entity.getEvents().trigger("entityDeath");
+        logger.info("Generator has died!");
+        deathSound =
+            ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
+      } else {
+        entity.getEvents().trigger("entityDeath");
+        deathSound =
+            ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
+      }
+      deathSound.play(0.3f * volume);
     }
   }
 }

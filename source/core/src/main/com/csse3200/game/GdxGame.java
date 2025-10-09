@@ -6,13 +6,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.csse3200.game.screens.*;
-import com.csse3200.game.screens.LoadingScreen;
-import com.csse3200.game.screens.MainGameScreen;
-import com.csse3200.game.screens.MainMenuScreen;
-import com.csse3200.game.screens.NewGameScreen;
-import com.csse3200.game.screens.SaveGameScreen;
-import com.csse3200.game.screens.SettingsScreen;
-import com.csse3200.game.screens.WorldMapScreen;
 import com.csse3200.game.services.*;
 import com.csse3200.game.ui.WorldMapNode;
 import net.dermetfan.utils.Pair;
@@ -34,7 +27,13 @@ public class GdxGame extends Game {
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
-    "images/ui/btn-blue.png"
+    "images/ui/btn-blue.png",
+  };
+  private static final String[] GLOBAL_SOUNDS = {
+    "sounds/achievement_unlock.mp3",
+    "sounds/error.mp3",
+    "sounds/dialog.mp3",
+    "sounds/button_clicked.mp3"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
@@ -44,6 +43,7 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
+    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 
@@ -169,6 +169,7 @@ public class GdxGame extends Game {
         .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
+    ServiceLocator.getGlobalResourceService().loadSounds(GLOBAL_SOUNDS);
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 

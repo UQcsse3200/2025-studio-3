@@ -98,6 +98,8 @@ public class DefenceFactory {
     defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
     defender.getEvents().addListener("doubleFireRateStop", attackTask::resetFireRate);
 
+    // add sound path
+    defender.setProperty("soundPath", config.getSoundPath());
     return defender;
   }
 

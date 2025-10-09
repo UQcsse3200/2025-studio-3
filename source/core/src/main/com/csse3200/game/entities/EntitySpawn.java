@@ -126,10 +126,8 @@ public class EntitySpawn {
 
   /**
    * Builds a spawn queue for the current wave using the new system: - Each wave has a budget
-   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked randomly, weighted
-   * by 'chance'. - Loop continues until budget runs out. The method uses a weight-accumulation
-   * system to distribute spawn probabilities based on each enemy type’s defined spawn chance and
-   * cost. The algorithm repeats until the wave budget is depleted or no affordable enemies remain.
+   * (waveWeight). - Each enemy type consumes budget (cost). - Enemies are picked using weighted
+   * fairness by 'chance'. - Loop continues until budget runs out or no affordable enemies remain.
    */
   public void spawnEnemiesFromConfig() {
     if (waveConfigProvider == null) {
@@ -138,37 +136,44 @@ public class EntitySpawn {
       return;
     }
 
-    Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs();
-    int waveWeight = waveConfigProvider.getWaveWeight();
-    int minCount = waveConfigProvider.getMinZombiesSpawn();
+    List<String> result =
+        generateSpawnList(waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
 
-    // Reset the spawn queue and count for the new wave
     spawnQueue.clear();
-    spawnCount = 0;
+    spawnQueue.addAll(result);
+    spawnCount = result.size();
+  }
 
-    // If no enemy configurations exist, skip spawning
-    if (configs == null || configs.isEmpty()) return;
+  /**
+   * Generates a weighted, fair enemy list for a wave using the algorithm from the main branch,
+   * refactored into a reusable function.
+   */
+  private List<String> generateSpawnList(int waveWeight, Map<String, BaseSpawnConfig> configs) {
+    if (configs == null || configs.isEmpty() || waveWeight <= 0) {
+      return Collections.emptyList();
+    }
 
-    // Build ordered entries (stable by enemy name)
+    // Build ordered entries
     List<TypeEntry> entries = new ArrayList<>();
     for (Map.Entry<String, BaseSpawnConfig> e : configs.entrySet()) {
       BaseSpawnConfig cfg = e.getValue();
       if (cfg == null) continue;
 
       int cost = cfg.getCost();
-      if (cost <= 0) continue; // skip invalid/zero-cost to avoid infinite loops
+      if (cost <= 0) continue;
 
       double w = Math.max(0d, cfg.getChance());
       entries.add(new TypeEntry(e.getKey(), cost, w));
     }
 
-    // Stop if no valid enemy types are available
-    if (entries.isEmpty()) return;
+    if (entries.isEmpty()) {
+      return Collections.emptyList();
+    }
 
-    // Keep spawn order stable by sorting alphabetically by name
+    // Keep spawn order stable
     entries.sort(Comparator.comparing(te -> te.name));
 
-    // Compute the cheapest cost and total positive weight
+    // Compute cheapest cost and total weight
     int cheapest = Integer.MAX_VALUE;
     double totalWeight = 0d;
     for (TypeEntry te : entries) {
@@ -176,26 +181,28 @@ public class EntitySpawn {
       totalWeight += te.weight;
     }
 
-    // Terminate if no valid costs were found
-    if (cheapest == Integer.MAX_VALUE) return;
+    if (cheapest == Integer.MAX_VALUE) return Collections.emptyList();
 
-    // If all chances are zero, assign equal weights to all types
+    // Assign equal weights if all are zero
     if (totalWeight <= 0d) {
       for (TypeEntry te : entries) te.weight = 1d;
       totalWeight = entries.size();
     }
 
-    // Adjust budget to guarantee minimum spawns
+    // Enforce minimum budget if applicable
+    int minCount = waveConfigProvider != null ? waveConfigProvider.getMinZombiesSpawn() : 0;
     int budget = Math.max(waveWeight, minCount * cheapest);
 
-    // Weighted spawn selection loop
+    List<String> result = new ArrayList<>();
+
+    // Weighted smooth-round-robin loop
     while (budget >= cheapest) {
-      // Each zombie’s accumulator (acc) increases by its weight (chance) each cycle.
+      // Increase each accumulator by its weight
       for (TypeEntry te : entries) {
         te.acc += te.weight;
       }
 
-      // Pick affordable enemy type with the highest accumulated weight
+      // Pick affordable enemy with highest accumulator
       TypeEntry best = null;
       for (TypeEntry te : entries) {
         if (te.cost <= budget && (best == null || te.acc > best.acc)) {
@@ -203,16 +210,43 @@ public class EntitySpawn {
         }
       }
 
-      // If no remaining enemies are affordable, stop spawning
       if (best == null) break;
 
-      // Queue the selected enemy and update counters/budget
-      spawnQueue.add(best.name);
-      spawnCount++;
+      result.add(best.name);
       budget -= best.cost;
 
-      // Normalize accumulator by subtracting total weight (keeps fairness)
+      // Normalize accumulator
       best.acc -= totalWeight;
     }
+
+    return result;
+  }
+
+  /**
+   * @return preview list for the current wave
+   */
+  public List<String> previewEnemiesForCurrentWave() {
+    if (waveConfigProvider == null) return Collections.emptyList();
+    return generateSpawnList(
+        waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
+  }
+
+  /** Preview all waves for the level. */
+  public Map<Integer, List<String>> previewAllWaves() {
+    if (waveConfigProvider == null) {
+      return Collections.emptyMap();
+    }
+
+    int total = waveConfigProvider.getTotalWaves();
+    Map<Integer, List<String>> plan = new LinkedHashMap<>();
+
+    for (int w = 0; w < total; w++) {
+      int budget = waveConfigProvider.getWaveWeight(w);
+      Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs(w);
+      List<String> list = generateSpawnList(budget, configs);
+      plan.put(w + 1, list);
+    }
+
+    return plan;
   }
 }
