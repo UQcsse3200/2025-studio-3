@@ -111,6 +111,9 @@ public class PaddleGameScreen extends ScreenAdapter {
     float survivalTime = totalTime;
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+    BallComponent ballComp = ball.getComponent(BallComponent.class);
+    CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
+
     paddle.getComponent(PaddleComponent.class).update();
     paddle.getComponent(PaddleInputComponent.class).update();
     ball.getComponent(BallComponent.class).update(delta);
