@@ -15,7 +15,7 @@ hs_err_pid*
 .gwt/
 gwt-unitCache/
 www-test/
-.gwt-tmp/
+.gwt-tmp/the
 
 ## Android Studio and Intellij and Android in general
 /android/libs/armeabi/

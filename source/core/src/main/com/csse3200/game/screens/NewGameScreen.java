@@ -6,6 +6,9 @@ import com.csse3200.game.components.persistence.NewGameMenuActions;
 import com.csse3200.game.components.persistence.NewGameMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +36,9 @@ public class NewGameScreen extends BaseScreen {
     return new Entity()
         .addComponent(new NewGameMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new NewGameMenuActions(game));
+        .addComponent(new NewGameMenuActions(game))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
   }
 }

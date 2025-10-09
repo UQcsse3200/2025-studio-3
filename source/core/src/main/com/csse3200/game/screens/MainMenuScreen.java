@@ -7,6 +7,8 @@ import com.csse3200.game.components.mainmenu.MainMenuDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +39,9 @@ public class MainMenuScreen extends BaseScreen {
     return new Entity()
         .addComponent(new MainMenuDisplay())
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new MainMenuActions(game));
+        .addComponent(new MainMenuActions(game))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
   }
 }

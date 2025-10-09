@@ -26,6 +26,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Maxhealth upper bound */
   private int maxHealth;
 
+  /** Scrap cost of the defender. */
+  private int cost;
+
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
       ServiceLocator.getProfileService()
@@ -56,9 +59,10 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param range the maximum attack range
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
+   * @param cost the scrap cost of the defender
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int range, float attackSpeed, float critChance) {
+      int health, int baseAttack, int range, float attackSpeed, float critChance, int cost) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
@@ -68,6 +72,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
+    setCost(cost);
   }
 
   // unused atm
@@ -158,7 +163,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(float critChance) {
-    this.critChance = critChance + CRIT_UPGRADE;
+    this.critChance = critChance * CRIT_UPGRADE;
   }
 
   /**
@@ -166,5 +171,27 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public float getCritChance() {
     return critChance;
+  }
+
+  /**
+   * Sets the scrap cost of the defender. If the provided value is negative, the cost is set to 0.
+   *
+   * @param cost new cost value.
+   */
+  public void setCost(int cost) {
+    if (cost < 0) {
+      this.cost = 0;
+    } else {
+      this.cost = cost;
+    }
+  }
+
+  /**
+   * Returns the scrap cost of the defender.
+   *
+   * @return the cost amount.
+   */
+  public int getCost() {
+    return cost;
   }
 }
