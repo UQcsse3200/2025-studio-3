@@ -1,19 +1,12 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -38,28 +31,11 @@ public class LoadMenuDisplay extends UIComponent {
     table = new Table();
     table.setFillParent(true);
 
-    // Back button positioned at top-left with close icon
-    ImageButton backBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-    backBtn.setSize(60f, 60f);
-    backBtn.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
-    backBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
+    // Back button positioned at top-left
+    TextButton backBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
 
     // Title
-    Label titleLabel = TypographyFactory.createTitle("LOAD GAME");
+    Label titleLabel = ui.heading("LOAD GAME");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
@@ -68,7 +44,7 @@ public class LoadMenuDisplay extends UIComponent {
         // Active save slot
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -82,7 +58,7 @@ public class LoadMenuDisplay extends UIComponent {
             });
       } else {
         // Empty save slot
-        saveSlotButtons[i] = ButtonFactory.createButton("Empty");
+        saveSlotButtons[i] = ui.primaryButton("Empty", 60f);
         saveSlotButtons[i].setDisabled(true);
       }
     }
@@ -92,7 +68,7 @@ public class LoadMenuDisplay extends UIComponent {
     contentTable.setFillParent(true);
     contentTable.center();
 
-    contentTable.add(titleLabel).padBottom(50f);
+    contentTable.add(titleLabel).padBottom(ui.getScaledHeight(50f));
     contentTable.row();
 
     // Add save slots with consistent sizing and spacing
@@ -107,8 +83,9 @@ public class LoadMenuDisplay extends UIComponent {
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
   }
 
   @Override

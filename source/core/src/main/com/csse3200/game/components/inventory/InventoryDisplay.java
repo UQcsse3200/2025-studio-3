@@ -1,10 +1,7 @@
 package com.csse3200.game.components.inventory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
@@ -43,12 +40,13 @@ public class InventoryDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    entity.getEvents().addListener("back", this::backMenu);
     addActors();
   }
 
   /** Builds and adds the main UI actors for the Inventory screen. */
   private void addActors() {
-    Label title = new Label("Inventory", skin, "title");
+    Label title = ui.heading("INVENTORY");
     ScrollPane inventoryScrollPane = makeInventoryGrid();
 
     rootTable = new Table();
@@ -70,7 +68,7 @@ public class InventoryDisplay extends UIComponent {
     Table gridTable = new Table();
 
     if (inventoryItems.isEmpty()) {
-      Label emptyLabel = new Label("No items in inventory", skin);
+      Label emptyLabel = ui.text("No items in inventory.");
       gridTable.add(emptyLabel).center();
     } else {
       int itemCount = 0;
@@ -128,7 +126,7 @@ public class InventoryDisplay extends UIComponent {
 
     // Add item name below the image
     slot.row();
-    Label nameLabel = new Label(itemConfig.getName(), skin);
+    Label nameLabel = ui.text(itemConfig.getName().toUpperCase());
     nameLabel.setFontScale(0.8f);
     slot.add(nameLabel).center().padTop(5f);
 
@@ -146,26 +144,7 @@ public class InventoryDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[InventoryDisplay] Close button clicked");
-            backMenu();
-          }
-        });
-
+    TextButton closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
   }
 
@@ -184,11 +163,6 @@ public class InventoryDisplay extends UIComponent {
   private void backMenu() {
     logger.debug("[InventoryDisplay] Back menu clicked");
     game.setScreen(ScreenType.WORLD_MAP);
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

@@ -2,33 +2,26 @@ package com.csse3200.game.components.achievements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.entities.configs.BaseAchievementConfig;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The AchievementsDisplay class is a UI component that renders a table of player achievements on
  * screen.
  */
 public class AchievementsDisplay extends UIComponent {
-  private static final Logger logger = LoggerFactory.getLogger(AchievementsDisplay.class);
   private final GdxGame game;
   private Table rootTable;
-  private ImageButton closeButton;
+
+  float uiScale = ui.getUIScale();
 
   /**
    * Creates an AchievementsDisplay for the game instance.
@@ -48,11 +41,15 @@ public class AchievementsDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Achievements screen. */
   private void addActors() {
-    Label title = TypographyFactory.createTitle("Achievements");
+    Label title = ui.title("Achievements");
     rootTable = new Table();
     rootTable.setFillParent(true);
     rootTable.top().padTop(20);
-    rootTable.add(title).center().row();
+    rootTable
+        .add(title)
+        .size(title.getWidth() * 0.5f * uiScale, title.getHeight() * 0.5f * uiScale)
+        .center()
+        .row();
     createAchievementDisplay();
     stage.addActor(rootTable);
     createCloseButton();
@@ -62,7 +59,7 @@ public class AchievementsDisplay extends UIComponent {
   private void createAchievementDisplay() {
     ConfigService configService = ServiceLocator.getConfigService();
     if (configService == null) {
-      Label errorLabel = new Label("Config service not available", skin);
+      Label errorLabel = ui.text("Config service not available");
       errorLabel.setColor(Color.RED);
       rootTable.row().padTop(20);
       rootTable.add(errorLabel).center().row();
@@ -73,7 +70,7 @@ public class AchievementsDisplay extends UIComponent {
     Map<String, BaseAchievementConfig> achievementConfigs = configService.getAchievementConfigs();
 
     if (achievementConfigs == null || achievementConfigs.isEmpty()) {
-      Label errorLabel = new Label("No achievements configured", skin);
+      Label errorLabel = ui.text("No achievements configured");
       errorLabel.setColor(Color.RED);
       rootTable.row().padTop(20);
       rootTable.add(errorLabel).center().row();
@@ -88,13 +85,13 @@ public class AchievementsDisplay extends UIComponent {
     // Stack tables vertically
     Table allTables = new Table();
 
-    allTables.add(TypographyFactory.createSubtitle("Tier 1")).center().row();
+    allTables.add(ui.subheading("Tier 1")).center().row();
     allTables.add(t1Table).left().padBottom(20).row();
 
-    allTables.add(TypographyFactory.createSubtitle("Tier 2")).center().row();
+    allTables.add(ui.subheading("Tier 2")).center().row();
     allTables.add(t2Table).left().padBottom(20).row();
 
-    allTables.add(TypographyFactory.createSubtitle("Tier 3")).center().row();
+    allTables.add(ui.subheading("Tier 3")).center().row();
     allTables.add(t3Table).left().padBottom(20).row();
 
     ScrollPane scrollPane = new ScrollPane(allTables, skin);
@@ -134,15 +131,15 @@ public class AchievementsDisplay extends UIComponent {
       // Place in correct tier table based on tier string
       String tier = config.getTier();
       if ("T1".equals(tier)) {
-        t1Table.add(achButton).pad(5).size(200f, 72f);
+        t1Table.add(achButton).pad(5).size(200f * uiScale, 72f * uiScale);
         colCountT1++;
         if (colCountT1 % 6 == 0) t1Table.row();
       } else if ("T2".equals(tier)) {
-        t2Table.add(achButton).pad(5).size(200f, 72f);
+        t2Table.add(achButton).pad(5).size(200f * uiScale, 72f * uiScale);
         colCountT2++;
         if (colCountT2 % 6 == 0) t2Table.row();
       } else if ("T3".equals(tier)) {
-        t3Table.add(achButton).pad(5).size(200f, 72f);
+        t3Table.add(achButton).pad(5).size(200f * uiScale, 72f * uiScale);
         colCountT3++;
         if (colCountT3 % 6 == 0) t3Table.row();
       }
@@ -166,12 +163,13 @@ public class AchievementsDisplay extends UIComponent {
                 ServiceLocator.getGlobalResourceService()
                     .getAsset("images/ui/achievement.png", Texture.class)));
 
-    achButton.setSize(200f, 72f);
+    achButton.setSize(200f * uiScale, 72f);
     Color labelColor = isUnlocked ? Color.GREEN : Color.RED;
-    Label nameLabel = TypographyFactory.createCustomSize(config.getName(), 12, labelColor);
+    Label nameLabel = ui.text(config.getName());
+    nameLabel.setColor(labelColor);
     nameLabel.setAlignment(com.badlogic.gdx.utils.Align.center);
     Table centerTable = new Table();
-    centerTable.setSize(200f, 72f);
+    centerTable.setSize(200f * uiScale, 72f * uiScale);
     centerTable.center();
     centerTable.add(nameLabel).center().expand().fill();
     achButton.addActor(centerTable);
@@ -219,48 +217,10 @@ public class AchievementsDisplay extends UIComponent {
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
     // Create close button using close-icon.png
-    closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    closeButton.setSize(60f, 60f);
-    updateCloseButtonPosition();
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[AchievementsDisplay] Close button clicked");
-            backMenu();
-          }
-        });
-
+    TextButton closeButton = ui.createBackExitButton(entity.getEvents(), stage.getHeight(), "Back");
+    AchievementBackAction backAction = new AchievementBackAction(game);
+    entity.getEvents().addListener("back", backAction::backMenu);
     stage.addActor(closeButton);
-  }
-
-  /** Updates the close button position based on current stage dimensions. */
-  private void updateCloseButtonPosition() {
-    if (closeButton != null && stage != null) {
-      closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-    }
-  }
-
-  /** Public method to update close button position on resize. */
-  public void updateOnResize() {
-    updateCloseButtonPosition();
-  }
-
-  /** Handles navigation back to the World Map. */
-  private void backMenu() {
-    game.setScreen(ScreenType.WORLD_MAP);
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   /** Disposes of this UI component. */

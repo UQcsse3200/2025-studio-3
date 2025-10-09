@@ -2,7 +2,6 @@ package com.csse3200.game.components.skilltree;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.progression.skilltree.Skill;
@@ -27,17 +26,6 @@ public class SkilltreeDisplay extends UIComponent {
   public void create() {
     super.create();
     addActors();
-  }
-
-  /**
-   * Draw method for custom rendering. Currently unused since this class relies on Scene2D UI
-   * elements.
-   *
-   * @param batch the SpriteBatch used for rendering
-   */
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // Custom drawing can be added here if needed
   }
 
   /**
@@ -103,14 +91,16 @@ public class SkilltreeDisplay extends UIComponent {
         });
   }
 
-  /** Adds actors to the stage, including the background image for the skill tree. */
+  /** Adds actors to the stage. */
   private void addActors() {
-    Image backgroundImage =
-        new Image(
-            ServiceLocator.getResourceService()
-                .getAsset("images/skilltree_background.jpg", Texture.class));
-
-    backgroundImage.setFillParent(true);
-    stage.addActor(backgroundImage);
+    // Title label centered at top
+    Label titleLabel = ui.title("Town");
+    float pad = ui.getScaledHeight(24f);
+    titleLabel.setPosition(
+        stage.getViewport().getWorldWidth() / 2f - titleLabel.getWidth() / 2f,
+        stage.getViewport().getWorldHeight() - titleLabel.getHeight() - pad);
+    titleLabel.setZIndex(3);
+    stage.addActor(titleLabel);
+    titleLabel.toFront();
   }
 }

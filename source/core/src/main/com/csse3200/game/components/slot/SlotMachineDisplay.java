@@ -1,8 +1,6 @@
 package com.csse3200.game.components.slot;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -343,9 +341,8 @@ public class SlotMachineDisplay extends UIComponent {
     barGroup.addActor(pieImage);
 
     // Remaining spins label
-    Color amber = new Color(1.0f, 0.70f, 0.00f, 1.0f);
-    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), amber);
-    spinsLabel = new Label("0", style);
+    spinsLabel = ui.text("0");
+    spinsLabel.setColor(skin.getColor("gold"));
     spinsLabel.setAlignment(Align.center);
     spinsLabel.setTouchable(Touchable.disabled);
     barGroup.addActor(spinsLabel);

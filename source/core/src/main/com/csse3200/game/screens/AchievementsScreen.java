@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
  */
 public class AchievementsScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(AchievementsScreen.class);
-  private AchievementsDisplay achievementsDisplay;
 
   /**
    * Creates a new AchievementsScreen and registers the services required, creates the renderer, and
@@ -45,10 +44,6 @@ public class AchievementsScreen extends BaseScreen {
     super.resize(width, height);
     // Notify DialogService to resize any active dialogs
     ServiceLocator.getDialogService().resize();
-    // Update close button position
-    if (achievementsDisplay != null) {
-      achievementsDisplay.updateOnResize();
-    }
   }
 
   /**
@@ -58,7 +53,7 @@ public class AchievementsScreen extends BaseScreen {
   @Override
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating achievements screen UI");
-    achievementsDisplay = new AchievementsDisplay(game);
+    AchievementsDisplay achievementsDisplay = new AchievementsDisplay(game);
     ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     return new Entity()
         .addComponent(achievementsDisplay)

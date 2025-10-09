@@ -2,7 +2,6 @@ package com.csse3200.game.components.gameover;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
@@ -23,6 +22,7 @@ public class GameOverWindow extends UIComponent {
   private Window window;
   // Tracks the display status of the window.
   boolean isDisplayed = false;
+  private float uiScale = ui.getUIScale();
 
   /** Creates the game over window. */
   @Override
@@ -35,13 +35,18 @@ public class GameOverWindow extends UIComponent {
     // Creates popup display.
     window = new Window("Game over.", skin);
     window.setMovable(false);
-    window.setSize(500, 500);
+    window.setSize(500 * uiScale, 500 * uiScale);
     window.setPosition(
         (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
         (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
     // Adds text in the popup display.
-    Label message = new Label("Game over.\n Press E to go back to main menu.", skin);
+    Label gameOverHeading = ui.heading("Game Over!");
+    String interactKeyName =
+        Input.Keys.toString(
+            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
+    Label message = ui.text("Press " + interactKeyName + " to go back to main menu.");
+    window.add(gameOverHeading).pad(20).row();
     window.add(message).pad(10).row();
 
     // Sets popup display to false when created.
@@ -59,21 +64,19 @@ public class GameOverWindow extends UIComponent {
     }
 
     // Press 'E' to take the player back to the main menu.
-    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+    int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
+    if (Gdx.input.isKeyJustPressed(interactKey)) {
       // Closes popup window
       window.setVisible(false);
       isDisplayed = false;
 
       // Updates next frame to return to the main menu without crashing.
       Gdx.app.postRunnable(
-          new Runnable() {
-            @Override
-            public void run() {
-              // Gets the game.
-              GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
-              // Switches to main menu.
-              game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-            }
+          () -> {
+            // Gets the game.
+            GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
+            // Switches to main menu.
+            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
           });
     }
   }
@@ -116,15 +119,5 @@ public class GameOverWindow extends UIComponent {
     }
 
     super.dispose();
-  }
-
-  /**
-   * Draws a sprite batch.
-   *
-   * @param batch Batch to render to.
-   */
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 }

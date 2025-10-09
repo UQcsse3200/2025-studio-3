@@ -18,7 +18,7 @@ public class PerformanceDisplay extends UIComponent {
   }
 
   private void addActors() {
-    profileLabel = new Label(getStats(), skin, "small");
+    profileLabel = ui.text(getStats());
     stage.addActor(profileLabel);
   }
 
@@ -28,10 +28,9 @@ public class PerformanceDisplay extends UIComponent {
       profileLabel.setVisible(true);
       profileLabel.setText(getStats());
 
-      int screenHeight = stage.getViewport().getScreenHeight();
-      float offsetX = 5f;
-      float offsetY = 180f;
-      profileLabel.setPosition(offsetX, screenHeight - offsetY);
+      float offsetX = 25f;
+      float offsetY = 100f;
+      profileLabel.setPosition(offsetX, offsetY);
     } else {
       profileLabel.setVisible(false);
     }

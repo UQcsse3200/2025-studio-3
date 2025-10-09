@@ -13,10 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.DialogService.DialogType;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,12 +71,13 @@ public class DialogComponent extends UIComponent {
     Table contentTable = new Table();
     contentTable.pad(20f);
     Color titleColor = getTextColor();
-    Label titleLabel = TypographyFactory.createSubtitle(title, titleColor);
+    Label titleLabel = ui.title(title);
+    titleLabel.setColor(titleColor);
     titleLabel.setAlignment(Align.center);
     contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
 
     // Add message label
-    Label messageLabel = TypographyFactory.createParagraph(message, Color.WHITE);
+    Label messageLabel = ui.text(message);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
     contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
@@ -137,100 +137,137 @@ public class DialogComponent extends UIComponent {
     Table buttonTable = new Table();
 
     switch (dialogType) {
-      // Info dialog buttons
       case INFO:
-        TextButton okButton = ButtonFactory.createDialogButton("OK");
-        okButton.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                hide();
-                if (onClose != null) {
-                  onClose.accept(DialogComponent.this);
-                }
-              }
-            });
-        buttonTable.add(okButton).size(120f, 60f).pad(5f);
+        addInfoButtons(buttonTable);
         break;
-
-      // Warning dialog buttons
       case WARNING:
-        TextButton cancelButton = ButtonFactory.createDialogButton("Cancel");
-        cancelButton.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                hide();
-                if (onCancel != null) {
-                  onCancel.accept(DialogComponent.this);
-                }
-              }
-            });
-
-        TextButton continueButton = ButtonFactory.createDialogButton("Continue");
-        continueButton.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                hide();
-                if (onConfirm != null) {
-                  onConfirm.accept(DialogComponent.this);
-                }
-              }
-            });
-
-        buttonTable.add(cancelButton).size(120f, 60f).pad(5f);
-        buttonTable.add(continueButton).size(150f, 60f).pad(5f);
+        addWarningButtons(buttonTable);
         break;
-
-      // Error dialog buttons
       case ERROR:
-        TextButton okButtonError = ButtonFactory.createDialogButton("OK");
-        okButtonError.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                hide();
-                if (onClose != null) {
-                  onClose.accept(DialogComponent.this);
-                }
-              }
-            });
-        buttonTable.add(okButtonError).size(120f, 60f).pad(5f);
+        addErrorButtons(buttonTable);
         break;
-
-      // Skill dialog buttons
       case SKILL:
-        TextButton closeButton = ButtonFactory.createDialogButton("Close");
-        closeButton.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                hide();
-                if (onClose != null) {
-                  onClose.accept(DialogComponent.this);
-                }
-              }
-            });
-
-        TextButton unlockButton = ButtonFactory.createDialogButton("Unlock");
-        unlockButton.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                if (onConfirm != null) {
-                  onConfirm.accept(DialogComponent.this);
-                }
-                // Note: Dialog hiding is handled by the callback
-              }
-            });
-
-        buttonTable.add(closeButton).size(120f, 60f).pad(5f);
-        buttonTable.add(unlockButton).size(120f, 60f).pad(5f);
+        addSkillButtons(buttonTable);
         break;
     }
 
     contentTable.add(buttonTable).center();
+  }
+
+  /** Adds buttons for INFO dialog type. */
+  private void addInfoButtons(Table buttonTable) {
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
+
+    TextButton okButton = ui.secondaryButton("OK", 120f);
+    okButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onClose != null) {
+              onClose.accept(DialogComponent.this);
+            }
+          }
+        });
+    buttonTable.add(okButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+  }
+
+  /** Adds buttons for WARNING dialog type. */
+  private void addWarningButtons(Table buttonTable) {
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
+    Pair<Float, Float> cancelDimensions = ui.getScaledDimensions(150f);
+
+    TextButton cancelButton = ui.secondaryButton("Cancel", 150f);
+    cancelButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onCancel != null) {
+              onCancel.accept(DialogComponent.this);
+            }
+          }
+        });
+
+    TextButton continueButton = ui.secondaryButton("Continue", 120f);
+    continueButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onConfirm != null) {
+              onConfirm.accept(DialogComponent.this);
+            }
+          }
+        });
+
+    buttonTable
+        .add(cancelButton)
+        .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
+    buttonTable
+        .add(continueButton)
+        .size(cancelDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
+  }
+
+  /** Adds buttons for ERROR dialog type. */
+  private void addErrorButtons(Table buttonTable) {
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
+
+    TextButton okButtonError = ui.secondaryButton("OK", 120f);
+    okButtonError.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onClose != null) {
+              onClose.accept(DialogComponent.this);
+            }
+          }
+        });
+    buttonTable
+        .add(okButtonError)
+        .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
+  }
+
+  /** Adds buttons for SKILL dialog type. */
+  private void addSkillButtons(Table buttonTable) {
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
+
+    TextButton closeButton = ui.secondaryButton("Close", 120f);
+    closeButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onClose != null) {
+              onClose.accept(DialogComponent.this);
+            }
+          }
+        });
+
+    TextButton unlockButton = ui.secondaryButton("Unlock", 150f);
+    unlockButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (onConfirm != null) {
+              onConfirm.accept(DialogComponent.this);
+            }
+            // Note: Dialog hiding is handled by the callback
+          }
+        });
+
+    buttonTable
+        .add(closeButton)
+        .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
+    buttonTable
+        .add(unlockButton)
+        .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
   }
 
   /** Centers the dialog on the screen. */
@@ -241,6 +278,7 @@ public class DialogComponent extends UIComponent {
   }
 
   /** Handles window resize by re-centering the dialog. */
+  @Override
   public void resize() {
     if (dialog != null && isVisible) {
       centerDialog();

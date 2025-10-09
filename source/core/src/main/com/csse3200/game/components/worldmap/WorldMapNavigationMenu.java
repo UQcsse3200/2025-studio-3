@@ -1,8 +1,6 @@
 package com.csse3200.game.components.worldmap;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -11,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
@@ -21,9 +18,9 @@ import org.slf4j.LoggerFactory;
 public class WorldMapNavigationMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapNavigationMenu.class);
   private static final float Z_INDEX = 10f;
-  private static final int ICON_SIZE = 32;
-  private static final int PLAQUE_WIDTH = 240;
-  private static final int PLAQUE_HEIGHT = 60;
+  private static final float ICON_SIZE = 32 * ui.getUIScale();
+  private static final float PLAQUE_WIDTH = 240 * ui.getUIScale();
+  private static final float PLAQUE_HEIGHT = 60 * ui.getUIScale();
   private static final int BUTTON_SIZE = 60;
   private static final int BUTTON_SPACING = 10;
   private Table plaqueTable;
@@ -48,7 +45,7 @@ public class WorldMapNavigationMenu extends UIComponent {
       return;
     }
 
-    // Create the plaque background
+    // Create the plaque background (using old architecture bc just an image)
     Texture plaqueTexture =
         ServiceLocator.getGlobalResourceService().getAsset("images/ui/plaque.png", Texture.class);
     plaqueBackground = new Image(plaqueTexture);
@@ -80,12 +77,8 @@ public class WorldMapNavigationMenu extends UIComponent {
     coinsIcon.setSize(ICON_SIZE, ICON_SIZE);
 
     // Create labels
-    skillPointsLabel = new Label("0", skin);
-    whiten(skillPointsLabel);
-    skillPointsLabel.setFontScale(1f);
-    coinsLabel = new Label("0", skin);
-    whiten(coinsLabel);
-    coinsLabel.setFontScale(1f);
+    skillPointsLabel = ui.text("0");
+    coinsLabel = ui.text("0");
 
     // Add elements to table
     plaqueTable.center();
@@ -107,11 +100,7 @@ public class WorldMapNavigationMenu extends UIComponent {
    */
   private void createButtons(float plaqueX, float plaqueY) {
     // Create settings button
-    Texture settingsTexture =
-        ServiceLocator.getGlobalResourceService()
-            .getAsset("images/ui/settings-icon.png", Texture.class);
-    settingsButton = new ImageButton(new TextureRegionDrawable(settingsTexture));
-    settingsButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
+    settingsButton = ui.createImageButton("images/ui/settings-icon.png", BUTTON_SIZE, BUTTON_SIZE);
     settingsButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
 
     // Position settings button to the right of the plaque
@@ -122,11 +111,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     stage.addActor(settingsButton);
 
     // Create menu button
-    Texture menuTexture =
-        ServiceLocator.getGlobalResourceService()
-            .getAsset("images/ui/menu-icon.png", Texture.class);
-    menuButton = new ImageButton(new TextureRegionDrawable(menuTexture));
-    menuButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
+    menuButton = ui.createImageButton("images/ui/menu-icon.png", BUTTON_SIZE, BUTTON_SIZE);
     menuButton.setOrigin(BUTTON_SIZE / 2f, BUTTON_SIZE / 2f);
 
     // Position menu button to the right of the settings button
@@ -196,17 +181,6 @@ public class WorldMapNavigationMenu extends UIComponent {
   }
 
   /**
-   * Sets the label's font color to white
-   *
-   * @param label The label to set the font color of
-   */
-  private void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
-  }
-
-  /**
    * Creates tooltip labels for the buttons
    *
    * @param settingsX The x position of the settings button
@@ -216,18 +190,14 @@ public class WorldMapNavigationMenu extends UIComponent {
    */
   private void createTooltips(float settingsX, float settingsY, float menuX, float menuY) {
     // Create settings tooltip
-    settingsTooltip = new Label("Settings", skin);
-    whiten(settingsTooltip);
-    settingsTooltip.setFontScale(0.8f);
+    settingsTooltip = ui.text("Settings");
     settingsTooltip.setPosition(
         settingsX + (BUTTON_SIZE - settingsTooltip.getPrefWidth()) / 2f, settingsY - 20f);
     settingsTooltip.setVisible(false);
     stage.addActor(settingsTooltip);
 
     // Create menu tooltip
-    menuTooltip = new Label("Menu", skin);
-    whiten(menuTooltip);
-    menuTooltip.setFontScale(0.8f);
+    menuTooltip = ui.text("Menu");
     menuTooltip.setPosition(menuX + (BUTTON_SIZE - menuTooltip.getPrefWidth()) / 2f, menuY - 20f);
     menuTooltip.setVisible(false);
     stage.addActor(menuTooltip);
@@ -323,11 +293,6 @@ public class WorldMapNavigationMenu extends UIComponent {
             menuX + (BUTTON_SIZE - menuTooltip.getPrefWidth()) / 2f, menuY - 20f);
       }
     }
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Draw is handled by the stage
   }
 
   @Override

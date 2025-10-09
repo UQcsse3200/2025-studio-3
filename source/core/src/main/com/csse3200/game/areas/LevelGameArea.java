@@ -9,7 +9,6 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -17,6 +16,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
@@ -780,9 +780,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public GridPoint2 stageToWorld(GridPoint2 pos) {
-    float x = pos.x * stageToWorldRatio;
-    float y = (stageHeight - pos.y) * stageToWorldRatio;
-
+    // pos currently represents SCREEN coordinates from input callbacks.
+    // Convert to STAGE coordinates first to respect the viewport's scaling/letterboxing,
+    // then map stage units into our game world units using stageToWorldRatio.
+    var stage = ServiceLocator.getRenderService().getStage();
+    com.badlogic.gdx.math.Vector2 p =
+        stage.screenToStageCoordinates(new com.badlogic.gdx.math.Vector2(pos.x, pos.y));
+    float x = p.x * stageToWorldRatio;
+    float y = p.y * stageToWorldRatio;
     return new GridPoint2((int) x, (int) y);
   }
 
@@ -794,9 +799,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public GridPoint2 worldToStage(GridPoint2 pos) {
-    float x = pos.x / stageToWorldRatio;
-    float y = stageHeight - (pos.y / stageToWorldRatio);
-    return new GridPoint2((int) x, (int) y);
+    // Convert from our game world units to stage coordinates (no Y flip; both are bottom-left).
+    float sx = pos.x / stageToWorldRatio;
+    float sy = pos.y / stageToWorldRatio;
+    return new GridPoint2((int) sx, (int) sy);
   }
 
   /** Adjusts all entities after a window resize by recalculating world scale and layout. */

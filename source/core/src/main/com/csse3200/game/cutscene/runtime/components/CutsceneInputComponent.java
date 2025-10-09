@@ -1,8 +1,8 @@
 package com.csse3200.game.cutscene.runtime.components;
 
-import com.badlogic.gdx.Input;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class CutsceneInputComponent extends InputComponent {
   private final CutsceneOrchestrator orchestrator;
@@ -18,7 +18,8 @@ public class CutsceneInputComponent extends InputComponent {
    */
   @Override
   public boolean keyDown(int keyCode) {
-    if (keyCode == Input.Keys.SPACE) {
+    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
+    if (keyCode == skipKey) {
       orchestrator.advance();
       return true;
     }

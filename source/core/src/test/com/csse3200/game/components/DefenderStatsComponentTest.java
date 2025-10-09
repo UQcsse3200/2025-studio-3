@@ -4,20 +4,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
 class DefenderStatsComponentTest {
+  @BeforeEach
+  void beforeEach() {
+    ProfileService profileService = mock(ProfileService.class, RETURNS_DEEP_STUBS);
+    ServiceLocator.registerProfileService(profileService);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.ATTACK_DAMAGE))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.HEALTH))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.FIRING_SPEED))
+        .thenReturn(1.0f);
+    when(profileService.getProfile().getSkillset().getUpgradeValue(Skill.StatType.CRIT_CHANCE))
+        .thenReturn(1.0f);
+  }
 
   private static ProfileService mockProfileService;
   private static Profile mockProfile;

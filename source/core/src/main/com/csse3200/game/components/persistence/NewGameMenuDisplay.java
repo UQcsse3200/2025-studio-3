@@ -1,21 +1,14 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -39,57 +32,20 @@ public class NewGameMenuDisplay extends UIComponent {
     addActors();
   }
 
-  @Override
-  public void update() {
-    // Update label text based on overwrite flag
-    if (overwrite) {
-      nameLabel.setText("Enter Save Name (overwriting existing save):");
-    } else {
-      nameLabel.setText("Enter Save Name:");
-    }
-  }
-
   /** Add the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
 
-    // Back button positioned at top-left with close icon
-    ImageButton backBtn =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-    backBtn.setSize(60f, 60f);
-    backBtn.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
-    backBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Back button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
+    // Back button positioned at top-left
+    TextButton backBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
 
     // Title
-    Label titleLabel = TypographyFactory.createTitle("NEW GAME");
+    Label titleLabel = ui.title("NEW GAME");
 
     // Name input field (initially hidden)
-    nameLabel = TypographyFactory.createSubtitle("Enter Save Name:");
-
-    // Create TextField with custom font
-    TextField.TextFieldStyle textFieldStyle =
-        new TextField.TextFieldStyle(skin.get(TextField.TextFieldStyle.class));
-    BitmapFont customFont =
-        ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 18);
-    if (customFont != null) {
-      textFieldStyle.font = customFont;
-    }
-    nameInput = new TextField("", textFieldStyle);
-    nameInput.setMessageText("");
+    nameLabel = ui.subheading("ENTER SAVE NAME");
+    nameInput = ui.createTextField("");
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
@@ -98,7 +54,7 @@ public class NewGameMenuDisplay extends UIComponent {
         // Active save slot - show existing save info
         Savefile save = saveFiles.get(i);
         String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -114,7 +70,7 @@ public class NewGameMenuDisplay extends UIComponent {
       } else {
         // Empty save slot
         String buttonText = "Empty";
-        saveSlotButtons[i] = ButtonFactory.createButton(buttonText);
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
@@ -131,7 +87,7 @@ public class NewGameMenuDisplay extends UIComponent {
     }
 
     // Start game button
-    startButton = ButtonFactory.createButton("Start Game");
+    startButton = ui.primaryButton("Start Game", 60f);
     startButton.addListener(
         new ChangeListener() {
           @Override
@@ -156,7 +112,6 @@ public class NewGameMenuDisplay extends UIComponent {
         });
 
     // Add back button directly to stage (no table needed for positioning)
-
     Table contentTable = new Table();
     contentTable.setFillParent(true);
     contentTable.center();
@@ -189,11 +144,6 @@ public class NewGameMenuDisplay extends UIComponent {
     nameLabel.setVisible(false);
     nameInput.setVisible(false);
     startButton.setVisible(false);
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
   }
 
   @Override

@@ -57,10 +57,7 @@ public class PauseMenuActions extends Component {
         .warning(
             "Exit Game",
             "Are you sure you want to exit the game? Your progress will not be saved.",
-            dialog -> {
-              game.exit();
-              ServiceLocator.getDiscordRichPresenceService().setPresence(null);
-            },
+            dialog -> game.exit(),
             null);
   }
 }

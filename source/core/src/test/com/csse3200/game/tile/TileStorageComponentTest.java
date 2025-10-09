@@ -18,6 +18,7 @@ import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.extensions.UIExtension;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.rendering.TextureRenderComponent;
@@ -35,15 +36,18 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(GameExtension.class)
+@ExtendWith(UIExtension.class)
 @ExtendWith(MockitoExtension.class)
 class TileStorageComponentTest {
   @Mock Texture texture;
   LevelGameGrid grid;
   LevelGameArea levelGameArea;
+  @Mock DiscordRichPresenceService discordRichPresenceService;
 
   @BeforeEach
   void beforeEach() {
     ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
 
     // creates mock stage and render service
     com.badlogic.gdx.scenes.scene2d.Stage stage = mock(com.badlogic.gdx.scenes.scene2d.Stage.class);
@@ -98,6 +102,11 @@ class TileStorageComponentTest {
             // default implementation ignored
           }
         };
+
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
 
     // creates a grid
     grid = new LevelGameGrid(1, 1);
