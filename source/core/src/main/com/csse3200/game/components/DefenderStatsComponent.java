@@ -2,6 +2,8 @@ package com.csse3200.game.components;
 
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
@@ -10,6 +12,8 @@ import com.csse3200.game.services.ServiceLocator;
  * range, attack speed, and critical hit chance.
  */
 public class DefenderStatsComponent extends CombatStatsComponent {
+  private static final Logger logger = LoggerFactory.getLogger(DefenderStatsComponent.class);
+
   /** Maximum range (in game units) at which the defender can engage targets. */
   private int range;
 
@@ -18,6 +22,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
+
+  /** Maxhealth upper bound */
+  private int maxHealth;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
@@ -57,9 +64,64 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
+    maxHealth = (int) Math.ceil(health * HEALTH_UPGRADE);
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
+  }
+
+  // unused atm
+  public void healthBuff() {
+    int newHealth = getMaxHealth() * 2;
+    setMaxHealth(newHealth);
+    heal(newHealth);
+    logger.info("Defender buffed! New max health: {}", getMaxHealth());
+  }
+
+  // unused atm
+  public void healthUnBuff() {
+    int newHealth = getMaxHealth() / 2;
+    setMaxHealth(newHealth);
+    if (getHealth() > newHealth) {
+      setHealth(newHealth);
+    }
+    logger.info("Defender unbuffed! New max health: {}", getMaxHealth());
+  }
+
+  /** Doubles the defender's attack damage. */
+  public void buff() {
+    // Double attack damage
+    int newAttack = getBaseAttack() * 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender buffed! New attack: {}", getBaseAttack());
+  }
+
+  /** Halves the defender's attack damage. */
+  public void unbuff() {
+    // Halve attack damage
+    int newAttack = getBaseAttack() / 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
+  }
+
+  /**
+   * gets the defenders maximum health.
+   *
+   * @return maxhealth
+   */
+  private int getMaxHealth() {
+    return maxHealth;
+  }
+
+  /** Sets the defender's max health limit */
+  private void setMaxHealth(int newHealth) {
+    this.maxHealth = newHealth;
+  }
+
+  /** Heals the defender by the specified amount, up to its maximum health. */
+  private void heal(int amount) {
+    int newHealth = Math.min(getHealth() + amount, getMaxHealth());
+    setHealth(newHealth);
   }
 
   /** Sets the defender's attack range. */
