@@ -189,7 +189,11 @@ public class DefenceFactory {
         new ColliderComponent()
             .setCollisionFilter(
                 PhysicsLayer.NPC,
-                (short) (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY));
+                (short)
+                    (PhysicsLayer.DEFAULT
+                        | PhysicsLayer.OBSTACLE
+                        | PhysicsLayer.ENEMY
+                        | PhysicsLayer.BOSS));
 
     Entity npc =
         new Entity()

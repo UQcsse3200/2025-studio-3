@@ -19,14 +19,23 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
+import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ItemEffectsService;
+import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -363,6 +372,40 @@ class LevelGameAreaTest {
   }
 
   @Test
+  void spawnBossShouldCreateAndPlaceBossCorrectly() {
+    try (MockedStatic<BossFactory> mockedBossFactory = mockStatic(BossFactory.class)) {
+      CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+      ServiceLocator.registerGameArea(area);
+      area.setScaling();
+
+      Entity fakeBoss = new Entity().addComponent(new HitboxComponent());
+      mockedBossFactory
+          .when(() -> BossFactory.createBossType(any(BossFactory.BossTypes.class)))
+          .thenReturn(fakeBoss);
+
+      area.spawnBoss(2, BossFactory.BossTypes.SCRAP_TITAN);
+
+      mockedBossFactory.verify(() -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN));
+      assertEquals(1, area.spawned.size());
+      Entity spawnedBoss = area.spawned.get(0);
+      assertEquals(fakeBoss, spawnedBoss);
+
+      float expectedTileSize = (720f * (Renderer.GAME_SCREEN_WIDTH / 1280f)) / 8f;
+      float expectedXOffset = 2f * expectedTileSize;
+      float expectedYOffset = 1f * expectedTileSize;
+      int levelCols = 10;
+      int spawnRow = 2;
+      float expectedX = expectedXOffset + expectedTileSize * levelCols;
+      float expectedY = expectedYOffset + expectedTileSize * spawnRow - (expectedTileSize / 1.5f);
+      float expectedScaleY = expectedTileSize * 3.0f;
+
+      Vector2 bossPos = spawnedBoss.getPosition();
+      assertEquals(expectedX, bossPos.x, 0.01f);
+      assertEquals(expectedY, bossPos.y, 0.01f);
+      assertEquals(expectedScaleY, spawnedBoss.getScale().y, 0.01f);
+    }
+  }
+
   void loadLevelConfiguration_usesDefaultMapPath_whenConfigMapPathMissing() throws Exception {
     // Return a level config with rows/cols but NO map file path
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);

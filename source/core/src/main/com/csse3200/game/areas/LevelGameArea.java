@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
@@ -18,6 +20,7 @@ import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
@@ -32,6 +35,7 @@ import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
@@ -156,6 +160,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
+    // Register the game area with the service locator
+    ServiceLocator.registerGameArea(this);
+
     displayUI();
     spawnMap();
     spawnGrid(levelRows, levelCols);
@@ -524,6 +531,82 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       requestDespawn(r);
       robots.remove(r);
     }
+  }
+
+  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+    logger.info("Spawning Boss of type {}", bossType);
+    Entity boss = BossFactory.createBossType(bossType);
+
+    int spawnCol = levelCols;
+    int spawnRow = Math.clamp(row, 0, levelRows - 1); // Bottom row for now
+
+    float spawnX = xOffset + tileSize * spawnCol;
+    float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
+
+    boss.setPosition(spawnX, spawnY);
+    boss.scaleHeight(tileSize * 3.0f);
+
+    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+
+    spawnEntity(boss);
+    robots.add(boss);
+    boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
+    boss.getEvents().addListener("despawnRobot", target -> {});
+
+    // --- BUG FIX STARTS HERE ---
+    // Use a boolean flag to ensure the death logic only runs ONCE.
+    final boolean[] isBossDead = {false};
+    boss.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              if (isBossDead[0]) {
+                return; // If already dead, do nothing.
+              }
+              isBossDead[0] = true; // Set flag to prevent re-entry.
+
+              logger.info("Boss death triggered");
+
+              AITaskComponent ai = boss.getComponent(AITaskComponent.class);
+              if (ai != null) {
+                ai.dispose();
+              }
+
+              AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
+              if (anim != null) {
+                anim.startAnimation("death");
+              }
+
+              Timer.schedule(
+                  new Timer.Task() {
+                    @Override
+                    public void run() {
+                      requestDespawn(boss);
+                      robots.remove(boss);
+                      logger.info("Boss defeated");
+                      if (ServiceLocator.getWaveService() != null) {
+                        ServiceLocator.getWaveService().onBossDefeated();
+                      }
+                    }
+                  },
+                  1.84f);
+            });
+    // --- BUG FIX ENDS HERE ---
+  }
+
+  public void spawnBossProjectile(Entity boss) {
+    Entity projectile = ProjectileFactory.createBossProjectile(5);
+    Vector2 spawnPos = boss.getCenterPosition().cpy();
+    spawnPos.x -= 1.0f;
+    spawnPos.y -= (tileSize / 6f);
+
+    projectile.setPosition(spawnPos.x, spawnPos.y);
+    projectile.scaleHeight(0.5f * tileSize);
+    projectile.scaleWidth(0.5f * tileSize);
+    projectile.addComponent(new MoveLeftComponent(150f));
+    projectile.getEvents().addListener("despawn", () -> requestDespawn(projectile));
+    spawnEntity(projectile);
+    logger.info("Boss fired projectile from position {}", spawnPos);
   }
 
   /**

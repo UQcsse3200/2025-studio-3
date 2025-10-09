@@ -7,6 +7,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.areas.LevelGameArea; // <<< CHANGE HERE (1): ADD IMPORT
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.listeners.EventListener0;
 import com.csse3200.game.events.listeners.EventListener1;
@@ -33,7 +34,17 @@ class AttackTaskTest {
     ServiceLocator.registerTimeSource(gameTime);
     ServiceLocator.registerPhysicsService(new PhysicsService());
 
+    // <<< CHANGE HERE (2): MOCK AND REGISTER THE GAME AREA
+    // This is the fix. We create a mock LevelGameArea so the AttackTask's
+    // isTargetInSameLane() method can work correctly.
+    LevelGameArea gameArea = mock(LevelGameArea.class);
+    when(gameArea.getTileSize()).thenReturn(1f); // Define a tile size
+    ServiceLocator.registerGameArea(gameArea);
+    // <<< END OF FIX
+
     target = new Entity();
+    // Place target at origin for predictable distance checks
+    target.setPosition(0, 0);
   }
 
   @Test
@@ -53,6 +64,7 @@ class AttackTaskTest {
 
     // Set up defender entity and attach AI task component
     Entity defender = new Entity();
+    defender.setPosition(0, 0); // Ensure it's in the same "lane"
     AITaskComponent aiTaskComponent = new AITaskComponent();
     aiTaskComponent.addTask(attackTask);
     defender.addComponent(aiTaskComponent);

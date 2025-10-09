@@ -52,6 +52,10 @@ public class CombatStatsComponent extends Component {
    * @param health health
    */
   public void setHealth(int health) {
+    if (this.health <= 0 && health <= 0) {
+      return;
+    }
+
     if (health >= 0) {
       this.health = health;
     } else {
@@ -59,6 +63,8 @@ public class CombatStatsComponent extends Component {
     }
 
     if (entity != null) {
+      entity.getEvents().trigger("updateHealth", this.health);
+
       if (this.health == 0) {
         // Add coins & update statistics
         // TODO: use config passed into the entity
@@ -159,7 +165,6 @@ public class CombatStatsComponent extends Component {
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
-      deathSound.play(0.3f * volume);
     }
   }
 }
