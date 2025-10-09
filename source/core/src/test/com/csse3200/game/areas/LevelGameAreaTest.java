@@ -53,6 +53,7 @@ class LevelGameAreaTest {
   @Mock ProfileService profileService;
   @Mock ConfigService configService;
   @Mock DiscordRichPresenceService discordRichPresenceService;
+  @Mock GameTime gameTime;
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
@@ -80,6 +81,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerProfileService(profileService);
     ServiceLocator.registerConfigService(configService);
     ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
+    ServiceLocator.registerTimeSource(gameTime);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
