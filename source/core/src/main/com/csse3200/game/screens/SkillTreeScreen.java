@@ -22,6 +22,8 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +121,10 @@ public class SkillTreeScreen extends ScreenAdapter {
         .addComponent(new SkilltreeButtons(game, display))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }

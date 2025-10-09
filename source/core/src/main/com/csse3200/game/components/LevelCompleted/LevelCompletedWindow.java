@@ -1,4 +1,4 @@
-package com.csse3200.game.components.LevelCompleted;
+package com.csse3200.game.components.levelcompleted;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -32,7 +32,9 @@ public class LevelCompletedWindow extends UIComponent {
         (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
         (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
-    Label message = new Label("Congratulations!\nPress E to return to the main menu.", skin);
+    String interactKeyName =
+        Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getInteractionButton());
+    Label message = new Label("Congratulations!\nPress " + interactKeyName + " to return to the main menu.", skin);
     window.add(message).pad(10).row();
 
     window.setVisible(false);
@@ -48,7 +50,8 @@ public class LevelCompletedWindow extends UIComponent {
     if (!isDisplayed) return;
 
     // Check for 'E' key press to close window and return to main menu
-    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+    int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
+    if (Gdx.input.isKeyJustPressed(interactKey)) {
       window.setVisible(false);
       isDisplayed = false;
       // Update the current level before changing screens

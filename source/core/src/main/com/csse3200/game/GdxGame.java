@@ -29,10 +29,13 @@ public class GdxGame extends Game {
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
-    "images/ui/btn-blue.png",
     "images/ui/cursor.png",
-    "images/backgrounds/bg.png"
+    "images/backgrounds/bg.png",
+    "images/ui/speedup1x.png",
+    "images/ui/speedup15x.png",
+    "images/ui/speedup2x.png"
   };
+
   private static final String[] GLOBAL_SOUNDS = {
     "sounds/achievement_unlock.mp3",
     "sounds/error.mp3",
@@ -47,7 +50,6 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
-    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 
@@ -64,6 +66,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
+    ServiceLocator.registerMusicService(new MusicService());
 
     // Initialize Discord Rich Presence
     DiscordRichPresenceService discordService = new DiscordRichPresenceService();
@@ -170,8 +173,6 @@ public class GdxGame extends Game {
   private void loadGlobalAssets() {
     logger.debug("[GdxGame] Loading global assets");
     ServiceLocator.getGlobalResourceService().loadTextures(GLOBAL_ASSETS);
-    ServiceLocator.getGlobalResourceService()
-        .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
     ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
     ServiceLocator.getGlobalResourceService().loadSounds(GLOBAL_SOUNDS);

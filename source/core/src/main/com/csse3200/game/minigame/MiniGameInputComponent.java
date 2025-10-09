@@ -1,6 +1,7 @@
 package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Input;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.input.InputComponent;
 
 public class MiniGameInputComponent extends InputComponent {
@@ -13,33 +14,43 @@ public class MiniGameInputComponent extends InputComponent {
 
   @Override
   public boolean keyDown(int key) {
-    switch (key) {
-      case Input.Keys.LEFT, Input.Keys.A:
-        if (!isGameOverScreen) {
-          entity.getEvents().trigger("moveLeft");
-          return true;
-        }
-        return false;
-      case Input.Keys.RIGHT, Input.Keys.D:
-        if (!isGameOverScreen) {
-          entity.getEvents().trigger("moveRight");
-          return true;
-        }
-        return false;
-      case Input.Keys.ESCAPE:
-        if (isGameOverScreen) {
-          entity.getEvents().trigger("returnToArcade");
-          return true;
-        }
-        return false;
-      case Input.Keys.SPACE:
-        if (isGameOverScreen) {
-          entity.getEvents().trigger("playAgain");
-          return true;
-        }
-        return false;
-      default:
-        return false;
+    int left = ServiceLocator.getSettingsService().getSettings().getLeftButton();
+    int right = ServiceLocator.getSettingsService().getSettings().getRightButton();
+    int escape = Input.Keys.ESCAPE;
+    int space = ServiceLocator.getSettingsService().getSettings().getSkipButton();
+
+    if (key == left) {
+      if (!isGameOverScreen) {
+        entity.getEvents().trigger("moveLeft");
+        return true;
+      }
+      return false;
     }
+
+    if (key == right) {
+      if (!isGameOverScreen) {
+        entity.getEvents().trigger("moveRight");
+        return true;
+      }
+      return false;
+    }
+
+    if (key == escape) {
+      if (isGameOverScreen) {
+        entity.getEvents().trigger("returnToArcade");
+        return true;
+      }
+      return false;
+    }
+
+    if (key == space) {
+      if (isGameOverScreen) {
+        entity.getEvents().trigger("playAgain");
+        return true;
+      }
+      return false;
+    }
+
+    return false;
   }
 }

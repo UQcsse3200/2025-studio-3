@@ -42,6 +42,13 @@ public class PaddleGameScreen extends ScreenAdapter {
     stage = new Stage(new ScreenViewport());
     Gdx.input.setInputProcessor(stage);
     ballsHit = 0;
+    // Ensure services required by music playback exist in this screen context
+    if (ServiceLocator.getResourceService() == null) {
+      ServiceLocator.registerResourceService(new com.csse3200.game.services.ResourceService());
+    }
+    if (ServiceLocator.getSettingsService() == null) {
+      ServiceLocator.registerSettingsService(new com.csse3200.game.services.SettingsService());
+    }
     loadAssests();
     addBackground();
     createPaddle();
@@ -87,7 +94,8 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void createScoreLabel() {
-    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+    BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
+    Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
     scoreLabel = new Label("Score: 0", style);
     scoreLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 40);
     stage.addActor(scoreLabel);

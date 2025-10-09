@@ -47,8 +47,8 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
     Label obstaclesLabel = new Label("Obstacles Dodged: " + obstaclesDodged, skin);
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
-    TextButton playagainbtn = ui.primaryButton("Play Again", 60f);
-    TextButton returnToArcadeBtn = ui.primaryButton("Return to Arcade", 60f);
+    TextButton playagainbtn = ui.primaryButton("Play Again", 100f);
+    TextButton returnToArcadeBtn = ui.primaryButton("Return to Arcade", 100f);
 
     playagainbtn.addListener(
         new ChangeListener() {

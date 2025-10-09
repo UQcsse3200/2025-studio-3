@@ -13,7 +13,7 @@ class GeneratorStatsComponentTest {
 
   @Test
   void shouldSetGetHealth() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
 
     assertEquals(100, generator.getHealth());
     generator.setHealth(150);
@@ -24,7 +24,7 @@ class GeneratorStatsComponentTest {
 
   @Test
   void shouldCheckIsDead() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     assertFalse(generator.isDead());
 
     generator.setHealth(0);
@@ -33,35 +33,49 @@ class GeneratorStatsComponentTest {
 
   @Test
   void shouldSetGetBaseAttack() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     assertEquals(0, generator.getBaseAttack()); // should have 0 base attack
   }
 
   @Test
   void testIntervalSetterGetter_Positive() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     generator.setInterval(10);
     assertEquals(10, generator.getInterval());
   }
 
   @Test
   void testIntervalSetterGetter_Negative() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     generator.setInterval(-5); // should clamp to 0
     assertEquals(0, generator.getInterval());
   }
 
   @Test
   void testScrapValueSetterGetter_Positive() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     generator.setScrapValue(15);
     assertEquals(15, generator.getScrapValue());
   }
 
   @Test
   void testScrapValueSetterGetter_Negative() {
-    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25);
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
     generator.setScrapValue(-10); // should clamp to 0
     assertEquals(0, generator.getScrapValue());
+  }
+
+  @Test
+  void testCostGetter_Positive() {
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
+    generator.setCost(100);
+    assertEquals(100, generator.getCost());
+  }
+
+  @Test
+  void testCostGetter_Negative() {
+    GeneratorStatsComponent generator = new GeneratorStatsComponent(100, 15, 25, 50);
+    generator.setCost(-100); // should clamp to 0
+    assertEquals(0, generator.getCost());
   }
 }
