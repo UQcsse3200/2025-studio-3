@@ -1,4 +1,4 @@
-package com.csse3200.game.components.LevelCompletedWindow;
+package com.csse3200.game.components.levelcompletedwindow;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
