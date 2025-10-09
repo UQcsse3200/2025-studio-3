@@ -1,7 +1,6 @@
 package com.csse3200.game.components;
 
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -55,15 +54,15 @@ public class BomberDeathExplodeComponent extends Component {
   private void onDeath() {
     getEntity().getEvents().trigger("bomberPreExplode");
 
-    // Schedule explosion after 0.5 seconds
-    Timer.schedule(
-        new Timer.Task() {
-          @Override
-          public void run() {
-            explode();
-          }
-        },
-        0.5f);
+    //    // Schedule explosion after 0.5 seconds
+    //    Timer.schedule(
+    //        new Timer.Task() {
+    //          @Override
+    //          public void run() {
+    //            explode();
+    //          }
+    //        },
+    //        0.5f);
   }
 
   /**
