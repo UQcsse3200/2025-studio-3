@@ -1,4 +1,4 @@
-package com.csse3200.game.components.levelcompletedwindow;
+package com.csse3200.game.components.levelcompleted;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -14,7 +14,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.csse3200.game.components.levelcompleted.LevelCompletedWindow;
+import com.csse3200.game.components.levelcompleted2.LevelCompletedWindow;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.UIExtension;
 import com.csse3200.game.rendering.RenderService;
