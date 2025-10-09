@@ -2,6 +2,8 @@ package com.csse3200.game.components;
 
 import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
@@ -10,6 +12,8 @@ import com.csse3200.game.services.ServiceLocator;
  * range, attack speed, and critical hit chance.
  */
 public class DefenderStatsComponent extends CombatStatsComponent {
+  private static final Logger logger = LoggerFactory.getLogger(DefenderStatsComponent.class);
+
   /** Maximum range (in game units) at which the defender can engage targets. */
   private int range;
 
@@ -18,6 +22,12 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
+
+  /** Maxhealth upper bound */
+  private int maxHealth;
+
+  /** Scrap cost of the defender. */
+  private int cost;
 
   // Initialises multiplier values to be applied to base stats from having unlocked skills
   private static final float ATTACK_UPGRADE =
@@ -49,17 +59,65 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    * @param range the maximum attack range
    * @param attackSpeed the speed of attacks
    * @param critChance the critical hit chance
+   * @param cost the scrap cost of the defender
    */
   public DefenderStatsComponent(
-      int health, int baseAttack, int range, float attackSpeed, float critChance) {
+      int health, int baseAttack, int range, float attackSpeed, float critChance, int cost) {
 
     // Initialises health and attack stats with consideration of skill upgrades
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
+    maxHealth = (int) Math.ceil(health * HEALTH_UPGRADE);
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
+    setCost(cost);
+  }
+
+  // unused atm
+  public void healthBuff() {
+    int newHealth = getMaxHealth() * 2;
+    setMaxHealth(newHealth);
+    heal(newHealth);
+    logger.info("Defender buffed! New max health: {}", getMaxHealth());
+  }
+
+  // unused atm
+  public void healthUnBuff() {
+    int newHealth = getMaxHealth() / 2;
+    setMaxHealth(newHealth);
+    if (getHealth() > newHealth) {
+      setHealth(newHealth);
+    }
+    logger.info("Defender unbuffed! New max health: {}", getMaxHealth());
+  }
+
+  /** Doubles the defender's attack damage. */
+  public void buff() {
+    // Double attack damage
+    int newAttack = getBaseAttack() * 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender buffed! New attack: {}", getBaseAttack());
+  }
+
+  /** Halves the defender's attack damage. */
+  public void unbuff() {
+    // Halve attack damage
+    int newAttack = getBaseAttack() / 2;
+    setBaseAttack(newAttack);
+    logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
+  }
+
+  /** Sets the defender's max health limit */
+  private void setMaxHealth(int newHealth) {
+    this.maxHealth = newHealth;
+  }
+
+  /** Heals the defender by the specified amount, up to its maximum health. */
+  private void heal(int amount) {
+    int newHealth = Math.min(getHealth() + amount, getMaxHealth());
+    setHealth(newHealth);
   }
 
   /** Sets the defender's attack range. */
@@ -96,7 +154,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Sets the defender's critical hit chance (as a percentage). */
   public void setCritChance(float critChance) {
-    this.critChance = critChance + CRIT_UPGRADE;
+    this.critChance = critChance * CRIT_UPGRADE;
   }
 
   /**
@@ -104,5 +162,27 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public float getCritChance() {
     return critChance;
+  }
+
+  /**
+   * Sets the scrap cost of the defender. If the provided value is negative, the cost is set to 0.
+   *
+   * @param cost new cost value.
+   */
+  public void setCost(int cost) {
+    if (cost < 0) {
+      this.cost = 0;
+    } else {
+      this.cost = cost;
+    }
+  }
+
+  /**
+   * Returns the scrap cost of the defender.
+   *
+   * @return the cost amount.
+   */
+  public int getCost() {
+    return cost;
   }
 }

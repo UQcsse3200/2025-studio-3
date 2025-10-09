@@ -28,6 +28,10 @@ public class GdxGame extends Game {
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
     "images/ui/btn-blue.png",
+    "images/ui/speedup1x.png",
+    "images/ui/speedup15x.png",
+    "images/ui/speedup2x.png",
+    "images/ui/btn-blue.png",
   };
   private static final String[] GLOBAL_SOUNDS = {
     "sounds/achievement_unlock.mp3",
@@ -43,7 +47,6 @@ public class GdxGame extends Game {
   @Override
   public void create() {
     logger.info("[GdxGame] Initialising core game services.");
-    ServiceLocator.registerMusicService(new MusicService());
     setScreen(new LoadingScreen(this));
   }
 
@@ -60,6 +63,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
+    ServiceLocator.registerMusicService(new MusicService());
 
     // Initialize Discord Rich Presence
     DiscordRichPresenceService discordService = new DiscordRichPresenceService();
