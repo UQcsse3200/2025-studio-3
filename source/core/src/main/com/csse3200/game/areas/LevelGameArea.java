@@ -35,6 +35,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import java.util.ArrayList;
@@ -95,8 +96,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setScaling();
     selectedUnit = null;
 
-    ServiceLocator.getDiscordRichPresenceService()
-        .updateGamePresence(currentLevelKey.split("level")[1], 1);
+    DiscordRichPresenceService discord = ServiceLocator.getDiscordRichPresenceService();
+    if (discord != null) {
+      discord.updateGamePresence(currentLevelKey.split("level")[1], 1);
+    }
   }
 
   /** Loads level configuration from ConfigService. */
