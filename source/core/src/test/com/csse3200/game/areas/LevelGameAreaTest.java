@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
@@ -25,12 +26,7 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.ItemEffectsService;
-import com.csse3200.game.services.ProfileService;
-import com.csse3200.game.services.ResourceService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -478,5 +474,47 @@ class LevelGameAreaTest {
     verify(resourceService).loadTextures(argThat(arr -> arr.length == 1 && path.equals(arr[0])));
     verify(resourceService).loadAll();
     verify(resourceService, atLeast(2)).getAsset(eq(path), eq(Texture.class));
+  }
+
+  @Test
+  void checkGameOver_triggersOnce_andPlaysSound() throws Exception {
+    // Level config only — enough for create() to build map/grid
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    // Spy and skip spawnWall() to avoid Box2D
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    // Register only what checkGameOver() uses
+    SettingsService settings = mock(SettingsService.class);
+    when(settings.getSoundVolume()).thenReturn(0.5f);
+    ServiceLocator.registerSettingsService(settings);
+
+    Sound goSound = mock(Sound.class);
+    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
+        .thenReturn(goSound);
+
+    // Create a robot that has crossed the left edge
+    float t = area.getTileSize();
+    Entity robot = new Entity();
+    robot.setPosition(area.getXOffset() - t * 1.1f, area.getYOffset());
+    area.getRobots().add(robot);
+
+    area.checkGameOver();
+
+    Field f = LevelGameArea.class.getDeclaredField("isGameOver");
+    f.setAccessible(true);
+    assertTrue(f.getBoolean(area));
+    verify(goSound, times(1)).play(eq(0.5f));
+
+    // Idempotent re-check
+    area.checkGameOver();
+    verify(goSound, times(1)).play(anyFloat());
   }
 }
