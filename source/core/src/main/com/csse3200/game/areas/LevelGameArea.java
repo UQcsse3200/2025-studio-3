@@ -353,60 +353,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    Entity unit;
-    // In sprint 4 we should probably put the gunner/giant bot code in seperate functions
-    if (robotType == RobotFactory.RobotType.GUNNER) {
-
-      unit = RobotFactory.createRobotType(RobotFactory.RobotType.GUNNER);
-
-      // ensure gunner attacks immediately
-      unit.getEvents()
-          .addListener(
-              "fire",
-              () -> {
-                // spawn a projectile every tick
-                Vector2 spawnPos = unit.getPosition().cpy();
-                logger.info("spawnRobotProjectile called at {}", spawnPos);
-                spawnRobotProjectile(spawnPos);
-                logger.info("Gunner fired projectile at position {}", spawnPos);
-              });
-    } else {
-      unit = RobotFactory.createRobotType(robotType);
-    }
-
-    // Entity unit = RobotFactory.createRobotType(robotType);
-
-    if (robotType == RobotType.GIANT) {
-      unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
-
-      unit.getEvents()
-          .addListener(
-              "spawnMinion",
-              () -> {
-                Entity mini = RobotFactory.createRobotType(RobotType.MINI);
-
-                // spawn half a tile ahead, same lane
-                // TODO replace this stuff with the newer LevelGameArea code used for the other
-                // robots.
-                // E.g. registerRobot
-                float aheadX = unit.getPosition().x - 0.5f * tileSize;
-                float spawnY = unit.getPosition().y;
-
-                mini.setPosition(aheadX, spawnY);
-                mini.scaleHeight(tileSize);
-
-                spawnEntity(mini);
-                robots.add(mini);
-
-                mini.getEvents()
-                    .addListener(
-                        ENTITY_DEATH_EVENT,
-                        () -> {
-                          requestDespawn(mini);
-                          robots.remove(mini);
-                        });
-              });
-    }
     // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
@@ -453,9 +399,64 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new Vector2(x, y);
   }
 
+  private void addGunnerRobotTask(Entity unit) {
+    // ensure gunner attacks immediately
+    unit.getEvents()
+        .addListener(
+            "fire",
+            () -> {
+              // spawn a projectile every tick
+              Vector2 spawnPos = unit.getPosition().cpy();
+              logger.info("spawnRobotProjectile called at {}", spawnPos);
+              spawnRobotProjectile(spawnPos);
+              logger.info("Gunner fired projectile at position {}", spawnPos);
+            });
+  }
+
+  private void addMinion(Entity unit) {
+    unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+
+    unit.getEvents()
+        .addListener(
+            "spawnMinion",
+            () -> {
+              Entity mini = RobotFactory.createRobotType(RobotType.MINI);
+
+              // spawn half a tile ahead, same lane
+              // TODO replace this stuff with the newer LevelGameArea code used for the other
+              // robots.
+              // E.g. registerRobot
+              float aheadX = unit.getPosition().x - 0.5f * tileSize;
+              float spawnY = unit.getPosition().y;
+
+              mini.setPosition(aheadX, spawnY);
+              mini.scaleHeight(tileSize);
+
+              spawnEntity(mini);
+              robots.add(mini);
+
+              mini.getEvents()
+                  .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                        requestDespawn(mini);
+                        robots.remove(mini);
+                      });
+            });
+  }
+
   /** Shared creation, placement, scaling, spawning, and listener wiring for robots. */
   private void registerRobot(RobotType type, float worldX, float worldY) {
     Entity unit = RobotFactory.createRobotType(type);
+
+    // Handles adding additional tasks for robots who spawn entities
+    // I don't think these can be added to robot factory because they spawn entities
+    if (type == RobotType.GIANT) {
+      addMinion(unit);
+    } else if (type == RobotType.GUNNER) {
+      addGunnerRobotTask(unit);
+    }
+
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
 
