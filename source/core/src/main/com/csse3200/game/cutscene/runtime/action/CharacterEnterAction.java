@@ -64,7 +64,8 @@ public class CharacterEnterAction implements ActionState {
           characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
         }
         case POP -> {
-          characterState.setScale(0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
+          characterState.setScale(
+              0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
         }
         default -> {
           // do nothing
@@ -79,12 +80,12 @@ public class CharacterEnterAction implements ActionState {
   }
 
   public float sineGauss(float x, float turningPoints) {
-    return (float) ((float) Math.exp(-Math.pow((x-0.5f), 2f)/(2*Math.pow(0.12f, 2f))) * Math.sin(turningPoints * x * Math.PI));
+    return (float)
+        ((float) Math.exp(-Math.pow((x - 0.5f), 2f) / (2 * Math.pow(0.12f, 2f)))
+            * Math.sin(turningPoints * x * Math.PI));
   }
 
-  /**
-   * Triggered on skip, will fast track any logic to its final state
-   */
+  /** Triggered on skip, will fast track any logic to its final state */
   @Override
   public void skip() {
     switch (characterEnterData.transition()) {

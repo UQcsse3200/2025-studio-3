@@ -1,0 +1,27 @@
+forge.png
+size: 300, 50
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 50, 50
+  index: 0
+idle
+  bounds: 0, 0, 50, 50
+  index: 0
+idle
+  bounds: 50, 0, 50, 50
+  index: 1
+idle
+  bounds: 100, 0, 50, 50
+  index: 2
+idle
+  bounds: 150, 0, 50, 50
+  index: 3
+idle
+  bounds: 200, 0, 50, 50
+  index: 4
+idle
+  bounds: 250, 0, 50, 50
+  index: 5

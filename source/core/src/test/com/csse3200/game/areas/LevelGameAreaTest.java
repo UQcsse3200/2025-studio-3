@@ -18,6 +18,7 @@ import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -31,6 +32,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.quality.Strictness;
 
@@ -43,9 +45,12 @@ class LevelGameAreaTest {
   @Mock Music music;
   @Mock ProfileService profileService;
   @Mock ConfigService configService;
+  @Mock DiscordRichPresenceService discordRichPresenceService;
 
   private MockedStatic<Persistence> persistenceMock;
   private Profile profile;
+
+  private MockedStatic<com.badlogic.gdx.utils.Timer> timerMock;
 
   /** A class to capture spawned entities without needing a full ECS */
   static class CapturingLevelGameArea extends LevelGameArea {
@@ -67,6 +72,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerProfileService(profileService);
     ServiceLocator.registerConfigService(configService);
+    ServiceLocator.registerDiscordRichPresenceService(discordRichPresenceService);
 
     lenient().when(renderService.getStage()).thenReturn(stage);
     // second value allows testing of resize
@@ -94,8 +100,30 @@ class LevelGameAreaTest {
     lenient().when(configService.getGeneratorConfig(anyString())).thenReturn(null);
     lenient().when(configService.getItemConfig(anyString())).thenReturn(null);
 
+    lenient()
+        .doNothing()
+        .when(discordRichPresenceService)
+        .updateGamePresence(anyString(), anyInt());
+
     persistenceMock = mockStatic(Persistence.class, withSettings().strictness(Strictness.LENIENT));
     // Note: Persistence.profile() no longer exists in the reworked system
+
+    // Make Timer.schedule(task, delay) run the task immediately
+    timerMock =
+        mockStatic(
+            com.badlogic.gdx.utils.Timer.class, withSettings().strictness(Strictness.LENIENT));
+    timerMock
+        .when(
+            () ->
+                com.badlogic.gdx.utils.Timer.schedule(
+                    Mockito.<com.badlogic.gdx.utils.Timer.Task>any(), Mockito.anyFloat()))
+        .thenAnswer(
+            inv -> {
+              com.badlogic.gdx.utils.Timer.Task task = inv.getArgument(0);
+              // run the Stop task immediately so your test can assert synchronously
+              task.run();
+              return null;
+            });
   }
 
   @AfterEach
@@ -105,6 +133,7 @@ class LevelGameAreaTest {
       if (persistenceMock != null) {
         persistenceMock.close();
       }
+      if (timerMock != null) timerMock.close();
     } catch (Throwable ignored) {
       // Ignore throwable and continue to next test
     }

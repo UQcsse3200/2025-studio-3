@@ -3,7 +3,7 @@ package com.csse3200.game.areas;
 import com.csse3200.game.entities.factories.RobotFactory;
 
 /**
- * Minimal interface for spawning enemies. WaveManager depends on this interface so it doesn't need
+ * Minimal interface for spawning enemies. WaveService depends on this interface so it doesn't need
  * to know the concrete GameArea type.
  */
 public interface EnemySpawner {

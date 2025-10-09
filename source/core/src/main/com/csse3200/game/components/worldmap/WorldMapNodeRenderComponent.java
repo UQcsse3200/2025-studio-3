@@ -1,11 +1,21 @@
 package com.csse3200.game.components.worldmap;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Renders a world map node using the engine's rendering system */
 public class WorldMapNodeRenderComponent extends UIComponent {
@@ -13,6 +23,43 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private final Vector2 worldSize;
   private final float nodeSize;
   private boolean showPrompt = false;
+
+  private static final int KEY_INSET = 6;
+  private static final int LABEL_INSET = 32;
+  // regions
+  private TextureRegion keyUpR;
+  private TextureRegion keyDownR;
+  private TextureRegion keyLeftR;
+  private TextureRegion keyRightR;
+  private TextureRegion labelBgR;
+
+  // assets
+  private Texture glow;
+  private Texture labelBg;
+  private Texture keyUp;
+  private Texture keyDown;
+  private Texture keyLeft;
+  private Texture keyRight;
+
+  private BitmapFont font;
+  private float pulseT = 0f;
+
+  // visuals
+  private static final float ARROW_SIZE = 44f;
+  private static final float ARROW_OFFSET = 0.78f;
+  private static final float LABEL_GAP = 5f;
+  private static final float FONT_SCALE = 1.15f;
+  private static final float VISUAL_TRIM_Y = 14f;
+
+  private static final float NAME_GAP = -14f;
+  private static final float LABEL_PAD_X = 45f;
+  private static final float LABEL_PAD_Y = 36f;
+  private static final float MIN_W_FACTOR = 2.2f;
+  private static final float MIN_H_FACTOR = 1.35f;
+
+  // local JSON cache: nodeKey -> (dir -> PathDef)
+  private final Map<String, Map<String, com.csse3200.game.services.WorldMapService.PathDef>>
+      localPaths = new HashMap<>();
 
   /**
    * Constructor for the world map node render component.
@@ -31,6 +78,70 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   public void create() {
     super.create();
     ServiceLocator.getWorldMapService().registerNodeRenderComponent(this);
+    // read JSON locally
+    loadLocalPathConfig("configs/worldmap_paths.json");
+
+    // get textures if preloaded
+    var rs = ServiceLocator.getResourceService();
+    try {
+      glow = rs.getAsset("images/ui/glow.png", Texture.class);
+      keyUp = rs.getAsset("images/ui/keycap_up.png", Texture.class);
+      keyDown = rs.getAsset("images/ui/keycap_down.png", Texture.class);
+      keyLeft = rs.getAsset("images/ui/keycap_left.png", Texture.class);
+      keyRight = rs.getAsset("images/ui/keycap_right.png", Texture.class);
+      labelBg = rs.getAsset("images/ui/label_bg.png", Texture.class);
+
+      if (keyUp != null) {
+        keyUpR =
+            new TextureRegion(
+                keyUp,
+                KEY_INSET,
+                KEY_INSET,
+                keyUp.getWidth() - 2 * KEY_INSET,
+                keyUp.getHeight() - 2 * KEY_INSET);
+      }
+      if (keyDown != null) {
+        keyDownR =
+            new TextureRegion(
+                keyDown,
+                KEY_INSET,
+                KEY_INSET,
+                keyDown.getWidth() - 2 * KEY_INSET,
+                keyDown.getHeight() - 2 * KEY_INSET);
+      }
+      if (keyLeft != null) {
+        keyLeftR =
+            new TextureRegion(
+                keyLeft,
+                KEY_INSET,
+                KEY_INSET,
+                keyLeft.getWidth() - 2 * KEY_INSET,
+                keyLeft.getHeight() - 2 * KEY_INSET);
+      }
+      if (keyRight != null) {
+        keyRightR =
+            new TextureRegion(
+                keyRight,
+                KEY_INSET,
+                KEY_INSET,
+                keyRight.getWidth() - 2 * KEY_INSET,
+                keyRight.getHeight() - 2 * KEY_INSET);
+      }
+      if (labelBg != null) {
+        labelBgR =
+            new TextureRegion(
+                labelBg,
+                LABEL_INSET,
+                LABEL_INSET,
+                labelBg.getWidth() - 2 * LABEL_INSET,
+                labelBg.getHeight() - 2 * LABEL_INSET);
+      }
+    } catch (Exception ignored) {
+      // Skip missing assets
+    }
+
+    font = new BitmapFont();
+    font.getData().setScale(FONT_SCALE);
   }
 
   /**
@@ -39,10 +150,9 @@ public class WorldMapNodeRenderComponent extends UIComponent {
    * @param nearbyNode the node the player is currently near, or null if none
    */
   public void updateProximityState(WorldMapNode nearbyNode) {
-    boolean isNearby =
+    showPrompt =
         nearbyNode != null
             && this.node.getRegistrationKey().equals(nearbyNode.getRegistrationKey());
-    setShowPrompt(isNearby);
   }
 
   @Override
@@ -72,10 +182,297 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       drawY -= 4f;
     }
 
+    // Draw node icon
     batch.draw(nodeTexture, drawX, drawY, drawSize, drawSize);
+    final float cx = drawX + drawSize * 0.5f;
+    final float cy = drawY + drawSize * 0.5f;
+
+    if (glow != null) {
+      drawGlow(batch, cx, cy, drawSize);
+    }
+
+    // on-node check
+    boolean onNode = false;
+    try {
+      float px = ServiceLocator.getProfileService().getProfile().getWorldMapX();
+      float py = ServiceLocator.getProfileService().getProfile().getWorldMapY();
+      float dx = px - x;
+      float dy = py - y;
+      float r = Math.max(drawSize * 0.45f, 36f);
+      onNode = dx * dx + dy * dy <= r * r;
+    } catch (Exception ignored) {
+      // Skip if profile not ready
+    }
+    if (!onNode) return;
+
+    // arrows + labels strictly by next
+    String key = node.getRegistrationKey();
+
+    // W
+    drawDirWithLabel(
+        batch,
+        keyUp,
+        new Vector2(cx - ARROW_SIZE * 0.5f, cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
+        getLocalPath(key, "W"),
+        "W",
+        new Vector2(0f, +1f));
+    // S
+    drawDirWithLabel(
+        batch,
+        keyDown,
+        new Vector2(cx - ARROW_SIZE * 0.5f, cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
+        getLocalPath(key, "S"),
+        "S",
+        new Vector2(0f, -1f));
+    // A
+    drawDirWithLabel(
+        batch,
+        keyLeft,
+        new Vector2(cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
+        getLocalPath(key, "A"),
+        "A",
+        new Vector2(-1f, 0f));
+    // D
+    drawDirWithLabel(
+        batch,
+        keyRight,
+        new Vector2(cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
+        getLocalPath(key, "D"),
+        "D",
+        new Vector2(+1f, 0f));
+
+    if (font != null && showPrompt) {
+      String hint = "Press E to Enter";
+      float sY = cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f;
+      float oldScale = font.getData().scaleX;
+      font.getData().setScale(FONT_SCALE * 0.90f);
+      GlyphLayout hl = new GlyphLayout(font, hint);
+
+      float tx = cx - hl.width * 0.5f;
+      float ty = sY - LABEL_GAP - hl.height - 14f;
+
+      font.setColor(1f, 1f, 1f, 1f);
+      font.setColor(0f, 0f, 0f, 1f);
+      font.draw(batch, hint, tx + 2, ty - 2);
+      font.draw(batch, hint, tx - 2, ty - 2);
+      font.draw(batch, hint, tx + 2, ty + 2);
+      font.draw(batch, hint, tx - 2, ty + 2);
+      font.setColor(1f, 1f, 1f, 1f);
+      font.draw(batch, hint, tx, ty);
+      font.getData().setScale(oldScale);
+    }
   }
 
-  public void setShowPrompt(boolean showPrompt) {
-    this.showPrompt = showPrompt;
+  private void drawGlow(SpriteBatch batch, float cx, float cy, float drawSize) {
+    pulseT += Gdx.graphics.getDeltaTime();
+    float s = (MathUtils.sin(2f * MathUtils.PI * 1.2f * pulseT) + 1f) * 0.5f;
+
+    float r = showPrompt ? 0.70f : 0.65f;
+    float g = showPrompt ? 1.00f : 0.80f;
+    float b = showPrompt ? 0.55f : 1.00f;
+
+    float baseSize = drawSize + 26f;
+    float size = baseSize + 3f * s;
+
+    float baseA = showPrompt ? 0.70f : 0.50f;
+    float a = baseA + 0.25f * s;
+
+    batch.setColor(r, g, b, a);
+    batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
+    batch.setColor(r, g, b, a * 0.45f);
+    batch.draw(glow, cx - size * 0.5f, cy - size * 0.5f, size, size);
+    batch.setColor(1f, 1f, 1f, 1f);
+  }
+
+  private void drawLabel(
+      SpriteBatch batch,
+      String name,
+      float midX,
+      float midY,
+      float bgW,
+      float bgH,
+      GlyphLayout gl) {
+    float bgX = midX - bgW * 0.5f;
+    float bgY = midY - bgH * 0.5f;
+    batch.draw(labelBgR != null ? labelBgR : new TextureRegion(labelBg), bgX, bgY, bgW, bgH);
+    font.setColor(1f, 1f, 1f, 1f);
+    float tx = midX - gl.width * 0.5f;
+    float ty = midY + gl.height * 0.35f;
+    drawOutlinedText(batch, name, tx, ty);
+  }
+
+  private TextureRegion regionFor(Texture tex) {
+    if (tex == keyUp) return keyUpR;
+    if (tex == keyDown) return keyDownR;
+    if (tex == keyLeft) return keyLeftR;
+    if (tex == keyRight) return keyRightR;
+    return null;
+  }
+
+  private void drawDirWithLabel(
+      SpriteBatch batch,
+      Texture tex,
+      Vector2 pos,
+      com.csse3200.game.services.WorldMapService.PathDef def,
+      String dir,
+      Vector2 labelOffset) {
+
+    if (tex == null) return;
+
+    // 1) Draw keycap
+    batch.setColor(1f, 1f, 1f, def == null ? 0.35f : 1f);
+    TextureRegion r = regionFor(tex);
+
+    batch.draw(r != null ? r : new TextureRegion(tex), pos.x, pos.y, ARROW_SIZE, ARROW_SIZE);
+    batch.setColor(1f, 1f, 1f, 1f);
+
+    // 2) Center Letter
+    if (font != null) {
+      float old = font.getData().scaleX;
+      font.getData().setScale(FONT_SCALE * 1.10f);
+      GlyphLayout g = new GlyphLayout(font, dir);
+      float cx = pos.x + ARROW_SIZE * 0.5f - g.width * 0.5f;
+      float cy = pos.y + ARROW_SIZE * 0.56f + g.height * 0.45f;
+      font.setColor(1f, 1f, 1f, def == null ? 0.55f : 1f);
+      drawOutlinedText(batch, dir, cx, cy);
+      font.getData().setScale(old);
+    }
+
+    if (def == null || font == null || labelBg == null) return;
+
+    // 3) Frame size
+    String name = resolveDisplayName(def.getNext());
+    float old2 = font.getData().scaleX;
+    font.getData().setScale(FONT_SCALE * 0.90f);
+    GlyphLayout gl = new GlyphLayout(font, name);
+
+    float bgW = Math.max(gl.width + LABEL_PAD_X * 2f, ARROW_SIZE * MIN_W_FACTOR);
+    float bgH = Math.max(gl.height + LABEL_PAD_Y * 2f, ARROW_SIZE * MIN_H_FACTOR);
+
+    // 4) Edge positioning
+    float sideX = Math.signum(labelOffset.x);
+    float sideY = Math.signum(labelOffset.y);
+
+    float midX = pos.x + ARROW_SIZE * 0.5f;
+    float midY = pos.y + ARROW_SIZE * 0.5f;
+
+    if (sideX > 0f) midX = pos.x + ARROW_SIZE + NAME_GAP + bgW * 0.5f;
+    else if (sideX < 0f) midX = pos.x - NAME_GAP - bgW * 0.5f;
+    if (sideY > 0f) midY = pos.y + ARROW_SIZE + (NAME_GAP - VISUAL_TRIM_Y) + bgH * 0.5f;
+    else if (sideY < 0f) midY = pos.y - (NAME_GAP - VISUAL_TRIM_Y) - bgH * 0.5f;
+
+    drawLabel(batch, name, midX, midY, bgW, bgH, gl);
+    font.getData().setScale(old2);
+  }
+
+  // Outlined white text
+  private void drawOutlinedText(SpriteBatch b, String t, float x, float y) {
+    font.setColor(0f, 0f, 0f, 1f);
+    font.draw(b, t, x + 2f, y - 2f);
+    font.draw(b, t, x - 2f, y - 2f);
+    font.draw(b, t, x + 2f, y + 2f);
+    font.draw(b, t, x - 2f, y + 2f);
+    font.setColor(1f, 1f, 1f, 1f);
+    font.draw(b, t, x, y);
+  }
+
+  // Load JSON to cache
+  private void loadLocalPathConfig(String internalPath) {
+    var file = Gdx.files.internal(internalPath);
+    if (!file.exists()) return;
+
+    localPaths.clear();
+    JsonReader reader = new JsonReader();
+    JsonValue root = reader.parse(file);
+
+    JsonValue nodesRoot = root.get("directions");
+    if (nodesRoot == null) {
+      return;
+    }
+
+    for (JsonValue nodeEntry = nodesRoot.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
+      String nodeKey = nodeEntry.name();
+      Map<String, com.csse3200.game.services.WorldMapService.PathDef> dirMap = new HashMap<>();
+
+      for (JsonValue keyEntry = nodeEntry.child(); keyEntry != null; keyEntry = keyEntry.next()) {
+        String dir = keyEntry.name();
+        var def = new com.csse3200.game.services.WorldMapService.PathDef();
+        def.setNext(keyEntry.getString("next"));
+        def.setWaypoints(new ArrayList<>());
+        JsonValue pathArr = keyEntry.get("path");
+        if (pathArr != null) {
+          for (JsonValue p = pathArr.child(); p != null; p = p.next()) {
+            float wx = p.get(0).asFloat();
+            float wy = p.get(1).asFloat();
+            def.getWaypoints().add(new Vector2(wx, wy));
+          }
+        }
+        dirMap.put(dir, def);
+      }
+      localPaths.put(nodeKey, dirMap);
+    }
+  }
+
+  // Get path def
+  private com.csse3200.game.services.WorldMapService.PathDef getLocalPath(
+      String nodeKey, String dir) {
+    Map<String, com.csse3200.game.services.WorldMapService.PathDef> m = localPaths.get(nodeKey);
+    return m == null ? null : m.get(dir);
+  }
+
+  /**
+   * Resolve the human-readable display name for a node key by querying the WorldMapService. Falls
+   * back to the key itself if the node cannot be found.
+   *
+   * @param nodeKey registration key from the path definition (def.next)
+   * @return display name (e.g., "Arcade", "Town", "Level 1") or the key if not found
+   */
+  private String resolveDisplayName(String nodeKey) {
+    try {
+      var worldMapService = ServiceLocator.getWorldMapService();
+      java.util.List<WorldMapNode> nodes = worldMapService.getAllNodes();
+      if (nodes != null) {
+        for (WorldMapNode n : nodes) {
+          if (n != null && nodeKey != null && nodeKey.equals(n.getRegistrationKey())) {
+            // Prefer the node's name for display
+            return n.getLabel();
+          }
+        }
+      }
+    } catch (Exception ignored) {
+      // If service not ready or any other issue, fall back to key
+    }
+    // Fallback: show the key itself so users/devs can still see where it points
+    return nodeKey != null ? nodeKey : "";
+  }
+
+  public String getKey() {
+    return node.getRegistrationKey();
+  }
+
+  /** Access the underlying node data object */
+  public WorldMapNode getNode() {
+    return node;
+  }
+
+  /** Center position in world coordinates (used by render and hit test) */
+  public Vector2 getCenterWorld() {
+    float x = node.getPositionX() * worldSize.x;
+    float y = node.getPositionY() * worldSize.y;
+    return new Vector2(x + nodeSize * 0.5f, y + nodeSize * 0.5f);
+  }
+
+  /** Hit radius consistent with on-node logic */
+  public float getHitRadius() {
+    return Math.max(nodeSize * 0.45f, 36f);
+  }
+
+  /** Point-in-node test in world coords */
+  public boolean hit(float worldX, float worldY) {
+    Vector2 c = getCenterWorld();
+    float r = getHitRadius();
+    float dx = worldX - c.x;
+    float dy = worldY - c.y;
+    return (dx * dx + dy * dy) <= (r * r);
   }
 }

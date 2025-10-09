@@ -14,9 +14,7 @@ public class AdvanceAutoState implements ActionState {
     // Not implemented
   }
 
-  /**
-   * Triggered on skip, will fast track any logic to its final state
-   */
+  /** Triggered on skip, will fast track any logic to its final state */
   @Override
   public void skip() {
     // Not implemented

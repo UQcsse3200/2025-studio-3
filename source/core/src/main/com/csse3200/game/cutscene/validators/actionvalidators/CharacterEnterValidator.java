@@ -65,10 +65,10 @@ public class CharacterEnterValidator implements ActionValidator {
         if (context.characterPoses().get(characterId) != null) {
           if (!context.characterPoses().get(characterId).contains(pose)) {
             errors.add(
-                    new AuthoringError(
-                            "ACTION_CHARACTER_POSE_INVALID",
-                            path,
-                            "Pose " + pose + " does not exist for the character " + characterId));
+                new AuthoringError(
+                    "ACTION_CHARACTER_POSE_INVALID",
+                    path,
+                    "Pose " + pose + " does not exist for the character " + characterId));
           }
         }
       }
