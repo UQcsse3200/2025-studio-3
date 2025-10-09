@@ -19,6 +19,7 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
+import com.csse3200.game.services.CutsceneService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -51,7 +52,14 @@ public class WorldMapScreen extends BaseScreen {
   public WorldMapScreen(GdxGame game) {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
     logger.debug("[WorldMapScreen] Initializing world map");
-    loadTextures();
+
+      // TEMP: Ensure CutsceneService is registered so cutscene testing works
+      if (ServiceLocator.getCutsceneService() == null) {
+          logger.info("Registering CutsceneService for mid-cutscene testing...");
+          ServiceLocator.registerCutsceneService(new CutsceneService());
+      }
+
+      loadTextures();
     createEntities();
     createNodes();
   }
@@ -137,12 +145,21 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-  @Override
-  public void render(float delta) {
-    handleZoomInput();
-    updateCamera();
-    super.render(delta);
-  }
+    @Override
+    public void render(float delta) {
+        handleZoomInput();
+        updateCamera();
+        super.render(delta);
+
+        // 🎬 TEMP TEST: press M anywhere on the world map to play your mid cutscene
+        if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            logger.info("🎬 Manual test: Playing mid-cutscene from world map...");
+            ServiceLocator.getCutsceneService().playCutscene("mid_cutscene_new", (id) -> {
+                logger.info("Mid cutscene finished, returning to world map (test mode)");
+                game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+            });
+        }
+    }
 
   /** Updates the camera to follow the player with smooth interpolation. */
   private void updateCamera() {
