@@ -8,7 +8,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.ui.TypographyFactory;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -86,15 +87,30 @@ public class WorldMapTutorial extends UIComponent {
         Gdx.graphics.getHeight() - table.getHeight() - TABLE_TOP_OFFSET); // top-left with padding
     table.pad(TABLE_PAD); // inner padding for the label
 
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
+    String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
+    String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
+    String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
+    String interactKeyName =
+        Input.Keys.toString(settingsService.getSettings().getInteractionButton());
+    // For zoom, re-use current Q/K bindings for now (no settings provided for zoom)
+    String zoomOutKeyName = Input.Keys.toString(Input.Keys.Q);
+    String zoomInKeyName = Input.Keys.toString(Input.Keys.K);
+
     this.moveLabel =
-        TypographyFactory.createSubtitle(
-            "Use W/A/S/D to move", com.badlogic.gdx.graphics.Color.WHITE);
-    this.interactLabel =
-        TypographyFactory.createSubtitle(
-            "Press E to interact", com.badlogic.gdx.graphics.Color.WHITE);
-    this.zoomLabel =
-        TypographyFactory.createSubtitle(
-            "Press Q/K to zoom", com.badlogic.gdx.graphics.Color.WHITE);
+        ui.text(
+            "Use "
+                + upKeyName
+                + "/"
+                + leftKeyName
+                + "/"
+                + downKeyName
+                + "/"
+                + rightKeyName
+                + " to move");
+    this.interactLabel = ui.text("Press " + interactKeyName + " to interact");
+    this.zoomLabel = ui.text("Press " + zoomOutKeyName + "/" + zoomInKeyName + " to zoom");
     currentLabel = moveLabel;
 
     table.add(currentLabel).left();
@@ -103,7 +119,7 @@ public class WorldMapTutorial extends UIComponent {
     stage.addActor(table);
 
     // Toggle button
-    TextButton toggleButton = new TextButton("Tutorial", skin);
+    TextButton toggleButton = ui.primaryButton("TUTORIAL", 150);
     toggleButton.addListener(
         new ClickListener() {
           @Override
@@ -206,7 +222,8 @@ public class WorldMapTutorial extends UIComponent {
 
   /** Handles the interaction tutorial step (step 1). */
   private void handleInteractionStep() {
-    if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+    int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
+    if (Gdx.input.isKeyJustPressed(interactKey)) {
       advanceToStep(zoomLabel, 2);
     }
   }
@@ -224,10 +241,15 @@ public class WorldMapTutorial extends UIComponent {
    * @return true if a movement key is pressed, false otherwise
    */
   private boolean isMovementKeyPressed() {
-    return Gdx.input.isKeyPressed(Input.Keys.W)
-        || Gdx.input.isKeyPressed(Input.Keys.A)
-        || Gdx.input.isKeyPressed(Input.Keys.S)
-        || Gdx.input.isKeyPressed(Input.Keys.D);
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    int up = settingsService.getSettings().getUpButton();
+    int down = settingsService.getSettings().getDownButton();
+    int left = settingsService.getSettings().getLeftButton();
+    int right = settingsService.getSettings().getRightButton();
+    return Gdx.input.isKeyPressed(up)
+        || Gdx.input.isKeyPressed(left)
+        || Gdx.input.isKeyPressed(down)
+        || Gdx.input.isKeyPressed(right);
   }
 
   /**

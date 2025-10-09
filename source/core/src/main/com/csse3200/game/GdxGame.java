@@ -5,6 +5,8 @@ import static com.badlogic.gdx.Gdx.app;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Cursor;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.services.*;
 import com.csse3200.game.ui.WorldMapNode;
@@ -27,12 +29,13 @@ public class GdxGame extends Game {
     "images/ui/achievement.png",
     "images/ui/pause-icon.png",
     "images/entities/placeholder.png",
-    "images/ui/btn-blue.png",
+    "images/ui/cursor.png",
+    "images/backgrounds/bg.png",
     "images/ui/speedup1x.png",
     "images/ui/speedup15x.png",
-    "images/ui/speedup2x.png",
-    "images/ui/btn-blue.png",
+    "images/ui/speedup2x.png"
   };
+
   private static final String[] GLOBAL_SOUNDS = {
     "sounds/achievement_unlock.mp3",
     "sounds/error.mp3",
@@ -76,8 +79,9 @@ public class GdxGame extends Game {
     // Asset configs
     loadGlobalAssets();
     loadNodes();
-    Gdx.gl.glClearColor(215f / 255f, 215f / 255f, 215f / 255f, 1);
-    setScreen(ScreenType.MAIN_MENU);
+    Gdx.gl.glClearColor(0f / 255f, 0f / 255f, 0f / 255f, 1);
+    setCursor();
+    setScreen(ScreenType.MAIN_MENU, null);
   }
 
   /** Registers the nodes on the world map. */
@@ -170,35 +174,43 @@ public class GdxGame extends Game {
     logger.debug("[GdxGame] Loading global assets");
     ServiceLocator.getGlobalResourceService().loadTextures(GLOBAL_ASSETS);
     ServiceLocator.getGlobalResourceService()
-        .loadTextureAtlases(new String[] {"images/ui/btn-blue.atlas"});
-    ServiceLocator.getGlobalResourceService()
         .loadFont(GLOBAL_FONT.getValue(), GLOBAL_FONT.getKey());
     ServiceLocator.getGlobalResourceService().loadSounds(GLOBAL_SOUNDS);
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 
-  /** Sets the game screen to the provided type. */
+  /** Used for backward compatibility. */
   public void setScreen(ScreenType screenType) {
+    setScreen(screenType, null);
+  }
+
+  /** Sets the game screen to the provided type. */
+  public void setScreen(ScreenType screenType, String levelKey) {
     logger.info("[GdxGame] Setting game screen to {}", screenType);
     Screen currentScreen = getScreen();
     if (currentScreen != null) {
       currentScreen.dispose();
     }
-    setScreen(newScreen(screenType));
-  }
-
-  /** Sets the game screen to the provided type, with an explicit level key for MAIN_GAME. */
-  public void setScreen(ScreenType screenType, String levelKey) {
-    logger.info("[GdxGame] Setting game screen to {} with levelKey={}", screenType, levelKey);
-    Screen currentScreen = getScreen();
-    if (currentScreen != null) {
-      currentScreen.dispose();
-    }
     if (screenType == ScreenType.MAIN_GAME) {
+      if (levelKey == null) {
+        throw new IllegalArgumentException("Level key cannot be null for MAIN_GAME");
+      }
       setScreen(new MainGameScreen(this, levelKey));
     } else {
       setScreen(newScreen(screenType));
     }
+    setScreen(newScreen(screenType));
+  }
+
+  /** Sets the cursor to the custom cursor. */
+  public void setCursor() {
+    logger.info("[GdxGame] Setting cursor");
+    Pixmap pixmap = new Pixmap(Gdx.files.internal("images/ui/cursor.png"));
+    int xHotspot = 0;
+    int yHotspot = 0;
+    Cursor cursor = Gdx.graphics.newCursor(pixmap, xHotspot, yHotspot);
+    pixmap.dispose();
+    Gdx.graphics.setCursor(cursor);
   }
 
   @Override

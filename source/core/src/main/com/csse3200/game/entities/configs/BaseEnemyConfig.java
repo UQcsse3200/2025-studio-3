@@ -15,6 +15,13 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   private int maxTeleports;
   private int invulnerabilityMs;
   private int coinsRewarded;
+  private String attackType;
+  private float attackRange;
+  private float attackSpeed;
+  private String projectileType;
+  private String targetLayer;
+  private int explosionDelay;
+  private int explosionDamage;
 
   /**
    * The enemy's size NOTE: THIS DOESN'T WORK because LevelGameArea rescales the enemy to match the
@@ -55,6 +62,19 @@ public class BaseEnemyConfig extends BaseEntityConfig {
   }
 
   /**
+   * Gets the attack type value for this entity.
+   *
+   * @return the attack type value
+   */
+  public String getAttackType() {
+    return attackType;
+  }
+
+  public boolean isBomberRobot() {
+    return explosionDamage > 0;
+  }
+
+  /**
    * Gets the teleport cooldown seconds value for this entity.
    *
    * @return the teleport cooldown seconds value
@@ -81,13 +101,12 @@ public class BaseEnemyConfig extends BaseEntityConfig {
     return maxTeleports;
   }
 
-  /**
-   * Gets the invulnerability ms value for this entity.
-   *
-   * @return the invulnerability ms value
-   */
-  public int getInvulnerabilityMs() {
-    return invulnerabilityMs;
+  public float getExplosionDelay() {
+    return explosionDelay;
+  }
+
+  public int getExplosionDamage() {
+    return explosionDamage;
   }
 
   /**
@@ -106,6 +125,42 @@ public class BaseEnemyConfig extends BaseEntityConfig {
    */
   public int getCoinsRewarded() {
     return coinsRewarded;
+  }
+
+  /**
+   * Gets the attack range for this entity
+   *
+   * @return the attack range
+   */
+  public float getAttackRange() {
+    return attackRange;
+  }
+
+  /**
+   * Gets the attack speed for this entity
+   *
+   * @return attack speed
+   */
+  public float getAttackSpeed() {
+    return attackSpeed;
+  }
+
+  /**
+   * Gets the projectile type for this entity
+   *
+   * @return the projectile type
+   */
+  public String getProjectileType() {
+    return projectileType;
+  }
+
+  /**
+   * Gets the intended target for this entity
+   *
+   * @return the intended target for this entity
+   */
+  public String getTargetLayer() {
+    return targetLayer;
   }
 
   /** DeserializedEnemyConfig is a wrapper class for the BaseEnemyConfig class. */

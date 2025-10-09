@@ -2,8 +2,8 @@ package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -16,10 +16,9 @@ import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,12 +64,23 @@ public class DossierDisplay extends UIComponent {
   public void create() {
     super.create();
     changeTypeListener();
+    DossierBackAction dossierBack = new DossierBackAction(game);
+    entity.getEvents().addListener("back", dossierBack::backMenu);
     addActors();
   }
 
   /** Adds all tables to the stage. */
   private void addActors() {
-    Label title = TypographyFactory.createTitle("Dossier");
+
+    // add background back in between changes
+    Texture bgTexture =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
+    Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTexture)));
+    bg.setFillParent(true);
+    bg.setScaling(Scaling.fill);
+    stage.addActor(bg);
+
+    Label title = ui.title("Dossier");
     createCloseButton();
 
     // create rootTable
@@ -156,7 +166,8 @@ public class DossierDisplay extends UIComponent {
 
   /** Sets up the buttons to swap between humans and robots. */
   private Table makeSwapBtn() {
-    TextButton robotsBtn = ButtonFactory.createLargeButton("Robots");
+    int swapButtonWidth = 300;
+    TextButton robotsBtn = ui.primaryButton("Robots", swapButtonWidth);
     robotsBtn.addListener(
         new ChangeListener() {
           @Override
@@ -168,7 +179,7 @@ public class DossierDisplay extends UIComponent {
           }
         });
 
-    TextButton humansBtn = ButtonFactory.createLargeButton("Humans");
+    TextButton humansBtn = ui.primaryButton("Humans", swapButtonWidth);
     humansBtn.addListener(
         new ChangeListener() {
           @Override
@@ -185,10 +196,10 @@ public class DossierDisplay extends UIComponent {
     table.padTop(50f);
 
     float buttonWidth = 200f; // Fixed width
-    float buttonHeight = 50f;
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
-    table.add(humansBtn).size(buttonWidth, buttonHeight);
-    table.add(robotsBtn).size(buttonWidth, buttonHeight);
+    table.add(humansBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
+    table.add(robotsBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
 
     table.row();
 
@@ -274,12 +285,14 @@ public class DossierDisplay extends UIComponent {
     Table infoTable = new Table(skin);
 
     String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
-    Label entityNameLabel = TypographyFactory.createSubtitle(name);
+    Label entityNameLabel = ui.subheading(name);
+    entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
     infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
 
     String info = entities.length > 0 ? getEntityInfo(currentEntityKey) : "";
-    Label entityInfoLabel = TypographyFactory.createParagraph(info);
+    Label entityInfoLabel = ui.text(info);
+    entityInfoLabel.setColor(Color.BLACK);
     entityInfoLabel.setWrap(true);
     entityInfoLabel.setAlignment(Align.left);
     infoTable
@@ -319,25 +332,7 @@ public class DossierDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    ImageButton closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(20f, stage.getHeight() - 60f - 20f);
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            backMenu();
-          }
-        });
+    TextButton closeButton = ui.createBackExitButton(entity.getEvents(), stage.getHeight(), "Back");
 
     stage.addActor(closeButton);
   }
@@ -350,15 +345,18 @@ public class DossierDisplay extends UIComponent {
    */
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
+    buttonRow.bottom().padBottom(60f);
     ButtonGroup<TextButton> group = new ButtonGroup<>();
+    float buttonWidth = 280f;
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
       String entityKey = entities[i];
       // Use the display name for button text
       String displayName = getEntityName(entityKey);
-      TextButton btn = ButtonFactory.createLargeButton(displayName);
+      TextButton btn = ui.secondaryButton(displayName, buttonWidth);
       group.add(btn);
-      buttonRow.add(btn).size(100f, 35f).pad(5);
+      buttonRow.add(btn).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5);
 
       btn.addListener(
           new ChangeListener() {
@@ -373,16 +371,6 @@ public class DossierDisplay extends UIComponent {
           });
     }
     return buttonRow;
-  }
-
-  /** Handles navigation back to the World Map Screen. */
-  private void backMenu() {
-    game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-  }
-
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   /**

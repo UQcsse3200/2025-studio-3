@@ -76,6 +76,9 @@ abstract class BaseScreen extends ScreenAdapter {
   public void resize(int width, int height) {
     logger.debug("[{}] Resized renderer: ({} x {})", getClass().getSimpleName(), width, height);
     renderer.resize(width, height);
+    ServiceLocator.getEntityService()
+        .getEntities()
+        .forEach(entity -> entity.getEvents().trigger("resize"));
   }
 
   @Override

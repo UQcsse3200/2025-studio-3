@@ -21,6 +21,7 @@ import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.services.CutsceneService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
 import com.csse3200.game.ui.terminal.Terminal;
@@ -165,6 +166,30 @@ public class WorldMapScreen extends BaseScreen {
 
     // Dev hotkeys every frame
     handleDevHotkeys();
+
+    enforceCameraZoomStep();
+
+    // If movement keys are pressed, smoothly recenter view to player when player is not moving
+    if (playerEntity != null) {
+      SettingsService settingsService = ServiceLocator.getSettingsService();
+      if (Gdx.input.isKeyJustPressed(settingsService.getSettings().getUpButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getDownButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getLeftButton())
+          || Gdx.input.isKeyJustPressed(settingsService.getSettings().getRightButton())) {
+        WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
+        if (comp != null && !comp.isCurrentlyMoving()) {
+          startSmoothRecenterToPlayer();
+        }
+      }
+    }
+
+    // While moving, force auto-follow and ignore manual pan
+    if (isPlayerCurrentlyMoving()) {
+      followCamera = true;
+    }
+
+    // Run one-shot smooth recenter if requested (does not enable follow mode)
+    updateSmoothRecentering();
 
     super.render(delta);
 

@@ -1,0 +1,225 @@
+teleport_robot.png
+	size: 512, 512
+	repeat: none
+attack
+	index: 1
+	bounds: 0, 2, 64, 64
+attack
+	index: 3
+	bounds: 0, 2, 64, 64
+attack
+	index: 2
+	bounds: 0, 2, 64, 64
+attack
+	index: 4
+	bounds: 64, 2, 64, 64
+attack
+	index: 0
+	bounds: 64, 2, 64, 64
+attack
+	index: 6
+	bounds: 128, 2, 64, 64
+attack
+	index: 5
+	bounds: 128, 2, 64, 64
+attack
+	index: 7
+	bounds: 128, 2, 64, 64
+attackDamaged
+	index: 2
+	bounds: 192, 2, 64, 64
+attackDamaged
+	index: 1
+	bounds: 192, 2, 64, 64
+attackDamaged
+	index: 3
+	bounds: 192, 2, 64, 64
+attackDamaged
+	index: 4
+	bounds: 256, 2, 64, 64
+attackDamaged
+	index: 0
+	bounds: 256, 2, 64, 64
+attackDamaged
+	index: 7
+	bounds: 320, 2, 64, 64
+attackDamaged
+	index: 5
+	bounds: 320, 2, 64, 64
+attackDamaged
+	index: 6
+	bounds: 320, 2, 64, 64
+moveLeft
+	index: 0
+	bounds: 448, 2, 64, 64
+default
+	bounds: 448, 2, 64, 64
+teleport
+	index: 0
+	bounds: 448, 2, 64, 64
+teleport
+	index: 19
+	bounds: 448, 2, 64, 64
+moveLeft
+	index: 1
+	bounds: 0, 68, 64, 64
+moveLeft
+	index: 2
+	bounds: 64, 68, 64, 64
+moveLeft
+	index: 3
+	bounds: 128, 68, 64, 64
+moveLeft
+	index: 4
+	bounds: 192, 68, 64, 64
+moveLeft
+	index: 5
+	bounds: 256, 68, 64, 64
+moveLeft
+	index: 6
+	bounds: 320, 68, 64, 64
+moveLeft
+	index: 7
+	bounds: 384, 68, 64, 64
+moveLeftDamaged
+	index: 1
+	bounds: 448, 68, 64, 64
+moveLeftDamaged
+	index: 2
+	bounds: 0, 134, 64, 64
+moveLeftDamaged
+	index: 3
+	bounds: 64, 134, 64, 64
+moveLeftDamaged
+	index: 4
+	bounds: 128, 134, 64, 64
+moveLeftDamaged
+	index: 5
+	bounds: 192, 134, 64, 64
+moveLeftDamaged
+	index: 6
+	bounds: 256, 134, 64, 64
+moveLeftDamaged
+	index: 7
+	bounds: 320, 134, 64, 64
+teleport
+	index: 3
+	bounds: 384, 134, 64, 64
+teleport
+	index: 16
+	bounds: 384, 134, 64, 64
+teleport
+	index: 5
+	bounds: 448, 134, 64, 64
+teleport
+	index: 14
+	bounds: 448, 134, 64, 64
+teleport
+	index: 6
+	bounds: 0, 200, 64, 64
+teleport
+	index: 13
+	bounds: 0, 200, 64, 64
+teleport
+	index: 8
+	bounds: 64, 200, 64, 64
+teleport
+	index: 11
+	bounds: 64, 200, 64, 64
+teleport
+	index: 10
+	bounds: 128, 200, 64, 64
+teleport
+	index: 9
+	bounds: 128, 200, 64, 64
+teleportDamaged
+	index: 10
+	bounds: 128, 200, 64, 64
+teleportDamaged
+	index: 9
+	bounds: 128, 200, 64, 64
+teleport
+	index: 12
+	bounds: 192, 200, 64, 64
+teleport
+	index: 7
+	bounds: 192, 200, 64, 64
+teleportDamaged
+	index: 12
+	bounds: 192, 200, 64, 64
+teleportDamaged
+	index: 7
+	bounds: 192, 200, 64, 64
+teleport
+	index: 15
+	bounds: 256, 200, 64, 64
+teleport
+	index: 4
+	bounds: 256, 200, 64, 64
+teleport
+	index: 17
+	bounds: 320, 200, 64, 64
+teleport
+	index: 2
+	bounds: 320, 200, 64, 64
+teleport
+	index: 18
+	bounds: 384, 200, 64, 64
+teleport
+	index: 1
+	bounds: 384, 200, 64, 64
+teleportDamaged
+	index: 0
+	bounds: 448, 200, 64, 64
+moveLeftDamaged
+	index: 0
+	bounds: 448, 200, 64, 64
+teleportDamaged
+	index: 19
+	bounds: 448, 200, 64, 64
+teleportDamaged
+	index: 2
+	bounds: 0, 266, 64, 64
+teleportDamaged
+	index: 17
+	bounds: 0, 266, 64, 64
+teleportDamaged
+	index: 5
+	bounds: 64, 266, 64, 64
+teleportDamaged
+	index: 14
+	bounds: 64, 266, 64, 64
+teleportDamaged
+	index: 11
+	bounds: 128, 266, 64, 64
+teleportDamaged
+	index: 8
+	bounds: 128, 266, 64, 64
+teleportDamaged
+	index: 13
+	bounds: 192, 266, 64, 64
+teleportDamaged
+	index: 6
+	bounds: 192, 266, 64, 64
+teleportDamaged
+	index: 15
+	bounds: 256, 266, 64, 64
+teleportDamaged
+	index: 4
+	bounds: 256, 266, 64, 64
+teleportDamaged
+	index: 16
+	bounds: 320, 266, 64, 64
+teleportDamaged
+	index: 3
+	bounds: 320, 266, 64, 64
+teleportDamaged
+	index: 18
+	bounds: 384, 266, 64, 64
+teleportDamaged
+	index: 1
+	bounds: 384, 266, 64, 64
+invalid
+	bounds: 384, 2, 64, 64
+explosion
+    bounds: 384, 2, 64, 64

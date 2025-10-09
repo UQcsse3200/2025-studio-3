@@ -3,7 +3,6 @@ package com.csse3200.game.components.hud;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -14,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,8 +83,7 @@ public class PauseMenu extends UIComponent {
     menuTable.center();
 
     // Create title
-    Label titleLabel = new Label("Game Paused", skin);
-    titleLabel.setFontScale(2.0f);
+    Label titleLabel = ui.title("Game Paused");
     whiten(titleLabel);
     menuTable.add(titleLabel).padBottom(30f).row();
 
@@ -94,7 +91,11 @@ public class PauseMenu extends UIComponent {
     createButtons();
 
     // Add buttons to table
-    menuTable.add(resumeButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
+    menuTable
+        .add(resumeButton)
+        .size(ui.getScaledWidth(BUTTON_WIDTH), ui.getScaledHeight(BUTTON_HEIGHT))
+        .padBottom(BUTTON_SPACING)
+        .row();
     menuTable
         .add(quitLevelButton)
         .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -110,7 +111,7 @@ public class PauseMenu extends UIComponent {
   /** Creates the menu buttons */
   private void createButtons() {
     // Resume button
-    resumeButton = ButtonFactory.createButton("Resume");
+    resumeButton = ui.primaryButton("Resume", BUTTON_WIDTH);
     resumeButton.addListener(
         new ClickListener() {
           @Override
@@ -122,7 +123,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Quit Level button
-    quitLevelButton = ButtonFactory.createButton("Quit Level");
+    quitLevelButton = ui.primaryButton("Quit Level", BUTTON_WIDTH);
     quitLevelButton.addListener(
         new ClickListener() {
           @Override
@@ -133,7 +134,7 @@ public class PauseMenu extends UIComponent {
         });
 
     // Main Menu button
-    mainMenuButton = ButtonFactory.createButton("Main Menu");
+    mainMenuButton = ui.primaryButton("Main Menu", BUTTON_WIDTH);
     mainMenuButton.addListener(
         new ClickListener() {
           @Override
@@ -144,7 +145,8 @@ public class PauseMenu extends UIComponent {
         });
 
     // Exit Game button
-    exitGameButton = ButtonFactory.createButton("Exit Game");
+    exitGameButton = ui.primaryButton("Exit Game", BUTTON_WIDTH);
+    // exitGameButton = ui.createExitButton(entity.getEvents(), stage.getHeight());
     exitGameButton.addListener(
         new ClickListener() {
           @Override
@@ -219,11 +221,6 @@ public class PauseMenu extends UIComponent {
    */
   public boolean isVisible() {
     return isVisible;
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Draw is handled by the stage
   }
 
   @Override

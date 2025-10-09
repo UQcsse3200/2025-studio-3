@@ -2,7 +2,9 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,16 +17,18 @@ public class CombatStatsComponent extends Component {
 
   private static final Logger logger = LoggerFactory.getLogger(CombatStatsComponent.class);
   private int health;
+  private final int maxHealth;
   private int baseAttack;
 
   /**
    * Creates a new combat stats component with the specified health and attack values.
    *
-   * @param health the initial health value
+   * @param maxHealth the initial health value
    * @param baseAttack the base attack value
    */
-  public CombatStatsComponent(int health, int baseAttack) {
-    setHealth(health);
+  public CombatStatsComponent(int maxHealth, int baseAttack) {
+    setHealth(maxHealth);
+    this.maxHealth = this.health; // setHealth will handle processing this
     setBaseAttack(baseAttack);
   }
 
@@ -47,45 +51,55 @@ public class CombatStatsComponent extends Component {
   }
 
   /**
+   * Returns the entity's maximum health.
+   *
+   * @return entity's maximum health
+   */
+  public int getMaxHealth() {
+    return maxHealth;
+  }
+
+  /**
    * Sets the entity's health. Health has a minimum bound of 0.
    *
    * @param health health
    */
   public void setHealth(int health) {
+    if (this.health <= 0 && health <= 0) {
+      return;
+    }
+
     if (health >= 0) {
       this.health = health;
     } else {
       this.health = 0;
     }
 
-    if (entity != null) {
-      if (this.health == 0) {
-        // Add coins & update statistics
-        // TODO: use config passed into the entity
-        int extraCoins = 3;
-        ProfileService profileService = ServiceLocator.getProfileService();
-        if (profileService != null && profileService.isActive()) {
-          int before = profileService.getProfile().getWallet().getCoins();
-          profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
-          profileService.getProfile().getWallet().addCoins(extraCoins);
-          profileService
-              .getProfile()
-              .getStatistics()
-              .incrementStatistic("coinsCollected", extraCoins);
-          logger.info(
-              "[Death] wallet: {} + {} -> {}",
-              before,
-              extraCoins,
-              profileService.getProfile().getWallet().getCoins());
-        } else {
-          logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
-        }
+    if (entity == null) return;
 
-        // despawn entity
-        entity.getEvents().trigger("despawnRobot", entity);
+    if (this.health == 0) {
+      // Add coins & update statistics
+      // TODO: use config passed into the entity
+      int extraCoins = 3;
+      ProfileService profileService = ServiceLocator.getProfileService();
+      if (profileService != null && profileService.isActive()) {
+        int before = profileService.getProfile().getWallet().getCoins();
+        profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+        profileService.getProfile().getWallet().addCoins(extraCoins);
+        profileService
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("coinsCollected", extraCoins);
+        logger.info(
+            "[Death] wallet: {} + {} -> {}",
+            before,
+            extraCoins,
+            profileService.getProfile().getWallet().getCoins());
+      } else {
+        logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
       }
-      entity.getEvents().trigger("updateHealth", this.health);
     }
+    entity.getEvents().trigger("updateHealth", this.health, this.maxHealth);
   }
 
   /**
@@ -128,10 +142,13 @@ public class CombatStatsComponent extends Component {
     int newHealth = getHealth() - target.getBaseAttack();
 
     // Play damage sound
-    Sound damageSound =
-        ServiceLocator.getResourceService().getAsset("sounds/damage.mp3", Sound.class);
-    float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    damageSound.play(0.5f * volume);
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    if (resourceService != null && settingsService != null) {
+      Sound damageSound = resourceService.getAsset("sounds/damage.mp3", Sound.class);
+      float volume = settingsService.getSoundVolume();
+      damageSound.play(0.5f * volume);
+    }
 
     setHealth(newHealth);
     handleDeath();
@@ -140,6 +157,12 @@ public class CombatStatsComponent extends Component {
   /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
     boolean isDead = isDead();
+    if (entity == null) {
+      return;
+    } // Stops NPE if component has no entity.
+    // Sends a different event depending on the entity type
+    if (entity.getDeathFlag()) return;
+
     if (isDead || getHealth() < 0) {
       Sound deathSound;
       float volume = ServiceLocator.getSettingsService().getSoundVolume();
@@ -159,7 +182,6 @@ public class CombatStatsComponent extends Component {
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
-      deathSound.play(0.3f * volume);
     }
   }
 }

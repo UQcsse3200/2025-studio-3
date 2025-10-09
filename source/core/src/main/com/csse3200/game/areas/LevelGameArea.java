@@ -5,11 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Timer;
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
 import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
@@ -17,24 +18,35 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
+import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
+import com.csse3200.game.components.npc.CarrierHealthWatcherComponent;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
+import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.factories.DefenceFactory;
+import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -99,8 +111,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setScaling();
     selectedUnit = null;
 
-    ServiceLocator.getDiscordRichPresenceService()
-        .updateGamePresence(currentLevelKey.split("level")[1], 1);
+    DiscordRichPresenceService discord = ServiceLocator.getDiscordRichPresenceService();
+    if (discord != null) {
+      discord.updateGamePresence(currentLevelKey.split("level")[1], 1);
+    }
   }
 
   /** Loads level configuration from ConfigService. */
@@ -156,9 +170,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
+    // Register the game area with the service locator
+    ServiceLocator.registerGameArea(this);
+
     displayUI();
     spawnMap();
     spawnGrid(levelRows, levelCols);
+
     Entity overlayEntity = new Entity();
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
@@ -182,7 +200,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     ui =
         new Entity()
-            .addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new GameAreaDisplay(this.currentLevelKey))
             .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
@@ -282,7 +300,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /** Spawns a static defensive wall at the left edge of the map. */
-  private void spawnWall() {
+  void spawnWall() {
     float tileY = yOffset - tileSize / 5;
     float wallSize = tileSize * 6;
 
@@ -342,6 +360,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
+    // Get and set position coords
     col = Math.clamp(col, 0, levelCols - 1);
     row = Math.clamp(row, 0, levelRows - 1);
 
@@ -387,9 +406,64 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new Vector2(x, y);
   }
 
+  private void addGunnerRobotTask(Entity unit) {
+    // ensure gunner attacks immediately
+    unit.getEvents()
+        .addListener(
+            "fire",
+            () -> {
+              // spawn a projectile every tick
+              Vector2 spawnPos = unit.getPosition().cpy();
+              logger.info("spawnRobotProjectile called at {}", spawnPos);
+              spawnRobotProjectile(spawnPos);
+              logger.info("Gunner fired projectile at position {}", spawnPos);
+            });
+  }
+
+  private void addMinion(Entity unit) {
+    unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+
+    unit.getEvents()
+        .addListener(
+            "spawnMinion",
+            () -> {
+              Entity mini = RobotFactory.createRobotType(RobotType.MINI);
+
+              // spawn half a tile ahead, same lane
+              // TODO replace this stuff with the newer LevelGameArea code used for the other
+              // robots.
+              // E.g. registerRobot
+              float aheadX = unit.getPosition().x - 0.5f * tileSize;
+              float spawnY = unit.getPosition().y;
+
+              mini.setPosition(aheadX, spawnY);
+              mini.scaleHeight(tileSize);
+
+              spawnEntity(mini);
+              robots.add(mini);
+
+              mini.getEvents()
+                  .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                        requestDespawn(mini);
+                        robots.remove(mini);
+                      });
+            });
+  }
+
   /** Shared creation, placement, scaling, spawning, and listener wiring for robots. */
   private void registerRobot(RobotType type, float worldX, float worldY) {
     Entity unit = RobotFactory.createRobotType(type);
+
+    // Handles adding additional tasks for robots who spawn entities
+    // I don't think these can be added to robot factory because they spawn entities
+    if (type == RobotType.GIANT) {
+      addMinion(unit);
+    } else if (type == RobotType.GUNNER) {
+      addGunnerRobotTask(unit);
+    }
+
     unit.setPosition(worldX, worldY);
     unit.scaleHeight(tileSize);
 
@@ -474,13 +548,30 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 damageRobotsAtPosition(pos, radius, damage);
               });
     } else {
-      projectile.addComponent(new MoveDirectionComponent(direction)); // pass velocity
+      projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
     }
     if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
     spawnEntity(projectile); // adds to area and entity service
+  }
+
+  /**
+   * Spawns a projectile (bullet) for the gunner robot type
+   *
+   * @param spawnPos the position to spawn the projectile at
+   */
+  public void spawnRobotProjectile(Vector2 spawnPos) {
+    Entity projectile = ProjectileFactory.createGunnerProjectile(5, 150f);
+    projectile.setPosition(spawnPos.x, spawnPos.y);
+
+    projectile.scaleHeight(30f);
+    projectile.scaleWidth(30f);
+    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+
+    spawnEntity(projectile);
+    logger.info("Gunner projectile spawned at {}", spawnPos);
   }
 
   /**
@@ -524,6 +615,82 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       requestDespawn(r);
       robots.remove(r);
     }
+  }
+
+  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+    logger.info("Spawning Boss of type {}", bossType);
+    Entity boss = BossFactory.createBossType(bossType);
+
+    int spawnCol = levelCols;
+    int spawnRow = Math.clamp(row, 0, levelRows - 1); // Bottom row for now
+
+    float spawnX = xOffset + tileSize * spawnCol;
+    float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
+
+    boss.setPosition(spawnX, spawnY);
+    boss.scaleHeight(tileSize * 3.0f);
+
+    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+
+    spawnEntity(boss);
+    robots.add(boss);
+    boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
+    boss.getEvents().addListener("despawnRobot", target -> {});
+
+    // --- BUG FIX STARTS HERE ---
+    // Use a boolean flag to ensure the death logic only runs ONCE.
+    final boolean[] isBossDead = {false};
+    boss.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              if (isBossDead[0]) {
+                return; // If already dead, do nothing.
+              }
+              isBossDead[0] = true; // Set flag to prevent re-entry.
+
+              logger.info("Boss death triggered");
+
+              AITaskComponent ai = boss.getComponent(AITaskComponent.class);
+              if (ai != null) {
+                ai.dispose();
+              }
+
+              AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
+              if (anim != null) {
+                anim.startAnimation("death");
+              }
+
+              Timer.schedule(
+                  new Timer.Task() {
+                    @Override
+                    public void run() {
+                      requestDespawn(boss);
+                      robots.remove(boss);
+                      logger.info("Boss defeated");
+                      if (ServiceLocator.getWaveService() != null) {
+                        ServiceLocator.getWaveService().onBossDefeated();
+                      }
+                    }
+                  },
+                  1.84f);
+            });
+    // --- BUG FIX ENDS HERE ---
+  }
+
+  public void spawnBossProjectile(Entity boss) {
+    Entity projectile = ProjectileFactory.createBossProjectile(5);
+    Vector2 spawnPos = boss.getCenterPosition().cpy();
+    spawnPos.x -= 1.0f;
+    spawnPos.y -= (tileSize / 6f);
+
+    projectile.setPosition(spawnPos.x, spawnPos.y);
+    projectile.scaleHeight(0.5f * tileSize);
+    projectile.scaleWidth(0.5f * tileSize);
+    projectile.addComponent(new MoveLeftComponent(150f));
+    projectile.getEvents().addListener("despawn", () -> requestDespawn(projectile));
+    spawnEntity(projectile);
+    logger.info("Boss fired projectile from position {}", spawnPos);
   }
 
   /**
@@ -780,9 +947,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public GridPoint2 stageToWorld(GridPoint2 pos) {
-    float x = pos.x * stageToWorldRatio;
-    float y = (stageHeight - pos.y) * stageToWorldRatio;
-
+    // pos currently represents SCREEN coordinates from input callbacks.
+    // Convert to STAGE coordinates first to respect the viewport's scaling/letterboxing,
+    // then map stage units into our game world units using stageToWorldRatio.
+    var stage = ServiceLocator.getRenderService().getStage();
+    com.badlogic.gdx.math.Vector2 p =
+        stage.screenToStageCoordinates(new com.badlogic.gdx.math.Vector2(pos.x, pos.y));
+    float x = p.x * stageToWorldRatio;
+    float y = p.y * stageToWorldRatio;
     return new GridPoint2((int) x, (int) y);
   }
 
@@ -794,9 +966,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public GridPoint2 worldToStage(GridPoint2 pos) {
-    float x = pos.x / stageToWorldRatio;
-    float y = stageHeight - (pos.y / stageToWorldRatio);
-    return new GridPoint2((int) x, (int) y);
+    // Convert from our game world units to stage coordinates (no Y flip; both are bottom-left).
+    float sx = pos.x / stageToWorldRatio;
+    float sy = pos.y / stageToWorldRatio;
+    return new GridPoint2((int) sx, (int) sy);
   }
 
   /** Adjusts all entities after a window resize by recalculating world scale and layout. */

@@ -3,6 +3,8 @@ package com.csse3200.game.entities.factories;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -77,5 +79,50 @@ public class ProjectileFactory {
       PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
     }
     return proj;
+  }
+
+  /**
+   * Creates a gunner robot projectile entity.
+   *
+   * <p>The bullet shot is designed to be used by robot entities such as gunner robot. It includes
+   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
+   * damage to enemies and is destroyed upon impact.
+   *
+   * @param damage amount of damage dealt to an enemy entity
+   * @param speed the speed the bullet shot moves at
+   * @return entity representing a bullet shot projectile
+   */
+  public static Entity createGunnerProjectile(int damage, float speed) {
+    Entity gunnerProjectile =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
+            .addComponent(new CombatStatsComponent(1, damage))
+            .addComponent(
+                new MoveDirectionComponent(TargetDetectionTasks.AttackDirection.LEFT, speed))
+            .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
+
+    gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
+    return gunnerProjectile;
+  }
+
+  public static Entity createBossProjectile(int damage) {
+    short targetLayers = PhysicsLayer.NPC;
+    ColliderComponent collider = new ColliderComponent();
+    collider.setCollisionFilter(PhysicsLayer.BOSS_PROJECTILE, targetLayers);
+    Entity bossProjectile =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(collider)
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS_PROJECTILE))
+            .addComponent(new TouchAttackComponent(targetLayers, 0f))
+            .addComponent(new CombatStatsComponent(1, damage));
+    bossProjectile.addComponent(new TextureRenderComponent("images/effects/gun_bot_fireball.png"));
+    bossProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(bossProjectile, 0.2f, 0.2f);
+    return bossProjectile;
   }
 }

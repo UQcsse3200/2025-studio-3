@@ -1,15 +1,14 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,17 +37,20 @@ public class MainMenuDisplay extends UIComponent {
             ServiceLocator.getResourceService()
                 .getAsset("images/backgrounds/bg-text.png", Texture.class));
 
-    TextButton newGameBtn = ButtonFactory.createButton("New Game");
-    TextButton loadBtn = ButtonFactory.createButton("Load Game");
-    TextButton settingsBtn = ButtonFactory.createButton("Settings");
-    TextButton exitBtn = ButtonFactory.createButton("Exit Game");
+    int buttonWidth = 300;
+    TextButton newGameBtn = ui.primaryButton("New Game", buttonWidth);
+    TextButton loadBtn = ui.primaryButton("Load Game", buttonWidth);
+    TextButton settingsBtn = ui.primaryButton("Settings", buttonWidth);
+    TextButton exitBtn = ui.primaryButton("Exit Game", buttonWidth);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+    float uiScale = ui.getUIScale();
 
     // Button listeners
     newGameBtn.addListener(
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] New Game button clicked");
+            logger.info("[MainMenuDisplay] New Game button clicked");
             entity.getEvents().trigger("start");
           }
         });
@@ -57,7 +59,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Load Game button clicked");
+            logger.info("[MainMenuDisplay] Load Game button clicked");
             entity.getEvents().trigger("load");
           }
         });
@@ -66,7 +68,7 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Settings button clicked");
+            logger.info("[MainMenuDisplay] Settings button clicked");
             entity.getEvents().trigger("settings");
           }
         });
@@ -75,41 +77,57 @@ public class MainMenuDisplay extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("[MainMenuDisplay] Exit Game button clicked");
+            logger.info("[MainMenuDisplay] Exit Game button clicked");
             entity.getEvents().trigger("exit");
           }
         });
 
     // Layout
     table.center();
-    float xf = 0.40f;
     table
         .add(title)
-        .size(title.getWidth() * xf, title.getHeight() * xf)
+        .size(title.getWidth() * 0.5f * uiScale, title.getHeight() * 0.5f * uiScale)
         .top()
         .center()
-        .padTop(20f)
-        .padBottom(20f);
+        .padTop(20f * uiScale)
+        .padBottom(60f * uiScale);
     table.row();
 
-    float buttonWidth = 200f;
-    float buttonHeight = 50f;
+    // Get UI scale from settings
 
-    table.add(newGameBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table
+        .add(newGameBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(loadBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table
+        .add(loadBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(settingsBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table
+        .add(settingsBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
     table.row();
-    table.add(exitBtn).size(buttonWidth, buttonHeight).padBottom(5f);
+    table
+        .add(exitBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
 
     // Add actors
     stage.addActor(table);
   }
 
   @Override
-  public void draw(SpriteBatch batch) {
-    // Drawing is handled by the stage
+  public void resize() {
+    super.resize();
+    table.clear();
+    addActors();
   }
 
   @Override

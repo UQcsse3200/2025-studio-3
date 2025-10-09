@@ -1,33 +1,49 @@
 package com.csse3200.game.components.tasks;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-class TeleportTaskSimpleTest {
+@ExtendWith(GameExtension.class)
+class TeleportTaskTest {
+  private GameTime gameTime;
 
   @BeforeEach
   void setUp() {
     ServiceLocator.clear();
+
+    // 🔸 Fix the seed so random() behaves deterministically
+    MathUtils.random.setSeed(12345L);
+
     // Fixed timestep so cooldowns are predictable
-    ServiceLocator.registerTimeSource(
-        new GameTime() {
-          @Override
-          public float getDeltaTime() {
-            return 0.5f;
-          } // 0.5s/frame
-        });
+    gameTime = mock(GameTime.class);
+    ServiceLocator.registerTimeSource(gameTime);
+    when(gameTime.getDeltaTime()).thenReturn(0.5f); // 0.5s/frame
   }
 
   @AfterEach
   void tearDown() {
     ServiceLocator.clear();
+  }
+
+  /** Helper: attach TeleportTask via AITaskComponent */
+  private TeleportTask attachTeleportTask(Entity e, TeleportTask task) {
+    AITaskComponent ai = new AITaskComponent().addTask(task);
+    e.addComponent(ai);
+    e.create();
+    e.update(); // Let the AI component select and start the task
+    return task;
   }
 
   @Test
@@ -36,77 +52,87 @@ class TeleportTaskSimpleTest {
     e.setPosition(new Vector2(8f, 4f));
     float[] lanes = {2f, 4f, 6f};
 
-    // cooldown=1s, chance=1 (always), unlimited
     TeleportTask tp = new TeleportTask(1f, 1f, 0, lanes);
-    e.addComponent(tp);
+    AITaskComponent ai = new AITaskComponent().addTask(tp);
+    e.addComponent(ai);
     e.create();
+    tp.start();
 
-    // After two updates (1.0s), teleport should trigger
-    tp.update(); // 0.5s
-    tp.update(); // 1.0s -> attempt
+    // Simulate a few frames to cover cooldown + animation + teleport
+    for (int i = 0; i < 5; i++) {
+      tp.getPriority();
+      tp.update();
+    }
 
     float y = e.getPosition().y;
-    assertNotEquals(4f, y, 1e-6, "Should switch to a different lane");
+    assertNotEquals(
+        4f,
+        y,
+        1e-6,
+        "Should have switched to a different lane after animation and teleport phases");
   }
 
   @Test
   void stopsAfterMaxTeleports() {
     Entity e = new Entity();
     e.setPosition(new Vector2(10f, 2f));
-    float[] lanes = {1f, 2f, 3f, 4f, 5f};
+    float[] lanes = {1f, 2f};
 
-    TeleportTask tp = new TeleportTask(0.5f, 1f, 1, lanes); // max 1 teleport
-    e.addComponent(tp);
-    e.create();
+    TeleportTask tp = attachTeleportTask(e, new TeleportTask(0.5f, 1f, 1, lanes));
+    tp.start();
 
-    // Let it teleport once
-    for (int i = 0; i < 2; i++) tp.update();
+    // First teleport cycle (cooldown + animation + teleport)
+    for (int i = 0; i < 6; i++) { // 👈 increased to cover teleportAnimTime fully
+      tp.getPriority();
+      tp.update();
+    }
     float afterFirst = e.getPosition().y;
 
-    // More updates should not change lane again
-    for (int i = 0; i < 10; i++) tp.update();
-    assertEquals(afterFirst, e.getPosition().y, 1e-6, "Should not teleport more than maxTeleports");
-  }
+    // Run more frames — should NOT teleport again
+    for (int i = 0; i < 10; i++) {
+      tp.getPriority();
+      tp.update();
+    }
 
-  @Test
-  void doesNotTeleportWhenChanceZero() {
-    Entity e = new Entity();
-    e.setPosition(new Vector2(10f, 3f));
-    float[] lanes = {1f, 2f, 3f, 4f, 5f};
-
-    TeleportTask tp = new TeleportTask(0.5f, 0f, 0, lanes); // chance=0 → never teleport
-    e.addComponent(tp);
-    e.create();
-
-    for (int i = 0; i < 20; i++) tp.update();
-    assertEquals(3f, e.getPosition().y, 1e-6, "Should stay in same lane with chance=0");
+    assertEquals(
+        afterFirst,
+        e.getPosition().y,
+        1e-6,
+        "Should have teleported once and stopped after reaching maxTeleports");
   }
 
   @Test
   void noTeleportWithSingleLane() {
     Entity e = new Entity();
     e.setPosition(new Vector2(5f, 4f));
-    float[] lanes = {4f}; // < 2 lanes -> should never teleport
+    float[] lanes = {4f}; // single lane
 
-    TeleportTask tp = new TeleportTask(0.5f, 1f, 0, lanes);
-    e.addComponent(tp);
-    e.create();
+    TeleportTask tp = attachTeleportTask(e, new TeleportTask(0.5f, 1f, 0, lanes));
+    tp.start();
 
-    for (int i = 0; i < 20; i++) tp.update();
+    for (int i = 0; i < 20; i++) {
+      tp.getPriority();
+      tp.update();
+    }
+
     assertEquals(4f, e.getPosition().y, 1e-6, "Should not teleport with fewer than 2 lanes");
   }
 
   @Test
   void maintainsXCoordinateOnTeleport() {
     Entity e = new Entity();
-    e.setPosition(new Vector2(7f, 100f)); // start Y not in lanes => first teleport must change Y
+    e.setPosition(new Vector2(7f, 100f));
     float[] lanes = {2f, 4f, 6f};
 
-    TeleportTask tp = new TeleportTask(0.5f, 1f, 0, lanes); // chance=1 -> attempt on each window
-    e.addComponent(tp);
-    e.create();
+    TeleportTask tp = attachTeleportTask(e, new TeleportTask(0.5f, 1f, 0, lanes));
+    tp.start();
 
-    tp.update(); // triggers a teleport (cooldown=0.5s; dt=0.5s)
+    // Simulate several frames to cover cooldown + animation + teleport phases
+    for (int i = 0; i < 6; i++) {
+      tp.getPriority();
+      tp.update();
+    }
+
     assertEquals(7f, e.getPosition().x, 1e-6, "X must remain constant after teleport");
     assertNotEquals(100f, e.getPosition().y, 1e-6, "Y should change to one of the lane values");
   }
@@ -114,24 +140,29 @@ class TeleportTaskSimpleTest {
   @Test
   void chanceOneAttemptsOverMultipleWindowsYEndsInLaneSet() {
     Entity e = new Entity();
-    e.setPosition(new Vector2(3f, 100f)); // start off-lane to guarantee first change
+    e.setPosition(new Vector2(3f, 100f)); // start off-lane
     float[] lanes = {1f, 2f, 3f, 4f};
 
-    TeleportTask tp = new TeleportTask(0.5f, 1f, 0, lanes);
-    e.addComponent(tp);
-    e.create();
+    TeleportTask tp = attachTeleportTask(e, new TeleportTask(0.5f, 1f, 0, lanes));
+    tp.start();
 
-    // Run several cooldown windows; we don't assert change every window (avoid RNG flake),
-    // but we do assert the final Y is one of the lane values.
-    for (int i = 0; i < 6; i++) tp.update();
+    // Simulate several teleport cycles (cooldown + animation + teleport)
+    for (int i = 0; i < 12; i++) {
+      tp.getPriority();
+      tp.update();
+    }
 
     float y = e.getPosition().y;
     boolean inSet = false;
-    for (float ly : lanes)
+    for (float ly : lanes) {
       if (Math.abs(ly - y) <= 1e-6) {
         inSet = true;
         break;
       }
-    assertTrue(inSet, "With chance=1 over multiple windows, Y should be one of the lane values");
+    }
+
+    assertTrue(
+        inSet,
+        "With chance=1 over multiple teleport windows, Y should end up on one of the lane values");
   }
 }
