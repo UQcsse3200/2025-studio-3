@@ -653,18 +653,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     unit.scaleHeight(tileSize);
 
     if (unit.getComponent(GeneratorStatsComponent.class) != null) {
-        if (unit.getComponent(GeneratorStatsComponent.class).getInterval() > 0) {
-            spawnScrap(unit);
-        } else {
-            // healer entity, no scrap & kills itself after one animation cycle
-            logger.info("Healer placed");
-            healDefences();
-            // remove the healer after its animation
-            ServiceLocator.getRenderService()
-                    .getStage()
-                    .addAction(
-                            Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position))));
-        }
+      if (unit.getComponent(GeneratorStatsComponent.class).getInterval() > 0) {
+        spawnScrap(unit);
+      } else {
+        // healer entity, no scrap & kills itself after one animation cycle
+        logger.info("Healer placed");
+        healDefences();
+        // remove the healer after its animation
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(
+                Actions.sequence(Actions.delay(2.75f), Actions.run(() -> removeUnit(position))));
+      }
     }
 
     spawnEntity(unit);
