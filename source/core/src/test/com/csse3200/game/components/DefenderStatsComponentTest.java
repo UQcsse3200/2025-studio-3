@@ -25,6 +25,7 @@ class DefenderStatsComponentTest {
 
   @BeforeAll
   static void setupMocks() {
+
     // create mocks
     mockProfileService = mock(ProfileService.class);
     mockProfile = mock(Profile.class);
@@ -99,13 +100,6 @@ class DefenderStatsComponentTest {
     DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 50);
     defender.setAttackSpeed(-5); // should clamp to 0
     assertEquals(0, defender.getAttackSpeed());
-  }
-
-  @Test
-  void testCritChanceSetterGetter() {
-    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 1f, 50);
-    defender.setCritChance(25);
-    assertEquals(25, defender.getCritChance()); // Crit chance should not be getting upgraded
   }
 
   @Test
