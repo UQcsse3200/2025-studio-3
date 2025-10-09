@@ -115,14 +115,10 @@ public class PaddleGameScreen extends ScreenAdapter {
     BallComponent ballComp = ball.getComponent(BallComponent.class);
     CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
 
-
     paddle.getComponent(PaddleComponent.class).update();
     paddle.getComponent(PaddleInputComponent.class).update();
 
-
     ballComp.update(delta, collisionComp);
-
-
 
     int score = ballComp.getScore();
     scoreLabel.setText("Score: " + score);

@@ -23,7 +23,6 @@ class CollisionComponentTest {
   private BallComponent ball;
   private CollisionComponent collision;
 
-
   private static final float COLLISION_WIDTH_RATIO = 0.25f;
   private static final float VISIBLE_PADDLE_HEIGHT = 10f;
   private static final float BALL_SIZE = 40f;
@@ -42,7 +41,6 @@ class CollisionComponentTest {
     paddleImage.setSize(200, 20); // 200x20
     paddleImage.setPosition(80, 150);
 
-
     ball = new BallComponent(ballImage, 0f, -50f);
 
     collision = new CollisionComponent(paddleImage);
@@ -53,7 +51,6 @@ class CollisionComponentTest {
     entity.create();
   }
 
-
   private float getTruePaddleTopY() {
     float imageHeight = paddleImage.getHeight(); // 20
     float effectiveHeight = VISIBLE_PADDLE_HEIGHT; // 10
@@ -61,7 +58,6 @@ class CollisionComponentTest {
 
     return paddleImage.getY() + yOffset + effectiveHeight;
   }
-
 
   @Test
   void checkCollisionDoesNothingIfNoEntity() {
@@ -73,7 +69,6 @@ class CollisionComponentTest {
       fail("No exception should be thrown if entity is null");
     }
   }
-
 
   @Test
   void checkCollisionDoesNothingIfNoBallComponent() {
@@ -89,16 +84,13 @@ class CollisionComponentTest {
     }
   }
 
-
   @Test
   void ballCollidesWithTarget() {
 
     float effectiveXStart = 80 + (200 - (200 * COLLISION_WIDTH_RATIO)) / 2f; // 80 + 75 = 155
     float truePaddleTopY = getTruePaddleTopY(); // 165
 
-
     ballImage.setX(effectiveXStart + 5); // X=160
-
 
     ballImage.setY(120);
 
@@ -106,32 +98,25 @@ class CollisionComponentTest {
     int initialBallsHit = ball.getBallsHit();
     float initialVelocityY = ball.getVelocityY(); // -50f
 
-
     collision.checkCollision(1f);
 
     assertEquals(initialBallsHit + 1, ball.getBallsHit());
     assertEquals(initialScore + 1, ball.getScore());
 
-
     assertEquals(truePaddleTopY + 2f, ballImage.getY(), 0.01f);
-
 
     assertEquals(-initialVelocityY, ball.getVelocityY(), 0.01f);
   }
-
 
   @Test
   void ballDoesNotCollideWhenSeperated() {
     int initialScore = ball.getScore();
     int initialBallsHit = ball.getBallsHit();
 
-
     ballImage.setY(50);
     ballImage.setX(10);
 
-
     collision.checkCollision(1f);
-
 
     assertEquals(initialBallsHit, ball.getBallsHit());
     assertEquals(initialScore, ball.getScore());
