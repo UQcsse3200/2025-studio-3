@@ -172,7 +172,7 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../entities/configs/BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemyConfigs()" class="member-name-link">getEnemyConfigs</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the enemy configuration map for the current wave.</div>
+<div class="block">Returns the enemy spawn attributes (cost + chance) for the current wave.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../entities/configs/BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEnemyConfigs(int)" class="member-name-link">getEnemyConfigs</a><wbr>(int&nbsp;waveIndex)</code></div>
@@ -183,7 +183,7 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn()" class="member-name-link">getMinZombiesSpawn</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the minimum number of zombies to spawn for the current wave.</div>
+<div class="block">Returns the minimum number of enemies to spawn for the current wave.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMinZombiesSpawn(int)" class="member-name-link">getMinZombiesSpawn</a><wbr>(int&nbsp;waveIndex)</code></div>
@@ -203,7 +203,7 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight()" class="member-name-link">getWaveWeight</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the configured weight/budget for the current wave.</div>
+<div class="block">Returns the configured weight/budget for the current wave.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWaveWeight(int)" class="member-name-link">getWaveWeight</a><wbr>(int&nbsp;waveIndex)</code></div>
@@ -220,36 +220,43 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPreparationPhaseActive()" class="member-name-link">isPreparationPhaseActive</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEnemyDispose()" class="member-name-link">onEnemyDispose</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBossDefeated()" class="member-name-link">onBossDefeated</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Called when a boss is defeated.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onEnemyDispose()" class="member-name-link">onEnemyDispose</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Method to be called when an enemy dies, to track wave end conditions</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetLevel()" class="member-name-link">resetLevel</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetToInitialState()" class="member-name-link">resetToInitialState</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentLevel(java.lang.String)" class="member-name-link">setCurrentLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentWave(int)" class="member-name-link">setCurrentWave</a><wbr>(int&nbsp;wave)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetLevel()" class="member-name-link">resetLevel</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Set the current wave in WaveService to the provided one</div>
+<div class="block">Resets the level state for starting a new level.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnemySpawnCallback(com.csse3200.game.services.WaveService.EnemySpawnCallback)" class="member-name-link">setEnemySpawnCallback</a><wbr>(<a href="WaveService.EnemySpawnCallback.html" title="interface in com.csse3200.game.services">WaveService.EnemySpawnCallback</a>&nbsp;callback)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetToInitialState()" class="member-name-link">resetToInitialState</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWaveEventListener(com.csse3200.game.services.WaveService.WaveEventListener)" class="member-name-link">setWaveEventListener</a><wbr>(<a href="WaveService.WaveEventListener.html" title="interface in com.csse3200.game.services">WaveService.WaveEventListener</a>&nbsp;listener)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentLevel(java.lang.String)" class="member-name-link">setCurrentLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelKey)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemy(int)" class="member-name-link">spawnEnemy</a><wbr>(int&nbsp;laneNumber)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentWave(int)" class="member-name-link">setCurrentWave</a><wbr>(int&nbsp;wave)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the current wave in WaveService to the provided one</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setEnemySpawnCallback(com.csse3200.game.services.WaveService.EnemySpawnCallback)" class="member-name-link">setEnemySpawnCallback</a><wbr>(<a href="WaveService.EnemySpawnCallback.html" title="interface in com.csse3200.game.services">WaveService.EnemySpawnCallback</a>&nbsp;callback)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWaveEventListener(com.csse3200.game.services.WaveService.WaveEventListener)" class="member-name-link">setWaveEventListener</a><wbr>(<a href="WaveService.WaveEventListener.html" title="interface in com.csse3200.game.services">WaveService.WaveEventListener</a>&nbsp;listener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;deltaTime)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemy(int)" class="member-name-link">spawnEnemy</a><wbr>(int&nbsp;laneNumber)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;deltaTime)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update function to be called by main game loop.</div>
 </div>
 </div>
@@ -356,6 +363,13 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 </section>
 </li>
 <li>
+<section class="detail" id="onBossDefeated()">
+<h3>onBossDefeated</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onBossDefeated</span>()</div>
+<div class="block">Called when a boss is defeated. This immediately ends the current wave and starts the next.</div>
+</section>
+</li>
+<li>
 <section class="detail" id="endWave()">
 <h3>endWave</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">endWave</span>()</div>
@@ -395,12 +409,18 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <section class="detail" id="isLevelComplete()">
 <h3>isLevelComplete</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isLevelComplete</span>()</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if all waves for the current level have been completed</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="resetLevel()">
 <h3>resetLevel</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetLevel</span>()</div>
+<div class="block">Resets the level state for starting a new level. This should be called when switching to a
+ different level.</div>
 </section>
 </li>
 <li>
@@ -455,13 +475,12 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <section class="detail" id="getWaveWeight()">
 <h3>getWaveWeight</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getWaveWeight</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../entities/WaveConfigProvider.html#getWaveWeight()">WaveConfigProvider</a></code></span></div>
-<div class="block">Gets the configured weight/budget for the current wave.</div>
+<div class="block">Returns the configured weight/budget for the current wave.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../entities/WaveConfigProvider.html#getWaveWeight()">getWaveWeight</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
 <dt>Returns:</dt>
-<dd>the wave weight budget</dd>
+<dd>the configured weight/budget for the current wave</dd>
 </dl>
 </section>
 </li>
@@ -469,13 +488,12 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <section class="detail" id="getMinZombiesSpawn()">
 <h3>getMinZombiesSpawn</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getMinZombiesSpawn</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../entities/WaveConfigProvider.html#getMinZombiesSpawn()">WaveConfigProvider</a></code></span></div>
-<div class="block">Gets the minimum number of zombies to spawn for the current wave.</div>
+<div class="block">Returns the minimum number of enemies to spawn for the current wave.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../entities/WaveConfigProvider.html#getMinZombiesSpawn()">getMinZombiesSpawn</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
 <dt>Returns:</dt>
-<dd>the minimum zombie spawn count</dd>
+<dd>the minimum number of enemies to spawn for the current wave</dd>
 </dl>
 </section>
 </li>
@@ -483,13 +501,12 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <section class="detail" id="getEnemyConfigs()">
 <h3>getEnemyConfigs</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../entities/configs/BaseSpawnConfig.html" title="class in com.csse3200.game.entities.configs">BaseSpawnConfig</a>&gt;</span>&nbsp;<span class="element-name">getEnemyConfigs</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../entities/WaveConfigProvider.html#getEnemyConfigs()">WaveConfigProvider</a></code></span></div>
-<div class="block">Gets the enemy configuration map for the current wave.</div>
+<div class="block">Returns the enemy spawn attributes (cost + chance) for the current wave.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../entities/WaveConfigProvider.html#getEnemyConfigs()">getEnemyConfigs</a></code>&nbsp;in interface&nbsp;<code><a href="../entities/WaveConfigProvider.html" title="interface in com.csse3200.game.entities">WaveConfigProvider</a></code></dd>
 <dt>Returns:</dt>
-<dd>map of enemy type to spawn configuration</dd>
+<dd>the enemy spawn attributes (cost + chance) for the current wave.</dd>
 </dl>
 </section>
 </li>

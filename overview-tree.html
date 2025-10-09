@@ -170,6 +170,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/BackgroundState.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.states">BackgroundState</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.DeserializedAchievementConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig.DeserializedAchievementConfig</a></li>
+<li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseBossConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseBossConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEnemyConfig.DeserializedEnemyConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseEnemyConfig.DeserializedEnemyConfig</a></li>
 <li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEntityConfig.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BaseEntityConfig</a>
 <ul>
@@ -187,6 +188,8 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Beat.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Beat</a></li>
 <li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/BeatDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">BeatDTO</a></li>
 <li class="circle">com.csse3200.game.physics.<a href="com/csse3200/game/physics/BodyUserData.html" class="type-name-link" title="class in com.csse3200.game.physics">BodyUserData</a></li>
+<li class="circle">com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BossConfigs.html" class="type-name-link" title="class in com.csse3200.game.entities.configs">BossConfigs</a></li>
+<li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/BossFactory.html" class="type-name-link" title="class in com.csse3200.game.entities.factories">BossFactory</a></li>
 <li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/Character.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.object">Character</a></li>
 <li class="circle">com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/CharacterDTO.html" class="type-name-link" title="class in com.csse3200.game.cutscene.models.dto">CharacterDTO</a></li>
 <li class="circle">com.csse3200.game.cutscene.runtime.action.<a href="com/csse3200/game/cutscene/runtime/action/CharacterEnterAction.html" class="type-name-link" title="class in com.csse3200.game.cutscene.runtime.action">CharacterEnterAction</a> (implements com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a>)</li>
@@ -242,6 +245,7 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.mainmenu.<a href="com/csse3200/game/components/mainmenu/MainMenuActions.html" class="type-name-link" title="class in com.csse3200.game.components.mainmenu">MainMenuActions</a></li>
 <li class="circle">com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/MiniGameActions.html" class="type-name-link" title="class in com.csse3200.game.minigame">MiniGameActions</a></li>
 <li class="circle">com.csse3200.game.components.projectiles.<a href="com/csse3200/game/components/projectiles/MoveDirectionComponent.html" class="type-name-link" title="class in com.csse3200.game.components.projectiles">MoveDirectionComponent</a></li>
+<li class="circle">com.csse3200.game.components.projectiles.<a href="com/csse3200/game/components/projectiles/MoveLeftComponent.html" class="type-name-link" title="class in com.csse3200.game.components.projectiles">MoveLeftComponent</a></li>
 <li class="circle">com.csse3200.game.components.persistence.<a href="com/csse3200/game/components/persistence/NewGameMenuActions.html" class="type-name-link" title="class in com.csse3200.game.components.persistence">NewGameMenuActions</a></li>
 <li class="circle">com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/PaddleComponent.html" class="type-name-link" title="class in com.csse3200.game.minigame">PaddleComponent</a></li>
 <li class="circle">com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/PaddleInputComponent.html" class="type-name-link" title="class in com.csse3200.game.minigame">PaddleInputComponent</a></li>
@@ -348,7 +352,9 @@ loadScripts(document, 'script');</script>
 <li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a> (implements com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a>)
 <ul>
 <li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/AttackTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">AttackTask</a></li>
+<li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/BossAttackTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">BossAttackTask</a></li>
 <li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/IdleTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">IdleTask</a></li>
+<li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/SplashAttackTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">SplashAttackTask</a> (implements com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a>)</li>
 </ul>
 </li>
 <li class="circle">com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/WaitTask.html" class="type-name-link" title="class in com.csse3200.game.components.tasks">WaitTask</a></li>
@@ -570,6 +576,7 @@ loadScripts(document, 'script');</script>
 <ul>
 <li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/AdvanceMode.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">AdvanceMode</a></li>
 <li class="circle">com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/AudioBus.html" class="type-name-link" title="enum class in com.csse3200.game.cutscene.models.object">AudioBus</a></li>
+<li class="circle">com.csse3200.game.entities.factories.<a href="com/csse3200/game/entities/factories/BossFactory.BossTypes.html" class="type-name-link" title="enum class in com.csse3200.game.entities.factories">BossFactory.BossTypes</a></li>
 <li class="circle">com.csse3200.game.components.<a href="com/csse3200/game/components/ComponentPriority.html" class="type-name-link" title="enum class in com.csse3200.game.components">ComponentPriority</a></li>
 <li class="circle">com.csse3200.game.services.<a href="com/csse3200/game/services/DialogService.DialogType.html" class="type-name-link" title="enum class in com.csse3200.game.services">DialogService.DialogType</a></li>
 <li class="circle">com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/FileLoader.Location.html" class="type-name-link" title="enum class in com.csse3200.game.persistence">FileLoader.Location</a></li>
