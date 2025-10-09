@@ -18,6 +18,7 @@ import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.services.CutsceneService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
@@ -62,6 +63,13 @@ public class WorldMapScreen extends BaseScreen {
   public WorldMapScreen(GdxGame game) {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
     logger.debug("[WorldMapScreen] Initializing world map");
+
+    // TEMP: Ensure CutsceneService is registered so cutscene testing works
+    if (ServiceLocator.getCutsceneService() == null) {
+      logger.info("Registering CutsceneService for mid-cutscene testing...");
+      ServiceLocator.registerCutsceneService(new CutsceneService());
+    }
+
     loadTextures();
     createEntities();
     createNodes();
@@ -69,9 +77,8 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Exposes the camera component to input components. */
   public CameraComponent getCameraComponent() {
-    return renderer.getCamera();
     ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
-    createPlayer();
+    return renderer.getCamera();
   }
 
   @Override
@@ -81,6 +88,9 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
         .addComponent(new AnimatedDropdownMenu())
+        // Input handlers (safe even if playerEntity is null during init)
+        .addComponent(new WorldMapZoomInputComponent(this, 5))
+        .addComponent(new WorldMapPanInputComponent(this, 6))
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
@@ -90,35 +100,31 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapZoomInputComponent(this, 12))
         .addComponent(new WorldMapPanInputComponent(this, 12))
         .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+
     return ui;
   }
 
-  /** Creates the entities for the world map screen. */
   private void createEntities() {
-    // World map background entity
     Entity worldMapEntity = new Entity();
     worldMapEntity.addComponent(new WorldMapRenderComponent(WORLD_SIZE));
     ServiceLocator.getEntityService().register(worldMapEntity);
 
-    // Player entity
     playerEntity = new Entity();
-    playerEntity.setPosition(new Vector2(WORLD_WIDTH * 0.1f, WORLD_HEIGHT * 0.25f)); // Start pos
+    playerEntity.setPosition(new Vector2(WORLD_WIDTH * 0.1f, WORLD_HEIGHT * 0.25f));
     playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
     ServiceLocator.getEntityService().register(playerEntity);
 
-    // Camera setup
     CameraComponent camera = renderer.getCamera();
     camera.getEntity().setPosition(WORLD_WIDTH * 0.1f, WORLD_HEIGHT * 0.25f);
+
     if (camera.getCamera()
         instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
       orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
     }
 
-    // Listen for node events
     playerEntity.getEvents().addListener("enterNode", this::onNodeEnter);
   }
 
-  /** Loads the textures for the nodes. */
   private void loadTextures() {
     for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
       textures.add(node.getNodeTexture());
@@ -127,11 +133,9 @@ public class WorldMapScreen extends BaseScreen {
     ServiceLocator.getResourceService().loadAll();
   }
 
-  /** Creates the nodes for the world map. */
   private void createNodes() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
 
-    // Get existing nodes and mark completed ones
     List<WorldMapNode> nodes = worldMapService.getAllNodes();
     ProfileService profileService = ServiceLocator.getProfileService();
     if (profileService != null) {
@@ -144,7 +148,6 @@ public class WorldMapScreen extends BaseScreen {
       worldMapService.unlockNode(currentLevel);
     }
 
-    // Create render entities for each node
     for (WorldMapNode node : nodes) {
       Entity nodeEntity = new Entity();
       float worldX = node.getPositionX() * WORLD_WIDTH;
@@ -158,13 +161,24 @@ public class WorldMapScreen extends BaseScreen {
   @Override
   public void render(float delta) {
     handleZoomInput();
-
     updateCamera();
 
     // Dev hotkeys every frame
     handleDevHotkeys();
 
     super.render(delta);
+
+    // 🎬 TEMP TEST: press M anywhere on the world map to play mid cutscene
+    if (Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+      logger.info("🎬 Manual test: Playing mid-cutscene from world map...");
+      ServiceLocator.getCutsceneService()
+          .playCutscene(
+              "mid_cutscene_new",
+              (id) -> {
+                logger.info("Mid cutscene finished, returning to world map (test mode)");
+                game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+              });
+    }
   }
 
   /** Smooth follow camera that tracks the player when followCamera is enabled. */
@@ -289,11 +303,6 @@ public class WorldMapScreen extends BaseScreen {
     return comp != null && comp.isCurrentlyMoving();
   }
 
-  /**
-   * Handles the event when the player enters a node.
-   *
-   * @param node the node the player entered
-   */
   private void onNodeEnter(WorldMapNode node) {
     logger.info("[WorldMapScreen] Entering node: {}", node.getLabel());
     game.setScreen(node.getTargetScreen());
@@ -312,18 +321,17 @@ public class WorldMapScreen extends BaseScreen {
   }
 
   private void playDevCutsceneIfExists(String bareName) {
-    // Our CutsceneService expects bare names; the loader resolves to "cutscenes/<name>.json".
     String resolved = "cutscenes/" + bareName + ".json";
     if (!Gdx.files.internal(resolved).exists()) {
       logger.error("Cutscene JSON not found at {}", resolved);
       return;
     }
-    logger.info("🎬 Playing cutscene: {}", resolved);
+    logger.info("Playing cutscene: {}", resolved);
     ServiceLocator.getCutsceneService()
         .playCutscene(
             bareName,
             id -> {
-              // callback is immediate in your service; no-op is fine
+              /* no-op */
             });
   }
 }
