@@ -77,10 +77,10 @@ public class WorldMapScreen extends BaseScreen {
 
   /** Exposes the camera component to input components. */
   public CameraComponent getCameraComponent() {
-    return renderer.getCamera();
-    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
-    createPlayer();
+      ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+      return renderer.getCamera();
   }
+
 
   @Override
   protected Entity constructEntity(Stage stage) {
