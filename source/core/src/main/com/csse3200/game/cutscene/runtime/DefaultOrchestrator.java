@@ -10,9 +10,7 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public class DefaultOrchestrator implements CutsceneOrchestrator {
   private OrchestratorState state;
@@ -99,8 +97,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
 
     // if there are no more blocking actions move on to next beat
     boolean blocking =
-            active.stream().anyMatch(ActionState::blocking)
-                    || queue.stream().anyMatch(ActionState::blocking);
+        active.stream().anyMatch(ActionState::blocking)
+            || queue.stream().anyMatch(ActionState::blocking);
     if (!blocking) {
       active.clear();
       queue.clear();
@@ -122,41 +120,31 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
 
   /**
    * Get the {@link ActionState} from the given {@link ActionData}
+   *
    * @param actionData the data to get the corresponding state for
    * @return an {@link ActionState} for the given actionData
    */
   public ActionState getActionState(ActionData actionData) {
     return switch (actionData) {
-      case BackgroundSetData d ->
-              new BackgroundSetAction(state.getBackgroundState(), d);
+      case BackgroundSetData d -> new BackgroundSetAction(state.getBackgroundState(), d);
       case CharacterEnterData d -> {
         if (!state.getCharacterStates().containsKey(d.character())) {
-          state
-                  .getCharacterStates()
-                  .put(d.character(), new CharacterState(d.character()));
+          state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
         }
-        yield new CharacterEnterAction(
-                state.getCharacterStates().get(d.character()), d);
+        yield new CharacterEnterAction(state.getCharacterStates().get(d.character()), d);
       }
       case CharacterExitData d -> {
         if (!state.getCharacterStates().containsKey(d.character())) {
-          state
-                  .getCharacterStates()
-                  .put(d.character(), new CharacterState(d.character()));
+          state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
         }
-        yield new CharacterExitAction(
-                state.getCharacterStates().get(d.character()), d);
+        yield new CharacterExitAction(state.getCharacterStates().get(d.character()), d);
       }
       case ChoiceData d ->
-              new ChoiceAction(this, state.getChoiceState(), state().getDialogueState(), d);
-      case DialogueShowData d ->
-              new DialogueShowAction(state.getDialogueState(), d);
-      case DialogueHideData d ->
-              new DialogueHideAction(state.getDialogueState(), d);
-      case GotoData d ->
-              new GotoAction(this, beatIdx, beats, d);
-      case ParallelData d ->
-              new ParallelAction(this, d);
+          new ChoiceAction(this, state.getChoiceState(), state().getDialogueState(), d);
+      case DialogueShowData d -> new DialogueShowAction(state.getDialogueState(), d);
+      case DialogueHideData d -> new DialogueHideAction(state.getDialogueState(), d);
+      case GotoData d -> new GotoAction(this, beatIdx, beats, d);
+      case ParallelData d -> new ParallelAction(this, d);
       default -> null;
     };
   }
@@ -192,7 +180,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
    */
   @Override
   public void gotoBeat(String id) {
-    Beat beatToGoto = beats.stream().filter(beat -> Objects.equals(beat.getId(), id)).findFirst().orElse(null);
+    Beat beatToGoto =
+        beats.stream().filter(beat -> Objects.equals(beat.getId(), id)).findFirst().orElse(null);
     if (beatToGoto == null) {
       throw new InvalidGotoBeatId("No valid beat could be found with the id " + id);
     }

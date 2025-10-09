@@ -80,9 +80,7 @@ public class DialogueShowAction implements ActionState {
     }
   }
 
-  /**
-   * Triggered on skip, will fast track any logic to its final state
-   */
+  /** Triggered on skip, will fast track any logic to its final state */
   @Override
   public void skip() {
     dialogueState.setVisible(true);
