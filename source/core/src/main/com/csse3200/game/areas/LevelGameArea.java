@@ -38,7 +38,6 @@ import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
-
 import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
