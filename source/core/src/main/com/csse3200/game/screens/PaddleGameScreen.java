@@ -42,7 +42,7 @@ public class PaddleGameScreen extends ScreenAdapter {
     stage = new Stage(new ScreenViewport());
     Gdx.input.setInputProcessor(stage);
     ballsHit = 0;
-    // Ensure services required by music playback exist in this screen context
+
     if (ServiceLocator.getResourceService() == null) {
       ServiceLocator.registerResourceService(new com.csse3200.game.services.ResourceService());
     }
@@ -94,6 +94,7 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void createScoreLabel() {
+
     BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
     Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
     scoreLabel = new Label("Score: 0", style);
@@ -114,19 +115,24 @@ public class PaddleGameScreen extends ScreenAdapter {
     BallComponent ballComp = ball.getComponent(BallComponent.class);
     CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
 
+
     paddle.getComponent(PaddleComponent.class).update();
     paddle.getComponent(PaddleInputComponent.class).update();
-    ball.getComponent(BallComponent.class).update(delta);
-    ball.getComponent(CollisionComponent.class).update(delta);
 
-    int score = ball.getComponent(BallComponent.class).getScore();
+
+    ballComp.update(delta, collisionComp);
+
+
+
+    int score = ballComp.getScore();
     scoreLabel.setText("Score: " + score);
     timeLabel.setText(String.format("Time: %.2f s", survivalTime));
-    ballsHit = ball.getComponent(BallComponent.class).getBallsHit();
+    ballsHit = ballComp.getBallsHit();
     stage.act(delta);
     stage.draw();
 
-    if (ball.getComponent(BallComponent.class).getImage().getY() <= 0) {
+    if (ballComp.getImage().getY() <= 0) {
+
       game.setScreen(new WallPongGameOverScreen(game, score, survivalTime, ballsHit));
       dispose();
     }
