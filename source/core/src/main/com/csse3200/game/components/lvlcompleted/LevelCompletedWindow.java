@@ -1,4 +1,4 @@
-package com.csse3200.game.components.levelcompleted;
+package com.csse3200.game.components.lvlcompleted;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

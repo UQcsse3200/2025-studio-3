@@ -16,7 +16,7 @@ import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
 import com.csse3200.game.components.hotbar.HotbarDisplay;
 import com.csse3200.game.components.items.ItemComponent;
-import com.csse3200.game.components.levelcompleted.LevelCompletedWindow;
+import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
