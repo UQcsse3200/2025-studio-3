@@ -2,7 +2,9 @@ package com.csse3200.game.components;
 
 import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,10 +138,13 @@ public class CombatStatsComponent extends Component {
     int newHealth = getHealth() - target.getBaseAttack();
 
     // Play damage sound
-    Sound damageSound =
-        ServiceLocator.getResourceService().getAsset("sounds/damage.mp3", Sound.class);
-    float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    damageSound.play(0.5f * volume);
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    if (resourceService != null && settingsService != null) {
+      Sound damageSound = resourceService.getAsset("sounds/damage.mp3", Sound.class);
+      float volume = settingsService.getSoundVolume();
+      damageSound.play(0.5f * volume);
+    }
 
     setHealth(newHealth);
     handleDeath();
