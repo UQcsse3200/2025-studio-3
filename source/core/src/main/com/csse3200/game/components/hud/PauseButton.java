@@ -134,8 +134,6 @@ public class PauseButton extends UIComponent {
     }
   }
 
-
-
   @Override
   public float getZIndex() {
     return Z_INDEX;

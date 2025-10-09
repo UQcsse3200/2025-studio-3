@@ -62,6 +62,7 @@ class DefenderStatsComponentTest {
     defender.setBaseAttack(-50);
     assertEquals(150, defender.getBaseAttack());
   }
+
   @Test
   void testRangeSetterGetter_Positive() {
     DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f);

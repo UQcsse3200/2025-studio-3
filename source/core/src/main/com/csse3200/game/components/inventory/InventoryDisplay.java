@@ -1,7 +1,6 @@
 package com.csse3200.game.components.inventory;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -146,8 +145,7 @@ public class InventoryDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    ImageButton closeButton =
-        ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
+    ImageButton closeButton = ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
 
     // Add listener for the close button
     closeButton.addListener(

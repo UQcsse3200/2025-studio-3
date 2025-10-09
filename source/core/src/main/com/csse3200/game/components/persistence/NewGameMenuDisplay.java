@@ -1,8 +1,6 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -10,12 +8,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
@@ -55,8 +51,7 @@ public class NewGameMenuDisplay extends UIComponent {
     table.setFillParent(true);
 
     // Back button positioned at top-left with close icon
-    ImageButton backBtn =
-            ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
+    ImageButton backBtn = ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
     backBtn.addListener(
         new ChangeListener() {
           @Override

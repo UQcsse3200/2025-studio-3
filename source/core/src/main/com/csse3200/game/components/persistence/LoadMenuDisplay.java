@@ -1,24 +1,18 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.ui.UIFactory;
 
 /** A UI component for displaying the load menu with current saves. */
 public class LoadMenuDisplay extends UIComponent {
@@ -32,8 +26,6 @@ public class LoadMenuDisplay extends UIComponent {
     super.create();
     saveFiles = Persistence.fetch();
     addActors();
-
-
   }
 
   /** Add the actors to the table. */
@@ -42,8 +34,7 @@ public class LoadMenuDisplay extends UIComponent {
     table.setFillParent(true);
 
     // Back button positioned at top-left with close icon
-    ImageButton backBtn =
-            ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
+    ImageButton backBtn = ui.createImageButton("images/ui/close-icon.png", 60f, 2100f);
     backBtn.addListener(
         new ChangeListener() {
           @Override
@@ -55,7 +46,6 @@ public class LoadMenuDisplay extends UIComponent {
 
     // Title
     Label titleLabel = ui.heading("LOAD GAME");
-
 
     // Create save slot buttons
     TextButton[] saveSlotButtons = new TextButton[3];
