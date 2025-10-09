@@ -8,9 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
+import com.csse3200.game.ui.UIComponent;
 
 /**
  * Displays an interactive tutorial overlay for the World Map screen.
@@ -92,12 +92,23 @@ public class WorldMapTutorial extends UIComponent {
     String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
     String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
     String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
-    String interactKeyName = Input.Keys.toString(settingsService.getSettings().getInteractionButton());
+    String interactKeyName =
+        Input.Keys.toString(settingsService.getSettings().getInteractionButton());
     // For zoom, re-use current Q/K bindings for now (no settings provided for zoom)
     String zoomOutKeyName = Input.Keys.toString(Input.Keys.Q);
     String zoomInKeyName = Input.Keys.toString(Input.Keys.K);
 
-    this.moveLabel = ui.text("Use " + upKeyName + "/" + leftKeyName + "/" + downKeyName + "/" + rightKeyName + " to move");
+    this.moveLabel =
+        ui.text(
+            "Use "
+                + upKeyName
+                + "/"
+                + leftKeyName
+                + "/"
+                + downKeyName
+                + "/"
+                + rightKeyName
+                + " to move");
     this.interactLabel = ui.text("Press " + interactKeyName + " to interact");
     this.zoomLabel = ui.text("Press " + zoomOutKeyName + "/" + zoomInKeyName + " to zoom");
     currentLabel = moveLabel;

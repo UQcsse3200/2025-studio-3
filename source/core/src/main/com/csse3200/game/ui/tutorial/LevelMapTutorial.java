@@ -110,9 +110,7 @@ public class LevelMapTutorial extends UIComponent {
     Table contentTable = new Table();
     contentTable.setFillParent(true);
 
-    messageLabel =
-        ui.text(
-            tutorialMessages[step]);
+    messageLabel = ui.text(tutorialMessages[step]);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
 

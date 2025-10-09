@@ -43,7 +43,8 @@ public class GameOverWindow extends UIComponent {
     // Adds text in the popup display.
     Label gameOverHeading = ui.heading("Game Over!");
     String interactKeyName =
-        Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getInteractionButton());
+        Input.Keys.toString(
+            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
     Label message = ui.text("Press " + interactKeyName + " to go back to main menu.");
     window.add(gameOverHeading).pad(20).row();
     window.add(message).pad(10).row();

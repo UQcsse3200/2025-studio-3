@@ -1,8 +1,8 @@
 package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Input;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class MiniGameInputComponent extends InputComponent {
   private boolean isGameOverScreen = false;

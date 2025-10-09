@@ -1,8 +1,8 @@
 package com.csse3200.game.cutscene.runtime.components;
 
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class CutsceneInputComponent extends InputComponent {
   private final CutsceneOrchestrator orchestrator;

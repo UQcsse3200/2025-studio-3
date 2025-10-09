@@ -33,8 +33,11 @@ public class LevelCompletedWindow extends UIComponent {
         (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
 
     String interactKeyName =
-        Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getInteractionButton());
-    Label message = new Label("Congratulations!\nPress " + interactKeyName + " to return to the main menu.", skin);
+        Input.Keys.toString(
+            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
+    Label message =
+        new Label(
+            "Congratulations!\nPress " + interactKeyName + " to return to the main menu.", skin);
     window.add(message).pad(10).row();
 
     window.setVisible(false);
