@@ -56,8 +56,7 @@ public class FileLoader {
    * Read generic Java classes from a JSON file.
    *
    * @param type class type
-   * @param filename file to read from
-   * @param FileHandle file to read from
+   * @param file file to read from
    * @param <T> Class type to read JSON into
    * @return instance of class, may be null
    */
