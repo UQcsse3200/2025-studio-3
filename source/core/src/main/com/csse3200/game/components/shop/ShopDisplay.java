@@ -1,5 +1,6 @@
 package com.csse3200.game.components.shop;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,6 +32,8 @@ public class ShopDisplay extends UIComponent {
   private Label timerLabel;
   private Table mainTable;
   private ImageButton closeButton;
+  private final Sound purchasedSound =
+      ServiceLocator.getResourceService().getAsset("sounds/item_purchased_sound.mp3", Sound.class);
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -320,6 +323,10 @@ public class ShopDisplay extends UIComponent {
         .getWallet()
         .purchaseShopItem(itemConfig.getCost());
     ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
+
+    // Play Item purchased sound
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    purchasedSound.play(volume);
 
     // Update statistics
     ServiceLocator.getProfileService()

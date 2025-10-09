@@ -1,0 +1,37 @@
+diff --git a/core/src/main/com/csse3200/game/components/tasks/AttackTask.java b/core/src/main/com/csse3200/game/components/tasks/AttackTask.java
+index 1a2b3c4..9f8e7d6 100644
+--- a/core/src/main/com/csse3200/game/components/tasks/AttackTask.java
++++ b/core/src/main/com/csse3200/game/components/tasks/AttackTask.java
+@@ -8,7 +8,6 @@ public class AttackTask extends TargetDetectionTasks {
+-  private static final float FIRE_COOLDOWN = 0.95f; // seconds between shots (tweak as needed)
+   private float fireCooldown; // time between attacks
+   private float timeSinceLastFire = 0f;
+@@ -18,10 +17,11 @@ public class AttackTask extends TargetDetectionTasks {
+-  public AttackTask(float attackRange) {
+-    super(attackRange);
+-  public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
+-    super(attackRange, direction);
+-    this.fireCooldown = attackSpeed;
++  public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
++    super(attackRange, direction);
++    // Treat attackSpeed as seconds between shots; clamp to a safe minimum to avoid 0 or NaN.
++    this.fireCooldown = Math.max(attackSpeed, 0.10f);
+   }
+@@ -33,9 +33,8 @@ public void start() {
+-    this.owner.getEntity().getEvents().trigger("attackStart");
+-    owner.getEntity().getEvents().trigger("fire");
+-    owner.getEntity().getEvents().trigger("fire", direction);
++    this.owner.getEntity().getEvents().trigger("attackStart");
++    // Do not fire in start(); firing is controlled by cooldown in update().
+@@ -50,10 +49,10 @@ public void update() {
+-      if (timeSinceLastFire >= FIRE_COOLDOWN) {
+-      if (timeSinceLastFire >= fireCooldown) {
+-        owner.getEntity().getEvents().trigger("fire");
+-        owner.getEntity().getEvents().trigger("fire", direction);
+-        timeSinceLastFire = 0f;
+-      }
++      if (timeSinceLastFire >= fireCooldown) {
++        // Tell listeners (LevelGameArea) to spawn a projectile once per cooldown
++        owner.getEntity().getEvents().trigger("fire", direction);
++        timeSinceLastFire -= fireCooldown; // preserve leftover time for smoother rate
++      }

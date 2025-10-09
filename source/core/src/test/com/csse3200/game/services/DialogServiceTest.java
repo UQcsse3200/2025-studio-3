@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.components.dialog.AchievementDialogComponent;
 import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
@@ -27,6 +30,7 @@ import org.slf4j.LoggerFactory;
 class DialogServiceTest {
   private static final Logger logger = LoggerFactory.getLogger(DialogServiceTest.class);
   @Mock private EntityService mockEntityService;
+  @Mock private Stage mockStage;
   private ResourceService resourceService;
   private DialogService dialogService;
 
@@ -34,7 +38,18 @@ class DialogServiceTest {
   void setUp() {
     MockitoAnnotations.openMocks(this);
     // Create real services
-    resourceService = new ResourceService();
+    resourceService = mock(ResourceService.class); // use field so we register the same instance
+    Texture mockTexture = mock(Texture.class);
+    when(resourceService.getAsset(any(), eq(Texture.class))).thenReturn(mockTexture);
+    Sound mockSound = mock(Sound.class);
+    when(mockSound.play(anyFloat())).thenReturn(1L);
+
+    when(resourceService.getAsset("sounds/dialog.mp3", Sound.class)).thenReturn(mockSound);
+    when(resourceService.getAsset("sounds/error.mp3", Sound.class)).thenReturn(mockSound);
+    when(resourceService.getAsset("sounds/achievement_unlock.mp3", Sound.class))
+        .thenReturn(mockSound);
+
+    // Register services (UIExtension will handle SettingsService and RenderService)
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerGlobalResourceService(resourceService);
     ServiceLocator.registerEntityService(mockEntityService);

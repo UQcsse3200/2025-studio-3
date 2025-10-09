@@ -2,6 +2,7 @@ package com.csse3200.game.components.dossier;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -144,6 +145,15 @@ public class DossierDisplay extends UIComponent {
                     java.util.Arrays.toString(entities));
               }
               currentEntity = 0;
+              // Play page turn sound
+              Sound pageTurn =
+                  ServiceLocator.getResourceService()
+                      .getAsset("sounds/dossier_page_turn.mp3", Sound.class);
+              if (pageTurn != null) {
+                float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                pageTurn.play(volume);
+                logger.info("Page turn sound played");
+              }
               // Rebuild UI for the new type
               stage.clear();
               addActors();
@@ -207,6 +217,15 @@ public class DossierDisplay extends UIComponent {
                 infoLabel.setText("");
                 spriteImage.setDrawable(null);
                 return;
+              }
+              // Play page turn sound
+              Sound pageTurn =
+                  ServiceLocator.getResourceService()
+                      .getAsset("sounds/dossier_page_turn.mp3", Sound.class);
+              if (pageTurn != null) {
+                float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                pageTurn.play(volume);
+                logger.info("Page turn sound played");
               }
               // Update current entity index
               currentEntity = (int) index;

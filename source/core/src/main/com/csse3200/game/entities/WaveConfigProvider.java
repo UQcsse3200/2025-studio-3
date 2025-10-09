@@ -28,4 +28,12 @@ public interface WaveConfigProvider {
    * @return map of enemy type to spawn configuration
    */
   Map<String, BaseSpawnConfig> getEnemyConfigs();
+
+  int getTotalWaves();
+
+  int getWaveWeight(int waveIndex);
+
+  int getMinZombiesSpawn(int waveIndex);
+
+  Map<String, BaseSpawnConfig> getEnemyConfigs(int waveIndex);
 }

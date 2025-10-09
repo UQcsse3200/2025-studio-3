@@ -2,10 +2,10 @@ package com.csse3200.game.components.hotbar;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -24,7 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HotbarDisplay extends UIComponent {
-  private Table hotbarTable;
+
+  private Table unitHotbarTable;
+  private Table itemHotbarTable;
   private final float scaling;
   private final LevelGameArea game;
   private final Map<String, Supplier<Entity>> unitList;
@@ -32,6 +34,7 @@ public class HotbarDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(HotbarDisplay.class);
   // a list of all the images for the slots
   private final Array<Image> slotImages = new Array<>();
+  private final Array<Image> itemImages = new Array<>();
   private float cellWidth;
 
   public HotbarDisplay(
@@ -55,16 +58,16 @@ public class HotbarDisplay extends UIComponent {
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
   private void addActors() {
-    Group layered = new Group();
+    Group unitLayers = new Group();
 
     // create hotbar image
     Image hotbar = new Image(new Texture("images/ui/hotbar.png"));
-    layered.addActor(hotbar);
+    unitLayers.addActor(hotbar);
 
-    layered.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
+    unitLayers.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
     // initialise the values needed for placing unit images in slots
-    float hotbarWidth = layered.getWidth();
+    float hotbarWidth = unitLayers.getWidth();
     cellWidth = hotbarWidth / 6;
     float startX = cellWidth / 4;
     float y = 30;
@@ -89,6 +92,7 @@ public class HotbarDisplay extends UIComponent {
                     new Entity()
                         .addComponent(new DeckInputComponent(game, unit.getValue()))
                         .addComponent(new TextureRenderComponent(unit.getKey()));
+
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);
@@ -96,13 +100,52 @@ public class HotbarDisplay extends UIComponent {
               return false;
             }
           });
-      layered.addActor(tempUnit);
+      unitLayers.addActor(tempUnit);
     }
+    // lays out the units
+    layoutUnits(startX, y, cellWidth, slotImages);
+
+    // sets the position to the top middle of screen
+    unitHotbarTable = new Table();
+    unitHotbarTable.setFillParent(true);
+    unitHotbarTable.center().top();
+    float targetWidth = stage.getViewport().getWorldWidth() * 0.35f;
+    float scale = targetWidth / unitLayers.getWidth();
+
+    unitLayers.setScale(scale);
+
+    // makes only the images touchable
+    unitHotbarTable.setTouchable(Touchable.childrenOnly);
+
+    // changes size to fit screen
+    unitHotbarTable
+        .add(unitLayers)
+        .size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale);
+
+    // creates a new table for item hotbar
+    itemHotbarTable = new Table();
+    itemHotbarTable.setFillParent(true);
+    itemHotbarTable.center().top().padTop(165 * scale);
+    Group itemLayers = new Group();
+
+    // create hotbar image
+    Image itemHotbar = new Image(new Texture("images/ui/hotbar.png"));
+    itemLayers.addActor(itemHotbar);
+
+    itemLayers.setSize(itemHotbar.getPrefWidth(), itemHotbar.getPrefHeight());
+
+    startX = cellWidth / 4;
+    // creates down arrow image
+    Image downArrow = new Image(new Texture("images/ui/down_arrow_hotbar.png"));
+    downArrow.setSize(scaling, (float) (0.5 * scaling));
+    downArrow.setPosition((float) (0.45 * hotbarWidth), -40);
+
+    // creates all the items
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
       Image tempItem = new Image(new Texture(item.getKey()));
       tempItem.setSize(scaling, scaling);
 
-      slotImages.add(tempItem);
+      itemImages.add(tempItem);
 
       // listener for selection/use
       tempItem.addListener(
@@ -142,29 +185,42 @@ public class HotbarDisplay extends UIComponent {
             }
           });
 
-      layered.addActor(tempItem);
+      itemLayers.addActor(tempItem);
     }
+    // lays out the items
+    layoutUnits(startX, y, cellWidth, itemImages);
 
-    layoutUnits(startX, y, cellWidth);
+    // handles the collapsing of the item hotbar
+    final boolean[] isUp = {false};
+    downArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            float distance = 170 * scale;
 
-    // sets the position to the top middle of screen
-    hotbarTable = new Table();
-    hotbarTable.setFillParent(true);
-    hotbarTable.center().top();
-    float targetWidth = stage.getViewport().getWorldWidth() * 0.5f;
-    float scale = targetWidth / layered.getWidth();
+            if (!isUp[0]) {
+              // Move up
+              itemLayers.addAction(Actions.moveBy(0, distance, 0.35f));
+              isUp[0] = true;
+            } else {
+              // Move down
+              itemLayers.addAction(Actions.moveBy(0, -distance, 0.35f));
+              isUp[0] = false;
+            }
+          }
+        });
+    itemLayers.addActor(downArrow);
 
-    layered.setScale(scale);
-
+    itemLayers.setScale(scale);
+    itemLayers.toBack();
+    itemHotbarTable
+        .add(itemLayers)
+        .size(itemLayers.getWidth() * scale, itemLayers.getHeight() * scale);
     // makes only the images touchable
-    hotbarTable.setTouchable(Touchable.childrenOnly);
+    itemHotbarTable.setTouchable(Touchable.childrenOnly);
 
-    // changes size to fit screen
-    hotbarTable.add(layered).size(layered.getWidth() * scale, layered.getHeight() * scale);
-
-
-    stage.addActor(hotbarTable);
-    hotbarTable.toBack();
+    stage.addActor(itemHotbarTable);
+    stage.addActor(unitHotbarTable);
 
     stage.addListener(
         new ClickListener() {
@@ -191,10 +247,10 @@ public class HotbarDisplay extends UIComponent {
    * @param usedUnit is an image of the item to be removed
    */
   public void remove(Image usedUnit) {
-    slotImages.removeValue(usedUnit, true);
+    itemImages.removeValue(usedUnit, true);
     usedUnit.remove();
     // reformats the layout of the slots so there isn't gaps
-    layoutUnits(cellWidth / 4, 30, cellWidth);
+    layoutUnits(cellWidth / 4, 30, cellWidth, itemImages);
   }
 
   /**
@@ -204,10 +260,11 @@ public class HotbarDisplay extends UIComponent {
    * @param startX the starting x value of the hotbar
    * @param y the y value of the hotbar
    * @param cellWidth the width of the cells to increment the x value
+   * @param array an array of images to be laid out
    */
-  private void layoutUnits(float startX, float y, float cellWidth) {
+  private void layoutUnits(float startX, float y, float cellWidth, Array<Image> array) {
     float x = startX;
-    for (Image img : slotImages) {
+    for (Image img : array) {
       img.setPosition(x, y);
       x += cellWidth;
     }
@@ -215,9 +272,13 @@ public class HotbarDisplay extends UIComponent {
 
   @Override
   public void dispose() {
-    if (hotbarTable != null) {
-      hotbarTable.remove();
-      hotbarTable = null;
+    if (unitHotbarTable != null) {
+      unitHotbarTable.remove();
+      unitHotbarTable = null;
+    }
+    if (itemHotbarTable != null) {
+      itemHotbarTable.remove();
+      itemHotbarTable = null;
     }
     super.dispose();
   }

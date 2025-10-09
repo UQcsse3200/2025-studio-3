@@ -3,12 +3,17 @@ package com.csse3200.game.physics;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -20,9 +25,23 @@ class DamageMappingSystemTest {
   private Fixture attackerFixture;
   private Fixture defenderFixture;
   private DamageMappingSystem damageSystem;
+  private ResourceService resources;
 
   @BeforeEach
   void setUp() {
+    // Mock resource and settings services
+    resources = mock(ResourceService.class);
+    ServiceLocator.registerResourceService(resources);
+    SettingsService mockSettingsService = mock(SettingsService.class);
+    ServiceLocator.registerSettingsService(mockSettingsService);
+    when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
+
+    Sound mockSound = mock(Sound.class);
+    // Mock the sound assets that CombatStatsComponent might request
+    when(resources.getAsset("sounds/human-death.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/robot-death.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/damage.mp3", Sound.class)).thenReturn(mockSound);
+
     attacker = new Entity();
     attackerStats = new CombatStatsComponent(100, 10);
     attacker.addComponent(attackerStats);
@@ -51,6 +70,11 @@ class DamageMappingSystemTest {
     defenderData.setEntity(defender);
     when(defenderFixture.getBody()).thenReturn(defenderBody);
     when(defenderBody.getUserData()).thenReturn(defenderData);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.clear();
   }
 
   @Test

@@ -1,6 +1,5 @@
 package com.csse3200.game.components.skilltree;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -17,13 +16,6 @@ import com.csse3200.game.ui.UIComponent;
  * unlock/close actions with appropriate sounds and UI updates.
  */
 public class SkilltreeDisplay extends UIComponent {
-  /** Sound effect for invalid or failed actions. */
-  private final Sound errorSound = Gdx.audio.newSound(Gdx.files.internal("sounds/error_click.mp3"));
-
-  /** Sound effect for successful skill unlocks. */
-  private final Sound unlockSound =
-      Gdx.audio.newSound(Gdx.files.internal("sounds/button_unlock_skill.mp3"));
-
   /** Creates a new SkilltreeDisplay. */
   public SkilltreeDisplay() {
     super();
@@ -64,6 +56,9 @@ public class SkilltreeDisplay extends UIComponent {
               ServiceLocator.getProfileService().getProfile().getWallet().getSkillsPoints();
           boolean locked = !skillSet.checkIfUnlocked(skill.getName());
 
+          // Get set volume
+          float volume = ServiceLocator.getSettingsService().getSoundVolume();
+
           // unlock skill conditions which removes skill points and replaces button if successful
           if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
             skillSet.addSkill(skill);
@@ -74,12 +69,14 @@ public class SkilltreeDisplay extends UIComponent {
             unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());
             unlockedImage.setPosition(skillButton.getX(), skillButton.getY());
             skillButton.remove();
-            unlockSound.play();
+            Sound unlockSound =
+                ServiceLocator.getResourceService()
+                    .getAsset("sounds/button_unlock_skill.mp3", Sound.class);
+            unlockSound.play(0.5f * volume);
             stage.addActor(unlockedImage);
             unlockedImage.setZIndex(1);
             dialog.hide();
           } else {
-            errorSound.play();
             // display corresponding error message
             if (cost > points) {
               dialogService.error("Error", "Not enough skill points for this purchase");
