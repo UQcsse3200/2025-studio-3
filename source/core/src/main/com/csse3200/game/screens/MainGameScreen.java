@@ -12,6 +12,7 @@ import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
+import com.csse3200.game.components.hud.SpeedControlDisplay;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -228,9 +229,11 @@ public class MainGameScreen extends ScreenAdapter {
   @Override
   public void render(float delta) {
     if (!isPaused) {
+      // Use scaled delta for systems that accept it
+      float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
       physicsEngine.update();
       ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(delta);
+      ServiceLocator.getWaveService().update(scaledDelta);
     }
 
     if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
@@ -350,6 +353,7 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new PerformanceDisplay())
         .addComponent(new PauseButton())
         .addComponent(new PauseMenu())
+        .addComponent(new SpeedControlDisplay())
         .addComponent(new PauseMenuActions(this.game))
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())

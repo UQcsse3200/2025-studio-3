@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
@@ -36,6 +37,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
+import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
@@ -63,6 +65,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
+  Entity ui;
   Entity gameOverEntity;
   private Entity levelCompleteEntity;
   private boolean isLevelComplete = false;
@@ -160,6 +163,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dragOverlay = new DragOverlay(this);
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
+
+    // tutorial for Level 1
+    if ("levelOne".equals(currentLevelKey)) {
+      Entity tutorialEntity = new Entity();
+      tutorialEntity.addComponent(new LevelMapTutorial());
+      spawnEntity(tutorialEntity);
+    }
   }
 
   /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
@@ -170,7 +180,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     populateUnitList(profile, configService);
     populateItemList(profile.getInventory(), configService);
 
-    Entity ui =
+    ui =
         new Entity()
             .addComponent(new GameAreaDisplay("Level One"))
             .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
@@ -649,6 +659,30 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    * world.
    */
   private void placeDefenceUnit(int position, Entity tile, Entity unit, Vector2 worldPos) {
+    // Check for enough scrap
+    GeneratorStatsComponent generator = unit.getComponent(GeneratorStatsComponent.class);
+    DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
+    int cost;
+    if (generator != null) {
+      cost = generator.getCost();
+    } else {
+      cost = defence.getCost();
+    }
+
+    // Checks if the player has sufficient scrap
+    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
+      logger.info(
+          "Not enough scrap for this entity. Need {} but have {}",
+          cost,
+          ServiceLocator.getCurrencyService().get());
+      ui.getEvents().trigger("insufficientScrap");
+      setSelectedUnit(null);
+      cancelDrag();
+      return;
+    }
+
+    ServiceLocator.getCurrencyService().add(-cost);
+
     tile.getComponent(TileStorageComponent.class).setTileUnit(unit);
     unit.scaleHeight(tileSize);
 
