@@ -20,6 +20,7 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Locale;
 import java.util.Map;
@@ -255,12 +256,6 @@ public class HotbarDisplay extends UIComponent {
     // makes only the images touchable
     itemHotbarTable.setTouchable(Touchable.childrenOnly);
 
-    // changes size to fit screen
-    itemHotbarTable
-        .add(unitLayers)
-        .size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale)
-        .row();
-
     stage.addActor(itemHotbarTable);
     itemHotbarTable.toBack();
     stage.addActor(unitHotbarTable);
@@ -278,9 +273,13 @@ public class HotbarDisplay extends UIComponent {
         });
 
     // Sets a placeholder message and an event to be called from other classes
-    insufficientScrapMessage = new Label("", skin);
+
+    insufficientScrapMessage = TypographyFactory.createParagraph("Insufficient Scrap");
     insufficientScrapMessage.setVisible(false);
-    itemHotbarTable.add(insufficientScrapMessage).padTop(5f);
+    Table messageTable = new Table();
+    messageTable.setFillParent(true);
+    messageTable.add(insufficientScrapMessage).expandY().bottom().padBottom(20f);
+    stage.addActor(messageTable);
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
   }
 
