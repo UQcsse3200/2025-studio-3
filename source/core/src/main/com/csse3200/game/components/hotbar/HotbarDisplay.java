@@ -93,6 +93,7 @@ public class HotbarDisplay extends UIComponent {
                     new Entity()
                         .addComponent(new DeckInputComponent(game, unit.getValue()))
                         .addComponent(new TextureRenderComponent(unit.getKey()));
+
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);

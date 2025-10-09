@@ -1,6 +1,9 @@
 package com.csse3200.game.tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -15,6 +18,8 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +59,13 @@ class TileStorageComponentTest {
     lenient().doNothing().when(inputService).register(any());
     lenient().doNothing().when(inputService).unregister(any());
     ServiceLocator.registerInputService(inputService);
+
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+
+    // creates mock discord rich presence service
+    DiscordRichPresenceService discordService = mock(DiscordRichPresenceService.class);
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
 
     levelGameArea =
         new LevelGameArea("levelOne") {
