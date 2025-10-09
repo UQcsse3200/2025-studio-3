@@ -75,7 +75,6 @@ public class BossAttackTask extends TargetDetectionTasks {
         owner.getEntity().getEvents().trigger("fire");
         timeSinceLastFire = 0f;
       }
-    } else {
     }
   }
 
