@@ -78,6 +78,7 @@ public class WorldMapScreen extends BaseScreen {
     loadTextures();
     createBackground();
     createNodes();
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     createPlayer();
   }
 

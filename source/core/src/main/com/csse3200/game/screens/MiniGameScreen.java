@@ -52,7 +52,7 @@ public class MiniGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
 
     renderer = RenderFactory.createRenderer();
-
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     loadAssets();
     createUI();
   }

@@ -1,7 +1,5 @@
 package com.csse3200.game.components.skilltree;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -36,12 +34,6 @@ public class SkilltreeActions extends ClickListener {
 
   /** The skill tree display used to render the unlock popup. */
   private final SkilltreeDisplay display;
-
-  /** Sound played when clicking a skill button. */
-  private final Sound clickSound = Gdx.audio.newSound(Gdx.files.internal("sounds/skill_click.mp3"));
-
-  /** Sound played when hovering over a skill button. */
-  private final Sound hoverSound = Gdx.audio.newSound(Gdx.files.internal("sounds/skill_hover.mp3"));
 
   /**
    * Creates a new {@code SkilltreeActions} listener.
@@ -79,7 +71,6 @@ public class SkilltreeActions extends ClickListener {
    */
   @Override
   public void clicked(InputEvent event, float x, float y) {
-    clickSound.play();
     Skill skill = skillSet.getSkill(skillName);
     display.unlockedPopUp(skill, skillSet, unlockedTexture, skillButton, stage);
   }
@@ -96,7 +87,6 @@ public class SkilltreeActions extends ClickListener {
    */
   @Override
   public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-    hoverSound.play();
     skillButton.setOrigin(Align.center);
     skillButton.addAction(Actions.scaleTo(1.1f, 1.1f, 0.1f));
   }

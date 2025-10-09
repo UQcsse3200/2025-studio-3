@@ -74,7 +74,9 @@ public class SkillTreeScreen extends ScreenAdapter {
   /** Loads necessary game assets */
   private void loadAssets() {
     logger.debug("Loading assets");
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/button_unlock_skill.mp3"});
     ServiceLocator.getResourceService().loadAll();
+    ServiceLocator.getMusicService().play("sounds/background-music/skilltree_background.mp3");
   }
 
   @Override

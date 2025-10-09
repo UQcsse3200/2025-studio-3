@@ -80,9 +80,6 @@ class LevelGameAreaTest {
     lenient().when(stage.getHeight()).thenReturn(1080f);
 
     lenient()
-        .when(resourceService.getAsset(eq("sounds/BGM_03_mp3.mp3"), eq(Music.class)))
-        .thenReturn(music);
-    lenient()
         .when(resourceService.getAsset(anyString(), eq(Texture.class)))
         .thenReturn(mock(Texture.class));
 

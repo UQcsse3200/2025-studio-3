@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
@@ -29,8 +30,8 @@ import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import com.csse3200.game.ui.DragOverlay;
+import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -62,6 +63,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
   Entity gameOverEntity;
+  Entity ui;
   private Entity levelCompleteEntity;
   private boolean isLevelComplete = false;
   private boolean isGameOver = false;
@@ -90,13 +92,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     selectedUnit = null;
 
     ServiceLocator.getDiscordRichPresenceService()
-            .updateGamePresence(currentLevelKey.split("level")[1], 1);
+        .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
 
   /** Loads level configuration from ConfigService. */
   private void loadLevelConfiguration() {
     logger.debug(
-            "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
+        "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
     ConfigService configService = ServiceLocator.getConfigService();
 
     if (configService == null) {
@@ -114,16 +116,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         mapFilePath = "images/backgrounds/level_map_grass.png";
       }
       logger.info(
-              "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
-              currentLevelKey,
-              levelRows,
-              levelCols);
+          "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
+          currentLevelKey,
+          levelRows,
+          levelCols);
     } else {
       logger.warn(
-              "[LevelGameArea] Could not load configuration for level {}, using defaults: {}x{}",
-              currentLevelKey,
-              levelRows,
-              levelCols);
+          "[LevelGameArea] Could not load configuration for level {}, using defaults: {}x{}",
+          currentLevelKey,
+          levelRows,
+          levelCols);
     }
   }
 
@@ -160,8 +162,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);
     }
-
-}
+  }
 
   /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   protected void displayUI() {
@@ -171,10 +172,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     populateUnitList(profile, configService);
     populateItemList(profile.getInventory(), configService);
 
-    Entity ui =
-            new Entity()
-                    .addComponent(new GameAreaDisplay("Level One"))
-                    .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
+    ui =
+        new Entity()
+            .addComponent(new GameAreaDisplay("Level One"))
+            .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
     createGameOverEntity();
@@ -209,12 +210,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Populates itemList for all items in inventory that have corresponding configs. */
   private void populateItemList(Inventory inventory, ConfigService configService) {
     Map<String, Supplier<Entity>> itemFactories =
-            Map.of(
-                    "grenade", ItemFactory::createGrenade,
-                    "coffee", ItemFactory::createCoffee,
-                    "buff", ItemFactory::createBuff,
-                    "emp", ItemFactory::createEmp,
-                    "nuke", ItemFactory::createNuke);
+        Map.of(
+            "grenade", ItemFactory::createGrenade,
+            "coffee", ItemFactory::createCoffee,
+            "buff", ItemFactory::createBuff,
+            "emp", ItemFactory::createEmp,
+            "nuke", ItemFactory::createNuke);
 
     for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
       String key = entry.getKey();
@@ -268,7 +269,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-            new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
+        new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
     entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
@@ -368,13 +369,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     robots.add(unit);
 
     unit.getEvents()
-            .addListener(
-                    ENTITY_DEATH_EVENT,
-                    () -> {
-                      requestDespawn(unit);
-                      ServiceLocator.getWaveService().onEnemyDispose();
-                      robots.remove(unit);
-                    });
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              requestDespawn(unit);
+              ServiceLocator.getWaveService().onEnemyDispose();
+              robots.remove(unit);
+            });
 
     // Keep list in sync if something else despawns the robot
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));
@@ -408,7 +409,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-          Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
     // Safety check
     if (projectile == null || spawnPos == null || direction == null) {
       logger.warn("Invalid projectile spawn parameters");
@@ -528,6 +529,30 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    * world.
    */
   private void placeDefenceUnit(int position, Entity tile, Entity unit, Vector2 worldPos) {
+    // Check for enough scrap
+    GeneratorStatsComponent generator = unit.getComponent(GeneratorStatsComponent.class);
+    DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
+    int cost;
+    if (generator != null) {
+      cost = generator.getCost();
+    } else {
+      cost = defence.getCost();
+    }
+
+    // Checks if the player has sufficient scrap
+    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
+      logger.info(
+          "Not enough scrap for this entity. Need {} but have {}",
+          cost,
+          ServiceLocator.getCurrencyService().get());
+      ui.getEvents().trigger("insufficientScrap");
+      setSelectedUnit(null);
+      cancelDrag();
+      return;
+    }
+
+    ServiceLocator.getCurrencyService().add(-cost);
+
     tile.getComponent(TileStorageComponent.class).setTileUnit(unit);
     unit.scaleHeight(tileSize);
 
@@ -539,29 +564,29 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     unit.getEvents().trigger("idleStart");
 
     Runnable clearTile =
-            () -> {
-              grid.removeOccupantIfMatchIndex(position, unit);
-              tile.getComponent(TileStorageComponent.class).removeTileUnit();
-            };
+        () -> {
+          grid.removeOccupantIfMatchIndex(position, unit);
+          tile.getComponent(TileStorageComponent.class).removeTileUnit();
+        };
 
     unit.getEvents()
-            .addListener(
-                    ENTITY_DEATH_EVENT,
-                    () -> {
-                      requestDespawn(unit);
-                      clearTile.run();
-                      robots.remove(unit);
-                    });
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              requestDespawn(unit);
+              clearTile.run();
+              robots.remove(unit);
+            });
     unit.getEvents().addListener("despawned", clearTile::run);
 
     unit.getEvents()
-            .addListener(
-                    "fire",
-                    (TargetDetectionTasks.AttackDirection dir) -> {
-                      spawnProjectile(
-                              worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
-                      unit.getEvents().trigger("attackStart");
-                    });
+        .addListener(
+            "fire",
+            (TargetDetectionTasks.AttackDirection dir) -> {
+              spawnProjectile(
+                  worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+              unit.getEvents().trigger("attackStart");
+            });
 
     // play appropriate sound
     try {
@@ -575,10 +600,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     logger.info(
-            "Unit spawned at position {} (r={}, c={})",
-            position,
-            position / levelCols,
-            position % levelCols);
+        "Unit spawned at position {} (r={}, c={})",
+        position,
+        position / levelCols,
+        position % levelCols);
   }
 
   /** Reset drag state and selection after any placement. */
@@ -716,7 +741,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         // play game over noise
         Sound sound =
-                ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
+            ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
         float volume = ServiceLocator.getSettingsService().getSoundVolume();
         sound.play(volume);
 

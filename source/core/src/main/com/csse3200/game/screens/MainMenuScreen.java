@@ -34,6 +34,7 @@ public class MainMenuScreen extends BaseScreen {
    */
   @Override
   protected Entity constructEntity(Stage stage) {
+    ServiceLocator.getMusicService().play("sounds/background-music/intro_music.mp3");
     logger.debug("Main menu screen UI is created");
     return new Entity()
         .addComponent(new MainMenuDisplay())

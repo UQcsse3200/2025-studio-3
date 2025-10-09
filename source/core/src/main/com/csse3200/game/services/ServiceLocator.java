@@ -31,6 +31,7 @@ public class ServiceLocator {
   private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
+  private static MusicService musicService;
   private static WaveService waveService;
   private static SettingsService settingsService;
   private static DiscordRichPresenceService discordRichPresenceService;
@@ -159,6 +160,15 @@ public class ServiceLocator {
    */
   public static WorldMapService getWorldMapService() {
     return worldMapService;
+  }
+
+  /**
+   * Gets the world map service.
+   *
+   * @return the world map service
+   */
+  public static MusicService getMusicService() {
+    return musicService;
   }
 
   /**
@@ -336,6 +346,12 @@ public class ServiceLocator {
   public static void registerCutsceneService(CutsceneService source) {
     logger.debug("Registering cutscene service {}", source);
     cutsceneService = source;
+  }
+
+  /** Registers music service */
+  public static void registerMusicService(MusicService service) {
+    logger.debug("Registering music service {}", service);
+    musicService = service;
   }
 
   /** Deregisters the cutscene service. */

@@ -38,6 +38,7 @@ public class StatisticsScreen extends BaseScreen {
   @Override
   protected Entity constructEntity(Stage stage) {
     logger.debug("Creating statistics screen UI");
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     return new Entity()
         .addComponent(new StatisticsDisplay(game))
         .addComponent(new InputDecorator(stage, 10))

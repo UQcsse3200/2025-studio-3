@@ -9,6 +9,7 @@
         "assetPath": "images/entities/defences/sling_shooter_1.png",
         "atlasPath": "images/entities/defences/sling_shooter.atlas",
         "projectilePath": "images/effects/sling_projectile.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
         "damage": 1,
         "direction": "right",
@@ -24,6 +25,7 @@
         "assetPath": "images/entities/defences/army_guy_1.png",
         "atlasPath": "images/entities/defences/machine_gun.atlas",
         "projectilePath": "images/effects/bullet.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
         "damage": 1,
         "direction": "right",
@@ -39,6 +41,7 @@
         "assetPath": "images/entities/defences/shadow_idle1.png",
         "atlasPath": "images/entities/defences/shadow.atlas",
         "projectilePath": "images/effects/shock.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
         "damage": 1,
         "direction": "left",
@@ -52,6 +55,7 @@
         "name": "Wall",
         "assetPath": "images/entities/defences/wall.png",
         "atlasPath": "images/entities/defences/wall.atlas",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "projectilePath": "",
         "damage": 0,
         "direction": "right",
@@ -67,9 +71,10 @@
         "assetPath": "images/entities/defences/forge_1.png",
         "atlasPath": "images/entities/defences/forge.atlas",
         "health": 50,
-        "interval": 4,
-        "scrapValue": 50,
-        "cost": 50
+        "interval": 12,
+        "scrapValue": 25,
+        "cost": 50,
+        "soundPath": "sounds/forge-place.mp3"
       }
     }
   }
