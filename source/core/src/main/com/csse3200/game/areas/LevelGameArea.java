@@ -1,11 +1,10 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.LevelCompleted.LevelCompletedWindow;
 import com.csse3200.game.components.ProjectileComponent;
@@ -30,14 +29,13 @@ import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
+import com.csse3200.game.ui.DragOverlay;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +61,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final Map<String, Supplier<Entity>> unitList = new HashMap<>();
   private final Map<String, Supplier<Entity>> itemList = new HashMap<>();
 
-  private Entity ui;
-  private Entity gameOverEntity;
+  Entity gameOverEntity;
   private Entity levelCompleteEntity;
   private boolean isLevelComplete = false;
   private boolean isGameOver = false;
@@ -77,6 +74,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
+  private final ItemHandler itemHandler = new ItemHandler(this);
   private final WavePreviewManager wavePreview = new WavePreviewManager(this);
 
   /**
@@ -92,13 +90,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     selectedUnit = null;
 
     ServiceLocator.getDiscordRichPresenceService()
-        .updateGamePresence(currentLevelKey.split("level")[1], 1);
+            .updateGamePresence(currentLevelKey.split("level")[1], 1);
   }
 
   /** Loads level configuration from ConfigService. */
   private void loadLevelConfiguration() {
     logger.debug(
-        "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
+            "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
     ConfigService configService = ServiceLocator.getConfigService();
 
     if (configService == null) {
@@ -116,16 +114,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         mapFilePath = "images/backgrounds/level_map_grass.png";
       }
       logger.info(
-          "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
-          currentLevelKey,
-          levelRows,
-          levelCols);
+              "[LevelGameArea] Loaded level {} configuration: {}x{} grid",
+              currentLevelKey,
+              levelRows,
+              levelCols);
     } else {
       logger.warn(
-          "[LevelGameArea] Could not load configuration for level {}, using defaults: {}x{}",
-          currentLevelKey,
-          levelRows,
-          levelCols);
+              "[LevelGameArea] Could not load configuration for level {}, using defaults: {}x{}",
+              currentLevelKey,
+              levelRows,
+              levelCols);
     }
   }
 
@@ -156,13 +154,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     overlayEntity.addComponent(dragOverlay);
     spawnEntity(overlayEntity);
 
-    // Tutorial for Level 1
+    // tutorial for Level 1
     if ("levelOne".equals(currentLevelKey)) {
       Entity tutorialEntity = new Entity();
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);
     }
-  }
+
+}
 
   /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   protected void displayUI() {
@@ -172,14 +171,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     populateUnitList(profile, configService);
     populateItemList(profile.getInventory(), configService);
 
-    ui =
-        new Entity()
-            .addComponent(
-                new GameAreaDisplay(
-                    "Level "
-                        + (ServiceLocator.getProfileService().getProfile().getCurrentLevel())
-                            .split("level")[1]))
-            .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
+    Entity ui =
+            new Entity()
+                    .addComponent(new GameAreaDisplay("Level One"))
+                    .addComponent(new HotbarDisplay(this, tileSize, unitList, itemList));
     spawnEntity(ui);
 
     createGameOverEntity();
@@ -214,12 +209,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Populates itemList for all items in inventory that have corresponding configs. */
   private void populateItemList(Inventory inventory, ConfigService configService) {
     Map<String, Supplier<Entity>> itemFactories =
-        Map.of(
-            "grenade", ItemFactory::createGrenade,
-            "coffee", ItemFactory::createCoffee,
-            "buff", ItemFactory::createBuff,
-            "emp", ItemFactory::createEmp,
-            "nuke", ItemFactory::createNuke);
+            Map.of(
+                    "grenade", ItemFactory::createGrenade,
+                    "coffee", ItemFactory::createCoffee,
+                    "buff", ItemFactory::createBuff,
+                    "emp", ItemFactory::createEmp,
+                    "nuke", ItemFactory::createNuke);
 
     for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
       String key = entry.getKey();
@@ -273,7 +268,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
+            new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
     entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
@@ -373,13 +368,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     robots.add(unit);
 
     unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
-              robots.remove(unit);
-            });
+            .addListener(
+                    ENTITY_DEATH_EVENT,
+                    () -> {
+                      requestDespawn(unit);
+                      ServiceLocator.getWaveService().onEnemyDispose();
+                      robots.remove(unit);
+                    });
 
     // Keep list in sync if something else despawns the robot
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));
@@ -413,7 +408,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+          Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
     // Safety check
     if (projectile == null || spawnPos == null || direction == null) {
       logger.warn("Invalid projectile spawn parameters");
@@ -488,26 +483,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       return;
     }
 
-    // --- Step 3a: Check currency ---
-    GeneratorStatsComponent generator = newEntity.getComponent(GeneratorStatsComponent.class);
-    DefenderStatsComponent defence = newEntity.getComponent(DefenderStatsComponent.class);
-
-    int cost =
-        (generator != null) ? generator.getCost() : (defence != null ? defence.getCost() : 0);
-
-    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
-      logger.info(
-          "Not enough scrap for this entity. Need {} but have {}",
-          cost,
-          ServiceLocator.getCurrencyService().get());
-      ui.getEvents().trigger("insufficientScrap");
-      resetSelectionUI();
-      return;
-    }
-
-    ServiceLocator.getCurrencyService().add(-cost);
-
-    // --- Step 3b: Place the unit ---
     placeDefenceUnit(position, tile, newEntity, worldPos);
     resetSelectionUI();
   }
@@ -532,69 +507,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   private boolean trySpawnItem(Entity entity, Entity tile, Vector2 worldPos) {
     ItemComponent item = entity.getComponent(ItemComponent.class);
-    if (item == null) {
-      return false;
-    }
+    if (item == null) return false;
 
-    String key = item.getType().toString().toLowerCase(Locale.ROOT);
+    String itemKey = item.getType().toString().toLowerCase(Locale.ROOT);
     Inventory inv = ServiceLocator.getProfileService().getProfile().getInventory();
 
-    if (!inv.contains(key)) {
-      logger.info("Cannot spawn item {}, not in player's inventory", key);
+    if (!inv.contains(itemKey)) {
+      logger.info("Cannot spawn item {}, not in player's inventory", itemKey);
       tile.getComponent(TileStorageComponent.class).removeTileUnit();
       return true; // handled: do nothing
     }
 
-    logger.info("Spawning item {}", key);
-
-    inv.removeItem(key);
-    logger.info("One {} item used", key);
-
-    ServiceLocator.getItemEffectsService()
-        .playEffect(
-            key,
-            worldPos,
-            (int) tileSize,
-            new Vector2(
-                (float) (xOffset * 0.25 + levelCols * tileSize), (float) (tileSize * -0.75)));
-
-    Set<String> damagingItems = Set.of("GRENADE", "EMP", "NUKE");
-    if (damagingItems.contains(item.getType().toString())) {
-      float radius = 1.5f * tileSize;
-      List<Entity> toRemove = new ArrayList<>();
-      for (Entity r : robots) {
-        Vector2 pos = r.getPosition();
-        if (Math.abs(worldPos.x - pos.x) <= radius && Math.abs(worldPos.y - pos.y) <= radius) {
-          toRemove.add(r);
-        }
-      }
-      for (Entity r : toRemove) {
-        requestDespawn(r); // The "despawned" listener on the robot handles removal from list
-      }
-    } else {
-      String itemTrigger = ServiceLocator.getConfigService().getItemConfig(key).getTrigger();
-      final int total = grid.getRows() * grid.getCols();
-      for (int i = 0; i < total; i++) {
-        Entity gridEntity = grid.getOccupantIndex(i);
-        if (gridEntity != null
-            && (gridEntity.getComponent(DefenderStatsComponent.class) != null
-                || gridEntity.getComponent(GeneratorStatsComponent.class) != null)) {
-          gridEntity.getEvents().trigger(itemTrigger);
-          logger.info("Start {} on {}", itemTrigger, gridEntity);
-
-          final Timer.Task repeatTask =
-              new Timer.Task() {
-                @Override
-                public void run() {
-                  gridEntity.getEvents().trigger(itemTrigger + "Stop");
-                  logger.info("Stop {}", itemTrigger);
-                }
-              };
-          Timer.schedule(repeatTask, 30f);
-        }
-      }
-    }
-
+    itemHandler.handleItemUse(item, worldPos);
     tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
@@ -615,34 +539,46 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     unit.getEvents().trigger("idleStart");
 
     Runnable clearTile =
-        () -> {
-          grid.removeOccupantIfMatchIndex(position, unit);
-          tile.getComponent(TileStorageComponent.class).removeTileUnit();
-        };
+            () -> {
+              grid.removeOccupantIfMatchIndex(position, unit);
+              tile.getComponent(TileStorageComponent.class).removeTileUnit();
+            };
 
     unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              clearTile.run();
-            });
+            .addListener(
+                    ENTITY_DEATH_EVENT,
+                    () -> {
+                      requestDespawn(unit);
+                      clearTile.run();
+                      robots.remove(unit);
+                    });
     unit.getEvents().addListener("despawned", clearTile::run);
 
     unit.getEvents()
-        .addListener(
-            "fire",
-            (TargetDetectionTasks.AttackDirection dir) -> {
-              spawnProjectile(
-                  worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
-              unit.getEvents().trigger("attackStart");
-            });
+            .addListener(
+                    "fire",
+                    (TargetDetectionTasks.AttackDirection dir) -> {
+                      spawnProjectile(
+                              worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+                      unit.getEvents().trigger("attackStart");
+                    });
+
+    // play appropriate sound
+    try {
+      String soundPath = unit.getProperty("soundPath").toString();
+      Sound sound = ServiceLocator.getResourceService().getAsset(soundPath, Sound.class);
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      sound.play(volume);
+      logger.info("Playing sound: {}", soundPath);
+    } catch (Exception e) {
+      logger.info("No soundPath property found on this entity");
+    }
 
     logger.info(
-        "Unit spawned at position {} (r={}, c={})",
-        position,
-        position / levelCols,
-        position % levelCols);
+            "Unit spawned at position {} (r={}, c={})",
+            position,
+            position / levelCols,
+            position % levelCols);
   }
 
   /** Reset drag state and selection after any placement. */
@@ -777,6 +713,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (gridX <= -1) {
         isGameOver = true;
         logger.info("GAME OVER - Robot reached the left edge at grid x: {}", gridX);
+
+        // play game over noise
+        Sound sound =
+                ServiceLocator.getResourceService().getAsset("sounds/game-over-voice.mp3", Sound.class);
+        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+        sound.play(volume);
+
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
       }
