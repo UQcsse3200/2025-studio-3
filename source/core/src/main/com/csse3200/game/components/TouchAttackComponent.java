@@ -67,8 +67,11 @@ public class TouchAttackComponent extends Component {
 
     // Attack logic
     CombatStatsComponent targetStats = target.getComponent(CombatStatsComponent.class);
-    if (targetStats == null) {
+    if (targetStats == null) { // Hit if entity is normal defender
       targetStats = target.getComponent(DefenderStatsComponent.class);
+      if (targetStats == null) { // Also hit if entity is generator defender
+        targetStats = target.getComponent(GeneratorStatsComponent.class);
+      }
     }
     if (targetStats == null) {
       targetStats = target.getComponent(GeneratorStatsComponent.class);

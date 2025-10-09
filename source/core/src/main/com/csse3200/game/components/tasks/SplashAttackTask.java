@@ -9,7 +9,7 @@ public class SplashAttackTask extends TargetDetectionTasks implements PriorityTa
   private float timeSinceLastSplash;
 
   public SplashAttackTask(float attackRange, float splashCooldown) {
-    super(attackRange);
+    super(attackRange, AttackDirection.LEFT);
     this.splashCooldown = splashCooldown;
     this.timeSinceLastSplash = splashCooldown;
   }

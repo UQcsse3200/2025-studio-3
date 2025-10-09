@@ -15,6 +15,9 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +57,18 @@ class TileHitboxComponentTest {
     lenient().doNothing().when(inputService).register(any());
     lenient().doNothing().when(inputService).unregister(any());
     ServiceLocator.registerInputService(inputService);
+
+    // creates mock config service
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+
+    // creates mock discord rich presence service
+    DiscordRichPresenceService discordService = mock(DiscordRichPresenceService.class);
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
+
+    // creates mock profile service
+    ProfileService profileService = mock(ProfileService.class);
+    ServiceLocator.registerProfileService(profileService);
 
     levelGameArea =
         new LevelGameArea("levelOne") {

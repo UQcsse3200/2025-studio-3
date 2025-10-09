@@ -32,6 +32,10 @@ public class ServiceLocator {
   private static ItemEffectsService itemEffectsService;
   private static CutsceneService cutsceneService;
   private static WorldMapService worldMapService;
+  private static MusicService musicService;
+  private static WaveService waveService;
+  private static SettingsService settingsService;
+  private static DiscordRichPresenceService discordRichPresenceService;
 
   // --- NEW FIELD ADDED ---
   private static GameArea gameArea;
@@ -170,6 +174,42 @@ public class ServiceLocator {
    */
   public static GameArea getGameArea() {
     return gameArea;
+  }
+
+  /**
+   * Gets the world map service.
+   *
+   * @return the world map service
+   */
+  public static MusicService getMusicService() {
+    return musicService;
+  }
+
+  /**
+   * Gets the wave service.
+   *
+   * @return the wave service
+   */
+  public static WaveService getWaveService() {
+    return waveService;
+  }
+
+  /**
+   * Gets the settings service.
+   *
+   * @return the settings service
+   */
+  public static SettingsService getSettingsService() {
+    return settingsService;
+  }
+
+  /**
+   * Gets the Discord Rich Presence service.
+   *
+   * @return the Discord Rich Presence service
+   */
+  public static DiscordRichPresenceService getDiscordRichPresenceService() {
+    return discordRichPresenceService;
   }
 
   /**
@@ -322,6 +362,18 @@ public class ServiceLocator {
     cutsceneService = source;
   }
 
+  /** Registers music service */
+  public static void registerMusicService(MusicService service) {
+    logger.debug("Registering music service {}", service);
+    musicService = service;
+  }
+
+  /** Deregisters the cutscene service. */
+  public static void deregisterCutsceneService() {
+    logger.debug("Removing cutscene service");
+    cutsceneService = null;
+  }
+
   /**
    * Registers the world map service.
    *
@@ -353,6 +405,57 @@ public class ServiceLocator {
   public static void deregisterWorldMapService() {
     logger.debug("Removing world map service");
     worldMapService = null;
+  }
+
+  /**
+   * Registers the settings service.
+   *
+   * @param source the settings service
+   */
+  public static void registerSettingsService(SettingsService source) {
+    logger.debug("Registering settings service {}", source);
+    settingsService = source;
+  }
+
+  /** Deregisters the settings service. */
+  public static void deregisterSettingsService() {
+    logger.debug("Removing settings service");
+    settingsService = null;
+  }
+
+  /**
+   * Registers the Discord Rich Presence service.
+   *
+   * @param source the Discord Rich Presence service
+   */
+  public static void registerDiscordRichPresenceService(DiscordRichPresenceService source) {
+    logger.debug("Registering Discord Rich Presence service {}", source);
+    discordRichPresenceService = source;
+  }
+
+  /** Deregisters the Discord Rich Presence service. */
+  public static void deregisterDiscordRichPresenceService() {
+    logger.debug("Removing Discord Rich Presence service");
+    if (discordRichPresenceService != null) {
+      discordRichPresenceService.shutdown();
+    }
+    discordRichPresenceService = null;
+  }
+
+  /**
+   * Registers the wave service.
+   *
+   * @param source the wave service
+   */
+  public static void registerWaveService(WaveService source) {
+    logger.debug("Registering wave service {}", source);
+    waveService = source;
+  }
+
+  /** Deregisters the wave service. */
+  public static void deregisterWaveService() {
+    logger.debug("Removing wave service");
+    waveService = null;
   }
 
   /** Clears all transient services. */

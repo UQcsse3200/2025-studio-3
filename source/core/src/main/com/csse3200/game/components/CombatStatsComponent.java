@@ -1,5 +1,6 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -65,6 +66,8 @@ public class CombatStatsComponent extends Component {
       entity.getEvents().trigger("updateHealth", this.health);
 
       if (this.health == 0) {
+        // Add coins & update statistics
+        // TODO: use config passed into the entity
         int extraCoins = 3;
         ProfileService profileService = ServiceLocator.getProfileService();
         if (profileService != null && profileService.isActive()) {
@@ -84,8 +87,10 @@ public class CombatStatsComponent extends Component {
           logger.warn("[Death] ProfileService is null; cannot update progression wallet/stats");
         }
 
-        handleDeath();
+        // despawn entity
+        entity.getEvents().trigger("despawnRobot", entity);
       }
+      entity.getEvents().trigger("updateHealth", this.health);
     }
   }
 
@@ -120,20 +125,52 @@ public class CombatStatsComponent extends Component {
     }
   }
 
-  public void hit(CombatStatsComponent attacker) {
-    int newHealth = getHealth() - attacker.getBaseAttack();
+  /**
+   * Hit another entity, affecting their respective component
+   *
+   * @param target the combat stats component of the target
+   */
+  public void hit(CombatStatsComponent target) {
+    int newHealth = getHealth() - target.getBaseAttack();
+
+    // Play damage sound
+    Sound damageSound =
+        ServiceLocator.getResourceService().getAsset("sounds/damage.mp3", Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    damageSound.play(0.5f * volume);
+
     setHealth(newHealth);
+    handleDeath();
   }
 
   /** Triggers death event handlers if a hit causes an entity to die. */
   public void handleDeath() {
-    if (isDead()) {
-      if (entity.getComponent(DefenderStatsComponent.class) != null
-          || entity.getComponent(GeneratorStatsComponent.class) != null) {
-        entity.getEvents().trigger("defenceDeath");
-        logger.info("Human has died!");
-      } else {
-        entity.getEvents().trigger("entityDeath");
+    boolean isDead = isDead();
+    if (isDead || getHealth() < 0) {
+      Sound deathSound;
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      // checks for components unique to defenders
+      if (entity.getComponent(DefenderStatsComponent.class) != null) {
+        if (isDead()) {
+          if (entity.getComponent(DefenderStatsComponent.class) != null
+              || entity.getComponent(GeneratorStatsComponent.class) != null) {
+            entity.getEvents().trigger("defenceDeath");
+            logger.info("Defence has died!");
+            deathSound =
+                ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
+          } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+            entity.getEvents().trigger("defenceDeath");
+            logger.info("Generator has died!");
+            deathSound =
+                ServiceLocator.getResourceService()
+                    .getAsset("sounds/generator-death.mp3", Sound.class);
+          } else {
+            entity.getEvents().trigger("entityDeath");
+            deathSound =
+                ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
+          }
+          deathSound.play(0.3f * volume);
+        }
       }
     }
   }

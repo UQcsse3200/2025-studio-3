@@ -15,7 +15,7 @@ public class BossAttackTask extends TargetDetectionTasks {
   private float timeSinceLastFire = 0f;
 
   public BossAttackTask(float attackRange) {
-    super(attackRange);
+    super(attackRange, AttackDirection.LEFT);
   }
 
   @Override
