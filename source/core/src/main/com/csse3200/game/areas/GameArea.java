@@ -25,10 +25,14 @@ public abstract class GameArea implements Disposable {
   /** Create the game area in the world. */
   public abstract void create();
 
-  /** Dispose of all internal entities in the area */
+  /**
+   * Dispose of all internal entities in the area. We have had issues where disposing during physics
+   * steps caused crashes. However, this will presumably only be called to dispose the entire area,
+   * so no more physics steps should be caused.
+   */
   public void dispose() {
     for (Entity entity : areaEntities) {
-      entity.setDeathFlag();
+      entity.dispose();
     }
   }
 

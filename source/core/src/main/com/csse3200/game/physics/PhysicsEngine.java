@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.raycast.AllHitCallback;
 import com.csse3200.game.physics.raycast.RaycastHit;
@@ -57,7 +58,13 @@ public class PhysicsEngine implements Disposable {
     }
 
     // NEW CHANGES: guaranteed disposal of entities with physics bodies after physics step
-    for (Entity entity : ServiceLocator.getEntityService().getEntities()) {
+    // Handles the entity service not existing. This should prevent crashes with Tests
+    EntityService entityService = ServiceLocator.getEntityService();
+    if (entityService == null) {
+      return;
+    }
+    // Disposes of all entities that have been marked as dead in the last physics step
+    for (Entity entity : entityService.getEntities()) {
       if (!entity.getDeathFlag()) {
         continue;
       }
