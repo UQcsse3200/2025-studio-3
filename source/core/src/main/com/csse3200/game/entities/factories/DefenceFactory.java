@@ -29,6 +29,9 @@ import com.csse3200.game.services.ServiceLocator;
 public class DefenceFactory {
   private static final String ATTACK = "attack";
   private static final String IDLE = "idle";
+  private static final String BUFF = "doubleDamage";
+  private static final String UNBUFF = "doubleDamageStop";
+  private static final String HEAL = "heal";
 
   /** Gets the config service for accessing defence configurations. */
   private static ConfigService getConfigService() {
@@ -45,9 +48,23 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
+    if (config.getName() != null && config.getName().equals("mortar")) {
+      defender.setProperty("unitType", "mortar");
+    }
 
-    AITaskComponent tasks = getTaskComponent(config);
+    // --- Create and attach task component ---
+    TargetDetectionTasks.AttackDirection dir = TargetDetectionTasks.AttackDirection.RIGHT;
+    if (config.getDirection().equals("left")) {
+      dir = TargetDetectionTasks.AttackDirection.LEFT;
+    }
+
+    AttackTask attackTask = new AttackTask(config.getRange(), config.getAttackSpeed(), dir);
+    IdleTask idleTask = new IdleTask(config.getRange(), dir);
+    AITaskComponent tasks = new AITaskComponent().addTask(attackTask).addTask(idleTask);
+
+    // Attach AI tasks
     defender.addComponent(tasks);
+
     // animation component
     AnimationRenderComponent animator = getAnimationComponent(config);
     // stats component
@@ -58,7 +75,6 @@ public class DefenceFactory {
         .addComponent(stats)
         .addComponent(animator)
         .addComponent(new DefenceAnimationController());
-
     if (config.getProjectilePath() != null) {
       defender.addComponent(
           new ProjectileComponent(config.getProjectilePath(), config.getDamage()));
@@ -66,6 +82,24 @@ public class DefenceFactory {
 
     // Scale to tilesize
     animator.scaleEntity();
+
+    // add event listener for buffing the defence when a buff item is used on it
+    defender
+        .getEvents()
+        .addListener(BUFF, () -> defender.getComponent(DefenderStatsComponent.class).buff());
+    defender
+        .getEvents()
+        .addListener(UNBUFF, () -> defender.getComponent(DefenderStatsComponent.class).unbuff());
+    defender
+        .getEvents()
+        .addListener(HEAL, () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
+
+    // Wire up fire-rate event listeners directly — no iteration
+    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
+    defender.getEvents().addListener("doubleFireRateStop", attackTask::resetFireRate);
+
+    // add sound path
+    defender.setProperty("soundPath", config.getSoundPath());
     return defender;
   }
 
@@ -81,7 +115,8 @@ public class DefenceFactory {
         config.getDamage(),
         config.getRange(),
         config.getAttackSpeed(),
-        config.getCritChance());
+        config.getCritChance(),
+        config.getCost());
   }
 
   /**
@@ -161,7 +196,6 @@ public class DefenceFactory {
             .addComponent(solid)
             .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.StaticBody))
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.NPC))
-            .addComponent(new ColliderComponent())
             .addComponent(new HitMarkerComponent());
 
     npc.getComponent(PhysicsComponent.class).setBodyType(BodyDef.BodyType.StaticBody);

@@ -23,6 +23,9 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.WorldMapNode;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
+import com.csse3200.game.ui.tutorial.WorldMapTutorial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -75,6 +78,8 @@ public class WorldMapScreen extends BaseScreen {
   /** Exposes the camera component to input components. */
   public CameraComponent getCameraComponent() {
     return renderer.getCamera();
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+    createPlayer();
   }
 
   @Override
@@ -84,10 +89,20 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
         .addComponent(new AnimatedDropdownMenu())
-        // Input handlers (safe even if playerEntity is null during init)
-        .addComponent(new WorldMapZoomInputComponent(this, 5))
-        .addComponent(new WorldMapPanInputComponent(this, 6))
-        .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+    // Input handlers (safe even if playerEntity is null during init)
+.addComponent(new WorldMapZoomInputComponent(this, 5))
+.addComponent(new WorldMapPanInputComponent(this, 6))
+
+.addComponent(new Terminal())
+.addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+.addComponent(new TerminalDisplay())
+.addComponent(new AnimatedDropdownMenu())
+.addComponent(new WorldMapTutorial())
+.addComponent(new AnimatedDropdownMenu())
+.addComponent(new WorldMapZoomInputComponent(this, 12))
+.addComponent(new WorldMapPanInputComponent(this, 12))
+.addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+
     return ui;
   }
 

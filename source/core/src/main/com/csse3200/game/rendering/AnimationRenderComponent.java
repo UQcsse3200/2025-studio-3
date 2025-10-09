@@ -167,6 +167,15 @@ public class AnimationRenderComponent extends RenderComponent {
   }
 
   /**
+   * Get the play time of the animation currently being played.
+   *
+   * @return current animation play time, or null if not playing.
+   */
+  public float getCurrentAnimationPlayTime() {
+    return animationPlayTime;
+  }
+
+  /**
    * Has the playing animation finished? This will always be false for looping animations.
    *
    * @return true if animation was playing and has now finished, false otherwise.

@@ -5,9 +5,11 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.dialog.AchievementDialogComponent;
@@ -54,17 +56,30 @@ class DialogServiceTest {
 
     // Create real services
     renderService = new RenderService();
-    resourceService = new ResourceService();
+    resourceService = mock(ResourceService.class); // use field so we register the same instance
+    Texture mockTexture = mock(Texture.class);
+    when(resourceService.getAsset(any(), eq(Texture.class))).thenReturn(mockTexture);
+    Sound mockSound = mock(Sound.class);
+    when(mockSound.play(anyFloat())).thenReturn(1L);
+
+    when(resourceService.getAsset("sounds/dialog.mp3", Sound.class)).thenReturn(mockSound);
+    when(resourceService.getAsset("sounds/error.mp3", Sound.class)).thenReturn(mockSound);
+    when(resourceService.getAsset("sounds/achievement_unlock.mp3", Sound.class))
+        .thenReturn(mockSound);
 
     // Mock the stage
     when(mockStage.getWidth()).thenReturn(800f);
     when(mockStage.getHeight()).thenReturn(600f);
 
+    SettingsService mockSettingsService = mock(SettingsService.class);
+    when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
     // Set the stage on the render service
     renderService.setStage(mockStage);
 
-    // Register services with ServiceLocator
+    // Ensure a clean slate then register all required services (order matters before DialogService
+    // creation)
     ServiceLocator.clear();
+    ServiceLocator.registerSettingsService(mockSettingsService);
     ServiceLocator.registerRenderService(renderService);
     ServiceLocator.registerResourceService(resourceService);
     ServiceLocator.registerGlobalResourceService(resourceService);

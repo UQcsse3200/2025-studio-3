@@ -9,12 +9,28 @@
         "assetPath": "images/entities/defences/sling_shooter_1.png",
         "atlasPath": "images/entities/defences/sling_shooter.atlas",
         "projectilePath": "images/effects/sling_projectile.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
         "damage": 1,
         "direction": "right",
         "numSprites": 46,
         "attackSpeed": 1,
         "critChance": 1
+      },
+      "shield": {
+        "health": 200,
+        "range": 90,
+        "name": "Riot Shield",
+        "description": "They say his brain is the size of a walnut. Big shield, even bigger heart",
+        "assetPath": "images/entities/defences/shield_1.png",
+        "atlasPath": "images/entities/defences/shield.atlas",
+        "projectilePath": null,
+        "cost": 150,
+        "damage": 0,
+        "direction": "right",
+        "numSprites": 4,
+        "attackSpeed": 1,
+        "critChance": 0
       },
       "armyguy" : {
         "health": 80,
@@ -24,11 +40,42 @@
         "assetPath": "images/entities/defences/army_guy_1.png",
         "atlasPath": "images/entities/defences/machine_gun.atlas",
         "projectilePath": "images/effects/bullet.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
         "damage": 1,
         "direction": "right",
         "numSprites": 14,
         "attackSpeed": 0.5,
+        "critChance": 1
+      },
+      "harpoon" : {
+        "health": 50,
+        "range": 750,
+        "name": "Harpoon",
+        "description": "",
+        "assetPath": "images/entities/defences/harpoon0.png",
+        "atlasPath": "images/entities/defences/harpoon.atlas",
+        "projectilePath": "images/effects/harpoon_projectile.png",
+        "cost": 100,
+        "damage": 1,
+        "direction": "right",
+        "numSprites": 26,
+        "attackSpeed": 1,
+        "critChance": 1
+      },
+      "mortar" : {
+        "health": 100,
+        "range": 1000,
+        "name": "Mortar",
+        "description": "",
+        "assetPath": "images/entities/defences/mortar0.png",
+        "atlasPath": "images/entities/defences/mortar.atlas",
+        "projectilePath": "images/effects/shell.png",
+        "cost": 100,
+        "damage": 5,
+        "direction": "right",
+        "numSprites": 43,
+        "attackSpeed": 1,
         "critChance": 1
       },
       "shadow" : {
@@ -39,8 +86,9 @@
         "assetPath": "images/entities/defences/shadow_idle1.png",
         "atlasPath": "images/entities/defences/shadow.atlas",
         "projectilePath": "images/effects/shock.png",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 100,
-        "damage": 1,
+        "damage": 2,
         "direction": "left",
         "numSprites": 4,
         "attackSpeed": 1.5,
@@ -52,12 +100,28 @@
         "name": "Wall",
         "assetPath": "images/entities/defences/wall.png",
         "atlasPath": "images/entities/defences/wall.atlas",
+        "soundPath": "sounds/slingshooter-place.mp3",
         "projectilePath": "",
         "damage": 0,
         "direction": "right",
         "numSprites": 2,
         "attackSpeed": 0,
         "critChance": 0
+      },
+      "boxer": {
+        "health": 60,
+        "range": 100,
+        "name": "Boxer",
+        "description": "Now this guy packs a punch. He can't hit far, but he sure hits hard",
+        "assetPath": "images/entities/defences/boxer_1.png",
+        "atlasPath": "images/entities/defences/boxer.atlas",
+        "projectilePath": "images/effects/default_projectile.png",
+        "cost": 150,
+        "damage": 5,
+        "direction": "right",
+        "numSprites": 3,
+        "attackSpeed": 1,
+        "critChance": 1
       }
     },
     "generators": {
@@ -69,7 +133,18 @@
         "health": 50,
         "interval": 12,
         "scrapValue": 25,
-        "cost": 50
+        "cost": 50,
+        "soundPath": "sounds/forge-place.mp3"
+      },
+      "healer": {
+        "name": "Healer",
+        "description": "Skibidi",
+        "assetPath": "images/entities/defences/healer_1.png",
+        "atlasPath": "images/entities/defences/healer.atlas",
+        "health": 50,
+        "interval": 0,
+        "scrapValue": 0,
+        "cost": 200
       }
     }
   }

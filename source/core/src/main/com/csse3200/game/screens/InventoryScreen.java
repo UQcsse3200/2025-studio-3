@@ -15,6 +15,8 @@ import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +49,7 @@ public class InventoryScreen extends ScreenAdapter {
     renderer.getCamera().getEntity().setPosition(5f, 5f);
     loadAssets();
     createUI();
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
   }
 
   @Override
@@ -92,7 +95,11 @@ public class InventoryScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     Entity ui = new Entity();
-    ui.addComponent(new InventoryDisplay(game)).addComponent(new InputDecorator(stage, 10));
+    ui.addComponent(new InventoryDisplay(game))
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
     ServiceLocator.getEntityService().register(ui);
   }
 }

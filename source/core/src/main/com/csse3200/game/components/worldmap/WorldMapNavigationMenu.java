@@ -93,6 +93,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     plaqueTable.add(skillPointsLabel).padRight(10f);
     plaqueTable.add(coinsIcon).size(ICON_SIZE, ICON_SIZE).padRight(5f);
     plaqueTable.add(coinsLabel);
+    plaqueBackground.toFront();
     stage.addActor(plaqueTable);
     createButtons(x, y);
     updateDisplay();

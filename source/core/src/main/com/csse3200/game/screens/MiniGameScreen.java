@@ -22,6 +22,8 @@ import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,7 +52,7 @@ public class MiniGameScreen extends ScreenAdapter {
     ServiceLocator.registerRenderService(new RenderService());
 
     renderer = RenderFactory.createRenderer();
-
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
     loadAssets();
     createUI();
   }
@@ -106,7 +108,10 @@ public class MiniGameScreen extends ScreenAdapter {
         .addComponent(new MiniGameActions(game))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
     ServiceLocator.getEntityService().register(ui);
     logger.debug("mini game screen ui is created and registered");
   }
