@@ -112,14 +112,20 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createBossProjectile(int)" class="member-name-link">createBossProjectile</a><wbr>(int&nbsp;damage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createProjectile(java.lang.String,int)" class="member-name-link">createProjectile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
- int&nbsp;damage)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createGunnerProjectile(int,float)" class="member-name-link">createGunnerProjectile</a><wbr>(int&nbsp;damage,
+ float&nbsp;speed)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a gunner robot projectile entity.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createProjectile(java.lang.String,int)" class="member-name-link">createProjectile</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path,
+ int&nbsp;damage)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Creates and returns a projectile entity given it's sprite path and the damage it deals</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getProjectileTypeFromPath(java.lang.String)" class="member-name-link">getProjectileTypeFromPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getProjectileTypeFromPath(java.lang.String)" class="member-name-link">getProjectileTypeFromPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -155,6 +161,25 @@ loadScripts(document, 'script');</script>
 <dd><code>damage</code> - amount of damage that the projectile does</dd>
 <dt>Returns:</dt>
 <dd>projectile entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createGunnerProjectile(int,float)">
+<h3>createGunnerProjectile</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createGunnerProjectile</span><wbr><span class="parameters">(int&nbsp;damage,
+ float&nbsp;speed)</span></div>
+<div class="block">Creates a gunner robot projectile entity.
+
+ <p>The bullet shot is designed to be used by robot entities such as gunner robot. It includes
+ components for physics, collision, attack damage, and rendering. The projectile is set to deal
+ damage to enemies and is destroyed upon impact.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>damage</code> - amount of damage dealt to an enemy entity</dd>
+<dd><code>speed</code> - the speed the bullet shot moves at</dd>
+<dt>Returns:</dt>
+<dd>entity representing a bullet shot projectile</dd>
 </dl>
 </section>
 </li>

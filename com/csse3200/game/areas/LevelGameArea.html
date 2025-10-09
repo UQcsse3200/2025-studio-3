@@ -295,18 +295,23 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Spawns a robot directly on top of an existing defence (placed unit) on the grid.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnRobotProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns a projectile (bullet) for the gunner robot type</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds a unit to the grid</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts stage (mouse/screen) coordinates into world (entity placement) coordinates</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts world (entity placement) coordinates into stage (mouse/screen) coordinates</div>
 </div>
 </div>
@@ -406,6 +411,17 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnRobotProjectile(com.badlogic.gdx.math.Vector2)">
+<h3>spawnRobotProjectile</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnRobotProjectile</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</span></div>
+<div class="block">Spawns a projectile (bullet) for the gunner robot type</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>spawnPos</code> - the position to spawn the projectile at</dd>
+</dl>
 </section>
 </li>
 <li>
