@@ -5,16 +5,24 @@ import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseItemConfig;
+import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.physics.PhysicsEngine;
+import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ConfigService;
@@ -24,8 +32,11 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -347,5 +358,97 @@ class LevelGameAreaTest {
 
     // Assert
     verify(overlay).cancel();
+  }
+
+  @Test
+  void loadLevelConfiguration_usesDefaultMapPath_whenConfigMapPathMissing() throws Exception {
+    // Return a level config with rows/cols but NO map file path
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(7);
+    when(levelCfg.getCols()).thenReturn(11);
+    when(levelCfg.getMapFile()).thenReturn(null);
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    LevelGameArea area = new LevelGameArea("levelOne");
+
+    // Reflect to verify private fields populated by loadLevelConfiguration()
+    Field rowsF = LevelGameArea.class.getDeclaredField("levelRows");
+    Field colsF = LevelGameArea.class.getDeclaredField("levelCols");
+    Field mapF = LevelGameArea.class.getDeclaredField("mapFilePath");
+    rowsF.setAccessible(true);
+    colsF.setAccessible(true);
+    mapF.setAccessible(true);
+
+    assertEquals(7, rowsF.getInt(area));
+    assertEquals(11, colsF.getInt(area));
+    assertEquals("images/backgrounds/level_map_grass.png", (String) mapF.get(area));
+  }
+
+  @Test
+  void create_populatesUnitAndItemLists_andSpawnsWindows() throws Exception {
+    // Provide a valid level config with a concrete map path so create() can run safely
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    // Provide defender/generator/item configs with asset paths for lists
+    BaseDefenderConfig slingCfg = mock(BaseDefenderConfig.class);
+    when(slingCfg.getAssetPath()).thenReturn("images/entities/defences/slingshooter.png");
+    BaseDefenderConfig furnaceCfg = mock(BaseDefenderConfig.class);
+    when(furnaceCfg.getAssetPath()).thenReturn("images/entities/defences/furnace.png");
+    when(configService.getDefenderConfig("slingshooter")).thenReturn(slingCfg);
+    when(configService.getDefenderConfig("furnace")).thenReturn(furnaceCfg);
+
+    BaseItemConfig grenadeCfg = mock(BaseItemConfig.class);
+    when(grenadeCfg.getAssetPath()).thenReturn("images/entities/items/grenade.png");
+    when(configService.getItemConfig("grenade")).thenReturn(grenadeCfg);
+
+    PhysicsService physicsService = mock(PhysicsService.class, RETURNS_DEEP_STUBS);
+    PhysicsEngine physicsEngine = mock(PhysicsEngine.class, RETURNS_DEEP_STUBS);
+
+    // Make sure getPhysics() returns the engine mock
+    when(physicsService.getPhysics()).thenReturn(physicsEngine);
+
+    // Ensure any call that could return a Box2D Body or similar is safe
+    when(physicsEngine.createBody(any())).thenReturn(mock(Body.class));
+    when(physicsEngine.getWorld()).thenReturn(mock(World.class));
+
+    // Register in the ServiceLocator
+    ServiceLocator.registerPhysicsService(physicsService);
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+
+    BaseDefenderConfig wallCfg = mock(BaseDefenderConfig.class);
+    when(wallCfg.getAtlasPath()).thenReturn("images/entities/defences/wall.atlas");
+    when(configService.getDefenderConfig("wall")).thenReturn(wallCfg);
+
+    TextureAtlas atlas = mock(TextureAtlas.class, RETURNS_DEEP_STUBS);
+    when(resourceService.getAsset(anyString(), eq(TextureAtlas.class))).thenReturn(atlas);
+    when(atlas.findRegions(anyString())).thenReturn(new com.badlogic.gdx.utils.Array<>());
+
+    area.create(); // calls displayUI(), spawnMap(), spawnGrid(), overlay creation
+
+    // Inspect private maps populated by displayUI()
+    Field unitListF = LevelGameArea.class.getDeclaredField("unitList");
+    Field itemListF = LevelGameArea.class.getDeclaredField("itemList");
+    Field gameOverF = LevelGameArea.class.getDeclaredField("gameOverEntity");
+    Field lvlCompleteF = LevelGameArea.class.getDeclaredField("levelCompleteEntity");
+    unitListF.setAccessible(true);
+    itemListF.setAccessible(true);
+    gameOverF.setAccessible(true);
+    lvlCompleteF.setAccessible(true);
+
+    @SuppressWarnings("unchecked")
+    Map<String, Supplier<Entity>> unitList = (Map<String, Supplier<Entity>>) unitListF.get(area);
+    @SuppressWarnings("unchecked")
+    Map<String, Supplier<Entity>> itemList = (Map<String, Supplier<Entity>>) itemListF.get(area);
+
+    assertTrue(unitList.containsKey("images/entities/defences/slingshooter.png"));
+    assertTrue(unitList.containsKey("images/entities/defences/furnace.png"));
+    assertTrue(itemList.containsKey("images/entities/items/grenade.png"));
+
+    assertNotNull(gameOverF.get(area)); // createGameOverEntity()
+    assertNotNull(lvlCompleteF.get(area)); // LevelCompletedWindow()
   }
 }
