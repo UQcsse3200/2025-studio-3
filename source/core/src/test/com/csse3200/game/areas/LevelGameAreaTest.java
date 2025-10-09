@@ -517,4 +517,52 @@ class LevelGameAreaTest {
     area.checkGameOver();
     verify(goSound, times(1)).play(anyFloat());
   }
+
+  @Test
+  void checkLevelComplete_tripsAtWaveFour_andIsIdempotent() throws Exception {
+    // Simple level config for create()
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    // Spy and bypass wall spawning
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    // Wave service determines current wave index
+    WaveService waves = mock(WaveService.class);
+    when(waves.getCurrentWave()).thenReturn(4);
+    ServiceLocator.registerWaveService(waves);
+
+    Field flag = LevelGameArea.class.getDeclaredField("isLevelComplete");
+    flag.setAccessible(true);
+    assertFalse(flag.getBoolean(area));
+
+    area.checkLevelComplete();
+    assertTrue(flag.getBoolean(area));
+
+    // Verify idempotence
+    area.checkLevelComplete();
+    assertTrue(flag.getBoolean(area));
+  }
+
+  @Test
+  void create_spawnsOverlayAndGridWithoutError() {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    // Spy and skip Box2D wall creation
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    assertDoesNotThrow(area::create);
+    assertNotNull(area.getGrid());
+  }
 }
