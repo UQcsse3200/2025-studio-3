@@ -7,6 +7,9 @@ import com.badlogic.gdx.Input;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.persistence.Settings;
+import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +25,15 @@ class MiniGameInputComponentTest {
     mockEntity = mock(Entity.class);
     mockEventHandler = mock(EventHandler.class);
     when(mockEntity.getEvents()).thenReturn(mockEventHandler);
+
+    // Mock settings service to align with new keybinding-driven logic
+    SettingsService mockSettingsService = mock(SettingsService.class);
+    Settings mockSettings = mock(Settings.class);
+    when(mockSettingsService.getSettings()).thenReturn(mockSettings);
+    when(mockSettings.getLeftButton()).thenReturn(Input.Keys.LEFT);
+    when(mockSettings.getRightButton()).thenReturn(Input.Keys.D);
+    when(mockSettings.getSkipButton()).thenReturn(Input.Keys.SPACE);
+    ServiceLocator.registerSettingsService(mockSettingsService);
   }
 
   @Test
