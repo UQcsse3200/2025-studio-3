@@ -65,5 +65,6 @@ com.csse3200.game.services
 com.csse3200.game.ui
 com.csse3200.game.ui.terminal
 com.csse3200.game.ui.terminal.commands
+com.csse3200.game.ui.tutorial
 com.csse3200.game.utils
 com.csse3200.game.utils.math

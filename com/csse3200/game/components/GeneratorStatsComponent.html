@@ -115,9 +115,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int)" class="member-name-link">GeneratorStatsComponent</a><wbr>(int&nbsp;health,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(int,int,int,int)" class="member-name-link">GeneratorStatsComponent</a><wbr>(int&nbsp;health,
  int&nbsp;interval,
- int&nbsp;scrapValue)</code></div>
+ int&nbsp;scrapValue,
+ int&nbsp;cost)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Creates a new GeneratorStatsComponent with the given stats</div>
 </div>
@@ -136,14 +137,24 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInterval()" class="member-name-link">getInterval</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCost()" class="member-name-link">getCost</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns the current interval value.</div>
+<div class="block">Returns the scrap cost of the generator.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScrapValue()" class="member-name-link">getScrapValue</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInterval()" class="member-name-link">getInterval</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the current interval value.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getScrapValue()" class="member-name-link">getScrapValue</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the current scrap value.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCost(int)" class="member-name-link">setCost</a><wbr>(int&nbsp;cost)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the scrap cost of the generator.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setInterval(int)" class="member-name-link">setInterval</a><wbr>(int&nbsp;interval)</code></div>
@@ -179,17 +190,19 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(int,int,int)">
+<section class="detail" id="&lt;init&gt;(int,int,int,int)">
 <h3>GeneratorStatsComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">GeneratorStatsComponent</span><wbr><span class="parameters">(int&nbsp;health,
  int&nbsp;interval,
- int&nbsp;scrapValue)</span></div>
+ int&nbsp;scrapValue,
+ int&nbsp;cost)</span></div>
 <div class="block">Creates a new GeneratorStatsComponent with the given stats</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>health</code> - the maximum health of the generator</dd>
 <dd><code>interval</code> - the currency generation rate</dd>
 <dd><code>scrapValue</code> - the value of the scrap generated</dd>
+<dd><code>cost</code> - the scrap cost of the generator</dd>
 </dl>
 </section>
 </li>
@@ -242,6 +255,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>scrapValue</code> - new scrap value</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setCost(int)">
+<h3>setCost</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCost</span><wbr><span class="parameters">(int&nbsp;cost)</span></div>
+<div class="block">Sets the scrap cost of the generator. If the provided value is negative, the cost is set to 0.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>cost</code> - new cost value.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getCost()">
+<h3>getCost</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getCost</span>()</div>
+<div class="block">Returns the scrap cost of the generator.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the cost amount.</dd>
 </dl>
 </section>
 </li>
