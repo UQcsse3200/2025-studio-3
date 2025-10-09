@@ -451,4 +451,32 @@ class LevelGameAreaTest {
     assertNotNull(gameOverF.get(area)); // createGameOverEntity()
     assertNotNull(lvlCompleteF.get(area)); // LevelCompletedWindow()
   }
+
+  @Test
+  void create_loadsMapTextureWhenNotPreloaded() {
+    final String path = "images/backgrounds/not_preloaded.png";
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn(path);
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    PhysicsService physicsService = mock(PhysicsService.class, RETURNS_DEEP_STUBS);
+    PhysicsEngine physicsEngine = mock(PhysicsEngine.class, RETURNS_DEEP_STUBS);
+    when(physicsService.getPhysics()).thenReturn(physicsEngine);
+    ServiceLocator.registerPhysicsService(physicsService);
+
+    Texture tex = mock(Texture.class);
+    when(resourceService.getAsset(eq(path), eq(Texture.class))).thenReturn(null, tex);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    // Skip wall spawning to avoid PolygonShape native call
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    verify(resourceService).loadTextures(argThat(arr -> arr.length == 1 && path.equals(arr[0])));
+    verify(resourceService).loadAll();
+    verify(resourceService, atLeast(2)).getAsset(eq(path), eq(Texture.class));
+  }
 }
