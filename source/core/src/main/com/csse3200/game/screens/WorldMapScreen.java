@@ -167,7 +167,7 @@ public class WorldMapScreen extends BaseScreen {
     // Dev hotkeys every frame
     handleDevHotkeys();
 
-    //enforceCameraZoomStep();
+    // enforceCameraZoomStep();
 
     // If movement keys are pressed, smoothly recenter view to player when player is not moving
     if (playerEntity != null) {
@@ -178,7 +178,7 @@ public class WorldMapScreen extends BaseScreen {
           || Gdx.input.isKeyJustPressed(settingsService.getSettings().getRightButton())) {
         WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);
         if (comp != null && !comp.isCurrentlyMoving()) {
-          //startSmoothRecenterToPlayer();
+          // startSmoothRecenterToPlayer();
         }
       }
     }
@@ -189,7 +189,7 @@ public class WorldMapScreen extends BaseScreen {
     }
 
     // Run one-shot smooth recenter if requested (does not enable follow mode)
-    //updateSmoothRecentering();
+    // updateSmoothRecentering();
 
     super.render(delta);
 
