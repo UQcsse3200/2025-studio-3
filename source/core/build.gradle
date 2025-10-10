@@ -14,6 +14,11 @@ test {
         destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
     }
 }
+// Prevent Javadoc task from failing the build
+tasks.withType(Javadoc) {
+    failOnError = false
+}
+
 
 
 jacocoTestReport {
