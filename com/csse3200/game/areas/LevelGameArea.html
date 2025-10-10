@@ -240,14 +240,24 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Checks if a character is currently selected.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markNextPlacementFree()" class="member-name-link">markNextPlacementFree</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Remove a unit form a tile</div>
+<div class="block">Mark the next unit placement as free (used by slot-machine rewards).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Remove a unit form a tile</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adjusts all entities after a window resize by recalculating world scale and layout.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#screenToGridIndex(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">screenToGridIndex</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;screenPx)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Convert SCREEN pixel coordinates (window pixels) into a grid index.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
@@ -353,6 +363,13 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="markNextPlacementFree()">
+<h3>markNextPlacementFree</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markNextPlacementFree</span>()</div>
+<div class="block">Mark the next unit placement as free (used by slot-machine rewards). One-shot flag.</div>
+</section>
+</li>
 <li>
 <section class="detail" id="setScaling()">
 <h3>setScaling</h3>
@@ -476,6 +493,14 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <dt>Parameters:</dt>
 <dd><code>unit</code> - Entity in the inventory</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="screenToGridIndex(com.badlogic.gdx.math.GridPoint2)">
+<h3>screenToGridIndex</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">screenToGridIndex</span><wbr><span class="parameters">(com.badlogic.gdx.math.GridPoint2&nbsp;screenPx)</span></div>
+<div class="block">Convert SCREEN pixel coordinates (window pixels) into a grid index. Returns -1 if the point is
+ outside the grid.</div>
 </section>
 </li>
 <li>
