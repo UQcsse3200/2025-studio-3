@@ -27,7 +27,6 @@ import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
-import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -86,6 +85,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   // Drag and drop variables
   private DragOverlay dragOverlay;
   private boolean characterSelected = false;
+  // Next placement comes from slot-machine reward and should be free (one-shot flag)
+  private boolean nextPlacementFree = false;
+
+  /** Mark the next unit placement as free (used by slot-machine rewards). One-shot flag. */
+  public void markNextPlacementFree() {
+    this.nextPlacementFree = true;
+  }
 
   // Level configuration
   private final String currentLevelKey;
@@ -714,6 +720,20 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
+   * Convert SCREEN pixel coordinates (window pixels) into a grid index. Returns -1 if the point is
+   * outside the grid.
+   */
+  public int screenToGridIndex(GridPoint2 screenPx) {
+    GridPoint2 worldPx = stageToWorld(screenPx); // convert screen -> stage -> world
+    int col = (int) Math.floor((worldPx.x - xOffset) / tileSize);
+    int row = (int) Math.floor((worldPx.y - yOffset) / tileSize);
+    if (col < 0 || col >= levelCols || row < 0 || row >= levelRows) {
+      return -1;
+    }
+    return row * levelCols + col;
+  }
+
+  /**
    * Adds a unit to the grid
    *
    * @param position the grid tile for spawning
@@ -826,29 +846,38 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    * world.
    */
   private void placeDefenceUnit(int position, Entity tile, Entity unit, Vector2 worldPos) {
-    // Check for enough scrap
+    // Check for enough scrap (unless next placement flagged free)
     GeneratorStatsComponent generator = unit.getComponent(GeneratorStatsComponent.class);
     DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
-    int cost;
+    int cost = 0;
     if (generator != null) {
       cost = generator.getCost();
-    } else {
+    } else if (defence != null) {
       cost = defence.getCost();
     }
 
-    // Checks if the player has sufficient scrap
-    if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
-      logger.info(
-          "Not enough scrap for this entity. Need {} but have {}",
-          cost,
-          ServiceLocator.getCurrencyService().get());
-      ui.getEvents().trigger("insufficientScrap");
-      setSelectedUnit(null);
-      cancelDrag();
-      return;
-    }
+    boolean free = this.nextPlacementFree;
+    this.nextPlacementFree = false; // one-shot consume
 
-    ServiceLocator.getCurrencyService().add(-cost);
+    if (!free) {
+      if (!ServiceLocator.getCurrencyService().canAfford(cost)) {
+        logger.info(
+            "Not enough scrap for this entity. Need {} but have {}",
+            cost,
+            ServiceLocator.getCurrencyService().get());
+        if (ui != null) {
+          ui.getEvents().trigger("insufficientScrap");
+        } else {
+          logger.warn("UI entity is null; skipping 'insufficientScrap' event trigger.");
+        }
+        setSelectedUnit(null);
+        cancelDrag();
+        return;
+      }
+      ServiceLocator.getCurrencyService().add(-cost);
+    } else {
+      logger.info("Slot reward placement: cost waived (free placement)");
+    }
 
     tile.getComponent(TileStorageComponent.class).setTileUnit(unit);
     unit.scaleHeight(tileSize);

@@ -121,6 +121,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/slotmachine/pie_filled.atlas",
     "images/entities/enemies/fast_robot.atlas",
     "images/entities/enemies/tanky_robot.atlas"
   };
