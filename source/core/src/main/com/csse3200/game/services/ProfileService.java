@@ -3,6 +3,7 @@ package com.csse3200.game.services;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.progression.Profile;
+import java.util.Arrays;
 import java.util.List;
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
@@ -17,6 +18,9 @@ import org.slf4j.LoggerFactory;
  */
 public class ProfileService {
   private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
+  // Ordered mainline levels used to infer progression without storing unlock/completion state
+  private static final List<String> MAINLINE_LEVELS =
+      Arrays.asList("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
   private Profile profile;
   private boolean isActive;
   private int currentSlot;
@@ -101,48 +105,54 @@ public class ProfileService {
   }
 
   /**
-   * Marks the given level as completed and optionally unlocks the next one. This ensures completed
-   * levels remain replayable.
+   * Returns the next mainline level key after the provided current key, or null if there is no
+   * next.
    */
-  public void markLevelComplete(String currentKey, String nextKey) {
+  private String nextMainlineOf(String currentKey) {
+    if (currentKey == null) {
+      return null;
+    }
+    int idx = MAINLINE_LEVELS.indexOf(currentKey);
+    if (idx == -1 || idx + 1 >= MAINLINE_LEVELS.size()) {
+      return null; // not in mainline or already at last level
+    }
+    return MAINLINE_LEVELS.get(idx + 1);
+  }
+
+  /**
+   * Marks the given level as completed and advances the mainline pointer solely based on the
+   * current level. This method no longer records unlocked/completed nodes; it only updates {@code
+   * currentLevel} to the next mainline level (if any within five levels).
+   *
+   * <p>Rules:
+   *
+   * <ul>
+   *   <li>If {@code currentKey} is one of levelOne..levelFive and not the last, set {@code
+   *       currentLevel} to the next one.
+   *   <li>If {@code currentKey} is levelFive or not a recognised mainline key, leave {@code
+   *       currentLevel} unchanged.
+   *   <li>No writes to unlockedNodes or completedNodes.
+   * </ul>
+   *
+   * After updating, the profile is saved immediately to the active slot.
+   *
+   * @param currentKey the key of the level just completed (e.g., {@code levelTwo})
+   */
+  public void markLevelComplete(String currentKey) {
     if (profile == null) {
       logger.warn("Attempted to mark level complete but profile is null.");
       return;
     }
-
-    // Always mark the played level as completed (replayable)
-    profile.completeNode(currentKey);
-
-    // Cache the current mainline pointer before any updates
-    final String tip = profile.getCurrentLevel();
-
-    // Unlock next main level if provided
-    if (nextKey != null && !nextKey.isEmpty()) {
-      profile.unlockNode(nextKey);
-
-      // Advance the mainline pointer ONLY when the player just cleared the current tip.
-      // This prevents regressions when replaying earlier levels (e.g., clearing levelTwo
-      // after already reaching levelFour should NOT move currentLevel backward).
-      if (tip == null || tip.equals(currentKey)) {
-        profile.setCurrentLevel(nextKey);
-      } else {
-        logger.debug(
-            "[ProfileService] Replay detected: keep currentLevel at '{}' (completed '{}'), just unlocked '{}'.",
-            tip,
-            currentKey,
-            nextKey);
-      }
+    final String next = nextMainlineOf(currentKey);
+    if (next != null) {
+      profile.setCurrentLevel(next);
+      logger.info("[ProfileService] Advanced currentLevel from '{}' to '{}'.", currentKey, next);
+    } else {
+      logger.debug(
+          "[ProfileService] No next mainline after '{}'; currentLevel unchanged.", currentKey);
     }
-
-    // Ensure special nodes remain unlocked (not completed)
-    for (String s : Profile.DEFAULT_UNLOCKED) {
-      profile.unlockNode(s);
-    }
-
-    // Persist immediately
+    // Persist only the updated currentLevel
     saveCurrentProfile();
-
-    logger.info("[ProfileService] Level '{}' completed. Next '{}' processed.", currentKey, nextKey);
   }
 
   /**
