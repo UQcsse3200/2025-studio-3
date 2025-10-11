@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.runtime.states;
 
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 import com.csse3200.game.cutscene.models.object.Character;
 import com.csse3200.game.cutscene.models.object.Position;
@@ -14,6 +15,7 @@ public class CharacterState {
   private float opacity;
   private boolean onScreen;
   private SpriteDrawable texture;
+  private Image image;
   private Position position;
 
   /**
@@ -131,6 +133,24 @@ public class CharacterState {
    */
   public void setTexture(SpriteDrawable texture) {
     this.texture = texture;
+    if (this.image == null) {
+      this.image = new Image(texture);
+    } else {
+      this.image.setDrawable(texture);
+    }
+  }
+
+  public void updateImage() {
+    this.image.setDrawable(this.texture);
+  }
+
+  /**
+   * Gets the image.
+   *
+   * @return The image for the character
+   */
+  public Image getImage() {
+    return image;
   }
 
   /**

@@ -1,6 +1,7 @@
 package com.csse3200.game.cutscene.runtime;
 
 import com.csse3200.game.cutscene.models.object.Cutscene;
+import com.csse3200.game.cutscene.models.object.actiondata.ActionData;
 
 /** Responsible for managing the state of a cutscene. */
 public interface CutsceneOrchestrator {
@@ -18,6 +19,14 @@ public interface CutsceneOrchestrator {
    */
   void update(float dt);
 
+  /**
+   * Get the {@link ActionState} from the given {@link ActionData}
+   *
+   * @param actionData the data to get the corresponding state for
+   * @return an {@link ActionState} for the given actionData
+   */
+  ActionState getActionState(ActionData actionData);
+
   /** Key or click to advance */
   void advance();
 
@@ -27,6 +36,13 @@ public interface CutsceneOrchestrator {
    * @param id The id of the choice made
    */
   void choose(String id);
+
+  /**
+   * Goto a specific beat from the beats ID
+   *
+   * @param id the ID of the beat to jump to
+   */
+  void gotoBeat(String id);
 
   /**
    * Get the current state of the orchestrator

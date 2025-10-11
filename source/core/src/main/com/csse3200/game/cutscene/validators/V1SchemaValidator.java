@@ -6,6 +6,9 @@ import java.util.*;
 
 /** Schema Validator for Version 1 of the cutscene schema. */
 public class V1SchemaValidator implements SchemaValidator {
+  static final String BEATS_PATH = "doc.cutscene.beats.";
+  static final String CHARACTERS_PATH = "doc.characters.";
+
   private Set<String> characterIds;
   private Set<String> backgroundIds;
   private Set<String> soundIds;
@@ -258,7 +261,7 @@ public class V1SchemaValidator implements SchemaValidator {
           cutsceneErrors.add(
               new AuthoringError(
                   "BEAT_ID_EXISTS",
-                  "doc.cutscene.beats." + beat.id,
+                  BEATS_PATH + beat.id,
                   "The beat id " + beat.id + " already exists"));
         } else {
           beatIds.add(beat.id);
@@ -304,25 +307,22 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.advance == null)
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ADVANCE_NULL",
-              "doc.cutscene.beats." + beat.id,
-              "Beat advance must not be null"));
+              "BEAT_ADVANCE_NULL", BEATS_PATH + beat.id, "Beat advance must not be null"));
     else
       switch (beat.advance.mode) {
         case null:
           beatErrors.add(
               new AuthoringError(
                   "BEAT_ADVANCE_MODE_NULL",
-                  "doc.cutscene.beats." + beat.id,
+                  BEATS_PATH + beat.id,
                   "Beat advance mode must not be null"));
           break;
-        case "auto":
-        case "input":
+        case "auto", "input":
           if (beat.advance.delay != null || beat.advance.signalKey != null)
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_UNEXPECTED",
-                    "doc.cutscene.beats." + beat.id,
+                    BEATS_PATH + beat.id,
                     "Unexpected value in auto advance"));
           break;
         case "auto_delay":
@@ -330,7 +330,7 @@ public class V1SchemaValidator implements SchemaValidator {
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_DELAY_INVALID",
-                    "doc.cutscene.beats." + beat.id,
+                    BEATS_PATH + beat.id,
                     "Invalid data for auto delay advance"));
           break;
         case "signal":
@@ -338,7 +338,7 @@ public class V1SchemaValidator implements SchemaValidator {
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_SIGNAL_INVALID",
-                    "doc.cutscene.beats." + beat.id,
+                    BEATS_PATH + beat.id,
                     "Invalid data for signal advance"));
           break;
         default:
@@ -348,9 +348,7 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.actions == null || beat.actions.isEmpty()) {
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ACTIONS_NULL",
-              "doc.cutscene.beats." + beat.id,
-              "Beat actions is null or empty"));
+              "BEAT_ACTIONS_NULL", BEATS_PATH + beat.id, "Beat actions is null or empty"));
     } else {
       for (ActionDTO action : beat.actions) {
         beatErrors.addAll(actionValidatorRegistry.validate(action, beat.id, validationCtx));

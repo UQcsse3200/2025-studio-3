@@ -1,0 +1,188 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    { "id": "danny", "name": "Danny", "poses": { "normal": "cutscenes/data/characters/rob/danny_normal.png" } },
+    { "id": "rob",   "name": "Rob",   "poses": { "normal": "cutscenes/data/characters/rob/rob_normal.png", "glitch": "cutscenes/data/characters/rob/rob_glitch.png" } },
+    { "id": "alice", "name": "Alice", "poses": { "hologram": "cutscenes/data/characters/rob/alice_hologram.png", "normal": "cutscenes/data/characters/rob/alice_normal.png" } }
+  ],
+  "backgrounds": [
+    { "id": "core_entry",      "image": "cutscenes/data/backgrounds/lab_dark.png" },
+    { "id": "core_datastream", "image": "cutscenes/data/backgrounds/core_city.png" },
+    { "id": "core_overload",   "image": "cutscenes/data/backgrounds/holo_room.png" }
+  ],
+  "cutscene": {
+    "id": "level3_intro_core",
+    "beats": [
+      {
+        "id": "init_clear",
+        "advance": { "mode": "auto" },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "rob",   "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 1, "await": false }
+        ]
+      },
+
+      {
+        "id": "show_core_entry",
+        "advance": { "mode": "auto_delay", "delay": 600 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "background.set", "backgroundId": "core_entry", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+
+      {
+        "id": "danny_intro",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 500, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "So this is it... the Core. Every heartbeat of the city runs through here.", "await": true }
+        ]
+      },
+
+      {
+        "id": "prep_rob_line",
+        "advance": { "mode": "auto_delay", "delay": 100 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 350, "await": true }
+        ]
+      },
+
+      {
+        "id": "rob_activation",
+        "advance": { "mode": "auto_delay", "delay": 1300 },
+        "actions": [
+          { "type": "character.enter", "characterId": "rob", "pose": "normal", "position": "right", "transition": "fade", "duration": 350, "await": true },
+          { "type": "dialogue.show", "characterId": "rob", "text": "Unauthorized entity detected. Access terminated.", "await": true }
+        ]
+      },
+
+      {
+        "id": "clear_after_rob",
+        "advance": { "mode": "auto_delay", "delay": 100 },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "rob", "transition": "slide", "duration": 350, "await": true }
+        ]
+      },
+
+      {
+        "id": "bg_to_datastream",
+        "advance": { "mode": "auto_delay", "delay": 200 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob",   "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 1, "await": false },
+          { "type": "background.set", "backgroundId": "core_datastream", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+
+      {
+        "id": "danny_found_signal",
+        "advance": { "mode": "auto_delay", "delay": 1200 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 450, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Alice's signal... found it.", "await": true }
+        ]
+      },
+
+      {
+        "id": "clear_for_alice",
+        "advance": { "mode": "auto_delay", "delay": 100 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 350, "await": true }
+        ]
+      },
+
+      {
+        "id": "alice_hologram",
+        "advance": { "mode": "auto_delay", "delay": 1400 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "right", "transition": "fade", "duration": 350, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Danny... they've tied me to the failsafe. If the core dies, I die.", "await": true }
+        ]
+      },
+
+      {
+        "id": "danny_reply_prep",
+        "advance": { "mode": "auto_delay", "delay": 100 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 300, "await": true }
+        ]
+      },
+
+      {
+        "id": "danny_reply",
+        "advance": { "mode": "auto_delay", "delay": 1200 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Then we'll rewrite the code.", "await": true }
+        ]
+      },
+
+      {
+        "id": "end_of_city_clear",
+        "advance": { "mode": "auto_delay", "delay": 150 },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "slide", "duration": 350, "await": true },
+          { "type": "character.exit", "characterId": "rob",   "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 1, "await": false }
+        ]
+      },
+
+      {
+        "id": "bg_to_overload",
+        "advance": { "mode": "auto_delay", "delay": 200 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob",   "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 1, "await": false },
+          { "type": "background.set", "backgroundId": "core_overload", "transition": "fade", "duration": 800, "await": true }
+        ]
+      },
+
+      {
+        "id": "overload_enter_both",
+        "advance": { "mode": "auto_delay", "delay": 400 },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "slide", "duration": 350, "await": true },
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "right", "transition": "fade", "duration": 350, "await": true }
+        ]
+      },
+
+      {
+        "id": "final_line",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 1, "await": false },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Hang on, Alice. One last firewall.", "await": true }
+        ]
+      },
+
+      {
+        "id": "cutscene_end",
+        "advance": { "mode": "auto_delay", "delay": 500 },
+        "actions": [
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 250, "await": false },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 250, "await": false },
+          { "type": "character.exit", "characterId": "rob",   "transition": "fade", "duration": 1,   "await": false }
+        ]
+      }
+    ]
+  }
+}

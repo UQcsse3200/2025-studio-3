@@ -48,6 +48,6 @@ public class NewGameMenuActions extends Component {
     ServiceLocator.getProfileService().createProfile(saveName, selectedSlot);
     ServiceLocator.getCutsceneService()
         .playCutscene(
-            "dialogue", cutsceneName -> this.game.setScreen(GdxGame.ScreenType.WORLD_MAP));
+            "intro_cutscene", cutsceneName -> this.game.setScreen(GdxGame.ScreenType.WORLD_MAP));
   }
 }

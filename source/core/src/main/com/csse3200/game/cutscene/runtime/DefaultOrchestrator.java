@@ -5,16 +5,17 @@ import com.csse3200.game.cutscene.models.object.Cutscene;
 import com.csse3200.game.cutscene.models.object.actiondata.*;
 import com.csse3200.game.cutscene.runtime.action.*;
 import com.csse3200.game.cutscene.runtime.states.*;
+import com.csse3200.game.exceptions.InvalidGotoBeatId;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Objects;
 
-public class DefaultOrchestrator implements CutsceneOrchestrator {
+public class DefaultOrchestrator extends OrchestratorState implements CutsceneOrchestrator {
   private OrchestratorState state;
   private Cutscene cutscene;
-  private ListIterator<Beat> beats;
+  private List<Beat> beats;
   private Beat beatIdx;
   private boolean running;
   private boolean paused;
@@ -22,6 +23,8 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
   private List<ActionState> queue = new ArrayList<>();
   private List<ActionState> active = new ArrayList<>();
   private boolean beatStarted;
+
+  private Beat gotoBeat;
 
   /**
    * Loads a cutscene from a {@link Cutscene} object
@@ -32,14 +35,16 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
   public void load(Cutscene cutscene) {
     this.state = new OrchestratorState();
     this.cutscene = cutscene;
-    this.beats = cutscene.getBeats().listIterator();
-    this.beatIdx = beats.next();
+    this.beats = cutscene.getBeats();
+    this.beatIdx = beats.getFirst();
     this.running = true;
     this.paused = false;
 
     this.queue = new ArrayList<>();
     this.active = new ArrayList<>();
     this.beatStarted = false;
+
+    this.gotoBeat = null;
 
     if (ServiceLocator.getTimeSource() == null) {
       ServiceLocator.registerTimeSource(new GameTime());
@@ -63,34 +68,7 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
           .forEach(
               action -> {
                 // make switch to create states for each action
-                ActionState actionState =
-                    switch (action) {
-                      case BackgroundSetData d ->
-                          new BackgroundSetAction(state.getBackgroundState(), d);
-                      case CharacterEnterData d -> {
-                        if (!state.getCharacterStates().containsKey(d.character())) {
-                          state
-                              .getCharacterStates()
-                              .put(d.character(), new CharacterState(d.character()));
-                        }
-                        yield new CharacterEnterAction(
-                            state.getCharacterStates().get(d.character()), d);
-                      }
-                      case CharacterExitData d -> {
-                        if (!state.getCharacterStates().containsKey(d.character())) {
-                          state
-                              .getCharacterStates()
-                              .put(d.character(), new CharacterState(d.character()));
-                        }
-                        yield new CharacterExitAction(
-                            state.getCharacterStates().get(d.character()), d);
-                      }
-                      case DialogueShowData d ->
-                          new DialogueShowAction(state.getDialogueState(), d);
-                      case DialogueHideData d ->
-                          new DialogueHideAction(state.getDialogueState(), d);
-                      default -> null;
-                    };
+                ActionState actionState = getActionState(action);
                 if (actionState != null) {
                   queue.add(actionState);
                 }
@@ -101,18 +79,21 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
       beatStarted = true;
     }
 
-    active.forEach(actionState -> actionState.tick(dtMs));
-
-    if (!active.isEmpty() && active.getFirst().done()) {
-      active.removeFirst();
-      if (!queue.isEmpty()) {
-        active.add(queue.getFirst());
-        queue.removeFirst();
+    if (!active.isEmpty() && active.stream().anyMatch(ActionState::done)) {
+      List<ActionState> completedActions = active.stream().filter(ActionState::done).toList();
+      for (ActionState action : completedActions) {
+        active.remove(action);
       }
-    } else if (active.isEmpty() && !queue.isEmpty()) {
+    }
+
+    boolean activeBlocking = active.stream().anyMatch(ActionState::blocking);
+
+    if (!activeBlocking && !queue.isEmpty()) {
       active.add(queue.getFirst());
       queue.removeFirst();
     }
+
+    active.forEach(actionState -> actionState.tick(dtMs));
 
     // if there are no more blocking actions move on to next beat
     boolean blocking =
@@ -123,12 +104,49 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
       queue.clear();
       beatStarted = false;
 
-      if (!beats.hasNext()) {
+      if (gotoBeat != null) {
+        beatIdx = gotoBeat;
+        gotoBeat = null;
+        return;
+      }
+
+      if (beats.getLast() == beatIdx) {
         ServiceLocator.getCutsceneService().end();
       } else {
-        beatIdx = beats.next();
+        beatIdx = beats.get(beats.indexOf(beatIdx) + 1);
       }
     }
+  }
+
+  /**
+   * Get the {@link ActionState} from the given {@link ActionData}
+   *
+   * @param actionData the data to get the corresponding state for
+   * @return an {@link ActionState} for the given actionData
+   */
+  public ActionState getActionState(ActionData actionData) {
+    return switch (actionData) {
+      case BackgroundSetData d -> new BackgroundSetAction(state.getBackgroundState(), d);
+      case CharacterEnterData d -> {
+        if (!state.getCharacterStates().containsKey(d.character())) {
+          state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
+        }
+        yield new CharacterEnterAction(state.getCharacterStates().get(d.character()), d);
+      }
+      case CharacterExitData d -> {
+        if (!state.getCharacterStates().containsKey(d.character())) {
+          state.getCharacterStates().put(d.character(), new CharacterState(d.character()));
+        }
+        yield new CharacterExitAction(state.getCharacterStates().get(d.character()), d);
+      }
+      case ChoiceData d ->
+          new ChoiceAction(this, state.getChoiceState(), state().getDialogueState(), d);
+      case DialogueShowData d -> new DialogueShowAction(state.getDialogueState(), d);
+      case DialogueHideData d -> new DialogueHideAction(state.getDialogueState(), d);
+      case GotoData d -> new GotoAction(this, d);
+      case ParallelData d -> new ParallelAction(this, d);
+      default -> null;
+    };
   }
 
   /** Key or click to advance */
@@ -136,6 +154,10 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
   public void advance() {
     if (active.size() == 1 && active.getFirst() instanceof SupportsAdvance) {
       ((SupportsAdvance) active.getFirst()).advance();
+    } else {
+      active.addAll(queue);
+      queue.clear();
+      active.forEach(ActionState::skip);
     }
   }
 
@@ -146,7 +168,24 @@ public class DefaultOrchestrator implements CutsceneOrchestrator {
    */
   @Override
   public void choose(String id) {
-    // Not implemented
+    active.clear();
+    queue.clear();
+    gotoBeat(id);
+  }
+
+  /**
+   * Goto a specific beat from the beats ID
+   *
+   * @param id the ID of the beat to jump to
+   */
+  @Override
+  public void gotoBeat(String id) {
+    Beat beatToGoto =
+        beats.stream().filter(beat -> Objects.equals(beat.getId(), id)).findFirst().orElse(null);
+    if (beatToGoto == null) {
+      throw new InvalidGotoBeatId("No valid beat could be found with the id " + id);
+    }
+    gotoBeat = beatToGoto;
   }
 
   /**

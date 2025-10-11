@@ -32,14 +32,20 @@ public class BackgroundSetAction implements ActionState {
     if (fadeLeftMs >= 0) {
       fadeLeftMs -= dtMs;
 
-      // TODO: this is having some fading issues, idk if it's here or in the rendering logic.
-
       float imageOpacity = (totalFadeDurationMs - (float) fadeLeftMs) / totalFadeDurationMs;
       backgroundState.setImageOpacity(imageOpacity);
       backgroundState.setOldImageOpacity(1 - imageOpacity);
     } else {
       done = true;
     }
+  }
+
+  /** Triggered on skip, will fast track any logic to its final state */
+  @Override
+  public void skip() {
+    backgroundState.setImageOpacity(1f);
+    backgroundState.setOldImageOpacity(0f);
+    done = true;
   }
 
   /**
