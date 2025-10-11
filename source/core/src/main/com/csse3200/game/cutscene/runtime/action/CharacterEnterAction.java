@@ -60,13 +60,9 @@ public class CharacterEnterAction implements ActionState {
             characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
           }
         }
-        case FADE -> {
-          characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
-        }
-        case POP -> {
-          characterState.setScale(
+        case FADE -> characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
+        case POP -> characterState.setScale(
               0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
-        }
         default -> {
           // do nothing
         }
@@ -90,7 +86,8 @@ public class CharacterEnterAction implements ActionState {
   public void skip() {
     switch (characterEnterData.transition()) {
       case SLIDE -> characterState.setxOffset(0f);
-      case FADE -> characterState.setOpacity(1f);
+      case FADE, REPLACE -> characterState.setOpacity(1f);
+      case POP -> characterState.setScale(1f);
     }
     done = true;
   }

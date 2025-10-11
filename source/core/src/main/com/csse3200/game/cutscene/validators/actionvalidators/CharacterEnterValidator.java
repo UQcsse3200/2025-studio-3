@@ -28,6 +28,9 @@ import java.util.List;
  * </ul>
  */
 public class CharacterEnterValidator implements ActionValidator {
+  private static final String CHARACTER_ID_FIELD = "characterId";
+  private static final String POSITION_FIELD = "position";
+
   /**
    * {@inheritDoc}
    *
@@ -43,7 +46,7 @@ public class CharacterEnterValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.fields.get("characterId"), "characterId", path);
+        ValidatorUtils.validateString(action.fields.get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
@@ -51,7 +54,7 @@ public class CharacterEnterValidator implements ActionValidator {
     errors.addAll(poseErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.fields.get("characterId");
+      String characterId = (String) action.fields.get(CHARACTER_ID_FIELD);
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(
@@ -62,24 +65,22 @@ public class CharacterEnterValidator implements ActionValidator {
 
       if (poseErrors.isEmpty()) {
         String pose = (String) action.fields.get("pose");
-        if (context.characterPoses().get(characterId) != null) {
-          if (!context.characterPoses().get(characterId).contains(pose)) {
+        if (context.characterPoses().get(characterId) != null && !context.characterPoses().get(characterId).contains(pose)) {
             errors.add(
                 new AuthoringError(
                     "ACTION_CHARACTER_POSE_INVALID",
                     path,
                     "Pose " + pose + " does not exist for the character " + characterId));
-          }
         }
       }
     }
 
     List<AuthoringError> positionErrors =
-        ValidatorUtils.validateString(action.fields.get("position"), "position", path);
+        ValidatorUtils.validateString(action.fields.get(POSITION_FIELD), POSITION_FIELD, path);
     errors.addAll(positionErrors);
 
     if (positionErrors.isEmpty()) {
-      String position = (String) action.fields.get("position");
+      String position = (String) action.fields.get(POSITION_FIELD);
 
       if (!position.equals("left") && !position.equals("right")) {
         errors.add(

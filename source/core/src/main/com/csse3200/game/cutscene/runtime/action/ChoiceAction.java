@@ -75,7 +75,9 @@ public class ChoiceAction implements ActionState {
 
   /** Triggered on skip, will fast track any logic to its final state */
   @Override
-  public void skip() {}
+  public void skip() {
+    // Choices can't be skipped
+  }
 
   /**
    * @return True if the action is blocking till completion (false if async)

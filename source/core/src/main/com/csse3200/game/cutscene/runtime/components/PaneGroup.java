@@ -14,8 +14,7 @@ import org.slf4j.LoggerFactory;
 public class PaneGroup extends WidgetGroup {
   private static final Logger logger = LoggerFactory.getLogger(PaneGroup.class);
   private Map<Image, CharacterImageData> images = new HashMap<>();
-  private Position position;
-  private final float zOverlapOffset = 0.3f;
+  private static final float Z_OVERLAP_OFFSET = 0.3f;
 
   public PaneGroup(Position position) {
     this.position = position;
@@ -39,7 +38,9 @@ public class PaneGroup extends WidgetGroup {
     float paneWidth = getWidth();
     float paneHeight = getHeight();
 
-    for (Image image : images.keySet()) {
+    for (Map.Entry<Image, CharacterImageData> entry : images.entrySet()) {
+      Image image = entry.getKey();
+      CharacterImageData characterImageData = entry.getValue();
 
       Drawable drawable = image.getDrawable();
       if (drawable == null) continue;
@@ -57,19 +58,19 @@ public class PaneGroup extends WidgetGroup {
       image.setSize(width, height);
       image.setPosition((paneWidth - width) * 0.5f, 0f);
 
-      float offsetX = images.get(image).getxOffset();
-      int z = images.size() - images.get(image).getzIndex();
+      float offsetX = characterImageData.getxOffset();
+      int z = images.size() - characterImageData.getzIndex();
       if (offsetX > -1 && offsetX < 1) {
         if (offsetX <= 0) {
-          offsetX = (1 + z * zOverlapOffset) * offsetX + z * zOverlapOffset;
+          offsetX = (1 + z * Z_OVERLAP_OFFSET) * offsetX + z * Z_OVERLAP_OFFSET;
         } else {
-          offsetX = (1 - z * zOverlapOffset) * offsetX - z * zOverlapOffset;
+          offsetX = (1 - z * Z_OVERLAP_OFFSET) * offsetX - z * Z_OVERLAP_OFFSET;
         }
       }
-      float offsetY = images.get(image).getyOffset();
+      float offsetY = characterImageData.getyOffset();
       image.moveBy(offsetX * image.getWidth(), offsetY * image.getHeight());
-      image.setRotation(images.get(image).getRotation());
-      image.setScale(images.get(image).getScale());
+      image.setRotation(characterImageData.getRotation());
+      image.setScale(characterImageData.getScale());
     }
   }
 

@@ -143,7 +143,7 @@ public class DefaultOrchestrator extends OrchestratorState implements CutsceneOr
           new ChoiceAction(this, state.getChoiceState(), state().getDialogueState(), d);
       case DialogueShowData d -> new DialogueShowAction(state.getDialogueState(), d);
       case DialogueHideData d -> new DialogueHideAction(state.getDialogueState(), d);
-      case GotoData d -> new GotoAction(this, beatIdx, beats, d);
+      case GotoData d -> new GotoAction(this, d);
       case ParallelData d -> new ParallelAction(this, d);
       default -> null;
     };

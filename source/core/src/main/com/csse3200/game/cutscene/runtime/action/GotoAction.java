@@ -1,25 +1,19 @@
 package com.csse3200.game.cutscene.runtime.action;
 
-import com.csse3200.game.cutscene.models.object.Beat;
 import com.csse3200.game.cutscene.models.object.actiondata.GotoData;
 import com.csse3200.game.cutscene.runtime.ActionState;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.exceptions.InvalidGotoBeatId;
-import java.util.List;
 
 public class GotoAction implements ActionState {
   private CutsceneOrchestrator orchestrator;
-  private Beat beatIdx;
-  private List<Beat> beats;
   private GotoData gotoData;
   private boolean done = false;
 
   public GotoAction(
-      CutsceneOrchestrator orchestrator, Beat beatIdx, List<Beat> beats, GotoData gotoData) {
+      CutsceneOrchestrator orchestrator, GotoData gotoData) {
     this.orchestrator = orchestrator;
     this.gotoData = gotoData;
-    this.beatIdx = beatIdx;
-    this.beats = beats;
   }
 
   /**

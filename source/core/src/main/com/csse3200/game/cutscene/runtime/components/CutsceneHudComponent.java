@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
+import com.csse3200.game.cutscene.runtime.states.CharacterState;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 
@@ -148,18 +149,13 @@ public class CutsceneHudComponent extends UIComponent {
 
     root.add(choicesGroup).growX().bottom().pad(0f, 1f, 12f, 1f).row();
 
-    //     TODO: root.add(choicesGroup).growX().fillX().row();
-
     // Make dialogue panel
     dialogueBox = new Table();
     dialogueBox.defaults().pad(20f);
 
-    //    dialogueBox.setBackground(colorTexture(Color.CORAL));
     dialogueBox.setBackground(skin.getDrawable("o"));
 
-    //    characterName = new Label("", skin);
     characterName = ui.createLabel("", (int) (70 * ui.getUIScale()), Color.WHITE);
-    //    characterName.setFontScale(1.5f);
     characterName.setAlignment(Align.topLeft);
 
     text = ui.createLabel("", (int) (40 * ui.getUIScale()), Color.WHITE);
@@ -183,8 +179,7 @@ public class CutsceneHudComponent extends UIComponent {
     // No drawing needed
   }
 
-  @Override
-  public void update() {
+  void updateBackground() {
     OrchestratorState orchestratorState = orchestrator.state();
 
     if (backgroundImage.getDrawable() != orchestratorState.getBackgroundState().getImage()) {
@@ -194,53 +189,57 @@ public class CutsceneHudComponent extends UIComponent {
     if (oldBackgroundImage.getDrawable() != orchestratorState.getBackgroundState().getOldImage()) {
       oldBackgroundImage.setDrawable(orchestratorState.getBackgroundState().getOldImage());
     }
+  }
 
-    dialogueBox.setVisible(orchestratorState.getDialogueState().isVisible());
-    characterName.setText(orchestratorState.getDialogueState().getSpeaker());
-    text.setText(orchestratorState.getDialogueState().getText());
+  void updateCharacters() {
+    OrchestratorState orchestratorState = orchestrator.state();
 
     orchestratorState
-        .getCharacterStatesList()
-        .forEach(
-            characterState -> {
-              if (characterState.isOnScreen()) {
-                Image spriteImage = characterState.getImage();
+            .getCharacterStatesList()
+            .forEach(
+                    characterState -> {
+                      if (characterState.isOnScreen()) {
+                        Image spriteImage = characterState.getImage();
 
-                if (characterState.getPosition() == Position.LEFT) {
-                  characterState.getTexture().getSprite().setFlip(false, false);
-                  characterState.updateImage();
-                  leftPane.getImage(spriteImage).setxOffset(characterState.getxOffset());
-                  leftPane.getImage(spriteImage).setyOffset(characterState.getyOffset());
-                  leftPane.relayout();
-                } else if (characterState.getPosition() == Position.RIGHT) {
-                  characterState.getTexture().getSprite().setFlip(true, false);
-                  characterState.updateImage();
-                  rightPane.getImage(spriteImage).setxOffset(-characterState.getxOffset());
-                  rightPane.getImage(spriteImage).setyOffset(-characterState.getyOffset());
-                  rightPane.relayout();
-                }
+                        if (characterState.getPosition() == Position.LEFT) {
+                          characterState.getTexture().getSprite().setFlip(false, false);
+                          characterState.updateImage();
+                          leftPane.getImage(spriteImage).setxOffset(characterState.getxOffset());
+                          leftPane.getImage(spriteImage).setyOffset(characterState.getyOffset());
+                          leftPane.relayout();
+                        } else if (characterState.getPosition() == Position.RIGHT) {
+                          characterState.getTexture().getSprite().setFlip(true, false);
+                          characterState.updateImage();
+                          rightPane.getImage(spriteImage).setxOffset(-characterState.getxOffset());
+                          rightPane.getImage(spriteImage).setyOffset(-characterState.getyOffset());
+                          rightPane.relayout();
+                        }
 
-                if (!characterState.isOnScreen()) {
-                  if (characterState.getPosition() == Position.LEFT) {
-                    leftPane.removeImage(spriteImage);
-                  } else if (characterState.getPosition() == Position.RIGHT) {
-                    rightPane.removeImage(spriteImage);
-                  }
-                }
-              }
-            });
+                        if (!characterState.isOnScreen()) {
+                          if (characterState.getPosition() == Position.LEFT) {
+                            leftPane.removeImage(spriteImage);
+                          } else if (characterState.getPosition() == Position.RIGHT) {
+                            rightPane.removeImage(spriteImage);
+                          }
+                        }
+                      }
+                    });
+  }
+
+  void cleanupCharacters() {
+    OrchestratorState orchestratorState = orchestrator.state();
 
     // Clean up any dead ones
     List<Image> leftStates =
-        orchestratorState.getCharacterStatesList().stream()
-            .filter(characterState -> characterState.getPosition() == Position.LEFT)
-            .map(characterState -> characterState.getImage())
-            .toList();
+            orchestratorState.getCharacterStatesList().stream()
+                    .filter(characterState -> characterState.getPosition() == Position.LEFT)
+                    .map(CharacterState::getImage)
+                    .toList();
     List<Image> rightStates =
-        orchestratorState.getCharacterStatesList().stream()
-            .filter(characterState -> characterState.getPosition() == Position.RIGHT)
-            .map(characterState -> characterState.getImage())
-            .toList();
+            orchestratorState.getCharacterStatesList().stream()
+                    .filter(characterState -> characterState.getPosition() == Position.RIGHT)
+                    .map(CharacterState::getImage)
+                    .toList();
 
     for (Image image : leftPane.getImagesKeys()) {
       if (!leftStates.contains(image)) {
@@ -253,33 +252,39 @@ public class CutsceneHudComponent extends UIComponent {
         rightPane.removeImage(image);
       }
     }
+  }
+
+  Table getChoicesGroup() {
+    if (!leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
+      return choicesCenter;
+    } else if (leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
+      return choicesRight;
+    } else if (rightPane.getImagesKeys().isEmpty() && !leftPane.getImagesKeys().isEmpty()) {
+      return choicesLeft;
+    }
+  }
+
+  void updateChoices() {
+    OrchestratorState orchestratorState = orchestrator.state();
 
     if (orchestratorState.getChoiceState().isActive() && !choicesBound) {
       choicesGroup.setVisible(true);
       choicesLeft.clearChildren();
       choicesCenter.clearChildren();
       choicesRight.clearChildren();
-      Table choiceGroup = choicesLeft;
-
-      if (!leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
-        choiceGroup = choicesCenter;
-      } else if (leftPane.getImagesKeys().isEmpty() && !rightPane.getImagesKeys().isEmpty()) {
-        choiceGroup = choicesRight;
-      } else if (rightPane.getImagesKeys().isEmpty() && !leftPane.getImagesKeys().isEmpty()) {
-        choiceGroup = choicesLeft;
-      }
+      Table choiceGroup = getChoicesGroup();
 
       for (Button button : orchestratorState.getChoiceState().getChoices()) {
         if (button instanceof TextButton tb) tb.setFillParent(false);
         if (button.getParent() == null) {
           choiceGroup
-              .add(button)
-              .minWidth(0)
-              .prefWidth(Value.percentWidth(1f, choiceGroup))
-              .maxWidth(Value.percentWidth(1f, choiceGroup))
-              .fillX()
-              .height(48f)
-              .row();
+                  .add(button)
+                  .minWidth(0)
+                  .prefWidth(Value.percentWidth(1f, choiceGroup))
+                  .maxWidth(Value.percentWidth(1f, choiceGroup))
+                  .fillX()
+                  .height(48f)
+                  .row();
         }
       }
       choicesBound = true;
@@ -293,6 +298,22 @@ public class CutsceneHudComponent extends UIComponent {
     if (!orchestratorState.getChoiceState().isActive()) {
       choicesGroup.setVisible(false);
     }
+  }
+
+  @Override
+  public void update() {
+    OrchestratorState orchestratorState = orchestrator.state();
+
+    updateBackground();
+
+    dialogueBox.setVisible(orchestratorState.getDialogueState().isVisible());
+    characterName.setText(orchestratorState.getDialogueState().getSpeaker());
+    text.setText(orchestratorState.getDialogueState().getText());
+
+    updateCharacters();
+    cleanupCharacters();
+
+    updateChoices();
   }
 
   @Override

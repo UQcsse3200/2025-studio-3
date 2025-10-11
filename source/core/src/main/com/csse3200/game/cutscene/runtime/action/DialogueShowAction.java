@@ -26,6 +26,47 @@ public class DialogueShowAction implements ActionState {
   }
 
   /**
+   * Determines the appropriate time to leave the character on screen depending on what it is.
+   * @return The time to leave the character on screen.
+   */
+  private int punctuationDelay() {
+    char nextCharIfExists;
+    if (charsShown == text.length()) {
+      nextCharIfExists = '\0';
+    } else {
+      nextCharIfExists = text.charAt(charsShown);
+    }
+
+    return switch (text.charAt(Math.max(charsShown - 1, 0))) {
+      case ',' -> 150;
+      case '.' -> {
+        if (nextCharIfExists == '.') {
+          yield 50;
+        } else {
+          yield 360;
+        }
+      }
+      case '-' -> 200;
+      case ':' -> 240;
+      case '!' -> {
+        if (text.charAt(charsShown - 2) == '?') {
+          yield 500;
+        } else {
+          yield 340;
+        }
+      }
+      case '?' -> {
+        if (nextCharIfExists == '!') {
+          yield 10;
+        } else {
+          yield 380;
+        }
+      }
+      default -> 32;
+    };
+  }
+
+  /**
    * Runs on every game tick to progress logic
    *
    * @param dtMs The delta time in milliseconds
@@ -40,40 +81,7 @@ public class DialogueShowAction implements ActionState {
       nextCharMsCountdown -= dtMs;
     } else if (text.length() >= charsShown) {
       dialogueState.set(speaker, text.substring(0, charsShown));
-      char nextCharIfExists;
-      if (charsShown == text.length()) {
-        nextCharIfExists = '\0';
-      } else {
-        nextCharIfExists = text.charAt(charsShown);
-      }
-      nextCharMsCountdown =
-          switch (text.charAt(Math.max(charsShown - 1, 0))) {
-            case ',' -> 150;
-            case '.' -> {
-              if (nextCharIfExists == '.') {
-                yield 50;
-              } else {
-                yield 360;
-              }
-            }
-            case '-' -> 200;
-            case ':' -> 240;
-            case '!' -> {
-              if (text.charAt(charsShown - 2) == '?') {
-                yield 500;
-              } else {
-                yield 340;
-              }
-            }
-            case '?' -> {
-              if (nextCharIfExists == '!') {
-                yield 10;
-              } else {
-                yield 380;
-              }
-            }
-            default -> 32;
-          };
+      nextCharMsCountdown = punctuationDelay();
       charsShown++;
     } else {
       done = true;
