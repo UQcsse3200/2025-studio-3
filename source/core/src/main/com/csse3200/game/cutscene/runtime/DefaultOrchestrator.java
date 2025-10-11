@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class DefaultOrchestrator implements CutsceneOrchestrator {
+public class DefaultOrchestrator extends OrchestratorState implements CutsceneOrchestrator {
   private OrchestratorState state;
   private Cutscene cutscene;
   private List<Beat> beats;

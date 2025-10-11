@@ -154,13 +154,15 @@ public class CutsceneHudComponent extends UIComponent {
     dialogueBox = new Table();
     dialogueBox.defaults().pad(20f);
 
-    dialogueBox.setBackground(colorTexture(Color.CORAL));
+//    dialogueBox.setBackground(colorTexture(Color.CORAL));
+    dialogueBox.setBackground(skin.getDrawable("o"));
 
-    characterName = new Label("", skin);
-    characterName.setFontScale(1.5f);
+//    characterName = new Label("", skin);
+    characterName = ui.createLabel("", (int) (70 * ui.getUIScale()), Color.WHITE);
+//    characterName.setFontScale(1.5f);
     characterName.setAlignment(Align.topLeft);
 
-    text = new Label("", skin);
+    text = ui.createLabel("", (int) (40 * ui.getUIScale()), Color.WHITE);
     text.setWrap(true);
     text.setAlignment(Align.topLeft);
 
