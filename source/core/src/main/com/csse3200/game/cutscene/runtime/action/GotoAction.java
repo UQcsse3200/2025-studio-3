@@ -10,8 +10,7 @@ public class GotoAction implements ActionState {
   private GotoData gotoData;
   private boolean done = false;
 
-  public GotoAction(
-      CutsceneOrchestrator orchestrator, GotoData gotoData) {
+  public GotoAction(CutsceneOrchestrator orchestrator, GotoData gotoData) {
     this.orchestrator = orchestrator;
     this.gotoData = gotoData;
   }

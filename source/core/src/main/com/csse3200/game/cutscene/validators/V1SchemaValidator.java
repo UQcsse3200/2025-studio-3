@@ -307,9 +307,7 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.advance == null)
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ADVANCE_NULL",
-              BEATS_PATH + beat.id,
-              "Beat advance must not be null"));
+              "BEAT_ADVANCE_NULL", BEATS_PATH + beat.id, "Beat advance must not be null"));
     else
       switch (beat.advance.mode) {
         case null:
@@ -350,9 +348,7 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.actions == null || beat.actions.isEmpty()) {
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ACTIONS_NULL",
-              BEATS_PATH + beat.id,
-              "Beat actions is null or empty"));
+              "BEAT_ACTIONS_NULL", BEATS_PATH + beat.id, "Beat actions is null or empty"));
     } else {
       for (ActionDTO action : beat.actions) {
         beatErrors.addAll(actionValidatorRegistry.validate(action, beat.id, validationCtx));

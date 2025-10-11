@@ -61,8 +61,9 @@ public class CharacterEnterAction implements ActionState {
           }
         }
         case FADE -> characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
-        case POP -> characterState.setScale(
-              0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
+        case POP ->
+            characterState.setScale(
+                0.2f * sineGauss((float) transitionMsLeft / transitionDurationMs, 1) + 1);
         default -> {
           // do nothing
         }

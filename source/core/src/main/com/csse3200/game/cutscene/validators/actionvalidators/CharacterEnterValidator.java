@@ -46,7 +46,8 @@ public class CharacterEnterValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.fields.get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
+        ValidatorUtils.validateString(
+            action.fields.get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
@@ -65,12 +66,13 @@ public class CharacterEnterValidator implements ActionValidator {
 
       if (poseErrors.isEmpty()) {
         String pose = (String) action.fields.get("pose");
-        if (context.characterPoses().get(characterId) != null && !context.characterPoses().get(characterId).contains(pose)) {
-            errors.add(
-                new AuthoringError(
-                    "ACTION_CHARACTER_POSE_INVALID",
-                    path,
-                    "Pose " + pose + " does not exist for the character " + characterId));
+        if (context.characterPoses().get(characterId) != null
+            && !context.characterPoses().get(characterId).contains(pose)) {
+          errors.add(
+              new AuthoringError(
+                  "ACTION_CHARACTER_POSE_INVALID",
+                  path,
+                  "Pose " + pose + " does not exist for the character " + characterId));
         }
       }
     }

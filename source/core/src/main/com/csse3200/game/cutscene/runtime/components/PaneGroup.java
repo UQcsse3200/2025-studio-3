@@ -3,7 +3,6 @@ package com.csse3200.game.cutscene.runtime.components;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.csse3200.game.cutscene.models.object.Position;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,9 +15,7 @@ public class PaneGroup extends WidgetGroup {
   private Map<Image, CharacterImageData> images = new HashMap<>();
   private static final float Z_OVERLAP_OFFSET = 0.3f;
 
-  public PaneGroup(Position position) {
-    this.position = position;
-  }
+  public PaneGroup() {}
 
   private void applyZOrder() {
     List<Map.Entry<Image, CharacterImageData>> entries = new ArrayList<>(images.entrySet());

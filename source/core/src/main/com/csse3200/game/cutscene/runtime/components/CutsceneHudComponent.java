@@ -89,14 +89,14 @@ public class CutsceneHudComponent extends UIComponent {
 
     // Setup character sprites
     characterSprites = new Table();
-    leftPane = new PaneGroup(Position.LEFT);
+    leftPane = new PaneGroup();
     Image leftImage = new Image();
     leftImage.setFillParent(true);
     leftImage.setScaling(Scaling.fit);
     leftImage.setAlign(Align.bottom);
     leftPane.addActor(leftImage);
 
-    rightPane = new PaneGroup(Position.RIGHT);
+    rightPane = new PaneGroup();
     Image rightImage = new Image();
     rightImage.setFillParent(true);
     rightImage.setScaling(Scaling.fit);
@@ -195,35 +195,35 @@ public class CutsceneHudComponent extends UIComponent {
     OrchestratorState orchestratorState = orchestrator.state();
 
     orchestratorState
-            .getCharacterStatesList()
-            .forEach(
-                    characterState -> {
-                      if (characterState.isOnScreen()) {
-                        Image spriteImage = characterState.getImage();
+        .getCharacterStatesList()
+        .forEach(
+            characterState -> {
+              if (characterState.isOnScreen()) {
+                Image spriteImage = characterState.getImage();
 
-                        if (characterState.getPosition() == Position.LEFT) {
-                          characterState.getTexture().getSprite().setFlip(false, false);
-                          characterState.updateImage();
-                          leftPane.getImage(spriteImage).setxOffset(characterState.getxOffset());
-                          leftPane.getImage(spriteImage).setyOffset(characterState.getyOffset());
-                          leftPane.relayout();
-                        } else if (characterState.getPosition() == Position.RIGHT) {
-                          characterState.getTexture().getSprite().setFlip(true, false);
-                          characterState.updateImage();
-                          rightPane.getImage(spriteImage).setxOffset(-characterState.getxOffset());
-                          rightPane.getImage(spriteImage).setyOffset(-characterState.getyOffset());
-                          rightPane.relayout();
-                        }
+                if (characterState.getPosition() == Position.LEFT) {
+                  characterState.getTexture().getSprite().setFlip(false, false);
+                  characterState.updateImage();
+                  leftPane.getImage(spriteImage).setxOffset(characterState.getxOffset());
+                  leftPane.getImage(spriteImage).setyOffset(characterState.getyOffset());
+                  leftPane.relayout();
+                } else if (characterState.getPosition() == Position.RIGHT) {
+                  characterState.getTexture().getSprite().setFlip(true, false);
+                  characterState.updateImage();
+                  rightPane.getImage(spriteImage).setxOffset(-characterState.getxOffset());
+                  rightPane.getImage(spriteImage).setyOffset(-characterState.getyOffset());
+                  rightPane.relayout();
+                }
 
-                        if (!characterState.isOnScreen()) {
-                          if (characterState.getPosition() == Position.LEFT) {
-                            leftPane.removeImage(spriteImage);
-                          } else if (characterState.getPosition() == Position.RIGHT) {
-                            rightPane.removeImage(spriteImage);
-                          }
-                        }
-                      }
-                    });
+                if (!characterState.isOnScreen()) {
+                  if (characterState.getPosition() == Position.LEFT) {
+                    leftPane.removeImage(spriteImage);
+                  } else if (characterState.getPosition() == Position.RIGHT) {
+                    rightPane.removeImage(spriteImage);
+                  }
+                }
+              }
+            });
   }
 
   void cleanupCharacters() {
@@ -231,15 +231,15 @@ public class CutsceneHudComponent extends UIComponent {
 
     // Clean up any dead ones
     List<Image> leftStates =
-            orchestratorState.getCharacterStatesList().stream()
-                    .filter(characterState -> characterState.getPosition() == Position.LEFT)
-                    .map(CharacterState::getImage)
-                    .toList();
+        orchestratorState.getCharacterStatesList().stream()
+            .filter(characterState -> characterState.getPosition() == Position.LEFT)
+            .map(CharacterState::getImage)
+            .toList();
     List<Image> rightStates =
-            orchestratorState.getCharacterStatesList().stream()
-                    .filter(characterState -> characterState.getPosition() == Position.RIGHT)
-                    .map(CharacterState::getImage)
-                    .toList();
+        orchestratorState.getCharacterStatesList().stream()
+            .filter(characterState -> characterState.getPosition() == Position.RIGHT)
+            .map(CharacterState::getImage)
+            .toList();
 
     for (Image image : leftPane.getImagesKeys()) {
       if (!leftStates.contains(image)) {
@@ -262,6 +262,7 @@ public class CutsceneHudComponent extends UIComponent {
     } else if (rightPane.getImagesKeys().isEmpty() && !leftPane.getImagesKeys().isEmpty()) {
       return choicesLeft;
     }
+    return choicesLeft;
   }
 
   void updateChoices() {
@@ -278,13 +279,13 @@ public class CutsceneHudComponent extends UIComponent {
         if (button instanceof TextButton tb) tb.setFillParent(false);
         if (button.getParent() == null) {
           choiceGroup
-                  .add(button)
-                  .minWidth(0)
-                  .prefWidth(Value.percentWidth(1f, choiceGroup))
-                  .maxWidth(Value.percentWidth(1f, choiceGroup))
-                  .fillX()
-                  .height(48f)
-                  .row();
+              .add(button)
+              .minWidth(0)
+              .prefWidth(Value.percentWidth(1f, choiceGroup))
+              .maxWidth(Value.percentWidth(1f, choiceGroup))
+              .fillX()
+              .height(48f)
+              .row();
         }
       }
       choicesBound = true;

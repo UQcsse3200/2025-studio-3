@@ -27,6 +27,7 @@ public class DialogueShowAction implements ActionState {
 
   /**
    * Determines the appropriate time to leave the character on screen depending on what it is.
+   *
    * @return The time to leave the character on screen.
    */
   private int punctuationDelay() {
