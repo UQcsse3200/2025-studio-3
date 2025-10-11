@@ -15,8 +15,6 @@ public class PaneGroup extends WidgetGroup {
   private Map<Image, CharacterImageData> images = new HashMap<>();
   private static final float Z_OVERLAP_OFFSET = 0.3f;
 
-  public PaneGroup() {}
-
   private void applyZOrder() {
     List<Map.Entry<Image, CharacterImageData>> entries = new ArrayList<>(images.entrySet());
 
