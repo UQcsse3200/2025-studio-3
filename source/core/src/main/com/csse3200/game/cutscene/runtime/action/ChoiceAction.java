@@ -1,14 +1,19 @@
 package com.csse3200.game.cutscene.runtime.action;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.cutscene.models.object.actiondata.ChoiceData;
 import com.csse3200.game.cutscene.runtime.ActionState;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.states.ChoiceState;
 import com.csse3200.game.cutscene.runtime.states.DialogueState;
-import com.csse3200.game.ui.ButtonFactory;
+import com.csse3200.game.persistence.Settings;
+import com.csse3200.game.ui.UIComponent;
+import com.csse3200.game.ui.UIFactory;
+
 import java.util.Objects;
 
 public class ChoiceAction implements ActionState {
@@ -17,6 +22,9 @@ public class ChoiceAction implements ActionState {
   private ChoiceState choiceState;
   private DialogueState dialogueState;
   private ChoiceData data;
+
+  private Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
+  private UIFactory ui = new UIFactory(skin, Settings.UIScale.MEDIUM);
 
   public ChoiceAction(
       CutsceneOrchestrator orchestrator,
@@ -50,7 +58,8 @@ public class ChoiceAction implements ActionState {
               choice -> {
                 if (Objects.equals(choice.getCutsceneId(), "current")) {
                   //                choiceState.addChoice(); // Use button factory to create buttons
-                  Button button = ButtonFactory.createButton(choice.getLine());
+//                  Button button = ButtonFactory.createButton(choice.getLine());
+                  Button button = ui.primaryButton(choice.getLine(), 1f);
                   button.setFillParent(false);
                   button.addListener(
                       new ChangeListener() {
