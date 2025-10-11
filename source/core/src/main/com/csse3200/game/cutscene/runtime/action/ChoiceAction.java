@@ -11,9 +11,7 @@ import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.states.ChoiceState;
 import com.csse3200.game.cutscene.runtime.states.DialogueState;
 import com.csse3200.game.persistence.Settings;
-import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.UIFactory;
-
 import java.util.Objects;
 
 public class ChoiceAction implements ActionState {
@@ -57,8 +55,6 @@ public class ChoiceAction implements ActionState {
           .forEach(
               choice -> {
                 if (Objects.equals(choice.getCutsceneId(), "current")) {
-                  //                choiceState.addChoice(); // Use button factory to create buttons
-//                  Button button = ButtonFactory.createButton(choice.getLine());
                   Button button = ui.primaryButton(choice.getLine(), 1f);
                   button.setFillParent(false);
                   button.addListener(
