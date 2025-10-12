@@ -40,19 +40,19 @@ public class ActionValidatorRegistry {
    *     {@link ActionDTO}
    */
   public List<AuthoringError> validate(ActionDTO action, String beatId, ValidationCtx context) {
-    if (action.type == null)
+    if (action.getType() == null)
       return List.of(
           new AuthoringError(
               "ACTION_TYPE_NULL",
               "doc.cutscene.beats." + beatId + "actions.*",
               "Action type must be a string and not null"));
-    else if (!actionValidators.containsKey(action.type))
+    else if (!actionValidators.containsKey(action.getType()))
       return List.of(
           new AuthoringError(
               "ACTION_TYPE_INVALID",
               "doc.cutscene.beats." + beatId + "actions.*",
-              "Action " + action.type + " is not a valid action"));
+              "Action " + action.getType() + " is not a valid action"));
 
-    return actionValidators.get(action.type).validate(beatId, action, context);
+    return actionValidators.get(action.getType()).validate(beatId, action, context);
   }
 }

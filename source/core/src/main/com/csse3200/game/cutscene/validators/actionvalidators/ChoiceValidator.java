@@ -48,10 +48,10 @@ public class ChoiceValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> promptErrors =
-        ValidatorUtils.validateString(action.fields.get("prompt"), "prompt", path);
+        ValidatorUtils.validateString(action.getFields().get("prompt"), "prompt", path);
     errors.addAll(promptErrors);
 
-    Object choicesObject = action.fields.get("choices");
+    Object choicesObject = action.getFields().get("choices");
     if (choicesObject instanceof List<?>) {
       for (Object choice : (List<?>) choicesObject) {
         if (choice instanceof Map<?, ?>) {

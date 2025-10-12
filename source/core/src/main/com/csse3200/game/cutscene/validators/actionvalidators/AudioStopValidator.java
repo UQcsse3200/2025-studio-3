@@ -36,29 +36,25 @@ public class AudioStopValidator implements ActionValidator {
     List<AuthoringError> errors = new ArrayList<>();
 
     // bus validation
-    Object busObject = action.fields.get("bus");
+    Object busObject = action.getFields().get("bus");
 
     String path = "doc.cutscene.beats." + beatId + ".actions.*";
 
     errors.addAll(ValidatorUtils.validateString(busObject, "AUDIO_STOP_BUS", path));
 
-    if (busObject instanceof String) {
-      String bus = (String) busObject;
-      if (!bus.equals("music")) {
-        errors.add(
-            new AuthoringError(
-                "ACTION_AUDIO_STOP_BUS_INVALID", path, "Bus for audio set must be only \"music\""));
-      }
+    if (busObject instanceof String bus && !bus.equals("music")) {
+      errors.add(
+          new AuthoringError(
+              "ACTION_AUDIO_STOP_BUS_INVALID", path, "Bus for audio set must be only \"music\""));
     }
 
-    errors.addAll(ValidatorUtils.validateInt(action.fields.get("fadeMs"), "AUDIO_STOP_FADE", path));
+    errors.addAll(
+        ValidatorUtils.validateInt(action.getFields().get("fadeMs"), "AUDIO_STOP_FADE", path));
 
-    if (action.fields.get("fadeMs") instanceof Long) {
-      if ((Long) action.fields.get("fadeMs") < 0) {
-        errors.add(
-            new AuthoringError(
-                "ACTION_AUDIO_STOP_FADE_INVALID", path, "FadeMs must be greater or equal to 0"));
-      }
+    if (action.getFields().get("fadeMs") instanceof Long fadeMs && fadeMs < 0) {
+      errors.add(
+          new AuthoringError(
+              "ACTION_AUDIO_STOP_FADE_INVALID", path, "FadeMs must be greater or equal to 0"));
     }
 
     errors.addAll(ValidatorUtils.validateAwait(beatId, action));

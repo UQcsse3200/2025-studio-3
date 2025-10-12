@@ -29,7 +29,7 @@ public class ParallelValidator implements ActionValidator {
 
     ActionValidatorRegistry actionValidatorRegistry = new ActionValidatorRegistry();
 
-    for (ActionDTO childAction : action.actions) {
+    for (ActionDTO childAction : action.getActions()) {
       errors.addAll(actionValidatorRegistry.validate(childAction, beatId, context));
     }
 
