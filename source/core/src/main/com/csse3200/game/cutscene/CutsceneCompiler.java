@@ -30,7 +30,8 @@ public class CutsceneCompiler {
     beats = new ArrayList<>();
 
     for (CharacterDTO characterDTO : cutsceneDocDTO.getCharacters()) {
-      characters.add(new Character(characterDTO.getId(), characterDTO.getName(), characterDTO.getPoses()));
+      characters.add(
+          new Character(characterDTO.getId(), characterDTO.getName(), characterDTO.getPoses()));
     }
 
     for (BackgroundDTO backgroundDTO : cutsceneDocDTO.getBackgrounds()) {
@@ -59,26 +60,13 @@ public class CutsceneCompiler {
     return new Cutscene(id, characters, backgrounds, sounds, beats);
   }
 
-  private List<ActionData> getActions(List<ActionDTO> actionsData) {
-    List<ActionData> actions = new ArrayList<>();
-
-    for (ActionDTO action : actionsData) {
-      ActionData actionData = createActionData(action);
-      if (actionData != null) {
-        actions.add(actionData);
-      }
-    }
-
-    return actions;
-  }
-
   /**
    * Creates an action data object from an action DTO.
    *
    * @param action the action DTO
    * @return the action data object
    */
-  private ActionData createActionData(ActionDTO action) {
+  public ActionData createActionData(ActionDTO action) {
     return switch (action.getType()) {
       case "audio.play" -> createAudioPlayData(action);
       case "audio.set" -> createAudioSetData(action);
@@ -108,12 +96,15 @@ public class CutsceneCompiler {
     Float volume = ((Double) action.getFields().get("volume")).floatValue();
 
     Float pitch =
-        action.getFields().get("pitch") != null
-            ? ((Double) action.getFields().get("pitch")).floatValue()
-            : null;
+            action.getFields().get("pitch") != null
+                    ? ((Double) action.getFields().get("pitch")).floatValue()
+                    : null;
     Float pan =
-        action.getFields().get("pan") != null ? ((Double) action.getFields().get("pan")).floatValue() : null;
-    boolean loop = action.getFields().get("loop") != null && (boolean) action.getFields().get("loop");
+            action.getFields().get("pan") != null
+                    ? ((Double) action.getFields().get("pan")).floatValue()
+                    : null;
+    boolean loop =
+            action.getFields().get("loop") != null && (boolean) action.getFields().get("loop");
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
 
     return new AudioPlayData(bus, sound, volume, pitch, pan, loop, await);
@@ -152,7 +143,8 @@ public class CutsceneCompiler {
    */
   private BackgroundSetData createBackgroundSetData(ActionDTO action) {
     Background background = getBackground((String) action.getFields().get("backgroundId"));
-    Transition transition = Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
+    Transition transition =
+            Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
     int duration = ((Long) action.getFields().get(CutsceneSchemaKeys.DURATION_FIELD)).intValue();
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
     return new BackgroundSetData(background, transition, duration, await);
@@ -165,10 +157,12 @@ public class CutsceneCompiler {
    * @return the character enter data object
    */
   private CharacterEnterData createCharacterEnterData(ActionDTO action) {
-    Character character = getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
+    com.csse3200.game.cutscene.models.object.Character character =
+            getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
     String pose = (String) action.getFields().get("pose");
     Position position = Position.fromString((String) action.getFields().get("position"));
-    Transition transition = Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
+    Transition transition =
+            Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
     int duration = ((Long) action.getFields().get(CutsceneSchemaKeys.DURATION_FIELD)).intValue();
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
     return new CharacterEnterData(character, pose, position, transition, duration, await);
@@ -181,8 +175,10 @@ public class CutsceneCompiler {
    * @return the character exit data object
    */
   private CharacterExitData createCharacterExitData(ActionDTO action) {
-    Character character = getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
-    Transition transition = Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
+    com.csse3200.game.cutscene.models.object.Character character =
+            getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
+    Transition transition =
+            Transition.fromString((String) action.getFields().get(CutsceneSchemaKeys.TRANSITION_FIELD));
     int duration = ((Long) action.getFields().get(CutsceneSchemaKeys.DURATION_FIELD)).intValue();
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
     return new CharacterExitData(character, transition, duration, await);
@@ -220,7 +216,7 @@ public class CutsceneCompiler {
    * @return the dialogue chorus data object
    */
   private DialogueChorusData createDialogueChorusData(ActionDTO action) {
-    List<Character> chorusCharacters = new ArrayList<>();
+    List<com.csse3200.game.cutscene.models.object.Character> chorusCharacters = new ArrayList<>();
     String text = (String) action.getFields().get("text");
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
 
@@ -238,7 +234,8 @@ public class CutsceneCompiler {
    * @return the dialogue show data object
    */
   private DialogueShowData createDialogueShowData(ActionDTO action) {
-    Character character = getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
+    Character character =
+            getCharacter((String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD));
     String text = (String) action.getFields().get("text");
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
     return new DialogueShowData(character, text, await);
@@ -277,6 +274,19 @@ public class CutsceneCompiler {
     List<ActionData> parallelActions = getActions(action.getActions());
     boolean await = (boolean) action.getFields().get(CutsceneSchemaKeys.AWAIT_FIELD);
     return new ParallelData(parallelActions, await);
+  }
+
+  public List<ActionData> getActions(List<ActionDTO> actionsData) {
+    List<ActionData> actions = new ArrayList<>();
+
+    for (ActionDTO action : actionsData) {
+      ActionData actionData = createActionData(action);
+      if (actionData != null) {
+        actions.add(actionData);
+      }
+    }
+
+    return actions;
   }
 
   /**

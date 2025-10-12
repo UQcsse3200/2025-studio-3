@@ -7,13 +7,13 @@ import java.util.List;
 
 public class CutsceneValidator {
   public List<AuthoringError> validate(CutsceneDocDTO cutscene) {
-      if (cutscene.getSchemaVersion() == 1) {
-          return new V1SchemaValidator().validate(cutscene);
-      }
-      return List.of(
-              new AuthoringError(
-                      "INVALID_SCHEMA",
-                      "doc",
-                      "The schema version " + cutscene.getSchemaVersion() + " does not exist"));
+    if (cutscene.getSchemaVersion() == 1) {
+      return new V1SchemaValidator().validate(cutscene);
+    }
+    return List.of(
+        new AuthoringError(
+            "INVALID_SCHEMA",
+            "doc",
+            "The schema version " + cutscene.getSchemaVersion() + " does not exist"));
   }
 }

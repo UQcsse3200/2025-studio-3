@@ -86,6 +86,26 @@ public class V1SchemaValidator implements SchemaValidator {
     return errors;
   }
 
+  Optional<AuthoringError> validateCharacterPoses(CharacterDTO characterDTO) {
+    if (characterDTO.getId() != null) {
+      if (characterIds.contains(characterDTO.getId())) {
+        return Optional.of(
+            new AuthoringError(
+                "CHARACTER_ID_TAKEN",
+                CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
+                "Character IDs must be unique"));
+      } else {
+        characterIds.add(characterDTO.getId());
+      }
+
+      if (!characterDTO.getPoses().isEmpty()) {
+        characterPoses.put(characterDTO.getId(), characterDTO.getPoses().keySet());
+      }
+    }
+
+    return Optional.empty();
+  }
+
   /**
    * Validates a list of {@link CharacterDTO} against the following rules:
    *
@@ -117,29 +137,17 @@ public class V1SchemaValidator implements SchemaValidator {
         characterErrors.add(
             new AuthoringError(
                 "NULL_CHARACTER_EMPTY_POSES",
-                    CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
+                CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
                 "Character must have at lest 1 pose"));
       else if (!ValidatorUtils.stringMapValid(characterDTO.getPoses())) {
         characterErrors.add(
             new AuthoringError(
-                "EMPTY_POSE", CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(), "A pose key or value is empty"));
+                "EMPTY_POSE",
+                CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
+                "A pose key or value is empty"));
       }
 
-      if (characterDTO.getId() != null) {
-        if (characterIds.contains(characterDTO.getId())) {
-          characterErrors.add(
-              new AuthoringError(
-                  "CHARACTER_ID_TAKEN",
-                      CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
-                  "Character IDs must be unique"));
-        } else {
-          characterIds.add(characterDTO.getId());
-        }
-
-        if (!characterDTO.getPoses().isEmpty()) {
-          characterPoses.put(characterDTO.getId(), characterDTO.getPoses().keySet());
-        }
-      }
+      validateCharacterPoses(characterDTO).ifPresent(characterErrors::add);
     }
 
     return characterErrors;
@@ -230,7 +238,8 @@ public class V1SchemaValidator implements SchemaValidator {
    *   <li>{@link CutsceneDTO#getId()} must not be null
    *   <li>{@link CutsceneDTO#getBeats()} must not be null
    *   <li>{@link CutsceneDTO#getBeats()} must be a list of {@link BeatDTO}
-   *   <li>Each {@link BeatDTO} in {@link CutsceneDTO#getBeats()} must have a valid {@link BeatDTO#getId()}
+   *   <li>Each {@link BeatDTO} in {@link CutsceneDTO#getBeats()} must have a valid {@link
+   *       BeatDTO#getId()}
    * </ul>
    *
    * It also constructs a {@link ValidationCtx} to pass Cutscene information to the {@link
@@ -278,18 +287,57 @@ public class V1SchemaValidator implements SchemaValidator {
     return cutsceneErrors;
   }
 
+  Optional<AuthoringError> validateBeatAction(BeatDTO beat) {
+    switch (beat.getAdvance().getMode()) {
+      case null:
+        return Optional.of(
+            new AuthoringError(
+                "BEAT_ADVANCE_MODE_NULL",
+                CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+                "Beat advance mode must not be null"));
+      case "auto", "input":
+        if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() != null)
+          return Optional.of(
+              new AuthoringError(
+                  "BEAT_ADVANCE_MODE_AUTO_UNEXPECTED",
+                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+                  "Unexpected value in auto advance"));
+        break;
+      case "auto_delay":
+        if (beat.getAdvance().getDelay() == null || beat.getAdvance().getSignalKey() != null)
+          return Optional.of(
+              new AuthoringError(
+                  "BEAT_ADVANCE_MODE_AUTO_DELAY_INVALID",
+                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+                  "Invalid data for auto delay advance"));
+        break;
+      case "signal":
+        if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() == null)
+          return Optional.of(
+              new AuthoringError(
+                  "BEAT_ADVANCE_MODE_SIGNAL_INVALID",
+                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+                  "Invalid data for signal advance"));
+        break;
+      default:
+        throw new IllegalStateException("Unexpected value: " + beat.getAdvance().getMode());
+    }
+
+    return Optional.empty();
+  }
+
   /**
    * Validates a {@link BeatDTO} against the following rules:
    *
    * <ul>
    *   <li>{@link BeatDTO#getAdvance()} must not be null
    *   <li>The {@link AdvanceDTO#getMode()} from {@link BeatDTO#getAdvance()} must not be null
-   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto"} or {@code "input"}, {@link AdvanceDTO#delay}
-   *       and {@link AdvanceDTO#getSignalKey()} must be null
-   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto_delay"}, {@link AdvanceDTO#getDelay()} must not be
-   *       null and {@link AdvanceDTO#getSignalKey()} must be null
-   *   <li>If {@link AdvanceDTO#getMode()} is {@code "signal"}, {@link AdvanceDTO#getDelay()} must be null,
-   *       and {@link AdvanceDTO#getSignalKey()} must not be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto"} or {@code "input"}, {@link
+   *       AdvanceDTO#delay} and {@link AdvanceDTO#getSignalKey()} must be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto_delay"}, {@link AdvanceDTO#getDelay()}
+   *       must not be null and {@link AdvanceDTO#getSignalKey()} must be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "signal"}, {@link AdvanceDTO#getDelay()} must
+   *       be null, and {@link AdvanceDTO#getSignalKey()} must not be null
    *   <li>{@link AdvanceDTO#getMode()} must not be any value than above
    *   <li>{@link BeatDTO#getActions()} must not be null or empty
    *   <li>Each action in {@link BeatDTO#getActions()} must pass its own validator
@@ -306,48 +354,17 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.getAdvance() == null)
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ADVANCE_NULL", CutsceneSchemaKeys.BEATS_PATH + beat.getId(), "Beat advance must not be null"));
-    else
-      switch (beat.getAdvance().getMode()) {
-        case null:
-          beatErrors.add(
-              new AuthoringError(
-                  "BEAT_ADVANCE_MODE_NULL",
-                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
-                  "Beat advance mode must not be null"));
-          break;
-        case "auto", "input":
-          if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() != null)
-            beatErrors.add(
-                new AuthoringError(
-                    "BEAT_ADVANCE_MODE_AUTO_UNEXPECTED",
-                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
-                    "Unexpected value in auto advance"));
-          break;
-        case "auto_delay":
-          if (beat.getAdvance().getDelay() == null || beat.getAdvance().getSignalKey() != null)
-            beatErrors.add(
-                new AuthoringError(
-                    "BEAT_ADVANCE_MODE_AUTO_DELAY_INVALID",
-                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
-                    "Invalid data for auto delay advance"));
-          break;
-        case "signal":
-          if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() == null)
-            beatErrors.add(
-                new AuthoringError(
-                    "BEAT_ADVANCE_MODE_SIGNAL_INVALID",
-                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
-                    "Invalid data for signal advance"));
-          break;
-        default:
-          throw new IllegalStateException("Unexpected value: " + beat.getAdvance().getMode());
-      }
+              "BEAT_ADVANCE_NULL",
+              CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+              "Beat advance must not be null"));
+    else validateBeatAction(beat).ifPresent(beatErrors::add);
 
     if (beat.getActions() == null || beat.getActions().isEmpty()) {
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ACTIONS_NULL", CutsceneSchemaKeys.BEATS_PATH + beat.getId(), "Beat actions is null or empty"));
+              "BEAT_ACTIONS_NULL",
+              CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
+              "Beat actions is null or empty"));
     } else {
       for (ActionDTO action : beat.getActions()) {
         beatErrors.addAll(actionValidatorRegistry.validate(action, beat.getId(), validationCtx));

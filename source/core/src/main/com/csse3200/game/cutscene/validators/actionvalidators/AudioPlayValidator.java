@@ -55,7 +55,7 @@ public class AudioPlayValidator implements ActionValidator {
     errors.addAll(ValidatorUtils.validateString(busObject, "AUDIO_PLAY_BUS", path));
 
     if (busObject instanceof String bus) {
-        switch (bus) {
+      switch (bus) {
         case "sfx":
           {
             errors.addAll(
@@ -63,7 +63,11 @@ public class AudioPlayValidator implements ActionValidator {
                     action.getFields().get("volume"), "AUDIO_PLAY_VOLUME", path, 0.0, 1.0));
             errors.addAll(
                 ValidatorUtils.validateDoubleWithRange(
-                    action.getFields().get("pitch"), "AUDIO_PLAY_PITCH", path, 0.0, Double.MAX_VALUE));
+                    action.getFields().get("pitch"),
+                    "AUDIO_PLAY_PITCH",
+                    path,
+                    0.0,
+                    Double.MAX_VALUE));
             errors.addAll(
                 ValidatorUtils.validateDoubleWithRange(
                     action.getFields().get("pan"), "AUDIO_PLAY_PAN", path, -1.0, 1.0));
@@ -72,7 +76,8 @@ public class AudioPlayValidator implements ActionValidator {
         case "music":
           {
             errors.addAll(
-                ValidatorUtils.validateBool(action.getFields().get("loop"), "AUDIO_PLAY_LOOP", path));
+                ValidatorUtils.validateBool(
+                    action.getFields().get("loop"), "AUDIO_PLAY_LOOP", path));
             errors.addAll(
                 ValidatorUtils.validateDoubleWithRange(
                     action.getFields().get("volume"), "AUDIO_PLAY_VOLUME", path, 0.0, 1.0));

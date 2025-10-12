@@ -48,7 +48,8 @@ public class AudioStopValidator implements ActionValidator {
               "ACTION_AUDIO_STOP_BUS_INVALID", path, "Bus for audio set must be only \"music\""));
     }
 
-    errors.addAll(ValidatorUtils.validateInt(action.getFields().get("fadeMs"), "AUDIO_STOP_FADE", path));
+    errors.addAll(
+        ValidatorUtils.validateInt(action.getFields().get("fadeMs"), "AUDIO_STOP_FADE", path));
 
     if (action.getFields().get("fadeMs") instanceof Long fadeMs && fadeMs < 0) {
       errors.add(

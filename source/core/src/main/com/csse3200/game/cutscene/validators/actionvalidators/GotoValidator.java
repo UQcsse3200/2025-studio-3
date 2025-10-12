@@ -39,10 +39,12 @@ public class GotoValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     errors.addAll(
-        ValidatorUtils.validateString(action.getFields().get("cutsceneId"), "GOTO_CUTSCENE_ID", path));
+        ValidatorUtils.validateString(
+            action.getFields().get("cutsceneId"), "GOTO_CUTSCENE_ID", path));
 
     List<AuthoringError> beatIdErrors =
-        ValidatorUtils.validateString(action.getFields().get("beatId"), "GOTO_CUTSCENE_BEAT_ID", path);
+        ValidatorUtils.validateString(
+            action.getFields().get("beatId"), "GOTO_CUTSCENE_BEAT_ID", path);
 
     if (errors.isEmpty() && action.getFields().get("cutsceneId").equals("current")) {
       if (beatIdErrors.isEmpty()) {

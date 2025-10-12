@@ -42,7 +42,7 @@ public class AudioSetValidator implements ActionValidator {
     errors.addAll(ValidatorUtils.validateString(busObject, "AUDIO_SET_BUS", path));
 
     if (busObject instanceof String bus) {
-        if (bus.equals("music")) {
+      if (bus.equals("music")) {
         errors.addAll(
             ValidatorUtils.validateDoubleWithRange(
                 action.getFields().get("volume"), "AUDIO_PLAY_VOLUME", path, 0.0, 1.0));

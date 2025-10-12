@@ -38,7 +38,10 @@ public class DialogueShowValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD), CutsceneSchemaKeys.CHARACTER_ID_FIELD, path);
+        ValidatorUtils.validateString(
+            action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD),
+            CutsceneSchemaKeys.CHARACTER_ID_FIELD,
+            path);
     errors.addAll(characterIdErrors);
 
     if (characterIdErrors.isEmpty()) {

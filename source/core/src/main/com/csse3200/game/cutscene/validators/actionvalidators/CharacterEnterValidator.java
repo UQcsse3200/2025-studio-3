@@ -45,7 +45,9 @@ public class CharacterEnterValidator implements ActionValidator {
 
     List<AuthoringError> characterIdErrors =
         ValidatorUtils.validateString(
-            action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD), CutsceneSchemaKeys.CHARACTER_ID_FIELD, path);
+            action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD),
+            CutsceneSchemaKeys.CHARACTER_ID_FIELD,
+            path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
@@ -76,7 +78,10 @@ public class CharacterEnterValidator implements ActionValidator {
     }
 
     List<AuthoringError> positionErrors =
-        ValidatorUtils.validateString(action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD), CutsceneSchemaKeys.POSITION_FIELD, path);
+        ValidatorUtils.validateString(
+            action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD),
+            CutsceneSchemaKeys.POSITION_FIELD,
+            path);
     errors.addAll(positionErrors);
 
     if (positionErrors.isEmpty()) {
