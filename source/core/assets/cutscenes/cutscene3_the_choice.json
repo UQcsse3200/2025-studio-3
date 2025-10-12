@@ -1,0 +1,217 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {
+      "id": "danny",
+      "name": "Danny",
+      "poses": {
+        "normal": "cutscenes/data/characters/danny/danny_normal.png"
+      }
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "poses": {
+        "sad": "cutscenes/data/characters/alice/alice_sad.png",
+        "normal": "cutscenes/data/characters/alice/alice_normal.png"
+      }
+    },
+    {
+      "id": "rob_glitch",
+      "name": "Rob",
+      "poses": {
+        "normal": "cutscenes/data/characters/rob/rob_glitch.png"
+      }
+    }
+  ],
+  "backgrounds": [
+    {
+      "id": "core_collapse",
+      "image": "cutscenes/data/backgrounds/core_collapse.png"
+    },
+    {
+      "id": "city_dawn",
+      "image": "cutscenes/data/backgrounds/city_dawn.png"
+    }
+  ],
+  "cutscene": {
+    "id": "cutscene3_the_choice",
+    "beats": [
+      {
+        "id": "core_collapse_intro",
+        "advance": { "mode": "input" },
+        "actions": [
+          {
+            "type": "background.set",
+            "backgroundId": "core_collapse",
+            "transition": "fade",
+            "duration": 2000,
+            "await": true
+          },
+          {
+            "type": "character.enter",
+            "characterId": "danny",
+            "pose": "normal",
+            "position": "left",
+            "transition": "fade",
+            "duration": 600,
+            "await": true
+          },
+          {
+            "type": "character.enter",
+            "characterId": "rob_glitch",
+            "pose": "normal",
+            "position": "right",
+            "layer": 0,
+            "transition": "fade",
+            "duration": 600,
+            "await": true
+          },
+          {
+            "type": "character.enter",
+            "characterId": "alice",
+            "pose": "sad",
+            "position": "right",
+            "layer": 1,
+            "transition": "fade",
+            "duration": 600,
+            "await": true
+          },
+
+          {
+            "type": "dialogue.show",
+            "characterId": "alice",
+            "text": "It's falling apart! Disconnect now!",
+            "typewriter": {
+              "speed": 0.20
+            },
+            "await": true
+          },
+          {
+            "type": "dialogue.show",
+            "characterId": "danny",
+            "text": "Not without you.",
+            "typewriter": {
+              "speed": 0.20
+            },
+            "await": true
+          },
+          {
+            "type": "dialogue.show",
+            "characterId": "rob_glitch",
+            "text": "Remove her code... and you live. Save her... and you both crash.",
+            "typewriter": {
+              "speed": 0.15
+            },
+            "await": true
+          },
+          {
+            "type": "dialogue.show",
+            "characterId": "alice",
+            "text": "Please, don't- I'm not worth the whole world",
+            "typewriter": {
+              "speed": 0.20
+            },
+            "await": true
+          },
+          {
+            "type": "dialogue.show",
+            "characterId": "danny",
+            "text": "I need to save Alice!",
+            "typewriter": {
+              "speed": 0.20
+            },
+            "await": true
+          }
+        ]
+      },
+      {
+        "id": "decision_save_alice",
+        "advance": { "mode": "input" },
+        "actions": [
+          {
+            "type": "choice",
+            "prompt": "What will you do?",
+            "choices": [
+              {
+                "id": "choice_save_alice",
+                "type": "goto",
+                "line": "Save Alice",
+                "cutsceneId": "current",
+                "entryBeatId": "rob_mock"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "rob_mock",
+        "advance": { "mode": "input" },
+        "actions": [
+          {
+            "type": "dialogue.show",
+            "characterId": "rob_glitch",
+            "text": "Hahaha... you thought you could save her? You need to save the world first. Until then she remains...",
+            "typewriter": {
+              "speed": 0.13
+            },
+            "await": true
+          },
+          {
+            "type": "choice",
+            "prompt": "What will you do now?",
+            "choices": [
+              {
+                "id": "choice_save_world",
+                "type": "goto",
+                "line": "Save World",
+                "cutsceneId": "current",
+                "entryBeatId": "save_world_branch"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "save_world_branch",
+        "advance": { "mode": "input" },
+        "actions": [
+          {
+            "type": "background.set",
+            "backgroundId": "city_dawn",
+            "transition": "fade",
+            "duration": 2000,
+            "await": true
+          },
+          {
+            "type": "character.enter",
+            "characterId": "alice",
+            "pose": "sad",
+            "position": "right",
+            "layer": 1,
+            "transition": "fade",
+            "duration": 600,
+            "await": true
+          },
+          {
+            "type": "character.exit",
+            "characterId": "rob_glitch",
+            "transition": "fade",
+            "duration": 600,
+            "await": true
+          },
+
+          {
+            "type": "dialogue.show",
+            "characterId": "rob_glitch",
+            "text": "Hmm.. you're quite a fighter. You saved the world. Let's see how you fight to save her. ",
+            "typewriter": {
+              "speed": 0.14
+            },
+            "await": true
+          }
+        ]
+      }
+    ]
+  }
+}
