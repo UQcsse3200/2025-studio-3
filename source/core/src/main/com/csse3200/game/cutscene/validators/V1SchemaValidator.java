@@ -1,13 +1,12 @@
 package com.csse3200.game.cutscene.validators;
 
+import com.csse3200.game.cutscene.CutsceneSchemaKeys;
 import com.csse3200.game.cutscene.models.dto.*;
 import com.csse3200.game.exceptions.AuthoringError;
 import java.util.*;
 
 /** Schema Validator for Version 1 of the cutscene schema. */
 public class V1SchemaValidator implements SchemaValidator {
-  static final String BEATS_PATH = "doc.cutscene.beats.";
-  static final String CHARACTERS_PATH = "doc.characters.";
 
   private Set<String> characterIds;
   private Set<String> backgroundIds;
@@ -91,12 +90,12 @@ public class V1SchemaValidator implements SchemaValidator {
    * Validates a list of {@link CharacterDTO} against the following rules:
    *
    * <ul>
-   *   <li>{@link CharacterDTO#id} must not be null
-   *   <li>{@link CharacterDTO#name} must not be null
-   *   <li>{@link CharacterDTO#poses} must not be null or empty
-   *   <li>Every entry in {@link CharacterDTO#poses} must have a non empty and non null {@link
+   *   <li>{@link CharacterDTO#getId()} must not be null
+   *   <li>{@link CharacterDTO#getName()} must not be null
+   *   <li>{@link CharacterDTO#getPoses()} must not be null or empty
+   *   <li>Every entry in {@link CharacterDTO#getPoses()} must have a non empty and non null {@link
    *       String} key and {@link String} value
-   *   <li>{@link CharacterDTO#id} must be unique across all characters
+   *   <li>{@link CharacterDTO#getId()} must be unique across all characters
    * </ul>
    *
    * @param characters A list of {@link CharacterDTO} to be validated
@@ -118,12 +117,12 @@ public class V1SchemaValidator implements SchemaValidator {
         characterErrors.add(
             new AuthoringError(
                 "NULL_CHARACTER_EMPTY_POSES",
-                "doc.characters." + characterDTO.getId(),
+                    CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
                 "Character must have at lest 1 pose"));
       else if (!ValidatorUtils.stringMapValid(characterDTO.getPoses())) {
         characterErrors.add(
             new AuthoringError(
-                "EMPTY_POSE", "doc.characters." + characterDTO.getId(), "A pose key or value is empty"));
+                "EMPTY_POSE", CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(), "A pose key or value is empty"));
       }
 
       if (characterDTO.getId() != null) {
@@ -131,7 +130,7 @@ public class V1SchemaValidator implements SchemaValidator {
           characterErrors.add(
               new AuthoringError(
                   "CHARACTER_ID_TAKEN",
-                  "doc.characters." + characterDTO.getId(),
+                      CutsceneSchemaKeys.CHARACTERS_PATH + characterDTO.getId(),
                   "Character IDs must be unique"));
         } else {
           characterIds.add(characterDTO.getId());
@@ -150,9 +149,9 @@ public class V1SchemaValidator implements SchemaValidator {
    * Validates a list of {@link BackgroundDTO} against the following rules:
    *
    * <ul>
-   *   <li>{@link BackgroundDTO#id} must not be null
-   *   <li>{@link BackgroundDTO#id} must be unique
-   *   <li>{@link BackgroundDTO#image} must not be null
+   *   <li>{@link BackgroundDTO#getId()} must not be null
+   *   <li>{@link BackgroundDTO#getId()} must be unique
+   *   <li>{@link BackgroundDTO#getImage()} must not be null
    * </ul>
    *
    * @param backgrounds A list of {@link BackgroundDTO} to be validated
@@ -191,9 +190,9 @@ public class V1SchemaValidator implements SchemaValidator {
    * Validates a list of {@link SoundDTO} against the following rules:
    *
    * <ul>
-   *   <li>{@link SoundDTO#id} must not be null
-   *   <li>{@link SoundDTO#file} must not be null
-   *   <li>If {@link SoundDTO#id} isn't null, it must correspond to a {@link SoundDTO}
+   *   <li>{@link SoundDTO#getId()} must not be null
+   *   <li>{@link SoundDTO#getFile()} must not be null
+   *   <li>If {@link SoundDTO#getId()} isn't null, it must correspond to a {@link SoundDTO}
    * </ul>
    *
    * @param sounds AA list of {@link SoundDTO} to be validated
@@ -228,10 +227,10 @@ public class V1SchemaValidator implements SchemaValidator {
    * Validates a {@link CutsceneDTO} against the following rules:
    *
    * <ul>
-   *   <li>{@link CutsceneDTO#id} must not be null
-   *   <li>{@link CutsceneDTO#beats} must not be null
-   *   <li>{@link CutsceneDTO#beats} must be a list of {@link BeatDTO}
-   *   <li>Each {@link BeatDTO} in {@link CutsceneDTO#beats} must have a valid {@link BeatDTO#id}
+   *   <li>{@link CutsceneDTO#getId()} must not be null
+   *   <li>{@link CutsceneDTO#getBeats()} must not be null
+   *   <li>{@link CutsceneDTO#getBeats()} must be a list of {@link BeatDTO}
+   *   <li>Each {@link BeatDTO} in {@link CutsceneDTO#getBeats()} must have a valid {@link BeatDTO#getId()}
    * </ul>
    *
    * It also constructs a {@link ValidationCtx} to pass Cutscene information to the {@link
@@ -261,7 +260,7 @@ public class V1SchemaValidator implements SchemaValidator {
           cutsceneErrors.add(
               new AuthoringError(
                   "BEAT_ID_EXISTS",
-                  BEATS_PATH + beat.getId(),
+                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
                   "The beat id " + beat.getId() + " already exists"));
         } else {
           beatIds.add(beat.getId());
@@ -283,18 +282,18 @@ public class V1SchemaValidator implements SchemaValidator {
    * Validates a {@link BeatDTO} against the following rules:
    *
    * <ul>
-   *   <li>{@link BeatDTO#advance} must not be null
-   *   <li>The {@link AdvanceDTO#mode} from {@link BeatDTO#advance} must not be null
-   *   <li>If {@link AdvanceDTO#mode} is {@code "auto"} or {@code "input"}, {@link AdvanceDTO#delay}
-   *       and {@link AdvanceDTO#signalKey} must be null
-   *   <li>If {@link AdvanceDTO#mode} is {@code "auto_delay"}, {@link AdvanceDTO#delay} must not be
-   *       null and {@link AdvanceDTO#signalKey} must be null
-   *   <li>If {@link AdvanceDTO#mode} is {@code "signal"}, {@link AdvanceDTO#delay} must be null,
-   *       and {@link AdvanceDTO#signalKey} must not be null
-   *   <li>{@link AdvanceDTO#mode} must not be any value than above
-   *   <li>{@link BeatDTO#actions} must not be null or empty
-   *   <li>Each action in {@link BeatDTO#actions} must pass its own validator
-   *   <li>The {@link BeatDTO#id} is unique
+   *   <li>{@link BeatDTO#getAdvance()} must not be null
+   *   <li>The {@link AdvanceDTO#getMode()} from {@link BeatDTO#getAdvance()} must not be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto"} or {@code "input"}, {@link AdvanceDTO#delay}
+   *       and {@link AdvanceDTO#getSignalKey()} must be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "auto_delay"}, {@link AdvanceDTO#getDelay()} must not be
+   *       null and {@link AdvanceDTO#getSignalKey()} must be null
+   *   <li>If {@link AdvanceDTO#getMode()} is {@code "signal"}, {@link AdvanceDTO#getDelay()} must be null,
+   *       and {@link AdvanceDTO#getSignalKey()} must not be null
+   *   <li>{@link AdvanceDTO#getMode()} must not be any value than above
+   *   <li>{@link BeatDTO#getActions()} must not be null or empty
+   *   <li>Each action in {@link BeatDTO#getActions()} must pass its own validator
+   *   <li>The {@link BeatDTO#getId()} is unique
    * </ul>
    *
    * @param beat The {@link BeatDTO} to be validated
@@ -307,14 +306,14 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.getAdvance() == null)
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ADVANCE_NULL", BEATS_PATH + beat.getId(), "Beat advance must not be null"));
+              "BEAT_ADVANCE_NULL", CutsceneSchemaKeys.BEATS_PATH + beat.getId(), "Beat advance must not be null"));
     else
       switch (beat.getAdvance().getMode()) {
         case null:
           beatErrors.add(
               new AuthoringError(
                   "BEAT_ADVANCE_MODE_NULL",
-                  BEATS_PATH + beat.getId(),
+                  CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
                   "Beat advance mode must not be null"));
           break;
         case "auto", "input":
@@ -322,7 +321,7 @@ public class V1SchemaValidator implements SchemaValidator {
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_UNEXPECTED",
-                    BEATS_PATH + beat.getId(),
+                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
                     "Unexpected value in auto advance"));
           break;
         case "auto_delay":
@@ -330,7 +329,7 @@ public class V1SchemaValidator implements SchemaValidator {
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_DELAY_INVALID",
-                    BEATS_PATH + beat.getId(),
+                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
                     "Invalid data for auto delay advance"));
           break;
         case "signal":
@@ -338,7 +337,7 @@ public class V1SchemaValidator implements SchemaValidator {
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_SIGNAL_INVALID",
-                    BEATS_PATH + beat.getId(),
+                    CutsceneSchemaKeys.BEATS_PATH + beat.getId(),
                     "Invalid data for signal advance"));
           break;
         default:
@@ -348,7 +347,7 @@ public class V1SchemaValidator implements SchemaValidator {
     if (beat.getActions() == null || beat.getActions().isEmpty()) {
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ACTIONS_NULL", BEATS_PATH + beat.getId(), "Beat actions is null or empty"));
+              "BEAT_ACTIONS_NULL", CutsceneSchemaKeys.BEATS_PATH + beat.getId(), "Beat actions is null or empty"));
     } else {
       for (ActionDTO action : beat.getActions()) {
         beatErrors.addAll(actionValidatorRegistry.validate(action, beat.getId(), validationCtx));

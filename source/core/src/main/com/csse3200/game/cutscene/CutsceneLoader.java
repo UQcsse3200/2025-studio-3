@@ -86,7 +86,7 @@ public class CutsceneLoader {
 
     beatDTO.setAdvance(parseAdvance(jsonValue.get("advance")));
 
-    JsonValue actions = jsonValue.get("actions");
+    JsonValue actions = jsonValue.get(CutsceneSchemaKeys.ACTIONS_KEY);
     if (actions == null) return beatDTO;
 
     beatDTO.setActions(new ArrayList<>());
@@ -122,7 +122,7 @@ public class CutsceneLoader {
 
     actionDTO.setType(jsonValue.getString("type"));
 
-    JsonValue actions = jsonValue.get("actions");
+    JsonValue actions = jsonValue.get(CutsceneSchemaKeys.ACTIONS_KEY);
     if (actions != null) {
       actionDTO.setActions(new ArrayList<>());
       for (JsonValue action : actions) {
@@ -132,7 +132,7 @@ public class CutsceneLoader {
 
     Map<String, Object> kvPairs = mapAny(jsonValue);
     kvPairs.remove("type");
-    kvPairs.remove("actions");
+    kvPairs.remove(CutsceneSchemaKeys.ACTIONS_KEY);
 
     actionDTO.getFields().putAll(kvPairs);
 

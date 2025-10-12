@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.validators.actionvalidators;
 
+import com.csse3200.game.cutscene.CutsceneSchemaKeys;
 import com.csse3200.game.cutscene.models.dto.ActionDTO;
 import com.csse3200.game.cutscene.validators.ActionValidator;
 import com.csse3200.game.cutscene.validators.ValidationCtx;
@@ -37,11 +38,11 @@ public class DialogueShowValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.getFields().get("characterId"), "characterId", path);
+        ValidatorUtils.validateString(action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD), CutsceneSchemaKeys.CHARACTER_ID_FIELD, path);
     errors.addAll(characterIdErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.getFields().get("characterId");
+      String characterId = (String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD);
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(

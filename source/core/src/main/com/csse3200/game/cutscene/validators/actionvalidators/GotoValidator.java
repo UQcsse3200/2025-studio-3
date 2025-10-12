@@ -44,21 +44,19 @@ public class GotoValidator implements ActionValidator {
     List<AuthoringError> beatIdErrors =
         ValidatorUtils.validateString(action.getFields().get("beatId"), "GOTO_CUTSCENE_BEAT_ID", path);
 
-    if (errors.isEmpty()) {
-      if (action.getFields().get("cutsceneId").equals("current")) {
-        if (beatIdErrors.isEmpty()) {
-          String gotoBeatId = (String) action.getFields().get("beatId");
-          if (!context.beatIds().contains(gotoBeatId)) {
-            beatIdErrors.add(
-                new AuthoringError(
-                    "ACTION_GOTO_BEAT_ID_INVALID",
-                    path,
-                    "Beat ID " + gotoBeatId + " is not a valid beat ID"));
-          }
+    if (errors.isEmpty() && action.getFields().get("cutsceneId").equals("current")) {
+      if (beatIdErrors.isEmpty()) {
+        String gotoBeatId = (String) action.getFields().get("beatId");
+        if (!context.beatIds().contains(gotoBeatId)) {
+          beatIdErrors.add(
+              new AuthoringError(
+                  "ACTION_GOTO_BEAT_ID_INVALID",
+                  path,
+                  "Beat ID " + gotoBeatId + " is not a valid beat ID"));
         }
-
-        errors.addAll(beatIdErrors);
       }
+
+      errors.addAll(beatIdErrors);
     }
 
     return errors;

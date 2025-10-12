@@ -40,14 +40,12 @@ public class DialogueChorusValidator implements ActionValidator {
     Object characterIdsObject = action.getFields().get("characterIds");
     if (characterIdsObject instanceof List<?>) {
       for (Object item : (List<?>) characterIdsObject) {
-        if (item instanceof String) {
-          if (!context.characterIds().contains((String) item)) {
-            errors.add(
-                new AuthoringError(
-                    "DIALOGUE_CHORUS_CHARACTERID_NONEXISTANT",
-                    path,
-                    "The character ID " + (String) item + " does not exist."));
-          }
+        if (item instanceof String itemString && !context.characterIds().contains(itemString)) {
+          errors.add(
+              new AuthoringError(
+                  "DIALOGUE_CHORUS_CHARACTERID_NONEXISTANT",
+                  path,
+                  "The character ID " + itemString + " does not exist."));
         }
       }
     } else {

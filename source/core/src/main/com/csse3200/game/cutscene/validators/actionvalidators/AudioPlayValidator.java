@@ -54,10 +54,8 @@ public class AudioPlayValidator implements ActionValidator {
 
     errors.addAll(ValidatorUtils.validateString(busObject, "AUDIO_PLAY_BUS", path));
 
-    if (busObject instanceof String) {
-      String bus = (String) busObject;
-
-      switch (bus) {
+    if (busObject instanceof String bus) {
+        switch (bus) {
         case "sfx":
           {
             errors.addAll(

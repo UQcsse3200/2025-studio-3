@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.validators.actionvalidators;
 
+import com.csse3200.game.cutscene.CutsceneSchemaKeys;
 import com.csse3200.game.cutscene.models.dto.ActionDTO;
 import com.csse3200.game.cutscene.validators.ActionValidator;
 import com.csse3200.game.cutscene.validators.ValidationCtx;
@@ -28,9 +29,6 @@ import java.util.List;
  * </ul>
  */
 public class CharacterEnterValidator implements ActionValidator {
-  private static final String CHARACTER_ID_FIELD = "characterId";
-  private static final String POSITION_FIELD = "position";
-
   /**
    * {@inheritDoc}
    *
@@ -47,7 +45,7 @@ public class CharacterEnterValidator implements ActionValidator {
 
     List<AuthoringError> characterIdErrors =
         ValidatorUtils.validateString(
-            action.getFields().get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
+            action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD), CutsceneSchemaKeys.CHARACTER_ID_FIELD, path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
@@ -55,7 +53,7 @@ public class CharacterEnterValidator implements ActionValidator {
     errors.addAll(poseErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.getFields().get(CHARACTER_ID_FIELD);
+      String characterId = (String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD);
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(
@@ -78,11 +76,11 @@ public class CharacterEnterValidator implements ActionValidator {
     }
 
     List<AuthoringError> positionErrors =
-        ValidatorUtils.validateString(action.getFields().get(POSITION_FIELD), POSITION_FIELD, path);
+        ValidatorUtils.validateString(action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD), CutsceneSchemaKeys.POSITION_FIELD, path);
     errors.addAll(positionErrors);
 
     if (positionErrors.isEmpty()) {
-      String position = (String) action.getFields().get(POSITION_FIELD);
+      String position = (String) action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD);
 
       if (!position.equals("left") && !position.equals("right")) {
         errors.add(
