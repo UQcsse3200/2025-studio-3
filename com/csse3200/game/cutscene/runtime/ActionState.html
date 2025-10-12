@@ -87,7 +87,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Known Implementing Classes:</dt>
-<dd><code><a href="states/AdvanceAutoDelayState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoDelayState</a></code>, <code><a href="states/AdvanceAutoState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoState</a></code>, <code><a href="states/AdvanceInputState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceInputState</a></code>, <code><a href="states/AdvanceSignalState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceSignalState</a></code>, <code><a href="action/BackgroundSetAction.html" title="class in com.csse3200.game.cutscene.runtime.action">BackgroundSetAction</a></code>, <code><a href="action/CharacterEnterAction.html" title="class in com.csse3200.game.cutscene.runtime.action">CharacterEnterAction</a></code>, <code><a href="action/CharacterExitAction.html" title="class in com.csse3200.game.cutscene.runtime.action">CharacterExitAction</a></code>, <code><a href="action/DialogueHideAction.html" title="class in com.csse3200.game.cutscene.runtime.action">DialogueHideAction</a></code>, <code><a href="action/DialogueShowAction.html" title="class in com.csse3200.game.cutscene.runtime.action">DialogueShowAction</a></code></dd>
+<dd><code><a href="states/AdvanceAutoDelayState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoDelayState</a></code>, <code><a href="states/AdvanceAutoState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceAutoState</a></code>, <code><a href="states/AdvanceInputState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceInputState</a></code>, <code><a href="states/AdvanceSignalState.html" title="class in com.csse3200.game.cutscene.runtime.states">AdvanceSignalState</a></code>, <code><a href="action/BackgroundSetAction.html" title="class in com.csse3200.game.cutscene.runtime.action">BackgroundSetAction</a></code>, <code><a href="action/CharacterEnterAction.html" title="class in com.csse3200.game.cutscene.runtime.action">CharacterEnterAction</a></code>, <code><a href="action/CharacterExitAction.html" title="class in com.csse3200.game.cutscene.runtime.action">CharacterExitAction</a></code>, <code><a href="action/ChoiceAction.html" title="class in com.csse3200.game.cutscene.runtime.action">ChoiceAction</a></code>, <code><a href="action/DialogueHideAction.html" title="class in com.csse3200.game.cutscene.runtime.action">DialogueHideAction</a></code>, <code><a href="action/DialogueShowAction.html" title="class in com.csse3200.game.cutscene.runtime.action">DialogueShowAction</a></code>, <code><a href="action/GotoAction.html" title="class in com.csse3200.game.cutscene.runtime.action">GotoAction</a></code>, <code><a href="action/ParallelAction.html" title="class in com.csse3200.game.cutscene.runtime.action">ParallelAction</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">ActionState</span></div>
@@ -117,8 +117,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Checks if the action is completed (can be disposed of)</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tick(int)" class="member-name-link">tick</a><wbr>(int&nbsp;dtMs)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#skip()" class="member-name-link">skip</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Triggered on skip, will fast track any logic to its final state</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#tick(int)" class="member-name-link">tick</a><wbr>(int&nbsp;dtMs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Runs on every game tick to progress logic</div>
 </div>
 </div>
@@ -144,6 +149,13 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>dtMs</code> - The delta time in milliseconds</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="skip()">
+<h3>skip</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">skip</span>()</div>
+<div class="block">Triggered on skip, will fast track any logic to its final state</div>
 </section>
 </li>
 <li>

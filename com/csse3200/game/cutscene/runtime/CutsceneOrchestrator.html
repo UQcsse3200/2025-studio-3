@@ -116,6 +116,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Selects a choice (from choice events)</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getActionState(com.csse3200.game.cutscene.models.object.actiondata.ActionData)" class="member-name-link">getActionState</a><wbr>(<a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&nbsp;actionData)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Get the <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> from the given <a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata"><code>ActionData</code></a></div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#gotoBeat(java.lang.String)" class="member-name-link">gotoBeat</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Goto a specific beat from the beats ID</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#isRuning()" class="member-name-link">isRuning</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
@@ -188,6 +198,19 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getActionState(com.csse3200.game.cutscene.models.object.actiondata.ActionData)">
+<h3>getActionState</h3>
+<div class="member-signature"><span class="return-type"><a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></span>&nbsp;<span class="element-name">getActionState</span><wbr><span class="parameters">(<a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&nbsp;actionData)</span></div>
+<div class="block">Get the <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> from the given <a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata"><code>ActionData</code></a></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>actionData</code> - the data to get the corresponding state for</dd>
+<dt>Returns:</dt>
+<dd>an <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> for the given actionData</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="advance()">
 <h3>advance</h3>
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">advance</span>()</div>
@@ -202,6 +225,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>id</code> - The id of the choice made</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="gotoBeat(java.lang.String)">
+<h3>gotoBeat</h3>
+<div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">gotoBeat</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Goto a specific beat from the beats ID</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>id</code> - the ID of the beat to jump to</dd>
 </dl>
 </section>
 </li>

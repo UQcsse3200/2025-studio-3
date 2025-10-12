@@ -135,8 +135,13 @@ implements <a href="../ActionState.html" title="interface in com.csse3200.game.c
 <div class="block">Checks if the action is completed (can be disposed of)</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(int)" class="member-name-link">tick</a><wbr>(int&nbsp;dtMs)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#skip()" class="member-name-link">skip</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Triggered on skip, will fast track any logic to its final state</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#tick(int)" class="member-name-link">tick</a><wbr>(int&nbsp;dtMs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Runs on every game tick to progress logic</div>
 </div>
 </div>
@@ -180,6 +185,17 @@ implements <a href="../ActionState.html" title="interface in com.csse3200.game.c
 <dd><code><a href="../ActionState.html#tick(int)">tick</a></code>&nbsp;in interface&nbsp;<code><a href="../ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>dtMs</code> - The delta time in milliseconds</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="skip()">
+<h3>skip</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">skip</span>()</div>
+<div class="block">Triggered on skip, will fast track any logic to its final state</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../ActionState.html#skip()">skip</a></code>&nbsp;in interface&nbsp;<code><a href="../ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></code></dd>
 </dl>
 </section>
 </li>

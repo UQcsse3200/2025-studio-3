@@ -85,7 +85,9 @@ loadScripts(document, 'script');</script>
 <h1 title="Class DefaultOrchestrator" class="title">Class DefaultOrchestrator</h1>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
+<div class="inheritance"><a href="OrchestratorState.html" title="class in com.csse3200.game.cutscene.runtime">com.csse3200.game.cutscene.runtime.OrchestratorState</a>
 <div class="inheritance">com.csse3200.game.cutscene.runtime.DefaultOrchestrator</div>
+</div>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
@@ -94,7 +96,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">DefaultOrchestrator</span>
-<span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
+<span class="extends-implements">extends <a href="OrchestratorState.html" title="class in com.csse3200.game.cutscene.runtime">OrchestratorState</a>
 implements <a href="CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></span></div>
 </section>
 <section class="summary">
@@ -133,10 +135,20 @@ implements <a href="CutsceneOrchestrator.html" title="interface in com.csse3200.
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Selects a choice (from choice events)</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object">Cutscene</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCutscene()" class="member-name-link">getCutscene</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActionState(com.csse3200.game.cutscene.models.object.actiondata.ActionData)" class="member-name-link">getActionState</a><wbr>(<a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&nbsp;actionData)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> from the given <a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata"><code>ActionData</code></a></div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object">Cutscene</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCutscene()" class="member-name-link">getCutscene</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the cutscene</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#gotoBeat(java.lang.String)" class="member-name-link">gotoBeat</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Goto a specific beat from the beats ID</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isRuning()" class="member-name-link">isRuning</a>()</code></div>
@@ -176,6 +188,9 @@ implements <a href="CutsceneOrchestrator.html" title="interface in com.csse3200.
 </div>
 </div>
 </div>
+<div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.csse3200.game.cutscene.runtime.OrchestratorState">Methods inherited from class&nbsp;com.csse3200.game.cutscene.runtime.<a href="OrchestratorState.html" title="class in com.csse3200.game.cutscene.runtime">OrchestratorState</a></h3>
+<code><a href="OrchestratorState.html#getBackgroundState()">getBackgroundState</a>, <a href="OrchestratorState.html#getCharacterStates()">getCharacterStates</a>, <a href="OrchestratorState.html#getCharacterStatesList()">getCharacterStatesList</a>, <a href="OrchestratorState.html#getChoiceState()">getChoiceState</a>, <a href="OrchestratorState.html#getDialogueState()">getDialogueState</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -231,6 +246,21 @@ implements <a href="CutsceneOrchestrator.html" title="interface in com.csse3200.
 </section>
 </li>
 <li>
+<section class="detail" id="getActionState(com.csse3200.game.cutscene.models.object.actiondata.ActionData)">
+<h3>getActionState</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime">ActionState</a></span>&nbsp;<span class="element-name">getActionState</span><wbr><span class="parameters">(<a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&nbsp;actionData)</span></div>
+<div class="block">Get the <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> from the given <a href="../models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata"><code>ActionData</code></a></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="CutsceneOrchestrator.html#getActionState(com.csse3200.game.cutscene.models.object.actiondata.ActionData)">getActionState</a></code>&nbsp;in interface&nbsp;<code><a href="CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>actionData</code> - the data to get the corresponding state for</dd>
+<dt>Returns:</dt>
+<dd>an <a href="ActionState.html" title="interface in com.csse3200.game.cutscene.runtime"><code>ActionState</code></a> for the given actionData</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="advance()">
 <h3>advance</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">advance</span>()</div>
@@ -251,6 +281,19 @@ implements <a href="CutsceneOrchestrator.html" title="interface in com.csse3200.
 <dd><code><a href="CutsceneOrchestrator.html#choose(java.lang.String)">choose</a></code>&nbsp;in interface&nbsp;<code><a href="CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>id</code> - The id of the choice made</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="gotoBeat(java.lang.String)">
+<h3>gotoBeat</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">gotoBeat</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</span></div>
+<div class="block">Goto a specific beat from the beats ID</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="CutsceneOrchestrator.html#gotoBeat(java.lang.String)">gotoBeat</a></code>&nbsp;in interface&nbsp;<code><a href="CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>id</code> - the ID of the beat to jump to</dd>
 </dl>
 </section>
 </li>
