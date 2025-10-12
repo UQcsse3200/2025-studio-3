@@ -37,11 +37,11 @@ public class DialogueShowValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.fields.get("characterId"), "characterId", path);
+        ValidatorUtils.validateString(action.getFields().get("characterId"), "characterId", path);
     errors.addAll(characterIdErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.fields.get("characterId");
+      String characterId = (String) action.getFields().get("characterId");
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(
@@ -52,7 +52,7 @@ public class DialogueShowValidator implements ActionValidator {
     }
 
     List<AuthoringError> textErrors =
-        ValidatorUtils.validateString(action.fields.get("text"), "text", path);
+        ValidatorUtils.validateString(action.getFields().get("text"), "text", path);
     errors.addAll(textErrors);
 
     errors.addAll(ValidatorUtils.validateAwait(beatId, action));

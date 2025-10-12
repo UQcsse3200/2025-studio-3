@@ -36,7 +36,7 @@ public class AudioStopValidator implements ActionValidator {
     List<AuthoringError> errors = new ArrayList<>();
 
     // bus validation
-    Object busObject = action.fields.get("bus");
+    Object busObject = action.getFields().get("bus");
 
     String path = "doc.cutscene.beats." + beatId + ".actions.*";
 
@@ -51,10 +51,10 @@ public class AudioStopValidator implements ActionValidator {
       }
     }
 
-    errors.addAll(ValidatorUtils.validateInt(action.fields.get("fadeMs"), "AUDIO_STOP_FADE", path));
+    errors.addAll(ValidatorUtils.validateInt(action.getFields().get("fadeMs"), "AUDIO_STOP_FADE", path));
 
-    if (action.fields.get("fadeMs") instanceof Long) {
-      if ((Long) action.fields.get("fadeMs") < 0) {
+    if (action.getFields().get("fadeMs") instanceof Long) {
+      if ((Long) action.getFields().get("fadeMs") < 0) {
         errors.add(
             new AuthoringError(
                 "ACTION_AUDIO_STOP_FADE_INVALID", path, "FadeMs must be greater or equal to 0"));

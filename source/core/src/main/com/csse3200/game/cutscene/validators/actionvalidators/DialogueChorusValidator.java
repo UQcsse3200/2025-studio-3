@@ -37,7 +37,7 @@ public class DialogueChorusValidator implements ActionValidator {
 
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
-    Object characterIdsObject = action.fields.get("characterIds");
+    Object characterIdsObject = action.getFields().get("characterIds");
     if (characterIdsObject instanceof List<?>) {
       for (Object item : (List<?>) characterIdsObject) {
         if (item instanceof String) {
@@ -59,7 +59,7 @@ public class DialogueChorusValidator implements ActionValidator {
     }
 
     List<AuthoringError> textErrors =
-        ValidatorUtils.validateString(action.fields.get("text"), "text", path);
+        ValidatorUtils.validateString(action.getFields().get("text"), "text", path);
     errors.addAll(textErrors);
 
     errors.addAll(ValidatorUtils.validateAwait(beatId, action));

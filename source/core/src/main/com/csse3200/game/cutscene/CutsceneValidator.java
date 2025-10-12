@@ -7,7 +7,7 @@ import java.util.List;
 
 public class CutsceneValidator {
   public List<AuthoringError> validate(CutsceneDocDTO cutscene) {
-    switch (cutscene.schemaVersion) {
+    switch (cutscene.getSchemaVersion()) {
       case 1:
         return new V1SchemaValidator().validate(cutscene);
       default:
@@ -15,7 +15,7 @@ public class CutsceneValidator {
             new AuthoringError(
                 "INVALID_SCHEMA",
                 "doc",
-                "The schema version " + cutscene.schemaVersion + " does not exist"));
+                "The schema version " + cutscene.getSchemaVersion() + " does not exist"));
     }
   }
 }

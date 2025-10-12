@@ -55,7 +55,7 @@ public class ValidatorUtils {
    * @return A list of {@link AuthoringError} detailing each rule infraction
    */
   public static List<AuthoringError> validateTransition(String beatId, ActionDTO action) {
-    Object transitionObject = action.fields.get("transition");
+    Object transitionObject = action.getFields().get("transition");
 
     List<AuthoringError> errors = new ArrayList<>();
 
@@ -75,7 +75,7 @@ public class ValidatorUtils {
       }
     }
 
-    Object durationObject = action.fields.get("duration");
+    Object durationObject = action.getFields().get("duration");
 
     List<AuthoringError> durationErrors =
         validateInt(durationObject, "duration", "doc.cutscene.beats." + beatId + ".actions.*");
@@ -285,7 +285,7 @@ public class ValidatorUtils {
    * @return A list of {@link AuthoringError} detailing each rule infraction
    */
   public static List<AuthoringError> validateAwait(String beatId, ActionDTO action) {
-    Object awaitObject = action.fields.get("await");
+    Object awaitObject = action.getFields().get("await");
 
     List<AuthoringError> awaitErrors =
         validateBool(awaitObject, "await", "doc.cutscene.beats." + beatId + ".actions.*");
@@ -307,10 +307,10 @@ public class ValidatorUtils {
   public static List<AuthoringError> validateSoundId(
       ActionDTO action, ValidationCtx context, String path) {
     List<AuthoringError> soundIdErrors =
-        ValidatorUtils.validateString(action.fields.get("soundId"), "soundId", path);
+        ValidatorUtils.validateString(action.getFields().get("soundId"), "soundId", path);
 
     if (soundIdErrors.isEmpty()) {
-      String soundId = (String) action.fields.get("soundId");
+      String soundId = (String) action.getFields().get("soundId");
       if (!context.soundIds().contains(soundId)) {
         soundIdErrors.add(
             new AuthoringError(

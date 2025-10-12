@@ -47,15 +47,15 @@ public class CharacterEnterValidator implements ActionValidator {
 
     List<AuthoringError> characterIdErrors =
         ValidatorUtils.validateString(
-            action.fields.get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
+            action.getFields().get(CHARACTER_ID_FIELD), CHARACTER_ID_FIELD, path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
-        ValidatorUtils.validateString(action.fields.get("pose"), "pose", path);
+        ValidatorUtils.validateString(action.getFields().get("pose"), "pose", path);
     errors.addAll(poseErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.fields.get(CHARACTER_ID_FIELD);
+      String characterId = (String) action.getFields().get(CHARACTER_ID_FIELD);
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(
@@ -65,7 +65,7 @@ public class CharacterEnterValidator implements ActionValidator {
       }
 
       if (poseErrors.isEmpty()) {
-        String pose = (String) action.fields.get("pose");
+        String pose = (String) action.getFields().get("pose");
         if (context.characterPoses().get(characterId) != null
             && !context.characterPoses().get(characterId).contains(pose)) {
           errors.add(
@@ -78,11 +78,11 @@ public class CharacterEnterValidator implements ActionValidator {
     }
 
     List<AuthoringError> positionErrors =
-        ValidatorUtils.validateString(action.fields.get(POSITION_FIELD), POSITION_FIELD, path);
+        ValidatorUtils.validateString(action.getFields().get(POSITION_FIELD), POSITION_FIELD, path);
     errors.addAll(positionErrors);
 
     if (positionErrors.isEmpty()) {
-      String position = (String) action.fields.get(POSITION_FIELD);
+      String position = (String) action.getFields().get(POSITION_FIELD);
 
       if (!position.equals("left") && !position.equals("right")) {
         errors.add(

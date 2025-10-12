@@ -54,35 +54,35 @@ public class V1SchemaValidator implements SchemaValidator {
       return List.of(new AuthoringError("DOC_NULL", "doc", "The json file is null or invalid."));
     }
 
-    if (cutsceneDocDTO.schemaVersion != 1) {
+    if (cutsceneDocDTO.getSchemaVersion() != 1) {
       return List.of(
           new AuthoringError(
               "INVALID_SCHEMA", "doc", "The schema version is invalid, should be 1."));
     }
 
-    if (cutsceneDocDTO.characters == null) {
+    if (cutsceneDocDTO.getCharacters() == null) {
       return List.of(new AuthoringError("CHARACTERS_NULL", "doc", "Characters are required"));
     }
 
-    if (cutsceneDocDTO.backgrounds == null) {
+    if (cutsceneDocDTO.getBackgrounds() == null) {
       return List.of(new AuthoringError("BACKGROUNDS_NULL", "doc", "Backgrounds are required"));
     }
 
-    if (cutsceneDocDTO.sounds == null) {
+    if (cutsceneDocDTO.getSounds() == null) {
       return List.of(new AuthoringError("SOUNDS_NULL", "doc", "Sounds are required"));
     }
 
-    if (cutsceneDocDTO.cutscene == null) {
+    if (cutsceneDocDTO.getCutscene() == null) {
       return List.of(new AuthoringError("CUTSCENE_NULL", "doc", "Cutscene is required"));
     }
 
-    errors.addAll(characterValidation(cutsceneDocDTO.characters));
+    errors.addAll(characterValidation(cutsceneDocDTO.getCharacters()));
 
-    errors.addAll(backgroundValidation(cutsceneDocDTO.backgrounds));
+    errors.addAll(backgroundValidation(cutsceneDocDTO.getBackgrounds()));
 
-    errors.addAll(soundValidation(cutsceneDocDTO.sounds));
+    errors.addAll(soundValidation(cutsceneDocDTO.getSounds()));
 
-    errors.addAll(cutsceneValidation(cutsceneDocDTO.cutscene));
+    errors.addAll(cutsceneValidation(cutsceneDocDTO.getCutscene()));
 
     return errors;
   }
@@ -106,39 +106,39 @@ public class V1SchemaValidator implements SchemaValidator {
     List<AuthoringError> characterErrors = new ArrayList<>();
 
     for (CharacterDTO characterDTO : characters) {
-      if (characterDTO.id == null)
+      if (characterDTO.getId() == null)
         characterErrors.add(
             new AuthoringError("NULL_CHARACTER_ID", "doc.characters", "Character id is null"));
 
-      if (characterDTO.name == null)
+      if (characterDTO.getName() == null)
         characterErrors.add(
             new AuthoringError("NULL_CHARACTER_NAME", "doc.characters", "Character name is null"));
 
-      if (characterDTO.poses.isEmpty())
+      if (characterDTO.getPoses().isEmpty())
         characterErrors.add(
             new AuthoringError(
                 "NULL_CHARACTER_EMPTY_POSES",
-                "doc.characters." + characterDTO.id,
+                "doc.characters." + characterDTO.getId(),
                 "Character must have at lest 1 pose"));
-      else if (!ValidatorUtils.stringMapValid(characterDTO.poses)) {
+      else if (!ValidatorUtils.stringMapValid(characterDTO.getPoses())) {
         characterErrors.add(
             new AuthoringError(
-                "EMPTY_POSE", "doc.characters." + characterDTO.id, "A pose key or value is empty"));
+                "EMPTY_POSE", "doc.characters." + characterDTO.getId(), "A pose key or value is empty"));
       }
 
-      if (characterDTO.id != null) {
-        if (characterIds.contains(characterDTO.id)) {
+      if (characterDTO.getId() != null) {
+        if (characterIds.contains(characterDTO.getId())) {
           characterErrors.add(
               new AuthoringError(
                   "CHARACTER_ID_TAKEN",
-                  "doc.characters." + characterDTO.id,
+                  "doc.characters." + characterDTO.getId(),
                   "Character IDs must be unique"));
         } else {
-          characterIds.add(characterDTO.id);
+          characterIds.add(characterDTO.getId());
         }
 
-        if (!characterDTO.poses.isEmpty()) {
-          characterPoses.put(characterDTO.id, characterDTO.poses.keySet());
+        if (!characterDTO.getPoses().isEmpty()) {
+          characterPoses.put(characterDTO.getId(), characterDTO.getPoses().keySet());
         }
       }
     }
@@ -162,24 +162,24 @@ public class V1SchemaValidator implements SchemaValidator {
     List<AuthoringError> backgroundErrors = new ArrayList<>();
 
     for (BackgroundDTO background : backgrounds) {
-      if (background.id == null)
+      if (background.getId() == null)
         backgroundErrors.add(
             new AuthoringError("NULL_BACKGROUND_ID", "doc.backgrounds", "Background id is null."));
 
-      if (background.image == null)
+      if (background.getImage() == null)
         backgroundErrors.add(
             new AuthoringError(
                 "NULL_BACKGROUND_IMAGE", "doc.backgrounds", "Background image address is null"));
 
-      if (background.id != null) {
-        if (backgroundIds.contains(background.id)) {
+      if (background.getId() != null) {
+        if (backgroundIds.contains(background.getId())) {
           backgroundErrors.add(
               new AuthoringError(
                   "BACKGROUND_ID_TAKEN",
-                  "doc.backgrounds." + background.id,
+                  "doc.backgrounds." + background.getId(),
                   "Background IDs must be unique"));
         } else {
-          backgroundIds.add(background.id);
+          backgroundIds.add(background.getId());
         }
       }
     }
@@ -203,20 +203,20 @@ public class V1SchemaValidator implements SchemaValidator {
     List<AuthoringError> soundErrors = new ArrayList<>();
 
     for (SoundDTO sound : sounds) {
-      if (sound.id == null)
+      if (sound.getId() == null)
         soundErrors.add(new AuthoringError("NULL_SOUND_ID", "doc.sounds", "Sound id is null."));
 
-      if (sound.file == null)
+      if (sound.getFile() == null)
         soundErrors.add(
             new AuthoringError("NULL_SOUND_FILE", "doc.sounds", "Sound file address is null"));
 
-      if (sound.id != null) {
-        if (soundIds.contains(sound.id)) {
+      if (sound.getId() != null) {
+        if (soundIds.contains(sound.getId())) {
           soundErrors.add(
               new AuthoringError(
-                  "SOUND_ID_TAKEN", "doc.sounds." + sound.id, "Sound IDs must be unique"));
+                  "SOUND_ID_TAKEN", "doc.sounds." + sound.getId(), "Sound IDs must be unique"));
         } else {
-          soundIds.add(sound.id);
+          soundIds.add(sound.getId());
         }
       }
     }
@@ -243,28 +243,28 @@ public class V1SchemaValidator implements SchemaValidator {
   private List<AuthoringError> cutsceneValidation(CutsceneDTO cutscene) {
     List<AuthoringError> cutsceneErrors = new ArrayList<>();
 
-    if (cutscene.id == null)
+    if (cutscene.getId() == null)
       cutsceneErrors.add(
           new AuthoringError("CUTSCENE_ID_NULL", "doc.cutscene", "Cutscene id must not be null"));
 
-    if (cutscene.beats == null)
+    if (cutscene.getBeats() == null)
       cutsceneErrors.add(
           new AuthoringError("CUTSCENE_BEATS_NULL", "doc.cutscene", "Beats must not be null"));
 
     // quick pass to collect all beat ids
-    for (BeatDTO beat : cutscene.beats) {
-      if (beat.id == null)
+    for (BeatDTO beat : cutscene.getBeats()) {
+      if (beat.getId() == null)
         cutsceneErrors.add(
             new AuthoringError("BEAT_ID_NULL", "doc.cutscene.beats", "Beats must have a valid id"));
       else {
-        if (beatIds.contains(beat.id)) {
+        if (beatIds.contains(beat.getId())) {
           cutsceneErrors.add(
               new AuthoringError(
                   "BEAT_ID_EXISTS",
-                  BEATS_PATH + beat.id,
-                  "The beat id " + beat.id + " already exists"));
+                  BEATS_PATH + beat.getId(),
+                  "The beat id " + beat.getId() + " already exists"));
         } else {
-          beatIds.add(beat.id);
+          beatIds.add(beat.getId());
         }
       }
     }
@@ -272,7 +272,7 @@ public class V1SchemaValidator implements SchemaValidator {
     ValidationCtx validationCtx =
         new ValidationCtx(characterIds, backgroundIds, soundIds, beatIds, characterPoses);
 
-    for (BeatDTO beat : cutscene.beats) {
+    for (BeatDTO beat : cutscene.getBeats()) {
       cutsceneErrors.addAll(beatValidation(beat, validationCtx));
     }
 
@@ -304,54 +304,54 @@ public class V1SchemaValidator implements SchemaValidator {
   private List<AuthoringError> beatValidation(BeatDTO beat, ValidationCtx validationCtx) {
     List<AuthoringError> beatErrors = new ArrayList<>();
 
-    if (beat.advance == null)
+    if (beat.getAdvance() == null)
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ADVANCE_NULL", BEATS_PATH + beat.id, "Beat advance must not be null"));
+              "BEAT_ADVANCE_NULL", BEATS_PATH + beat.getId(), "Beat advance must not be null"));
     else
-      switch (beat.advance.mode) {
+      switch (beat.getAdvance().getMode()) {
         case null:
           beatErrors.add(
               new AuthoringError(
                   "BEAT_ADVANCE_MODE_NULL",
-                  BEATS_PATH + beat.id,
+                  BEATS_PATH + beat.getId(),
                   "Beat advance mode must not be null"));
           break;
         case "auto", "input":
-          if (beat.advance.delay != null || beat.advance.signalKey != null)
+          if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() != null)
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_UNEXPECTED",
-                    BEATS_PATH + beat.id,
+                    BEATS_PATH + beat.getId(),
                     "Unexpected value in auto advance"));
           break;
         case "auto_delay":
-          if (beat.advance.delay == null || beat.advance.signalKey != null)
+          if (beat.getAdvance().getDelay() == null || beat.getAdvance().getSignalKey() != null)
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_AUTO_DELAY_INVALID",
-                    BEATS_PATH + beat.id,
+                    BEATS_PATH + beat.getId(),
                     "Invalid data for auto delay advance"));
           break;
         case "signal":
-          if (beat.advance.delay != null || beat.advance.signalKey == null)
+          if (beat.getAdvance().getDelay() != null || beat.getAdvance().getSignalKey() == null)
             beatErrors.add(
                 new AuthoringError(
                     "BEAT_ADVANCE_MODE_SIGNAL_INVALID",
-                    BEATS_PATH + beat.id,
+                    BEATS_PATH + beat.getId(),
                     "Invalid data for signal advance"));
           break;
         default:
-          throw new IllegalStateException("Unexpected value: " + beat.advance.mode);
+          throw new IllegalStateException("Unexpected value: " + beat.getAdvance().getMode());
       }
 
-    if (beat.actions == null || beat.actions.isEmpty()) {
+    if (beat.getActions() == null || beat.getActions().isEmpty()) {
       beatErrors.add(
           new AuthoringError(
-              "BEAT_ACTIONS_NULL", BEATS_PATH + beat.id, "Beat actions is null or empty"));
+              "BEAT_ACTIONS_NULL", BEATS_PATH + beat.getId(), "Beat actions is null or empty"));
     } else {
-      for (ActionDTO action : beat.actions) {
-        beatErrors.addAll(actionValidatorRegistry.validate(action, beat.id, validationCtx));
+      for (ActionDTO action : beat.getActions()) {
+        beatErrors.addAll(actionValidatorRegistry.validate(action, beat.getId(), validationCtx));
       }
     }
 
