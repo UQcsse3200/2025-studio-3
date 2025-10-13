@@ -176,6 +176,7 @@ public class RobotFactory {
 
     if (config.getName() != null && config.getName().contains("Teleport")) {
       animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportDamaged", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
       if (laneYs.length >= 2) {
         AITaskComponent ai = robot.getComponent(AITaskComponent.class);
@@ -188,6 +189,11 @@ public class RobotFactory {
                   laneYs));
         }
       }
+    }
+
+    if (config.getName() != null && config.getName().contains("Gunner")) {
+      animator.addAnimation("shoot", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("shootDamaged", 0.1f, Animation.PlayMode.NORMAL);
     }
 
     // ✅ Add explosion-on-death component for bomber
