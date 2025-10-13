@@ -150,8 +150,8 @@
     },
     "gunnerRobot": {
       "name": "Gunner Robot",
-      "atlasPath": "images/entities/enemies/fast_robot.atlas",
-      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/gunner_robot.atlas",
+      "assetPath": "images/entities/enemies/gunner_robot_default_sprite.png",
       "health": 25,
       "attack": 8,
       "attackRange": 500,
