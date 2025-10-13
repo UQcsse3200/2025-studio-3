@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.validators;
 
+import com.csse3200.game.cutscene.CutsceneSchemaKeys;
 import com.csse3200.game.cutscene.models.dto.ActionDTO;
 import com.csse3200.game.cutscene.models.object.Transition;
 import com.csse3200.game.exceptions.AuthoringError;
@@ -8,6 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 public class ValidatorUtils {
+  private ValidatorUtils() {
+    throw new UnsupportedOperationException("This is a utility class and cannot be instantiated.");
+  }
+
   /**
    * Validates a {@link Map<String, String>} against the following rules:
    *
@@ -55,41 +60,44 @@ public class ValidatorUtils {
    * @return A list of {@link AuthoringError} detailing each rule infraction
    */
   public static List<AuthoringError> validateTransition(String beatId, ActionDTO action) {
-    Object transitionObject = action.fields.get("transition");
+    Object transitionObject = action.getFields().get("transition");
 
     List<AuthoringError> errors = new ArrayList<>();
 
     List<AuthoringError> transitionErrors =
         validateString(
-            transitionObject, "transition", "doc.cutscene.beats." + beatId + ".actions.*");
+            transitionObject,
+            "transition",
+            CutsceneSchemaKeys.BEATS_PATH + beatId + CutsceneSchemaKeys.ACTIONS_SUB);
 
     errors.addAll(transitionErrors);
 
-    if (transitionErrors.isEmpty()) {
-      if (!Transition.displayNames().contains((String) transitionObject)) {
-        errors.add(
-            new AuthoringError(
-                "ACTION_TRANSITION_INVALID",
-                "doc.cutscene.beats." + beatId + ".actions.*",
-                "Transition must be any of: " + String.join(", ", Transition.displayNames())));
-      }
+    if (transitionErrors.isEmpty()
+        && transitionObject instanceof String transition
+        && !Transition.displayNames().contains(transition)) {
+      errors.add(
+          new AuthoringError(
+              "ACTION_TRANSITION_INVALID",
+              CutsceneSchemaKeys.BEATS_PATH + beatId + CutsceneSchemaKeys.ACTIONS_SUB,
+              "Transition must be any of: " + String.join(", ", Transition.displayNames())));
     }
 
-    Object durationObject = action.fields.get("duration");
+    Object durationObject = action.getFields().get("duration");
 
     List<AuthoringError> durationErrors =
-        validateInt(durationObject, "duration", "doc.cutscene.beats." + beatId + ".actions.*");
+        validateInt(
+            durationObject,
+            "duration",
+            CutsceneSchemaKeys.BEATS_PATH + beatId + CutsceneSchemaKeys.ACTIONS_SUB);
 
     errors.addAll(durationErrors);
 
-    if (durationErrors.isEmpty()) {
-      if (((Long) durationObject).intValue() <= 0) {
-        errors.add(
-            new AuthoringError(
-                "ACTION_DURATION_INVALID",
-                "doc.cutscene.beats." + beatId + ".action.*",
-                "Duration must be greater than 0"));
-      }
+    if (durationErrors.isEmpty() && ((Long) durationObject).intValue() <= 0) {
+      errors.add(
+          new AuthoringError(
+              "ACTION_DURATION_INVALID",
+              CutsceneSchemaKeys.BEATS_PATH + beatId + CutsceneSchemaKeys.ACTIONS_SUB,
+              "Duration must be greater than 0"));
     }
 
     return errors;
@@ -114,13 +122,19 @@ public class ValidatorUtils {
     if (object == null) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NULL", path, key + " can not be null"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX
+                  + key.toUpperCase()
+                  + CutsceneSchemaKeys.NULL_SUFFIX,
+              path,
+              key + CutsceneSchemaKeys.CANNOT_BE_NULL));
     }
 
     if (!(object instanceof String)) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NOT_STRING", path, key + " must be a string"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX + key.toUpperCase() + "_NOT_STRING",
+              path,
+              key + " must be a string"));
     }
 
     return new ArrayList<>();
@@ -145,13 +159,19 @@ public class ValidatorUtils {
     if (object == null) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NULL", path, key + " can not be null"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX
+                  + key.toUpperCase()
+                  + CutsceneSchemaKeys.NULL_SUFFIX,
+              path,
+              key + CutsceneSchemaKeys.CANNOT_BE_NULL));
     }
 
     if (!(object instanceof Integer) && !(object instanceof Long)) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NOT_INTEGER", path, key + " must be an integer"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX + key.toUpperCase() + "_NOT_INTEGER",
+              path,
+              key + " must be an integer"));
     }
 
     return new ArrayList<>();
@@ -176,13 +196,19 @@ public class ValidatorUtils {
     if (object == null) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NULL", path, key + " can not be null"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX
+                  + key.toUpperCase()
+                  + CutsceneSchemaKeys.NULL_SUFFIX,
+              path,
+              key + CutsceneSchemaKeys.CANNOT_BE_NULL));
     }
 
     if (!(object instanceof Float) && !(object instanceof Double)) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NOT_FLOAT", path, key + " must be a float"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX + key.toUpperCase() + "_NOT_FLOAT",
+              path,
+              key + " must be a float"));
     }
 
     return new ArrayList<>();
@@ -231,13 +257,19 @@ public class ValidatorUtils {
     if (object == null) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NULL", path, key + " can not be null"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX
+                  + key.toUpperCase()
+                  + CutsceneSchemaKeys.NULL_SUFFIX,
+              path,
+              key + CutsceneSchemaKeys.CANNOT_BE_NULL));
     }
 
     if (!(object instanceof Boolean)) {
       return List.of(
           new AuthoringError(
-              "ACTION_" + key.toUpperCase() + "_NOT_BOOLEAN", path, key + " must be a boolean"));
+              CutsceneSchemaKeys.ACTION_ERROR_PREFIX + key.toUpperCase() + "_NOT_BOOLEAN",
+              path,
+              key + " must be a boolean"));
     }
 
     return new ArrayList<>();
@@ -285,12 +317,12 @@ public class ValidatorUtils {
    * @return A list of {@link AuthoringError} detailing each rule infraction
    */
   public static List<AuthoringError> validateAwait(String beatId, ActionDTO action) {
-    Object awaitObject = action.fields.get("await");
+    Object awaitObject = action.getFields().get("await");
 
-    List<AuthoringError> awaitErrors =
-        validateBool(awaitObject, "await", "doc.cutscene.beats." + beatId + ".actions.*");
-
-    return awaitErrors;
+    return validateBool(
+        awaitObject,
+        "await",
+        CutsceneSchemaKeys.BEATS_PATH + beatId + CutsceneSchemaKeys.ACTIONS_SUB);
   }
 
   /**
@@ -307,10 +339,13 @@ public class ValidatorUtils {
   public static List<AuthoringError> validateSoundId(
       ActionDTO action, ValidationCtx context, String path) {
     List<AuthoringError> soundIdErrors =
-        ValidatorUtils.validateString(action.fields.get("soundId"), "soundId", path);
+        ValidatorUtils.validateString(
+            action.getFields().get(CutsceneSchemaKeys.SOUND_ID_FIELD),
+            CutsceneSchemaKeys.SOUND_ID_FIELD,
+            path);
 
     if (soundIdErrors.isEmpty()) {
-      String soundId = (String) action.fields.get("soundId");
+      String soundId = (String) action.getFields().get(CutsceneSchemaKeys.SOUND_ID_FIELD);
       if (!context.soundIds().contains(soundId)) {
         soundIdErrors.add(
             new AuthoringError(

@@ -35,18 +35,17 @@ public class AudioSetValidator implements ActionValidator {
     List<AuthoringError> errors = new ArrayList<>();
 
     // bus validation
-    Object busObject = action.fields.get("bus");
+    Object busObject = action.getFields().get("bus");
 
     String path = "doc.cutscene.beats." + beatId + ".actions.*";
 
     errors.addAll(ValidatorUtils.validateString(busObject, "AUDIO_SET_BUS", path));
 
-    if (busObject instanceof String) {
-      String bus = (String) busObject;
+    if (busObject instanceof String bus) {
       if (bus.equals("music")) {
         errors.addAll(
             ValidatorUtils.validateDoubleWithRange(
-                action.fields.get("volume"), "AUDIO_PLAY_VOLUME", path, 0.0, 1.0));
+                action.getFields().get("volume"), "AUDIO_PLAY_VOLUME", path, 0.0, 1.0));
       } else {
         errors.add(
             new AuthoringError(
