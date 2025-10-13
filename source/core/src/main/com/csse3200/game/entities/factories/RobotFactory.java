@@ -65,10 +65,10 @@ public class RobotFactory {
     }
 
     /**
-     * Converts a string into the corresponding RobotType. If type is null or invalid,
-     * the RobotType will default to STANDARD. Matching logic is case-insensitive and can use
-     * either enum name or config key
-     * REFERENCE: This was written with ChatGPT
+     * Converts a string into the corresponding RobotType. If type is null or invalid, the RobotType
+     * will default to STANDARD. Matching logic is case-insensitive and can use either enum name or
+     * config key REFERENCE: This was written with ChatGPT
+     *
      * @param type The robot type, in string form
      * @return The corresponding RobotType. Will be standard if type is invalid
      */
@@ -84,8 +84,8 @@ public class RobotFactory {
 
       for (RobotType robotType : values()) {
         if (robotType.name().equalsIgnoreCase(normalised)
-                || robotType.configKey.equalsIgnoreCase(normalised)
-                || robotType.name().equalsIgnoreCase(normalised2)) {
+            || robotType.configKey.equalsIgnoreCase(normalised)
+            || robotType.name().equalsIgnoreCase(normalised2)) {
           return robotType;
         }
       }

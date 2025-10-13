@@ -2,7 +2,6 @@ package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
-
 import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
