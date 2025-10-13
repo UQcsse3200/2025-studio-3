@@ -125,6 +125,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Compiles a <a href="models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> into a <a href="models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object"><code>Cutscene</code></a> No error checking is handled in this
  method as it assumed that the <a href="models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> has already been validated.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#createActionData(com.csse3200.game.cutscene.models.dto.ActionDTO)" class="member-name-link">createActionData</a><wbr>(<a href="models/dto/ActionDTO.html" title="class in com.csse3200.game.cutscene.models.dto">ActionDTO</a>&nbsp;action)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Creates an action data object from an action DTO.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActions(java.util.List)" class="member-name-link">getActions</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="models/dto/ActionDTO.html" title="class in com.csse3200.game.cutscene.models.dto">ActionDTO</a>&gt;&nbsp;actionsData)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="models/object/Background.html" title="class in com.csse3200.game.cutscene.models.object">Background</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getBackground(java.lang.String)" class="member-name-link">getBackground</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -188,6 +196,25 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>A <a href="models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object"><code>Cutscene</code></a> with all the information filled out.</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="createActionData(com.csse3200.game.cutscene.models.dto.ActionDTO)">
+<h3>createActionData</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a></span>&nbsp;<span class="element-name">createActionData</span><wbr><span class="parameters">(<a href="models/dto/ActionDTO.html" title="class in com.csse3200.game.cutscene.models.dto">ActionDTO</a>&nbsp;action)</span></div>
+<div class="block">Creates an action data object from an action DTO.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>action</code> - the action DTO</dd>
+<dt>Returns:</dt>
+<dd>the action data object</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getActions(java.util.List)">
+<h3>getActions</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="models/object/actiondata/ActionData.html" title="interface in com.csse3200.game.cutscene.models.object.actiondata">ActionData</a>&gt;</span>&nbsp;<span class="element-name">getActions</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="models/dto/ActionDTO.html" title="class in com.csse3200.game.cutscene.models.dto">ActionDTO</a>&gt;&nbsp;actionsData)</span></div>
 </section>
 </li>
 <li>
