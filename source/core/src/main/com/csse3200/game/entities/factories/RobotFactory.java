@@ -63,6 +63,36 @@ public class RobotFactory {
     public String get() {
       return configKey;
     }
+
+    /**
+     * Converts a string into the corresponding RobotType. If type is null or invalid,
+     * the RobotType will default to STANDARD. Matching logic is case-insensitive and can use
+     * either enum name or config key
+     * REFERENCE: This was written with ChatGPT
+     * @param type The robot type, in string form
+     * @return The corresponding RobotType. Will be standard if type is invalid
+     */
+    public static RobotType fromString(String type) {
+      if (type == null) {
+        logger.info("type is null. Defaulting to STANDARD RobotType.");
+        return STANDARD;
+      }
+      String normalised = type.trim().toLowerCase();
+      // This allows the Robot part to be removed. e.g. "fast" will still count as fastRobot
+      // The levels json file does not include the "Robot" part, so this accounts for that.
+      String normalised2 = normalised + "Robot";
+
+      for (RobotType robotType : values()) {
+        if (robotType.name().equalsIgnoreCase(normalised)
+                || robotType.configKey.equalsIgnoreCase(normalised)
+                || robotType.name().equalsIgnoreCase(normalised2)) {
+          return robotType;
+        }
+      }
+
+      logger.info("type is invalid. Defaulting to STANDARD RobotType.");
+      return STANDARD; // Default fallback
+    }
   }
 
   /** Gets the config service for accessing enemy configurations. */
@@ -244,9 +274,9 @@ public class RobotFactory {
    * @param robotType the robot type key from the spawn preview
    * @return a simple entity with an animation for display
    */
-  public static Entity createPreviewRobot(String robotType) {
+  public static Entity createPreviewRobot(RobotType robotType) {
     ConfigService configService = getConfigService();
-    BaseEnemyConfig config = configService.getEnemyConfig(robotType + "Robot");
+    BaseEnemyConfig config = configService.getEnemyConfig(robotType.get());
     if (config == null) {
       config = configService.getEnemyConfig("standardRobot");
     }

@@ -6,8 +6,10 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import java.util.*;
 import java.util.LinkedList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,7 +32,7 @@ public class WaveService implements WaveConfigProvider {
   private final EntitySpawn entitySpawn;
 
   public interface EnemySpawnCallback {
-    void spawnEnemy(int col, int row, String robotType);
+    void spawnEnemy(int col, int row, RobotFactory.RobotType robotType);
 
     void spawnBoss(int row, BossFactory.BossTypes bossType);
   }
@@ -351,7 +353,7 @@ public class WaveService implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-    String robotType = entitySpawn.getNextRobotType();
+    RobotFactory.RobotType robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
   }
