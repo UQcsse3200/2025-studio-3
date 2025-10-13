@@ -11,10 +11,9 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WaveService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -349,7 +348,7 @@ class EntitySpawnTest {
   }
 
   private static Map<RobotType, Integer> drainCounts(EntitySpawn spawner) {
-    Map<RobotType, Integer> counts = new HashMap<>();
+    Map<RobotType, Integer> counts = new EnumMap<>(RobotType.class);
     int n = spawner.getSpawnCount();
     for (int i = 0; i < n; i++) {
       RobotType type = spawner.getNextRobotType();
