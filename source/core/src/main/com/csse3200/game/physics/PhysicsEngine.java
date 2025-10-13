@@ -14,6 +14,8 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Iterator;
+
 /**
  * Process game physics using the Box2D library. See the Box2D documentation for examples or use
  * cases.
@@ -60,11 +62,14 @@ public class PhysicsEngine implements Disposable {
     // NEW CHANGES: guaranteed disposal of entities with physics bodies after physics step
     // Handles the entity service not existing. This should prevent crashes with Tests
     EntityService entityService = ServiceLocator.getEntityService();
+
     if (entityService == null) {
       return;
     }
+
     // Disposes of all entities that have been marked as dead in the last physics step
-    for (Entity entity : entityService.getEntities()) {
+    for (int i = entityService.getEntities().size - 1; i >= 0; i--) {
+      Entity entity = entityService.getEntities().get(i);
       if (!entity.getDeathFlag()) {
         continue;
       }
@@ -73,7 +78,6 @@ public class PhysicsEngine implements Disposable {
         continue;
       }
       entity.dispose();
-      ServiceLocator.getEntityService().unregister(entity);
     }
   }
 
