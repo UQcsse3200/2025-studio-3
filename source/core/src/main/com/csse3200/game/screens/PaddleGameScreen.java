@@ -9,13 +9,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.minigame.BallComponent;
 import com.csse3200.game.minigame.CollisionComponent;
 import com.csse3200.game.minigame.PaddleComponent;
 import com.csse3200.game.minigame.PaddleInputComponent;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ServiceLocator;
 
 public class PaddleGameScreen extends ScreenAdapter {
@@ -31,6 +35,8 @@ public class PaddleGameScreen extends ScreenAdapter {
   private int ballsHit;
   private float totalTime = 0f;
   private Label timeLabel;
+  private boolean gameOver = false;
+  private Renderer renderer;
 
   /**
    * Creates a new PaddleGameScreen and initializes the stage, input processor, and assets.
@@ -39,8 +45,21 @@ public class PaddleGameScreen extends ScreenAdapter {
    */
   public PaddleGameScreen(GdxGame game) {
     this.game = game;
-    stage = new Stage(new ScreenViewport());
-    Gdx.input.setInputProcessor(stage);
+    // Register services required for dialogs and rendering
+    if (ServiceLocator.getInputService() == null) {
+      ServiceLocator.registerInputService(new InputService());
+    }
+    if (ServiceLocator.getResourceService() == null) {
+      ServiceLocator.registerResourceService(new com.csse3200.game.services.ResourceService());
+    }
+    if (ServiceLocator.getEntityService() == null) {
+      ServiceLocator.registerEntityService(new EntityService());
+    }
+    if (ServiceLocator.getRenderService() == null) {
+      ServiceLocator.registerRenderService(new RenderService());
+    }
+    renderer = RenderFactory.createRenderer();
+    stage = ServiceLocator.getRenderService().getStage();
     ballsHit = 0;
 
     if (ServiceLocator.getResourceService() == null) {
@@ -108,37 +127,64 @@ public class PaddleGameScreen extends ScreenAdapter {
   @Override
   public void render(float delta) {
     ServiceLocator.getMusicService().play("sounds/background-music/level2_music.mp3");
-    totalTime += delta;
+    if (!gameOver) {
+      totalTime += delta;
+    }
     float survivalTime = totalTime;
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+    // Update ECS so dialogs can render/respond
+    ServiceLocator.getEntityService().update();
 
     BallComponent ballComp = ball.getComponent(BallComponent.class);
     CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
 
-    paddle.getComponent(PaddleComponent.class).update();
-    paddle.getComponent(PaddleInputComponent.class).update();
-
-    ballComp.update(delta, collisionComp);
+    if (!gameOver) {
+      paddle.getComponent(PaddleComponent.class).update();
+      paddle.getComponent(PaddleInputComponent.class).update();
+      ballComp.update(delta, collisionComp);
+    }
 
     int score = ballComp.getScore();
     scoreLabel.setText("Score: " + score);
     timeLabel.setText(String.format("Time: %.2f s", survivalTime));
     ballsHit = ballComp.getBallsHit();
+
+    // Render via renderer to ensure UI layering
+    renderer.render();
     stage.act(delta);
     stage.draw();
 
-    if (ballComp.getImage().getY() <= 0) {
-
-      game.setScreen(new WallPongGameOverScreen(game, score, survivalTime, ballsHit));
-      dispose();
+    if (!gameOver && ballComp.getImage().getY() <= 0) {
+      gameOver = true;
+      String title = "Game Over";
+      String message = String.format(
+          "Final Score: %d%nSurvival Time: %.2fs%nBalls Hit: %d",
+          score, survivalTime, ballsHit);
+      ServiceLocator
+          .getDialogService()
+          .warning(
+              title,
+              message,
+              d -> game.setScreen(GdxGame.ScreenType.PADDLE_GAME),
+              d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
     }
   }
 
   @Override
   public void dispose() {
-    stage.dispose();
+    if (renderer != null) {
+      renderer.dispose();
+    }
     if (paddleTex != null) paddleTex.dispose();
     if (ballTex != null) ballTex.dispose();
     if (bgTex != null) bgTex.dispose();
+    if (ServiceLocator.getRenderService() != null) {
+      ServiceLocator.getRenderService().dispose();
+    }
+    if (ServiceLocator.getEntityService() != null) {
+      ServiceLocator.getEntityService().dispose();
+    }
+    ServiceLocator.clear();
   }
 }

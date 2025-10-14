@@ -211,9 +211,18 @@ public class LaneRunnerScreen extends ScreenAdapter {
       if (obstacleManager.checkCollision(playerImage)) {
         logger.info("Player collided with an obstacle. Game Over!");
         gameOver = true;
-        game.setScreen(
-            new LaneRunnerGameOverScreen(
-                game, score, survivalTime, obstacleManager.getObstaclesDodged()));
+        // Show in-screen dialog instead of switching screens
+        String title = "Game Over";
+        String message = String.format(
+            "Final Score: %s%nSurvival Time: %.1fs%nObstacles Dodged: %d",
+            score, survivalTime, obstacleManager.getObstaclesDodged());
+        ServiceLocator
+            .getDialogService()
+            .warning(
+                title,
+                message,
+                d -> game.setScreen(GdxGame.ScreenType.LANE_RUNNER),
+                d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
         return;
       }
     }
