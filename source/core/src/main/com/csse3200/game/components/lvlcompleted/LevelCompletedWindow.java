@@ -107,9 +107,10 @@ public class LevelCompletedWindow extends UIComponent {
 
   private void displayNewEntity(DialogService dialogService) {
     String unlockedDefences = unlockEntity();
+    String nextMessage = (unlockedDefences.isEmpty()) ? "You have unlocked all defences" : "You have unlocked the: \n";
     dialogService.info(
         "Congratulations!",
-        "You have unlocked the: \n"
+        nextMessage
             + unlockedDefences
             + "\n Go to the dossier to check them out!");
   }
@@ -123,6 +124,12 @@ public class LevelCompletedWindow extends UIComponent {
         profile.getArsenal().unlockDefence(key);
         unlockedDefences.add(key);
       }
+    }
+    for (String key : Arsenal.ALL_GENERATORS.keySet()) {
+        if (Arsenal.ALL_GENERATORS.get(key).equals(findNextLevel(profile.getCurrentLevel()))) {
+            profile.getArsenal().unlockGenerator(key);
+            unlockedDefences.add(key);
+        }
     }
     return String.join(" and ", unlockedDefences);
   }
