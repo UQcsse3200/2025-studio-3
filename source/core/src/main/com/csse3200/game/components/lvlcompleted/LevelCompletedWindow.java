@@ -13,6 +13,9 @@ import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Class to create and display a window when the level is completed. */
 public class LevelCompletedWindow extends UIComponent {
   private Window window;
@@ -106,22 +109,22 @@ public class LevelCompletedWindow extends UIComponent {
     String unlockedDefences = unlockEntity();
     dialogService.info(
         "Congratulations!",
-        "You have unlocked a new entity: "
+        "You have unlocked the: \n"
             + unlockedDefences
-            + "\n Go to the dossier to check him out!");
+            + "\n Go to the dossier to check them out!");
   }
 
   private String unlockEntity() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
-    StringBuilder unlockedDefences = new StringBuilder();
+    List<String> unlockedDefences = new ArrayList<>();
     for (String key : Arsenal.ALL_DEFENCES.keySet()) {
       if (Arsenal.ALL_DEFENCES.get(key).equals(findNextLevel(profile.getCurrentLevel()))
           && !profile.getArsenal().contains(key)) {
         profile.getArsenal().unlockDefence(key);
-        unlockedDefences.append(key);
+        unlockedDefences.add(key);
       }
     }
-    return unlockedDefences.toString();
+    return String.join(" and ", unlockedDefences);
   }
 
   /** Disposes of the window when the component is disposed. */
