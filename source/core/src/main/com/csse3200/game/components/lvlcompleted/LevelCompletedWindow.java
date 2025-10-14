@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
+import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -70,8 +73,55 @@ public class LevelCompletedWindow extends UIComponent {
 
   /** Displays the level completed window when the level is completed. */
   private void onLevelCompleted() {
+    DialogService dialogService = ServiceLocator.getDialogService();
+    displayNewEntity(dialogService);
+
     window.setVisible(true);
     isDisplayed = true;
+  }
+
+  /**
+   * Called when level is completed, before changing back to world map screen and update's the
+   * profile's current level to the following level.
+   */
+  public void updateLevel() {
+    String currentLevel = profileService.getProfile().getCurrentLevel();
+    String nextLevel = findNextLevel(currentLevel);
+    profileService.getProfile().setCurrentLevel(nextLevel);
+  }
+
+  private String findNextLevel(String currentLevel) {
+    String nextLevel =
+        switch (currentLevel) {
+          case "levelOne" -> "levelTwo";
+          case "levelTwo" -> "levelThree";
+          case "levelThree" -> "levelFour";
+          case "levelFour" -> "levelFive";
+          default -> "end";
+        };
+    return nextLevel;
+  }
+
+  private void displayNewEntity(DialogService dialogService) {
+    String unlockedDefences = unlockEntity();
+    dialogService.info(
+        "Congratulations!",
+        "You have unlocked a new entity: "
+            + unlockedDefences
+            + "\n Go to the dossier to check him out!");
+  }
+
+  private String unlockEntity() {
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    StringBuilder unlockedDefences = new StringBuilder();
+    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+      if (Arsenal.ALL_DEFENCES.get(key).equals(findNextLevel(profile.getCurrentLevel()))
+          && !profile.getArsenal().contains(key)) {
+        profile.getArsenal().unlockDefence(key);
+        unlockedDefences.append(key);
+      }
+    }
+    return unlockedDefences.toString();
   }
 
   /** Disposes of the window when the component is disposed. */
@@ -86,23 +136,6 @@ public class LevelCompletedWindow extends UIComponent {
   @Override
   protected void draw(SpriteBatch batch) {
     // Stage handles drawing
-  }
-
-  /**
-   * Called when level is completed, before changing back to world map screen and update's the
-   * profile's current level to the following level.
-   */
-  public void updateLevel() {
-    String currentLevel = profileService.getProfile().getCurrentLevel();
-    String nextLevel =
-        switch (currentLevel) {
-          case "levelOne" -> "levelTwo";
-          case "levelTwo" -> "levelThree";
-          case "levelThree" -> "levelFour";
-          case "levelFour" -> "levelFive";
-          default -> "end";
-        };
-    profileService.getProfile().setCurrentLevel(nextLevel);
   }
 
   public Window getWindow() {
