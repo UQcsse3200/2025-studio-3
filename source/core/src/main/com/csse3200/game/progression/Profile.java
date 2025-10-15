@@ -42,12 +42,11 @@ public class Profile {
     this.statistics = new Statistics();
     this.arsenal = new Arsenal();
     this.completedNodes = new ArrayList<>();
-    this.unlockedNodes = new HashSet<>();
+    this.unlockedNodes = new HashSet<>(DEFAULT_UNLOCKED);
     this.unlockedNodes.add("levelOne");
     this.worldMapX = -1f;
     this.worldMapY = -1f;
     this.worldMapZoomIdx = -1;
-    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
     this.currentLevel = "levelOne";
   }
 

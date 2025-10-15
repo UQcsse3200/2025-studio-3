@@ -85,10 +85,6 @@ public class ProfileService {
     this.profile = pair.getKey();
     this.currentSlot = savefile.getSlot();
     this.isActive = true;
-
-    if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
-      profile.unlockNode(profile.getCurrentLevel());
-    }
   }
 
   /**
@@ -104,56 +100,28 @@ public class ProfileService {
     Persistence.save(currentSlot, profile);
   }
 
-  /**
-   * Returns the next mainline level key after the provided current key, or null if there is no
-   * next.
-   */
-  private String nextMainlineOf(String currentKey) {
-    if (currentKey == null) {
-      return null;
-    }
-    int idx = MAINLINE_LEVELS.indexOf(currentKey);
-    if (idx == -1 || idx + 1 >= MAINLINE_LEVELS.size()) {
-      return null; // not in mainline or already at last level
-    }
-    return MAINLINE_LEVELS.get(idx + 1);
-  }
+    public void markLevelComplete(String keyJustCompleted) {
+        if (!isActive || profile == null || keyJustCompleted == null) return;
 
-  /**
-   * Marks the given level as completed and advances the mainline pointer solely based on the
-   * current level. This method no longer records unlocked/completed nodes; it only updates {@code
-   * currentLevel} to the next mainline level (if any within five levels).
-   *
-   * <p>Rules:
-   *
-   * <ul>
-   *   <li>If {@code currentKey} is one of levelOne..levelFive and not the last, set {@code
-   *       currentLevel} to the next one.
-   *   <li>If {@code currentKey} is levelFive or not a recognised mainline key, leave {@code
-   *       currentLevel} unchanged.
-   *   <li>No writes to unlockedNodes or completedNodes.
-   * </ul>
-   *
-   * After updating, the profile is saved immediately to the active slot.
-   *
-   * @param currentKey the key of the level just completed (e.g., {@code levelTwo})
-   */
-  public void markLevelComplete(String currentKey) {
-    if (profile == null) {
-      logger.warn("Attempted to mark level complete but profile is null.");
-      return;
+        profile.completeNode(keyJustCompleted);
+        profile.unlockNode(keyJustCompleted);
+
+        String frontier = highestUnlockedMainline(profile);
+        if (keyJustCompleted.equals(frontier)) {
+            String next = nextOf(keyJustCompleted);
+            if (next != null) {
+                profile.unlockNode(next);
+            }
+        }
+
+        String newFrontier = highestUnlockedMainline(profile);
+        if (newFrontier != null) {
+            profile.setCurrentLevel(newFrontier);
+        }
+
+        saveCurrentProfile();
     }
-    final String next = nextMainlineOf(currentKey);
-    if (next != null) {
-      profile.setCurrentLevel(next);
-      logger.info("[ProfileService] Advanced currentLevel from '{}' to '{}'.", currentKey, next);
-    } else {
-      logger.debug(
-          "[ProfileService] No next mainline after '{}'; currentLevel unchanged.", currentKey);
-    }
-    // Persist only the updated currentLevel
-    saveCurrentProfile();
-  }
+
 
   /**
    * Saves the current profile to a specific slot.
@@ -236,4 +204,22 @@ public class ProfileService {
     }
     return count;
   }
+
+  private int idxOf(String key) { return MAINLINE_LEVELS.indexOf(key); }
+
+  private String highestUnlockedMainline(Profile p) {
+      String best = null;
+      int bestIdx = -1;
+      for (String k : p.getUnlockedNodes()) {
+          int i = idxOf(k);
+          if (i >= 0 && i > bestIdx) { best = k; bestIdx = i; }
+      }
+        return best;
+  }
+
+  private String nextOf(String key) {
+      int i = idxOf(key);
+      return (i >= 0 && i + 1 < MAINLINE_LEVELS.size()) ? MAINLINE_LEVELS.get(i + 1) : null;
+  }
+
 }
