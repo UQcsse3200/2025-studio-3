@@ -192,11 +192,15 @@ public class WorldMapScreen extends BaseScreen {
     Set<String> toComplete = new HashSet<>();
 
     if (current != null && !current.isEmpty()) {
-      List<String> chain = buildChainUpTo(wms, current);
+        List<String> chain = buildChainUpTo(wms, current);
 
-      unlockAndCompleteChain(chain, toUnlock, toComplete);
-      syncProfileCompletion(profile, toComplete);
-      ensureSpecialNodesUnlocked(profile);
+        for (int i = 0; i < chain.size(); i++) {
+            String key = chain.get(i);
+            toUnlock.add(key);
+            if ("end".equals(current) || i < chain.size() - 1) {
+                toComplete.add(key);
+            }
+        }
     }
 
     applyNodeStates(wms, nodes, toUnlock, toComplete);
@@ -228,6 +232,9 @@ public class WorldMapScreen extends BaseScreen {
       return chain;
     }
     List<String> levelKeys = getSortedLevelKeys(wms);
+      if ("end".equals(currentKey)) {
+          return levelKeys;
+      }
     return collectChainUntil(levelKeys, currentKey);
   }
 
@@ -278,40 +285,10 @@ public class WorldMapScreen extends BaseScreen {
         return 4;
       case "levelFive":
         return 5;
+      case "end":
+        return 6;
       default:
         return Integer.MAX_VALUE; // unknown -> push to end
-    }
-  }
-
-  /**
-   * Marks all previous nodes in the chain as completed and unlocks all nodes up to current. Special
-   * nodes are only unlocked, not completed.
-   */
-  private void unlockAndCompleteChain(
-      List<String> chain, Set<String> toUnlock, Set<String> toComplete) {
-    for (int i = 0; i < chain.size(); i++) {
-      String key = chain.get(i);
-      toUnlock.add(key);
-      // Mark previous ones as completed, exclude current and special nodes
-      if (i < chain.size() - 1 && !SPECIAL_NODES.contains(key)) {
-        toComplete.add(key);
-      }
-    }
-  }
-
-  /** Writes completed state back into the profile to keep persistence consistent. */
-  private void syncProfileCompletion(Profile profile, Set<String> toComplete) {
-    for (String key : toComplete) {
-      if (!profile.isNodeCompleted(key)) {
-        profile.completeNode(key);
-      }
-    }
-  }
-
-  /** Ensures the three special nodes are always unlocked (but never marked completed). */
-  private void ensureSpecialNodesUnlocked(Profile profile) {
-    for (String s : SPECIAL_NODES) {
-      profile.unlockNode(s);
     }
   }
 

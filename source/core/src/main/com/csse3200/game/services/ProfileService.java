@@ -20,7 +20,7 @@ public class ProfileService {
   private static final Logger logger = LoggerFactory.getLogger(ProfileService.class);
   // Ordered mainline levels used to infer progression without storing unlock/completion state
   private static final List<String> MAINLINE_LEVELS =
-      Arrays.asList("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
+      Arrays.asList("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive", "end");
   private Profile profile;
   private boolean isActive;
   private int currentSlot;
@@ -72,6 +72,7 @@ public class ProfileService {
     this.profile = pair.getKey();
     this.currentSlot = pair.getValue();
     this.isActive = true;
+    Persistence.save(this.currentSlot, this.profile);
   }
 
   /**
@@ -86,9 +87,6 @@ public class ProfileService {
     this.currentSlot = savefile.getSlot();
     this.isActive = true;
 
-    if (profile.getUnlockedNodes().isEmpty() && profile.getCurrentLevel() != null) {
-      profile.unlockNode(profile.getCurrentLevel());
-    }
   }
 
   /**
