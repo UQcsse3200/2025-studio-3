@@ -9,7 +9,6 @@ public class MiniGameInputComponent extends InputComponent {
 
   public MiniGameInputComponent(boolean isGameOverScreen) {
     super(5);
-    this.isGameOverScreen = isGameOverScreen;
   }
 
   @Override

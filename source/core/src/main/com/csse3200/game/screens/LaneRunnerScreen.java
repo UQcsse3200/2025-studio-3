@@ -2,13 +2,9 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -38,8 +34,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private int score = 0;
   private float survivalTime = 0f;
   private float scoreTimer = 0f;
-  private Label scoreLabel;
-  private Label timeLabel;
+  private LaneRunnerHUD hud;
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/Background.png",
@@ -116,7 +111,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     this.playerImage = playerImg;
     this.cureentLane = 1;
 
-    createScoreUI(stage);
+    createScoreUI();
 
     Entity inputListener = new Entity().addComponent(new MiniGameInputComponent(false));
     ServiceLocator.getEntityService().register(inputListener);
@@ -125,36 +120,12 @@ public class LaneRunnerScreen extends ScreenAdapter {
     inputListener.getEvents().addListener("moveRight", this::movePlayerRight);
   }
 
-  private void createScoreUI(Stage stage) {
-    BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
-    Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-
-    scoreLabel = new Label("Score: 0", labelStyle);
-    scoreLabel.setFontScale(2f);
-    scoreLabel.setPosition(20, Gdx.graphics.getHeight() - 40f);
-    scoreLabel.setAlignment(Align.left);
-    stage.addActor(scoreLabel);
-
-    timeLabel = new Label("Time: 0.0s", labelStyle);
-    timeLabel.setFontScale(2f);
-    timeLabel.setPosition(Gdx.graphics.getWidth() - 200f, Gdx.graphics.getHeight() - 40f);
-    timeLabel.setAlignment(Align.right);
-    stage.addActor(timeLabel);
-
-    // Update score and time every second
-    stage.addAction(
-        com.badlogic.gdx.scenes.scene2d.actions.Actions.forever(
-            com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence(
-                com.badlogic.gdx.scenes.scene2d.actions.Actions.delay(1f),
-                com.badlogic.gdx.scenes.scene2d.actions.Actions.run(
-                    () -> {
-                      if (!gameOver) {
-                        score += 0.5; // Increment score
-                        survivalTime += 0.1f; // Increment survival time
-                        scoreLabel.setText("Score: " + score);
-                        timeLabel.setText(String.format("Time: %.1fs", survivalTime));
-                      }
-                    }))));
+  private void createScoreUI() {
+    hud = new LaneRunnerHUD();
+    Entity hudEntity = new Entity().addComponent(hud);
+    ServiceLocator.getEntityService().register(hudEntity);
+    hud.setScore(score);
+    hud.setTime(survivalTime);
   }
 
   private void initializeObstacles() {
@@ -206,8 +177,10 @@ public class LaneRunnerScreen extends ScreenAdapter {
       if (newDodged > previousDodged) {
         score += (newDodged - previousDodged) * 5; // Bonus for dodging
       }
-      scoreLabel.setText("Score: " + score);
-      timeLabel.setText(String.format("Time: %.1fs", survivalTime));
+      if (hud != null) {
+        hud.setScore(score);
+        hud.setTime(survivalTime);
+      }
       if (obstacleManager.checkCollision(playerImage)) {
         logger.info("Player collided with an obstacle. Game Over!");
         gameOver = true;

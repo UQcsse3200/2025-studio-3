@@ -30,10 +30,12 @@ public class DialogService {
     WARNING,
     /** Error dialog type, typically used for error messages with a single "OK" button. */
     ERROR,
-    /**
-     * Skill dialog type, typically used for skill information with "Unlock" and "Close" buttons.
-     */
-    SKILL
+    /** Skill dialog type, used for skill information with "Unlock" and "Close" buttons. */
+    SKILL,
+    /** Game over dialog, with a "Play Again" and "Quit" button */
+    GAME_OVER,
+    /** Win game dialog, with only a "Continue" button */
+    WIN_GAME
   }
 
   /** Creates a new dialog service. */
@@ -157,6 +159,66 @@ public class DialogService {
     return skill(title, message, null, null);
   }
 
+  /**
+   * Creates and shows a game over dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent gameOver(String title, String message) {
+    return gameOver(title, message, null, null);
+  }
+
+  /**
+   * Creates and shows a game over dialog with callbacks.
+   * @param title
+   * @param message
+   * @param onPlayAgain
+   * @param onQuit
+   * @return the created dialog component
+   */
+  public DialogComponent gameOver(
+      String title,
+      String message,
+      Consumer<DialogComponent> onPlayAgain,
+      Consumer<DialogComponent> onQuit) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (errorSound == null) {
+      initSounds();
+    }
+    errorSound.play(volume);
+    return createAndShowDialog(DialogType.GAME_OVER, title, message, onPlayAgain, onQuit, null);
+  }
+
+  /**
+   * Creates and shows a win game dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent winGame(String title, String message) {
+    return winGame(title, message, null);
+  }
+
+  /**
+   * Creates and shows a win game dialog with callbacks.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onContinue callback when user continues
+   * @return the created dialog component
+   */
+  public DialogComponent winGame(String title, String message, Consumer<DialogComponent> onContinue) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (dialogSound == null) {
+      initSounds();
+    }
+    dialogSound.play(volume);
+    return createAndShowDialog(DialogType.WIN_GAME, title, message, onContinue, null, null);
+  }
+  
   /**
    * Creates and shows a skill dialog with callbacks.
    *

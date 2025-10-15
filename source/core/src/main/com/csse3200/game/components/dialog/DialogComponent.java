@@ -127,6 +127,10 @@ public class DialogComponent extends UIComponent {
         return Color.RED;
       case SKILL:
         return Color.GOLD;
+      case GAME_OVER:
+        return Color.RED;
+      case WIN_GAME:
+        return Color.CYAN;
       default:
         return Color.WHITE;
     }
@@ -149,6 +153,12 @@ public class DialogComponent extends UIComponent {
       case SKILL:
         addSkillButtons(buttonTable);
         break;
+      case GAME_OVER:
+        addGameOverButtons(buttonTable);
+        break;
+      case WIN_GAME:
+        addWinGameButtons(buttonTable);
+        break;
     }
 
     contentTable.add(buttonTable).center();
@@ -170,6 +180,66 @@ public class DialogComponent extends UIComponent {
           }
         });
     buttonTable.add(okButton).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5f);
+  }
+
+  /** Adds buttons for GAME_OVER dialog type. */
+  private void addGameOverButtons(Table buttonTable) {
+    Pair<Float, Float> quitDimensions = ui.getScaledDimensions(120f);
+    Pair<Float, Float> playAgainDimensions = ui.getScaledDimensions(150f);
+
+    TextButton playAgainButton = ui.secondaryButton("Play Again", 150f);
+    playAgainButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onConfirm != null) {
+              onConfirm.accept(DialogComponent.this);
+            }
+          }
+        });
+
+    TextButton quitButton = ui.secondaryButton("Quit", 120f);
+    quitButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onCancel != null) {
+              onCancel.accept(DialogComponent.this);
+            }
+          }
+        });
+    buttonTable
+        .add(playAgainButton)
+        .size(playAgainDimensions.getKey(), playAgainDimensions.getValue())
+        .pad(5f);
+    buttonTable
+        .add(quitButton)
+        .size(quitDimensions.getKey(), quitDimensions.getValue())
+        .pad(5f);
+  }
+
+  /** Adds buttons for WIN_GAME dialog type. */
+  private void addWinGameButtons(Table buttonTable) {
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(150f);
+
+    TextButton continueButton = ui.secondaryButton("Continue", 150f);
+    continueButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            hide();
+            if (onConfirm != null) {
+              onConfirm.accept(DialogComponent.this);
+            }
+          }
+        });
+    
+    buttonTable
+        .add(continueButton)
+        .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+        .pad(5f);
   }
 
   /** Adds buttons for WARNING dialog type. */

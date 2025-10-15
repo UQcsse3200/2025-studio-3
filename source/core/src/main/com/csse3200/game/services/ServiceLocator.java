@@ -36,8 +36,7 @@ public class ServiceLocator {
   private static WaveService waveService;
   private static SettingsService settingsService;
   private static DiscordRichPresenceService discordRichPresenceService;
-
-  // --- NEW FIELD ADDED ---
+  private static MinigameService minigameService;
   private static GameArea gameArea;
 
   /**
@@ -166,7 +165,6 @@ public class ServiceLocator {
     return worldMapService;
   }
 
-  // --- NEW GETTER ADDED ---
   /**
    * Gets the active game area.
    *
@@ -210,6 +208,15 @@ public class ServiceLocator {
    */
   public static DiscordRichPresenceService getDiscordRichPresenceService() {
     return discordRichPresenceService;
+  }
+
+  /**
+   * Gets the minigame service.
+   *
+   * @return the minigame service
+   */
+  public static MinigameService getMinigameService() {
+    return minigameService;
   }
 
   /**
@@ -384,7 +391,6 @@ public class ServiceLocator {
     worldMapService = source;
   }
 
-  // --- NEW REGISTRATION METHODS ADDED ---
   /**
    * Registers the game area.
    *
@@ -458,6 +464,16 @@ public class ServiceLocator {
     waveService = null;
   }
 
+  /**
+   * Registers the minigame service.
+   *
+   * @param source the minigame service
+   */
+  public static void registerMinigameService(MinigameService source) {
+    logger.debug("Registering minigame service {}", source);
+    minigameService = source;
+  }
+
   /** Clears all transient services. */
   public static void clear() {
     entityService = null;
@@ -468,7 +484,8 @@ public class ServiceLocator {
     resourceService = null;
     currencyService = null;
     itemEffectsService = null;
-    gameArea = null; // <-- ADDED TO CLEAR METHOD
+    minigameService = null;
+    gameArea = null;
   }
 
   /** Private constructor to prevent instantiation. */
