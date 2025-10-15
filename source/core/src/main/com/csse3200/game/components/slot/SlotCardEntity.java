@@ -304,6 +304,9 @@ public final class SlotCardEntity {
 
   /** Optional: dispose when unloading scene */
   public static void disposeUi() {
+    // Reset temporary in-level card count so re-entering doesn't carry over
+    activeCount = 0;
+
     if (ownsCardsAtlas && cardsAtlas != null) {
       cardsAtlas.dispose();
       cardsAtlas = null;

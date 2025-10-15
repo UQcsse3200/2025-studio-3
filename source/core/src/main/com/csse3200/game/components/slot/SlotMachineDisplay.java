@@ -759,6 +759,11 @@ public class SlotMachineDisplay extends UIComponent {
   public void dispose() {
     super.dispose();
     if (barGroup != null) barGroup.remove();
+    // Stop engine timers and clear counts when leaving the level
+    if (slotEngine != null) {
+      slotEngine.dispose();
+    }
+    SlotCardEntity.disposeUi();
     SlotEffect.unbindUiContext();
   }
 
