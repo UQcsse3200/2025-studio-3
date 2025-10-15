@@ -131,8 +131,8 @@
     },
     "miniRobot": {
       "name": "Mini Robot",
-      "atlasPath": "images/entities/enemies/fast_robot.atlas",
-      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/mini_robot.atlas",
+      "assetPath": "images/entities/enemies/mini_robot_default_sprite.png",
       "health": 24,
       "attack": 6,
       "movementSpeed": 50,
