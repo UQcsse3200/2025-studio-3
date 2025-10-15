@@ -1,6 +1,5 @@
 package com.csse3200.game.components.slot;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -20,14 +19,12 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.SlotMachineArea;
-import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.function.BooleanSupplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +44,9 @@ import org.slf4j.LoggerFactory;
 public class SlotMachineDisplay extends UIComponent {
   /** Logic engine used to compute spin outcomes and to apply effects. */
   private final SlotEngine slotEngine;
+  
+  /** Pause flag for UI animations (reels); currently only used to block new spins during pause. */
+  private volatile boolean paused = false;
 
   /** Cached pending spin result (set on spin, consumed when all reels stop). */
   private SlotEngine.SpinResult pendingResult = null;
@@ -103,12 +103,6 @@ public class SlotMachineDisplay extends UIComponent {
 
   /** Whether any spin sequence is currently active. */
   private boolean isSpinning = false;
-
-  /** Local pause flag for test-only pause/resume. */
-  private boolean spinPaused = false;
-
-  /** Input listener for P/O pause testing. */
-  private SlotSpinPauseInput pauseInput;
 
   /** Maximum number of cards allowed on the field to permit a spin. */
   private static final int MAX_ACTIVE_CARDS = 5;
@@ -185,9 +179,6 @@ public class SlotMachineDisplay extends UIComponent {
   /** Snapshot of last seen remaining spins to detect +1 ticks. */
   private int lastSeenSpins = -1;
 
-  /** Epoch (ms) when local pause started; -1 means not paused. */
-  private long pauseStartMs = -1L;
-
   // ---------- Constructors ---------
 
   /** Creates a display with a bound {@link SlotMachineArea}. */
@@ -216,9 +207,6 @@ public class SlotMachineDisplay extends UIComponent {
     lastSeenSpins = slotEngine.getRemainingSpins();
     lastRefillEpochMs = System.currentTimeMillis();
     updateAvailabilityVisual();
-    // Register local input listener: P=pause, O=resume (test-only)
-    pauseInput = new SlotSpinPauseInput(this);
-    ServiceLocator.getInputService().register(pauseInput);
   }
 
   /**
@@ -276,10 +264,7 @@ public class SlotMachineDisplay extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            if (spinPaused) {
-              logger.info("Spin ignored: paused.");
-              return;
-            }
+            if (paused) return; // block spins while paused
             if (isSpinning) return;
             int remaining = slotEngine.getRemainingSpins();
             int activeCards = SlotEffect.getActiveCardCount();
@@ -560,10 +545,6 @@ public class SlotMachineDisplay extends UIComponent {
    * Starts looped scrolling for all reels and schedules staggered smooth stop landing on target.
    */
   private void spinToTargets() {
-    if (spinPaused) {
-      logger.info("spinToTargets() blocked: currently paused.");
-      return;
-    }
     if (isSpinning) {
       logger.info("Already spinning.");
       return;
@@ -582,12 +563,7 @@ public class SlotMachineDisplay extends UIComponent {
 
       ScrollAction loop =
           new ScrollAction(
-              8f,
-              speed,
-              oneCycle,
-              col.getY(),
-              v -> currentScrollSpeeds.set(colIndex, v),
-              () -> spinPaused);
+              8f, speed, oneCycle, col.getY(), v -> currentScrollSpeeds.set(colIndex, v));
       col.addAction(loop);
     }
 
@@ -653,7 +629,7 @@ public class SlotMachineDisplay extends UIComponent {
 
     col.addAction(
         Actions.sequence(
-            new HermiteStopYAction(t, currentY, mappedY, v0, () -> spinPaused),
+            new HermiteStopYAction(t, currentY, mappedY, v0),
             Actions.run(
                 () -> {
                   currentScrollSpeeds.set(colIdx, 0f);
@@ -708,10 +684,6 @@ public class SlotMachineDisplay extends UIComponent {
       lastRefillEpochMs = System.currentTimeMillis();
     }
     lastSeenSpins = cur;
-
-    if (spinPaused) {
-      return;
-    }
 
     // 2) Pie frame by time since last tick
     if (pieImage != null && !pieRegions.isEmpty()) {
@@ -791,45 +763,33 @@ public class SlotMachineDisplay extends UIComponent {
   public void dispose() {
     super.dispose();
     if (barGroup != null) barGroup.remove();
-    if (pauseInput != null) {
-      ServiceLocator.getInputService().unregister(pauseInput);
-      pauseInput = null;
-    }
-    // Stop engine timers and clear counts when leaving the level
-    if (slotEngine != null) {
-      slotEngine.dispose();
-    }
-    SlotCardEntity.disposeUi();
     SlotEffect.unbindUiContext();
   }
-
-  /** Pause the slot machine spinning/animations. */
+  
+  /** Pause slot auto-refill and disable spin input. */
   public void pauseSpin() {
-    if (spinPaused) return;
-    spinPaused = true;
-    // Record when the pause starts so we can offset the HUD clock on resume
-    pauseStartMs = System.currentTimeMillis();
-    slotEngine.pauseRefill();
-    logger.info("SlotMachineDisplay: paused (test-local).");
-  }
-
-  /** Resume spinning/animations. */
-  public void resumeSpin() {
-    if (!spinPaused) return;
-    spinPaused = false;
-    // Offset the lastRefillEpochMs by the time spent paused so the pie does not "jump ahead"
-    if (pauseStartMs > 0L) {
-      long pausedDuration = System.currentTimeMillis() - pauseStartMs;
-      lastRefillEpochMs += pausedDuration;
-      pauseStartMs = -1L;
+    try {
+      paused = true;
+      slotEngine.stopAutoRefill();
+      if (frameImage != null) {
+        frameImage.setTouchable(Touchable.disabled);
+      }
+    } catch (Exception e) {
+      logger.warn("pauseSpin encountered an issue: {}", e.getMessage());
     }
-    slotEngine.resumeRefill();
-    logger.info("SlotMachineDisplay: resumed (test-local).");
   }
-
-  /** Optional helper for external query. */
-  public boolean isSpinPaused() {
-    return spinPaused;
+  
+  /** Resume slot auto-refill and re-enable spin input. */
+  public void resumeSpin() {
+    try {
+      paused = false;
+      slotEngine.startAutoRefill();
+      if (frameImage != null) {
+        frameImage.setTouchable(Touchable.enabled);
+      }
+    } catch (Exception e) {
+      logger.warn("resumeSpin encountered an issue: {}", e.getMessage());
+    }
   }
 
   /** Image with precise hit test limited to actually drawn (scaled & aligned) rectangle. */
@@ -891,31 +851,19 @@ public class SlotMachineDisplay extends UIComponent {
     private final float cycle;
     private final float startY;
     private final java.util.function.Consumer<Float> speedTap;
-    private final BooleanSupplier pauseQuery;
 
     ScrollAction(
         float duration,
         float speed,
         float cycle,
         float startY,
-        java.util.function.Consumer<Float> speedTap,
-        BooleanSupplier pauseQuery) {
+        java.util.function.Consumer<Float> speedTap) {
       super(duration);
       this.speed = speed;
       this.cycle = cycle;
       this.startY = startY;
       this.speedTap = speedTap;
-      this.pauseQuery = pauseQuery;
       setInterpolation(null);
-    }
-
-    @Override
-    public boolean act(float delta) {
-      if (pauseQuery != null && pauseQuery.getAsBoolean()) {
-        // Do not advance internal time while paused
-        return false;
-      }
-      return super.act(delta);
     }
 
     @Override
@@ -937,25 +885,14 @@ public class SlotMachineDisplay extends UIComponent {
     private final float y1;
     private final float v0;
     private final float v1;
-    private final BooleanSupplier pauseQuery;
 
-    HermiteStopYAction(float duration, float y0, float y1, float v0, BooleanSupplier pauseQuery) {
+    HermiteStopYAction(float duration, float y0, float y1, float v0) {
       super(duration);
       this.y0 = y0;
       this.y1 = y1;
       this.v0 = v0;
       this.v1 = 0f;
-      this.pauseQuery = pauseQuery;
       setInterpolation(null);
-    }
-
-    @Override
-    public boolean act(float delta) {
-      if (pauseQuery != null && pauseQuery.getAsBoolean()) {
-        // Freeze progression of the easing while paused
-        return false;
-      }
-      return super.act(delta);
     }
 
     @Override
@@ -974,29 +911,6 @@ public class SlotMachineDisplay extends UIComponent {
       float d = getDuration();
       float y = h00 * y0 + h10 * (v0 * d) + h01 * y1 + h11 * (v1 * d);
       a.setY(y);
-    }
-  }
-
-  /** Input listener for local pause testing: P=Pause, O=Resume. */
-  private static final class SlotSpinPauseInput extends InputComponent {
-    private final SlotMachineDisplay display;
-
-    private SlotSpinPauseInput(SlotMachineDisplay display) {
-      super(5); // low priority to avoid stealing global shortcuts
-      this.display = display;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-      if (keycode == Input.Keys.P) {
-        display.pauseSpin();
-        return true;
-      }
-      if (keycode == Input.Keys.O) {
-        display.resumeSpin();
-        return true;
-      }
-      return false;
     }
   }
 }
