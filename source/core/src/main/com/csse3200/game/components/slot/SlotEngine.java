@@ -28,6 +28,9 @@ public class SlotEngine {
   /** Number of symbols (always equals Effect.values().length). */
   private static final int NUM_SYMBOLS = Effect.values().length;
 
+  /** Whether auto-refill is locally paused (test/local pause). */
+  private volatile boolean refillPaused = false;
+
   /** Number of reels (fixed at 3). */
   private static final int NUM_REELS = 3;
 
@@ -37,6 +40,15 @@ public class SlotEngine {
   // New: spin credits state
   private final AtomicInteger remainingSpins;
   private ScheduledExecutorService refillExec;
+
+  /** High-precision clock of the last (logical) refill tick (excludes paused time). */
+  private long lastRefillNano = System.nanoTime();
+
+  /** When paused, record start time to offset lastRefillNano on resume; -1 means not paused. */
+  private long pausedAtNano = -1L;
+
+  /** Cached period in nanoseconds for faster comparisons. */
+  private long refillPeriodNanos = TimeUnit.SECONDS.toNanos(10);
 
   /** Try to consume one credit. */
   private boolean consumeOneCredit() {
@@ -310,6 +322,9 @@ public class SlotEngine {
     this.config = Objects.requireNonNull(config, "config");
     this.random = Objects.requireNonNull(random, "random");
     this.remainingSpins = new AtomicInteger(config.getInitialSpins());
+    this.refillPeriodNanos = TimeUnit.SECONDS.toNanos(config.getRefillPeriodSeconds());
+    this.lastRefillNano = System.nanoTime();
+    this.pausedAtNano = -1L;
     startAutoRefill();
   }
 
@@ -350,8 +365,37 @@ public class SlotEngine {
               return t;
             });
     int period = config.getRefillPeriodSeconds();
-    refillExec.scheduleAtFixedRate(
-        () -> updateSpins(1, "auto_refill"), period, period, TimeUnit.SECONDS);
+    this.refillPeriodNanos = TimeUnit.SECONDS.toNanos(period);
+    // Poll at a short fixed delay and compute logical ticks so pause truly "freezes" time.
+    refillExec.scheduleWithFixedDelay(
+        () -> {
+          final long now = System.nanoTime();
+          if (refillPaused) {
+            // Mark the start of a paused interval (only once)
+            if (pausedAtNano < 0L) {
+              pausedAtNano = now;
+            }
+            return;
+          }
+          // If we just resumed, shift the epoch forward by paused duration so phase is preserved
+          if (pausedAtNano >= 0L) {
+            long pausedDur = now - pausedAtNano;
+            lastRefillNano += pausedDur;
+            pausedAtNano = -1L;
+          }
+          // How many whole periods have elapsed since the last logical tick?
+          long elapsed = now - lastRefillNano;
+          if (elapsed >= refillPeriodNanos) {
+            long ticks = Math.max(1L, elapsed / refillPeriodNanos);
+            // Cap ticks to avoid burst if the game was backgrounded a long time.
+            int toApply = (int) Math.min(ticks, 3L);
+            updateSpins(toApply, "auto_refill");
+            lastRefillNano += refillPeriodNanos * ticks;
+          }
+        },
+        0L,
+        100L,
+        TimeUnit.MILLISECONDS);
     LOG.info(() -> String.format("[Slot] auto_refill started, +1 per %ds", period));
   }
 
@@ -361,6 +405,34 @@ public class SlotEngine {
       refillExec = null;
       LOG.info("[Slot] auto_refill stopped");
     }
+  }
+
+  /** Pause auto-refill of spin credits (no credits will be added while paused). */
+  public void pauseRefill() {
+    this.refillPaused = true;
+    if (pausedAtNano < 0L) {
+      pausedAtNano = System.nanoTime();
+    }
+    LOG.info("[Slot] refill paused");
+  }
+
+  /** Resume auto-refill of spin credits. */
+  public void resumeRefill() {
+    this.refillPaused = false;
+    if (pausedAtNano >= 0L) {
+      long now = System.nanoTime();
+      long pausedDur = now - pausedAtNano;
+      lastRefillNano += pausedDur; // preserve phase; do NOT "lose" time across pause
+      pausedAtNano = -1L;
+    }
+    LOG.info("[Slot] refill resumed");
+  }
+
+  /**
+   * @return true if auto-refill is currently paused.
+   */
+  public boolean isRefillPaused() {
+    return this.refillPaused;
   }
 
   public void dispose() {
