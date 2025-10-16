@@ -533,7 +533,6 @@ public class Settings {
 
   /** Resets the key binds to their default values. */
   public void resetKeyBinds() {
-    difficulty = Difficulty.NORMAL;
     pauseButton = Input.Keys.ESCAPE;
     skipButton = Input.Keys.SPACE;
     interactionButton = Input.Keys.E;
