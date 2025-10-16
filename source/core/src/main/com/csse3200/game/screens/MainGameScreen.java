@@ -222,9 +222,8 @@ public class MainGameScreen extends ScreenAdapter {
         .setEnemySpawnCallback(
             new WaveService.EnemySpawnCallback() {
               @Override
-              public void spawnEnemy(int col, int row, String robotType) {
-                gameArea.spawnRobot(
-                    col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
+              public void spawnEnemy(int col, int row, RobotFactory.RobotType robotType) {
+                gameArea.spawnRobot(col, row, robotType);
               }
 
               @Override
