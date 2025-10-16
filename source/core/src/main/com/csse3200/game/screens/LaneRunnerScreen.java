@@ -3,17 +3,26 @@ package com.csse3200.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
 import com.csse3200.game.input.InputService;
 import com.csse3200.game.minigame.*;
 import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.physics.components.PhysicsComponent.AlignX;
+import com.csse3200.game.physics.components.PhysicsComponent.AlignY;
+import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.MinigameService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -26,15 +35,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private final GdxGame game;
   private final Renderer renderer;
   private LaneManager laneManager;
-  private Image playerImage;
-  private int cureentLane = 1; // Start in the middle lane (0, 1, 2)
-  private ObstacleManager obstacleManager;
-  private Entity player;
-  private boolean gameOver = false;
-  private int score = 0;
-  private float survivalTime = 0f;
-  private float scoreTimer = 0f;
-  private LaneRunnerHUD hud;
+  private boolean gameOverDialogShown = false;
+  private float spawnTimer = 0f;
+  private final java.util.Random random = new java.util.Random();
+  private com.badlogic.gdx.physics.box2d.Box2DDebugRenderer debugRenderer;
+  private boolean gameElementsCreated = false;
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/Background.png",
@@ -45,185 +50,188 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   public LaneRunnerScreen(GdxGame game) {
     this.game = game;
-
-    logger.debug("Initialising lane runner mini game screen services");
     ServiceLocator.registerInputService(new InputService());
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
+    ServiceLocator.registerTimeSource(new GameTime());
     ServiceLocator.registerPhysicsService(new PhysicsService());
+    ServiceLocator.registerMinigameService(new MinigameService());
 
     renderer = RenderFactory.createRenderer();
+    logger.debug("[LaneRunnerScreen] Renderer created");
+    
+    // Initialize debug renderer for physics debugging
+    debugRenderer = new com.badlogic.gdx.physics.box2d.Box2DDebugRenderer();
+    
+    renderer.getCamera().getEntity().setPosition(640f, 360f);
     this.laneManager = new LaneManager(Gdx.graphics.getWidth());
     ServiceLocator.getMusicService().play("sounds/background-music/level3_music.mp3");
     loadAssets();
     createUI();
-    initializeObstacles();
+    createGameElements();
   }
 
+  /** Loads the lane runner game's assets. */
   private void loadAssets() {
-    logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(laneRunnerTextures);
-    ServiceLocator.getResourceService().loadAll();
+    resourceService.loadAll();
   }
 
-  private void addBackground(String texturePath, float width, float height) {
-    Texture bgTex = ServiceLocator.getResourceService().getAsset(texturePath, Texture.class);
-    Image background = new Image(bgTex);
-    background.setSize(width, height);
-    background.setPosition(0, 0);
-    ServiceLocator.getRenderService().getStage().addActor(background);
-  }
 
   private void createUI() {
-    logger.debug("Creating UI");
+    logger.debug("[LaneRunnerScreen] Creating UI");
     Stage stage = ServiceLocator.getRenderService().getStage();
+    
+    // Create the lane runner game UI
+    Entity ui = new Entity()
+        .addComponent(new InputDecorator(stage, 10))
+        .addComponent(new MinigameHUD());
 
-    addBackground(
-        "images/backgrounds/Background.png", Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    ServiceLocator.getEntityService().register(ui);
 
-    // Create the background image
-    Texture bgTex =
-        ServiceLocator.getResourceService().getAsset("images/backgrounds/lanes.png", Texture.class);
-    Image background = new Image(bgTex);
-
-    // Calculate the correct width to avoid stretching, based on our lane logic
-    float totalLaneWidth = laneManager.getLaneWidth() * laneManager.getNumLanes();
-    float screenHeight = Gdx.graphics.getHeight();
-    background.setSize(totalLaneWidth, screenHeight);
-
-    // Center the background on the screen
-    float leftMargin = (Gdx.graphics.getWidth() - totalLaneWidth) / 2;
-    background.setPosition(leftMargin, 0);
-
-    stage.addActor(background);
-
-    Texture playerTex =
-        ServiceLocator.getResourceService()
-            .getAsset("images/entities/character.png", Texture.class);
-    Image playerImg = new Image(playerTex);
-    playerImg.setSize(64f, 64f);
-    float playerX = laneManager.getLaneCenter(1) - 32f;
-    float playerY = 2f;
-    playerImg.setPosition(playerX, playerY);
-    stage.addActor(playerImg);
-    this.playerImage = playerImg;
-    this.cureentLane = 1;
-
-    createScoreUI();
-
-    Entity inputListener = new Entity().addComponent(new MiniGameInputComponent(false));
-    ServiceLocator.getEntityService().register(inputListener);
-
-    inputListener.getEvents().addListener("moveLeft", this::movePLayerLeft);
-    inputListener.getEvents().addListener("moveRight", this::movePlayerRight);
+    // Background removed as requested
   }
 
-  private void createScoreUI() {
-    hud = new LaneRunnerHUD();
-    Entity hudEntity = new Entity().addComponent(hud);
-    ServiceLocator.getEntityService().register(hudEntity);
-    hud.setScore(score);
-    hud.setTime(survivalTime);
-  }
 
-  private void initializeObstacles() {
-    obstacleManager = new ObstacleManager(laneManager);
-    player = LaneRunnerPlayerFactory.createPlayer(laneManager);
-    updatePlayerEntityPosition();
-  }
-
-  private void movePlayerRight() {
-    if (cureentLane < laneManager.getNumLanes() - 1) {
-      cureentLane++;
-      updatePlayerPosition();
-      logger.info("Moved Right to lane: {}", cureentLane);
+  /** Creates the game elements. */
+  private void createGameElements() {
+    if (gameElementsCreated) {
+      logger.warn("[LaneRunnerScreen] Game elements already created, skipping");
+      return;
     }
-  }
-
-  private void updatePlayerEntityPosition() {
-    float newX = laneManager.getLaneCenter(cureentLane);
-    player.setPosition(newX, LaneConfig.PLAYER_Y);
-  }
-
-  private void movePLayerLeft() {
-    if (cureentLane > 0) {
-      cureentLane--;
-      updatePlayerPosition();
-      logger.info("Moved Left to lane: {}", cureentLane);
-    }
-  }
-
-  private void updatePlayerPosition() {
-    float newX = laneManager.getLaneCenter(cureentLane) - 32f; // Center the image
-    playerImage.setPosition(newX, playerImage.getY());
+    
+    logger.info("[LaneRunnerScreen] Creating game elements");
+    gameElementsCreated = true;
+    
+    // Create player entity with components
+    ColliderComponent playerCollider = new ColliderComponent();
+    Entity player = new Entity()
+        .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService()
+            .getAsset("images/entities/character.png", Texture.class)))
+        .addComponent(new LaneRunnerPlayerComponent(laneManager))
+        .addComponent(new PhysicsComponent())
+        .addComponent(playerCollider)
+        .addComponent(new LaneRunnerPlayerCollisionComponent());
+    
+    // Enable continuous collision detection for player
+    player.getComponent(PhysicsComponent.class).getBody().setBullet(true);
+    
+    playerCollider.setAsBox(new Vector2(16f, 16f))
+        .setCollisionFilter(PhysicsLayer.PLAYER, PhysicsLayer.PROJECTILE);
+    
+    // Set player scale and position
+    player.setScale(32f, 32f);
+    player.setPosition(laneManager.getLaneCenter(1), 100f);
+    logger.info("[LaneRunnerScreen] Player created at lane center with scale (32, 32)");
+    ServiceLocator.getEntityService().register(player);
   }
 
   @Override
   public void render(float delta) {
     // Only update game logic if not game over
-    if (!gameOver) {
-      survivalTime += delta;
-      scoreTimer += delta;
-      if (scoreTimer >= 1f) { // Every second
-        score += 0.5; // Increment score
-        scoreTimer = 0f;
-      }
-      int previousDodged = obstacleManager.getObstaclesDodged();
+    if (!ServiceLocator.getMinigameService().isGameOver()) {
+      ServiceLocator.getPhysicsService().getPhysics().update();
       ServiceLocator.getEntityService().update();
-      obstacleManager.update(delta);
-      int newDodged = obstacleManager.getObstaclesDodged();
-      if (newDodged > previousDodged) {
-        score += (newDodged - previousDodged) * 5; // Bonus for dodging
-      }
-      if (hud != null) {
-        hud.setScore(score);
-        hud.setTime(survivalTime);
-      }
-      if (obstacleManager.checkCollision(playerImage)) {
-        logger.info("Player collided with an obstacle. Game Over!");
-        gameOver = true;
-        // Show in-screen dialog instead of switching screens
-        String title = "Game Over";
-        String message = String.format(
-            "Final Score: %s%nSurvival Time: %.1fs%nObstacles Dodged: %d",
-            score, survivalTime, obstacleManager.getObstaclesDodged());
-        ServiceLocator
-            .getDialogService()
-            .warning(
-                title,
-                message,
-                d -> game.setScreen(GdxGame.ScreenType.LANE_RUNNER),
-                d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
-        return;
+      
+      // Spawn obstacles
+      spawnTimer += delta;
+      if (spawnTimer >= 1.5f) {
+        spawnObstacle();
+        spawnTimer = 0f;
       }
     }
-    // Always render the scene & stage so Game Over box shows
+    
     renderer.render();
-    Stage stage = ServiceLocator.getRenderService().getStage();
-    stage.act(delta);
-    stage.draw();
+    
+    // Render physics debug information
+    if (debugRenderer != null) {
+      debugRenderer.render(ServiceLocator.getPhysicsService().getPhysics().getWorld(), 
+          renderer.getCamera().getCamera().combined);
+    }
+    
+    if (ServiceLocator.getMinigameService().isGameOver() && !gameOverDialogShown) {
+      handleGameOver();
+    }
   }
 
-  private void unloadAssets() {
-    logger.debug("Unloading assets");
-    ResourceService resourceService = ServiceLocator.getResourceService();
-    resourceService.unloadAssets(laneRunnerTextures);
+  /**
+   * Spawns a new obstacle in a random lane.
+   */
+  private void spawnObstacle() {
+    int laneIndex = random.nextInt(laneManager.getNumLanes());
+    float x = laneManager.getLaneCenter(laneIndex);
+    float y = Gdx.graphics.getHeight();
+
+    // Create obstacle entity with components
+    ColliderComponent obstacleCollider = new ColliderComponent();
+    Entity obstacle = new Entity()
+        .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService()
+            .getAsset("images/entities/minigames/Bomb.png", Texture.class)))
+        .addComponent(new LaneRunnerObstacleComponent(3f))
+        .addComponent(new PhysicsComponent())
+        .addComponent(obstacleCollider);
+    
+    // Enable continuous collision detection for obstacles
+    obstacle.getComponent(PhysicsComponent.class).getBody().setBullet(true);
+    
+    obstacleCollider.setAsBox(new Vector2(32f, 32f))
+        .setCollisionFilter(PhysicsLayer.PROJECTILE, PhysicsLayer.PLAYER);
+    obstacleCollider.setAsBoxAligned(new Vector2(32f, 32f), AlignX.CENTER, AlignY.CENTER);
+
+    obstacle.setScale(32f, 32f);
+    obstacle.setPosition(x, y);
+    
+    ServiceLocator.getEntityService().register(obstacle);
+  }
+
+  /**
+   * Handles the game over state.
+   */
+  private void handleGameOver() {
+    // Add achievement and coins
+    int score = ServiceLocator.getMinigameService().getScore();
+    if (score >= 10) {
+      ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("laneRunnerCompleted");
+    }
+    ServiceLocator.getProfileService().getProfile().getWallet().addCoins(Math.floorDiv(score, 3));
+
+    // Show game over dialog
+    gameOverDialogShown = true;
+    String title = "Game Over";
+    float time = ServiceLocator.getTimeSource().getTime();
+    String message = String.format(
+        "Final Score: %d%nSurvival Time: %.2fs",
+        score, time / 1000f);
+    ServiceLocator
+        .getDialogService()
+        .gameOver(
+            title,
+            message,
+            d -> game.setScreen(GdxGame.ScreenType.LANE_RUNNER),
+            d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
+  }
+
+  @Override
+  public void resize(int width, int height) {
+    logger.debug("[LaneRunnerScreen] Resized renderer: ({} x {})", width, height);
+    renderer.resize(width, height);
   }
 
   @Override
   public void dispose() {
-    logger.debug("Disposing lane runner mini game screen");
+    logger.debug("[LaneRunnerScreen] Disposing");
 
-    if (obstacleManager != null) {
-      obstacleManager.clearObstacles();
+    if (debugRenderer != null) {
+      debugRenderer.dispose();
     }
     renderer.dispose();
-    unloadAssets();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
 
+    logger.debug("[LaneRunnerScreen] Services cleared");
     ServiceLocator.clear();
   }
+
 }

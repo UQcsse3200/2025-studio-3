@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class MiniGameActions extends Component {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.minigame.MiniGameActions.class);
+      LoggerFactory.getLogger(MiniGameActions.class);
   private GdxGame game;
 
   public MiniGameActions(GdxGame game) {
@@ -24,13 +24,11 @@ public class MiniGameActions extends Component {
   /** Swaps to the Main Game screen. */
   private void onLaneRunner() {
     logger.info("Lane Runner Mini game");
-
     game.setScreen(GdxGame.ScreenType.LANE_RUNNER);
   }
 
   private void onWallPong() {
-    logger.info("Brick Breaker Mini game");
-
+    logger.info("Wall Pong Mini game");
     game.setScreen(GdxGame.ScreenType.PADDLE_GAME);
   }
 

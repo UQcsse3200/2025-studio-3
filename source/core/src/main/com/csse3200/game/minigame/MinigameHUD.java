@@ -5,6 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
+/**
+ * HUD for the minigames.
+ */
 public class MinigameHUD extends UIComponent {
   private Label scoreLabel;
   private Label timeLabel;
@@ -13,8 +16,6 @@ public class MinigameHUD extends UIComponent {
   @Override
   public void create() {
     super.create();
-    
-    // Create labels using UIFactory for consistent styling
     scoreLabel = ui.subheading("Score: 0");
     timeLabel = ui.subheading("Time: 0.00s");
 

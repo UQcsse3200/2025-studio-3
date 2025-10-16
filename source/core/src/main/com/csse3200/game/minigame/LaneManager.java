@@ -1,28 +1,37 @@
 package com.csse3200.game.minigame;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LaneManager {
-  private final int numLanes = 3;
+  private static final Logger logger = LoggerFactory.getLogger(LaneManager.class);  
+  private static final int NUM_LANES = 3;
   private final float totalLaneWidth;
   private final float laneWidth;
   private final float[] laneCenters;
 
   public LaneManager(float screenWidth) {
-    this.totalLaneWidth = screenWidth * 0.5f;
-    this.laneWidth = totalLaneWidth / numLanes;
-    this.laneCenters = new float[numLanes];
+    // Use 80% of screen width for lanes, centered
+    this.totalLaneWidth = screenWidth * 0.8f;
+    this.laneWidth = totalLaneWidth / NUM_LANES;
+    this.laneCenters = new float[NUM_LANES];
 
+    // Center the lanes on screen
     float leftMargin = (screenWidth - totalLaneWidth) / 2;
-    for (int i = 0; i < numLanes; i++) {
+    for (int i = 0; i < NUM_LANES; i++) {
       laneCenters[i] = leftMargin + (i * laneWidth) + (laneWidth / 2);
     }
+
+    logger.info("LaneManager created with totalLaneWidth: {}, laneWidth: {}, laneCenters: {}", totalLaneWidth, laneWidth, laneCenters);
+    logger.info("Screen width: {}", screenWidth);
   }
 
   public float getLaneCenter(int lane) {
 
-    if (lane < 0 || lane >= numLanes) {
+    if (lane < 0 || lane >= NUM_LANES) {
       // Return the closest lane if out of bounds, preventing crashes
       if (lane < 0) return laneCenters[0];
-      return laneCenters[numLanes - 1];
+      return laneCenters[NUM_LANES - 1];
     }
     return laneCenters[lane];
   }
@@ -32,6 +41,6 @@ public class LaneManager {
   }
 
   public int getNumLanes() {
-    return numLanes;
+    return NUM_LANES;
   }
 }

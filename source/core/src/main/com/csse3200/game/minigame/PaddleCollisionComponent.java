@@ -10,7 +10,6 @@ import com.csse3200.game.services.ServiceLocator;
  * Uses the physics system's collision events instead of manual collision checking.
  */
 public class PaddleCollisionComponent extends Component {
-
   @Override
   public void create() {
     super.create();
