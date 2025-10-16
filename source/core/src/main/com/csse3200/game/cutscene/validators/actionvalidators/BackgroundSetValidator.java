@@ -35,14 +35,13 @@ public class BackgroundSetValidator implements ActionValidator {
   public List<AuthoringError> validate(String beatId, ActionDTO action, ValidationCtx context) {
     List<AuthoringError> errors = new ArrayList<>();
 
-    if (!(action.fields.get("backgroundId") instanceof String))
+    if (!(action.getFields().get("backgroundId") instanceof String backgroundId))
       errors.add(
           new AuthoringError(
               "ACTION_BACKGROUND_SET_INVALID",
               "doc.cutscene.beats." + beatId + ".actions.*",
               "Background ID must be a string"));
     else {
-      String backgroundId = (String) action.fields.get("backgroundId");
       if (!context.backgroundIds().contains(backgroundId))
         errors.add(
             new AuthoringError(

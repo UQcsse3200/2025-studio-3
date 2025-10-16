@@ -51,6 +51,22 @@ public class DefaultOrchestrator extends OrchestratorState implements CutsceneOr
     }
   }
 
+  private void updateQueue() {
+    if (!active.isEmpty() && active.stream().anyMatch(ActionState::done)) {
+      List<ActionState> completedActions = active.stream().filter(ActionState::done).toList();
+      for (ActionState action : completedActions) {
+        active.remove(action);
+      }
+    }
+
+    boolean activeBlocking = active.stream().anyMatch(ActionState::blocking);
+
+    if (!activeBlocking && !queue.isEmpty()) {
+      active.add(queue.getFirst());
+      queue.removeFirst();
+    }
+  }
+
   /**
    * Updates the state of the cutscene by delta time (dt)
    *
@@ -79,19 +95,7 @@ public class DefaultOrchestrator extends OrchestratorState implements CutsceneOr
       beatStarted = true;
     }
 
-    if (!active.isEmpty() && active.stream().anyMatch(ActionState::done)) {
-      List<ActionState> completedActions = active.stream().filter(ActionState::done).toList();
-      for (ActionState action : completedActions) {
-        active.remove(action);
-      }
-    }
-
-    boolean activeBlocking = active.stream().anyMatch(ActionState::blocking);
-
-    if (!activeBlocking && !queue.isEmpty()) {
-      active.add(queue.getFirst());
-      queue.removeFirst();
-    }
+    updateQueue();
 
     active.forEach(actionState -> actionState.tick(dtMs));
 
@@ -152,8 +156,8 @@ public class DefaultOrchestrator extends OrchestratorState implements CutsceneOr
   /** Key or click to advance */
   @Override
   public void advance() {
-    if (active.size() == 1 && active.getFirst() instanceof SupportsAdvance) {
-      ((SupportsAdvance) active.getFirst()).advance();
+    if (active.size() == 1 && active.getFirst() instanceof SupportsAdvance firstActive) {
+      firstActive.advance();
     } else {
       active.addAll(queue);
       queue.clear();

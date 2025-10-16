@@ -65,7 +65,8 @@ public class ProjectileFactory {
       proj.addComponent(new PhysicsComponent())
           .addComponent(collider)
           .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-          .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+          .addComponent(
+              new TouchAttackComponent((short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), 0))
           .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
     }
 

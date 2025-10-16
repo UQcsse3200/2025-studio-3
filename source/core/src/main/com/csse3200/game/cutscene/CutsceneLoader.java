@@ -14,50 +14,50 @@ public class CutsceneLoader {
     JsonValue root = jsonReader.parse(fileHandle);
 
     CutsceneDocDTO docDTO = new CutsceneDocDTO();
-    docDTO.schemaVersion = root.getInt("schemaVersion");
+    docDTO.setSchemaVersion(root.getInt("schemaVersion"));
 
     // characters
-    docDTO.characters = new ArrayList<>();
+    docDTO.setCharacters(new ArrayList<>());
     JsonValue charactersJson = root.get("characters");
     if (charactersJson != null) {
       for (JsonValue character : charactersJson) {
         CharacterDTO characterDTO = new CharacterDTO();
-        characterDTO.id = character.getString("id");
-        characterDTO.name = character.getString("name");
-        characterDTO.poses = mapStringString(character.get("poses"));
+        characterDTO.setId(character.getString("id"));
+        characterDTO.setName(character.getString("name"));
+        characterDTO.setPoses(mapStringString(character.get("poses")));
 
-        docDTO.characters.add(characterDTO);
+        docDTO.getCharacters().add(characterDTO);
       }
     }
 
     // Backgrounds
-    docDTO.backgrounds = new ArrayList<>();
+    docDTO.setBackgrounds(new ArrayList<>());
     JsonValue backgroundsJson = root.get("backgrounds");
     if (backgroundsJson != null) {
       for (JsonValue background : backgroundsJson) {
         BackgroundDTO backgroundDTO = new BackgroundDTO();
-        backgroundDTO.id = background.getString("id");
-        backgroundDTO.image = background.getString("image");
+        backgroundDTO.setId(background.getString("id"));
+        backgroundDTO.setImage(background.getString("image"));
 
-        docDTO.backgrounds.add(backgroundDTO);
+        docDTO.getBackgrounds().add(backgroundDTO);
       }
     }
 
     // Sounds
-    docDTO.sounds = new ArrayList<>();
+    docDTO.setSounds(new ArrayList<>());
     JsonValue soundsJson = root.get("sounds");
     if (soundsJson != null) {
       for (JsonValue sound : soundsJson) {
         SoundDTO soundDTO = new SoundDTO();
-        soundDTO.id = sound.getString("id");
-        soundDTO.file = sound.getString("file");
+        soundDTO.setId(sound.getString("id"));
+        soundDTO.setFile(sound.getString("file"));
 
-        docDTO.sounds.add(soundDTO);
+        docDTO.getSounds().add(soundDTO);
       }
     }
 
     // Cutscene
-    docDTO.cutscene = parseCutscene(root.get("cutscene"));
+    docDTO.setCutscene(parseCutscene(root.get("cutscene")));
 
     return docDTO;
   }
@@ -65,15 +65,15 @@ public class CutsceneLoader {
   private CutsceneDTO parseCutscene(JsonValue jsonValue) {
     CutsceneDTO cutsceneDTO = new CutsceneDTO();
 
-    cutsceneDTO.id = jsonValue.getString("id");
+    cutsceneDTO.setId(jsonValue.getString("id"));
 
     JsonValue beats = jsonValue.get("beats");
     if (beats == null) return cutsceneDTO;
 
-    cutsceneDTO.beats = new ArrayList<>();
+    cutsceneDTO.setBeats(new ArrayList<>());
 
     for (JsonValue beat : beats) {
-      cutsceneDTO.beats.add(parseBeat(beat));
+      cutsceneDTO.getBeats().add(parseBeat(beat));
     }
 
     return cutsceneDTO;
@@ -82,17 +82,17 @@ public class CutsceneLoader {
   private BeatDTO parseBeat(JsonValue jsonValue) {
     BeatDTO beatDTO = new BeatDTO();
 
-    beatDTO.id = jsonValue.getString("id");
+    beatDTO.setId(jsonValue.getString("id"));
 
-    beatDTO.advance = parseAdvance(jsonValue.get("advance"));
+    beatDTO.setAdvance(parseAdvance(jsonValue.get("advance")));
 
-    JsonValue actions = jsonValue.get("actions");
+    JsonValue actions = jsonValue.get(CutsceneSchemaKeys.ACTIONS_KEY);
     if (actions == null) return beatDTO;
 
-    beatDTO.actions = new ArrayList<>();
+    beatDTO.setActions(new ArrayList<>());
 
     for (JsonValue action : actions) {
-      beatDTO.actions.add(parseAction(action));
+      beatDTO.getActions().add(parseAction(action));
     }
 
     return beatDTO;
@@ -101,17 +101,17 @@ public class CutsceneLoader {
   private AdvanceDTO parseAdvance(JsonValue jsonValue) {
     AdvanceDTO advanceDTO = new AdvanceDTO();
 
-    advanceDTO.mode = jsonValue.getString("mode");
+    advanceDTO.setMode(jsonValue.getString("mode"));
     try {
-      advanceDTO.delay = jsonValue.getInt("delay");
+      advanceDTO.setDelay(jsonValue.getInt("delay"));
     } catch (IllegalArgumentException e) {
-      advanceDTO.delay = null;
+      advanceDTO.setDelay(null);
     }
 
     try {
-      advanceDTO.signalKey = jsonValue.getString("signalKey");
+      advanceDTO.setSignalKey(jsonValue.getString("signalKey"));
     } catch (IllegalArgumentException e) {
-      advanceDTO.signalKey = null;
+      advanceDTO.setSignalKey(null);
     }
 
     return advanceDTO;
@@ -120,21 +120,21 @@ public class CutsceneLoader {
   private ActionDTO parseAction(JsonValue jsonValue) {
     ActionDTO actionDTO = new ActionDTO();
 
-    actionDTO.type = jsonValue.getString("type");
+    actionDTO.setType(jsonValue.getString("type"));
 
-    JsonValue actions = jsonValue.get("actions");
+    JsonValue actions = jsonValue.get(CutsceneSchemaKeys.ACTIONS_KEY);
     if (actions != null) {
-      actionDTO.actions = new ArrayList<>();
+      actionDTO.setActions(new ArrayList<>());
       for (JsonValue action : actions) {
-        actionDTO.actions.add(parseAction(action));
+        actionDTO.getActions().add(parseAction(action));
       }
     }
 
     Map<String, Object> kvPairs = mapAny(jsonValue);
     kvPairs.remove("type");
-    kvPairs.remove("actions");
+    kvPairs.remove(CutsceneSchemaKeys.ACTIONS_KEY);
 
-    actionDTO.fields.putAll(kvPairs);
+    actionDTO.getFields().putAll(kvPairs);
 
     return actionDTO;
   }
