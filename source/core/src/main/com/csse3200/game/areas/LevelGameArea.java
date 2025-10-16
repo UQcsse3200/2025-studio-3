@@ -540,6 +540,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       Random random = new Random();
       int col = (int) ((spawnPos.x - xOffset) / tileSize);
       int maxRange = 9 - col;
+      if (maxRange <= 1) {
+        return; // no valid range to spawn
+      }
       int num = random.nextInt(maxRange - 1) + 2; // pick random num between 2 and 7
       projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 

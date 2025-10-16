@@ -91,7 +91,7 @@ public class BossFactory {
       aiComponent =
           new AITaskComponent()
               .addTask(new MoveLeftTask(config.speed))
-              .addTask(new RobotAttackTask(90f, PhysicsLayer.NPC));
+              .addTask(new RobotAttackTask(200f, PhysicsLayer.NPC));
     }
 
     AnimationRenderComponent animator =
@@ -128,7 +128,7 @@ public class BossFactory {
             .addComponent(new PhysicsComponent())
             .addComponent(new PhysicsMovementComponent())
             .addComponent(colliderComponent)
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS))
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
             .addComponent(new CombatStatsComponent(config.health, config.attack))
             .addComponent(aiComponent)
             .addComponent(new RobotAnimationController())
