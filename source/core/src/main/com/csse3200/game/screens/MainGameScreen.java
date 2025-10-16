@@ -136,8 +136,6 @@ protected boolean isPaused = false;
   private final List<String> textures = new ArrayList<>();
   private final String level;
   
-  /** Cache of UI slot display to avoid scanning each time (optional). */
-  private SlotMachineDisplay cachedSlotDisplay;
 
   private enum PanPhase {
     RIGHT,
@@ -416,8 +414,6 @@ protected boolean isPaused = false;
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
     
-    // Prime cached slot reference if present
-    cachedSlotDisplay = findSlotMachineDisplay();
 
     // Connect the CurrentWaveDisplay to the WaveService for event listening
     ServiceLocator.getWaveService()
@@ -470,6 +466,11 @@ protected boolean isPaused = false;
     logger.info("[MainGameScreen] Game paused");
     isPaused = true;
     ServiceLocator.getMusicService().pause();
+    // Pause slot machine auto-refill (if present)
+    SlotMachineDisplay slot = findSlotMachineDisplay();
+    if (slot != null) {
+      slot.pauseSpin();
+    }
     // Pause currency generators
     EntityService es = ServiceLocator.getEntityService();
     if (es != null) {
@@ -480,12 +481,6 @@ protected boolean isPaused = false;
         }
       }
     }
-    // Pause slot machine auto-refill (level 3)
-    SlotMachineDisplay slot = cachedSlotDisplay != null ? cachedSlotDisplay : findSlotMachineDisplay();
-    if (slot != null) {
-      slot.pauseSpin();
-      cachedSlotDisplay = slot;
-    }
   }
 
   /** Event handler for resume events */
@@ -493,6 +488,11 @@ protected boolean isPaused = false;
     logger.info("[MainGameScreen] Game resumed");
     isPaused = false;
     ServiceLocator.getMusicService().resume();
+    // Resume slot machine auto-refill (if present)
+    SlotMachineDisplay slot = findSlotMachineDisplay();
+    if (slot != null) {
+      slot.resumeSpin();
+    }
     // Resume currency generators
     EntityService es = ServiceLocator.getEntityService();
     if (es != null) {
@@ -502,12 +502,6 @@ protected boolean isPaused = false;
           cg.resume();
         }
       }
-    }
-    // Resume slot machine auto-refill (level 3)
-    SlotMachineDisplay slot = cachedSlotDisplay != null ? cachedSlotDisplay : findSlotMachineDisplay();
-    if (slot != null) {
-      slot.resumeSpin();
-      cachedSlotDisplay = slot;
     }
   }
 
