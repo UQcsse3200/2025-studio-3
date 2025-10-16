@@ -28,8 +28,10 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * The Lane Runner screen.
+ */
 public class LaneRunnerScreen extends ScreenAdapter {
-
   private static final Logger logger =
       LoggerFactory.getLogger(com.csse3200.game.screens.LaneRunnerScreen.class);
   private final GdxGame game;
@@ -48,6 +50,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
     "images/entities/character.png"
   };
 
+  /**
+   * Creates a new Lane Runner screen.
+   * 
+   * @param game the game instance
+   */
   public LaneRunnerScreen(GdxGame game) {
     this.game = game;
     ServiceLocator.registerInputService(new InputService());
@@ -61,18 +68,18 @@ public class LaneRunnerScreen extends ScreenAdapter {
     renderer = RenderFactory.createRenderer();
     logger.debug("[LaneRunnerScreen] Renderer created");
     
-    // Initialize debug renderer for physics debugging
-    debugRenderer = new com.badlogic.gdx.physics.box2d.Box2DDebugRenderer();
-    
     renderer.getCamera().getEntity().setPosition(640f, 360f);
     this.laneManager = new LaneManager(Gdx.graphics.getWidth());
-    ServiceLocator.getMusicService().play("sounds/background-music/level3_music.mp3");
     loadAssets();
     createUI();
     createGameElements();
+
+    ServiceLocator.getMusicService().play("sounds/background-music/level3_music.mp3");
   }
 
-  /** Loads the lane runner game's assets. */
+  /**
+   * Loads the lane runner game's assets.
+   */
   private void loadAssets() {
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(laneRunnerTextures);
@@ -80,6 +87,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
   }
 
 
+  /**
+   * Creates the UI for the lane runner game.
+   */
   private void createUI() {
     logger.debug("[LaneRunnerScreen] Creating UI");
     Stage stage = ServiceLocator.getRenderService().getStage();
@@ -90,8 +100,6 @@ public class LaneRunnerScreen extends ScreenAdapter {
         .addComponent(new MinigameHUD());
 
     ServiceLocator.getEntityService().register(ui);
-
-    // Background removed as requested
   }
 
 
@@ -114,17 +122,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
         .addComponent(new PhysicsComponent())
         .addComponent(playerCollider)
         .addComponent(new LaneRunnerPlayerCollisionComponent());
-    
-    // Enable continuous collision detection for player
     player.getComponent(PhysicsComponent.class).getBody().setBullet(true);
-    
-    playerCollider.setAsBox(new Vector2(16f, 16f))
+    playerCollider.setAsBoxAligned(new Vector2(32f, 32f), AlignX.LEFT, AlignY.BOTTOM)
         .setCollisionFilter(PhysicsLayer.PLAYER, PhysicsLayer.PROJECTILE);
-    
-    // Set player scale and position
     player.setScale(32f, 32f);
     player.setPosition(laneManager.getLaneCenter(1), 100f);
-    logger.info("[LaneRunnerScreen] Player created at lane center with scale (32, 32)");
     ServiceLocator.getEntityService().register(player);
   }
 
@@ -172,17 +174,11 @@ public class LaneRunnerScreen extends ScreenAdapter {
         .addComponent(new LaneRunnerObstacleComponent(3f))
         .addComponent(new PhysicsComponent())
         .addComponent(obstacleCollider);
-    
-    // Enable continuous collision detection for obstacles
     obstacle.getComponent(PhysicsComponent.class).getBody().setBullet(true);
-    
-    obstacleCollider.setAsBox(new Vector2(32f, 32f))
+    obstacleCollider.setAsBoxAligned(new Vector2(32f, 32f), AlignX.LEFT, AlignY.BOTTOM)
         .setCollisionFilter(PhysicsLayer.PROJECTILE, PhysicsLayer.PLAYER);
-    obstacleCollider.setAsBoxAligned(new Vector2(32f, 32f), AlignX.CENTER, AlignY.CENTER);
-
     obstacle.setScale(32f, 32f);
     obstacle.setPosition(x, y);
-    
     ServiceLocator.getEntityService().register(obstacle);
   }
 
