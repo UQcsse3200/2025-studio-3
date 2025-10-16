@@ -111,19 +111,16 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
     float tileSize = area.getTileSize();
-    float rayLength = attackRange;
-    float raycastVertical = tileSize;
 
-    // done with the help of OpenAI
-    for (float yOffset = -raycastVertical; yOffset <= raycastVertical; yOffset += 0.5) {
+      // done with the help of OpenAI
+    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
       offsetFrom.set(from.x, from.y + yOffset);
-      end.set(offsetFrom).mulAdd(castDir, rayLength);
+      end.set(offsetFrom).mulAdd(castDir, attackRange);
 
       boolean didHit =
           physics.raycast(
               offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
-      debugRenderer.drawLine(offsetFrom, end);
       if (didHit) {
         Fixture hitFixture = tempHit.getFixture();
         if (hitFixture != null && hitFixture.getUserData() instanceof Entity) {
