@@ -115,12 +115,8 @@ public class BossFactory {
     ColliderComponent colliderComponent =
         new ColliderComponent()
             .setCollisionFilter(
-                PhysicsLayer.BOSS,
-                (short)
-                    (PhysicsLayer.DEFAULT
-                        | PhysicsLayer.NPC
-                        | PhysicsLayer.OBSTACLE
-                        | PhysicsLayer.ENEMY))
+                PhysicsLayer.ENEMY,
+                (short) (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE))
             .setFriction(0f);
 
     Entity boss =

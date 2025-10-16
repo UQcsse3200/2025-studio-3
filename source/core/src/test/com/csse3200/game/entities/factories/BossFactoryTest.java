@@ -114,7 +114,7 @@ class BossFactoryTest {
     assertEquals(10, stats.getBaseAttack());
 
     scrapTitan.create();
-    assertPhysicsLayers(scrapTitan, PhysicsLayer.BOSS);
+    assertPhysicsLayers(scrapTitan, PhysicsLayer.ENEMY);
   }
 
   @Test
@@ -130,7 +130,7 @@ class BossFactoryTest {
     assertEquals(20, stats.getBaseAttack());
 
     samuraiBot.create();
-    assertPhysicsLayers(samuraiBot, PhysicsLayer.BOSS);
+    assertPhysicsLayers(samuraiBot, PhysicsLayer.ENEMY);
   }
 
   @Test
@@ -146,7 +146,7 @@ class BossFactoryTest {
     assertEquals(15, stats.getBaseAttack());
 
     gunBot.create();
-    assertPhysicsLayers(gunBot, PhysicsLayer.BOSS);
+    assertPhysicsLayers(gunBot, PhysicsLayer.ENEMY);
   }
 
   private void assertPhysicsLayers(Entity entity, short expectedLayer) {
@@ -157,9 +157,7 @@ class BossFactoryTest {
     assertEquals(expectedLayer, filter.categoryBits);
     assertEquals(expectedLayer, hitbox.getLayer());
 
-    short expectedMask =
-        (short)
-            (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY);
+    short expectedMask = (short) (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE);
     assertEquals(expectedMask, filter.maskBits);
   }
 }

@@ -14,8 +14,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-
 /**
  * Process game physics using the Box2D library. See the Box2D documentation for examples or use
  * cases.
