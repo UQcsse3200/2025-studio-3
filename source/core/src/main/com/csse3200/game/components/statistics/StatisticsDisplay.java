@@ -80,7 +80,7 @@ public class StatisticsDisplay extends UIComponent {
       {"Skill Points Spent:", statistics.getStatistic("skillPointsSpent")},
       {"Purchases Made:", statistics.getStatistic("purchasesMade")},
       {"Waves Completed:", statistics.getStatistic("wavesCompleted")},
-      {"Items Collected:", statistics.getStatistic("itemsCollected")}
+      {"Items Collected:", statistics.getStatistic("itemsCollected")},
     };
 
     // Position Components on table

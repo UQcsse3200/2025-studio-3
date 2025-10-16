@@ -11,8 +11,8 @@ public class BallComponent extends Component {
   private final Vector2 velocity;
   private int score;
   private int ballsHit;
-  private static final float INITIAL_X_SPEED = 200f;
-  private static final float INITIAL_Y_SPEED = 200f;
+  private static final float INITIAL_X_SPEED = 300f;
+  private static final float INITIAL_Y_SPEED = 300f;
 
   /**
    * Creates a new BallComponent.

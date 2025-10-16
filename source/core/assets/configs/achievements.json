@@ -71,6 +71,22 @@
       "quota": 10,
       "skillPoints": 2,
       "tier": "T2"
+    },
+    "paddleGameMaster": {
+      "name": "Paddle Game Master",
+      "description": "Reach 10 points in the paddle minigame",
+      "statistic": "paddleGameCompleted",
+      "quota": 1,
+      "skillPoints": 3,
+      "tier": "T3"
+    }, 
+    "laneRunnerMaster": {
+      "name": "Lane Runner Master",
+      "description": "Completed the lane runner minigame",
+      "statistic": "laneRunnerCompleted",
+      "quota": 1,
+      "skillPoints": 3,
+      "tier": "T3"
     }
   }
 }

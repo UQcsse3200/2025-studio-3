@@ -2,6 +2,8 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
@@ -19,6 +21,7 @@ import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.MinigameService;
 import com.csse3200.game.services.ResourceService;
@@ -26,7 +29,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.PhysicsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /** The game screen containing the paddle game. */
 public class PaddleGameScreen extends ScreenAdapter {
@@ -64,7 +66,7 @@ public class PaddleGameScreen extends ScreenAdapter {
   /** Loads the paddle game's assets. */
   private void loadAssests() {
     ResourceService resourceService = ServiceLocator.getResourceService();
-    String[] textures = {"images/entities/minigames/paddle.png", "images/entities/minigames/ball.png", "images/backgrounds/WallPongbg.png"};
+    String[] textures = {"images/entities/minigames/paddle_new.png", "images/entities/minigames/ball_new.png", "images/backgrounds/WallPongbg.png"};
     resourceService.loadTextures(textures);
     resourceService.loadAll();
   }
@@ -72,14 +74,7 @@ public class PaddleGameScreen extends ScreenAdapter {
   private void createUI() {
     logger.debug("[PaddleGameScreen] Creating UI");
     Stage stage = ServiceLocator.getRenderService().getStage();
-
-    // // Add the background image
-    // Texture bgTex = ServiceLocator.getResourceService().getAsset("images/backgrounds/WallPongbg.png", Texture.class);
-    // Image bg = new Image(new TextureRegionDrawable(new TextureRegion(bgTex)));
-    // bg.setFillParent(true);
-    // bg.setScaling(Scaling.fill);
-    // stage.addActor(bg);
-
+    
     // Create the paddle game UI
     Entity ui = new Entity()
         .addComponent(new InputDecorator(stage, 10))
@@ -92,31 +87,40 @@ public class PaddleGameScreen extends ScreenAdapter {
   private void createGameElements() {
     logger.info("[PaddleGameScreen] Creating game elements");
     
+    // Create background entity with custom render component
+    Entity backgroundEntity = new Entity()
+      .addComponent(new BackgroundRenderComponent());
+    ServiceLocator.getEntityService().register(backgroundEntity);
+    
     // Create paddle entity
+    ColliderComponent paddleCollider = new ColliderComponent();
     Entity paddle = new Entity()
-      .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService().getAsset("images/entities/minigames/paddle.png", Texture.class)))
+      .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService().getAsset("images/entities/minigames/paddle_new.png", Texture.class)))
       .addComponent(new PaddleComponent())
       .addComponent(new PaddleCollisionComponent())
       .addComponent(new PhysicsComponent())
-      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PLAYER));
-    
+      .addComponent(paddleCollider);
+      paddleCollider.setAsBox(new Vector2(100f, 30f)).setLayer(PhysicsLayer.PLAYER);
+
     // Set paddle scale and position
-    paddle.setScale(100f, 50f);
-    paddle.setPosition(590f, 100f);
+    paddle.setScale(100f, 30f);
+    paddle.setPosition(590f, 50f);
     logger.info("[PaddleGameScreen] Paddle created at (590, 100) with scale (100, 50)");
     ServiceLocator.getEntityService().register(paddle);
     
     // Create ball entity
+    ColliderComponent ballCollider = new ColliderComponent();
     Entity ball = new Entity()
-      .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService().getAsset("images/entities/minigames/ball.png", Texture.class)))
+      .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService().getAsset("images/entities/minigames/ball_new.png", Texture.class)))
       .addComponent(new BallComponent())
       .addComponent(new PhysicsComponent())
-      .addComponent(new ColliderComponent().setLayer(PhysicsLayer.PROJECTILE));
+      .addComponent(ballCollider);
+      ballCollider.setAsBox(new Vector2(20f, 20f)).setLayer(PhysicsLayer.PROJECTILE);
     
     // Set ball scale and position
-    ball.setScale(50f, 50f);
+    ball.setScale(20f, 20f);
     ball.setPosition(640f, 400f);
-    logger.info("[PaddleGameScreen] Ball created at (640, 400) with scale (50, 50)");
+    logger.info("[PaddleGameScreen] Ball created at (640, 400) with scale (20, 20)");
     ServiceLocator.getEntityService().register(ball);
   }
 
@@ -139,13 +143,20 @@ public class PaddleGameScreen extends ScreenAdapter {
    * Handles the game over state.
    */
   private void handleGameOver() {
+    // Add achievement and coins
+    int score = ServiceLocator.getMinigameService().getScore();
+    if (score >= 10) {
+      ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("paddleGameCompleted");
+    }
+    ServiceLocator.getProfileService().getProfile().getWallet().addCoins(score);
+
+    // Show game over dialog
     gameOverDialogShown = true;
     String title = "Game Over";
     float time = ServiceLocator.getTimeSource().getTime();
-    int score = ServiceLocator.getMinigameService().getScore();
     String message = String.format(
-        "Final Score: %d | Survival Time: %.2fs",
-        score, time);
+        "Final Score: %d%nSurvival Time: %.2fs",
+        score, time / 1000f);
     ServiceLocator
         .getDialogService()
         .gameOver(
@@ -153,8 +164,6 @@ public class PaddleGameScreen extends ScreenAdapter {
             message,
             d -> game.setScreen(GdxGame.ScreenType.PADDLE_GAME),
             d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
-    
-    // TODO: Add coins + achievement unlock
   }
 
   @Override
@@ -173,5 +182,33 @@ public class PaddleGameScreen extends ScreenAdapter {
 
     logger.debug("[PaddleGameScreen] Services cleared");
     ServiceLocator.clear();
+  }
+
+  /**
+   * Custom render component for the background that renders behind all other entities.
+   */
+  private static class BackgroundRenderComponent extends RenderComponent {
+    private final Texture backgroundTexture;
+
+    public BackgroundRenderComponent() {
+      this.backgroundTexture = ServiceLocator.getResourceService()
+          .getAsset("images/backgrounds/WallPongbg.png", Texture.class);
+    }
+
+    @Override
+    protected void draw(SpriteBatch batch) {
+      // Draw background to fill the entire screen
+      batch.draw(backgroundTexture, 0, 0, 1280f, 720f);
+    }
+
+    @Override
+    public int getLayer() {
+      return 0; // Background layer - renders behind everything
+    }
+
+    @Override
+    public float getZIndex() {
+      return -1000f; // Very low Z-index to ensure it's behind everything
+    }
   }
 }

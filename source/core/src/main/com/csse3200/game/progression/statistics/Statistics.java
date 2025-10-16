@@ -61,6 +61,8 @@ public class Statistics {
     stats.putIfAbsent("purchasesMade", 0);
     stats.putIfAbsent("wavesCompleted", 0);
     stats.putIfAbsent("itemsCollected", 0);
+    stats.putIfAbsent("paddleGameCompleted", 0);
+    stats.putIfAbsent("laneRunnerCompleted", 0);
   }
 
   /**
