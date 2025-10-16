@@ -5,6 +5,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
@@ -108,8 +109,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     Vector2 from = owner.getEntity().getCenterPosition();
     castDir.set((direction == AttackDirection.RIGHT) ? 1f : -1f, 0f);
 
-    float tileSize = 40;
-    float rayLength = attackRange * tileSize;
+    LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
+    float tileSize = area.getTileSize();
+    float rayLength = attackRange;
     float raycastVertical = tileSize;
 
     // done with the help of OpenAI
