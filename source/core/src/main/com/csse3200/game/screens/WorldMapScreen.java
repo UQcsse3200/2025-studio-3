@@ -27,10 +27,8 @@ import com.csse3200.game.ui.terminal.Terminal;
 import com.csse3200.game.ui.terminal.TerminalDisplay;
 import com.csse3200.game.ui.tutorial.WorldMapTutorial;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,9 +63,6 @@ public class WorldMapScreen extends BaseScreen {
   // One-shot smooth recenter flag and threshold (in world units)
   private boolean smoothRecentering = false;
   private static final float RECENTER_STOP_EPSILON = 2f;
-
-  /** Prefix used to identify level nodes, e.g., "level1", "levelTwo". */
-  private static final String LEVEL_PREFIX = "level";
 
   // Special non-level nodes that should always be unlocked but never auto-completed
   private static final java.util.Set<String> SPECIAL_NODES =
@@ -172,141 +167,41 @@ public class WorldMapScreen extends BaseScreen {
     var profileService = ServiceLocator.getProfileService();
 
     if (profileService != null && profileService.getProfile() != null) {
-      handleProfileBasedNodeSetup(worldMapService, nodes, profileService.getProfile());
+      handleProfileBasedNodeSetup(worldMapService, profileService.getProfile());
     } else {
-      handleDefaultNodeSetup(worldMapService, nodes);
+      handleDefaultNodeSetup(nodes);
     }
 
     registerNodeEntities(worldMapService, nodes);
   }
 
-  /**
-   * Handles map setup when a profile exists (normal case). Unlocks all nodes up to the current
-   * level and marks previous ones as completed. Special nodes are only unlocked, never marked
-   * completed.
-   */
-  private void handleProfileBasedNodeSetup(
-      WorldMapService wms, List<WorldMapNode> nodes, Profile profile) {
-    String current = profile.getCurrentLevel();
-    Set<String> toUnlock = new HashSet<>(SPECIAL_NODES);
-    Set<String> toComplete = new HashSet<>();
-
-    if (current != null && !current.isEmpty()) {
-        List<String> chain = buildChainUpTo(wms, current);
-
-        for (int i = 0; i < chain.size(); i++) {
-            String key = chain.get(i);
-            toUnlock.add(key);
-            if ("end".equals(current) || i < chain.size() - 1) {
-                toComplete.add(key);
-            }
-        }
+    private void handleProfileBasedNodeSetup(
+            WorldMapService wms, Profile profile) {
+        wms.applyStatesFrom(profile, Profile.DEFAULT_UNLOCKED);
     }
 
-    applyNodeStates(wms, nodes, toUnlock, toComplete);
-  }
 
   /**
    * Handles map setup when there is no active profile (first-time run or error). Only unlocks the
    * default special nodes.
    */
-  private void handleDefaultNodeSetup(WorldMapService wms, List<WorldMapNode> nodes) {
-    for (WorldMapNode node : nodes) {
-      String key = node.getRegistrationKey();
-      if (SPECIAL_NODES.contains(key)) {
-        wms.unlockNode(key);
-      } else {
-        wms.lockNode(key, "Locked until you reach this node.");
+  private void handleDefaultNodeSetup(List<WorldMapNode> nodes) {
+      for (WorldMapNode node : nodes) {
+          String key = node.getRegistrationKey();
+          if (SPECIAL_NODES.contains(key)) {
+              // Always unlocked, never completed
+              node.setUnlocked(true);
+              node.setCompleted(false);
+              node.setLockReason(null);
+          } else {
+              // Locked by default
+              node.setUnlocked(false);
+              node.setCompleted(false);
+              node.setLockReason("Locked until you reach this node.");
+          }
       }
-    }
   }
 
-  /**
-   * Builds a linear chain of level keys from the first node to the given current key (inclusive).
-   * Filters only level nodes, sorts by progression order, and includes up to currentKey. If
-   * currentKey is not a valid level key, returns an empty list.
-   */
-  private List<String> buildChainUpTo(WorldMapService wms, String currentKey) {
-    List<String> chain = new ArrayList<>();
-    if (wms == null || currentKey == null || currentKey.isEmpty()) {
-      return chain;
-    }
-    List<String> levelKeys = getSortedLevelKeys(wms);
-      if ("end".equals(currentKey)) {
-          return levelKeys;
-      }
-    return collectChainUntil(levelKeys, currentKey);
-  }
-
-  /** Returns all level-like keys sorted deterministically by progression index. */
-  private List<String> getSortedLevelKeys(WorldMapService wms) {
-    List<String> levelKeys = new ArrayList<>();
-    for (WorldMapNode node : wms.getAllNodes()) {
-      String key = node.getRegistrationKey();
-      if (key != null && key.startsWith(LEVEL_PREFIX)) {
-        levelKeys.add(key);
-      }
-    }
-    levelKeys.sort((a, b) -> Integer.compare(parseLevelIndex(a), parseLevelIndex(b)));
-    return levelKeys;
-  }
-
-  /**
-   * Builds a chain from the beginning until the currentKey (inclusive). Returns empty if not found.
-   */
-  private List<String> collectChainUntil(List<String> levelKeys, String currentKey) {
-    List<String> chain = new ArrayList<>();
-    boolean found = false;
-    for (String key : levelKeys) {
-      chain.add(key);
-      if (currentKey.equals(key)) {
-        found = true;
-        break;
-      }
-    }
-    if (!found) {
-      chain.clear();
-    }
-    return chain;
-  }
-
-  /** Parses a level key into an integer progression index. */
-  private int parseLevelIndex(String key) {
-    if (key == null) return Integer.MAX_VALUE;
-    String k = key.trim();
-    switch (k) {
-      case "levelOne":
-        return 1;
-      case "levelTwo":
-        return 2;
-      case "levelThree":
-        return 3;
-      case "levelFour":
-        return 4;
-      case "levelFive":
-        return 5;
-      case "end":
-        return 6;
-      default:
-        return Integer.MAX_VALUE; // unknown -> push to end
-    }
-  }
-
-  /** Applies unlock/completion state to all map nodes visually and logically. */
-  private void applyNodeStates(
-      WorldMapService wms, List<WorldMapNode> nodes, Set<String> toUnlock, Set<String> toComplete) {
-    for (WorldMapNode node : nodes) {
-      String key = node.getRegistrationKey();
-      if (toComplete.contains(key)) {
-        wms.completeNode(key);
-        wms.unlockNode(key);
-      } else if (toUnlock.contains(key)) {
-        wms.unlockNode(key);
-      } else {
-        wms.lockNode(key, "Locked until you reach this node.");
-      }
-    }
-  }
 
   /** Registers node entities for rendering on the world map. */
   private void registerNodeEntities(WorldMapService wms, List<WorldMapNode> nodes) {
