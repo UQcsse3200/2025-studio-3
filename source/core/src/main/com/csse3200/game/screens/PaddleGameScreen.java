@@ -9,7 +9,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.minigame.BallComponent;
-import com.csse3200.game.minigame.PaddleHUD;
+import com.csse3200.game.minigame.MinigameHUD;
 import com.csse3200.game.minigame.PaddleComponent;
 import com.csse3200.game.minigame.PaddleCollisionComponent;
 import com.csse3200.game.physics.components.ColliderComponent;
@@ -78,7 +78,7 @@ public class PaddleGameScreen extends ScreenAdapter {
     // Create the paddle game UI
     Entity ui = new Entity()
         .addComponent(new InputDecorator(stage, 10))
-        .addComponent(new PaddleHUD());
+        .addComponent(new MinigameHUD());
 
     ServiceLocator.getEntityService().register(ui);
   }

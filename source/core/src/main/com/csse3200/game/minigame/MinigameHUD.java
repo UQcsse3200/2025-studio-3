@@ -5,7 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
-public class PaddleHUD extends UIComponent {
+public class MinigameHUD extends UIComponent {
   private Label scoreLabel;
   private Label timeLabel;
   private Table table;

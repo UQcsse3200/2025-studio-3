@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class MiniGameActions extends Component {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.components.mainmenu.MainMenuActions.class);
+      LoggerFactory.getLogger(com.csse3200.game.minigame.MiniGameActions.class);
   private GdxGame game;
 
   public MiniGameActions(GdxGame game) {
