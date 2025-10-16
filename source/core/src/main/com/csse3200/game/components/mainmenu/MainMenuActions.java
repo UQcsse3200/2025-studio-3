@@ -19,6 +19,7 @@ public class MainMenuActions extends Component {
     entity.getEvents().addListener("load", this::onLoad);
     entity.getEvents().addListener("exit", this::onExit);
     entity.getEvents().addListener("settings", this::onSettings);
+    entity.getEvents().addListener("credits", this::onCredits);
   }
 
   /** Start → World Map */
@@ -43,5 +44,11 @@ public class MainMenuActions extends Component {
   private void onSettings() {
     logger.info("[MainMenuActions] Launching settings screen");
     game.setScreen(GdxGame.ScreenType.SETTINGS);
+  }
+
+  /** Open Credits screen. */
+  private void onCredits() {
+    logger.info("[MainMenuActions] Launching credits screen");
+    game.setScreen(GdxGame.ScreenType.CREDITS);
   }
 }
