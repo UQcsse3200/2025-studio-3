@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.runtime.components;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -14,6 +15,8 @@ import com.csse3200.game.cutscene.models.object.Position;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
 import com.csse3200.game.cutscene.runtime.OrchestratorState;
 import com.csse3200.game.cutscene.runtime.states.CharacterState;
+import com.csse3200.game.cutscene.runtime.states.DialogueState;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.List;
 
@@ -39,6 +42,7 @@ public class CutsceneHudComponent extends UIComponent {
   private Table dialogueBox;
   private Label characterName;
   private Label text;
+  private Label continueText;
 
   /**
    * Initialise with a {@link CutsceneOrchestrator}
@@ -162,8 +166,11 @@ public class CutsceneHudComponent extends UIComponent {
     text.setWrap(true);
     text.setAlignment(Align.topLeft);
 
+    continueText = ui.text("Press \"Space\" to skip/next");
+
     dialogueBox.add(characterName).top().left().padBottom(4f).row();
-    dialogueBox.add(text).top().left().expand().fillX().padTop(0f);
+    dialogueBox.add(text).top().left().expand().fillX().padTop(0f).row();
+    dialogueBox.add(continueText);
 
     root.bottom().pad(20f);
     root.add(dialogueBox).growX().fillX().minHeight(Value.percentHeight(0.3f, root));
@@ -285,6 +292,7 @@ public class CutsceneHudComponent extends UIComponent {
               .maxWidth(Value.percentWidth(1f, choiceGroup))
               .fillX()
               .height(48f)
+              .padTop(10f)
               .row();
         }
       }
@@ -307,9 +315,19 @@ public class CutsceneHudComponent extends UIComponent {
 
     updateBackground();
 
-    dialogueBox.setVisible(orchestratorState.getDialogueState().isVisible());
-    characterName.setText(orchestratorState.getDialogueState().getSpeaker());
-    text.setText(orchestratorState.getDialogueState().getText());
+    DialogueState dialogueState = orchestratorState.getDialogueState();
+
+    dialogueBox.setVisible(dialogueState.isVisible());
+    characterName.setText(dialogueState.getSpeaker());
+    text.setText(dialogueState.getText());
+
+    String skipKey = Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getSkipButton());
+
+    if (dialogueState.isDone()) {
+      continueText.setText("Press \"" + skipKey + "\" to continue");
+    } else {
+      continueText.setText("Press \"" + skipKey + "\" to skip");
+    }
 
     updateCharacters();
     cleanupCharacters();

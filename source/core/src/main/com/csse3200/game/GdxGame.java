@@ -269,6 +269,8 @@ public class GdxGame extends Game {
         return new PaddleGameScreen(this);
       case LANE_RUNNER:
         return new LaneRunnerScreen(this);
+      case CREDITS:
+        return new CreditsScreen(this);
       default:
         return null;
     }
@@ -309,7 +311,9 @@ public class GdxGame extends Game {
     /** Paddle game screen */
     PADDLE_GAME,
     /** Lane runner game screen */
-    LANE_RUNNER
+    LANE_RUNNER,
+    /** Credits game screen */
+    CREDITS
   }
 
   /** Exits the game. */
