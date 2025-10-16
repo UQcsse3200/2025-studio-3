@@ -225,8 +225,8 @@ public class GameSettingsMenu extends UIComponent {
           @Override
           public boolean keyDown(InputEvent event, int keycode) {
             if (textField.hasKeyboardFocus()) {
-              // Update the text field with the new key
-              if (keybinds.containsValue(keycode)) {
+              // Update the text field with the new key (do not error if same key as as previous is re-entered)
+              if (keybinds.containsValue(keycode) && (keybinds.get(textField.getName()) != keycode)) {
                 logger.info("Keybind conflict: {}", keycode);
                 ServiceLocator.getDialogService()
                     .error("Keybind conflict", "This key is already in use by another action.");
