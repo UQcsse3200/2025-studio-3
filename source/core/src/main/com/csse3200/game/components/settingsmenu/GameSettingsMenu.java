@@ -125,6 +125,33 @@ public class GameSettingsMenu extends UIComponent {
           }
         });
 
+    // Create reset button using UIFactory
+    TextButton resetKeysBtn = ui.primaryButton("Reset Keys", buttonWidth);
+    resetKeysBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            logger.debug("Reset button clicked");
+            resetKeyBinds();
+            // Update keybind text fields
+            pauseKeyText.setText(Input.Keys.toString(settings.getPauseButton()));
+            skipKeyText.setText(Input.Keys.toString(settings.getSkipButton()));
+            interactionKeyText.setText(Input.Keys.toString(settings.getInteractionButton()));
+            upKeyText.setText(Input.Keys.toString(settings.getUpButton()));
+            downKeyText.setText(Input.Keys.toString(settings.getDownButton()));
+            leftKeyText.setText(Input.Keys.toString(settings.getLeftButton()));
+            rightKeyText.setText(Input.Keys.toString(settings.getRightButton()));
+            // Update keybind map
+            keybinds.put(PAUSE_KEY, settings.getPauseButton());
+            keybinds.put(SKIP_KEY, settings.getSkipButton());
+            keybinds.put(INTERACTION_KEY, settings.getInteractionButton());
+            keybinds.put(UP_KEY, settings.getUpButton());
+            keybinds.put(DOWN_KEY, settings.getDownButton());
+            keybinds.put(LEFT_KEY, settings.getLeftButton());
+            keybinds.put(RIGHT_KEY, settings.getRightButton());
+          }
+        });
+
     // Layout with proper UI scaling
     rootTable.add(pauseLabel).left().padRight(20f * uiScale);
     rootTable.add(pauseKeyText).width(150f * uiScale).center();
@@ -166,7 +193,12 @@ public class GameSettingsMenu extends UIComponent {
         .add(applyBtn)
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue())
-        .center();
+        .center()
+        .padRight(20f * uiScale);
+    bottomRow
+        .add(resetKeysBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue());
     stage.addActor(bottomRow);
   }
 
@@ -252,6 +284,11 @@ public class GameSettingsMenu extends UIComponent {
     logger.info("[GameSettingsMenu] New Keybinds: {}", keybinds);
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[GameSettingsMenu] Game settings applied");
+  }
+
+  /** Reset keybinds to default keys. */
+  private void resetKeyBinds() {
+    ServiceLocator.getSettingsService().resetKeyBinds();
   }
 
   /** Show the game settings menu. */
