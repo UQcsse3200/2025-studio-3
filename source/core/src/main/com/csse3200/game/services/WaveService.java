@@ -98,7 +98,7 @@ public class WaveService implements WaveConfigProvider {
   public void update(float deltaTime) {
     if (!bossSpawnQueue.isEmpty()) {
       BossFactory.BossTypes bossToSpawn = bossSpawnQueue.poll();
-      if (enemySpawnCallback != null) {
+      if (enemySpawnCallback != null && getCurrentLevelWaveCount() == getCurrentWave()) {
         enemySpawnCallback.spawnBoss(2, bossToSpawn);
       }
     }
@@ -148,31 +148,20 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    if (currentWave == getCurrentLevelWaveCount()) {
-        switch (getCurrentLevelKey()) {
-            case "levelTwo" -> {
-                logger.info("Final wave complete. Queuing boss spawn: SCRAP_TITAN");
-                bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
-                bossActive = true;
-            }
-            case "levelFour" -> {
-                logger.info("Final wave complete. Queuing boss spawn: SAMURAI_BOT");
-                bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
-                bossActive = true;
-            }
-            case "levelFive" -> {
-                logger.info("Final wave complete. Queuing boss spawn: GUN_BOT");
-                bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
-                bossActive = true;
-            }
-          default -> bossActive = false;
-        }
+    if (Objects.equals(currentLevelKey, "levelOne")) {
+      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
+      bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
+      bossActive = true;
+    } else if (Objects.equals(currentLevelKey, "levelTwo")) {
+      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
+      bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
+      bossActive = true;
+    } else if (Objects.equals(currentLevelKey, "levelFour")) {
+      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
+      bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
+      bossActive = true;
     }
-    if (bossActive) {
-      waveActive = false;
-      preparationPhaseActive = false; // No prep phase needed, just spawn the boss.
-      return;
-    }
+
 
     setCurrentWave(currentWave + 1);
 
@@ -233,7 +222,6 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Final boss defeated! Level complete!");
       levelComplete = true;
       waveActive = false;
-      return;
     }
 
     endWave();
