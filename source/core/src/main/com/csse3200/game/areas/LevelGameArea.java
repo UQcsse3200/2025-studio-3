@@ -1158,6 +1158,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
+   * Removes a preview entity created for wave previews. Uses {@link #despawnEntity(Entity)} so it
+   * is immediately cleaned up, independent of physics updates.
+   *
+   * @param entity preview entity to remove
+   */
+  public void removePreviewEntity(Entity entity) {
+    if (entity == null) {
+      return;
+    }
+    despawnEntity(entity);
+  }
+
+  /**
    * Sets whether a character is currently selected.
    *
    * @param status true to indicate a character is selected, false otherwise
