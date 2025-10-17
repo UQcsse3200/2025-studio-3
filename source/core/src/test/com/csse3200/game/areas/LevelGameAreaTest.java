@@ -589,6 +589,40 @@ class LevelGameAreaTest {
   }
 
   @Test
+  void checkGameOverAddsFreezeReason() throws Exception {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    SettingsService settings = mock(SettingsService.class);
+    when(settings.getSoundVolume()).thenReturn(0.5f);
+    ServiceLocator.registerSettingsService(settings);
+
+    Sound goSound = mock(Sound.class);
+    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
+        .thenReturn(goSound);
+
+    Entity robot = new Entity();
+    robot.setPosition(area.getXOffset() - area.getTileSize(), area.getYOffset());
+    area.getRobots().add(robot);
+
+    area.checkGameOver();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+    verify(state).lockPlacement();
+  }
+
+  @Test
   void checkLevelComplete_tripsAtWaveFour_andIsIdempotent() throws Exception {
     // Simple level config for create()
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
@@ -618,6 +652,32 @@ class LevelGameAreaTest {
     // Verify idempotence
     area.checkLevelComplete();
     assertTrue(flag.getBoolean(area));
+  }
+
+  @Test
+  void checkLevelCompleteAddsFreezeReason() throws Exception {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    WaveService waves = mock(WaveService.class);
+    when(waves.getCurrentWave()).thenReturn(4);
+    ServiceLocator.registerWaveService(waves);
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    area.checkLevelComplete();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+    verify(state).lockPlacement();
   }
 
   @Test

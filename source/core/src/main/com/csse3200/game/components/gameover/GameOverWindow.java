@@ -3,7 +3,8 @@ package com.csse3200.game.components.gameover;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
@@ -19,7 +20,9 @@ public class GameOverWindow extends UIComponent {
   private String levelKey;
 
   // Initialises the game over window.
-  private Window window;
+  private Table container;
+  private TextButton mainMenuButton;
+  private TextButton quitButton;
   // Tracks the display status of the window.
   boolean isDisplayed = false;
   private float uiScale = ui.getUIScale();
@@ -32,26 +35,41 @@ public class GameOverWindow extends UIComponent {
     // Listens for game over event
     entity.getEvents().addListener("gameOver", this::onGameOver);
 
-    // Creates popup display.
-    window = new Window("Game over.", skin);
-    window.setMovable(false);
-    window.setSize(500 * uiScale, 500 * uiScale);
-    window.setPosition(
-        (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
+    container = new Table();
+    container.setFillParent(true);
+    container.center();
 
-    // Adds text in the popup display.
     Label gameOverHeading = ui.heading("Game Over!");
     String interactKeyName =
         Input.Keys.toString(
             ServiceLocator.getSettingsService().getSettings().getInteractionButton());
     Label message = ui.text("Press " + interactKeyName + " to go back to main menu.");
-    window.add(gameOverHeading).pad(20).row();
-    window.add(message).pad(10).row();
+    mainMenuButton = ui.primaryButton("Main Menu", 250);
+    mainMenuButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          navigateTo(GdxGame.ScreenType.WORLD_MAP);
+          return true;
+        });
 
-    // Sets popup display to false when created.
-    window.setVisible(false);
-    stage.addActor(window);
+    quitButton = ui.primaryButton("Quit Game", 250);
+    quitButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          Gdx.app.exit();
+          return true;
+        });
+
+    container.add(gameOverHeading).pad(20f).row();
+    container.add(message).pad(10f).row();
+    container.add(mainMenuButton).pad(8f).row();
+    container.add(quitButton).pad(8f).row();
+    container.setVisible(false);
+    stage.addActor(container);
   }
 
   /** Checks the status of the popup display */
@@ -66,18 +84,7 @@ public class GameOverWindow extends UIComponent {
     // Press 'E' to take the player back to the main menu.
     int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
     if (Gdx.input.isKeyJustPressed(interactKey)) {
-      // Closes popup window
-      window.setVisible(false);
-      isDisplayed = false;
-
-      // Updates next frame to return to the main menu without crashing.
-      Gdx.app.postRunnable(
-          () -> {
-            // Gets the game.
-            GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
-            // Switches to main menu.
-            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-          });
+      navigateTo(GdxGame.ScreenType.WORLD_MAP);
     }
   }
 
@@ -86,8 +93,18 @@ public class GameOverWindow extends UIComponent {
     DialogService dialogService = ServiceLocator.getDialogService();
 
     displayNewEntity(dialogService);
-    window.setVisible(true);
+    container.setVisible(true);
     isDisplayed = true;
+  }
+
+  private void navigateTo(GdxGame.ScreenType target) {
+    container.setVisible(false);
+    isDisplayed = false;
+    Gdx.app.postRunnable(
+        () -> {
+          GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
+          game.setScreen(target);
+        });
   }
 
   private void displayNewEntity(DialogService dialogService) {
@@ -114,8 +131,8 @@ public class GameOverWindow extends UIComponent {
   /** Frees the memory. */
   @Override
   public void dispose() {
-    if (window != null) {
-      window.remove();
+    if (container != null) {
+      container.remove();
     }
 
     super.dispose();

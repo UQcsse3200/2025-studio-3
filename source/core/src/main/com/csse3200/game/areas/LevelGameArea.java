@@ -1100,6 +1100,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+
+        GameStateService service = ServiceLocator.getGameStateService();
+        if (service != null) {
+          service.addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+          service.lockPlacement();
+        }
       }
     }
   }
@@ -1117,6 +1123,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
+      }
+
+      GameStateService service = ServiceLocator.getGameStateService();
+      if (service != null) {
+        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+        service.lockPlacement();
       }
     }
   }
