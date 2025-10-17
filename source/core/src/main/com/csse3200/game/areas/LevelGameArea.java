@@ -46,6 +46,7 @@ import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -716,6 +717,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
+    if (unit != null && isPlacementLocked()) {
+      logger.debug("Ignoring unit selection while placement is locked");
+      return;
+    }
     selectedUnit = unit;
   }
 
@@ -740,6 +745,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring spawn request while placement is locked");
+      resetSelectionUI();
+      return;
+    }
     // --- Step 1: Resolve grid/tile/selected entity ---
     Entity tile = grid.getTile(position);
 
@@ -789,6 +799,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
+  }
+
+  private boolean isPlacementLocked() {
+    GameStateService service = ServiceLocator.getGameStateService();
+    return service != null && service.isPlacementLocked();
   }
 
   /** Convert a tile index into its world position. */
@@ -1113,6 +1128,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void beginDrag(Texture texture) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring drag start while placement is locked");
+      return;
+    }
     if (dragOverlay != null && texture != null) {
       dragOverlay.begin(texture);
     }

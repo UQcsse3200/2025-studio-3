@@ -32,6 +32,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -243,6 +244,26 @@ class LevelGameAreaTest {
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
     verify(storage).removeTileUnit();
+  }
+
+  @Test
+  void spawnUnitIgnoredWhenPlacementLocked() {
+    GameStateService service = mock(GameStateService.class);
+    when(service.isPlacementLocked()).thenReturn(true);
+    ServiceLocator.registerGameStateService(service);
+
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
+    area.setGrid(new LevelGameGrid(5, 5));
+
+    Entity selection = new Entity().addComponent(new DeckInputComponent(area, Entity::new));
+    area.setSelectedUnit(selection);
+    area.setIsCharacterSelected(true);
+
+    area.spawnUnit(0);
+
+    assertFalse(area.getGrid().isOccupiedIndex(0));
+    assertNull(area.getSelectedUnit());
+    assertFalse(area.isCharacterSelected());
   }
 
   @Test
