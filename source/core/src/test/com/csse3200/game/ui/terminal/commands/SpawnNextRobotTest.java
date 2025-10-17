@@ -12,7 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class SpawnNextRobotTest {
+class SpawnNextRobotTest {
   private SpawnNextRobot spawnNextRobot;
   private WaveService mockWaveService;
   private ArrayList<String> args;
