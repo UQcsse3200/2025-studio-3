@@ -7,8 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
-import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
+import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
@@ -132,10 +132,9 @@ public class MainGameScreen extends ScreenAdapter {
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
   protected LevelGameArea gameArea;
-protected boolean isPaused = false;
+  protected boolean isPaused = false;
   private final List<String> textures = new ArrayList<>();
   private final String level;
-  
 
   private enum PanPhase {
     RIGHT,
@@ -412,7 +411,6 @@ protected boolean isPaused = false;
     // Add event listeners for pause/resume to the UI entity
     ui.getEvents().addListener("pause", this::handlePause);
     ui.getEvents().addListener("resume", this::handleResume);
-    
 
     // Connect the CurrentWaveDisplay to the WaveService for event listening
     ServiceLocator.getWaveService()

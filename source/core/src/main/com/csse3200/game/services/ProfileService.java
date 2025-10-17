@@ -86,7 +86,6 @@ public class ProfileService {
     this.profile = pair.getKey();
     this.currentSlot = savefile.getSlot();
     this.isActive = true;
-
   }
 
   /**

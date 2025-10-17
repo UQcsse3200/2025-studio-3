@@ -175,33 +175,30 @@ public class WorldMapScreen extends BaseScreen {
     registerNodeEntities(worldMapService, nodes);
   }
 
-    private void handleProfileBasedNodeSetup(
-            WorldMapService wms, Profile profile) {
-        wms.applyStatesFrom(profile, Profile.DEFAULT_UNLOCKED);
-    }
-
+  private void handleProfileBasedNodeSetup(WorldMapService wms, Profile profile) {
+    wms.applyStatesFrom(profile, Profile.DEFAULT_UNLOCKED);
+  }
 
   /**
    * Handles map setup when there is no active profile (first-time run or error). Only unlocks the
    * default special nodes.
    */
   private void handleDefaultNodeSetup(List<WorldMapNode> nodes) {
-      for (WorldMapNode node : nodes) {
-          String key = node.getRegistrationKey();
-          if (SPECIAL_NODES.contains(key)) {
-              // Always unlocked, never completed
-              node.setUnlocked(true);
-              node.setCompleted(false);
-              node.setLockReason(null);
-          } else {
-              // Locked by default
-              node.setUnlocked(false);
-              node.setCompleted(false);
-              node.setLockReason("Locked until you reach this node.");
-          }
+    for (WorldMapNode node : nodes) {
+      String key = node.getRegistrationKey();
+      if (SPECIAL_NODES.contains(key)) {
+        // Always unlocked, never completed
+        node.setUnlocked(true);
+        node.setCompleted(false);
+        node.setLockReason(null);
+      } else {
+        // Locked by default
+        node.setUnlocked(false);
+        node.setCompleted(false);
+        node.setLockReason("Locked until you reach this node.");
       }
+    }
   }
-
 
   /** Registers node entities for rendering on the world map. */
   private void registerNodeEntities(WorldMapService wms, List<WorldMapNode> nodes) {

@@ -70,25 +70,30 @@ class PersistenceTest {
   void testSave() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
       // Create a new profile
-        mockFileLoader.when(() ->
-                        FileLoader.writeClass(any(Persistence.ProfileSnapshot.class), anyString(),
-                                eq(FileLoader.Location.EXTERNAL))).thenAnswer(inv -> null);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.writeClass(
+                      any(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenAnswer(inv -> null);
 
-        Files mockFiles = mock(Files.class);
-        FileHandle mockRoot = mock(FileHandle.class);
-        Gdx.files = mockFiles;
-        when(mockFiles.external(anyString())).thenReturn(mockRoot);
-        when(mockRoot.exists()).thenReturn(true);
-        when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
+      Files mockFiles = mock(Files.class);
+      FileHandle mockRoot = mock(FileHandle.class);
+      Gdx.files = mockFiles;
+      when(mockFiles.external(anyString())).thenReturn(mockRoot);
+      when(mockRoot.exists()).thenReturn(true);
+      when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
 
-        Persistence.create("testProfile", 1);
+      Persistence.create("testProfile", 1);
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
                   any(Persistence.ProfileSnapshot.class),
                   matches(".*testProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
-              atLeastOnce());
+          atLeastOnce());
     }
   }
 
@@ -120,8 +125,20 @@ class PersistenceTest {
   @Test
   void testLoadFailure() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-      mockFileLoader.when(() -> FileLoader.readClass(eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL))).thenReturn(null);
-      mockFileLoader.when(() -> FileLoader.readClass(eq(Persistence.ProfileSnapshot.class), anyString(), eq(FileLoader.Location.EXTERNAL))).thenReturn(null);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.readClass(
+                      eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
+          .thenReturn(null);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.readClass(
+                      eq(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenReturn(null);
       Savefile savefile = new Savefile("testProfile", 1234567890L, 1);
 
       assertThrows(IllegalStateException.class, () -> Persistence.load(savefile));
@@ -131,15 +148,20 @@ class PersistenceTest {
   @Test
   void testCreate() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-        mockFileLoader.when(() ->
-                        FileLoader.writeClass(any(Persistence.ProfileSnapshot.class), anyString(),
-                                eq(FileLoader.Location.EXTERNAL))).thenAnswer(inv -> null);
-        Files mockFiles = mock(Files.class);
-        FileHandle mockRoot = mock(FileHandle.class);
-        Gdx.files = mockFiles;
-        when(mockFiles.external(anyString())).thenReturn(mockRoot);
-        when(mockRoot.exists()).thenReturn(true);
-        when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.writeClass(
+                      any(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenAnswer(inv -> null);
+      Files mockFiles = mock(Files.class);
+      FileHandle mockRoot = mock(FileHandle.class);
+      Gdx.files = mockFiles;
+      when(mockFiles.external(anyString())).thenReturn(mockRoot);
+      when(mockRoot.exists()).thenReturn(true);
+      when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
 
       var result = Persistence.create("testProfile", 2);
       Profile profile = result.getKey();
@@ -153,22 +175,27 @@ class PersistenceTest {
                   any(Persistence.ProfileSnapshot.class),
                   matches(".*testProfile\\$\\d+\\$2\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
-              atLeastOnce());
+          atLeastOnce());
     }
   }
 
   @Test
   void testCreateWithNullName() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-        mockFileLoader.when(() ->
-                        FileLoader.writeClass(any(Persistence.ProfileSnapshot.class), anyString(),
-                                eq(FileLoader.Location.EXTERNAL))).thenAnswer(inv -> null);
-        Files mockFiles = mock(Files.class);
-        FileHandle mockRoot = mock(FileHandle.class);
-        Gdx.files = mockFiles;
-        when(mockFiles.external(anyString())).thenReturn(mockRoot);
-        when(mockRoot.exists()).thenReturn(true);
-        when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.writeClass(
+                      any(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenAnswer(inv -> null);
+      Files mockFiles = mock(Files.class);
+      FileHandle mockRoot = mock(FileHandle.class);
+      Gdx.files = mockFiles;
+      when(mockFiles.external(anyString())).thenReturn(mockRoot);
+      when(mockRoot.exists()).thenReturn(true);
+      when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
       var result = Persistence.create(null, 1);
       Profile profile = result.getKey();
 
@@ -178,25 +205,30 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                 any(Persistence.ProfileSnapshot.class),
-                 matches(".*\\$\\d+\\$1\\.json"),
-                 eq(FileLoader.Location.EXTERNAL)),
-              atLeastOnce());
+                  any(Persistence.ProfileSnapshot.class),
+                  matches(".*\\$\\d+\\$1\\.json"),
+                  eq(FileLoader.Location.EXTERNAL)),
+          atLeastOnce());
     }
   }
 
   @Test
   void testSaveWithProfile() {
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-        mockFileLoader.when(() ->
-                        FileLoader.writeClass(any(Persistence.ProfileSnapshot.class), anyString(),
-                                eq(FileLoader.Location.EXTERNAL))).thenAnswer(inv -> null);
-        Files mockFiles = mock(Files.class);
-        FileHandle mockRoot = mock(FileHandle.class);
-        Gdx.files = mockFiles;
-        when(mockFiles.external(anyString())).thenReturn(mockRoot);
-        when(mockRoot.exists()).thenReturn(true);
-        when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.writeClass(
+                      any(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenAnswer(inv -> null);
+      Files mockFiles = mock(Files.class);
+      FileHandle mockRoot = mock(FileHandle.class);
+      Gdx.files = mockFiles;
+      when(mockFiles.external(anyString())).thenReturn(mockRoot);
+      when(mockRoot.exists()).thenReturn(true);
+      when(mockRoot.list(".json")).thenReturn(new FileHandle[0]);
       Profile testProfile = new Profile();
       Persistence.save(1, testProfile);
 
@@ -206,7 +238,7 @@ class PersistenceTest {
                   any(Persistence.ProfileSnapshot.class),
                   matches(".*\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
-              atLeastOnce());
+          atLeastOnce());
     }
   }
 
@@ -341,11 +373,16 @@ class PersistenceTest {
     when(mockRootDir.list(".json")).thenReturn(new FileHandle[] {mockExistingFile});
 
     try (MockedStatic<FileLoader> mockFileLoader = Mockito.mockStatic(FileLoader.class)) {
-        mockFileLoader.when(() ->
-                        FileLoader.writeClass(any(Persistence.ProfileSnapshot.class), anyString(),
-                                eq(FileLoader.Location.EXTERNAL))).thenAnswer(inv -> null);
+      mockFileLoader
+          .when(
+              () ->
+                  FileLoader.writeClass(
+                      any(Persistence.ProfileSnapshot.class),
+                      anyString(),
+                      eq(FileLoader.Location.EXTERNAL)))
+          .thenAnswer(inv -> null);
 
-        Persistence.create("newProfile", 1);
+      Persistence.create("newProfile", 1);
 
       mockFileLoader.verify(
           () ->
@@ -353,7 +390,7 @@ class PersistenceTest {
                   any(Persistence.ProfileSnapshot.class),
                   matches(".*newProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
-              atLeastOnce());
+          atLeastOnce());
     }
   }
 }

@@ -56,8 +56,7 @@ class ProfileTest {
 
   @Test
   void testProfileParameterizedConstructor() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(name, profile.getName());
     assertEquals(30, profile.getWallet().getCoins());
     assertEquals(1, profile.getWallet().getSkillsPoints());
@@ -73,8 +72,7 @@ class ProfileTest {
 
   @Test
   void testGetCurrentLevel() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(currentLevel, profile.getCurrentLevel());
   }
 
@@ -88,43 +86,37 @@ class ProfileTest {
 
   @Test
   void testGetInventory() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(inventory, profile.getInventory());
   }
 
   @Test
   void testGetArsenal() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(arsenal, profile.getArsenal());
   }
 
   @Test
   void testGetSkillset() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(skillset, profile.getSkillset());
   }
 
   @Test
   void testGetStatistics() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(statistics, profile.getStatistics());
   }
 
   @Test
   void testGetWallet() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, statistics, arsenal);
     assertEquals(wallet, profile.getWallet());
   }
 
   @Test
   void testParameterizedConstructorWithNullStatistics() {
-    Profile profile =
-        new Profile(nameAndLevel, wallet, inventory, skillset, null, arsenal);
+    Profile profile = new Profile(nameAndLevel, wallet, inventory, skillset, null, arsenal);
     assertNotNull(profile.getStatistics());
   }
 }

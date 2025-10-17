@@ -8,9 +8,7 @@ import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.ui.WorldMapNode;
-
 import java.util.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,83 +67,86 @@ public class WorldMapService {
   public List<WorldMapNode> getAllNodes() {
     return new ArrayList<>(nodes.values());
   }
-    // Put these helpers near WorldMapService (or the class where the method lives)
-    private static final String LOCK_MSG = "Locked until you reach this node.";
-    private static final Map<String, Integer> LEVEL_INDEX = Map.of(
-            "levelOne", 1, "levelTwo", 2, "levelThree", 3, "levelFour", 4, "levelFive", 5
-    );
 
-    private enum State { UNLOCKED_DONE, UNLOCKED_TODO, LOCKED }
+  // Put these helpers near WorldMapService (or the class where the method lives)
+  private static final String LOCK_MSG = "Locked until you reach this node.";
+  private static final Map<String, Integer> LEVEL_INDEX =
+      Map.of("levelOne", 1, "levelTwo", 2, "levelThree", 3, "levelFour", 4, "levelFive", 5);
 
-    /** Returns true for "level*" keys. */
-    private static boolean isLevelKey(String key) {
-        return key != null && key.startsWith("level");
+  private enum State {
+    UNLOCKED_DONE,
+    UNLOCKED_TODO,
+    LOCKED
+  }
+
+  /** Returns true for "level*" keys. */
+  private static boolean isLevelKey(String key) {
+    return key != null && key.startsWith("level");
+  }
+
+  /** Returns level index; unknown/non-level = MAX_VALUE. */
+  private static int levelIndexOf(String key) {
+    if (key == null) return Integer.MAX_VALUE;
+    Integer idx = LEVEL_INDEX.get(key.trim());
+    return idx != null ? idx : Integer.MAX_VALUE;
+  }
+
+  /** Decide node state with simple, flat rules. */
+  private static State decideState(
+      String key, Set<String> defaultUnlocked, int currentIdx, boolean finished) {
+
+    // Special nodes (shop/minigames/skills) are always unlocked but not completed
+    if (defaultUnlocked != null && defaultUnlocked.contains(key)) {
+      return State.UNLOCKED_TODO;
     }
 
-    /** Returns level index; unknown/non-level = MAX_VALUE. */
-    private static int levelIndexOf(String key) {
-        if (key == null) return Integer.MAX_VALUE;
-        Integer idx = LEVEL_INDEX.get(key.trim());
-        return idx != null ? idx : Integer.MAX_VALUE;
+    // Non-level nodes (that are not special) are locked
+    if (!isLevelKey(key)) {
+      return State.LOCKED;
     }
 
-    /** Decide node state with simple, flat rules. */
-    private static State decideState(
-            String key, Set<String> defaultUnlocked, int currentIdx, boolean finished) {
+    // Level nodes
+    int idx = levelIndexOf(key);
+    if (finished || idx < currentIdx) return State.UNLOCKED_DONE;
+    if (idx == currentIdx) return State.UNLOCKED_TODO;
+    return State.LOCKED;
+  }
 
-        // Special nodes (shop/minigames/skills) are always unlocked but not completed
-        if (defaultUnlocked != null && defaultUnlocked.contains(key)) {
-            return State.UNLOCKED_TODO;
-        }
-
-        // Non-level nodes (that are not special) are locked
-        if (!isLevelKey(key)) {
-            return State.LOCKED;
-        }
-
-        // Level nodes
-        int idx = levelIndexOf(key);
-        if (finished || idx < currentIdx) return State.UNLOCKED_DONE;
-        if (idx == currentIdx) return State.UNLOCKED_TODO;
-        return State.LOCKED;
+  /** Apply the decided state to a node. */
+  private static void apply(WorldMapNode node, State s) {
+    switch (s) {
+      case UNLOCKED_DONE:
+        node.setUnlocked(true);
+        node.setCompleted(true);
+        node.setLockReason(null);
+        break;
+      case UNLOCKED_TODO:
+        node.setUnlocked(true);
+        node.setCompleted(false);
+        node.setLockReason(null);
+        break;
+      default: // LOCKED
+        node.setUnlocked(false);
+        node.setCompleted(false);
+        node.setLockReason(LOCK_MSG);
     }
+  }
 
-    /** Apply the decided state to a node. */
-    private static void apply(WorldMapNode node, State s) {
-        switch (s) {
-            case UNLOCKED_DONE:
-                node.setUnlocked(true);
-                node.setCompleted(true);
-                node.setLockReason(null);
-                break;
-            case UNLOCKED_TODO:
-                node.setUnlocked(true);
-                node.setCompleted(false);
-                node.setLockReason(null);
-                break;
-            default: // LOCKED
-                node.setUnlocked(false);
-                node.setCompleted(false);
-                node.setLockReason(LOCK_MSG);
-        }
+  public void applyStatesFrom(Profile profile, Set<String> defaultUnlocked) {
+    if (profile == null) return;
+
+    String cur = profile.getCurrentLevel();
+    boolean finished = "end".equals(cur);
+    int currentIdx = finished ? Integer.MAX_VALUE - 1 : levelIndexOf(cur);
+
+    for (WorldMapNode node : getAllNodes()) {
+      String key = node.getRegistrationKey();
+      State s = decideState(key, defaultUnlocked, currentIdx, finished);
+      apply(node, s);
     }
+  }
 
-    public void applyStatesFrom(Profile profile, Set<String> defaultUnlocked) {
-        if (profile == null) return;
-
-        String cur = profile.getCurrentLevel();
-        boolean finished = "end".equals(cur);
-        int currentIdx = finished ? Integer.MAX_VALUE - 1 : levelIndexOf(cur);
-
-        for (WorldMapNode node : getAllNodes()) {
-            String key = node.getRegistrationKey();
-            State s = decideState(key, defaultUnlocked, currentIdx, finished);
-            apply(node, s);
-        }
-    }
-
-
-    /**
+  /**
    * Lock a specific node
    *
    * @param key The key of the node to lock

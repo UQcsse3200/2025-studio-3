@@ -15,8 +15,7 @@ import net.dermetfan.utils.Pair;
  */
 public class Profile {
 
-  public static final Set<String> DEFAULT_UNLOCKED =
-            Set.of("shop", "minigames", "skills");
+  public static final Set<String> DEFAULT_UNLOCKED = Set.of("shop", "minigames", "skills");
   private String name;
   private Wallet wallet; // The player's wallet (incl. coins & skill points)
   private Inventory inventory; // The player's inventory of items (not defences)
@@ -57,7 +56,7 @@ public class Profile {
     this.skillset = skillset;
     this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
-    }
+  }
 
   /**
    * Get the name of the profile.
@@ -165,5 +164,4 @@ public class Profile {
   public void setWorldMapY(float worldMapY) {
     this.worldMapY = worldMapY;
   }
-
 }
