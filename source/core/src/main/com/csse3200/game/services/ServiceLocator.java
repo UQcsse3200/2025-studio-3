@@ -36,6 +36,7 @@ public class ServiceLocator {
   private static WaveService waveService;
   private static SettingsService settingsService;
   private static DiscordRichPresenceService discordRichPresenceService;
+  private static GameStateService gameStateService;
 
   // --- NEW FIELD ADDED ---
   private static GameArea gameArea;
@@ -177,6 +178,15 @@ public class ServiceLocator {
   }
 
   /**
+   * Gets the game state service.
+   *
+   * @return the game state service
+   */
+  public static GameStateService getGameStateService() {
+    return gameStateService;
+  }
+
+  /**
    * Gets the world map service.
    *
    * @return the world map service
@@ -273,6 +283,16 @@ public class ServiceLocator {
   }
 
   /**
+   * Registers the game state service.
+   *
+   * @param service the game state service
+   */
+  public static void registerGameStateService(GameStateService service) {
+    logger.debug("Registering game state service {}", service);
+    gameStateService = service;
+  }
+
+  /**
    * Registers the global resource service.
    *
    * @param source the global resource service
@@ -286,6 +306,12 @@ public class ServiceLocator {
   public static void deregisterGlobalResourceService() {
     logger.debug("Removing global resource service");
     globalResourceService = null;
+  }
+
+  /** Deregisters the game state service. */
+  public static void deregisterGameStateService() {
+    logger.debug("Removing game state service");
+    gameStateService = null;
   }
 
   /**
@@ -469,6 +495,7 @@ public class ServiceLocator {
     currencyService = null;
     itemEffectsService = null;
     gameArea = null; // <-- ADDED TO CLEAR METHOD
+    gameStateService = null;
   }
 
   /** Private constructor to prevent instantiation. */
