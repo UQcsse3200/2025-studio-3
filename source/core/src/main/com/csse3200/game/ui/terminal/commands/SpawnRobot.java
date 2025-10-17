@@ -2,9 +2,8 @@ package com.csse3200.game.ui.terminal.commands;
 
 import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.services.ServiceLocator;
-import java.util.ArrayList;
-
 import com.csse3200.game.services.WaveService;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
