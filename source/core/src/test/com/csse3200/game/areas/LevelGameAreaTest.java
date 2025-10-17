@@ -614,4 +614,59 @@ class LevelGameAreaTest {
     assertDoesNotThrow(area::create);
     assertNotNull(area.getGrid());
   }
+
+  @Test
+  void placeDefenceUnit_playsSound() {
+    // Arrange
+    ResourceService resources = mock(ResourceService.class);
+    SettingsService settings = mock(SettingsService.class);
+    CurrencyService currencyService = mock(CurrencyService.class);
+    Sound sound = mock(Sound.class);
+    Entity unit = spy(new Entity());
+
+    // Expected values
+    String expectedPath = "sounds/slingshooter-place.mp3";
+    float expectedVolume = 0.7f;
+
+    // Mock service locator
+    ServiceLocator.registerResourceService(resources);
+    ServiceLocator.registerSettingsService(settings);
+    ServiceLocator.registerCurrencyService(currencyService);
+
+    // Mock behaviour
+    when(unit.getProperty(anyString())).thenReturn(null);
+    when(unit.getProperty("soundPath")).thenReturn(expectedPath);
+    when(resources.getAsset(expectedPath, Sound.class)).thenReturn(sound);
+    when(settings.getSoundVolume()).thenReturn(expectedVolume);
+
+    // area and grid
+    Entity tileEntity = mock(Entity.class);
+    TileStorageComponent tileStorage = mock(TileStorageComponent.class);
+    when(tileEntity.getComponent(TileStorageComponent.class)).thenReturn(tileStorage);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    LevelGameGrid grid = mock(LevelGameGrid.class);
+    when(grid.getTile(anyInt())).thenReturn(tileEntity);
+
+    // allow unit to be placed
+    unit.addComponent(
+        new DeckInputComponent(
+            area,
+            new Supplier<Entity>() {
+              @Override
+              public Entity get() {
+                return unit;
+              }
+            }));
+
+    // Act
+    area.setGrid(grid);
+    area.setSelectedUnit(unit);
+    area.markNextPlacementFree();
+    area.spawnUnit(0);
+
+    // Assert
+    verify(resources).getAsset(expectedPath, Sound.class);
+    verify(sound).play(expectedVolume);
+  }
 }
