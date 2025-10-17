@@ -176,6 +176,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
+      ServiceLocator.getResourceService()
+              .loadSounds(new String[]{"sounds/human-death.mp3","sounds/robot-death.mp3"});
+      ServiceLocator.getResourceService().loadAll();
     // Register the game area with the service locator
     ServiceLocator.registerGameArea(this);
 
@@ -476,14 +479,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
-    unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
-              robots.remove(unit);
-            });
+      unit.getEvents()
+              .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                          try {
+                              float vol = ServiceLocator.getSettingsService().getSoundVolume();
+                              Sound s = ServiceLocator.getResourceService()
+                                      .getAsset("sounds/robot-death.mp3", Sound.class);
+                              if (s != null) s.play(vol);
+                          }  catch (Exception e) {
+          logger.debug("Skip death sfx: {}", e.toString());
+      }
+
+      requestDespawn(unit);
+                          if (ServiceLocator.getWaveService() != null) {
+                              ServiceLocator.getWaveService().onEnemyDispose();
+                          }
+                          robots.remove(unit);
+                      });
+
 
     // Keep list in sync if something else despawns the robot
     unit.getEvents().addListener("despawned", () -> robots.remove(unit));
@@ -641,7 +656,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(boss);
     robots.add(boss);
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
-    boss.getEvents().addListener("despawnRobot", target -> {});
 
     // --- BUG FIX STARTS HERE ---
     // Use a boolean flag to ensure the death logic only runs ONCE.
@@ -906,14 +920,28 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           tile.getComponent(TileStorageComponent.class).removeTileUnit();
         };
 
-    unit.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              requestDespawn(unit);
-              clearTile.run();
-              robots.remove(unit);
-            });
+      unit.getEvents()
+              .addListener(
+                      ENTITY_DEATH_EVENT,
+                      () -> {
+                          try {
+                              Object p = unit.getProperty("deathSfxPath");
+                              if (p != null) {
+                                  float vol = ServiceLocator.getSettingsService().getSoundVolume();
+                                  Sound s = ServiceLocator.getResourceService()
+                                          .getAsset(p.toString(), Sound.class);
+                                  if (s != null) s.play(vol);
+                              }
+                          } catch (Exception e) {
+          logger.debug("Skip death SFX: {}", e.toString());
+      }
+
+
+      requestDespawn(unit);
+                          clearTile.run();
+                          robots.remove(unit);
+                      });
+
     unit.getEvents().addListener("despawned", clearTile::run);
 
     unit.getEvents()
