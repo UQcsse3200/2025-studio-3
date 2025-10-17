@@ -38,7 +38,6 @@ public class ServiceLocator {
   private static DiscordRichPresenceService discordRichPresenceService;
   private static GameStateService gameStateService;
 
-  // --- NEW FIELD ADDED ---
   private static GameArea gameArea;
 
   /**
@@ -494,7 +493,7 @@ public class ServiceLocator {
     resourceService = null;
     currencyService = null;
     itemEffectsService = null;
-    gameArea = null; // <-- ADDED TO CLEAR METHOD
+    gameArea = null;
     gameStateService = null;
   }
 
