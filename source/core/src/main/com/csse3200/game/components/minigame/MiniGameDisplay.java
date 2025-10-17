@@ -1,10 +1,18 @@
 package com.csse3200.game.components.minigame;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+
+import net.dermetfan.utils.Pair;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,39 +31,61 @@ public class MiniGameDisplay extends UIComponent {
 
   /** Adds the actors to the table. */
   private void addActors() {
+    Stack stack = new Stack();
+    stack.setFillParent(false);
+
+    Label title = ui.title("Arcade");
+
+    float frameWidth = ui.getScaledWidth(320);
+    float frameHeight = ui.getScaledHeight(390);
+    stack.setSize(frameWidth, frameHeight);
+    stack.setPosition((stage.getWidth() - frameWidth) / 2f, (stage.getHeight() - frameHeight) / 2f);
+    Texture frameTexture = ServiceLocator.getGlobalResourceService().getAsset("images/ui/menu.png", Texture.class);
+    Image frameImage = new Image(frameTexture);
+    frameImage.setSize(frameWidth, frameHeight);
+
     table = new Table();
-    table.setFillParent(true);
+    table.center();
+    table.setFillParent(false);
 
-    TextButton laneRunnerBtn = ui.primaryButton("Lane Runner", 60f);
-    TextButton wallPongBtn = ui.primaryButton("Wall Pong", 60f);
+    // Add the frame first so it's behind the table
+    stage.addActor(frameImage);
 
-    // Triggers an event when the button is pressed
-    laneRunnerBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+    TextButton laneRunnerBtn = ui.primaryButton("Lane Runner", 200f);
+    TextButton wallPongBtn = ui.primaryButton("Wall Pong", 200f);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(200f);
+
+    laneRunnerBtn.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Lane Runner button clicked");
             entity.getEvents().trigger("lanerunner");
-          }
-        });
-    wallPongBtn.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+        }
+    });
+
+    wallPongBtn.addListener(new ChangeListener() {
+        @Override
+        public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Wall Pong button clicked");
             entity.getEvents().trigger("wallpong");
-          }
-        });
+        }
+    });
 
-    table.add(laneRunnerBtn).size(200f, 50f).padTop(30f);
+    table.add(title);
     table.row();
-    table.add(wallPongBtn).size(200f, 50f).padTop(30f);
+    table.add(laneRunnerBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padTop(30f);
     table.row();
-    stage.addActor(table);
+    table.add(wallPongBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padTop(30f);
 
-    // Add close button in top left corner
+    stack.add(frameImage);
+    stack.add(table);
+
+    stage.addActor(stack);
+
+    // Close button stays on top
     createCloseButton();
   }
+
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {

@@ -8,6 +8,7 @@ dialog box, the achievement box, the coins icon, the skill points icon, the sett
 - Generative AI was used to write tests for the DialogService class.
 - Generative AI was used to quickly reposition all back buttons to the top left of the screen.
 - Generative AI was used to write tests for the DialogComponent class.
+- Generative AI was used to write docs, but wherever used, it would most likely be updated to be more accurate.
 - Generative AI was used to write javadocs across the codebase, but wherever used, it would most likely be updated to be more accurate.
 - Generative AI was used to do the animation of the dropdown menu, the
 animation of the dialog box and the animation of the achievement box.
