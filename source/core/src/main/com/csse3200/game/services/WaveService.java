@@ -357,6 +357,20 @@ public class WaveService implements WaveConfigProvider {
     currentEnemyPos++;
   }
 
+  /**
+   * Unlike the regular spawnEnemy function, this does not update the position in the wave
+   * @param laneNumber The lane to spawn the enemy in
+   * @param robotType The robot type to spawn
+   */
+  public void spawnEnemyDebug(int laneNumber, RobotFactory.RobotType robotType) {
+    if (enemySpawnCallback == null) {
+        logger.warn("No enemy spawn callback set - cannot spawn {}", robotType.get());
+        return;
+    }
+
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
+  }
+
   public int getWaveCountForLevel(String levelKey) {
     BaseLevelConfig config = ServiceLocator.getConfigService().getLevelConfig(levelKey);
     return config != null ? config.getWaves().size() : 0;
