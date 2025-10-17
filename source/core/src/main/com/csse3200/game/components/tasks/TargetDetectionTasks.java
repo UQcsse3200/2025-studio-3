@@ -117,6 +117,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       offsetFrom.set(from.x, from.y + yOffset);
       end.set(offsetFrom).mulAdd(castDir, attackRange);
 
+      // find first enemy entity in current entities line of sight in the given direction and range
       boolean didHit =
           physics.raycast(
               offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
