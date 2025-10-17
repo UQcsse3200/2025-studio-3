@@ -55,7 +55,6 @@ public class SpawnRobotTest {
 
   @Test
   void shouldSpawnDefaultLaneWhenOnlyTypeProvided() {
-    ArrayList<String> args = new ArrayList<>();
     args.add("tanky");
 
     boolean result = spawnRobot.action(args);
@@ -66,7 +65,6 @@ public class SpawnRobotTest {
 
   @Test
   void shouldSpawnSpecifiedLaneWhenValidLaneProvided() {
-    ArrayList<String> args = new ArrayList<>();
     args.add("fast");
     args.add("3");
 
@@ -78,7 +76,6 @@ public class SpawnRobotTest {
 
   @Test
   void shouldSpawnDefaultLaneWhenInvalidLaneProvided() {
-    ArrayList<String> args = new ArrayList<>();
     args.add("fast");
     args.add("this most certainly isn't a number");
 
@@ -90,7 +87,6 @@ public class SpawnRobotTest {
 
   @Test
   void shouldUseStandardRobotWhenTypeInvalid() {
-    ArrayList<String> args = new ArrayList<>();
     args.add("this is not a valid robot type");
     args.add("this most certainly isn't a number");
 
@@ -102,7 +98,6 @@ public class SpawnRobotTest {
 
   @Test
   void shouldIgnoreExtraArgs() {
-    ArrayList<String> args = new ArrayList<>();
     args.add("bungee");
     args.add("4");
     args.add("3");
