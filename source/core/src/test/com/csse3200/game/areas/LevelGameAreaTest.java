@@ -512,7 +512,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerPhysicsService(physicsService);
 
     Texture tex = mock(Texture.class);
-    when(resourceService.getAsset(eq(path), eq(Texture.class))).thenReturn(null, tex);
+    when(resourceService.getAsset(path, Texture.class)).thenReturn(null, tex);
 
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
     // Skip wall spawning to avoid PolygonShape native call
@@ -522,7 +522,7 @@ class LevelGameAreaTest {
 
     verify(resourceService).loadTextures(argThat(arr -> arr.length == 1 && path.equals(arr[0])));
     verify(resourceService).loadAll();
-    verify(resourceService, atLeast(2)).getAsset(eq(path), eq(Texture.class));
+    verify(resourceService, atLeast(2)).getAsset(path, Texture.class);
   }
 
   @Test
@@ -546,8 +546,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerSettingsService(settings);
 
     Sound goSound = mock(Sound.class);
-    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
-        .thenReturn(goSound);
+    when(resourceService.getAsset("sounds/game-over-voice.mp3", Sound.class)).thenReturn(goSound);
 
     // Create a robot that has crossed the left edge
     float t = area.getTileSize();
@@ -560,7 +559,7 @@ class LevelGameAreaTest {
     Field f = LevelGameArea.class.getDeclaredField("isGameOver");
     f.setAccessible(true);
     assertTrue(f.getBoolean(area));
-    verify(goSound, times(1)).play(eq(0.5f));
+    verify(goSound, times(1)).play(0.5f);
 
     // Idempotent re-check
     area.checkGameOver();
