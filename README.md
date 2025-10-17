@@ -8,7 +8,7 @@
 ![Sonar Coverage](https://img.shields.io/sonar/coverage/UQcsse3200_2025-studio-3?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge)
 
 
-## Description
+## Project Description
 
 AI has run out of training data, their solution, take it from humans. You are the first to discover this, and must fight back. Will you be able to save humanity?
 
@@ -18,9 +18,41 @@ The engine is built on the [libGDX](https://libgdx.com/ "libGDX Information") fr
 
 You are welcome to use the game engine for your own purposes. It is released under the [MIT license](https://opensource.org/licenses/MIT "MIT License Description"). Acknowledgment of the source of the game engine is required.
 
+## Course Description
+
+This project is part of the CSSE3200 Software Engineering course at the University of Queensland. The course focuses on practical software engineering skills, including requirements analysis, design, implementation, testing, and project management. Students work in teams to develop a software project, applying the principles and practices learned throughout the course.
+
+---
+
 ## Playing the Game
 
-You can download the latest release of the game from the [Releases](https://github.com/UQcsse3200/2025-studio-3/releases).
+### Option A: Downloading a Build
+
+You can download the latest release of the game as a `.jar` file from the [Releases](https://github.com/UQcsse3200/2025-studio-3/releases).
+
+### Option B: Building from Source
+
+To build the game from source, follow these steps:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/UQcsse3200/2025-studio-1.git
+2. Navigate to the project directory:
+   ```bash
+    cd 2025-studio-1
+3. Build and run the project using Gradle:
+   ```bash
+    ./gradlew run
+    ```
+
+**Prerequisites:**
+- Java Development Kit (JDK) 21 or higher
+- Gradle (if not using the wrapper)
+
+## How to Play
+
+In the world map menu use **WASD** to move between levels and **ENTER** to select a level.
+
+Once in a level, drag and drop items from the bar up the top to the game grid to place a defense. You must place these in the same row as a robot to deal damage. Each defence deals damage in unique ways so choose wisely!
 
 ## Documentation and Reports
 
