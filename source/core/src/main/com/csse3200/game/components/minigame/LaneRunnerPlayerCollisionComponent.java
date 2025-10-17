@@ -1,4 +1,4 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.components.Component;

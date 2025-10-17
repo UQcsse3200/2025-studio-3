@@ -1,4 +1,4 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -8,10 +8,10 @@ import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/** ui component for displaying the Main menu. */
+/** UI component for displaying the mini game selection menu. */
 public class MiniGameDisplay extends UIComponent {
   private static final Logger logger =
-      LoggerFactory.getLogger(com.csse3200.game.minigame.MiniGameDisplay.class);
+      LoggerFactory.getLogger(com.csse3200.game.components.minigame.MiniGameDisplay.class);
   private static final float Z_INDEX = 2f;
   private Table table;
 

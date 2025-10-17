@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.minigame.BackgroundRenderComponent;
+import com.csse3200.game.components.minigame.BallComponent;
+import com.csse3200.game.components.minigame.MinigameHUD;
+import com.csse3200.game.components.minigame.PaddleCollisionComponent;
+import com.csse3200.game.components.minigame.PaddleComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
-import com.csse3200.game.minigame.BallComponent;
-import com.csse3200.game.minigame.MinigameHUD;
-import com.csse3200.game.minigame.PaddleComponent;
-import com.csse3200.game.minigame.PaddleCollisionComponent;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -27,7 +28,6 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.PhysicsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.csse3200.game.minigame.BackgroundRenderComponent;
 
 /** The game screen containing the paddle game. */
 public class PaddleGameScreen extends ScreenAdapter {

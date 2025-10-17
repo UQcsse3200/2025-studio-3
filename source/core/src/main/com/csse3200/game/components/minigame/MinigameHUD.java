@@ -1,4 +1,4 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;

@@ -14,6 +14,7 @@ animation of the dialog box and the animation of the achievement box.
 - Generative AI was used sporadically to assist with identifying where
 code coverage was missing and how to fix it.
 - AI was used to assist with the creation and writing tests of the Settings system.
+- AI was used to assist with the refactoring of the minigames and writing new tests for it.
 
 ## Jackie
 

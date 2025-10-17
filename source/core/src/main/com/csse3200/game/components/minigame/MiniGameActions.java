@@ -1,4 +1,4 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.Component;

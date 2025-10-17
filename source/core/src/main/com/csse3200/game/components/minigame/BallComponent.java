@@ -1,4 +1,4 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
@@ -6,6 +6,9 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Component for the ball in the minigame.
+ */
 public class BallComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(BallComponent.class);
   private final Vector2 velocity;

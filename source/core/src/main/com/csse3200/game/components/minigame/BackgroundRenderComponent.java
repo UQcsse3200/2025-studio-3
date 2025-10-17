@@ -1,13 +1,21 @@
-package com.csse3200.game.minigame;
+package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.rendering.RenderComponent;
 
+/**
+ * Renders a background texture.
+ */
 public class BackgroundRenderComponent extends RenderComponent{
   private final Texture backgroundTexture;
 
+  /**
+   * Creates a new BackgroundRenderComponent.
+   * 
+   * @param backgroundTexturePath the path to the background texture
+   */
   public BackgroundRenderComponent(String backgroundTexturePath) {
     this.backgroundTexture = ServiceLocator.getResourceService()
         .getAsset(backgroundTexturePath, Texture.class);
