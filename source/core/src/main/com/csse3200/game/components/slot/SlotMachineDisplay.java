@@ -235,8 +235,8 @@ public class SlotMachineDisplay extends UIComponent {
     barGroup.setTouchable(Touchable.childrenOnly);
     stage.addActor(barGroup);
     TextureAtlas atlas =
-            ServiceLocator.getResourceService()
-                    .getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/slot_frame.atlas", TextureAtlas.class);
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
     TextureRegion lockedRegion = atlas.findRegion("slot_frame_locked");
@@ -252,8 +252,8 @@ public class SlotMachineDisplay extends UIComponent {
     frameLockedDrawable = new TextureRegionDrawable(lockedRegion);
 
     Texture reelsBgTex =
-            ServiceLocator.getResourceService()
-                    .getAsset("images/entities/slotmachine/slot_reels_background.png", Texture.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/slot_reels_background.png", Texture.class);
     reelsBgTex.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
     reelsBgImage = new Image(reelsBgTex);
     reelsBgImage.setTouchable(Touchable.disabled);
@@ -273,51 +273,51 @@ public class SlotMachineDisplay extends UIComponent {
     frameImage.setScaling(Scaling.fit);
     frameImage.setAlign(Align.center);
     frameImage.addListener(
-            new ClickListener() {
-              @Override
-              public void clicked(InputEvent event, float x, float y) {
-                if (spinPaused) {
-                  logger.info("Spin ignored: paused.");
-                  return;
-                }
-                if (isSpinning) return;
-                int remaining = slotEngine.getRemainingSpins();
-                int activeCards = SlotEffect.getActiveCardCount();
-                if (remaining <= 0 || activeCards >= MAX_ACTIVE_CARDS) {
-                  logger.info(
-                          "Spin blocked: credits={}, fieldCards={} (limit={})",
-                          remaining,
-                          activeCards,
-                          MAX_ACTIVE_CARDS);
-                  frameImage.clearActions();
-                  frameImage.setDrawable(frameDownDrawable);
-                  frameImage.addAction(
-                          Actions.sequence(
-                                  Actions.delay(0.08f),
-                                  Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
-                  return;
-                }
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (spinPaused) {
+              logger.info("Spin ignored: paused.");
+              return;
+            }
+            if (isSpinning) return;
+            int remaining = slotEngine.getRemainingSpins();
+            int activeCards = SlotEffect.getActiveCardCount();
+            if (remaining <= 0 || activeCards >= MAX_ACTIVE_CARDS) {
+              logger.info(
+                  "Spin blocked: credits={}, fieldCards={} (limit={})",
+                  remaining,
+                  activeCards,
+                  MAX_ACTIVE_CARDS);
+              frameImage.clearActions();
+              frameImage.setDrawable(frameDownDrawable);
+              frameImage.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.08f),
+                      Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
+              return;
+            }
 
-                logger.info("Topbar slot clicked");
-                pendingResult = slotEngine.spin();
-                targetIndices = pendingResult.getReels();
-                frameImage.clearActions();
-                frameImage.setDrawable(frameDownDrawable);
-                frameImage.addAction(
-                        Actions.sequence(
-                                Actions.delay(0.12f),
-                                Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
-                spinToTargets();
-              }
-            });
+            logger.info("Topbar slot clicked");
+            pendingResult = slotEngine.spin();
+            targetIndices = pendingResult.getReels();
+            frameImage.clearActions();
+            frameImage.setDrawable(frameDownDrawable);
+            frameImage.addAction(
+                Actions.sequence(
+                    Actions.delay(0.12f),
+                    Actions.run(() -> frameImage.setDrawable(frameUpDrawable))));
+            spinToTargets();
+          }
+        });
     barGroup.addActor(frameImage);
   }
 
   /** Loads the reels atlas and collects symbol regions in name order. */
   private void loadSymbols() {
     TextureAtlas reelsAtlas =
-            ServiceLocator.getResourceService()
-                    .getAsset("images/entities/slotmachine/slot_reels.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/slot_reels.atlas", TextureAtlas.class);
     symbolRegions = new ArrayList<>();
     for (TextureAtlas.AtlasRegion r : reelsAtlas.getRegions()) {
       symbolRegions.add(r);
@@ -332,8 +332,8 @@ public class SlotMachineDisplay extends UIComponent {
   private void loadPieRegions() {
     // Ensure this asset is registered during the game's asset-loading phase:
     TextureAtlas pieAtlas =
-            ServiceLocator.getResourceService()
-                    .getAsset("images/entities/slotmachine/pie_filled.atlas", TextureAtlas.class);
+        ServiceLocator.getResourceService()
+            .getAsset("images/entities/slotmachine/pie_filled.atlas", TextureAtlas.class);
     pieRegions.clear();
     for (TextureAtlas.AtlasRegion r : pieAtlas.getRegions()) {
       pieRegions.add(r);
@@ -581,13 +581,13 @@ public class SlotMachineDisplay extends UIComponent {
       float speed = reelScrollSpeedPxPerSec * (0.9f + 0.1f * i);
 
       ScrollAction loop =
-              new ScrollAction(
-                      8f,
-                      speed,
-                      oneCycle,
-                      col.getY(),
-                      v -> currentScrollSpeeds.set(colIndex, v),
-                      () -> spinPaused);
+          new ScrollAction(
+              8f,
+              speed,
+              oneCycle,
+              col.getY(),
+              v -> currentScrollSpeeds.set(colIndex, v),
+              () -> spinPaused);
       col.addAction(loop);
     }
 
@@ -597,7 +597,7 @@ public class SlotMachineDisplay extends UIComponent {
 
       Group col = reelColumns.get(i);
       col.addAction(
-              Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
+          Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
     }
   }
 
@@ -629,9 +629,9 @@ public class SlotMachineDisplay extends UIComponent {
     float mappedY = idealY - kNearest * oneCycle;
 
     float v0 =
-            (colIdx < currentScrollSpeeds.size())
-                    ? currentScrollSpeeds.get(colIdx)
-                    : -reelScrollSpeedPxPerSec;
+        (colIdx < currentScrollSpeeds.size())
+            ? currentScrollSpeeds.get(colIdx)
+            : -reelScrollSpeedPxPerSec;
 
     float delta = mappedY - currentY;
     float halfSymbol = 0.5f * h;
@@ -652,13 +652,13 @@ public class SlotMachineDisplay extends UIComponent {
     float t = Math.clamp(tSuggested, 0.40f, 1.10f);
 
     col.addAction(
-            Actions.sequence(
-                    new HermiteStopYAction(t, currentY, mappedY, v0, () -> spinPaused),
-                    Actions.run(
-                            () -> {
-                              currentScrollSpeeds.set(colIdx, 0f);
-                              notifyReelStopped();
-                            })));
+        Actions.sequence(
+            new HermiteStopYAction(t, currentY, mappedY, v0, () -> spinPaused),
+            Actions.run(
+                () -> {
+                  currentScrollSpeeds.set(colIdx, 0f);
+                  notifyReelStopped();
+                })));
   }
 
   /** Count the reels has stopped. While all reels has stopped, resolve outcome. */
@@ -894,12 +894,12 @@ public class SlotMachineDisplay extends UIComponent {
     private final BooleanSupplier pauseQuery;
 
     ScrollAction(
-            float duration,
-            float speed,
-            float cycle,
-            float startY,
-            java.util.function.Consumer<Float> speedTap,
-            BooleanSupplier pauseQuery) {
+        float duration,
+        float speed,
+        float cycle,
+        float startY,
+        java.util.function.Consumer<Float> speedTap,
+        BooleanSupplier pauseQuery) {
       super(duration);
       this.speed = speed;
       this.cycle = cycle;

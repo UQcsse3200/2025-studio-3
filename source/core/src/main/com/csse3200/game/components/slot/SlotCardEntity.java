@@ -80,6 +80,54 @@ public final class SlotCardEntity {
                     ServiceLocator.getConfigService().getDefenderConfig("slingshooter"))));
   }
 
+  public static void dropBoxerCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Boxer",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("boxer"))));
+  }
+
+  public static void dropHarpoonCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Harpoon",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("harpoon"))));
+  }
+
+  public static void dropMortarCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Mortar",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("mortar"))));
+  }
+
+  public static void dropShieldCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Shield",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("shield"))));
+  }
+
   // Universal drop entrance
   public static void dropCard(
       Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area, CardSpec spec) {

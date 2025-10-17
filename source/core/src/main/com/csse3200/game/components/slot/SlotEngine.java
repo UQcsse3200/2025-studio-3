@@ -95,9 +95,13 @@ public class SlotEngine {
    * logging/debugging.
    */
   public enum Effect {
-    SUMMON_ENEMY(2, "SummonEnemy", 1),
-    DESTROY_ENEMY(7, "DestroyEnemy", 1),
-    DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 10);
+    SUMMON_ENEMY(0, "SummonEnemy", 1),
+    DESTROY_ENEMY(1, "DestroyEnemy", 1),
+    DROP_SLINGSHOOTER_CARD(2, "DropSlingShooterCard", 10),
+    DROP_BOXER_CARD(3, "DropBoxerCard", 10),
+    DROP_SHIELD_CARD(4, "DropShieldCard", 10),
+    DROP_HARPOON_CARD(7, "DropHarpoonCard", 10),
+    DROP_MORTAR_CARD(8, "DropMortarCard", 10);
 
     private final int id;
     private final String displayName;
