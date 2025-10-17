@@ -148,23 +148,34 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    setCurrentWave(currentWave + 1);
-
-    if (currentWave == 1) {
-      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
-      bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
-      bossActive = true;
-    } else if (currentWave == 2) {
-      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
-      bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
-      bossActive = true;
-    } else if (currentWave == 3) {
-      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
-      bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
-      bossActive = true;
+    if (currentWave == getCurrentLevelWaveCount()) {
+        switch (getCurrentLevelKey()) {
+            case "levelTwo" -> {
+                logger.info("Final wave complete. Queuing boss spawn: SCRAP_TITAN");
+                bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
+                bossActive = true;
+            }
+            case "levelFour" -> {
+                logger.info("Final wave complete. Queuing boss spawn: SAMURAI_BOT");
+                bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
+                bossActive = true;
+            }
+            case "levelFive" -> {
+                logger.info("Final wave complete. Queuing boss spawn: GUN_BOT");
+                bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
+                bossActive = true;
+            }
+          default -> bossActive = false;
+        }
+    }
+    if (bossActive) {
+      waveActive = false;
+      preparationPhaseActive = false; // No prep phase needed, just spawn the boss.
+      return;
     }
 
-    waveActive = false;
+    setCurrentWave(currentWave + 1);
+
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -202,9 +213,9 @@ public class WaveService implements WaveConfigProvider {
 
     if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
       logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
-
+      endWave();
       int maxWaves = getCurrentLevelWaveCount();
-      if (currentWave >= maxWaves) {
+      if (currentWave >= maxWaves && !bossActive) {
         logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
         levelComplete = true;
         waveActive = false;
