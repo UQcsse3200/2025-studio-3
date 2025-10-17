@@ -38,7 +38,7 @@ public class PaddleCollisionComponent extends Component {
     
     // Only reverse the ball's Y velocity if it's moving downward (towards the paddle)
     if (otherBall.getVelocityY() < 0) {
-      otherBall.reverseY();
+      otherBall.hitPaddle();
       
       // Update the minigame service with the score
       ServiceLocator.getMinigameService().setScore(otherBall.getScore());

@@ -64,16 +64,16 @@ class BallComponentTest {
   }
 
   @Test
-  void testReverseY() {
+  void testHitPaddle() {
     // Test reverseY method
-    ballComponent.reverseY();
+    ballComponent.hitPaddle();
     
     assertEquals(-300f, ballComponent.getVelocityY());
     assertEquals(1, ballComponent.getScore());
     assertEquals(1, ballComponent.getBallsHit());
     
     // Test multiple reverses
-    ballComponent.reverseY();
+    ballComponent.hitPaddle();
     assertEquals(300f, ballComponent.getVelocityY());
     assertEquals(2, ballComponent.getScore());
     assertEquals(2, ballComponent.getBallsHit());
@@ -177,7 +177,7 @@ class BallComponentTest {
     int initialScore = ballComponent.getScore();
     int initialBallsHit = ballComponent.getBallsHit();
     
-    ballComponent.reverseY();
+    ballComponent.hitPaddle();
     
     assertEquals(initialScore + 1, ballComponent.getScore());
     assertEquals(initialBallsHit + 1, ballComponent.getBallsHit());
@@ -188,7 +188,7 @@ class BallComponentTest {
     // Test getVelocityY method
     assertEquals(300f, ballComponent.getVelocityY());
     
-    ballComponent.reverseY();
+    ballComponent.hitPaddle();
     assertEquals(-300f, ballComponent.getVelocityY());
   }
 

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 public class BallComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(BallComponent.class);
   private final Vector2 velocity;
+  private float speedMultiplier = 1f;
   private int score;
   private int ballsHit;
   private static final float INITIAL_X_SPEED = 300f;
@@ -56,18 +57,19 @@ public class BallComponent extends Component {
   /**
    * Reverses the ball's Y velocity and updates the score and balls hit.
    */
-  public void reverseY() {
+  public void hitPaddle() {
     velocity.y *= -1;
     score++;
     ballsHit++;
+    speedMultiplier += 0.1f;
   }
 
   @Override
   public void update() {
     float delta = ServiceLocator.getTimeSource().getDeltaTime();
     Vector2 currentPos = entity.getPosition();
-    float newX = currentPos.x + velocity.x * delta;
-    float newY = currentPos.y + velocity.y * delta;
+    float newX = currentPos.x + velocity.x * delta * speedMultiplier;
+    float newY = currentPos.y + velocity.y * delta * speedMultiplier;
     entity.setPosition(newX, newY);
     checkWallCollisions();
   }
