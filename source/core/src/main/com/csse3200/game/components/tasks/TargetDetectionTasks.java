@@ -131,9 +131,9 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       // only
       // consider targets to the right of defender
       if (direction == AttackDirection.RIGHT
-              && (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1)
+              && (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 50f)
           || direction == AttackDirection.LEFT
-              && (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 1)) {
+              && (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 50f)) {
         continue;
       }
 
