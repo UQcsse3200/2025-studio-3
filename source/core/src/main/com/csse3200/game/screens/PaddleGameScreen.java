@@ -16,6 +16,7 @@ import com.csse3200.game.minigame.BallComponent;
 import com.csse3200.game.minigame.CollisionComponent;
 import com.csse3200.game.minigame.PaddleComponent;
 import com.csse3200.game.minigame.PaddleInputComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 public class PaddleGameScreen extends ScreenAdapter {
   private final GdxGame game;
@@ -41,6 +42,13 @@ public class PaddleGameScreen extends ScreenAdapter {
     stage = new Stage(new ScreenViewport());
     Gdx.input.setInputProcessor(stage);
     ballsHit = 0;
+
+    if (ServiceLocator.getResourceService() == null) {
+      ServiceLocator.registerResourceService(new com.csse3200.game.services.ResourceService());
+    }
+    if (ServiceLocator.getSettingsService() == null) {
+      ServiceLocator.registerSettingsService(new com.csse3200.game.services.SettingsService());
+    }
     loadAssests();
     addBackground();
     createPaddle();
@@ -86,7 +94,9 @@ public class PaddleGameScreen extends ScreenAdapter {
   }
 
   private void createScoreLabel() {
-    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
+
+    BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
+    Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
     scoreLabel = new Label("Score: 0", style);
     scoreLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 40);
     stage.addActor(scoreLabel);
@@ -97,23 +107,28 @@ public class PaddleGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
+    ServiceLocator.getMusicService().play("sounds/background-music/level2_music.mp3");
     totalTime += delta;
     float survivalTime = totalTime;
     Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+    BallComponent ballComp = ball.getComponent(BallComponent.class);
+    CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
+
     paddle.getComponent(PaddleComponent.class).update();
     paddle.getComponent(PaddleInputComponent.class).update();
-    ball.getComponent(BallComponent.class).update(delta);
-    ball.getComponent(CollisionComponent.class).update(delta);
 
-    int score = ball.getComponent(BallComponent.class).getScore();
+    ballComp.update(delta, collisionComp);
+
+    int score = ballComp.getScore();
     scoreLabel.setText("Score: " + score);
     timeLabel.setText(String.format("Time: %.2f s", survivalTime));
-    ballsHit = ball.getComponent(BallComponent.class).getBallsHit();
+    ballsHit = ballComp.getBallsHit();
     stage.act(delta);
     stage.draw();
 
-    if (ball.getComponent(BallComponent.class).getImage().getY() <= 0) {
+    if (ballComp.getImage().getY() <= 0) {
+
       game.setScreen(new WallPongGameOverScreen(game, score, survivalTime, ballsHit));
       dispose();
     }

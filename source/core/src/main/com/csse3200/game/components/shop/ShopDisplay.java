@@ -1,5 +1,6 @@
 package com.csse3200.game.components.shop;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -8,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -30,7 +32,9 @@ public class ShopDisplay extends UIComponent {
   private String[] itemKeys = new String[3];
   private Label timerLabel;
   private Table mainTable;
-  private ImageButton closeButton;
+  private TextButton closeButton;
+  private final Sound purchasedSound =
+      ServiceLocator.getResourceService().getAsset("sounds/item_purchased_sound.mp3", Sound.class);
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -74,30 +78,8 @@ public class ShopDisplay extends UIComponent {
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
-    // Create close button using close-icon.png
-    closeButton =
-        new ImageButton(
-            new TextureRegionDrawable(
-                ServiceLocator.getGlobalResourceService()
-                    .getAsset("images/ui/close-icon.png", Texture.class)));
-
-    // Position in top left with 20f padding
-    closeButton.setSize(60f, 60f);
-    closeButton.setPosition(
-        20f, // 20f padding from left
-        stage.getHeight() - 60f - 20f // 20f padding from top
-        );
-
-    // Add listener for the close button
-    closeButton.addListener(
-        new ChangeListener() {
-          @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
-            logger.debug("Close button clicked");
-            entity.getEvents().trigger("back");
-          }
-        });
-
+    // Create close button using createBackButton
+    closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
   }
 
@@ -115,7 +97,7 @@ public class ShopDisplay extends UIComponent {
   /** Creates the main shop UI layout. */
   private void createShopUI() {
     mainTable.clear();
-    Label titleLabel = new Label("SHOP", skin, "title");
+    Label titleLabel = ui.title("SHOP");
     titleLabel.setColor(Color.BLACK);
     titleLabel.setFontScale(1.5f);
     mainTable.add(titleLabel).colspan(3).center().padTop(-40).padBottom(34f).row();
@@ -321,6 +303,10 @@ public class ShopDisplay extends UIComponent {
         .purchaseShopItem(itemConfig.getCost());
     ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
 
+    // Play Item purchased sound
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    purchasedSound.play(volume);
+
     // Update statistics
     ServiceLocator.getProfileService()
         .getProfile()
@@ -352,5 +338,11 @@ public class ShopDisplay extends UIComponent {
   @Override
   public float getZIndex() {
     return Z_INDEX;
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    recenterTable();
   }
 }

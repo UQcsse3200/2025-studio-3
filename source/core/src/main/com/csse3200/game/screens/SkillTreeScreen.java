@@ -22,6 +22,8 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,8 +38,7 @@ public class SkillTreeScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final Texture background;
   private final SpriteBatch batch;
-  protected static final Skin skin =
-      new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
+  protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
 
   /**
    * Constructs a SkillTreeScreen, initializing all necessary services and rendering components.
@@ -72,7 +73,9 @@ public class SkillTreeScreen extends ScreenAdapter {
   /** Loads necessary game assets */
   private void loadAssets() {
     logger.debug("Loading assets");
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/button_unlock_skill.mp3"});
     ServiceLocator.getResourceService().loadAll();
+    ServiceLocator.getMusicService().play("sounds/background-music/skilltree_background.mp3");
   }
 
   @Override
@@ -112,11 +115,16 @@ public class SkillTreeScreen extends ScreenAdapter {
 
     // Create UI entity with various components
     Entity ui = new Entity();
+    SkilltreeDisplay display = new SkilltreeDisplay();
     ui.addComponent(new InputDecorator(stage, 10))
-        .addComponent(new SkilltreeButtons(game, new SkilltreeDisplay()))
+        .addComponent(display)
+        .addComponent(new SkilltreeButtons(game, display))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
 
     ServiceLocator.getEntityService().register(ui);
   }

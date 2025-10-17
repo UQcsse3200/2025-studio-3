@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +47,8 @@ public class LaneRunnerGameOverDisplay extends UIComponent {
     Label obstaclesLabel = new Label("Obstacles Dodged: " + obstaclesDodged, skin);
     Label performanceLabel = new Label("Performance:" + getPerformanceRating(), skin);
 
-    TextButton playagainbtn = ButtonFactory.createButton("Play Again");
-    TextButton returnToArcadeBtn = ButtonFactory.createButton("Return to Arcade");
+    TextButton playagainbtn = ui.primaryButton("Play Again", 100f);
+    TextButton returnToArcadeBtn = ui.primaryButton("Return to Arcade", 100f);
 
     playagainbtn.addListener(
         new ChangeListener() {

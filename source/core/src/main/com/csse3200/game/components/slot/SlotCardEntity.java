@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.LevelGameArea;
-import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.components.DeckInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.factories.DefenceFactory;
@@ -34,8 +33,8 @@ public final class SlotCardEntity {
   private static TextureAtlas cardsAtlas;
   private static boolean ownsCardsAtlas = false;
 
-  private static final float CARD_SCREEN_W_RATIO = 0.06f;
-  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float CARD_SCREEN_W_RATIO = 0.15f;
+  private static final float CARD_SLOT_W_RATIO = 0.50f;
   private static final float DROP_FADE_SEC = 0.15f;
   private static final float DROP_MOVE_SEC = 0.35f;
   private static final float DROP_PADDING_PCT = 0.02f;
@@ -79,6 +78,54 @@ public final class SlotCardEntity {
             () ->
                 DefenceFactory.createDefenceUnit(
                     ServiceLocator.getConfigService().getDefenderConfig("slingshooter"))));
+  }
+
+  public static void dropBoxerCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Boxer",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("boxer"))));
+  }
+
+  public static void dropHarpoonCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Harpoon",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("harpoon"))));
+  }
+
+  public static void dropMortarCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Mortar",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("mortar"))));
+  }
+
+  public static void dropShieldCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Shield",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("shield"))));
   }
 
   // Universal drop entrance
@@ -254,28 +301,15 @@ public final class SlotCardEntity {
       Vector2 stageCenter = new Vector2(getX() + getWidth() / 2f, getY() + getHeight() / 2f);
       Vector2 screen = stage.stageToScreenCoordinates(new Vector2(stageCenter));
 
-      com.badlogic.gdx.math.GridPoint2 worldPx =
-          currentArea.stageToWorld(
+      int pos =
+          currentArea.screenToGridIndex(
               new com.badlogic.gdx.math.GridPoint2((int) screen.x, (int) screen.y));
-      float wx = worldPx.x;
-      float wy = worldPx.y;
-
-      LevelGameGrid grid = currentArea.getGrid();
-      if (grid == null || grid.getRows() <= 0 || grid.getCols() <= 0) return;
-      Entity tile0 = grid.getTile(0);
-      if (tile0 == null) return;
-      Vector2 off = tile0.getPosition();
-      float tileSize = currentArea.getTileSize();
-
-      int col = (int) Math.floor((wx - off.x) / tileSize);
-      int row = (int) Math.floor((wy - off.y) / tileSize);
-      if (col < 0 || col >= grid.getCols() || row < 0 || row >= grid.getRows()) {
+      if (pos < 0) {
         logger.info("[SlotCardEntity] Placement failed: outside grid");
         return;
       }
-      int pos = row * grid.getCols() + col;
 
-      boolean occupiedBefore = grid.isOccupiedIndex(pos);
+      boolean occupiedBefore = currentArea.getGrid().isOccupiedIndex(pos);
 
       Entity selected =
           new Entity().addComponent(new DeckInputComponent(currentArea, spec.factory));
@@ -283,19 +317,16 @@ public final class SlotCardEntity {
 
       currentArea.setSelectedUnit(selected);
       currentArea.setIsCharacterSelected(true);
+      // Slot-machine card placements are free
+      currentArea.markNextPlacementFree();
       currentArea.spawnUnit(pos);
 
-      boolean occupiedAfter = grid.isOccupiedIndex(pos);
+      boolean occupiedAfter = currentArea.getGrid().isOccupiedIndex(pos);
       if (!occupiedBefore && occupiedAfter) {
         remove();
         decActiveCount(); // -1 on successful placement
         logger.info("[CardCount] after placement = {}", getActiveCardCount());
-        logger.info(
-            "[SlotCardEntity] Placed '{}' at row={}, col={}, pos={}",
-            spec.atlasRegion,
-            row,
-            col,
-            pos);
+        logger.info("[SlotCardEntity] Placed '{}' at pos={}", spec.atlasRegion, pos);
       } else {
         logger.info("[SlotCardEntity] Placement did not take effect");
       }
@@ -321,6 +352,9 @@ public final class SlotCardEntity {
 
   /** Optional: dispose when unloading scene */
   public static void disposeUi() {
+    // Reset temporary in-level card count so re-entering doesn't carry over
+    activeCount = 0;
+
     if (ownsCardsAtlas && cardsAtlas != null) {
       cardsAtlas.dispose();
       cardsAtlas = null;

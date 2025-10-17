@@ -1,14 +1,20 @@
 package com.csse3200.game.entities.factories;
 
 import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.projectiles.MoveDirectionComponent;
+import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsUtils;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Factory class for creating projectile entities for defense entities (e.g., sling shoots for sling
@@ -21,10 +27,22 @@ public class ProjectileFactory {
     throw new IllegalStateException("Instantiating static util class");
   }
 
-  public enum ProjectileType {
-    BULLET,
-    SLINGSHOT,
-    SHOCK
+  // Static map for path to projectile type
+  private static final Map<String, ProjectileType> pathToTypeMap = new HashMap<>();
+
+  static {
+    // Initialize the mapping once
+    pathToTypeMap.put("images/effects/sling_projectile.png", ProjectileType.SLINGSHOT);
+    pathToTypeMap.put("images/effects/bullet.png", ProjectileType.BULLET);
+    pathToTypeMap.put("images/effects/harpoon_projectile.png", ProjectileType.HARPOON_PROJECTILE);
+    pathToTypeMap.put("images/effects/shock.png", ProjectileType.SHOCK);
+    pathToTypeMap.put("images/effects/shell.png", ProjectileType.SHELL);
+    // add more mappings as needed
+  }
+
+  public static ProjectileType getProjectileTypeFromPath(String path) {
+    return pathToTypeMap.getOrDefault(
+        path, ProjectileType.SLINGSHOT); // default type or handle null
   }
 
   /**
@@ -35,20 +53,76 @@ public class ProjectileFactory {
    * @return projectile entity
    */
   public static Entity createProjectile(String path, int damage) {
-    Entity proj =
-        new Entity()
-            .addComponent(new PhysicsComponent())
-            .addComponent(new ColliderComponent())
-            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-            .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
-            .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
+    ProjectileType type = getProjectileTypeFromPath(path);
+    ColliderComponent collider = new ColliderComponent();
+    if (type == ProjectileType.HARPOON_PROJECTILE) {
+      collider.setSensor(true);
+    }
+    Entity proj = new Entity();
+    if (type
+        != ProjectileType
+            .SHELL) { // the mortar shell projectile doesn't get physics, its purely visual
+      proj.addComponent(new PhysicsComponent())
+          .addComponent(collider)
+          .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+          .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+          .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
+    }
 
     // Add render component so it draws above the grid
     TextureRenderComponent render = new TextureRenderComponent(path);
     proj.addComponent(render);
+    proj.addComponent(new ProjectileTagComponent(type));
 
     render.scaleEntity(); // mimic human entities to ensure it renders correctly
-    PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
+    if (type != ProjectileType.SHELL) { // no collider for the mortar shell
+      PhysicsUtils.setScaledCollider(proj, 0.1f, 0.1f);
+    }
     return proj;
+  }
+
+  /**
+   * Creates a gunner robot projectile entity.
+   *
+   * <p>The bullet shot is designed to be used by robot entities such as gunner robot. It includes
+   * components for physics, collision, attack damage, and rendering. The projectile is set to deal
+   * damage to enemies and is destroyed upon impact.
+   *
+   * @param damage amount of damage dealt to an enemy entity
+   * @param speed the speed the bullet shot moves at
+   * @return entity representing a bullet shot projectile
+   */
+  public static Entity createGunnerProjectile(int damage, float speed) {
+    Entity gunnerProjectile =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(new ColliderComponent())
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
+            .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0)) // defense
+            .addComponent(new CombatStatsComponent(1, damage))
+            .addComponent(
+                new MoveDirectionComponent(TargetDetectionTasks.AttackDirection.LEFT, speed))
+            .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
+
+    gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
+    return gunnerProjectile;
+  }
+
+  public static Entity createBossProjectile(int damage) {
+    short targetLayers = PhysicsLayer.NPC;
+    ColliderComponent collider = new ColliderComponent();
+    collider.setCollisionFilter(PhysicsLayer.BOSS_PROJECTILE, targetLayers);
+    Entity bossProjectile =
+        new Entity()
+            .addComponent(new PhysicsComponent())
+            .addComponent(collider)
+            .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS_PROJECTILE))
+            .addComponent(new TouchAttackComponent(targetLayers, 0f))
+            .addComponent(new CombatStatsComponent(1, damage));
+    bossProjectile.addComponent(new TextureRenderComponent("images/effects/gun_bot_fireball.png"));
+    bossProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
+    PhysicsUtils.setScaledCollider(bossProjectile, 0.2f, 0.2f);
+    return bossProjectile;
   }
 }

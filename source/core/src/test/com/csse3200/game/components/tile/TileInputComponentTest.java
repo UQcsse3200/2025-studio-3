@@ -1,6 +1,8 @@
 package com.csse3200.game.components.tile;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.Input;
@@ -8,6 +10,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.areas.LevelGameGrid;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,6 +43,12 @@ class TileInputComponentTest {
               GridPoint2 p = inv.getArgument(0);
               return new GridPoint2(p.x, p.y);
             });
+    ConfigService configService = mock(ConfigService.class);
+    ServiceLocator.registerConfigService(configService);
+
+    // creates mock discord rich presence service
+    DiscordRichPresenceService discordService = mock(DiscordRichPresenceService.class);
+    ServiceLocator.registerDiscordRichPresenceService(discordService);
   }
 
   @Test

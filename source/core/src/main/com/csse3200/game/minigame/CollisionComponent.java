@@ -7,12 +7,14 @@ import com.csse3200.game.entities.Entity;
 
 public class CollisionComponent extends Component {
   private Image target;
+  private static final float VISIBLE_PADDLE_HEIGHT = 10f;
+  private static final float COLLISION_WIDTH_RATIO = 0.25f;
 
   public CollisionComponent(Image target) {
     this.target = target;
   }
 
-  public void update(float delta) {
+  public void checkCollision(float delta) {
     Entity owner = entity;
     if (owner == null) return;
 
@@ -26,12 +28,23 @@ public class CollisionComponent extends Component {
             ball.getImage().getWidth(),
             ball.getImage().getHeight());
 
-    Rectangle targetRect =
-        new Rectangle(target.getX(), target.getY(), target.getWidth(), target.getHeight());
-    if (ballRect.overlaps(targetRect)) {
-      ball.reverseY();
+    float imageWidth = target.getWidth();
+    float imageHeight = target.getHeight();
+    float effectiveWidth = imageWidth * COLLISION_WIDTH_RATIO;
+    float effectiveHeight = VISIBLE_PADDLE_HEIGHT;
+    float xOffset = (imageWidth - effectiveWidth) / 2f;
+    float yOffset = (imageHeight / 2f) - (effectiveHeight / 2f);
 
-      ball.getImage().setY(target.getY() + target.getHeight());
+    Rectangle targetRect =
+        new Rectangle(
+            target.getX() + xOffset, target.getY() + yOffset, effectiveWidth, effectiveHeight);
+
+    if (ballRect.overlaps(targetRect)) {
+      if (ball.getVelocityY() < 0) {
+        ball.reverseY();
+        float repositionY = target.getY() + yOffset + effectiveHeight + 2f;
+        ball.getImage().setY(repositionY);
+      }
     }
   }
 }

@@ -26,6 +26,12 @@ public class AdvanceAutoDelayState implements ActionState {
     elapsed += dtMs;
   }
 
+  /** Triggered on skip, will fast track any logic to its final state */
+  @Override
+  public void skip() {
+    // Not implemented
+  }
+
   /**
    * Checks if the action is blocking till completion (false if async)
    *

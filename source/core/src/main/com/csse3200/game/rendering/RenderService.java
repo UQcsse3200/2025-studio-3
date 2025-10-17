@@ -62,18 +62,38 @@ public class RenderService implements Disposable {
     }
   }
 
+  /**
+   * Set the stage.
+   *
+   * @param stage the stage
+   */
   public void setStage(Stage stage) {
     this.stage = stage;
   }
 
+  /**
+   * Get the stage.
+   *
+   * @return the stage
+   */
   public Stage getStage() {
     return stage;
   }
 
+  /**
+   * Set the debug renderer.
+   *
+   * @param debugRenderer the debug renderer
+   */
   public void setDebug(DebugRenderer debugRenderer) {
     this.debugRenderer = debugRenderer;
   }
 
+  /**
+   * Get the debug renderer.
+   *
+   * @return the debug renderer
+   */
   public DebugRenderer getDebug() {
     return debugRenderer;
   }

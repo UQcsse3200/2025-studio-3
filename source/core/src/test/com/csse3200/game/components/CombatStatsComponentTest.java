@@ -23,6 +23,18 @@ class CombatStatsComponentTest {
   }
 
   @Test
+  void shouldSetGetMaxHealth() {
+    CombatStatsComponent combat1 = new CombatStatsComponent(100, 20);
+    assertEquals(100, combat1.getMaxHealth());
+
+    CombatStatsComponent combat2 = new CombatStatsComponent(150, 20);
+    assertEquals(150, combat2.getMaxHealth());
+
+    CombatStatsComponent combat3 = new CombatStatsComponent(-50, 20);
+    assertEquals(0, combat3.getMaxHealth());
+  }
+
+  @Test
   void shouldCheckIsDead() {
     CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertFalse(combat.isDead());
@@ -43,6 +55,16 @@ class CombatStatsComponentTest {
   }
 
   @Test
+  void shouldNotChangeMaxHealth() {
+    CombatStatsComponent combat = new CombatStatsComponent(100, 20);
+    combat.addHealth(-500);
+    assertEquals(100, combat.getMaxHealth());
+
+    combat.setHealth(50);
+    assertEquals(100, combat.getMaxHealth());
+  }
+
+  @Test
   void shouldSetGetBaseAttack() {
     CombatStatsComponent combat = new CombatStatsComponent(100, 20);
     assertEquals(20, combat.getBaseAttack());
@@ -52,5 +74,21 @@ class CombatStatsComponentTest {
 
     combat.setBaseAttack(-50);
     assertEquals(150, combat.getBaseAttack());
+  }
+
+  @Test
+  void shouldLowerHealthOnHit() {
+    CombatStatsComponent defender = new CombatStatsComponent(5, 0);
+    CombatStatsComponent attacker = new CombatStatsComponent(100, 3);
+
+    assertEquals(5, defender.getHealth());
+
+    defender.hit(attacker);
+    assertEquals(2, defender.getHealth());
+    assertFalse(defender.isDead());
+
+    defender.hit(attacker);
+    assertEquals(0, defender.getHealth());
+    assertTrue(defender.isDead());
   }
 }

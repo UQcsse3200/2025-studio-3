@@ -1,9 +1,6 @@
 package com.csse3200.game.components.currency;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -19,21 +16,18 @@ public class ScrapHudDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-
+    float width = stage.getViewport().getWorldWidth();
     Texture sunTex =
         ServiceLocator.getResourceService()
             .getAsset("images/entities/currency/scrap_metal.png", Texture.class);
     Image sunIcon = new Image(sunTex);
-    sunIcon.setSize(22f, 22f);
 
-    Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.BLACK);
-    amountLabel = new Label(String.valueOf(ServiceLocator.getCurrencyService().get()), style);
-    amountLabel.setFontScale(3f);
+    amountLabel = ui.heading(String.valueOf(ServiceLocator.getCurrencyService().get()));
 
     table = new Table();
     table.setFillParent(true);
-    table.top().left().padTop(48f).padLeft(14f);
-    table.add(sunIcon).padRight(6f);
+    table.top().left().padTop(100f).padLeft(0.015f * width);
+    table.add(sunIcon).size(40f, 40f).padRight(8f);
     table.add(amountLabel);
 
     Stage stage = ServiceLocator.getRenderService().getStage();
@@ -44,11 +38,6 @@ public class ScrapHudDisplay extends UIComponent {
   public void update() {
     CurrencyService cs = ServiceLocator.getCurrencyService();
     amountLabel.setText(String.valueOf(cs.get()));
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // No drawing needed
   }
 
   @Override

@@ -1,5 +1,6 @@
 package com.csse3200.game.services;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.dialog.AchievementDialogComponent;
 import com.csse3200.game.components.dialog.DialogComponent;
 import com.csse3200.game.entities.Entity;
@@ -17,6 +18,9 @@ public class DialogService {
   private static final Logger logger = LoggerFactory.getLogger(DialogService.class);
   private final List<DialogComponent> activeDialogs = new ArrayList<>();
   private final List<AchievementDialogComponent> activeAchievementDialogs = new ArrayList<>();
+  private Sound dialogSound;
+  private Sound errorSound;
+  private Sound achievementUnlockSound;
 
   /** Enum for the different types of dialogs. */
   public enum DialogType {
@@ -35,6 +39,22 @@ public class DialogService {
   /** Creates a new dialog service. */
   public DialogService() {
     logger.debug("[DialogService] Dialog service created");
+    initSounds();
+  }
+
+  /** Initializes sound assets for the dialog service. */
+  private void initSounds() {
+    try {
+      dialogSound =
+          ServiceLocator.getGlobalResourceService().getAsset("sounds/dialog.mp3", Sound.class);
+      errorSound =
+          ServiceLocator.getGlobalResourceService().getAsset("sounds/error.mp3", Sound.class);
+      achievementUnlockSound =
+          ServiceLocator.getGlobalResourceService()
+              .getAsset("sounds/achievement_unlock.mp3", Sound.class);
+    } catch (Exception e) {
+      logger.debug("[DialogService] Dialog sound assets not loaded yet.");
+    }
   }
 
   /**
@@ -57,6 +77,11 @@ public class DialogService {
    * @return the created dialog component
    */
   public DialogComponent info(String title, String message, Consumer<DialogComponent> onClose) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (dialogSound == null) {
+      initSounds();
+    }
+    dialogSound.play(volume);
     return createAndShowDialog(DialogType.INFO, title, message, null, null, onClose);
   }
 
@@ -85,6 +110,11 @@ public class DialogService {
       String message,
       Consumer<DialogComponent> onConfirm,
       Consumer<DialogComponent> onCancel) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (dialogSound == null) {
+      initSounds();
+    }
+    dialogSound.play(volume);
     return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
   }
 
@@ -108,6 +138,11 @@ public class DialogService {
    * @return the created dialog component
    */
   public DialogComponent error(String title, String message, Consumer<DialogComponent> onClose) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (errorSound == null) {
+      initSounds();
+    }
+    errorSound.play(volume);
     return createAndShowDialog(DialogType.ERROR, title, message, null, null, onClose);
   }
 
@@ -136,6 +171,11 @@ public class DialogService {
       String message,
       Consumer<DialogComponent> onUnlock,
       Consumer<DialogComponent> onClose) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (dialogSound == null) {
+      initSounds();
+    }
+    dialogSound.play(volume);
     return createAndShowDialog(DialogType.SKILL, title, message, onUnlock, null, onClose);
   }
 
@@ -263,8 +303,14 @@ public class DialogService {
    */
   public AchievementDialogComponent achievement(
       String name, String description, int skillPoints, String tier) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (achievementUnlockSound == null) {
+      initSounds();
+    }
+    achievementUnlockSound.play(volume);
     AchievementDialogComponent dialogComponent =
-        new AchievementDialogComponent(name, description, skillPoints, tier != null ? tier : "T1");
+        new AchievementDialogComponent(
+            name.toUpperCase(), description.toUpperCase(), skillPoints, tier != null ? tier : "T1");
     Entity dialogEntity = new Entity();
     dialogEntity.addComponent(dialogComponent);
     ServiceLocator.getEntityService().register(dialogEntity);

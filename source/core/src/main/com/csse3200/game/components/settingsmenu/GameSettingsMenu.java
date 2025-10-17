@@ -1,7 +1,6 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -11,11 +10,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.ButtonFactory;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.HashMap;
 import java.util.Map;
+import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,70 +55,66 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.setFillParent(true);
     rootTable.center(); // Center the entire table content
 
-    // Create title
-    Label title = TypographyFactory.createTitle("Game Settings");
-    rootTable.add(title).padTop(30f).center().colspan(2);
-    rootTable.row().padTop(30f);
+    // Create title with proper UI scaling
+    Label title = ui.title("Game Settings");
+    float uiScale = ui.getUIScale();
+    rootTable.add(title).padTop(30f * uiScale).center().colspan(2);
+    rootTable.row().padTop(30f * uiScale);
 
     Settings settings = ServiceLocator.getSettingsService().getSettings();
 
-    Label pauseLabel = new Label("Pause Key:", skin);
+    // Create labels using UIFactory
+    Label pauseLabel = ui.subheading("Pause Key:");
     keybinds.put(PAUSE_KEY, settings.getPauseButton());
-    TextField pauseKeyText = new TextField(Input.Keys.toString(settings.getPauseButton()), skin);
+    TextField pauseKeyText = ui.createTextField(Input.Keys.toString(settings.getPauseButton()));
     pauseKeyText.setName(PAUSE_KEY);
-    whiten(pauseLabel);
     setupKeybindTextField(pauseKeyText);
 
-    Label skipLabel = new Label("Skip Key:", skin);
+    Label skipLabel = ui.subheading("Skip Key:");
     keybinds.put(SKIP_KEY, settings.getSkipButton());
-    TextField skipKeyText = new TextField(Input.Keys.toString(settings.getSkipButton()), skin);
+    TextField skipKeyText = ui.createTextField(Input.Keys.toString(settings.getSkipButton()));
     skipKeyText.setName(SKIP_KEY);
-    whiten(skipLabel);
     setupKeybindTextField(skipKeyText);
 
-    Label interactionLabel = new Label("Interaction Key:", skin);
+    Label interactionLabel = ui.subheading("Interaction Key:");
     keybinds.put(INTERACTION_KEY, settings.getInteractionButton());
     TextField interactionKeyText =
-        new TextField(Input.Keys.toString(settings.getInteractionButton()), skin);
+        ui.createTextField(Input.Keys.toString(settings.getInteractionButton()));
     interactionKeyText.setName(INTERACTION_KEY);
-    whiten(interactionLabel);
     setupKeybindTextField(interactionKeyText);
 
-    Label upLabel = new Label("Up Key:", skin);
+    Label upLabel = ui.subheading("Up Key:");
     keybinds.put(UP_KEY, settings.getUpButton());
-    TextField upKeyText = new TextField(Input.Keys.toString(settings.getUpButton()), skin);
+    TextField upKeyText = ui.createTextField(Input.Keys.toString(settings.getUpButton()));
     upKeyText.setName(UP_KEY);
-    whiten(upLabel);
     setupKeybindTextField(upKeyText);
 
-    Label downLabel = new Label("Down Key:", skin);
+    Label downLabel = ui.subheading("Down Key:");
     keybinds.put(DOWN_KEY, settings.getDownButton());
-    TextField downKeyText = new TextField(Input.Keys.toString(settings.getDownButton()), skin);
+    TextField downKeyText = ui.createTextField(Input.Keys.toString(settings.getDownButton()));
     downKeyText.setName(DOWN_KEY);
-    whiten(downLabel);
     setupKeybindTextField(downKeyText);
 
-    Label leftLabel = new Label("Left Key:", skin);
+    Label leftLabel = ui.subheading("Left Key:");
     keybinds.put(LEFT_KEY, settings.getLeftButton());
-    TextField leftKeyText = new TextField(Input.Keys.toString(settings.getLeftButton()), skin);
+    TextField leftKeyText = ui.createTextField(Input.Keys.toString(settings.getLeftButton()));
     leftKeyText.setName(LEFT_KEY);
-    whiten(leftLabel);
     setupKeybindTextField(leftKeyText);
 
-    Label rightLabel = new Label("Right Key:", skin);
+    Label rightLabel = ui.subheading("Right Key:");
     keybinds.put(RIGHT_KEY, settings.getRightButton());
-    TextField rightKeyText = new TextField(Input.Keys.toString(settings.getRightButton()), skin);
+    TextField rightKeyText = ui.createTextField(Input.Keys.toString(settings.getRightButton()));
     rightKeyText.setName(RIGHT_KEY);
-    whiten(rightLabel);
     setupKeybindTextField(rightKeyText);
 
-    Label difficultyLabel = new Label("Difficulty:", skin);
-    difficultySelect = new SelectBox<>(skin);
-    difficultySelect.setItems("EASY", "NORMAL", "HARD");
+    Label difficultyLabel = ui.subheading("Difficulty:");
+    difficultySelect = ui.createSelectBox(new String[] {"EASY", "NORMAL", "HARD"});
     difficultySelect.setSelected(settings.getDifficulty().toString());
-    whiten(difficultyLabel);
 
-    TextButton applyBtn = ButtonFactory.createButton("Apply");
+    // Create apply button using UIFactory
+    int buttonWidth = 150;
+    TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
         new ChangeListener() {
           @Override
@@ -131,43 +125,48 @@ public class GameSettingsMenu extends UIComponent {
           }
         });
 
-    rootTable.add(pauseLabel).left().padRight(20f);
-    rootTable.add(pauseKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    // Layout with proper UI scaling
+    rootTable.add(pauseLabel).left().padRight(20f * uiScale);
+    rootTable.add(pauseKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(skipLabel).left().padRight(25f);
-    rootTable.add(skipKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(skipLabel).left().padRight(25f * uiScale);
+    rootTable.add(skipKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(interactionLabel).left().padRight(25f);
-    rootTable.add(interactionKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(interactionLabel).left().padRight(25f * uiScale);
+    rootTable.add(interactionKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(upLabel).left().padRight(25f);
-    rootTable.add(upKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(upLabel).left().padRight(25f * uiScale);
+    rootTable.add(upKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(downLabel).left().padRight(25f);
-    rootTable.add(downKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(downLabel).left().padRight(25f * uiScale);
+    rootTable.add(downKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(leftLabel).left().padRight(25f);
-    rootTable.add(leftKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(leftLabel).left().padRight(25f * uiScale);
+    rootTable.add(leftKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(rightLabel).left().padRight(25f);
-    rootTable.add(rightKeyText).width(150f).center();
-    rootTable.row().padTop(10f);
+    rootTable.add(rightLabel).left().padRight(25f * uiScale);
+    rootTable.add(rightKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(difficultyLabel).left().padRight(25f);
-    rootTable.add(difficultySelect).width(150f).center();
-    rootTable.row().padTop(20f);
+    rootTable.add(difficultyLabel).left().padRight(25f * uiScale);
+    rootTable.add(difficultySelect).width(150f * uiScale).center();
+    rootTable.row().padTop(20f * uiScale);
     stage.addActor(rootTable);
 
     bottomRow = new Table();
     bottomRow.setFillParent(true);
-    bottomRow.bottom().padBottom(20f);
-    bottomRow.add(applyBtn).size(150f, 50f).center();
+    bottomRow.bottom().padBottom(20f * uiScale);
+    bottomRow
+        .add(applyBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .center();
     stage.addActor(bottomRow);
   }
 
@@ -277,17 +276,5 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.clear();
     bottomRow.clear();
     super.dispose();
-  }
-
-  /**
-   * Whiten the label.
-   *
-   * @param label The label to whiten.
-   */
-  private static void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
-    logger.debug("Labels are white");
   }
 }

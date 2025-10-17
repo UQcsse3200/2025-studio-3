@@ -18,6 +18,8 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.ui.terminal.Terminal;
+import com.csse3200.game.ui.terminal.TerminalDisplay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +31,7 @@ public class ShopScreen extends ScreenAdapter {
     "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
   };
   private String[] itemTextures;
+  private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
 
   /**
    * Initialises the shop screen.
@@ -82,6 +85,8 @@ public class ShopScreen extends ScreenAdapter {
   /** Loads the shop screen's assets. */
   private void loadAssets() {
     ServiceLocator.getResourceService().loadTextures(shopTextures);
+    ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
+    ServiceLocator.getResourceService().loadSounds(SHOP_SOUNDS);
     logger.debug("Loading shop assets");
     ConfigService configService = ServiceLocator.getConfigService();
     if (configService == null) {
@@ -116,7 +121,10 @@ public class ShopScreen extends ScreenAdapter {
         .addComponent(new InputDecorator(stage, 10))
         .addComponent(new WorldMapNavigationMenu())
         .addComponent(new WorldMapNavigationMenuActions(this.game))
-        .addComponent(new AnimatedDropdownMenu());
+        .addComponent(new AnimatedDropdownMenu())
+        .addComponent(new Terminal())
+        .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
+        .addComponent(new TerminalDisplay());
     ServiceLocator.getEntityService().register(ui);
   }
 }

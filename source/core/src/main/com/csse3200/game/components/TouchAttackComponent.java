@@ -73,10 +73,14 @@ public class TouchAttackComponent extends Component {
         targetStats = target.getComponent(GeneratorStatsComponent.class);
       }
     }
+    if (targetStats == null) {
+      targetStats = target.getComponent(GeneratorStatsComponent.class);
+    }
 
     if (targetStats != null) {
       targetStats.hit(combatStats);
       target.getEvents().trigger("hitMarker", target);
+      entity.getEvents().trigger("attack", target);
     }
 
     // Knockback

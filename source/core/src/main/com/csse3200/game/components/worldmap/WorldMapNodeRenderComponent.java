@@ -1,6 +1,7 @@
 package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
@@ -11,6 +12,9 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
+import com.csse3200.game.services.WorldMapService;
+import com.csse3200.game.services.WorldMapService.PathDef;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
 import java.util.ArrayList;
@@ -58,8 +62,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private static final float MIN_H_FACTOR = 1.35f;
 
   // local JSON cache: nodeKey -> (dir -> PathDef)
-  private final Map<String, Map<String, com.csse3200.game.services.WorldMapService.PathDef>>
-      localPaths = new HashMap<>();
+  private final Map<String, Map<String, WorldMapService.PathDef>> localPaths = new HashMap<>();
 
   /**
    * Constructor for the world map node render component.
@@ -140,8 +143,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       // Skip missing assets
     }
 
-    font = new BitmapFont();
-    font.getData().setScale(FONT_SCALE);
+    font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
   }
 
   /**
@@ -208,55 +210,64 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     // arrows + labels strictly by next
     String key = node.getRegistrationKey();
 
-    // W
+    // Get key names from settings service
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
+    String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
+    String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
+    String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
+
+    // Up
     drawDirWithLabel(
         batch,
         keyUp,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
         getLocalPath(key, "W"),
-        "W",
+        upKeyName,
         new Vector2(0f, +1f));
-    // S
+    // Down
     drawDirWithLabel(
         batch,
         keyDown,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
         getLocalPath(key, "S"),
-        "S",
+        downKeyName,
         new Vector2(0f, -1f));
-    // A
+    // Left
     drawDirWithLabel(
         batch,
         keyLeft,
         new Vector2(cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
         getLocalPath(key, "A"),
-        "A",
+        leftKeyName,
         new Vector2(-1f, 0f));
-    // D
+    // Right
     drawDirWithLabel(
         batch,
         keyRight,
         new Vector2(cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
         getLocalPath(key, "D"),
-        "D",
+        rightKeyName,
         new Vector2(+1f, 0f));
 
     if (font != null && showPrompt) {
-      String hint = "Press E to Enter";
+      // Get interaction key name from settings service
+      String interactionKeyName =
+          Input.Keys.toString(settingsService.getSettings().getInteractionButton());
+      String hint = "Press " + interactionKeyName + " to Enter";
       float sY = cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f;
+
+      // Check if there's a down option - if not, move the hint 20px higher
+      boolean hasDownOption = getLocalPath(key, "S") != null;
+      float verticalOffset = hasDownOption ? 0f : 20f;
+
       float oldScale = font.getData().scaleX;
       font.getData().setScale(FONT_SCALE * 0.90f);
       GlyphLayout hl = new GlyphLayout(font, hint);
 
       float tx = cx - hl.width * 0.5f;
-      float ty = sY - LABEL_GAP - hl.height - 14f;
+      float ty = sY - LABEL_GAP - hl.height - 14f + verticalOffset;
 
-      font.setColor(1f, 1f, 1f, 1f);
-      font.setColor(0f, 0f, 0f, 1f);
-      font.draw(batch, hint, tx + 2, ty - 2);
-      font.draw(batch, hint, tx - 2, ty - 2);
-      font.draw(batch, hint, tx + 2, ty + 2);
-      font.draw(batch, hint, tx - 2, ty + 2);
       font.setColor(1f, 1f, 1f, 1f);
       font.draw(batch, hint, tx, ty);
       font.getData().setScale(oldScale);
@@ -310,68 +321,75 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   }
 
   private void drawDirWithLabel(
-      SpriteBatch batch,
-      Texture tex,
-      Vector2 pos,
-      com.csse3200.game.services.WorldMapService.PathDef def,
-      String dir,
-      Vector2 labelOffset) {
+      SpriteBatch batch, Texture tex, Vector2 pos, PathDef def, String dir, Vector2 labelOffset) {
 
     if (tex == null) return;
 
     // 1) Draw keycap
     batch.setColor(1f, 1f, 1f, def == null ? 0.35f : 1f);
-    TextureRegion r = regionFor(tex);
-
-    batch.draw(r != null ? r : new TextureRegion(tex), pos.x, pos.y, ARROW_SIZE, ARROW_SIZE);
+    TextureRegion keyRegion = regionFor(tex);
+    batch.draw(
+        keyRegion != null ? keyRegion : new TextureRegion(tex),
+        pos.x,
+        pos.y,
+        ARROW_SIZE,
+        ARROW_SIZE);
     batch.setColor(1f, 1f, 1f, 1f);
 
     // 2) Center Letter
     if (font != null) {
-      float old = font.getData().scaleX;
-      font.getData().setScale(FONT_SCALE * 1.10f);
-      GlyphLayout g = new GlyphLayout(font, dir);
-      float cx = pos.x + ARROW_SIZE * 0.5f - g.width * 0.5f;
-      float cy = pos.y + ARROW_SIZE * 0.56f + g.height * 0.45f;
-      font.setColor(1f, 1f, 1f, def == null ? 0.55f : 1f);
-      drawOutlinedText(batch, dir, cx, cy);
-      font.getData().setScale(old);
+      drawCenterLetter(batch, pos, dir, def);
     }
 
-    if (def == null || font == null || labelBg == null) return;
+    // 3) Draw label if path exists
+    if (def != null && font != null && labelBg != null) {
+      drawPathLabel(batch, pos, def, labelOffset);
+    }
+  }
 
-    // 3) Frame size
-    String name = resolveDisplayName(def.getNext());
-    float old2 = font.getData().scaleX;
+  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, PathDef def) {
+    float originalScale = font.getData().scaleX;
+    font.getData().setScale(FONT_SCALE * 1.10f);
+
+    GlyphLayout glyphLayout = new GlyphLayout(font, dir);
+    float centerX = pos.x + ARROW_SIZE * 0.5f - glyphLayout.width * 0.5f;
+    float centerY = pos.y + ARROW_SIZE * 0.56f + glyphLayout.height * 0.45f;
+
+    font.setColor(1f, 1f, 1f, def == null ? 0.55f : 1f);
+    drawOutlinedText(batch, dir, centerX, centerY);
+    font.getData().setScale(originalScale);
+  }
+
+  private void drawPathLabel(SpriteBatch batch, Vector2 pos, PathDef def, Vector2 labelOffset) {
+    String nodeName = resolveDisplayName(def.getNext());
+    float originalScale = font.getData().scaleX;
     font.getData().setScale(FONT_SCALE * 0.90f);
-    GlyphLayout gl = new GlyphLayout(font, name);
 
-    float bgW = Math.max(gl.width + LABEL_PAD_X * 2f, ARROW_SIZE * MIN_W_FACTOR);
-    float bgH = Math.max(gl.height + LABEL_PAD_Y * 2f, ARROW_SIZE * MIN_H_FACTOR);
+    GlyphLayout nameLayout = new GlyphLayout(font, nodeName);
+    float backgroundWidth =
+        Math.max(nameLayout.width + LABEL_PAD_X * 2f, ARROW_SIZE * MIN_W_FACTOR);
+    float backgroundHeight =
+        Math.max(nameLayout.height + LABEL_PAD_Y * 2f, ARROW_SIZE * MIN_H_FACTOR);
 
-    // 4) Edge positioning
+    // Calculate label position
+    float labelX = pos.x + ARROW_SIZE * 0.5f;
+    float labelY = pos.y + ARROW_SIZE * 0.5f;
+
     float sideX = Math.signum(labelOffset.x);
     float sideY = Math.signum(labelOffset.y);
 
-    float midX = pos.x + ARROW_SIZE * 0.5f;
-    float midY = pos.y + ARROW_SIZE * 0.5f;
+    if (sideX > 0f) labelX = pos.x + ARROW_SIZE + NAME_GAP + backgroundWidth * 0.5f;
+    else if (sideX < 0f) labelX = pos.x - NAME_GAP - backgroundWidth * 0.5f;
+    if (sideY > 0f)
+      labelY = pos.y + ARROW_SIZE + (NAME_GAP - VISUAL_TRIM_Y) + backgroundHeight * 0.5f;
+    else if (sideY < 0f) labelY = pos.y - (NAME_GAP - VISUAL_TRIM_Y) - backgroundHeight * 0.5f;
 
-    if (sideX > 0f) midX = pos.x + ARROW_SIZE + NAME_GAP + bgW * 0.5f;
-    else if (sideX < 0f) midX = pos.x - NAME_GAP - bgW * 0.5f;
-    if (sideY > 0f) midY = pos.y + ARROW_SIZE + (NAME_GAP - VISUAL_TRIM_Y) + bgH * 0.5f;
-    else if (sideY < 0f) midY = pos.y - (NAME_GAP - VISUAL_TRIM_Y) - bgH * 0.5f;
-
-    drawLabel(batch, name, midX, midY, bgW, bgH, gl);
-    font.getData().setScale(old2);
+    drawLabel(batch, nodeName, labelX, labelY, backgroundWidth, backgroundHeight, nameLayout);
+    font.getData().setScale(originalScale);
   }
 
-  // Outlined white text
+  // White text without outline
   private void drawOutlinedText(SpriteBatch b, String t, float x, float y) {
-    font.setColor(0f, 0f, 0f, 1f);
-    font.draw(b, t, x + 2f, y - 2f);
-    font.draw(b, t, x - 2f, y - 2f);
-    font.draw(b, t, x + 2f, y + 2f);
-    font.draw(b, t, x - 2f, y + 2f);
     font.setColor(1f, 1f, 1f, 1f);
     font.draw(b, t, x, y);
   }
@@ -392,11 +410,11 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
     for (JsonValue nodeEntry = nodesRoot.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
       String nodeKey = nodeEntry.name();
-      Map<String, com.csse3200.game.services.WorldMapService.PathDef> dirMap = new HashMap<>();
+      Map<String, WorldMapService.PathDef> dirMap = new HashMap<>();
 
       for (JsonValue keyEntry = nodeEntry.child(); keyEntry != null; keyEntry = keyEntry.next()) {
         String dir = keyEntry.name();
-        var def = new com.csse3200.game.services.WorldMapService.PathDef();
+        var def = new WorldMapService.PathDef();
         def.setNext(keyEntry.getString("next"));
         def.setWaypoints(new ArrayList<>());
         JsonValue pathArr = keyEntry.get("path");
@@ -414,9 +432,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   }
 
   // Get path def
-  private com.csse3200.game.services.WorldMapService.PathDef getLocalPath(
-      String nodeKey, String dir) {
-    Map<String, com.csse3200.game.services.WorldMapService.PathDef> m = localPaths.get(nodeKey);
+  private WorldMapService.PathDef getLocalPath(String nodeKey, String dir) {
+    Map<String, WorldMapService.PathDef> m = localPaths.get(nodeKey);
     return m == null ? null : m.get(dir);
   }
 

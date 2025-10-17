@@ -60,6 +60,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
     renderer = RenderFactory.createRenderer();
     this.laneManager = new LaneManager(Gdx.graphics.getWidth());
+    ServiceLocator.getMusicService().play("sounds/background-music/level3_music.mp3");
     loadAssets();
     createUI();
     initializeObstacles();
@@ -125,7 +126,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
   }
 
   private void createScoreUI(Stage stage) {
-    com.badlogic.gdx.graphics.g2d.BitmapFont font = new BitmapFont();
+    BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
     Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
 
     scoreLabel = new Label("Score: 0", labelStyle);

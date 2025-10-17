@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.ui.TypographyFactory;
 import com.csse3200.game.ui.UIComponent;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ public class AchievementDialogComponent extends UIComponent {
   private Window dialog;
   private boolean isVisible = false;
   private Consumer<AchievementDialogComponent> onCompletion;
+  private float uiScale = ui.getUIScale();
 
   /**
    * Creates a new achievement dialog for the specified achievement.
@@ -73,7 +73,7 @@ public class AchievementDialogComponent extends UIComponent {
       dialog = new Window("", windowStyle);
     }
 
-    dialog.setSize(400f, 200f);
+    dialog.setSize(400f * uiScale, 200f * uiScale);
     dialog.setMovable(false);
     dialog.setModal(false); // Don't block interaction
 
@@ -82,24 +82,27 @@ public class AchievementDialogComponent extends UIComponent {
     Table textTable = new Table();
 
     // Achievement unlocked header
-    Label headerLabel = TypographyFactory.createSubtitle("Achievement Unlocked!", Color.GOLD);
+    Label headerLabel = ui.subheading("Achievement Unlocked!");
+    headerLabel.setColor(Color.GOLD);
     headerLabel.setAlignment(Align.left);
     textTable.add(headerLabel).left().row();
 
     // Achievement name
-    Label nameLabel = TypographyFactory.createParagraph(name, Color.WHITE);
+    Label nameLabel = ui.text(name);
     nameLabel.setAlignment(Align.left);
     textTable.add(nameLabel).left().padTop(2f).row();
 
     // Achievement description
-    Label descLabel = TypographyFactory.createCustomSize(description, 14, Color.LIGHT_GRAY);
+    Label descLabel = ui.subtext(description);
+    descLabel.setColor(Color.LIGHT_GRAY);
     descLabel.setWrap(true);
     descLabel.setAlignment(Align.left);
-    textTable.add(descLabel).width(320f).left().padTop(2f).row();
+    textTable.add(descLabel).width(320f * uiScale).left().padTop(2f).row();
 
     // Tier information
     if (tier != null && !tier.isEmpty()) {
-      Label tierLabel = TypographyFactory.createCustomSize("Tier: " + tier, 12, Color.YELLOW);
+      Label tierLabel = ui.subtext("Tier: " + tier);
+      tierLabel.setColor(Color.YELLOW);
       tierLabel.setAlignment(Align.left);
       textTable.add(tierLabel).left().padTop(2f).row();
     }
@@ -116,16 +119,15 @@ public class AchievementDialogComponent extends UIComponent {
         if (skillPointTexture != null) {
           Drawable skillPointDrawable = new TextureRegionDrawable(skillPointTexture);
           Image skillPointIcon = new Image(skillPointDrawable);
-          skillPointTable.add(skillPointIcon).size(12f, 12f).padRight(3f);
+          skillPointTable.add(skillPointIcon).size(12f * uiScale, 12f * uiScale).padRight(3f);
         }
       } catch (Exception e) {
         logger.debug(
             "[AchievementDialogComponent] Could not load skill point texture: {}", e.getMessage());
         // Continue without icon
       }
-
-      Label pointsLabel =
-          TypographyFactory.createCustomSize("+" + skillPoints + " Skill Points", 12, Color.CYAN);
+      Label pointsLabel = ui.subtext("+" + skillPoints + " Skill Points");
+      pointsLabel.setColor(Color.CYAN);
       pointsLabel.setAlignment(Align.left);
       skillPointTable.add(pointsLabel);
       textTable.add(skillPointTable).left().padTop(2f).row();
@@ -193,6 +195,7 @@ public class AchievementDialogComponent extends UIComponent {
   }
 
   /** Handles window resize by repositioning the dialog to bottom right. */
+  @Override
   public void resize() {
     if (dialog != null && isVisible) {
       centerDialog();

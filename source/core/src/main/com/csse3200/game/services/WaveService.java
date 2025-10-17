@@ -5,7 +5,10 @@ import com.csse3200.game.entities.WaveConfigProvider;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
+import com.csse3200.game.entities.factories.BossFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import java.util.*;
+import java.util.LinkedList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +18,7 @@ public class WaveService implements WaveConfigProvider {
 
   private int currentWave = 0;
   private String currentLevelKey = "LevelOne";
-  private List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
+  private final List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
   private int enemiesDisposed = 0;
@@ -23,12 +26,14 @@ public class WaveService implements WaveConfigProvider {
   private boolean waveActive = false;
 
   private boolean preparationPhaseActive = false;
-  private static final float PREPERATION_PHASE_DURATION = 5.0f;
+  private static final float PREPARATION_PHASE_DURATION = 5.0f;
   private float preparationPhaseTimer = 0.0f;
   private final EntitySpawn entitySpawn;
 
   public interface EnemySpawnCallback {
-    void spawnEnemy(int col, int row, String robotType);
+    void spawnEnemy(int col, int row, RobotFactory.RobotType robotType);
+
+    void spawnBoss(int row, BossFactory.BossTypes bossType);
   }
 
   public interface WaveEventListener {
@@ -47,6 +52,9 @@ public class WaveService implements WaveConfigProvider {
 
   private boolean levelComplete = false;
   private BaseLevelConfig levelConfig;
+
+  private boolean bossActive = false;
+  private final Queue<BossFactory.BossTypes> bossSpawnQueue = new LinkedList<>();
 
   /** Creates new WaveService that creates its own WaveService */
   public WaveService() {
@@ -89,9 +97,15 @@ public class WaveService implements WaveConfigProvider {
    * @param deltaTime time elapsed since last update in seconds
    */
   public void update(float deltaTime) {
+    if (!bossSpawnQueue.isEmpty()) {
+      BossFactory.BossTypes bossToSpawn = bossSpawnQueue.poll();
+      if (enemySpawnCallback != null) {
+        enemySpawnCallback.spawnBoss(2, bossToSpawn);
+      }
+    }
     if (preparationPhaseActive) {
       preparationPhaseTimer += deltaTime;
-      if (preparationPhaseTimer >= PREPERATION_PHASE_DURATION) {
+      if (preparationPhaseTimer >= PREPARATION_PHASE_DURATION) {
         startWave();
       }
       return;
@@ -123,13 +137,35 @@ public class WaveService implements WaveConfigProvider {
     currentWave = wave;
   }
 
+  public void debugSetCurrentWave(int wave) {
+    currentWave = wave - 1;
+    initialiseNewWave();
+  }
+
   /** Tells WaveService to start spawning the next wave */
   public void initialiseNewWave() {
+    // Don't start new waves if level is complete
     if (levelComplete) {
       logger.info("Level complete - no more waves will spawn");
     }
 
     setCurrentWave(currentWave + 1);
+
+    if (currentWave == 1) {
+      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
+      bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
+      bossActive = true;
+    } else if (currentWave == 2) {
+      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
+      bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
+      bossActive = true;
+    } else if (currentWave == 3) {
+      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
+      bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
+      bossActive = true;
+    }
+
+    waveActive = false;
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -174,9 +210,23 @@ public class WaveService implements WaveConfigProvider {
         levelComplete = true;
         waveActive = false;
       }
-
-      endWave();
     }
+  }
+
+  /** Called when a boss is defeated. This immediately ends the current wave and starts the next. */
+  public void onBossDefeated() {
+    logger.info("Boss defeated! Wave {} is now complete.", currentWave);
+    bossActive = false;
+
+    int maxWaves = getCurrentLevelWaveCount();
+    if (currentWave >= maxWaves) {
+      logger.info("Final boss defeated! Level complete!");
+      levelComplete = true;
+      waveActive = false;
+      return;
+    }
+
+    endWave();
   }
 
   public void endWave() {
@@ -202,11 +252,11 @@ public class WaveService implements WaveConfigProvider {
     if (!preparationPhaseActive) {
       return 0.0f;
     }
-    return Math.max(0.0f, PREPERATION_PHASE_DURATION - preparationPhaseTimer);
+    return Math.max(0.0f, PREPARATION_PHASE_DURATION - preparationPhaseTimer);
   }
 
   public float getPreparationPhaseDuration() {
-    return PREPERATION_PHASE_DURATION;
+    return PREPARATION_PHASE_DURATION;
   }
 
   public int getEnemiesDisposed() {
@@ -217,10 +267,17 @@ public class WaveService implements WaveConfigProvider {
     return currentEnemyPos;
   }
 
+  /**
+   * @return true if all waves for the current level have been completed
+   */
   public boolean isLevelComplete() {
     return levelComplete;
   }
 
+  /**
+   * Resets the level state for starting a new level. This should be called when switching to a
+   * different level.
+   */
   public void resetLevel() {
     levelComplete = false;
     setCurrentWave(0);
@@ -231,6 +288,8 @@ public class WaveService implements WaveConfigProvider {
     currentEnemyPos = 0;
     waveLaneSequence.clear();
     waveLanePointer = 0;
+    bossActive = false;
+    bossSpawnQueue.clear();
     logger.info("Level reset - ready for new level");
   }
 
@@ -247,6 +306,8 @@ public class WaveService implements WaveConfigProvider {
     waveLaneSequence.clear();
     waveLanePointer = 0;
     Collections.shuffle(laneOrder);
+    bossActive = false;
+    bossSpawnQueue.clear();
     logger.info("WaveService reset to initial state - ready for new game");
   }
 
@@ -291,7 +352,7 @@ public class WaveService implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-    String robotType = entitySpawn.getNextRobotType();
+    RobotFactory.RobotType robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
   }
@@ -305,16 +366,31 @@ public class WaveService implements WaveConfigProvider {
     return levelConfig != null ? levelConfig.getWaves().size() : 0;
   }
 
+  /**
+   * Returns the configured weight/budget for the current wave.
+   *
+   * @return the configured weight/budget for the current wave
+   */
   public int getWaveWeight() {
     BaseWaveConfig waveConfig = getCurrentWaveConfig();
-    return waveConfig != null ? waveConfig.getWaveWeight() : 20;
+    return waveConfig != null ? waveConfig.getWaveWeight() : 20; // Default fallback
   }
 
+  /**
+   * Returns the minimum number of enemies to spawn for the current wave.
+   *
+   * @return the minimum number of enemies to spawn for the current wave
+   */
   public int getMinZombiesSpawn() {
     BaseWaveConfig waveConfig = getCurrentWaveConfig();
-    return waveConfig != null ? waveConfig.getMinZombiesSpawn() : 5;
+    return waveConfig != null ? waveConfig.getMinZombiesSpawn() : 5; // Default fallback
   }
 
+  /**
+   * Returns the enemy spawn attributes (cost + chance) for the current wave.
+   *
+   * @return the enemy spawn attributes (cost + chance) for the current wave.
+   */
   public Map<String, BaseSpawnConfig> getEnemyConfigs() {
     BaseWaveConfig wave = getCurrentWaveConfig();
 
@@ -325,9 +401,57 @@ public class WaveService implements WaveConfigProvider {
     return wave.getSpawnConfigs();
   }
 
+  @Override
+  public int getTotalWaves() {
+    if (levelConfig != null && levelConfig.getWaves() != null) {
+      return levelConfig.getWaves().size();
+    }
+    return 0;
+  }
+
+  @Override
+  public int getWaveWeight(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      return levelConfig.getWaves().get(waveIndex).getWaveWeight();
+    }
+    // Fallback default
+    return 20;
+  }
+
+  @Override
+  public int getMinZombiesSpawn(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      return levelConfig.getWaves().get(waveIndex).getMinZombiesSpawn();
+    }
+    // Fallback default
+    return 5;
+  }
+
+  @Override
+  public Map<String, BaseSpawnConfig> getEnemyConfigs(int waveIndex) {
+    if (levelConfig != null
+        && levelConfig.getWaves() != null
+        && waveIndex >= 0
+        && waveIndex < levelConfig.getWaves().size()) {
+      Map<String, BaseSpawnConfig> configs =
+          levelConfig.getWaves().get(waveIndex).getSpawnConfigs();
+      if (configs != null) {
+        return configs;
+      }
+    }
+    // Safe empty map if missing
+    return new HashMap<>();
+  }
+
   private BaseWaveConfig getCurrentWaveConfig() {
     int waveNumber = getCurrentWave();
-    int waveIndex = waveNumber - 1;
+    int waveIndex = waveNumber - 1; // Convert to 0-based index
 
     if (levelConfig != null
         && levelConfig.getWaves() != null
