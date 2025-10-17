@@ -10,9 +10,11 @@ import org.slf4j.LoggerFactory;
 public class SpawnRobot implements Command {
   private static final Logger logger = LoggerFactory.getLogger(SpawnRobot.class);
 
+  private static final int DEFAULT_LANE = 0;
+
   /**
-   * Spawns the next robot in the spawn queue in the lane corresponding to the first argument
-   * expressed as an int.
+   * Spawns the specified robot. robot in the spawn queue in the lane corresponding to the first
+   * argument expressed as an int.
    *
    * @return true when successful, otherwise false
    */
@@ -27,27 +29,19 @@ public class SpawnRobot implements Command {
     if (args.isEmpty()) {
       logger.debug("Invalid arguments received for 'spawnRobot' command: {}", args);
       return false;
-    } else if (args.size() == 1) {
-      try {
-        int lane = Integer.parseInt(args.getFirst());
-        waveService.spawnEnemy(lane);
-      } catch (NumberFormatException e) {
-        logger.debug("{} is not a valid number", args.getFirst());
-        return false;
-      }
-    } else if (args.size() == 2) {
+    } else {
       // This will be a standard robot if invalid
       RobotFactory.RobotType robotType = RobotFactory.RobotType.fromString(args.getFirst());
-      try {
-        int lane = Integer.parseInt(args.get(1));
-        waveService.spawnEnemyDebug(lane, robotType);
-      } catch (NumberFormatException e) {
-        logger.debug("{} is not a valid number. Cannot spawn {}", args.get(1), robotType.get());
-        return false;
+      int lane = DEFAULT_LANE;
+      // If the lane isn't specified in the args, just keep the default (0)
+      if (args.size() > 1) {
+        try {
+          lane = Integer.parseInt(args.get(1));
+        } catch (NumberFormatException e) {
+          logger.debug("{} is not a valid number. Defaulting to {}", args.get(1), DEFAULT_LANE);
+        }
       }
-    } else {
-      logger.debug("Invalid number of arguments in spawnRobot. args: {}", args);
-      return false;
+      waveService.spawnEnemyDebug(lane, robotType);
     }
 
     return true;

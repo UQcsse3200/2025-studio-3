@@ -115,7 +115,7 @@ public class WaveService implements WaveConfigProvider {
       timeSinceLastSpawn += deltaTime;
       float spawnInterval = 5.0f;
       if (timeSinceLastSpawn >= spawnInterval) {
-        spawnEnemy(getLane());
+        spawnNextEnemy(getLane());
         timeSinceLastSpawn -= spawnInterval;
       }
     }
@@ -165,7 +165,6 @@ public class WaveService implements WaveConfigProvider {
       bossActive = true;
     }
 
-    waveActive = false;
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -344,7 +343,7 @@ public class WaveService implements WaveConfigProvider {
     return lane;
   }
 
-  public void spawnEnemy(int laneNumber) {
+  public void spawnNextEnemy(int laneNumber) {
     if (currentEnemyPos >= enemiesToSpawn) {
       return;
     }
@@ -358,7 +357,8 @@ public class WaveService implements WaveConfigProvider {
   }
 
   /**
-   * Unlike the regular spawnEnemy function, this does not update the position in the wave
+   * A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+   * function, this does not update the position in the wave
    *
    * @param laneNumber The lane to spawn the enemy in
    * @param robotType The robot type to spawn
