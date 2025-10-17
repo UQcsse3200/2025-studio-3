@@ -112,7 +112,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
     float tileSize = area.getTileSize();
 
-      // done with the help of OpenAI
+    // done with the help of OpenAI
     for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
       offsetFrom.set(from.x, from.y + yOffset);
       end.set(offsetFrom).mulAdd(castDir, attackRange);
