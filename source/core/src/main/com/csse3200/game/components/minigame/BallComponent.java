@@ -5,6 +5,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.Random;
 
 /**
  * Component for the ball in the minigame.
@@ -17,6 +18,10 @@ public class BallComponent extends Component {
   private int ballsHit;
   private static final float INITIAL_X_SPEED = 300f;
   private static final float INITIAL_Y_SPEED = 300f;
+  private float mu = 1f;
+  private float sigma = 0.1f;
+  private float decayFactor = 1f;
+  private final Random random = new Random();
 
   /**
    * Creates a new BallComponent.
@@ -55,13 +60,29 @@ public class BallComponent extends Component {
   }
 
   /**
+   * Generates a random number from a Gaussian distribution that is truncated with repeated draws.
+   * 
+   * @return a random number from a Gaussian distribution
+   */
+  private float randomizer() {
+    float res = Float.MAX_VALUE;
+    while (res > 1.5f * this.mu || res < 0.3f * this.mu) {
+      res = (float) (this.mu + this.sigma * random.nextGaussian()); 
+    }
+    return res;
+  }
+
+  /**
    * Reverses the ball's Y velocity and updates the score and balls hit.
    */
   public void hitPaddle() {
     velocity.y *= -1;
     score++;
     ballsHit++;
-    speedMultiplier += 0.1f;
+    this.mu += 0.1f*decayFactor;
+    this.sigma += 0.1f*decayFactor;
+    this.decayFactor *= 0.9f;
+    speedMultiplier = randomizer();
   }
 
   @Override
