@@ -17,7 +17,7 @@ class SpawnRobotTest {
   private SpawnRobot spawnRobot;
   private WaveService mockWaveService;
   private ArrayList<String> args;
-  private final int DEFAULT_LANE = 0;
+  private static final int DEFAULT_LANE = 0;
 
   @BeforeEach
   void setUp() {
