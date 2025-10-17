@@ -589,7 +589,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void checkGameOverAddsFreezeReason() throws Exception {
+  void checkGameOverAddsFreezeReason() {
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
     when(levelCfg.getRows()).thenReturn(5);
     when(levelCfg.getCols()).thenReturn(10);
@@ -655,7 +655,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void checkLevelCompleteAddsFreezeReason() throws Exception {
+  void checkLevelCompleteAddsFreezeReason() {
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
     when(levelCfg.getRows()).thenReturn(5);
     when(levelCfg.getCols()).thenReturn(10);

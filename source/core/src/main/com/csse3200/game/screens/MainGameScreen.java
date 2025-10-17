@@ -278,49 +278,71 @@ public class MainGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    if (!gameStateService.isFrozen()) {
-      // Use scaled delta for systems that accept it
-      float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
-      physicsEngine.update();
-      ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(scaledDelta);
-    }
-
-    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
-      gameArea.createWavePreview();
-    }
-
-    if (doIntroPan) {
-      panElapsed += delta;
-      float t = Math.min(1f, panElapsed / PAN_DURATION);
-      var cam = renderer.getCamera().getCamera();
-
-      if (panPhase == PanPhase.RIGHT) {
-        cam.position.x = Interpolation.smoother.apply(panStartX, panTargetX, t);
-        cam.update();
-        if (t >= 1f) {
-          // switch to left pan
-          panPhase = PanPhase.LEFT;
-          panElapsed = 0f;
-        }
-      } else if (panPhase == PanPhase.LEFT) {
-        cam.position.x = Interpolation.smoother.apply(panTargetX, panStartX, t);
-        cam.update();
-        if (t >= 1f) {
-          panPhase = PanPhase.DONE;
-          doIntroPan = false;
-          gameArea.clearWavePreview();
-          gameStateService.removeFreezeReason(INTRO_PAN);
-          if (!gameStateService.isFrozen()) {
-            gameStateService.unlockPlacement();
-          }
-        }
-      }
-    }
-
+    updateWorld();
+    updateIntroPan(delta);
     renderer.render();
     gameArea.checkGameOver(); // check game-over state
     gameArea.checkLevelComplete(); // check level-complete state
+  }
+
+  private void updateWorld() {
+    if (gameStateService.isFrozen()) {
+      return;
+    }
+
+    float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
+    physicsEngine.update();
+    ServiceLocator.getEntityService().update();
+    ServiceLocator.getWaveService().update(scaledDelta);
+  }
+
+  private void updateIntroPan(float delta) {
+    if (!doIntroPan) {
+      return;
+    }
+
+    if (panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+      gameArea.createWavePreview();
+    }
+
+    panElapsed += delta;
+    float progress = Math.min(1f, panElapsed / PAN_DURATION);
+    Float newCameraX = null;
+
+    switch (panPhase) {
+      case RIGHT:
+        newCameraX = Interpolation.smoother.apply(panStartX, panTargetX, progress);
+        if (progress >= 1f) {
+          panPhase = PanPhase.LEFT;
+          panElapsed = 0f;
+        }
+        break;
+      case LEFT:
+        newCameraX = Interpolation.smoother.apply(panTargetX, panStartX, progress);
+        if (progress >= 1f) {
+          completeIntroPan();
+        }
+        break;
+      default:
+        // No movement required once the pan is done.
+        break;
+    }
+
+    if (newCameraX != null) {
+      var cam = renderer.getCamera().getCamera();
+      cam.position.x = newCameraX;
+      cam.update();
+    }
+  }
+
+  private void completeIntroPan() {
+    panPhase = PanPhase.DONE;
+    doIntroPan = false;
+    gameArea.clearWavePreview();
+    gameStateService.removeFreezeReason(INTRO_PAN);
+    if (!gameStateService.isFrozen()) {
+      gameStateService.unlockPlacement();
+    }
   }
 
   @Override
