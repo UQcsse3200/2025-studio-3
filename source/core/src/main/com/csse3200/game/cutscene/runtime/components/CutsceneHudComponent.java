@@ -166,7 +166,7 @@ public class CutsceneHudComponent extends UIComponent {
     text.setWrap(true);
     text.setAlignment(Align.topLeft);
 
-    continueText = ui.text("Press \"Space\" to skip/next");
+    continueText = ui.text("");
 
     dialogueBox.add(characterName).top().left().padBottom(4f).row();
     dialogueBox.add(text).top().left().expand().fillX().padTop(0f).row();
@@ -323,10 +323,14 @@ public class CutsceneHudComponent extends UIComponent {
 
     String skipKey = Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getSkipButton());
 
-    if (dialogueState.isDone()) {
-      continueText.setText("Press \"" + skipKey + "\" to continue");
+    if (!orchestratorState.getChoiceState().isActive()){
+      if (dialogueState.isDone()) {
+        continueText.setText("Press \"" + skipKey + "\" to continue");
+      } else {
+        continueText.setText("Press \"" + skipKey + "\" to skip");
+      }
     } else {
-      continueText.setText("Press \"" + skipKey + "\" to skip");
+      continueText.setText("");
     }
 
     updateCharacters();
