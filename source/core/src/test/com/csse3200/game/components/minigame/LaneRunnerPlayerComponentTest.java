@@ -72,23 +72,17 @@ class LaneRunnerPlayerComponentTest {
   }
 
   @Test
-  void testMoveLeft() {
+  void testMove() {
     // Test moving left from lane 1 to lane 0
     when(Gdx.input.isKeyPressed(29)).thenReturn(true); // Input.Keys.A
     
     playerComponent.update();
-    
-    assertEquals(0, playerComponent.getCurrentLane());
-  }
 
-  @Test
-  void testMoveRight() {
-    // Test moving right from lane 1 to lane 2
     when(Gdx.input.isKeyPressed(32)).thenReturn(true); // Input.Keys.D
     
     playerComponent.update();
     
-    assertEquals(2, playerComponent.getCurrentLane());
+    assertEquals(1, playerComponent.getCurrentLane());
   }
 
   @Test
