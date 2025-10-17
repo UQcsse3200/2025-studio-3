@@ -33,8 +33,8 @@ public final class SlotCardEntity {
   private static TextureAtlas cardsAtlas;
   private static boolean ownsCardsAtlas = false;
 
-  private static final float CARD_SCREEN_W_RATIO = 0.06f;
-  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float CARD_SCREEN_W_RATIO = 0.15f;
+  private static final float CARD_SLOT_W_RATIO = 0.50f;
   private static final float DROP_FADE_SEC = 0.15f;
   private static final float DROP_MOVE_SEC = 0.35f;
   private static final float DROP_PADDING_PCT = 0.02f;
