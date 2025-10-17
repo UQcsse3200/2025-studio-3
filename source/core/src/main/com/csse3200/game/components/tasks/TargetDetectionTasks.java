@@ -124,8 +124,8 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
       if (didHit) {
         Fixture hitFixture = tempHit.getFixture();
-        if (hitFixture != null && hitFixture.getUserData() instanceof Entity) {
-          return (Entity) hitFixture.getUserData();
+        if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
+          return entity;
         }
       }
     }

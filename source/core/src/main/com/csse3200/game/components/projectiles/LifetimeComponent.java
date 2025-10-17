@@ -15,10 +15,8 @@ public class LifetimeComponent extends Component{
     @Override
     public void update() {
         elapsed += ServiceLocator.getTimeSource().getDeltaTime();
-        if (elapsed >= lifetime) {
-            if (entity.getComponent(ProjectileTagComponent.class) != null) {
-                entity.getEvents().trigger("despawnSlingshot", entity);
-            }
+        if (elapsed >= lifetime && entity.getComponent(ProjectileTagComponent.class) != null) {
+            entity.getEvents().trigger("despawnSlingshot", entity);
         }
     }
 }
