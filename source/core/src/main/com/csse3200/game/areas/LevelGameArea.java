@@ -176,9 +176,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
-      ServiceLocator.getResourceService()
-              .loadSounds(new String[]{"sounds/human-death.mp3","sounds/robot-death.mp3"});
-      ServiceLocator.getResourceService().loadAll();
     // Register the game area with the service locator
     ServiceLocator.registerGameArea(this);
 
