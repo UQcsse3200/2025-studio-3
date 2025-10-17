@@ -73,7 +73,7 @@
       "tier": "T2"
     },
     "paddleGameMaster": {
-      "name": "Paddle Game Master",
+      "name": "Paddle Master",
       "description": "Reach 10 points in the paddle minigame",
       "statistic": "paddleGameCompleted",
       "quota": 1,
@@ -81,7 +81,7 @@
       "tier": "T3"
     }, 
     "laneRunnerMaster": {
-      "name": "Lane Runner Master",
+      "name": "Lane Master",
       "description": "Completed the lane runner minigame",
       "statistic": "laneRunnerCompleted",
       "quota": 1,

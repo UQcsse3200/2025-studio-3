@@ -12,6 +12,8 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 
+import net.dermetfan.utils.Pair;
+
 /**
  * Displays an interactive tutorial overlay for the World Map screen.
  *
@@ -119,7 +121,8 @@ public class WorldMapTutorial extends UIComponent {
     stage.addActor(table);
 
     // Toggle button
-    TextButton toggleButton = ui.primaryButton("TUTORIAL", 150);
+    TextButton toggleButton = ui.primaryButton("TUTORIAL", 150f);
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(150f);
     toggleButton.addListener(
         new ClickListener() {
           @Override
@@ -142,7 +145,7 @@ public class WorldMapTutorial extends UIComponent {
     Table buttonTable = new Table();
     buttonTable.top().left().pad(TABLE_PAD);
     buttonTable.setFillParent(true);
-    buttonTable.add(toggleButton).left();
+    buttonTable.add(toggleButton).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).left();
     stage.addActor(buttonTable);
   }
 
