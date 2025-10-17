@@ -23,8 +23,22 @@ public class GameTime {
    * @param timeScale Time scale, where normal speed is 1.0, no time passing is 0.0
    */
   public void setTimeScale(float timeScale) {
-    logger.debug("Setting time scale to {}", timeScale);
-    this.timeScale = timeScale;
+    float clamped = Math.max(0f, timeScale);
+    if (clamped != timeScale) {
+      logger.warn("Requested time scale {} below zero. Clamping to {}", timeScale, clamped);
+    }
+    logger.debug("Setting time scale to {}", clamped);
+    this.timeScale = clamped;
+  }
+
+  /**
+   * Get the current timescale applied to delta calculations. A value of 1.0 represents normal
+   * speed, while 0.0 represents a frozen game.
+   *
+   * @return the timescale in effect.
+   */
+  public float getTimeScale() {
+    return timeScale;
   }
 
   /**
