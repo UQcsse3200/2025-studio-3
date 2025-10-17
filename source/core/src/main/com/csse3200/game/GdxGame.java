@@ -200,7 +200,6 @@ public class GdxGame extends Game {
     } else {
       setScreen(newScreen(screenType));
     }
-    setScreen(newScreen(screenType));
   }
 
   /** Sets the cursor to the custom cursor. */

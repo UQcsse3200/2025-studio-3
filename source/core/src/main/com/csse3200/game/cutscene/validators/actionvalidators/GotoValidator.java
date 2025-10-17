@@ -39,26 +39,26 @@ public class GotoValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     errors.addAll(
-        ValidatorUtils.validateString(action.fields.get("cutsceneId"), "GOTO_CUTSCENE_ID", path));
+        ValidatorUtils.validateString(
+            action.getFields().get("cutsceneId"), "GOTO_CUTSCENE_ID", path));
 
     List<AuthoringError> beatIdErrors =
-        ValidatorUtils.validateString(action.fields.get("beatId"), "GOTO_CUTSCENE_BEAT_ID", path);
+        ValidatorUtils.validateString(
+            action.getFields().get("beatId"), "GOTO_CUTSCENE_BEAT_ID", path);
 
-    if (errors.isEmpty()) {
-      if (action.fields.get("cutsceneId").equals("current")) {
-        if (beatIdErrors.isEmpty()) {
-          String gotoBeatId = (String) action.fields.get("beatId");
-          if (!context.beatIds().contains(gotoBeatId)) {
-            beatIdErrors.add(
-                new AuthoringError(
-                    "ACTION_GOTO_BEAT_ID_INVALID",
-                    path,
-                    "Beat ID " + gotoBeatId + " is not a valid beat ID"));
-          }
+    if (errors.isEmpty() && action.getFields().get("cutsceneId").equals("current")) {
+      if (beatIdErrors.isEmpty()) {
+        String gotoBeatId = (String) action.getFields().get("beatId");
+        if (!context.beatIds().contains(gotoBeatId)) {
+          beatIdErrors.add(
+              new AuthoringError(
+                  "ACTION_GOTO_BEAT_ID_INVALID",
+                  path,
+                  "Beat ID " + gotoBeatId + " is not a valid beat ID"));
         }
-
-        errors.addAll(beatIdErrors);
       }
+
+      errors.addAll(beatIdErrors);
     }
 
     return errors;

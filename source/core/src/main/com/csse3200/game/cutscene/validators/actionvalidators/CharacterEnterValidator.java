@@ -1,5 +1,6 @@
 package com.csse3200.game.cutscene.validators.actionvalidators;
 
+import com.csse3200.game.cutscene.CutsceneSchemaKeys;
 import com.csse3200.game.cutscene.models.dto.ActionDTO;
 import com.csse3200.game.cutscene.validators.ActionValidator;
 import com.csse3200.game.cutscene.validators.ValidationCtx;
@@ -43,15 +44,18 @@ public class CharacterEnterValidator implements ActionValidator {
     String path = "doc.cutscene.beats." + beatId + ".action.*";
 
     List<AuthoringError> characterIdErrors =
-        ValidatorUtils.validateString(action.fields.get("characterId"), "characterId", path);
+        ValidatorUtils.validateString(
+            action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD),
+            CutsceneSchemaKeys.CHARACTER_ID_FIELD,
+            path);
     errors.addAll(characterIdErrors);
 
     List<AuthoringError> poseErrors =
-        ValidatorUtils.validateString(action.fields.get("pose"), "pose", path);
+        ValidatorUtils.validateString(action.getFields().get("pose"), "pose", path);
     errors.addAll(poseErrors);
 
     if (characterIdErrors.isEmpty()) {
-      String characterId = (String) action.fields.get("characterId");
+      String characterId = (String) action.getFields().get(CutsceneSchemaKeys.CHARACTER_ID_FIELD);
       if (!context.characterIds().contains(characterId)) {
         errors.add(
             new AuthoringError(
@@ -61,8 +65,9 @@ public class CharacterEnterValidator implements ActionValidator {
       }
 
       if (poseErrors.isEmpty()) {
-        String pose = (String) action.fields.get("pose");
-        if (!context.characterPoses().get(characterId).contains(pose)) {
+        String pose = (String) action.getFields().get("pose");
+        if (context.characterPoses().get(characterId) != null
+            && !context.characterPoses().get(characterId).contains(pose)) {
           errors.add(
               new AuthoringError(
                   "ACTION_CHARACTER_POSE_INVALID",
@@ -73,11 +78,14 @@ public class CharacterEnterValidator implements ActionValidator {
     }
 
     List<AuthoringError> positionErrors =
-        ValidatorUtils.validateString(action.fields.get("position"), "position", path);
+        ValidatorUtils.validateString(
+            action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD),
+            CutsceneSchemaKeys.POSITION_FIELD,
+            path);
     errors.addAll(positionErrors);
 
     if (positionErrors.isEmpty()) {
-      String position = (String) action.fields.get("position");
+      String position = (String) action.getFields().get(CutsceneSchemaKeys.POSITION_FIELD);
 
       if (!position.equals("left") && !position.equals("right")) {
         errors.add(

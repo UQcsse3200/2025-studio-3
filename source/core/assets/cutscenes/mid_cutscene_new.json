@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "characters": [
+    {
+      "id": "danny",
+      "name": "Danny",
+      "poses": { "normal": "cutscenes/data/characters/danny/danny_normal.png" }
+    },
+    {
+      "id": "alice",
+      "name": "Alice",
+      "poses": { "hologram": "cutscenes/data/characters/alice/alice_hologram.png" }
+    },
+    {
+      "id": "rob",
+      "name": "Rob",
+      "poses": { "normal": "cutscenes/data/characters/rob/rob_normal.png" }
+    }
+  ],
+
+  "backgrounds": [
+    { "id": "lab_ruins", "image": "cutscenes/data/backgrounds/lab_ruins.png" },
+    { "id": "holo_room", "image": "cutscenes/data/backgrounds/holo_room.png" },
+    { "id": "city_night", "image": "cutscenes/data/backgrounds/city_night.png" },
+    { "id": "home_bg_level2", "image": "cutscenes/data/backgrounds/home_bg_level2.png" }
+  ],
+
+  "cutscene": {
+    "id": "mid_cutscene_new",
+    "beats": [
+
+      {
+        "id": "intro_lab",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "lab_ruins", "transition": "fade", "duration": 1000, "await": true },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "fade", "duration": 600, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "It's over... or so I thought.", "await": true },
+          { "type": "dialogue.hide", "await": true }
+        ]
+      },
+
+      {
+        "id": "signal_transition",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "holo_room", "transition": "fade", "duration": 1200, "await": true }
+        ]
+      },
+
+      {
+        "id": "signal_dialogue1",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "alice", "pose": "hologram", "position": "right", "transition": "fade", "duration": 700, "await": true },
+          { "type": "dialogue.show", "characterId": "alice", "text": "Danny... if you're seeing this, I'm still here. Inside the system.", "await": true }
+        ]
+      },
+
+      {
+        "id": "signal_dialogue2",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "danny", "text": "Alice?! How?", "await": true }
+        ]
+      },
+
+      {
+        "id": "signal_dialogue3",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "dialogue.show", "characterId": "alice", "text": "They connected me to the core. Don't come for me.", "await": true },
+          { "type": "dialogue.hide", "await": true }
+        ]
+      },
+
+      {
+        "id": "rob_appearance",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "character.enter", "characterId": "rob", "pose": "normal", "position": "right", "transition": "fade", "duration": 600, "await": true },
+          { "type": "dialogue.show", "characterId": "rob", "text": "You still don't understand... she belongs to us now.", "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Then I'll burn your whole network down.", "await": true },
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "rob", "transition": "fade", "duration": 500, "await": true },
+          { "type": "character.exit", "characterId": "alice", "transition": "fade", "duration": 500, "await": true }
+        ]
+      },
+
+      {
+        "id": "city_scene",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "city_night", "transition": "fade", "duration": 1200, "await": true },
+          { "type": "character.enter", "characterId": "danny", "pose": "normal", "position": "left", "transition": "fade", "duration": 600, "await": true },
+          { "type": "dialogue.show", "characterId": "danny", "text": "Hang on, Alice. I'm coming.", "await": true },
+          { "type": "dialogue.hide", "await": true },
+          { "type": "character.exit", "characterId": "danny", "transition": "fade", "duration": 600, "await": true }
+        ]
+      },
+
+      {
+        "id": "final_title",
+        "advance": { "mode": "input" },
+        "actions": [
+          { "type": "background.set", "backgroundId": "home_bg_level2", "transition": "fade", "duration": 1500, "await": true },
+          { "type": "dialogue.hide", "await": true }
+        ]
+      }
+    ]
+  }
+}

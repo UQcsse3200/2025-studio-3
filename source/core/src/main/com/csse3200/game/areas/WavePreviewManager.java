@@ -33,11 +33,11 @@ public class WavePreviewManager {
 
     EntitySpawn spawner = new EntitySpawn();
     spawner.setWaveConfigProvider(ServiceLocator.getWaveService());
-    Map<Integer, List<String>> plan = spawner.previewAllWaves();
+    Map<Integer, List<RobotFactory.RobotType>> plan = spawner.previewAllWaves();
 
-    for (Map.Entry<Integer, List<String>> entry : plan.entrySet()) {
+    for (Map.Entry<Integer, List<RobotFactory.RobotType>> entry : plan.entrySet()) {
       int wave = entry.getKey();
-      for (String type : entry.getValue()) {
+      for (RobotFactory.RobotType type : entry.getValue()) {
         float xSpread = ThreadLocalRandom.current().nextFloat(tileSize);
         float x = xOffset + (cols * tileSize) + (wave * 1.15f * tileSize) + xSpread;
         int row = ThreadLocalRandom.current().nextInt(rows);

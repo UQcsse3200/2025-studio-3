@@ -115,15 +115,13 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/buff.atlas",
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
-    "images/entities/enemies/blue_robot.atlas",
-    "images/entities/enemies/red_robot.atlas",
     "images/entities/enemies/Scrap-titan.atlas",
     "images/entities/enemies/samurai_Bot.atlas",
     "images/entities/enemies/gun_Bot.atlas",
-    "images/entities/enemies/red_robot.atlas",
     "images/entities/defences/mortar.atlas",
     "images/entities/slotmachine/slot_frame.atlas",
     "images/entities/slotmachine/slot_reels.atlas",
+    "images/entities/slotmachine/pie_filled.atlas",
     "images/entities/enemies/fast_robot.atlas",
     "images/entities/enemies/tanky_robot.atlas"
   };
@@ -224,9 +222,8 @@ public class MainGameScreen extends ScreenAdapter {
         .setEnemySpawnCallback(
             new WaveService.EnemySpawnCallback() {
               @Override
-              public void spawnEnemy(int col, int row, String robotType) {
-                gameArea.spawnRobot(
-                    col, row, RobotFactory.RobotType.valueOf(robotType.toUpperCase()));
+              public void spawnEnemy(int col, int row, RobotFactory.RobotType robotType) {
+                gameArea.spawnRobot(col, row, robotType);
               }
 
               @Override
