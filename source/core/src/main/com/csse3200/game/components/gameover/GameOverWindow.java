@@ -1,7 +1,6 @@
 package com.csse3200.game.components.gameover;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,11 +20,9 @@ public class GameOverWindow extends UIComponent {
 
   // Initialises the game over window.
   private Table container;
-  private TextButton mainMenuButton;
-  private TextButton quitButton;
+
   // Tracks the display status of the window.
   boolean isDisplayed = false;
-  private float uiScale = ui.getUIScale();
 
   /** Creates the game over window. */
   @Override
@@ -40,11 +37,9 @@ public class GameOverWindow extends UIComponent {
     container.center();
 
     Label gameOverHeading = ui.heading("Game Over!");
-    String interactKeyName =
-        Input.Keys.toString(
-            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
-    Label message = ui.text("Press " + interactKeyName + " to go back to main menu.");
-    mainMenuButton = ui.primaryButton("Main Menu", 250);
+    Label message = ui.text("You have failed to complete the level");
+
+    TextButton mainMenuButton = ui.primaryButton("World Map", 250);
     mainMenuButton.addListener(
         event -> {
           if (!event.toString().equals("touchDown")) {
@@ -54,7 +49,7 @@ public class GameOverWindow extends UIComponent {
           return true;
         });
 
-    quitButton = ui.primaryButton("Quit Game", 250);
+    TextButton quitButton = ui.primaryButton("Quit Game", 250);
     quitButton.addListener(
         event -> {
           if (!event.toString().equals("touchDown")) {

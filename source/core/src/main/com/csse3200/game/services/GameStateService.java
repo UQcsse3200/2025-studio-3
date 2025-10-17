@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * the final reason is cleared.
  *
  * <p>The service also tracks whether user placement interactions should be blocked. Placement locks
- * are managed independently from freeze reasons so callers can decide the scope of each pause.
+ * are managed independently of freeze reasons so callers can decide the scope of each pause.
  */
 public class GameStateService {
   private static final Logger logger = LoggerFactory.getLogger(GameStateService.class);
