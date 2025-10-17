@@ -12,13 +12,6 @@ public class PaddleComponent extends Component {
   private float speed = 500f;
 
   /**
-   * Creates a new PaddleComponent.
-   */
-  public PaddleComponent() {
-    // No constructor parameters needed
-  }
-
-  /**
    * Updates the paddle's movement.
    */
   @Override

@@ -36,16 +36,15 @@ public class LaneRunnerScreen extends ScreenAdapter {
       LoggerFactory.getLogger(com.csse3200.game.screens.LaneRunnerScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private LaneManager laneManager;
+  public static final int NUM_LANES = 3;
+  public static final float LANE_WIDTH = 1280f / NUM_LANES;
+  public static final float LANE_CENTER = LANE_WIDTH / 2;
   private boolean gameOverDialogShown = false;
   private float spawnTimer = 0f;
   private final java.util.Random random = new java.util.Random();
   private com.badlogic.gdx.physics.box2d.Box2DDebugRenderer debugRenderer;
-  private boolean gameElementsCreated = false;
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
-    "images/backgrounds/Background.png",
-    "images/backgrounds/GameOver.png",
     "images/backgrounds/lanes.png",
     "images/entities/character.png"
   };
@@ -69,7 +68,6 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("[LaneRunnerScreen] Renderer created");
     
     renderer.getCamera().getEntity().setPosition(640f, 360f);
-    this.laneManager = new LaneManager(Gdx.graphics.getWidth());
     loadAssets();
     createUI();
     createGameElements();
@@ -85,7 +83,6 @@ public class LaneRunnerScreen extends ScreenAdapter {
     resourceService.loadTextures(laneRunnerTextures);
     resourceService.loadAll();
   }
-
 
   /**
    * Creates the UI for the lane runner game.
@@ -105,29 +102,45 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   /** Creates the game elements. */
   private void createGameElements() {
-    if (gameElementsCreated) {
-      logger.warn("[LaneRunnerScreen] Game elements already created, skipping");
-      return;
-    }
-    
-    logger.info("[LaneRunnerScreen] Creating game elements");
-    gameElementsCreated = true;
-    
+    createBackground();
+
     // Create player entity with components
     ColliderComponent playerCollider = new ColliderComponent();
     Entity player = new Entity()
         .addComponent(new TextureRenderComponent(ServiceLocator.getResourceService()
             .getAsset("images/entities/character.png", Texture.class)))
-        .addComponent(new LaneRunnerPlayerComponent(laneManager))
+        .addComponent(new LaneRunnerPlayerComponent())
         .addComponent(new PhysicsComponent())
         .addComponent(playerCollider)
         .addComponent(new LaneRunnerPlayerCollisionComponent());
     player.getComponent(PhysicsComponent.class).getBody().setBullet(true);
-    playerCollider.setAsBoxAligned(new Vector2(32f, 32f), AlignX.LEFT, AlignY.BOTTOM)
+    playerCollider.setAsBoxAligned(new Vector2(64f, 64f), AlignX.LEFT, AlignY.BOTTOM)
         .setCollisionFilter(PhysicsLayer.PLAYER, PhysicsLayer.PROJECTILE);
-    player.setScale(32f, 32f);
-    player.setPosition(laneManager.getLaneCenter(1), 100f);
+    player.setScale(64f, 64f);
+    player.setPosition(1 * LANE_WIDTH + LANE_CENTER - 32f, 50f);
     ServiceLocator.getEntityService().register(player);
+    
+  }
+
+  /**
+   * Creates the background for the lane runner game.
+   */
+  private void createBackground() {
+    var camera = renderer.getCamera();
+    float worldWidth = camera.getCamera().viewportWidth;
+    float worldHeight = camera.getCamera().viewportHeight;
+    Entity background = new Entity()
+        .addComponent(new BackgroundRenderComponent("images/backgrounds/lanes.png"));
+  
+    // Scale the background to fill the world view
+    background.setScale(worldWidth, worldHeight);
+    background.setPosition(
+        camera.getEntity().getPosition().x - worldWidth / 2f,
+        camera.getEntity().getPosition().y - worldHeight / 2f
+    );
+  
+    // Register background FIRST to ensure it's drawn behind everything
+    ServiceLocator.getEntityService().register(background);
   }
 
   @Override
@@ -162,8 +175,8 @@ public class LaneRunnerScreen extends ScreenAdapter {
    * Spawns a new obstacle in a random lane.
    */
   private void spawnObstacle() {
-    int laneIndex = random.nextInt(laneManager.getNumLanes());
-    float x = laneManager.getLaneCenter(laneIndex);
+    int laneIndex = random.nextInt(NUM_LANES);
+    float x = laneIndex * LANE_WIDTH + LANE_CENTER;
     float y = Gdx.graphics.getHeight();
 
     // Create obstacle entity with components
@@ -229,5 +242,4 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("[LaneRunnerScreen] Services cleared");
     ServiceLocator.clear();
   }
-
 }

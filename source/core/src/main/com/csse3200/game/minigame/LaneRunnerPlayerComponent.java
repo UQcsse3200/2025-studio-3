@@ -2,6 +2,7 @@ package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Gdx;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.screens.LaneRunnerScreen;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -9,14 +10,9 @@ import com.csse3200.game.services.ServiceLocator;
  */
 public class LaneRunnerPlayerComponent extends Component {
   private int currentLane = 1;
-  private final LaneManager laneManager;
   private static final float MOVE_SPEED = 10f;
   private boolean leftPressed = false;
   private boolean rightPressed = false;
-
-  public LaneRunnerPlayerComponent(LaneManager laneManager) {
-    this.laneManager = laneManager;
-  }
 
   @Override
   public void update() {
@@ -24,6 +20,9 @@ public class LaneRunnerPlayerComponent extends Component {
     updatePosition();
   }
 
+  /**
+   * Handles the input for the player.
+   */
   private void handleInput() {
     // Check for left movement
     int left = ServiceLocator.getSettingsService().getSettings().getLeftButton();
@@ -42,20 +41,29 @@ public class LaneRunnerPlayerComponent extends Component {
     rightPressed = rightKeyPressed;
   }
 
+  /**
+   * Moves the player to the left.
+   */
   private void moveLeft() {
     if (currentLane > 0) {
       currentLane--;
     }
   }
 
+  /**
+   * Moves the player to the right.
+   */
   private void moveRight() {
-    if (currentLane < laneManager.getNumLanes() - 1) {
+    if (currentLane < LaneRunnerScreen.NUM_LANES - 1) {
       currentLane++;
     }
   }
 
+  /**
+   * Updates the position of the player.
+   */
   private void updatePosition() {
-    float targetX = laneManager.getLaneCenter(currentLane);
+    float targetX = LaneRunnerScreen.LANE_CENTER + currentLane * LaneRunnerScreen.LANE_WIDTH -32f;
     float currentX = entity.getPosition().x;
     
     // Smooth movement towards target lane
@@ -65,11 +73,12 @@ public class LaneRunnerPlayerComponent extends Component {
     entity.setPosition(newX, entity.getPosition().y);
   }
 
+  /**
+   * Gets the current lane of the player.
+   * 
+   * @return the current lane of the player
+   */
   public int getCurrentLane() {
     return currentLane;
-  }
-
-  public float getLaneCenter() {
-    return laneManager.getLaneCenter(currentLane);
   }
 }

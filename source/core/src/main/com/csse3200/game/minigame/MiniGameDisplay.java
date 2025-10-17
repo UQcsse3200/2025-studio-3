@@ -1,6 +1,5 @@
 package com.csse3200.game.minigame;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -22,6 +21,7 @@ public class MiniGameDisplay extends UIComponent {
     addActors();
   }
 
+  /** Adds the actors to the table. */
   private void addActors() {
     table = new Table();
     table.setFillParent(true);
@@ -61,11 +61,6 @@ public class MiniGameDisplay extends UIComponent {
   private void createCloseButton() {
     TextButton closeButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
     stage.addActor(closeButton);
-  }
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // draw is handled by the stage
   }
 
   @Override

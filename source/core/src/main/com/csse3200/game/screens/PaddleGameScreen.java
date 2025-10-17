@@ -2,7 +2,6 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
@@ -21,7 +20,6 @@ import com.csse3200.game.input.InputService;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.MinigameService;
 import com.csse3200.game.services.ResourceService;
@@ -29,6 +27,7 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.physics.PhysicsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.csse3200.game.minigame.BackgroundRenderComponent;
 
 /** The game screen containing the paddle game. */
 public class PaddleGameScreen extends ScreenAdapter {
@@ -89,7 +88,7 @@ public class PaddleGameScreen extends ScreenAdapter {
     
     // Create background entity with custom render component
     Entity backgroundEntity = new Entity()
-      .addComponent(new BackgroundRenderComponent());
+      .addComponent(new BackgroundRenderComponent("images/backgrounds/WallPongbg.png"));
     ServiceLocator.getEntityService().register(backgroundEntity);
     
     // Create paddle entity
@@ -182,33 +181,5 @@ public class PaddleGameScreen extends ScreenAdapter {
 
     logger.debug("[PaddleGameScreen] Services cleared");
     ServiceLocator.clear();
-  }
-
-  /**
-   * Custom render component for the background that renders behind all other entities.
-   */
-  private static class BackgroundRenderComponent extends RenderComponent {
-    private final Texture backgroundTexture;
-
-    public BackgroundRenderComponent() {
-      this.backgroundTexture = ServiceLocator.getResourceService()
-          .getAsset("images/backgrounds/WallPongbg.png", Texture.class);
-    }
-
-    @Override
-    protected void draw(SpriteBatch batch) {
-      // Draw background to fill the entire screen
-      batch.draw(backgroundTexture, 0, 0, 1280f, 720f);
-    }
-
-    @Override
-    public int getLayer() {
-      return 0; // Background layer - renders behind everything
-    }
-
-    @Override
-    public float getZIndex() {
-      return -1000f; // Very low Z-index to ensure it's behind everything
-    }
   }
 }

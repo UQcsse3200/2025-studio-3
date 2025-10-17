@@ -12,13 +12,6 @@ import org.slf4j.LoggerFactory;
  */
 public class LaneRunnerPlayerCollisionComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(LaneRunnerPlayerCollisionComponent.class);
-  
-  /**
-   * Creates a new LaneRunnerPlayerCollisionComponent.
-   */
-  public LaneRunnerPlayerCollisionComponent() {
-    // No constructor parameters needed
-  }
 
   @Override
   public void create() {

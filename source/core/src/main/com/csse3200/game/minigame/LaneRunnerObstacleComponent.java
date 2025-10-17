@@ -30,6 +30,9 @@ public class LaneRunnerObstacleComponent extends Component {
     checkBounds();
   }
 
+  /**
+   * Moves the obstacle down.
+   */
   private void moveDown() {
     float delta = ServiceLocator.getTimeSource().getDeltaTime();
     float elapsedTime = ServiceLocator.getTimeSource().getTime() / 1000f;
@@ -39,6 +42,9 @@ public class LaneRunnerObstacleComponent extends Component {
     entity.setPosition(entity.getPosition().x, newY);
   }
 
+  /**
+   * Checks if the obstacle is off the screen and removes it if it is.
+   */
   private void checkBounds() {
     // Remove obstacle if it goes off screen
     if (entity.getPosition().y < -entity.getScale().y) {
@@ -48,6 +54,11 @@ public class LaneRunnerObstacleComponent extends Component {
     }
   }
 
+  /**
+   * Checks if the obstacle is alive.
+   * 
+   * @return true if the obstacle is alive, false otherwise
+   */
   public boolean isAlive() {
     return isAlive;
   }
@@ -61,10 +72,20 @@ public class LaneRunnerObstacleComponent extends Component {
     this.isAlive = alive;
   }
 
+  /**
+   * Gets the speed of the obstacle.
+   * 
+   * @return the speed of the obstacle
+   */
   public float getSpeed() {
     return speed;
   }
 
+  /**
+   * Sets the speed of the obstacle.
+   * 
+   * @param speed the new speed of the obstacle
+   */
   public void setSpeed(float speed) {
     this.speed = speed;
   }
