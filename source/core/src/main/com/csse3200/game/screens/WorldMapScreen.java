@@ -1,7 +1,6 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -491,7 +490,11 @@ public class WorldMapScreen extends BaseScreen {
   private void handleZoomInput() {
     CameraComponent camera = renderer.getCamera();
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
+    // Get keybind for Zoom Out
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    int zoomOutButton = settingsService.getSettings().getZoomOutButton();
+
+    if (Gdx.input.isKeyJustPressed(zoomOutButton) && zoomIdx < ZOOM_STEPS.length - 1) {
       zoomIdx++;
       if (camera.getCamera()
           instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
@@ -502,7 +505,10 @@ public class WorldMapScreen extends BaseScreen {
       }
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
+    // Get keybind for Zoom In
+    int zoomInButton = settingsService.getSettings().getZoomInButton();
+
+    if (Gdx.input.isKeyJustPressed(zoomInButton) && zoomIdx > 0) {
       zoomIdx--;
       if (camera.getCamera()
           instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
