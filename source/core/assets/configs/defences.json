@@ -102,7 +102,7 @@
         "atlasPath": "images/entities/defences/wall.atlas",
         "soundPath": "sounds/slingshooter-place.mp3",
         "projectilePath": "",
-        "damage": 0,
+        "damage": 1000,
         "direction": "right",
         "numSprites": 2,
         "attackSpeed": 0,
