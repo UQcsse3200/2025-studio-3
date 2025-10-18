@@ -247,8 +247,9 @@ public class DossierDisplay extends UIComponent {
     float stageWidth = stage.getWidth();
     float stageHeight = stage.getHeight();
 
-    // Load book image as texture
-    Texture bookTexture = new Texture(Gdx.files.internal("images/ui/dossierBackground.png"));
+    // Load book image as texture based on current type
+    String backgroundPath = type ? "images/ui/robot-dossier.png" : "images/ui/human-dossier.png";
+    Texture bookTexture = new Texture(Gdx.files.internal(backgroundPath));
     bookTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
     // Create background image of dossier
