@@ -517,7 +517,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction, int damage) {
     // Safety check
     if (projectile == null || spawnPos == null || direction == null) {
       logger.warn("Invalid projectile spawn parameters");
@@ -549,9 +549,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               "despawnShell",
               e -> {
                 Vector2 pos = projectile.getPosition();
-                int damage = 5; // or configurable
                 float radius = tileSize; // 1 tile radius
-                damageRobotsAtPosition(pos, radius, damage);
+                damageRobotsAtPosition(pos, radius, damage); //this damage value is now passed into spawnProjectile
               });
     } else {
       projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
@@ -850,6 +849,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Check for enough scrap (unless next placement flagged free)
     GeneratorStatsComponent generator = unit.getComponent(GeneratorStatsComponent.class);
     DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
+    final int damage = (defence != null) ? defence.getBaseAttack() : 0;
     int cost = 0;
     if (generator != null) {
       cost = generator.getCost();
@@ -923,7 +923,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             (TargetDetectionTasks.AttackDirection dir) -> {
               if (unit.getComponent(ProjectileComponent.class) != null) {
                 spawnProjectile(
-                    worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+                    worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir, damage);
               }
               unit.getEvents().trigger("attackStart");
             });
