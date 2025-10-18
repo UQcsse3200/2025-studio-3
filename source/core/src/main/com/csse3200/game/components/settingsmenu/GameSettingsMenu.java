@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import net.dermetfan.utils.Pair;
@@ -33,6 +34,28 @@ public class GameSettingsMenu extends UIComponent {
   private static final String RIGHT_KEY = "right";
   private static final String ZOOM_IN_KEY = "zoomin";
   private static final String ZOOM_OUT_KEY = "zoomout";
+  private static final ArrayList<Integer> ALLOWED_KEYS = new ArrayList<>();
+
+  static {
+    // Letters (A-Z)
+    for (int l = Input.Keys.A; l <= Input.Keys.Z; l++) {
+      ALLOWED_KEYS.add(l);
+    }
+
+    // Numbers (0-9)
+    for (int n = Input.Keys.NUM_0; n <= Input.Keys.NUM_9; n++) {
+      ALLOWED_KEYS.add(n);
+    }
+
+    // Special keys
+    ALLOWED_KEYS.add(Input.Keys.SPACE);
+    ALLOWED_KEYS.add(Input.Keys.ESCAPE);
+    ALLOWED_KEYS.add(Input.Keys.UP);
+    ALLOWED_KEYS.add(Input.Keys.DOWN);
+    ALLOWED_KEYS.add(Input.Keys.LEFT);
+    ALLOWED_KEYS.add(Input.Keys.RIGHT);
+    ALLOWED_KEYS.add(Input.Keys.TAB);
+  }
 
   /** Constructor for GameSettingsMenu. */
   public GameSettingsMenu() {
@@ -251,6 +274,17 @@ public class GameSettingsMenu extends UIComponent {
           @Override
           public boolean keyDown(InputEvent event, int keycode) {
             if (textField.hasKeyboardFocus()) {
+              // Reject invalid key codes
+              if (!ALLOWED_KEYS.contains(keycode)) {
+                ServiceLocator.getDialogService()
+                    .error("Invalid Key", "That key cannot be used for keybinds.");
+                // Restore previous text
+                textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
+                textField.setFocusTraversal(false);
+                stage.setKeyboardFocus(null);
+                return false;
+              }
+
               // Update the text field with the new key (do not error if same key as previous is
               // re-entered)
               if (keybinds.containsValue(keycode)
@@ -264,7 +298,6 @@ public class GameSettingsMenu extends UIComponent {
                 return false;
               }
               logger.info("Keybind not conflict: {}", keycode);
-              // to fix
               keybinds.put(textField.getName(), keycode);
               textField.setText(Input.Keys.toString(keycode));
               textField.setFocusTraversal(false);
