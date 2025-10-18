@@ -113,7 +113,7 @@ public class WaveService implements WaveConfigProvider {
 
     if (waveActive) {
       timeSinceLastSpawn += deltaTime;
-      float spawnInterval = 5.0f;
+      float spawnInterval = 10.0f / currentWave;
       if (timeSinceLastSpawn >= spawnInterval) {
         spawnEnemy(getLane());
         timeSinceLastSpawn -= spawnInterval;
@@ -153,7 +153,7 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
       bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
       bossActive = true;
-    } else if (Objects.equals(currentLevelKey, "levelTwo")) {
+    } else if (Objects.equals(currentLevelKey, "levelTwo")) { 
       logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
       bossActive = true;

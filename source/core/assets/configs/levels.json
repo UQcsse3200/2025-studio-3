@@ -8,7 +8,7 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 5,
+          "waveWeight": 10,
           "minZombiesSpawn": 2,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.5 },
@@ -24,7 +24,7 @@
           }
         },
         {
-          "waveWeight": 10,
+          "waveWeight": 20,
           "minZombiesSpawn": 5,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
@@ -39,7 +39,7 @@
           }
         },
         {
-          "waveWeight": 15,
+          "waveWeight": 30,
           "minZombiesSpawn": 7,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
@@ -144,18 +144,18 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 20,
+          "waveWeight": 30,
           "minZombiesSpawn": 5,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.5 },
-            "fast": { "cost": 3, "chance": 0.3 },
-            "tanky": { "cost": 5, "chance": 0.15 },
+            "fast": { "cost": 3, "chance": 0.25 },
+            "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.05 },
             "teleport": { "cost": 6, "chance": 0.05 }
           }
         },
         {
-          "waveWeight": 50,
+          "waveWeight": 75,
           "minZombiesSpawn": 10,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
@@ -166,7 +166,7 @@
           }
         },
         {
-          "waveWeight": 75,
+          "waveWeight": 100,
           "minZombiesSpawn": 15,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
