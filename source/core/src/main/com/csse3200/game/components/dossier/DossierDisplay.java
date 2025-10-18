@@ -262,12 +262,18 @@ public class DossierDisplay extends UIComponent {
     float targetHeight = targetWidth * ((float) bookTexture.getHeight() / bookTexture.getWidth());
     bookImage.setSize(targetWidth, targetHeight);
 
-    // Create content table
+    // Create content table with adjusted positioning for dossier pages
     Table contentTable = new Table(skin);
     float uiScale = ui.getUIScale();
-    contentTable.defaults().pad(10f * uiScale);
 
-    // 1st column for Entity Image
+    // Adjust table positioning to better align with dossier background
+    contentTable.defaults().pad(15f * uiScale); // Increased padding
+    contentTable.padLeft(targetWidth * 0.08f); // Left margin for left page
+    contentTable.padRight(targetWidth * 0.08f); // Right margin for right page
+    contentTable.padTop(targetHeight * 0.12f); // Top margin
+    contentTable.padBottom(targetHeight * 0.12f); // Bottom margin
+
+    // 1st column for Entity Image (Left Page)
     String currentEntityKey = entities.length > 0 ? entities[currentEntity] : "";
     logger.debug(
         "[DossierDisplay] makeDossierTable - entities.length: {}, currentEntity: {}, currentEntityKey: '{}'",
@@ -279,18 +285,23 @@ public class DossierDisplay extends UIComponent {
     Table imageFrame = new Table(skin);
     imageFrame
         .add(entitySpriteImage)
-        .width(stageWidth * 0.3f)
-        .height(stageHeight * 0.3f)
-        .pad(stageHeight * 0.03f);
+        .width(stageWidth * 0.25f) // Reduced from 0.3f to 0.25f
+        .height(stageHeight * 0.25f) // Reduced from 0.3f to 0.25f
+        .pad(stageHeight * 0.02f); // Reduced padding
 
-    // 2nd column for Entity Info
+    // 2nd column for Entity Info (Right Page)
     Table infoTable = new Table(skin);
 
     String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
     Label entityNameLabel = ui.subheading(name);
     entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
-    infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
+    infoTable
+        .add(entityNameLabel)
+        .left()
+        .expandX()
+        .padRight(stageWidth * 0.05f)
+        .row(); // Reduced padding
 
     String info = entities.length > 0 ? getEntityInfo(currentEntityKey) : "";
     Label entityInfoLabel = ui.text(info);
