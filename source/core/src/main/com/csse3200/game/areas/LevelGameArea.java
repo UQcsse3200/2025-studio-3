@@ -604,6 +604,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (distanceSq <= radius * radius) {
         // Apply damage by subtracting health
         stats.addHealth(-damage);
+        robot.getEvents().trigger("hitMarker", robot);
 
         logger.info(
             "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
