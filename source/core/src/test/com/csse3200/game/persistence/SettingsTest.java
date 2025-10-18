@@ -202,11 +202,11 @@ class SettingsTest {
     settings.setRightButton(Input.Keys.RIGHT);
     assertEquals(Input.Keys.RIGHT, settings.getRightButton());
 
-    settings.setZoomInButton(Input.Keys.Z);
-    assertEquals(Input.Keys.Z, settings.getZoomInButton());
+    settings.setZoomInButton(Input.Keys.W);
+    assertEquals(Input.Keys.W, settings.getZoomInButton());
 
-    settings.setZoomOutButton(Input.Keys.X);
-    assertEquals(Input.Keys.X, settings.getZoomOutButton());
+    settings.setZoomOutButton(Input.Keys.Y);
+    assertEquals(Input.Keys.Y, settings.getZoomOutButton());
   }
 
   @Test
@@ -222,8 +222,8 @@ class SettingsTest {
     settings.setDownButton(Input.Keys.DOWN);
     settings.setLeftButton(Input.Keys.LEFT);
     settings.setRightButton(Input.Keys.RIGHT);
-    settings.setZoomInButton(Input.Keys.Z);
-    settings.setZoomOutButton(Input.Keys.X);
+    settings.setZoomInButton(Input.Keys.W);
+    settings.setZoomOutButton(Input.Keys.Y);
 
     // Reset and assert defaults
     settings.resetKeyBinds();

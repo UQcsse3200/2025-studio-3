@@ -346,8 +346,8 @@ class SettingsServiceTest {
         Input.Keys.DOWN,
         Input.Keys.LEFT,
         Input.Keys.RIGHT,
-        Input.Keys.Z,
-        Input.Keys.X);
+        Input.Keys.W,
+        Input.Keys.Y);
 
     Settings settings = service.getSettings();
     assertEquals(Input.Keys.P, settings.getPauseButton());
@@ -357,8 +357,8 @@ class SettingsServiceTest {
     assertEquals(Input.Keys.DOWN, settings.getDownButton());
     assertEquals(Input.Keys.LEFT, settings.getLeftButton());
     assertEquals(Input.Keys.RIGHT, settings.getRightButton());
-    assertEquals(Input.Keys.Z, settings.getZoomInButton());
-    assertEquals(Input.Keys.X, settings.getZoomOutButton());
+    assertEquals(Input.Keys.W, settings.getZoomInButton());
+    assertEquals(Input.Keys.Y, settings.getZoomOutButton());
   }
 
   @Test
