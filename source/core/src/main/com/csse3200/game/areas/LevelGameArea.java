@@ -2,6 +2,8 @@ package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -32,11 +34,6 @@ import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
-import com.csse3200.game.entities.factories.DefenceFactory;
-import com.csse3200.game.entities.factories.GridFactory;
-import com.csse3200.game.entities.factories.ItemFactory;
-import com.csse3200.game.entities.factories.ProjectileFactory;
-import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
@@ -46,6 +43,7 @@ import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -814,6 +812,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       Entity occ = grid.getOccupantIndex(i);
       if (occ == null) continue;
 
+      Vector2 pos = occ.getPosition();
+
+      if (occ.getComponent(GeneratorStatsComponent.class) != null) {
+        if (occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
+          // must be a healer
+          continue;
+        }
+      }
+      
+      // spawn heal effect on entity
+      ItemEffectsService.spawnEffect(ServiceLocator.getResourceService()
+          .getAsset("images/effects/hp-up.atlas", TextureAtlas.class), 
+          "hp-up",
+          (new Vector2[] {pos, pos}),
+          (int) tileSize,
+          // frame duration and total effect time (buff effects remain for 30 seconds)
+          (new float[] {0.1f, 1.85f}),
+          Animation.PlayMode.NORMAL,
+      false);
+
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
     }
@@ -888,8 +906,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
-        healDefences();
         // remove the healer after its animation
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(
+                Actions.sequence(Actions.delay(0.55f), Actions.run(() -> healDefences())));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
