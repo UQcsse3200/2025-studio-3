@@ -81,6 +81,7 @@ public class TouchAttackComponent extends Component {
       targetStats.hit(combatStats);
       target.getEvents().trigger("hitMarker", target);
       entity.getEvents().trigger("attack", target);
+      entity.getEvents().trigger("hit");
     }
 
     // Knockback

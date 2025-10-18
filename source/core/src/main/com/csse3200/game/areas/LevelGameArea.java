@@ -307,15 +307,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Spawns a static defensive wall at the left edge of the map. */
   void spawnWall() {
-    float tileY = yOffset - tileSize / 5;
-    float wallSize = tileSize * 6;
+    for (int i = 0; i < 5; i++) {
+        Entity wall = DefenceFactory.createWall();
 
-    Entity wall = DefenceFactory.createWall();
-    wall.setPosition(xOffset + tileSize * -1, tileY);
-    wall.scaleHeight(wallSize);
+        float tileY = yOffset + (i * tileSize);
+        wall.setPosition(xOffset + tileSize * -1, tileY);
+        wall.scaleHeight(tileSize);
 
-    spawnEntity(wall);
-    wall.getEvents().trigger("idleStart");
+        wall.getEvents()
+                .addListener(
+                        ENTITY_DEATH_EVENT,
+                        () -> {
+
+                            requestDespawn(wall);
+                            robots.remove(wall);
+                        });
+
+        spawnEntity(wall);
+        wall.getEvents().trigger("idleStart");
+    }
   }
 
   private void spawnScrap(Entity entity) {
