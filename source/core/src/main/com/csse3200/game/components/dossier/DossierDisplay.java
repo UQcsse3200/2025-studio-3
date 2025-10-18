@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -100,7 +101,7 @@ public class DossierDisplay extends UIComponent {
 
     // main information of entity
     rootTable.row().padTop(10f * uiScale);
-    rootTable.add(makeDossierTable()).expand().fill().row();
+    rootTable.add(navigateDossier()).expand().fill().row();
 
     rootTable.add(makeEntitiesButtons()).expand().fill().row();
 
@@ -206,6 +207,47 @@ public class DossierDisplay extends UIComponent {
     table.row();
 
     return table;
+  }
+
+  private Table navigateDossier() {
+    float uiScale = ui.getUIScale();
+    float arrowSize = 140f * uiScale;
+
+    Texture leftArrowTexture = new Texture(Gdx.files.internal("images/ui/arrow_left.png"));
+    Texture rightArrowTexture = new Texture(Gdx.files.internal("images/ui/arrow_right.png"));
+
+    Drawable leftArrowDrawable = new TextureRegionDrawable(new TextureRegion(leftArrowTexture));
+    Drawable rightArrowDrawable = new TextureRegionDrawable(new TextureRegion(rightArrowTexture));
+
+    ImageButton leftArrow = new ImageButton(leftArrowDrawable);
+    ImageButton rightArrow = new ImageButton(rightArrowDrawable);
+
+    leftArrow.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        if (entities.length > 0 && currentEntity > 0) {
+          currentEntity--;
+          entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+        }
+      }
+    });
+
+    rightArrow.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        if (entities.length > 0 && currentEntity < entities.length - 1) {
+          currentEntity++;
+          entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+        }
+      }
+    });
+
+    Table navigationTable = new Table();
+    navigationTable.add(leftArrow).size(arrowSize).padRight(5f * uiScale);
+    navigationTable.add(makeDossierTable()).expand().fill();
+    navigationTable.add(rightArrow).size(arrowSize).padRight(5f * uiScale);
+
+    return navigationTable;
   }
 
   private void updateDossierInfoListener(Label nameLabel, Label infoLabel, Image spriteImage) {
@@ -330,7 +372,7 @@ public class DossierDisplay extends UIComponent {
     // sizing content table
     Container<Table> contentContainer = new Container<>(contentTable);
     contentContainer.size(targetWidth, targetHeight);
-    contentContainer.fill().center();
+    contentContainer.fill();
 
     // Stack containing book image and content
     Stack stack = new Stack();
@@ -340,7 +382,7 @@ public class DossierDisplay extends UIComponent {
 
     // Wrap in outer table for positioning
     Table outerTable = new Table();
-    outerTable.add(stack).size(targetWidth, targetHeight).center();
+    outerTable.add(stack).size(targetWidth, targetHeight).fill();
 
     return outerTable;
   }
