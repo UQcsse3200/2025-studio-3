@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -359,7 +361,6 @@ public class DossierDisplay extends UIComponent {
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
     float uiScale = ui.getUIScale();
-    buttonRow.bottom().padBottom(60f * uiScale);
     ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
@@ -388,7 +389,72 @@ public class DossierDisplay extends UIComponent {
             }
           });
     }
-    return buttonRow;
+
+    // create horizontal ScrollPane for entity buttons
+    ScrollPane scrollPane = createScrollPane(buttonRow);
+
+    // create arrow button
+    float arrowWidth = 60f * uiScale;
+    float arrowHeight = buttonDimensions.getValue();
+    Table arrowRow = createScrollArrows(scrollPane, arrowWidth, arrowHeight, uiScale);
+
+    // wrap everything in a root table
+    Table root = new Table();
+    root.bottom().padBottom(60f * uiScale);
+    root.padLeft(200f * uiScale);
+    root.padRight(200f * uiScale);
+    root.add(arrowRow).expandX().fillX();
+
+    return root;
+  }
+
+  private ScrollPane createScrollPane(Actor content) {
+    // define ScrollPane style
+    ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
+    scrollStyle.background = null; // optional, if you don’t want any background
+    scrollStyle.hScroll = null; // removes the horizontal scroll knob background
+    scrollStyle.hScrollKnob = null; // removes the horizontal scroll knob
+    scrollStyle.vScroll = null;
+    scrollStyle.vScrollKnob = null;
+
+    // wrap the row in a scroll pane (horizontal scrolling)
+    ScrollPane scrollPane = new ScrollPane(content, scrollStyle);
+    scrollPane.setScrollingDisabled(false, true); // allow horizontal scroll and disable vertical scroll
+    scrollPane.setFadeScrollBars(false);
+    scrollPane.setScrollbarsOnTop(true);
+    scrollPane.setSmoothScrolling(true);
+
+    return scrollPane;
+  }
+
+  private Table createScrollArrows(ScrollPane scrollPane, float arrowWidth, float arrowHeight, float uiScale) {
+    TextButton leftArrow = new TextButton("<", skin);
+    TextButton rightArrow = new TextButton(">", skin);
+
+    // add listener to move the scroll pane left/right
+    leftArrow.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        float newScrollX = Math.max(scrollPane.getScrollX() - 200f, 0f);
+        scrollPane.setScrollX(newScrollX);
+      }
+    });
+
+    rightArrow.addListener(new ClickListener() {
+      @Override
+      public void clicked(InputEvent event, float x, float y) {
+        float newScrollX = Math.min(scrollPane.getScrollX() + 200f, scrollPane.getMaxX());
+        scrollPane.setScrollX(newScrollX);
+      }
+    });
+
+    // wrap everything in a table
+    Table arrowRow = new Table();
+    arrowRow.add(leftArrow).size(arrowWidth, arrowHeight).padRight(20f * uiScale);
+    arrowRow.add(scrollPane).height(arrowHeight).expandX().fillX();
+    arrowRow.add(rightArrow).size(arrowWidth, arrowHeight).padLeft(20f * uiScale);
+
+    return arrowRow;
   }
 
   /**
