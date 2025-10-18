@@ -81,6 +81,10 @@ public final class SlotEffect {
       case SUMMON_ENEMY -> summonWave(area);
       case DESTROY_ENEMY -> destroyAllEnemies();
       case DROP_SLINGSHOOTER_CARD -> dropSlingShooterCard();
+      case DROP_BOXER_CARD -> dropBoxerCard();
+      case DROP_HARPOON_CARD -> dropHarpoonCard();
+      case DROP_MORTAR_CARD -> dropMortarCard();
+      case DROP_SHIELD_CARD -> dropShieldCard();
       default -> logger.info("Effect {} ignored for LevelGameArea.", effect);
     }
   }
@@ -170,6 +174,30 @@ public final class SlotEffect {
     // ===== New logic: forward to card module, then return =====
     if (uiStage != null && uiReelsPane != null && currentArea != null) {
       SlotCardEntity.dropSlingShooterCard(uiStage, uiReelsPane, currentArea);
+    }
+  }
+
+  private static void dropBoxerCard() {
+    if (uiStage != null && uiReelsPane != null && currentArea != null) {
+      SlotCardEntity.dropBoxerCard(uiStage, uiReelsPane, currentArea);
+    }
+  }
+
+  private static void dropHarpoonCard() {
+    if (uiStage != null && uiReelsPane != null && currentArea != null) {
+      SlotCardEntity.dropHarpoonCard(uiStage, uiReelsPane, currentArea);
+    }
+  }
+
+  private static void dropMortarCard() {
+    if (uiStage != null && uiReelsPane != null && currentArea != null) {
+      SlotCardEntity.dropMortarCard(uiStage, uiReelsPane, currentArea);
+    }
+  }
+
+  private static void dropShieldCard() {
+    if (uiStage != null && uiReelsPane != null && currentArea != null) {
+      SlotCardEntity.dropShieldCard(uiStage, uiReelsPane, currentArea);
     }
   }
 

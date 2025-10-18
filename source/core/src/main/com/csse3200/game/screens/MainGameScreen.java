@@ -7,12 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.components.hud.PauseMenu;
 import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.components.hud.SpeedControlDisplay;
+import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.components.waves.CurrentWaveDisplay;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
@@ -278,11 +280,11 @@ public class MainGameScreen extends ScreenAdapter {
       ServiceLocator.getWaveService().update(scaledDelta);
     }
 
-    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+    if (!isPaused && doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
       gameArea.createWavePreview();
     }
 
-    if (doIntroPan) {
+    if (!isPaused && doIntroPan) {
       panElapsed += delta;
       float t = Math.min(1f, panElapsed / PAN_DURATION);
       var cam = renderer.getCamera().getCamera();
@@ -459,14 +461,55 @@ public class MainGameScreen extends ScreenAdapter {
   /** Event handler for pause events */
   private void handlePause() {
     logger.info("[MainGameScreen] Game paused");
+    isPaused = true;
     ServiceLocator.getMusicService().pause();
-    // Pause currency generation, pause wave manager, pause generators.
+    // Pause slot machine auto-refill (if present)
+    SlotMachineDisplay slot = findSlotMachineDisplay();
+    if (slot != null) {
+      slot.pauseSpin();
+    }
+    // Pause currency generators
+    EntityService es = ServiceLocator.getEntityService();
+    if (es != null) {
+      for (Entity e : es.getEntities()) {
+        CurrencyGeneratorComponent cg = e.getComponent(CurrencyGeneratorComponent.class);
+        if (cg != null) {
+          cg.pause();
+        }
+      }
+    }
   }
 
   /** Event handler for resume events */
   private void handleResume() {
     logger.info("[MainGameScreen] Game resumed");
+    isPaused = false;
     ServiceLocator.getMusicService().resume();
-    // Resume currency generation, resume wave manager, resume generators.
+    // Resume slot machine auto-refill (if present)
+    SlotMachineDisplay slot = findSlotMachineDisplay();
+    if (slot != null) {
+      slot.resumeSpin();
+    }
+    // Resume currency generators
+    EntityService es = ServiceLocator.getEntityService();
+    if (es != null) {
+      for (Entity e : es.getEntities()) {
+        CurrencyGeneratorComponent cg = e.getComponent(CurrencyGeneratorComponent.class);
+        if (cg != null) {
+          cg.resume();
+        }
+      }
+    }
+  }
+
+  /** Find the SlotMachineDisplay component if present in current entities. */
+  private SlotMachineDisplay findSlotMachineDisplay() {
+    EntityService es = ServiceLocator.getEntityService();
+    if (es == null) return null;
+    for (Entity e : es.getEntities()) {
+      SlotMachineDisplay comp = e.getComponent(SlotMachineDisplay.class);
+      if (comp != null) return comp;
+    }
+    return null;
   }
 }

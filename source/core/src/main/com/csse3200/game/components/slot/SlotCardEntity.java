@@ -33,8 +33,8 @@ public final class SlotCardEntity {
   private static TextureAtlas cardsAtlas;
   private static boolean ownsCardsAtlas = false;
 
-  private static final float CARD_SCREEN_W_RATIO = 0.06f;
-  private static final float CARD_SLOT_W_RATIO = 0.22f;
+  private static final float CARD_SCREEN_W_RATIO = 0.15f;
+  private static final float CARD_SLOT_W_RATIO = 0.50f;
   private static final float DROP_FADE_SEC = 0.15f;
   private static final float DROP_MOVE_SEC = 0.35f;
   private static final float DROP_PADDING_PCT = 0.02f;
@@ -78,6 +78,54 @@ public final class SlotCardEntity {
             () ->
                 DefenceFactory.createDefenceUnit(
                     ServiceLocator.getConfigService().getDefenderConfig("slingshooter"))));
+  }
+
+  public static void dropBoxerCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Boxer",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("boxer"))));
+  }
+
+  public static void dropHarpoonCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Harpoon",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("harpoon"))));
+  }
+
+  public static void dropMortarCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Mortar",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("mortar"))));
+  }
+
+  public static void dropShieldCard(Stage uiStage, ScrollPane uiReelsPane, LevelGameArea area) {
+    dropCard(
+        uiStage,
+        uiReelsPane,
+        area,
+        CardSpec.of(
+            "Card_Shield",
+            () ->
+                DefenceFactory.createDefenceUnit(
+                    ServiceLocator.getConfigService().getDefenderConfig("shield"))));
   }
 
   // Universal drop entrance
@@ -304,6 +352,9 @@ public final class SlotCardEntity {
 
   /** Optional: dispose when unloading scene */
   public static void disposeUi() {
+    // Reset temporary in-level card count so re-entering doesn't carry over
+    activeCount = 0;
+
     if (ownsCardsAtlas && cardsAtlas != null) {
       cardsAtlas.dispose();
       cardsAtlas = null;
