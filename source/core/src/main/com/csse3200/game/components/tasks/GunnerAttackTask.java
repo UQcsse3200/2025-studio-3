@@ -54,6 +54,11 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
       // if the time since last fire is greater than the cooldown, fire
       if (timeSinceLastFire >= FIRE_COOLDOWN) {
+        // This is a bit of a scuffed solution, but the gunnerAttack is very inconsistent about
+        // starting.
+        // Gunner animations could use a repass later after gunner robot kinks have been ironed out.
+        this.owner.getEntity().getEvents().trigger("shootStart");
+
         logger.info("Gunner firing at {} from {}", targetPos, myPos);
         owner.getEntity().getEvents().trigger("fire");
         timeSinceLastFire = 0f;
