@@ -10,6 +10,7 @@
   * to merge main into feat/levels-extension to combine improved spawn logic with refactored EntitySpawn class due to level preview
   * to speed up refactoring/cleaning of LevelGameArea
   * to assist with creation of additional unit tests in LevelGameArea
+  * plan pause functionality changes and ensure they did not break other features
 
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.

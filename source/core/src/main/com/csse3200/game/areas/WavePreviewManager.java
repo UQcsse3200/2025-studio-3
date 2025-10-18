@@ -56,7 +56,7 @@ public class WavePreviewManager {
   public void clearWavePreview() {
     if (!active) return;
     for (Entity e : new ArrayList<>(previewEntities)) {
-      area.requestDespawn(e);
+      area.removePreviewEntity(e);
     }
     previewEntities.clear();
     active = false;

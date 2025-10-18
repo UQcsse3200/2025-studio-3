@@ -32,6 +32,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -243,6 +244,26 @@ class LevelGameAreaTest {
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
     verify(storage).removeTileUnit();
+  }
+
+  @Test
+  void spawnUnitIgnoredWhenPlacementLocked() {
+    GameStateService service = mock(GameStateService.class);
+    when(service.isPlacementLocked()).thenReturn(true);
+    ServiceLocator.registerGameStateService(service);
+
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
+    area.setGrid(new LevelGameGrid(5, 5));
+
+    Entity selection = new Entity().addComponent(new DeckInputComponent(area, Entity::new));
+    area.setSelectedUnit(selection);
+    area.setIsCharacterSelected(true);
+
+    area.spawnUnit(0);
+
+    assertFalse(area.getGrid().isOccupiedIndex(0));
+    assertNull(area.getSelectedUnit());
+    assertFalse(area.isCharacterSelected());
   }
 
   @Test
@@ -568,6 +589,40 @@ class LevelGameAreaTest {
   }
 
   @Test
+  void checkGameOverAddsFreezeReason() {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    SettingsService settings = mock(SettingsService.class);
+    when(settings.getSoundVolume()).thenReturn(0.5f);
+    ServiceLocator.registerSettingsService(settings);
+
+    Sound goSound = mock(Sound.class);
+    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
+        .thenReturn(goSound);
+
+    Entity robot = new Entity();
+    robot.setPosition(area.getXOffset() - area.getTileSize(), area.getYOffset());
+    area.getRobots().add(robot);
+
+    area.checkGameOver();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+    verify(state).lockPlacement();
+  }
+
+  @Test
   void checkLevelComplete_tripsAtWaveFour_andIsIdempotent() throws Exception {
     // Simple level config for create()
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
@@ -597,6 +652,32 @@ class LevelGameAreaTest {
     // Verify idempotence
     area.checkLevelComplete();
     assertTrue(flag.getBoolean(area));
+  }
+
+  @Test
+  void checkLevelCompleteAddsFreezeReason() {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    WaveService waves = mock(WaveService.class);
+    when(waves.getCurrentWave()).thenReturn(4);
+    ServiceLocator.registerWaveService(waves);
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    area.checkLevelComplete();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+    verify(state).lockPlacement();
   }
 
   @Test

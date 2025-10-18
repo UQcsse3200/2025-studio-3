@@ -1,5 +1,8 @@
 package com.csse3200.game.screens;
 
+import static com.csse3200.game.services.GameStateService.FreezeReason.INTRO_PAN;
+import static com.csse3200.game.services.GameStateService.FreezeReason.USER_PAUSE;
+
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
@@ -130,7 +133,8 @@ public class MainGameScreen extends ScreenAdapter {
   protected final Renderer renderer;
   protected final PhysicsEngine physicsEngine;
   protected LevelGameArea gameArea;
-  protected boolean isPaused = false;
+  protected final GameStateService gameStateService;
+  protected Entity uiEntity;
   private final List<String> textures = new ArrayList<>();
   private final String level;
 
@@ -197,6 +201,8 @@ public class MainGameScreen extends ScreenAdapter {
     logger.debug("[MainGameScreen] Initialising main game screen services");
 
     ServiceLocator.registerTimeSource(new GameTime());
+    gameStateService = new GameStateService(ServiceLocator.getTimeSource());
+    ServiceLocator.registerGameStateService(gameStateService);
     PhysicsService physicsService = new PhysicsService();
     ServiceLocator.registerPhysicsService(physicsService);
     physicsEngine = physicsService.getPhysics();
@@ -243,6 +249,8 @@ public class MainGameScreen extends ScreenAdapter {
     panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
     panElapsed = 0f;
     panPhase = PanPhase.RIGHT;
+    gameStateService.addFreezeReason(INTRO_PAN);
+    gameStateService.lockPlacement();
   }
 
   /**
@@ -270,45 +278,71 @@ public class MainGameScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    if (!isPaused) {
-      // Use scaled delta for systems that accept it
-      float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
-      physicsEngine.update();
-      ServiceLocator.getEntityService().update();
-      ServiceLocator.getWaveService().update(scaledDelta);
-    }
-
-    if (doIntroPan && panPhase == PanPhase.RIGHT && panElapsed == 0f) {
-      gameArea.createWavePreview();
-    }
-
-    if (doIntroPan) {
-      panElapsed += delta;
-      float t = Math.min(1f, panElapsed / PAN_DURATION);
-      var cam = renderer.getCamera().getCamera();
-
-      if (panPhase == PanPhase.RIGHT) {
-        cam.position.x = Interpolation.smoother.apply(panStartX, panTargetX, t);
-        cam.update();
-        if (t >= 1f) {
-          // switch to left pan
-          panPhase = PanPhase.LEFT;
-          panElapsed = 0f;
-        }
-      } else if (panPhase == PanPhase.LEFT) {
-        cam.position.x = Interpolation.smoother.apply(panTargetX, panStartX, t);
-        cam.update();
-        if (t >= 1f) {
-          panPhase = PanPhase.DONE;
-          doIntroPan = false;
-          gameArea.clearWavePreview();
-        }
-      }
-    }
-
+    updateWorld();
+    updateIntroPan(delta);
     renderer.render();
     gameArea.checkGameOver(); // check game-over state
     gameArea.checkLevelComplete(); // check level-complete state
+  }
+
+  private void updateWorld() {
+    if (gameStateService.isFrozen()) {
+      return;
+    }
+
+    float scaledDelta = ServiceLocator.getTimeSource().getDeltaTime();
+    physicsEngine.update();
+    ServiceLocator.getEntityService().update();
+    ServiceLocator.getWaveService().update(scaledDelta);
+  }
+
+  private void updateIntroPan(float delta) {
+    if (!doIntroPan) {
+      return;
+    }
+
+    if (panPhase == PanPhase.RIGHT && panElapsed == 0f) {
+      gameArea.createWavePreview();
+    }
+
+    panElapsed += delta;
+    float progress = Math.min(1f, panElapsed / PAN_DURATION);
+    Float newCameraX = null;
+
+    switch (panPhase) {
+      case RIGHT:
+        newCameraX = Interpolation.smoother.apply(panStartX, panTargetX, progress);
+        if (progress >= 1f) {
+          panPhase = PanPhase.LEFT;
+          panElapsed = 0f;
+        }
+        break;
+      case LEFT:
+        newCameraX = Interpolation.smoother.apply(panTargetX, panStartX, progress);
+        if (progress >= 1f) {
+          completeIntroPan();
+        }
+        break;
+      default:
+        // No movement required once the pan is done.
+        break;
+    }
+
+    if (newCameraX != null) {
+      var cam = renderer.getCamera().getCamera();
+      cam.position.x = newCameraX;
+      cam.update();
+    }
+  }
+
+  private void completeIntroPan() {
+    panPhase = PanPhase.DONE;
+    doIntroPan = false;
+    gameArea.clearWavePreview();
+    gameStateService.removeFreezeReason(INTRO_PAN);
+    if (!gameStateService.isFrozen()) {
+      gameStateService.unlockPlacement();
+    }
   }
 
   @Override
@@ -329,10 +363,11 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getEntityService().dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getResourceService().dispose();
+    ServiceLocator.deregisterGameStateService();
     ServiceLocator.clear();
   }
 
-  private void loadAssets() {
+  protected void loadAssets() {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
 
@@ -390,8 +425,9 @@ public class MainGameScreen extends ScreenAdapter {
     BaseLevelConfig cfgForUi = ServiceLocator.getConfigService().getLevelConfig(level);
     boolean isSlotLevel = cfgForUi != null && cfgForUi.isSlotMachine();
 
-    Entity ui = new Entity();
-    ui.addComponent(new InputDecorator(stage, 10))
+    uiEntity = new Entity();
+    uiEntity
+        .addComponent(new InputDecorator(stage, 10))
         .addComponent(new PerformanceDisplay())
         .addComponent(new PauseButton())
         .addComponent(new PauseMenu())
@@ -403,12 +439,12 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new CurrentWaveDisplay());
 
     if (!isSlotLevel) {
-      ui.addComponent(new ScrapHudDisplay());
+      uiEntity.addComponent(new ScrapHudDisplay());
     }
 
     // Add event listeners for pause/resume to the UI entity
-    ui.getEvents().addListener("pause", this::handlePause);
-    ui.getEvents().addListener("resume", this::handleResume);
+    uiEntity.getEvents().addListener("pause", this::handlePause);
+    uiEntity.getEvents().addListener("resume", this::handleResume);
 
     // Connect the CurrentWaveDisplay to the WaveService for event listening
     ServiceLocator.getWaveService()
@@ -430,7 +466,7 @@ public class MainGameScreen extends ScreenAdapter {
               }
             });
 
-    ServiceLocator.getEntityService().register(ui);
+    ServiceLocator.getEntityService().register(uiEntity);
   }
 
   /**
@@ -446,6 +482,11 @@ public class MainGameScreen extends ScreenAdapter {
     }
   }
 
+  /** Exposes the resolved level key for subclasses and tests. */
+  protected String getLevelKey() {
+    return level;
+  }
+
   /** Snaps the camera to the bottom left of the screen */
   private void snapCameraBottomLeft() {
     var cam = renderer.getCamera();
@@ -453,20 +494,37 @@ public class MainGameScreen extends ScreenAdapter {
     float viewportWidth = cam.getCamera().viewportWidth;
     float viewportHeight = cam.getCamera().viewportHeight;
 
-    cam.getEntity().setPosition(viewportWidth / 2f, viewportHeight / 2f);
+    float targetX = viewportWidth / 2f;
+    float targetY = viewportHeight / 2f;
+
+    // When the game is frozen the camera entity won't update automatically, so push the transform
+    // directly onto the camera before calling update().
+    cam.getEntity().setPosition(targetX, targetY);
+    cam.getCamera().position.set(targetX, targetY, 0f);
+    cam.getCamera().update();
   }
 
   /** Event handler for pause events */
-  private void handlePause() {
+  protected void handlePause() {
     logger.info("[MainGameScreen] Game paused");
-    ServiceLocator.getMusicService().pause();
-    // Pause currency generation, pause wave manager, pause generators.
+    gameStateService.addFreezeReason(USER_PAUSE);
+    gameStateService.lockPlacement();
+    MusicService musicService = ServiceLocator.getMusicService();
+    if (musicService != null) {
+      musicService.pause();
+    }
   }
 
   /** Event handler for resume events */
-  private void handleResume() {
+  protected void handleResume() {
     logger.info("[MainGameScreen] Game resumed");
-    ServiceLocator.getMusicService().resume();
-    // Resume currency generation, resume wave manager, resume generators.
+    gameStateService.removeFreezeReason(USER_PAUSE);
+    if (!gameStateService.isFrozen()) {
+      gameStateService.unlockPlacement();
+    }
+    MusicService musicService = ServiceLocator.getMusicService();
+    if (musicService != null) {
+      musicService.resume();
+    }
   }
 }

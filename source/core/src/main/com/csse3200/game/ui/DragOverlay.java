@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.areas.AreaAPI;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -43,6 +44,10 @@ public class DragOverlay extends UIComponent {
    * @param texture Texture to show while dragging.
    */
   public void begin(Texture texture) {
+    GameStateService service = ServiceLocator.getGameStateService();
+    if (service != null && service.isPlacementLocked()) {
+      return;
+    }
     if (texture == null) return;
     image.setDrawable(new TextureRegionDrawable(texture));
     float size = area.getTileSize() * sizeScale; // Set Scale

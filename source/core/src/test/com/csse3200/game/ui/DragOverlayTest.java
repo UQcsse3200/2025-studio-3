@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.extensions.UIExtension;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,6 +42,18 @@ class DragOverlayTest {
     Texture texture = mock(Texture.class);
     overlay.begin(texture);
     assertTrue(getImage().isVisible());
+  }
+
+  @Test
+  void begin_ignoredWhenPlacementLocked() {
+    GameStateService service = mock(GameStateService.class);
+    when(service.isPlacementLocked()).thenReturn(true);
+    ServiceLocator.registerGameStateService(service);
+
+    Texture texture = mock(Texture.class);
+    overlay.begin(texture);
+
+    assertFalse(getImage().isVisible());
   }
 
   @Test
@@ -93,6 +106,11 @@ class DragOverlayTest {
     Image img = getImage();
     overlay.dispose();
     assertFalse(img.hasParent());
+  }
+
+  @AfterEach
+  void afterEach() {
+    ServiceLocator.deregisterGameStateService();
   }
 
   private Image getImage() {
