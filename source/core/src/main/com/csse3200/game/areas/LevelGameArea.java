@@ -1,6 +1,8 @@
 package com.csse3200.game.areas;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
@@ -548,9 +550,23 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           .addListener(
               "despawnShell",
               e -> {
-                Vector2 pos = projectile.getPosition();
+                Vector2 pos = projectile.getPosition().cpy();
                 float radius = tileSize; // 1 tile radius
                 damageRobotsAtPosition(pos, radius, damage); //this damage value is now passed into spawnProjectile
+
+                // Spawn shell explosion effect
+                pos.x -= tileSize / 2f;
+                pos.y -= tileSize / 2f;
+                ServiceLocator.getItemEffectsService().spawnEffect(
+                        ServiceLocator.getResourceService()
+                                .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                        "shell_explosion",
+                        new Vector2[] {pos, pos}, // effect stays in place
+                        (int) tileSize,                 // scale to match tile size
+                        new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                        Animation.PlayMode.NORMAL,
+                        false                     // not moving
+                );
               });
     } else {
       projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity

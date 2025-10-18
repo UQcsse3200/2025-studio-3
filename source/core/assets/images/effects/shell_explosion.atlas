@@ -1,0 +1,24 @@
+shell_explosion.png
+size: 256, 32
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+pma: false
+default
+  bounds: 0, 0, 32, 32
+shell_explosion
+  bounds: 0, 0, 32, 32
+shell_explosion
+  bounds: 32, 0, 32, 32
+shell_explosion
+  bounds: 64, 0, 32, 32
+shell_explosion
+  bounds: 96, 0, 32, 32
+shell_explosion
+  bounds: 128, 0, 32, 32
+shell_explosion
+  bounds: 160, 0, 32, 32
+shell_explosion
+  bounds: 192, 0, 32, 32
+shell_explosion
+  bounds: 224, 0, 32, 32
