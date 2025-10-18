@@ -31,6 +31,8 @@ public class GameSettingsMenu extends UIComponent {
   private static final String DOWN_KEY = "down";
   private static final String LEFT_KEY = "left";
   private static final String RIGHT_KEY = "right";
+  private static final String ZOOM_IN_KEY = "zoomin";
+  private static final String ZOOM_OUT_KEY = "zoomout";
 
   /** Constructor for GameSettingsMenu. */
   public GameSettingsMenu() {
@@ -107,6 +109,18 @@ public class GameSettingsMenu extends UIComponent {
     rightKeyText.setName(RIGHT_KEY);
     setupKeybindTextField(rightKeyText);
 
+    Label zoomInLabel = ui.subheading("Zoom In Key:");
+    keybinds.put(ZOOM_IN_KEY, settings.getZoomInButton());
+    TextField zoomInKeyText = ui.createTextField(Input.Keys.toString(settings.getZoomInButton()));
+    zoomInKeyText.setName(ZOOM_IN_KEY);
+    setupKeybindTextField(zoomInKeyText);
+
+    Label zoomOutLabel = ui.subheading("Zoom Out Key:");
+    keybinds.put(ZOOM_OUT_KEY, settings.getZoomOutButton());
+    TextField zoomOutKeyText = ui.createTextField(Input.Keys.toString(settings.getZoomOutButton()));
+    zoomOutKeyText.setName(ZOOM_OUT_KEY);
+    setupKeybindTextField(zoomOutKeyText);
+
     Label difficultyLabel = ui.subheading("Difficulty:");
     difficultySelect = ui.createSelectBox(new String[] {"EASY", "NORMAL", "HARD"});
     difficultySelect.setSelected(settings.getDifficulty().toString());
@@ -141,6 +155,8 @@ public class GameSettingsMenu extends UIComponent {
             downKeyText.setText(Input.Keys.toString(settings.getDownButton()));
             leftKeyText.setText(Input.Keys.toString(settings.getLeftButton()));
             rightKeyText.setText(Input.Keys.toString(settings.getRightButton()));
+            zoomInKeyText.setText(Input.Keys.toString(settings.getZoomInButton()));
+            zoomOutKeyText.setText(Input.Keys.toString(settings.getZoomOutButton()));
             // Update keybind map
             keybinds.put(PAUSE_KEY, settings.getPauseButton());
             keybinds.put(SKIP_KEY, settings.getSkipButton());
@@ -149,6 +165,8 @@ public class GameSettingsMenu extends UIComponent {
             keybinds.put(DOWN_KEY, settings.getDownButton());
             keybinds.put(LEFT_KEY, settings.getLeftButton());
             keybinds.put(RIGHT_KEY, settings.getRightButton());
+            keybinds.put(ZOOM_IN_KEY, settings.getZoomInButton());
+            keybinds.put(ZOOM_OUT_KEY, settings.getZoomOutButton());
           }
         });
 
@@ -179,6 +197,14 @@ public class GameSettingsMenu extends UIComponent {
 
     rootTable.add(rightLabel).left().padRight(25f * uiScale);
     rootTable.add(rightKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
+
+    rootTable.add(zoomInLabel).left().padRight(25f * uiScale);
+    rootTable.add(zoomInKeyText).width(150f * uiScale).center();
+    rootTable.row().padTop(10f * uiScale);
+
+    rootTable.add(zoomOutLabel).left().padRight(25f * uiScale);
+    rootTable.add(zoomOutKeyText).width(150f * uiScale).center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(difficultyLabel).left().padRight(25f * uiScale);
@@ -225,7 +251,7 @@ public class GameSettingsMenu extends UIComponent {
           @Override
           public boolean keyDown(InputEvent event, int keycode) {
             if (textField.hasKeyboardFocus()) {
-              // Update the text field with the new key (do not error if same key as as previous is
+              // Update the text field with the new key (do not error if same key as previous is
               // re-entered)
               if (keybinds.containsValue(keycode)
                   && (keybinds.get(textField.getName()) != keycode)) {
@@ -282,7 +308,9 @@ public class GameSettingsMenu extends UIComponent {
             keybinds.get(UP_KEY),
             keybinds.get(DOWN_KEY),
             keybinds.get(LEFT_KEY),
-            keybinds.get(RIGHT_KEY));
+            keybinds.get(RIGHT_KEY),
+            keybinds.get(ZOOM_IN_KEY),
+            keybinds.get(ZOOM_OUT_KEY));
     logger.info("[GameSettingsMenu] New Keybinds: {}", keybinds);
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[GameSettingsMenu] Game settings applied");

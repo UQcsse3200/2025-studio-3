@@ -92,6 +92,8 @@ public class Settings {
   private int downButton;
   private int leftButton;
   private int rightButton;
+  private int zoomInButton;
+  private int zoomOutButton;
 
   /*
    * Audio settings of the game.
@@ -122,6 +124,8 @@ public class Settings {
     downButton = Input.Keys.S;
     leftButton = Input.Keys.A;
     rightButton = Input.Keys.D;
+    zoomInButton = Input.Keys.Z;
+    zoomOutButton = Input.Keys.X;
 
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
@@ -176,6 +180,8 @@ public class Settings {
     this.downButton = deserializedSettings.getDownButton();
     this.leftButton = deserializedSettings.getLeftButton();
     this.rightButton = deserializedSettings.getRightButton();
+    this.zoomInButton = deserializedSettings.getZoomInButton();
+    this.zoomOutButton = deserializedSettings.getZoomOutButton();
 
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
@@ -322,6 +328,24 @@ public class Settings {
    */
   public int getRightButton() {
     return rightButton;
+  }
+
+  /**
+   * Gets the key assigned to the zoom in button.
+   *
+   * @return the zoom in button.
+   */
+  public int getZoomInButton() {
+    return zoomInButton;
+  }
+
+  /**
+   * Gets the key assigned to the zoom out button.
+   *
+   * @return the zoom out button.
+   */
+  public int getZoomOutButton() {
+    return zoomOutButton;
   }
 
   /**
@@ -531,6 +555,24 @@ public class Settings {
     this.rightButton = rightButton;
   }
 
+  /**
+   * Sets the zoom in button.
+   *
+   * @param zoomInButton the zoom in button.
+   */
+  public void setZoomInButton(int zoomInButton) {
+    this.zoomInButton = zoomInButton;
+  }
+
+  /**
+   * Sets the zoom out button.
+   *
+   * @param zoomOutButton the zoom out button.
+   */
+  public void setZoomOutButton(int zoomOutButton) {
+    this.zoomOutButton = zoomOutButton;
+  }
+
   /** Resets the key binds to their default values. */
   public void resetKeyBinds() {
     pauseButton = Input.Keys.ESCAPE;
@@ -540,6 +582,8 @@ public class Settings {
     downButton = Input.Keys.S;
     leftButton = Input.Keys.A;
     rightButton = Input.Keys.D;
+    zoomInButton = Input.Keys.Z;
+    zoomOutButton = Input.Keys.X;
   }
 
   /**
@@ -707,6 +751,12 @@ public class Settings {
         + "\n"
         + "rightButton = "
         + Input.Keys.toString(rightButton)
+        + "\n"
+        + "zoomInButton = "
+        + Input.Keys.toString(zoomInButton)
+        + "\n"
+        + "zoomOutButton = "
+        + Input.Keys.toString(zoomOutButton)
         + "\n"
         + "windowedResolution = "
         + windowedResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "")

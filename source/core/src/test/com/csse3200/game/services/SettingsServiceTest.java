@@ -89,6 +89,8 @@ class SettingsServiceTest {
     lenient().when(deserializedSettingsMock.getDownButton()).thenReturn(Input.Keys.S);
     lenient().when(deserializedSettingsMock.getLeftButton()).thenReturn(Input.Keys.A);
     lenient().when(deserializedSettingsMock.getRightButton()).thenReturn(Input.Keys.D);
+    lenient().when(deserializedSettingsMock.getZoomInButton()).thenReturn(Input.Keys.Z);
+    lenient().when(deserializedSettingsMock.getZoomOutButton()).thenReturn(Input.Keys.X);
     lenient().when(deserializedSettingsMock.getMusicVolume()).thenReturn(1.0f);
     lenient().when(deserializedSettingsMock.getSoundVolume()).thenReturn(1.0f);
     lenient().when(deserializedSettingsMock.getVoiceVolume()).thenReturn(1.0f);
@@ -111,6 +113,8 @@ class SettingsServiceTest {
     lenient().when(settingsMock.getDownButton()).thenReturn(Input.Keys.S);
     lenient().when(settingsMock.getLeftButton()).thenReturn(Input.Keys.A);
     lenient().when(settingsMock.getRightButton()).thenReturn(Input.Keys.D);
+    lenient().when(settingsMock.getZoomInButton()).thenReturn(Input.Keys.Z);
+    lenient().when(settingsMock.getZoomOutButton()).thenReturn(Input.Keys.X);
     lenient().when(settingsMock.getMusicVolume()).thenReturn(1.0f);
     lenient().when(settingsMock.getSoundVolume()).thenReturn(1.0f);
     lenient().when(settingsMock.getVoiceVolume()).thenReturn(1.0f);
@@ -341,7 +345,9 @@ class SettingsServiceTest {
         Input.Keys.UP,
         Input.Keys.DOWN,
         Input.Keys.LEFT,
-        Input.Keys.RIGHT);
+        Input.Keys.RIGHT,
+        Input.Keys.Z,
+        Input.Keys.X);
 
     Settings settings = service.getSettings();
     assertEquals(Input.Keys.P, settings.getPauseButton());
@@ -351,6 +357,8 @@ class SettingsServiceTest {
     assertEquals(Input.Keys.DOWN, settings.getDownButton());
     assertEquals(Input.Keys.LEFT, settings.getLeftButton());
     assertEquals(Input.Keys.RIGHT, settings.getRightButton());
+    assertEquals(Input.Keys.Z, settings.getZoomInButton());
+    assertEquals(Input.Keys.X, settings.getZoomOutButton());
   }
 
   @Test
