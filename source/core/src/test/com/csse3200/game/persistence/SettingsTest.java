@@ -58,6 +58,8 @@ class SettingsTest {
     when(deserializedSettingsMock.getDownButton()).thenReturn(Input.Keys.S);
     when(deserializedSettingsMock.getLeftButton()).thenReturn(Input.Keys.A);
     when(deserializedSettingsMock.getRightButton()).thenReturn(Input.Keys.D);
+    when(deserializedSettingsMock.getZoomInButton()).thenReturn(Input.Keys.Z);
+    when(deserializedSettingsMock.getZoomOutButton()).thenReturn(Input.Keys.X);
   }
 
   @Test
@@ -89,6 +91,8 @@ class SettingsTest {
       assertEquals(Input.Keys.S, settings.getDownButton());
       assertEquals(Input.Keys.A, settings.getLeftButton());
       assertEquals(Input.Keys.D, settings.getRightButton());
+      assertEquals(Input.Keys.Z, settings.getZoomInButton());
+      assertEquals(Input.Keys.X, settings.getZoomOutButton());
 
       // Test default display settings
       assertEquals(Settings.Mode.FULLSCREEN, settings.getCurrentMode());
@@ -133,6 +137,8 @@ class SettingsTest {
       assertEquals(Input.Keys.S, settings.getDownButton());
       assertEquals(Input.Keys.A, settings.getLeftButton());
       assertEquals(Input.Keys.D, settings.getRightButton());
+      assertEquals(Input.Keys.Z, settings.getZoomInButton());
+      assertEquals(Input.Keys.X, settings.getZoomOutButton());
 
       assertEquals(Settings.Mode.WINDOWED, settings.getCurrentMode());
       assertEquals(Settings.UIScale.MEDIUM, settings.getCurrentUIScale());
@@ -195,6 +201,12 @@ class SettingsTest {
 
     settings.setRightButton(Input.Keys.RIGHT);
     assertEquals(Input.Keys.RIGHT, settings.getRightButton());
+
+    settings.setZoomInButton(Input.Keys.Z);
+    assertEquals(Input.Keys.Z, settings.getZoomInButton());
+
+    settings.setZoomOutButton(Input.Keys.X);
+    assertEquals(Input.Keys.X, settings.getZoomOutButton());
   }
 
   @Test
@@ -210,6 +222,8 @@ class SettingsTest {
     settings.setDownButton(Input.Keys.DOWN);
     settings.setLeftButton(Input.Keys.LEFT);
     settings.setRightButton(Input.Keys.RIGHT);
+    settings.setZoomInButton(Input.Keys.Z);
+    settings.setZoomOutButton(Input.Keys.X);
 
     // Reset and assert defaults
     settings.resetKeyBinds();
@@ -225,6 +239,8 @@ class SettingsTest {
     assertEquals(Input.Keys.S, settings.getDownButton());
     assertEquals(Input.Keys.A, settings.getLeftButton());
     assertEquals(Input.Keys.D, settings.getRightButton());
+    assertEquals(Input.Keys.Z, settings.getZoomInButton());
+    assertEquals(Input.Keys.X, settings.getZoomOutButton());
   }
 
   @Test
