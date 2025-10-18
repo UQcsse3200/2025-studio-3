@@ -141,12 +141,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color"><code>protected final <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></code></div>
 <div class="col-second even-row-color"><code><a href="#direction" class="member-name-link">direction</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="../../physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#hit" class="member-name-link">hit</a></code></div>
+<div class="col-first odd-row-color"><code>protected final <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
-<div class="col-second even-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
@@ -216,12 +213,6 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
  
    When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isTargetVisible(com.csse3200.game.entities.Entity)" class="member-name-link">isTargetVisible</a><wbr>(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of
- sight</div>
-</div>
 </div>
 </div>
 </div>
@@ -267,12 +258,6 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="debugRenderer">
 <h3>debugRenderer</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></span>&nbsp;<span class="element-name">debugRenderer</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="hit">
-<h3>hit</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../physics/raycast/RaycastHit.html" title="class in com.csse3200.game.physics.raycast">RaycastHit</a></span>&nbsp;<span class="element-name">hit</span></div>
 </section>
 </li>
 </ul>
@@ -361,20 +346,6 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <dd><code><a href="../../ai/tasks/PriorityTask.html#getPriority()">getPriority</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></code></dd>
 <dt>Returns:</dt>
 <dd>the tasks priority</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="isTargetVisible(com.csse3200.game.entities.Entity)">
-<h3>isTargetVisible</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isTargetVisible</span><wbr><span class="parameters">(<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</span></div>
-<div class="block">Determines if a target is visible by checking for obstacles in the current entities line of
- sight</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>target</code> - the target to check</dd>
-<dt>Returns:</dt>
-<dd><code>true</code> if the target is visible, <code>false</code> otherwise</dd>
 </dl>
 </section>
 </li>
