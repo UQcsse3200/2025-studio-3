@@ -71,7 +71,6 @@ public class DossierDisplay extends UIComponent {
 
   /** Adds all tables to the stage. */
   private void addActors() {
-
     // add background back in between changes
     Texture bgTexture =
         ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
@@ -86,18 +85,19 @@ public class DossierDisplay extends UIComponent {
     // create rootTable
     rootTable = new Table();
     rootTable.setFillParent(true);
-    rootTable.padTop(100f);
-    rootTable.padBottom(100f);
+    float uiScale = ui.getUIScale();
+    rootTable.padTop(100f * uiScale);
+    rootTable.padBottom(100f * uiScale);
 
-    // title
-    rootTable.add(title).expandX().top().padTop(20f);
+    // title with proper scaling
+    rootTable.add(title).expandX().top().padTop(20f * uiScale);
 
     // button row to swap between humans and robots
-    rootTable.row().padTop(10f);
+    rootTable.row().padTop(10f * uiScale);
     rootTable.add(makeSwapBtn()).expandX().expandY();
 
     // main information of entity
-    rootTable.row().padTop(10f);
+    rootTable.row().padTop(10f * uiScale);
     rootTable.add(makeDossierTable()).expand().fill().row();
 
     rootTable.add(makeEntitiesButtons()).expand().fill().row();
@@ -193,10 +193,10 @@ public class DossierDisplay extends UIComponent {
 
     Table table = new Table();
     table.defaults().expandX().fillX().space(50f);
-    table.padTop(50f);
+    table.padTop(50f * ui.getUIScale());
 
-    float buttonWidth = 200f; // Fixed width
-    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+    // Use UIFactory scaling for consistent button sizing
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(swapButtonWidth);
 
     table.add(humansBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
     table.add(robotsBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
@@ -264,7 +264,8 @@ public class DossierDisplay extends UIComponent {
 
     // Create content table
     Table contentTable = new Table(skin);
-    contentTable.defaults().pad(10);
+    float uiScale = ui.getUIScale();
+    contentTable.defaults().pad(10f * uiScale);
 
     // 1st column for Entity Image
     String currentEntityKey = entities.length > 0 ? entities[currentEntity] : "";
@@ -342,14 +343,16 @@ public class DossierDisplay extends UIComponent {
    * Builds a table containing buttons to access different entities within either 'Human' or
    * 'Robots' sections.
    *
-   * @return table with exit button
+   * @return table with entity buttons
    */
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
-    buttonRow.bottom().padBottom(60f);
+    float uiScale = ui.getUIScale();
+    buttonRow.bottom().padBottom(60f * uiScale);
     ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
       String entityKey = entities[i];
@@ -357,7 +360,10 @@ public class DossierDisplay extends UIComponent {
       String displayName = getEntityName(entityKey);
       TextButton btn = ui.secondaryButton(displayName, buttonWidth);
       group.add(btn);
-      buttonRow.add(btn).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5);
+      buttonRow
+          .add(btn)
+          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+          .pad(5f * uiScale);
 
       btn.addListener(
           new ChangeListener() {
