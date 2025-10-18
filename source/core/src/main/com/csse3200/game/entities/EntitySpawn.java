@@ -1,6 +1,7 @@
 package com.csse3200.game.entities;
 
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import java.util.*;
 
 /** Computes how many enemies to spawn in the current wave and selects a type per spawn request. */
@@ -9,7 +10,7 @@ public class EntitySpawn {
 
   private final int robotWeight;
   private int spawnCount = 0;
-  private final Deque<String> spawnQueue = new ArrayDeque<>();
+  private final Deque<RobotType> spawnQueue = new ArrayDeque<>();
 
   /** Creates a new instance with a default per-enemy weight cost. */
   public EntitySpawn() {
@@ -87,8 +88,8 @@ public class EntitySpawn {
   /**
    * @return next enemy type from the spawn queue, or "standard" if empty.
    */
-  public String getNextRobotType() {
-    return spawnQueue.isEmpty() ? "standard" : spawnQueue.pollFirst();
+  public RobotType getNextRobotType() {
+    return spawnQueue.isEmpty() ? RobotType.STANDARD : spawnQueue.pollFirst();
   }
 
   /** Deterministic expansion: build a fixed pattern from 'chance' weights. */
@@ -136,7 +137,7 @@ public class EntitySpawn {
       return;
     }
 
-    List<String> result =
+    List<RobotType> result =
         generateSpawnList(waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
 
     spawnQueue.clear();
@@ -148,7 +149,7 @@ public class EntitySpawn {
    * Generates a weighted, fair enemy list for a wave using the algorithm from the main branch,
    * refactored into a reusable function.
    */
-  private List<String> generateSpawnList(int waveWeight, Map<String, BaseSpawnConfig> configs) {
+  private List<RobotType> generateSpawnList(int waveWeight, Map<String, BaseSpawnConfig> configs) {
     if (configs == null || configs.isEmpty() || waveWeight <= 0) {
       return Collections.emptyList();
     }
@@ -193,7 +194,7 @@ public class EntitySpawn {
     int minCount = waveConfigProvider != null ? waveConfigProvider.getMinZombiesSpawn() : 0;
     int budget = Math.max(waveWeight, minCount * cheapest);
 
-    List<String> result = new ArrayList<>();
+    List<RobotType> result = new ArrayList<>();
 
     // Weighted smooth-round-robin loop
     while (budget >= cheapest) {
@@ -212,7 +213,7 @@ public class EntitySpawn {
 
       if (best == null) break;
 
-      result.add(best.name);
+      result.add(RobotType.fromString(best.name));
       budget -= best.cost;
 
       // Normalize accumulator
@@ -225,25 +226,25 @@ public class EntitySpawn {
   /**
    * @return preview list for the current wave
    */
-  public List<String> previewEnemiesForCurrentWave() {
+  public List<RobotType> previewEnemiesForCurrentWave() {
     if (waveConfigProvider == null) return Collections.emptyList();
     return generateSpawnList(
         waveConfigProvider.getWaveWeight(), waveConfigProvider.getEnemyConfigs());
   }
 
   /** Preview all waves for the level. */
-  public Map<Integer, List<String>> previewAllWaves() {
+  public Map<Integer, List<RobotType>> previewAllWaves() {
     if (waveConfigProvider == null) {
       return Collections.emptyMap();
     }
 
     int total = waveConfigProvider.getTotalWaves();
-    Map<Integer, List<String>> plan = new LinkedHashMap<>();
+    Map<Integer, List<RobotType>> plan = new LinkedHashMap<>();
 
     for (int w = 0; w < total; w++) {
       int budget = waveConfigProvider.getWaveWeight(w);
       Map<String, BaseSpawnConfig> configs = waveConfigProvider.getEnemyConfigs(w);
-      List<String> list = generateSpawnList(budget, configs);
+      List<RobotType> list = generateSpawnList(budget, configs);
       plan.put(w + 1, list);
     }
 
