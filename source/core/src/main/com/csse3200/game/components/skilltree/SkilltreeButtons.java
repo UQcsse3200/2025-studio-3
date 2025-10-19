@@ -235,8 +235,8 @@ public class SkilltreeButtons extends UIComponent {
       h = ui.getScaledHeight(height * 0.136f);
     } else if (skillName.contains("Expert")) {
       // Defaults for Expert
-      w = ui.getScaledWidth(width * 0.064f);
-      h = ui.getScaledHeight(height * 0.28f);
+      w = ui.getScaledWidth(width * 0.052f);
+      h = ui.getScaledHeight(height * 0.228f);
       if (skillName.equals("Health Expert")) {
         w = ui.getScaledWidth(width * 0.2f);
         h = ui.getScaledHeight(height * 0.144f);
