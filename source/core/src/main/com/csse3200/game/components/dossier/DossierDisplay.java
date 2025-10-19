@@ -209,6 +209,11 @@ public class DossierDisplay extends UIComponent {
     return table;
   }
 
+    /**
+     * Creates and returns a navigation UI table for browsing through a list of entities.
+     *
+     * @return a table containing navigation controls and the dossier display
+     */
   private Table navigateDossier() {
     float uiScale = ui.getUIScale();
     float arrowSize = 140f * uiScale;
@@ -395,10 +400,10 @@ public class DossierDisplay extends UIComponent {
   }
 
   /**
-   * Builds a table containing buttons to access different entities within either 'Human' or
-   * 'Robots' sections.
+   * Builds a horizontally scrollable table of buttons to access different entities within either
+   * 'Human' or 'Robots' sections.
    *
-   * @return table with entity buttons
+   * @return a horizontally scrollable table with entity buttons
    */
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
@@ -450,6 +455,12 @@ public class DossierDisplay extends UIComponent {
     return root;
   }
 
+    /**
+     * Creates a horizontally scrollable ScrollPane to contain UI content.
+     *
+     * @param content the Actor to be wrapped inside the ScrollPane
+     * @return a configured ScrollPane for horizontal scrolling
+     */
   private ScrollPane createScrollPane(Actor content) {
     // define ScrollPane style
     ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -469,6 +480,15 @@ public class DossierDisplay extends UIComponent {
     return scrollPane;
   }
 
+    /**
+     * Creates a table containing left and right arrow buttons to manually control a ScrollPane.
+     *
+     * @param scrollPane the ScrollPane to be controlled by the arrows
+     * @param arrowWidth the width of the arrow button
+     * @param arrowHeight the height of the arrow button
+     * @param uiScale the UI scale factor used for padding and sizing
+     * @return a table containing the scroll arrows and the scrollable content
+     */
   private Table createScrollArrows(ScrollPane scrollPane, float arrowWidth, float arrowHeight, float uiScale) {
     TextButton leftArrow = new TextButton("<", skin);
     TextButton rightArrow = new TextButton(">", skin);
