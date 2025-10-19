@@ -1,6 +1,5 @@
 package com.csse3200.game.components.slot;
 
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,8 +20,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.input.InputComponent;
-import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -217,8 +216,6 @@ public class SlotMachineDisplay extends UIComponent {
     lastSeenSpins = slotEngine.getRemainingSpins();
     lastRefillEpochMs = System.currentTimeMillis();
     updateAvailabilityVisual();
-    pauseInput = new SlotSpinPauseInput(this);
-    ServiceLocator.getInputService().register(pauseInput);
     if (entity != null && entity.getEvents() != null) {
       entity.getEvents().addListener("pause", this::pauseSpin);
       entity.getEvents().addListener("resume", this::resumeSpin);
@@ -685,13 +682,13 @@ public class SlotMachineDisplay extends UIComponent {
   /** Draw pass also detects stage resize and reapplies layout if needed. */
   @Override
   public void draw(SpriteBatch batch) {
-      GameStateService gs = ServiceLocator.getGameStateService();
-      boolean frozen = (gs != null) && gs.isFrozen();
-      if (frozen && !spinPaused) {
-          pauseSpin();
-      } else if (!frozen && spinPaused) {
-          resumeSpin();
-      }
+    GameStateService gs = ServiceLocator.getGameStateService();
+    boolean frozen = (gs != null) && gs.isFrozen();
+    if (frozen && !spinPaused) {
+      pauseSpin();
+    } else if (!frozen && spinPaused) {
+      resumeSpin();
+    }
     float w = stage.getWidth();
     float h = stage.getHeight();
     if (w != lastStageW || h != lastStageH) {
@@ -989,25 +986,5 @@ public class SlotMachineDisplay extends UIComponent {
   }
 
   /** Input listener for local pause testing: P=Pause, O=Resume. */
-  private static final class SlotSpinPauseInput extends InputComponent {
-    private final SlotMachineDisplay display;
-
-    private SlotSpinPauseInput(SlotMachineDisplay display) {
-      super(5); // low priority to avoid stealing global shortcuts
-      this.display = display;
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-      if (keycode == Input.Keys.P) {
-        display.pauseSpin();
-        return true;
-      }
-      if (keycode == Input.Keys.O) {
-        display.resumeSpin();
-        return true;
-      }
-      return false;
-    }
-  }
+  private static final class SlotSpinPauseInput extends InputComponent {}
 }
