@@ -7,12 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -475,7 +470,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
-    int coins = unit.getComponent(CoinRewardedComponent.class).getCoinAmount();
+    int coins;
+    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
 
     unit.getEvents()
         .addListener(
@@ -645,7 +646,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     robots.add(boss);
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
     boss.getEvents().addListener("despawnRobot", target -> {});
-    int coins = boss.getComponent(CoinRewardedComponent.class).getCoinAmount();
+
+    int coins;
+    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
 
     // --- BUG FIX STARTS HERE ---
     // Use a boolean flag to ensure the death logic only runs ONCE.
