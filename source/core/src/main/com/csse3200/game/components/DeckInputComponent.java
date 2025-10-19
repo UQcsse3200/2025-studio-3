@@ -6,6 +6,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputComponent;
+import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,12 @@ public class DeckInputComponent extends InputComponent {
    */
   @Override
   public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+    GameStateService gameStateService = ServiceLocator.getGameStateService();
+    if (gameStateService != null && gameStateService.isPlacementLocked()) {
+      logger.debug("Ignoring deck click while placement is locked");
+      return false;
+    }
+
     Vector2 position = entity.getPosition();
     float tileSize = area.getTileSize();
     GridPoint2 clickInWorld = area.stageToWorld(new GridPoint2(screenX, screenY));
