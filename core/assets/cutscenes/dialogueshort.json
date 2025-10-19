@@ -1,0 +1,50 @@
+{
+    "schemaVersion": 1,
+    "characters": [
+        {
+            "id": "alice",
+            "name": "Alice",
+            "poses": {
+                "normal": "cutscenes/data/characters/rob/alice_normal.png"
+            }
+        },
+        {
+            "id": "rob",
+            "name": "Rob",
+            "poses": {
+                "normal": "cutscenes/data/characters/rob/rob_normal.png"
+            }
+        }
+    ],
+    "backgrounds": [
+        {
+            "id": "park",
+            "image": "cutscenes/data/backgrounds/park.png"
+        }
+    ],
+    "cutscene": {
+        "id": "simple_dialogue_test",
+        "beats": [
+            {
+                "id": "b0",
+                "advance": {
+                    "mode": "input"
+                },
+                "actions": [
+                    {
+                        "type": "dialogue.hide", "await": true
+                    },
+                    {
+                        "type": "background.set", "backgroundId": "park", "transition": "fade", "duration": 2000, "await": true
+                    },
+                    {
+                        "type": "character.enter", "characterId": "alice", "pose": "normal", "position": "left", "transition": "slide", "duration": 400, "await": true
+                    },
+                    {
+                        "type": "dialogue.show", "characterId": "alice", "text": "What a beautiful day in the park, isn't it, {player_name}?", "await": true
+                    }
+                ]
+            }
+        ]
+    }
+}

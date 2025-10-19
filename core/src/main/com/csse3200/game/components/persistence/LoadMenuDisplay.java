@@ -1,0 +1,103 @@
+package com.csse3200.game.components.persistence;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.csse3200.game.persistence.Persistence;
+import com.csse3200.game.persistence.Savefile;
+import com.csse3200.game.ui.UIComponent;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/** A UI component for displaying the load menu with current saves. */
+public class LoadMenuDisplay extends UIComponent {
+  private static final Logger logger = LoggerFactory.getLogger(LoadMenuDisplay.class);
+  private static final float Z_INDEX = 2f;
+  private Table table;
+  private List<Savefile> saveFiles;
+
+  @Override
+  public void create() {
+    super.create();
+    saveFiles = Persistence.fetch();
+    addActors();
+  }
+
+  /** Add the actors to the table. */
+  private void addActors() {
+    table = new Table();
+    table.setFillParent(true);
+
+    // Back button positioned at top-left
+    TextButton backBtn = ui.createBackButton(entity.getEvents(), stage.getHeight());
+
+    // Title
+    Label titleLabel = ui.heading("LOAD GAME");
+
+    // Create save slot buttons
+    TextButton[] saveSlotButtons = new TextButton[3];
+    for (int i = 0; i < 3; i++) {
+      if (saveFiles.get(i) != null) {
+        // Active save slot
+        Savefile save = saveFiles.get(i);
+        String buttonText = save.getDisplayName() + "\n" + save.getDisplayDate();
+        saveSlotButtons[i] = ui.primaryButton(buttonText, 60f);
+
+        final int slotIndex = i;
+        saveSlotButtons[i].addListener(
+            new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent changeEvent, Actor actor) {
+                logger.debug(
+                    "Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).getName());
+                entity.getEvents().trigger("loadGame", saveFiles.get(slotIndex));
+              }
+            });
+      } else {
+        // Empty save slot
+        saveSlotButtons[i] = ui.primaryButton("Empty", 60f);
+        saveSlotButtons[i].setDisabled(true);
+      }
+    }
+
+    // Main content table
+    Table contentTable = new Table();
+    contentTable.setFillParent(true);
+    contentTable.center();
+
+    contentTable.add(titleLabel).padBottom(ui.getScaledHeight(50f));
+    contentTable.row();
+
+    // Add save slots with consistent sizing and spacing
+    for (int i = 0; i < saveSlotButtons.length; i++) {
+      contentTable.add(saveSlotButtons[i]).width(400f).height(80f).padBottom(20f);
+      contentTable.row();
+    }
+
+    // Add both tables to stage
+    stage.addActor(backBtn);
+    stage.addActor(contentTable);
+  }
+
+  @Override
+  public void resize() {
+    super.resize();
+    // Future: handle dynamic resizing if required
+  }
+
+  @Override
+  public float getZIndex() {
+    return Z_INDEX;
+  }
+
+  @Override
+  public void dispose() {
+    if (table != null) {
+      table.clear();
+    }
+    super.dispose();
+  }
+}
