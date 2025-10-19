@@ -310,15 +310,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     for (int i = 0; i < 5; i++) {
         Entity wall = DefenceFactory.createWall();
 
-        float tileY = yOffset + (i * tileSize);
-        wall.setPosition(xOffset + tileSize * -1, tileY);
+        Vector2 tile = new Vector2(xOffset + tileSize * -1, yOffset + (i * tileSize));
+        wall.setPosition(tile);
         wall.scaleHeight(tileSize);
 
         wall.getEvents()
                 .addListener(
                         ENTITY_DEATH_EVENT,
                         () -> {
-
+                            damageRobotsAtPosition(tile, tileSize, 1000);
                             requestDespawn(wall);
                             robots.remove(wall);
                         });
