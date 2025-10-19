@@ -1,6 +1,7 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
@@ -12,6 +13,7 @@ public class JumpTask extends RobotTargetDetectionTasks {
   private float jumpTimer = 0f;
   private boolean isJumping = false;
   private float startY;
+  private int WALL_DEATH_DAMAGE = 1000;
 
   public JumpTask(float range, short targetLayer) {
     super(range, targetLayer);
@@ -28,6 +30,9 @@ public class JumpTask extends RobotTargetDetectionTasks {
     Entity target = getNearestVisibleTarget();
     if (target == null) {
       return -1; // No target, low priority
+    } else if (target.getComponent(DefenderStatsComponent.class).getBaseAttack()
+        == WALL_DEATH_DAMAGE) {
+      return -1; // the entity is the wall, don't allow jump
     }
     return 200;
   }

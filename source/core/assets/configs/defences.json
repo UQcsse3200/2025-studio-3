@@ -104,7 +104,7 @@
         "projectilePath": "",
         "damage": 1000,
         "direction": "right",
-        "numSprites": 2,
+        "numSprites": 1,
         "attackSpeed": 0,
         "critChance": 0
       },

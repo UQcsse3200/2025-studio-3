@@ -319,7 +319,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           .addListener(
               ENTITY_DEATH_EVENT,
               () -> {
-                damageRobotsAtPosition(damageTile, tileSize, 1000);
+                damageRobotsAtPosition(
+                    damageTile,
+                    tileSize,
+                    wall.getComponent(DefenderStatsComponent.class).getBaseAttack());
                 knockbackRobotsAtPosition(knockbackTile, 3);
                 requestDespawn(wall);
                 robots.remove(wall);
