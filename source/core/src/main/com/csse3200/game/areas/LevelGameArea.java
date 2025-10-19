@@ -880,7 +880,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         }
       }
 
-      cost = generator.getCost() * (furnaces + 1);
+      cost = generator.getCost() + (25 * furnaces);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1140,7 +1140,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
       logger.info("Level is complete!");
       isLevelComplete = true;
-      if (levelCompleteEntity != null) {}
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
+      }
       for (Entity r : getRobots()) {
         requestDespawn(r);
       }

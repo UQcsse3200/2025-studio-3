@@ -20,7 +20,9 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,22 +73,26 @@ public class HotbarDisplay extends UIComponent {
     unitLayers.addActor(hotbar);
     unitLayers.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
+    // initialise the values needed for placing unit images in slots
     float hotbarWidth = unitLayers.getWidth();
     cellWidth = hotbarWidth / 6;
     float startX = cellWidth / 4;
     float y = 30;
     float currentX = startX;
 
+    // creates unit images and places in slots
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
       Table slot = new Table();
       Image tempUnit = new Image(new Texture(unit.getKey()));
       tempUnit.setSize(scaling, scaling);
       slotImages.add(tempUnit);
 
+      // Get the cost of the entity
       Entity entity = unit.getValue().get();
       GeneratorStatsComponent generator = entity.getComponent(GeneratorStatsComponent.class);
       DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
 
+      // Handles displaying the cost in the hotbar
       Label displayCost = new Label("50", skin);
 
       if (generator != null) {
@@ -104,12 +110,13 @@ public class HotbarDisplay extends UIComponent {
       slot.add(displayCost);
       slot.setPosition(currentX, y);
       currentX += cellWidth;
-
+      // listener for selection/use
       tempUnit.addListener(
           new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
               if (event.getButton() == Input.Buttons.LEFT) {
+                // sets the drag image to the unit image and selects it
                 game.setIsCharacterSelected(true);
                 game.beginDrag(new Texture(unit.getKey()));
                 Entity tempPlaceableUnit =
@@ -352,7 +359,7 @@ public class HotbarDisplay extends UIComponent {
         Label costLabel = entry.getValue();
         GeneratorStatsComponent stats = generatorEntity.getComponent(GeneratorStatsComponent.class);
 
-        int newCost = stats.getCost() * (currentFurnaceCount + 1);
+        int newCost = stats.getCost() + (currentFurnaceCount * 25);
         costLabel.setText(String.valueOf(newCost));
       }
       lastFurnaceCount = currentFurnaceCount;
