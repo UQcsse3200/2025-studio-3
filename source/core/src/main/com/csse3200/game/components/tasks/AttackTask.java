@@ -127,7 +127,7 @@ public class AttackTask extends TargetDetectionTasks {
 
       // Check if the absolute vertical distance between the entities' centers
       // is less than half a tile. This confirms they are on the same row.
-      return Math.abs(ownerY - targetY) < (tileSize / 2);
+      return Math.abs(ownerY - targetY) < (tileSize);
     }
     // If we're not in a LevelGameArea, we can't determine lanes, so fallback to false.
     return false;
