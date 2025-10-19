@@ -7,8 +7,6 @@ import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
-
-import java.security.Provider;
 import java.util.*;
 import java.util.LinkedList;
 import org.slf4j.Logger;
@@ -145,20 +143,19 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    if (currentLevelKey == "levelTwo") {
-      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
+    if (Objects.equals(getCurrentLevelKey(), "levelTwo")) {
+      logger.info("Queuing boss spawn for level 2: SCRAP_TITAN");
       bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
       bossActive = true;
-    } else if (levelConfig.getLevelNumber() == 4) {
-      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFour")) {
+      logger.info("Queuing boss spawn for level 4: SAMURAI_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
       bossActive = true;
-    } else if (levelConfig.getLevelNumber() == 5) {
-      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFive")) {
+      logger.info("Queuing boss spawn for level 5: GUN_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
       bossActive = true;
     }
-
 
     setCurrentWave(currentWave + 1);
 
@@ -317,6 +314,10 @@ public class WaveService implements WaveConfigProvider {
   public void setCurrentLevel(String levelKey) {
     this.currentLevelKey = levelKey;
     this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
+    if (levelConfig == null) {
+      logger.warn("Level config not found for level {}", this.currentLevelKey);
+      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("LevelOne");
+    }
     resetLevel();
     logger.info("Level set to {}", levelKey);
   }
