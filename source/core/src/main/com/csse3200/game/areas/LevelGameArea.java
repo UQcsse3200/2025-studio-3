@@ -49,6 +49,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -549,6 +550,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       int num = random.nextInt(maxRange - 1) + 2; // pick random num between 2 and 7
       projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 
+      final ItemEffectsService itemEffects = ServiceLocator.getItemEffectsService();
+
       projectile
           .getEvents()
           .addListener(
@@ -562,17 +565,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 // Spawn shell explosion effect
                 pos.x -= tileSize / 2f;
                 pos.y -= tileSize / 2f;
-                ServiceLocator.getItemEffectsService()
-                    .spawnEffect(
-                        ServiceLocator.getResourceService()
-                            .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
-                        "shell_explosion",
-                        new Vector2[] {pos, pos}, // effect stays in place
-                        (int) tileSize, // scale to match tile size
-                        new float[] {0.05f, 0.5f}, // frame duration & total effect time
-                        Animation.PlayMode.NORMAL,
-                        false // not moving
-                        );
+
+                itemEffects.spawnEffect(
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                    "shell_explosion",
+                    new Vector2[] {pos, pos}, // effect stays in place
+                    (int) tileSize, // scale to match tile size
+                    new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                    Animation.PlayMode.NORMAL,
+                    false // not moving
+                    );
               });
     } else {
       projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
