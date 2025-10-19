@@ -30,9 +30,11 @@ public class JumpTask extends RobotTargetDetectionTasks {
     Entity target = getNearestVisibleTarget();
     if (target == null) {
       return -1; // No target, low priority
-    } else if (target.getComponent(DefenderStatsComponent.class).getBaseAttack()
-        == WALL_DEATH_DAMAGE) {
-      return -1; // the entity is the wall, don't allow jump
+    }
+    if (target.getComponent(DefenderStatsComponent.class) != null) {
+      if (target.getComponent(DefenderStatsComponent.class).getBaseAttack() == WALL_DEATH_DAMAGE) {
+        return -1; // the entity is the wall, don't allow jump
+      }
     }
     return 200;
   }
