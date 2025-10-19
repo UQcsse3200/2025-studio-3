@@ -201,6 +201,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Begins animation in which currency flies up to top corner hud display</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#addFreezeReason(com.csse3200.game.services.GameStateService.FreezeReason)" class="member-name-link">addFreezeReason(GameStateService.FreezeReason)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Adds a reason to keep the game frozen.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#addGold(int)" class="member-name-link">addGold(int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
 <dd>
 <div class="block">Adds to the player's gold.</div>
@@ -1839,6 +1843,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a <code>Cutscene</code> object with specified id, characters, backgrounds, sounds, and beats</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#CUTSCENE" class="member-name-link">CUTSCENE</a> - Enum constant in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/CutsceneCompiler.html" class="type-name-link" title="class in com.csse3200.game.cutscene">CutsceneCompiler</a> - Class in <a href="com/csse3200/game/cutscene/package-summary.html">com.csse3200.game.cutscene</a></dt>
 <dd>
 <div class="block">Cutscene compiler.</div>
@@ -2003,6 +2009,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterGameArea()" class="member-name-link">deregisterGameArea()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Deregisters the game area.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterGameStateService()" class="member-name-link">deregisterGameStateService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Deregisters the game state service.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#deregisterGlobalResourceService()" class="member-name-link">deregisterGlobalResourceService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -2862,6 +2872,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/MainGameScreen.html#game" class="member-name-link">game</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#GAME_OVER" class="member-name-link">GAME_OVER</a> - Enum constant in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/rendering/Renderer.html#GAME_SCREEN_WIDTH" class="member-name-link">GAME_SCREEN_WIDTH</a> - Static variable in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/MainGameScreen.html#gameArea" class="member-name-link">gameArea</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
@@ -2891,6 +2903,24 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#%3Cinit%3E()" class="member-name-link">GameSettingsMenu()</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
 <dd>
 <div class="block">Constructor for GameSettingsMenu.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#gameStateService" class="member-name-link">gameStateService</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html" class="type-name-link" title="class in com.csse3200.game.services">GameStateService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">Coordinates pausing behaviour across the game.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#%3Cinit%3E(com.csse3200.game.services.GameTime)" class="member-name-link">GameStateService(GameTime)</a> - Constructor for class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Creates the service with the default libGDX timer instance.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#%3Cinit%3E(com.csse3200.game.services.GameTime,com.badlogic.gdx.utils.Timer)" class="member-name-link">GameStateService(GameTime, Timer)</a> - Constructor for class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Creates the service with explicit dependencies.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html" class="type-name-link" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a> - Enum Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">Reasons that the game can be frozen.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/GameTime.html" class="type-name-link" title="class in com.csse3200.game.services">GameTime</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
 <dd>
@@ -2997,6 +3027,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html#getActivePriority(float,com.csse3200.game.entities.Entity)" class="member-name-link">getActivePriority(float, Entity)</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></dt>
 <dd>
 <div class="block">Gets the priority when the task is active.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#getActiveReasons()" class="member-name-link">getActiveReasons()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Returns an immutable snapshot of the active freeze reasons.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/models/dto/BeatDTO.html#getAdvance()" class="member-name-link">getAdvance()</a> - Method in class com.csse3200.game.cutscene.models.dto.<a href="com/csse3200/game/cutscene/models/dto/BeatDTO.html" title="class in com.csse3200.game.cutscene.models.dto">BeatDTO</a></dt>
 <dd>&nbsp;</dd>
@@ -3542,6 +3576,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the active game area.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#getGameStateService()" class="member-name-link">getGameStateService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Gets the game state service.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getGeneratorConfig(java.lang.String)" class="member-name-link">getGeneratorConfig(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
 <div class="block">Gets a particular generator config.</div>
@@ -3783,6 +3821,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getLevelConfigValues()" class="member-name-link">getLevelConfigValues()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
 <div class="block">Gets all the level configs.</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#getLevelKey()" class="member-name-link">getLevelKey()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Exposes the resolved level key for subclasses and tests.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#getLevelKeys()" class="member-name-link">getLevelKeys()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
@@ -4470,6 +4512,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the time since the game started in milliseconds</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameTime.html#getTimeScale()" class="member-name-link">getTimeScale()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></dt>
+<dd>
+<div class="block">Get the current timescale applied to delta calculations.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/GameTime.html#getTimeSince(long)" class="member-name-link">getTimeSince(long)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameTime.html" title="class in com.csse3200.game.services">GameTime</a></dt>
 <dd>
 <div class="block">Get the time since the last time in milliseconds</div>
@@ -4775,6 +4821,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Main entry point for spawning and resolving an item's effects.</div>
 </dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#handlePause()" class="member-name-link">handlePause()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Event handler for pause events</div>
+</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#handleResume()" class="member-name-link">handleResume()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>
+<div class="block">Event handler for resume events</div>
+</dd>
 <dt><a href="com/csse3200/game/persistence/Settings.Difficulty.html#HARD" class="member-name-link">HARD</a> - Enum constant in enum class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.Difficulty.html" title="enum class in com.csse3200.game.persistence">Settings.Difficulty</a></dt>
 <dd>
 <div class="block">Hard difficulty.</div>
@@ -5020,6 +5074,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Checks if the provided position is in the hitbox of the tile</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#INTRO_PAN" class="member-name-link">INTRO_PAN</a> - Enum constant in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/exceptions/InvalidGotoBeatId.html" class="type-name-link" title="class in com.csse3200.game.exceptions">InvalidGotoBeatId</a> - Exception Class in <a href="com/csse3200/game/exceptions/package-summary.html">com.csse3200.game.exceptions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/exceptions/InvalidGotoBeatId.html#%3Cinit%3E(java.lang.String)" class="member-name-link">InvalidGotoBeatId(String)</a> - Constructor for exception class com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/InvalidGotoBeatId.html" title="class in com.csse3200.game.exceptions">InvalidGotoBeatId</a></dt>
@@ -5106,6 +5162,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Has the playing animation finished? This will always be false for looping animations.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#isFrozen()" class="member-name-link">isFrozen()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Indicates whether the game is currently frozen.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#isInitialized()" class="member-name-link">isInitialized()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
 <dd>
 <div class="block">Checks if the service is initialized and ready to use.</div>
@@ -5130,11 +5190,13 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/ui/terminal/Terminal.html#isOpen()" class="member-name-link">isOpen()</a> - Method in class com.csse3200.game.ui.terminal.<a href="com/csse3200/game/ui/terminal/Terminal.html" title="class in com.csse3200.game.ui.terminal">Terminal</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/screens/MainGameScreen.html#isPaused" class="member-name-link">isPaused</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html#isPaused()" class="member-name-link">isPaused()</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></dt>
 <dd>
 <div class="block">Checks if the generator is paused.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#isPlacementLocked()" class="member-name-link">isPlacementLocked()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Indicates whether placement is currently locked.</div>
 </dd>
 <dt><a href="com/csse3200/game/screens/WorldMapScreen.html#isPlayerCurrentlyMoving()" class="member-name-link">isPlayerCurrentlyMoving()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/WorldMapScreen.html" title="class in com.csse3200.game.screens">WorldMapScreen</a></dt>
 <dd>
@@ -5402,6 +5464,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/utils/math/Vector2Utils.html#LEFT" class="member-name-link">LEFT</a> - Static variable in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#LEVEL_COMPLETE" class="member-name-link">LEVEL_COMPLETE</a> - Enum constant in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/lvlcompleted/LevelCompletedWindow.html" class="type-name-link" title="class in com.csse3200.game.components.lvlcompleted">LevelCompletedWindow</a> - Class in <a href="com/csse3200/game/components/lvlcompleted/package-summary.html">com.csse3200.game.components.lvlcompleted</a></dt>
 <dd>
 <div class="block">Class to create and display a window when the level is completed.</div>
@@ -5463,6 +5527,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Blocking call to load all assets.</div>
 </dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#loadAssets()" class="member-name-link">loadAssets()</a> - Method in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/ConfigService.html#loadDefenceConfigs(java.lang.String)" class="member-name-link">loadDefenceConfigs(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ConfigService.html" title="class in com.csse3200.game.services">ConfigService</a></dt>
 <dd>
 <div class="block">Loads defence configs from a file.</div>
@@ -5554,6 +5620,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/WorldMapService.html#lockNode(java.lang.String,java.lang.String)" class="member-name-link">lockNode(String, String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>
 <div class="block">Lock a specific node</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#lockPlacement()" class="member-name-link">lockPlacement()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Locks placement interactions.</div>
 </dd>
 <dt><a href="com/csse3200/game/input/InputComponent.html#longPress(float,float)" class="member-name-link">longPress(float, float)</a> - Method in class com.csse3200.game.input.<a href="com/csse3200/game/input/InputComponent.html" title="class in com.csse3200.game.input">InputComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -6253,6 +6323,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Registers the game area.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/ServiceLocator.html#registerGameStateService(com.csse3200.game.services.GameStateService)" class="member-name-link">registerGameStateService(GameStateService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
+<dd>
+<div class="block">Registers the game state service.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerGlobalResourceService(com.csse3200.game.services.ResourceService)" class="member-name-link">registerGlobalResourceService(ResourceService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Registers the global resource service.</div>
@@ -6323,6 +6397,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/ChoiceState.html#removeChoice(com.badlogic.gdx.scenes.scene2d.ui.Button)" class="member-name-link">removeChoice(Button)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/ChoiceState.html" title="class in com.csse3200.game.cutscene.runtime.states">ChoiceState</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#removeFreezeReason(com.csse3200.game.services.GameStateService.FreezeReason)" class="member-name-link">removeFreezeReason(GameStateService.FreezeReason)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Removes a freeze reason.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/components/PaneGroup.html#removeImage(com.badlogic.gdx.scenes.scene2d.ui.Image)" class="member-name-link">removeImage(Image)</a> - Method in class com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/PaneGroup.html" title="class in com.csse3200.game.cutscene.runtime.components">PaneGroup</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/inventory/Inventory.html#removeItem(java.lang.String)" class="member-name-link">removeItem(String)</a> - Method in class com.csse3200.game.progression.inventory.<a href="com/csse3200/game/progression/inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></dt>
@@ -6336,6 +6414,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/areas/LevelGameGrid.html#removeOccupantIfMatchIndex(int,com.csse3200.game.entities.Entity)" class="member-name-link">removeOccupantIfMatchIndex(int, Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></dt>
 <dd>
 <div class="block">Removes an occupant from the grid if it exists This is now Null pointer safe</div>
+</dd>
+<dt><a href="com/csse3200/game/areas/LevelGameArea.html#removePreviewEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removePreviewEntity(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
+<dd>
+<div class="block">Removes a preview entity created for wave previews.</div>
 </dd>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#removeSkill(com.csse3200.game.progression.skilltree.Skill.StatType)" class="member-name-link">removeSkill(Skill.StatType)</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>&nbsp;</dd>
@@ -8560,6 +8642,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/ui/UIComponent.html#%3Cinit%3E()" class="member-name-link">UIComponent()</a> - Constructor for class com.csse3200.game.ui.<a href="com/csse3200/game/ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/screens/MainGameScreen.html#uiEntity" class="member-name-link">uiEntity</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/UIFactory.html" class="type-name-link" title="class in com.csse3200.game.ui">UIFactory</a> - Class in <a href="com/csse3200/game/ui/package-summary.html">com.csse3200.game.ui</a></dt>
 <dd>
 <div class="block">Factory class for creating UI components with consistent styling.</div>
@@ -8605,6 +8689,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/WorldMapService.html#unlockNode(java.lang.String)" class="member-name-link">unlockNode(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>
 <div class="block">Unlock a specific node</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#unlockPlacement()" class="member-name-link">unlockPlacement()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Unlocks placement interactions.</div>
 </dd>
 <dt><a href="com/csse3200/game/progression/wallet/Wallet.html#unlockSkill(int)" class="member-name-link">unlockSkill(int)</a> - Method in class com.csse3200.game.progression.wallet.<a href="com/csse3200/game/progression/wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></dt>
 <dd>
@@ -8794,6 +8882,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Updates the wave display on the UI.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#USER_PAUSE" class="member-name-link">USER_PAUSE</a> - Enum constant in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:V">V</h2>
 <dl class="index">
@@ -9022,6 +9112,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Returns the enum constant of this class with the specified name.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#valueOf(java.lang.String)" class="member-name-link">valueOf(String)</a> - Static method in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
+<dd>
+<div class="block">Returns the enum constant of this class with the specified name.</div>
+</dd>
 <dt><a href="com/csse3200/game/ai/tasks/Task.Status.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.Status.html" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
@@ -9133,6 +9227,11 @@ the order they are declared.</div>
 the order they are declared.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/DialogService.DialogType.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/DialogService.DialogType.html" title="enum class in com.csse3200.game.services">DialogService.DialogType</a></dt>
+<dd>
+<div class="block">Returns an array containing the constants of this enum class, in
+the order they are declared.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html#values()" class="member-name-link">values()</a> - Static method in enum class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></dt>
 <dd>
 <div class="block">Returns an array containing the constants of this enum class, in
 the order they are declared.</div>

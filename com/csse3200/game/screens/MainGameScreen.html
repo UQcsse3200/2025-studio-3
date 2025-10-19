@@ -118,8 +118,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color"><code>protected <a href="../areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#gameArea" class="member-name-link">gameArea</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected boolean</code></div>
-<div class="col-second even-row-color"><code><a href="#isPaused" class="member-name-link">isPaused</a></code></div>
+<div class="col-first even-row-color"><code>protected final <a href="../services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></code></div>
+<div class="col-second even-row-color"><code><a href="#gameStateService" class="member-name-link">gameStateService</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected final <a href="../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#physicsEngine" class="member-name-link">physicsEngine</a></code></div>
@@ -127,6 +127,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected final <a href="../rendering/Renderer.html" title="class in com.csse3200.game.rendering">Renderer</a></code></div>
 <div class="col-second even-row-color"><code><a href="#renderer" class="member-name-link">renderer</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#uiEntity" class="member-name-link">uiEntity</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -174,6 +177,24 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#dispose()" class="member-name-link">dispose</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLevelKey()" class="member-name-link">getLevelKey</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Exposes the resolved level key for subclasses and tests.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handlePause()" class="member-name-link">handlePause</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Event handler for pause events</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handleResume()" class="member-name-link">handleResume</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Event handler for resume events</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadAssets()" class="member-name-link">loadAssets</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#render(float)" class="member-name-link">render</a><wbr>(float&nbsp;delta)</code></div>
@@ -227,9 +248,15 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="isPaused">
-<h3>isPaused</h3>
-<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPaused</span></div>
+<section class="detail" id="gameStateService">
+<h3>gameStateService</h3>
+<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></span>&nbsp;<span class="element-name">gameStateService</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="uiEntity">
+<h3>uiEntity</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">uiEntity</span></div>
 </section>
 </li>
 </ul>
@@ -311,6 +338,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="loadAssets()">
+<h3>loadAssets</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadAssets</span>()</div>
+</section>
+</li>
+<li>
 <section class="detail" id="createUI()">
 <h3>createUI</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">createUI</span>()</div>
@@ -324,6 +357,27 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></span>&nbsp;<span class="element-name">createGameArea</span>()</div>
 <div class="block">Factory method for creating the game area. Automatically detects whether to create a regular
  level or slot machine area based on the level configuration.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLevelKey()">
+<h3>getLevelKey</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getLevelKey</span>()</div>
+<div class="block">Exposes the resolved level key for subclasses and tests.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handlePause()">
+<h3>handlePause</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handlePause</span>()</div>
+<div class="block">Event handler for pause events</div>
+</section>
+</li>
+<li>
+<section class="detail" id="handleResume()">
+<h3>handleResume</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handleResume</span>()</div>
+<div class="block">Event handler for resume events</div>
 </section>
 </li>
 </ul>
