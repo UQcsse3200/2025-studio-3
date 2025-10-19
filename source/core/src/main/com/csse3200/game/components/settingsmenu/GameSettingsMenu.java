@@ -264,6 +264,10 @@ public class GameSettingsMenu extends UIComponent {
           public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
             if (focused) {
               textField.setText("");
+
+              // If user clicked away without setting a new key, restore previous text
+            } else if (textField.getText() == null || textField.getText().isEmpty()) {
+              textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
             }
           }
         });
@@ -347,6 +351,10 @@ public class GameSettingsMenu extends UIComponent {
     logger.info("[GameSettingsMenu] New Keybinds: {}", keybinds);
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[GameSettingsMenu] Game settings applied");
+
+    // Make last TextField not show as still selected after applying changes (if/when re-entering
+    // Game Settings Menu)
+    stage.setKeyboardFocus(null);
   }
 
   /** Reset keybinds to default keys. */
