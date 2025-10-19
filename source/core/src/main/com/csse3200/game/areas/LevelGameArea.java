@@ -308,23 +308,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Spawns a static defensive wall at the left edge of the map. */
   void spawnWall() {
     for (int i = 0; i < 5; i++) {
-        Entity wall = DefenceFactory.createWall();
+      Entity wall = DefenceFactory.createWall();
 
-        Vector2 tile = new Vector2(xOffset + tileSize * -1, yOffset + (i * tileSize));
-        wall.setPosition(tile);
-        wall.scaleHeight(tileSize);
+      Vector2 damageTile = new Vector2(xOffset + tileSize * -1, yOffset + (i * tileSize));
+      wall.setPosition(damageTile);
+      wall.scaleHeight(tileSize);
+      Vector2 knockbackTile = new Vector2(damageTile.x + tileSize, damageTile.y);
 
-        wall.getEvents()
-                .addListener(
-                        ENTITY_DEATH_EVENT,
-                        () -> {
-                            damageRobotsAtPosition(tile, tileSize, 1000);
-                            requestDespawn(wall);
-                            robots.remove(wall);
-                        });
+      wall.getEvents()
+          .addListener(
+              ENTITY_DEATH_EVENT,
+              () -> {
+                damageRobotsAtPosition(damageTile, tileSize, 1000);
+                knockbackRobotsAtPosition(knockbackTile, 3);
+                requestDespawn(wall);
+                robots.remove(wall);
+              });
 
-        spawnEntity(wall);
-        wall.getEvents().trigger("idleStart");
+      spawnEntity(wall);
+      wall.getEvents().trigger("idleStart");
     }
   }
 
@@ -593,11 +595,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /**
    * Deal damage to all robots in a circular area around the given world position.
    *
-   * @param landingPos The world coordinates where the projectile landed
+   * @param pos The world coordinates where the damage is applied
    * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
    * @param damage Amount of damage to apply
    */
-  public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
+  public void damageRobotsAtPosition(Vector2 pos, float radius, int damage) {
     if (robots.isEmpty()) return;
 
     List<Entity> robotsToRemove = new ArrayList<>();
@@ -607,8 +609,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (stats == null) continue;
 
       Vector2 robotPos = robot.getPosition();
-      float dx = robotPos.x - landingPos.x;
-      float dy = robotPos.y - landingPos.y;
+      float dx = robotPos.x - pos.x;
+      float dy = robotPos.y - pos.y;
       float distanceSq = dx * dx + dy * dy;
 
       if (distanceSq <= radius * radius) {
@@ -617,6 +619,47 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         logger.info(
             "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
+
+        // Mark robot for removal if dead
+        boolean mark = stats.isDead();
+        if (mark) {
+          robotsToRemove.add(robot);
+        }
+      }
+    }
+
+    // Despawn dead robots
+    for (Entity r : robotsToRemove) {
+      requestDespawn(r);
+      robots.remove(r);
+    }
+  }
+
+  /**
+   * Knockback all robots in a circular area around the given world position.
+   *
+   * @param pos The world coordinates where the effect happens
+   * @param dist the distance that the robots get knocked back (in tile numbers)
+   */
+  public void knockbackRobotsAtPosition(Vector2 pos, int dist) {
+    if (robots.isEmpty()) return;
+
+    List<Entity> robotsToRemove = new ArrayList<>();
+
+    for (Entity robot : robots) {
+      CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
+      if (stats == null) continue;
+
+      Vector2 robotPos = robot.getPosition();
+      float dx = robotPos.x - pos.x;
+      float dy = robotPos.y - pos.y;
+      float distanceSq = dx * dx + dy * dy;
+
+      if (distanceSq <= tileSize * tileSize) {
+        // Apply damage by subtracting health
+        robot.setPosition(robotPos.x + dist * tileSize, robotPos.y);
+
+        logger.info("Robot knocked back {} tiles", dist);
 
         // Mark robot for removal if dead
         boolean mark = stats.isDead();
