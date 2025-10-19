@@ -107,7 +107,7 @@ public class WaveService implements WaveConfigProvider {
 
     if (waveActive) {
       timeSinceLastSpawn += deltaTime;
-      float spawnInterval = 10.0f / currentWave;
+      float spawnInterval = 8.0f / currentWave;
       if (timeSinceLastSpawn >= spawnInterval) {
         spawnEnemy(getLane());
         timeSinceLastSpawn -= spawnInterval;

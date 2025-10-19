@@ -130,10 +130,10 @@
         "description": "This building produces scrap, used to install new defences.",
         "assetPath": "images/entities/defences/forge_1.png",
         "atlasPath": "images/entities/defences/forge.atlas",
-        "health": 50,
-        "interval": 3,
+        "health": 1,
+        "interval": 5,
         "scrapValue": 25,
-        "cost": 50,
+        "cost": 75,
         "soundPath": "sounds/forge-place.mp3"
       },
       "healer": {
