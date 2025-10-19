@@ -204,7 +204,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     populateUnitList(profile, configService);
     populateItemList(profile.getInventory(), configService);
-
     ui =
         new Entity()
             .addComponent(new GameAreaDisplay(this.currentLevelKey))
@@ -871,7 +870,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
     int cost = 0;
     if (generator != null) {
-      cost = generator.getCost();
+      List<Entity> entities = new ArrayList<>(areaEntities);
+      int furnaces = 0;
+      for (Entity entity : entities) {
+        GeneratorStatsComponent generatorEntity =
+            entity.getComponent(GeneratorStatsComponent.class);
+        if (generatorEntity != null) {
+          furnaces++;
+        }
+      }
+
+      cost = generator.getCost() * (furnaces + 1);
     } else if (defence != null) {
       cost = defence.getCost();
     }

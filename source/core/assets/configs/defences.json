@@ -2,7 +2,7 @@
   "config": {
     "defenders": {
       "slingshooter": {
-        "health": 50,
+        "health": 40,
         "range": 500,
         "name": "Slingshooter",
         "description": "Slingshots do a surprising amount of damage, even to metal robots.",
@@ -11,7 +11,7 @@
         "projectilePath": "images/effects/sling_projectile.png",
         "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 50,
-        "damage": 5,
+        "damage": 4,
         "direction": "right",
         "numSprites": 46,
         "attackSpeed": 1,
@@ -25,7 +25,7 @@
         "assetPath": "images/entities/defences/shield_1.png",
         "atlasPath": "images/entities/defences/shield.atlas",
         "projectilePath": null,
-        "cost": 50,
+        "cost": 75,
         "damage": 0,
         "direction": "right",
         "numSprites": 4,
@@ -33,7 +33,7 @@
         "critChance": 0
       },
       "armyguy" : {
-        "health": 80,
+        "health": 65,
         "range": 1000,
         "name": "Army Guy",
         "description": "",
@@ -72,7 +72,7 @@
         "atlasPath": "images/entities/defences/mortar.atlas",
         "projectilePath": "images/effects/shell.png",
         "cost": 75,
-        "damage": 10,
+        "damage": 12,
         "direction": "right",
         "numSprites": 43,
         "attackSpeed": 1,
@@ -88,7 +88,7 @@
         "projectilePath": "images/effects/shock.png",
         "soundPath": "sounds/slingshooter-place.mp3",
         "cost": 50,
-        "damage": 2,
+        "damage": 10,
         "direction": "left",
         "numSprites": 4,
         "attackSpeed": 1.5,
@@ -133,7 +133,7 @@
         "health": 1,
         "interval": 5,
         "scrapValue": 25,
-        "cost": 75,
+        "cost": 50,
         "soundPath": "sounds/forge-place.mp3"
       },
       "healer": {
