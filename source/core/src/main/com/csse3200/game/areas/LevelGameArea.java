@@ -1132,8 +1132,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
-        levelCompleteEntity.getEvents().trigger("levelComplete");
-      }
+ e      }
       for (Entity r : getRobots()) {
         requestDespawn(r);
       }
