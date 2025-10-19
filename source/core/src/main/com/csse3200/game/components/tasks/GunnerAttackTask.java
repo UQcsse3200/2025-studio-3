@@ -28,16 +28,10 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
   }
 
   @Override
-  public void start() {
-    super.start();
-  }
-
-  @Override
   public void update() {
     // find nearest visible defense
     currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
-      //      logger.info("No visible defense for {}", owner.getEntity());
       return;
     }
     // check if the target is in range
