@@ -1,14 +1,20 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.persistence.Settings;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
@@ -25,6 +31,7 @@ public class GameSettingsMenu extends UIComponent {
   private Table bottomRow;
   private SelectBox<String> difficultySelect;
   private Map<String, Integer> keybinds = new HashMap<>();
+  private Map<String, Image> keyImages = new HashMap<>();
   private static final String PAUSE_KEY = "pause";
   private static final String SKIP_KEY = "skip";
   private static final String INTERACTION_KEY = "interaction";
@@ -36,6 +43,7 @@ public class GameSettingsMenu extends UIComponent {
   private static final String ZOOM_OUT_KEY = "zoomout";
   private static final ArrayList<Integer> ALLOWED_KEYS = new ArrayList<>();
 
+  // Set Allowed Keys
   static {
     // Letters (A-Z)
     for (int l = Input.Keys.A; l <= Input.Keys.Z; l++) {
@@ -65,6 +73,22 @@ public class GameSettingsMenu extends UIComponent {
   @Override
   public void create() {
     super.create();
+    // Load key images
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    for (int keycode : ALLOWED_KEYS) {
+      String imagePath = "images/keys/" + Input.Keys.toString(keycode) + ".png";
+      if (!resourceService.containsAsset(imagePath, Texture.class)) {
+        resourceService.loadTextures(new String[] {imagePath});
+        logger.info("Loaded key image: {}", imagePath);
+      }
+    }
+    String blankKeyImagePath = "images/keys/Blank.png";
+    if (!resourceService.containsAsset(blankKeyImagePath, Texture.class)) {
+      resourceService.loadTextures(new String[] {blankKeyImagePath});
+      logger.info("Loaded key image: {}", blankKeyImagePath);
+    }
+    resourceService.loadAll();
+
     addActors();
     entity.getEvents().addListener("backtosettingsmenu", this::hideMenu);
     entity.getEvents().addListener("gamesettings", this::showMenu);
@@ -190,44 +214,84 @@ public class GameSettingsMenu extends UIComponent {
             keybinds.put(RIGHT_KEY, settings.getRightButton());
             keybinds.put(ZOOM_IN_KEY, settings.getZoomInButton());
             keybinds.put(ZOOM_OUT_KEY, settings.getZoomOutButton());
+            // Update key images following reset
+            setKeyImage(keyImages.get(PAUSE_KEY), keybinds.get(PAUSE_KEY));
+            setKeyImage(keyImages.get(SKIP_KEY), keybinds.get(SKIP_KEY));
+            setKeyImage(keyImages.get(INTERACTION_KEY), keybinds.get(INTERACTION_KEY));
+            setKeyImage(keyImages.get(UP_KEY), keybinds.get(UP_KEY));
+            setKeyImage(keyImages.get(DOWN_KEY), keybinds.get(DOWN_KEY));
+            setKeyImage(keyImages.get(LEFT_KEY), keybinds.get(LEFT_KEY));
+            setKeyImage(keyImages.get(RIGHT_KEY), keybinds.get(RIGHT_KEY));
+            setKeyImage(keyImages.get(ZOOM_IN_KEY), keybinds.get(ZOOM_IN_KEY));
+            setKeyImage(keyImages.get(ZOOM_OUT_KEY), keybinds.get(ZOOM_OUT_KEY));
           }
         });
 
-    // Layout with proper UI scaling
+    // Layout with proper UI scaling (including creating Stacks for key textfield and image pairs)
     rootTable.add(pauseLabel).left().padRight(20f * uiScale);
-    rootTable.add(pauseKeyText).width(150f * uiScale).center();
+    // Use set width/height for key fields
+    float width = 150f * uiScale;
+    float height = 40f * uiScale;
+    rootTable
+        .add(makeKeyImageStack(pauseKeyText, settings.getPauseButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(skipLabel).left().padRight(25f * uiScale);
-    rootTable.add(skipKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(skipKeyText, settings.getSkipButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(interactionLabel).left().padRight(25f * uiScale);
-    rootTable.add(interactionKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(interactionKeyText, settings.getInteractionButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(upLabel).left().padRight(25f * uiScale);
-    rootTable.add(upKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(upKeyText, settings.getUpButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(downLabel).left().padRight(25f * uiScale);
-    rootTable.add(downKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(downKeyText, settings.getDownButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(leftLabel).left().padRight(25f * uiScale);
-    rootTable.add(leftKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(leftKeyText, settings.getLeftButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(rightLabel).left().padRight(25f * uiScale);
-    rootTable.add(rightKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(rightKeyText, settings.getRightButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(zoomInLabel).left().padRight(25f * uiScale);
-    rootTable.add(zoomInKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(zoomInKeyText, settings.getZoomInButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(zoomOutLabel).left().padRight(25f * uiScale);
-    rootTable.add(zoomOutKeyText).width(150f * uiScale).center();
+    rootTable
+        .add(makeKeyImageStack(zoomOutKeyText, settings.getZoomOutButton()))
+        .size(width, height)
+        .center();
     rootTable.row().padTop(10f * uiScale);
 
     rootTable.add(difficultyLabel).left().padRight(25f * uiScale);
@@ -264,10 +328,13 @@ public class GameSettingsMenu extends UIComponent {
           public void keyboardFocusChanged(FocusEvent event, Actor actor, boolean focused) {
             if (focused) {
               textField.setText("");
+              // Set key image to blank key
+              setKeyImage(keyImages.get(textField.getName()), -1);
 
-              // If user clicked away without setting a new key, restore previous text
+              // If user clicked away without setting a new key, restore previous text/key image
             } else if (textField.getText() == null || textField.getText().isEmpty()) {
               textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
+              setKeyImage(keyImages.get(textField.getName()), keybinds.get(textField.getName()));
             }
           }
         });
@@ -282,8 +349,9 @@ public class GameSettingsMenu extends UIComponent {
               if (!ALLOWED_KEYS.contains(keycode)) {
                 ServiceLocator.getDialogService()
                     .error("Invalid Key", "That key cannot be used for keybinds.");
-                // Restore previous text
+                // Restore previous text/key image
                 textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
+                setKeyImage(keyImages.get(textField.getName()), keybinds.get(textField.getName()));
                 textField.setFocusTraversal(false);
                 stage.setKeyboardFocus(null);
                 return false;
@@ -296,14 +364,18 @@ public class GameSettingsMenu extends UIComponent {
                 logger.info("Keybind conflict: {}", keycode);
                 ServiceLocator.getDialogService()
                     .error("Keybind conflict", "This key is already in use by another action.");
+                // Set key text/image back
                 textField.setText(Input.Keys.toString(keybinds.get(textField.getName())));
+                setKeyImage(keyImages.get(textField.getName()), keybinds.get(textField.getName()));
                 textField.setFocusTraversal(false);
                 stage.setKeyboardFocus(null);
                 return false;
               }
               logger.info("Keybind not conflict: {}", keycode);
               keybinds.put(textField.getName(), keycode);
+              // Set new key text/image
               textField.setText(Input.Keys.toString(keycode));
+              setKeyImage(keyImages.get(textField.getName()), keybinds.get(textField.getName()));
               textField.setFocusTraversal(false);
               stage.setKeyboardFocus(null);
               return true;
@@ -311,6 +383,69 @@ public class GameSettingsMenu extends UIComponent {
             return false;
           }
         });
+  }
+
+  /**
+   * Creates a Stack containing a key image and text field for the keybind input. The stack
+   * positions the image behind the text field (which is transparent), so the text field handles
+   * clicks and focus, but the image is shown to the user.
+   *
+   * @param textField the TextField set up for the keybind input.
+   * @param keycode the keycode used to generate the relevant key image to start.
+   * @return a Stack containing the key image and the text field (configured and sized).
+   */
+  private Stack makeKeyImageStack(TextField textField, int keycode) {
+    Image keyImage = new Image();
+    // Save the key image instance that will be part of the Stack (in order to access/change it
+    // later)
+    keyImages.put(textField.getName(), keyImage);
+
+    setKeyImage(keyImage, keycode);
+    keyImage.setScaling(Scaling.fillY);
+
+    textField.setColor(1f, 1f, 1f, 0f); // fully transparent
+    textField.setSize(150f * ui.getUIScale(), 40f * ui.getUIScale());
+
+    // Create key stack
+    Stack stack = new Stack();
+    stack.setSize(150f * ui.getUIScale(), 40f * ui.getUIScale());
+    stack.add(keyImage);
+    stack.add(textField); // sits on top to receive clicks/focus
+    return stack;
+  }
+
+  /**
+   * Updates the displayed key image associated with a specific key binding. The method sets the
+   * appropriate image based on the provided keycode. If the keycode is -1, a blank image is used as
+   * a placeholder.
+   *
+   * @param keyImage the Image object representing the key binding display (part of the Stack set up
+   *     upon creation).
+   * @param keycode the keycode representing the specific key (used to determine the correct key
+   *     image).
+   */
+  private void setKeyImage(Image keyImage, int keycode) {
+    Texture texture;
+    ResourceService resourceService = ServiceLocator.getResourceService();
+
+    if (keycode == -1) {
+      texture = resourceService.getAsset("images/keys/Blank.png", Texture.class);
+    } else {
+      texture =
+          resourceService.getAsset(
+              "images/keys/" + Input.Keys.toString(keycode) + ".png", Texture.class);
+    }
+
+    // Pick nearest texel when scaling, don't blur (keeps pixelated look)
+    texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+
+    // Wrap in Texture Region to define drawable area, then in Drawable type that Image can render,
+    // and assign to Image
+    keyImage.setDrawable(new TextureRegionDrawable(new TextureRegion(texture)));
+
+    // Scale to height, but maintain aspect ratio, and center
+    keyImage.setScaling(Scaling.fillY);
+    keyImage.setAlign(Align.center);
   }
 
   /** Apply changes to the game settings. */
