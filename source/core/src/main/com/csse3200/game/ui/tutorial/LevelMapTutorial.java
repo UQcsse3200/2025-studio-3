@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -83,6 +84,8 @@ public class LevelMapTutorial extends UIComponent {
   public void create() {
     super.create();
 
+    Stage screenSize = ServiceLocator.getRenderService().getStage();
+
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888); // create dark overlay
     pixmap.setColor(0, 0, 0, 1); // Solid black
     pixmap.fill();
@@ -90,8 +93,7 @@ public class LevelMapTutorial extends UIComponent {
     pixmap.dispose(); // clean up after creating texture
 
     overlay = new Image(new TextureRegionDrawable(blackTex));
-
-    overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    overlay.setSize(screenSize.getWidth(), screenSize.getHeight());
     overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
     overlay.setVisible(true);
     stage.addActor(overlay);
@@ -102,10 +104,10 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable = new Table();
     dialogTable.setBackground(dialogDrawable);
     dialogTable.setSize(
-        Math.floorDiv(Gdx.graphics.getWidth(), 3), Math.floorDiv(Gdx.graphics.getHeight(), 5));
+        Math.floorDiv((int) screenSize.getWidth(), 3), Math.floorDiv((int) screenSize.getHeight(), 5));
     dialogTable.setPosition(
-        (Gdx.graphics.getWidth() - dialogTable.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - dialogTable.getHeight()) / 5f);
+        (screenSize.getWidth() - dialogTable.getWidth()) / 2f,
+        (screenSize.getHeight() - dialogTable.getHeight()) / 5f);
 
     Table contentTable = new Table();
     contentTable.setFillParent(true);
