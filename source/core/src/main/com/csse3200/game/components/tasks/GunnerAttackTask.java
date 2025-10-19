@@ -17,8 +17,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
 
   private static final int GUNNER_TASK_PRIORITY = 10;
   private static final float FIRE_COOLDOWN = 0.95f;
-
-  private Entity currentTarget;
   private float timeSinceLastFire = 0f;
 
   /**
@@ -31,15 +29,11 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
     super(attackRange, targetLayer);
   }
 
-  @Override
-  public void start() {
-    super.start();
-  }
 
   @Override
   public void update() {
     // find nearest visible defense
-    currentTarget = getNearestVisibleTarget();
+    Entity currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
       logger.info("No visible defense for {}", owner.getEntity());
       return;
