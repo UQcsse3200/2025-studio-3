@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -70,6 +71,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(laneRunnerTextures);
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/lane_move.mp3"});
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -165,6 +167,10 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   private void movePlayerRight() {
     if (cureentLane < laneManager.getNumLanes() - 1) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      Sound move =
+          ServiceLocator.getResourceService().getAsset("sounds/lane_move.mp3", Sound.class);
+      move.play(0.1f * volume);
       cureentLane++;
       updatePlayerPosition();
       logger.info("Moved Right to lane: {}", cureentLane);
@@ -178,6 +184,10 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   private void movePLayerLeft() {
     if (cureentLane > 0) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      Sound move =
+          ServiceLocator.getResourceService().getAsset("sounds/lane_move.mp3", Sound.class);
+      move.play(0.1f * volume);
       cureentLane--;
       updatePlayerPosition();
       logger.info("Moved Left to lane: {}", cureentLane);

@@ -1,10 +1,12 @@
 package com.csse3200.game.minigame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.components.Component;
+import com.csse3200.game.services.ServiceLocator;
 
 public class BallComponent extends Component {
   private final Image image;
@@ -19,6 +21,7 @@ public class BallComponent extends Component {
     this.score = 0;
     this.ballsHit = 0;
     this.initialSpeed = initialXSpeed;
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/bounce.mp3"});
   }
 
   public Image getImage() {
@@ -41,6 +44,9 @@ public class BallComponent extends Component {
     velocity.y *= -1;
     score++;
     ballsHit++;
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    Sound bounce = ServiceLocator.getResourceService().getAsset("sounds/bounce.mp3", Sound.class);
+    bounce.play(0.7f * volume);
   }
 
   public void update(float delta, CollisionComponent collisionComponent) {

@@ -118,6 +118,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     float menuX = settingsX + BUTTON_SIZE + BUTTON_SPACING;
     float menuY = settingsY; // Same Y as settings button
     menuButton.setPosition(menuX, menuY);
+    menuButton.setZIndex(10);
     stage.addActor(menuButton);
 
     // Create tooltips
