@@ -76,8 +76,9 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
       }
 
       Vector2 targetPos = target.getCenterPosition();
-      float distance = from.dst(targetPos);
-      if ((abs(targetPos.y - from.y) <= 5f) && (distance <= attackRange)) {
+      // dst2 instead of dst to avoid square root calculation because calculating square root is expensive.
+      float distance = from.dst2(targetPos);
+      if ((abs(targetPos.y - from.y) <= 5f) && (distance <= attackRange * attackRange)) {
         return target;
       }
     }
