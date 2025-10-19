@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 
 /** GunnerAttackTask: Handles the gunner robot attacking tasks */
 public class GunnerAttackTask extends RobotTargetDetectionTasks {
-  private static final Logger logger = LoggerFactory.getLogger(GunnerAttackTask.class);
-
   private static final int GUNNER_TASK_PRIORITY = 10;
   private static final float FIRE_COOLDOWN = 0.95f;
 
@@ -34,7 +32,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-    logger.info("GunnerAttackTask started for {}", owner.getEntity());
   }
 
   @Override
@@ -42,7 +39,7 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
     // find nearest visible defense
     currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
-      logger.info("No visible defense for {}", owner.getEntity());
+//      logger.info("No visible defense for {}", owner.getEntity());
       return;
     }
     // check if the target is in range
@@ -59,7 +56,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         // Gunner animations could use a repass later after gunner robot kinks have been ironed out.
         this.owner.getEntity().getEvents().trigger("shootStart");
 
-        logger.info("Gunner firing at {} from {}", targetPos, myPos);
         owner.getEntity().getEvents().trigger("fire");
         timeSinceLastFire = 0f;
       }
@@ -91,7 +87,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         defenses.add(entity);
       }
     }
-    logger.info("Found {} possible defense targets", defenses.size());
     return defenses;
   }
 
@@ -119,15 +114,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         nearestDistance = dist;
       }
     }
-    // log the nearest visible defense
-    if (nearest != null) {
-      logger.info(
-          "Nearest visible defense: {} at {} (dist = {})",
-          nearest,
-          nearest.getPosition(),
-          nearestDistance);
-    }
-
     return nearest;
   }
 
