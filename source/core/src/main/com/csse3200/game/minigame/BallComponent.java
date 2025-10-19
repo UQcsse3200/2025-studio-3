@@ -21,7 +21,9 @@ public class BallComponent extends Component {
     this.score = 0;
     this.ballsHit = 0;
     this.initialSpeed = initialXSpeed;
-    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/bounce.mp3"});
+    if (ServiceLocator.getResourceService() != null) {
+      ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/bounce.mp3"});
+    }
   }
 
   public Image getImage() {
@@ -44,9 +46,13 @@ public class BallComponent extends Component {
     velocity.y *= -1;
     score++;
     ballsHit++;
-    float volume = ServiceLocator.getSettingsService().getSoundVolume();
-    Sound bounce = ServiceLocator.getResourceService().getAsset("sounds/bounce.mp3", Sound.class);
-    bounce.play(0.7f * volume);
+    // play sound when ball bounces off paddle
+    if (ServiceLocator.getSettingsService() != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+
+      Sound bounce = ServiceLocator.getResourceService().getAsset("sounds/bounce.mp3", Sound.class);
+      bounce.play(0.7f * volume);
+    }
   }
 
   public void update(float delta, CollisionComponent collisionComponent) {
