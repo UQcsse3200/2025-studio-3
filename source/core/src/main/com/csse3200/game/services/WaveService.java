@@ -7,6 +7,8 @@ import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RobotFactory;
+
+import java.security.Provider;
 import java.util.*;
 import java.util.LinkedList;
 import org.slf4j.Logger;
@@ -17,7 +19,7 @@ public class WaveService implements WaveConfigProvider {
   private static final Logger logger = LoggerFactory.getLogger(WaveService.class);
 
   private int currentWave = 0;
-  private String currentLevelKey = "LevelOne";
+  private String currentLevelKey;
   private final List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
@@ -66,14 +68,8 @@ public class WaveService implements WaveConfigProvider {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
-    this.currentLevelKey = "levelOne";
     resetToInitialState();
     Collections.shuffle(laneOrder);
-    this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
-    if (levelConfig == null) {
-      logger.warn("Level config not found for level {}", this.currentLevelKey);
-      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("levelOne");
-    }
     logger.debug("[WaveService] Wave service created.");
   }
 
@@ -149,15 +145,15 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    if (Objects.equals(currentLevelKey, "levelOne")) {
+    if (currentLevelKey == "levelTwo") {
       logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
       bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
       bossActive = true;
-    } else if (Objects.equals(currentLevelKey, "levelTwo")) { 
+    } else if (levelConfig.getLevelNumber() == 4) {
       logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
       bossActive = true;
-    } else if (Objects.equals(currentLevelKey, "levelFour")) {
+    } else if (levelConfig.getLevelNumber() == 5) {
       logger.info("Queuing boss spawn for wave 3: GUN_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
       bossActive = true;
@@ -321,10 +317,6 @@ public class WaveService implements WaveConfigProvider {
   public void setCurrentLevel(String levelKey) {
     this.currentLevelKey = levelKey;
     this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
-    if (levelConfig == null) {
-      logger.warn("Level config not found for level {}", this.currentLevelKey);
-      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("LevelOne");
-    }
     resetLevel();
     logger.info("Level set to {}", levelKey);
   }
