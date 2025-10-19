@@ -281,6 +281,8 @@ public class MainGameScreen extends ScreenAdapter {
     updateWorld();
     updateIntroPan(delta);
     renderer.render();
+    gameArea.checkGameOver(); // check game-over state
+    gameArea.checkLevelComplete(); // check level-complete state
   }
 
   private void updateWorld() {
