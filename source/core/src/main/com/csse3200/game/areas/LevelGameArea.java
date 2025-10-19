@@ -212,11 +212,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(ui);
 
     createGameOverEntity();
-
-    // Handles the level completion window UI
-    this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
-    spawnEntity(this.levelCompleteEntity);
+    createLevelCompleteEntity();
   }
 
   /** Unlocks all entities that are listed as playing on the current game level */
@@ -287,6 +283,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   void createGameOverEntity() {
     gameOverEntity = new Entity().addComponent(new GameOverWindow());
     spawnEntity(gameOverEntity);
+  }
+
+  /** Creates and spawns the game-over UI entity. */
+  void createLevelCompleteEntity() {
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
   /** Creates and spawns the game background map and its boundary wall. */
