@@ -1131,8 +1131,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
       logger.info("Level is complete!");
       isLevelComplete = true;
-      if (levelCompleteEntity != null) {
- e      }
+      if (levelCompleteEntity != null) {}
       for (Entity r : getRobots()) {
         requestDespawn(r);
       }
