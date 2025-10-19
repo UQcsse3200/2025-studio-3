@@ -1,5 +1,7 @@
 package com.csse3200.game.areas;
 
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DefenderStatsComponent;
@@ -8,6 +10,7 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.progression.inventory.Inventory;
+import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -92,6 +95,7 @@ public class ItemHandler {
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
 
         entity.getEvents().trigger(trigger);
+        addAnimationOntoDefence(trigger, entity);
         logger.info("Start {} on {}", trigger, entity);
 
         Timer.schedule(
@@ -105,5 +109,42 @@ public class ItemHandler {
             30f);
       }
     }
+  }
+
+  private void addAnimationOntoDefence(String trigger, Entity entity) {
+    Vector2 pos = entity.getPosition();
+
+    // spawn trigger visual cue on entity
+    String name = "";
+    if (trigger.equals("doubleDamage")) {
+      name = "attack-up";
+    } else if (trigger.equals("doubleFireRate")) {
+      name = "speed-up";
+    }
+
+    // failsafe
+    if (name.equals("")) {
+      return;
+    }
+
+    // only apply the animations to damage dealing entities
+    if (entity.getComponent(DefenderStatsComponent.class) != null) {
+      if (entity.getComponent(DefenderStatsComponent.class).getBaseAttack() == 0) {
+        return;
+      }
+    } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+      return;
+    }
+
+    logger.info("Spawning effect " + name + " onto entities");
+    ItemEffectsService.spawnEffect(ServiceLocator.getResourceService()
+          .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class), 
+          name,
+          (new Vector2[] {pos, pos}),
+          (int) area.getTileSize(),
+          (new float[] {0.1f, 5f}),
+          Animation.PlayMode.NORMAL,
+          false,
+          false);
   }
 }

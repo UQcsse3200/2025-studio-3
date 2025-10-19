@@ -843,10 +843,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           "hp-up",
           (new Vector2[] {pos, pos}),
           (int) tileSize,
-          // frame duration and total effect time (buff effects remain for 30 seconds)
           (new float[] {0.1f, 1.85f}),
           Animation.PlayMode.NORMAL,
-      false);
+          false,
+          true);
 
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
