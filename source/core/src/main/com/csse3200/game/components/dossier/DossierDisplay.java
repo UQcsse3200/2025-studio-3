@@ -248,9 +248,9 @@ public class DossierDisplay extends UIComponent {
     });
 
     Table navigationTable = new Table();
-    navigationTable.add(leftArrow).size(arrowSize).padRight(5f * uiScale);
-    navigationTable.add(makeDossierTable()).expand().fill();
-    navigationTable.add(rightArrow).size(arrowSize).padRight(5f * uiScale);
+    navigationTable.add(leftArrow).size(arrowSize);
+    navigationTable.add(makeDossierTable()).center();
+    navigationTable.add(rightArrow).size(arrowSize);
 
     return navigationTable;
   }
@@ -381,13 +381,15 @@ public class DossierDisplay extends UIComponent {
 
     // Stack containing book image and content
     Stack stack = new Stack();
+    stack.setSize(targetWidth, targetHeight);
     stack.add(bookImage);
     stack.add(contentContainer);
     stack.setFillParent(false);
 
     // Wrap in outer table for positioning
     Table outerTable = new Table();
-    outerTable.add(stack).size(targetWidth, targetHeight).fill();
+    outerTable.setSize(targetWidth, targetHeight);
+    outerTable.add(stack).size(targetWidth, targetHeight);
 
     return outerTable;
   }
