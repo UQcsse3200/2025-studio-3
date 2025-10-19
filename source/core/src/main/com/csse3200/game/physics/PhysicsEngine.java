@@ -63,8 +63,8 @@ public class PhysicsEngine implements Disposable {
     if (entityService == null) {
       return;
     }
-    // Disposes of all entities that have been marked as dead in the last physics step. Iterating backwards to avoid
-    // index shifting issues when removing entities.
+    // Disposes of all entities that have been marked as dead in the last physics step. Iterating
+    // backwards to avoid index shifting issues when removing entities.
     for (int i = entityService.getEntities().size - 1; i >= 0; i--) {
       Entity entity = entityService.getEntities().get(i);
       if (!entity.getDeathFlag()) {

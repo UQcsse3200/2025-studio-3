@@ -8,8 +8,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** GunnerAttackTask: Handles the gunner robot attacking tasks */
 public class GunnerAttackTask extends RobotTargetDetectionTasks {
@@ -39,7 +37,7 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
     // find nearest visible defense
     currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
-//      logger.info("No visible defense for {}", owner.getEntity());
+      //      logger.info("No visible defense for {}", owner.getEntity());
       return;
     }
     // check if the target is in range
