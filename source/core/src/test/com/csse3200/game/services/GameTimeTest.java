@@ -47,8 +47,16 @@ class GameTimeTest {
     shouldScale(0f, 0f, 10f);
   }
 
+  @Test
+  void shouldClampNegativeScaleToZero() {
+    gameTime.setTimeScale(-2f);
+    assertEquals(0f, gameTime.getTimeScale());
+    assertEquals(0f, gameTime.getDeltaTime());
+  }
+
   private void shouldScale(float scale, float delta, float rawDelta) {
     gameTime.setTimeScale(scale);
+    assertEquals(scale, gameTime.getTimeScale());
     assertEquals(delta, gameTime.getDeltaTime());
     assertEquals(rawDelta, gameTime.getRawDeltaTime());
   }

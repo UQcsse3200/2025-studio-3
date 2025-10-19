@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.Scaling;
 import com.csse3200.game.areas.SlotMachineArea;
 import com.csse3200.game.input.InputComponent;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.ui.UIComponent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -216,9 +217,12 @@ public class SlotMachineDisplay extends UIComponent {
     lastSeenSpins = slotEngine.getRemainingSpins();
     lastRefillEpochMs = System.currentTimeMillis();
     updateAvailabilityVisual();
-    // Register local input listener: P=pause, O=resume (test-only)
     pauseInput = new SlotSpinPauseInput(this);
     ServiceLocator.getInputService().register(pauseInput);
+    if (entity != null && entity.getEvents() != null) {
+      entity.getEvents().addListener("pause", this::pauseSpin);
+      entity.getEvents().addListener("resume", this::resumeSpin);
+    }
   }
 
   /**
@@ -681,6 +685,13 @@ public class SlotMachineDisplay extends UIComponent {
   /** Draw pass also detects stage resize and reapplies layout if needed. */
   @Override
   public void draw(SpriteBatch batch) {
+      GameStateService gs = ServiceLocator.getGameStateService();
+      boolean frozen = (gs != null) && gs.isFrozen();
+      if (frozen && !spinPaused) {
+          pauseSpin();
+      } else if (!frozen && spinPaused) {
+          resumeSpin();
+      }
     float w = stage.getWidth();
     float h = stage.getHeight();
     if (w != lastStageW || h != lastStageH) {
