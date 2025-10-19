@@ -1118,6 +1118,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Checks if the level is complete */
   public void checkLevelComplete() {
     if (isLevelComplete) {
+      GameStateService service = ServiceLocator.getGameStateService();
+      if (service != null) {
+        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+        service.lockPlacement();
+      }
       return;
       // level is already complete, don't check again
     }
@@ -1129,12 +1134,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
       }
-
-      GameStateService service = ServiceLocator.getGameStateService();
-      if (service != null) {
-        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
-        service.lockPlacement();
+      for (Entity r : getRobots()) {
+        requestDespawn(r);
       }
+      getRobots().clear();
     }
   }
 
