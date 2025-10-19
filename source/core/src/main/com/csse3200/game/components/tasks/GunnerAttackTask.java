@@ -34,7 +34,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
   @Override
   public void start() {
     super.start();
-    logger.info("GunnerAttackTask started for {}", owner.getEntity());
   }
 
   @Override
@@ -91,7 +90,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         defenses.add(entity);
       }
     }
-    logger.info("Found {} possible defense targets", defenses.size());
     return defenses;
   }
 
@@ -119,24 +117,8 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         nearestDistance = dist;
       }
     }
-    // log the nearest visible defense
-    if (nearest != null) {
-      logger.info(
-          "Nearest visible defense: {} at {} (dist = {})",
-          nearest,
-          nearest.getPosition(),
-          nearestDistance);
-    }
 
     return nearest;
   }
 
-  /**
-   * Get the current target of the gunner
-   *
-   * @return the current target of the gunner
-   */
-  public Entity getCurrentTarget() {
-    return currentTarget;
-  }
 }
