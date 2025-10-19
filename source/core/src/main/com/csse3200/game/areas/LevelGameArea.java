@@ -314,6 +314,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       wall.setPosition(damageTile);
       wall.scaleHeight(tileSize);
       Vector2 knockbackTile = new Vector2(damageTile.x + tileSize, damageTile.y);
+      Vector2 knockbackTile2 = new Vector2(damageTile.x + 2 * tileSize, damageTile.y);
 
       wall.getEvents()
           .addListener(
@@ -324,6 +325,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                     tileSize,
                     wall.getComponent(DefenderStatsComponent.class).getBaseAttack());
                 knockbackRobotsAtPosition(knockbackTile, 3);
+                knockbackRobotsAtPosition(knockbackTile2, 3);
                 requestDespawn(wall);
                 robots.remove(wall);
               });
