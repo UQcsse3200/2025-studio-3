@@ -238,6 +238,11 @@ public class DisplaySettingsMenu extends UIComponent {
     }
 
     // Apply remaining display settings
+
+    // Check if settings have changed that need to be updated immediately
+    boolean uiScaleChanged = false;
+    boolean qualityChanged = false;
+
     if (fpsVal != null && vsyncCheck != null && uiScaleSelect != null && qualitySelect != null) {
       Settings.UIScale uiScale;
       try {
@@ -245,6 +250,7 @@ public class DisplaySettingsMenu extends UIComponent {
       } catch (IllegalArgumentException e) {
         uiScale = Settings.UIScale.MEDIUM;
       }
+      uiScaleChanged = settings.getCurrentUIScale() != uiScale;
 
       Settings.Quality quality;
       try {
@@ -252,6 +258,7 @@ public class DisplaySettingsMenu extends UIComponent {
       } catch (IllegalArgumentException e) {
         quality = Settings.Quality.HIGH;
       }
+      qualityChanged = settings.getQuality() != quality;
 
       ServiceLocator.getSettingsService()
           .changeDisplaySettings(fpsVal, vsyncCheck.isChecked(), uiScale, quality);
@@ -260,7 +267,17 @@ public class DisplaySettingsMenu extends UIComponent {
 
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[DisplaySettingsMenu] Remaining display settings applied");
-    entity.getEvents().trigger("backtosettingsmenu");
+
+    // Check if settings have changed that need to be applied immediately (trigger change event),
+    // otherwise return to Settings menu
+    if (uiScaleChanged || qualityChanged) {
+      logger.info("[DisplaySettingsMenu] UIScale or Quality settings changed");
+      entity.getEvents().trigger("uiscaleorqualitychanged");
+    } else {
+      logger.info(
+          "[DisplaySettingsMenu] UIScale or Quality settings unchanged, back to settings menu");
+      entity.getEvents().trigger("backtosettingsmenu");
+    }
   }
 
   /**
