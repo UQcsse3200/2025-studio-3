@@ -58,7 +58,7 @@ public class SaveGameMenuDisplay extends UIComponent {
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
-            new ClickListener () {
+            new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
                 logger.debug("Save slot {} selected for overwrite", slotIndex);
@@ -74,7 +74,7 @@ public class SaveGameMenuDisplay extends UIComponent {
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
-            new ClickListener () {
+            new ClickListener() {
               @Override
               public void clicked(InputEvent event, float x, float y) {
                 logger.debug("Empty save slot {} selected", slotIndex);

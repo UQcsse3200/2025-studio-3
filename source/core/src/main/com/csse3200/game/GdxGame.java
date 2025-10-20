@@ -66,7 +66,7 @@ public class GdxGame extends Game {
     ServiceLocator.registerSettingsService(new SettingsService());
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
-    
+
     loadGlobalAssets();
 
     ServiceLocator.registerDialogService(new DialogService());

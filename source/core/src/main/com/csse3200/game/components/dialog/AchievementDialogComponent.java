@@ -89,7 +89,6 @@ public class AchievementDialogComponent extends UIComponent {
     nameLabel.setAlignment(Align.left);
     textTable.add(nameLabel).left().padTop(2f).row();
 
-
     // Tier information
     if (tier != null && !tier.isEmpty()) {
       Label tierLabel = ui.subtext("Tier: " + tier);

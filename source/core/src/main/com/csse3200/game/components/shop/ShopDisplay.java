@@ -262,9 +262,7 @@ public class ShopDisplay extends UIComponent {
     BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
     String title = itemConfig.getName();
     String message =
-        String.format(
-            "%s Do you want to purchase this item?",
-            itemConfig.getDescription());
+        String.format("%s Do you want to purchase this item?", itemConfig.getDescription());
     ServiceLocator.getDialogService()
         .warning(
             title,

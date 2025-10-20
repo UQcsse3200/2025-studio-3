@@ -48,33 +48,31 @@ public class InventoryDisplay extends UIComponent {
   /** Builds and adds the main UI actors for the Inventory screen. */
   private void addActors() {
     // Create background image
-    Texture backgroundTexture = ServiceLocator.getGlobalResourceService()
-        .getAsset("images/ui/menu_card.png", Texture.class);
+    Texture backgroundTexture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/menu_card.png", Texture.class);
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(870f * uiScale, 610f * uiScale);
-    
+
     // Create content table for inventory
     rootTable = new Table();
     rootTable.setSize(870f * uiScale, 610f * uiScale);
     rootTable.center();
-    
+
     // Add title with 10f padding from top
     Label title = ui.title("Inventory");
-    rootTable.add(title)
-        .expandX()
-        .center()
-        .padTop(25f * uiScale)
-        .row();
-    
+    rootTable.add(title).expandX().center().padTop(25f * uiScale).row();
+
     createInventoryDisplay();
-    
+
     // Create stack with background and content
     Stack stack = new Stack();
     stack.add(backgroundImage);
     stack.add(rootTable);
     stack.setSize(1044f * uiScale, 732f * uiScale);
-    stack.setPosition((stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
-    
+    stack.setPosition(
+        (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
+
     stage.addActor(stack);
     createCloseButton();
   }
@@ -82,7 +80,7 @@ public class InventoryDisplay extends UIComponent {
   /** Creates the inventory display with scrollable grid. */
   private void createInventoryDisplay() {
     ScrollPane inventoryScrollPane = makeInventoryGrid();
-    
+
     rootTable.row();
     rootTable.add(inventoryScrollPane).expand().fill().row();
   }

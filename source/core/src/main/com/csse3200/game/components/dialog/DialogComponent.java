@@ -75,13 +75,23 @@ public class DialogComponent extends UIComponent {
     Label titleLabel = ui.heading(title);
     titleLabel.setColor(titleColor);
     titleLabel.setAlignment(Align.center);
-    contentTable.add(titleLabel).width(defaultWidth - (120f * uiScale)).center().padBottom(20f * uiScale).row();
+    contentTable
+        .add(titleLabel)
+        .width(defaultWidth - (120f * uiScale))
+        .center()
+        .padBottom(20f * uiScale)
+        .row();
 
     // Add message label
     Label messageLabel = ui.text(message);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
-    contentTable.add(messageLabel).width(defaultWidth - (120f * uiScale)).center().padBottom(20f*uiScale).row();
+    contentTable
+        .add(messageLabel)
+        .width(defaultWidth - (120f * uiScale))
+        .center()
+        .padBottom(20f * uiScale)
+        .row();
     contentTable.center();
 
     // Add buttons based on dialog type
@@ -106,15 +116,15 @@ public class DialogComponent extends UIComponent {
     // Set the dialog background image
     try {
       Texture dialogTexture =
-          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog_new_new.png", Texture.class);
+          ServiceLocator.getGlobalResourceService()
+              .getAsset("images/ui/dialog_new_new.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
         windowStyle.background = dialogDrawable;
       }
     } catch (Exception e) {
-      logger.warn(
-          "[DialogComponent] Could not load dialog background image: {}", e.getMessage());
+      logger.warn("[DialogComponent] Could not load dialog background image: {}", e.getMessage());
     }
     dialog.setStyle(windowStyle);
   }
