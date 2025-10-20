@@ -482,9 +482,21 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              try {
+                float vol = ServiceLocator.getSettingsService().getSoundVolume();
+                Sound s =
+                    ServiceLocator.getResourceService()
+                        .getAsset("sounds/robot-death.mp3", Sound.class);
+                if (s != null) s.play(vol);
+              } catch (Exception e) {
+                logger.debug("Skip death sfx: {}", e.toString());
+              }
+
               increaseOutGameCurrency(coins);
               requestDespawn(unit);
-              ServiceLocator.getWaveService().onEnemyDispose();
+              if (ServiceLocator.getWaveService() != null) {
+                ServiceLocator.getWaveService().onEnemyDispose();
+              }
               robots.remove(unit);
             });
 
@@ -645,7 +657,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(boss);
     robots.add(boss);
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
-    boss.getEvents().addListener("despawnRobot", target -> {});
 
     int coins;
     CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
@@ -937,10 +948,22 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              try {
+                Object p = unit.getProperty("deathSfxPath");
+                if (p != null) {
+                  float vol = ServiceLocator.getSettingsService().getSoundVolume();
+                  Sound s = ServiceLocator.getResourceService().getAsset(p.toString(), Sound.class);
+                  if (s != null) s.play(vol);
+                }
+              } catch (Exception e) {
+                logger.debug("Skip death SFX: {}", e.toString());
+              }
+
               requestDespawn(unit);
               clearTile.run();
               robots.remove(unit);
             });
+
     unit.getEvents().addListener("despawned", clearTile::run);
 
     unit.getEvents()
