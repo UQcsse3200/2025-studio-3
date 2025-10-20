@@ -169,16 +169,19 @@ public class CombatStatsComponent extends Component {
       // checks for components unique to defenders
       if (entity.getComponent(DefenderStatsComponent.class) != null) {
         entity.getEvents().trigger("entityDeath");
+
         logger.info("Defence has died!");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
       } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
         entity.getEvents().trigger("entityDeath");
+
         logger.info("Generator has died!");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
       } else {
         entity.getEvents().trigger("entityDeath");
+
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
