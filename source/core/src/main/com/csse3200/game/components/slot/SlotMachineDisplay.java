@@ -598,7 +598,8 @@ public class SlotMachineDisplay extends UIComponent {
 
       Group col = reelColumns.get(i);
       col.addAction(
-          Actions.sequence(Actions.delay(delay), Actions.run(() -> stopColumnAt(colIndex))));
+          Actions.sequence(
+              new ScaledDelayAction(delay), Actions.run(() -> stopColumnAt(colIndex))));
     }
   }
 
@@ -919,11 +920,11 @@ public class SlotMachineDisplay extends UIComponent {
 
     @Override
     public boolean act(float delta) {
-      if (pauseQuery != null && pauseQuery.getAsBoolean()) {
+      if (pauseQuery != null && pauseQuery.getAsBoolean())
         // Do not advance internal time while paused
         return false;
-      }
-      return super.act(delta);
+      float scaled = delta * ServiceLocator.getTimeSource().getTimeScale();
+      return super.act(scaled);
     }
 
     @Override
@@ -936,6 +937,25 @@ public class SlotMachineDisplay extends UIComponent {
       if (y > 0) y -= cycle;
       a.setY(y);
       if (speedTap != null) speedTap.accept(-speed);
+    }
+  }
+
+  /** Delayed action, advancing by GameTime multiplier */
+  private static final class ScaledDelayAction extends TemporalAction {
+    ScaledDelayAction(float duration) {
+      super(duration);
+      setInterpolation(null);
+    }
+
+    @Override
+    public boolean act(float delta) {
+      float scaled = delta * ServiceLocator.getTimeSource().getTimeScale();
+      return super.act(scaled);
+    }
+
+    @Override
+    protected void update(float percent) {
+      /* no-op */
     }
   }
 
@@ -959,11 +979,11 @@ public class SlotMachineDisplay extends UIComponent {
 
     @Override
     public boolean act(float delta) {
-      if (pauseQuery != null && pauseQuery.getAsBoolean()) {
+      if (pauseQuery != null && pauseQuery.getAsBoolean())
         // Freeze progression of the easing while paused
         return false;
-      }
-      return super.act(delta);
+      float scaled = delta * ServiceLocator.getTimeSource().getTimeScale();
+      return super.act(scaled);
     }
 
     @Override
