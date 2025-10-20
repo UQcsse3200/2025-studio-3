@@ -9,8 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
@@ -64,7 +64,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   @Override
   public void create() {
     super.create();
-    ServiceLocator.getWorldMapService().registerNodeRenderComponent(this);
 
     // get textures if preloaded
     var rs = ServiceLocator.getResourceService();
@@ -193,18 +192,20 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     String key = node.getRegistrationKey();
 
     // Get key names from settings service
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
-    String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
-    String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
-    String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    String upKeyName = Input.Keys.toString(settings.getUpButton());
+    String downKeyName = Input.Keys.toString(settings.getDownButton());
+    String leftKeyName = Input.Keys.toString(settings.getLeftButton());
+    String rightKeyName = Input.Keys.toString(settings.getRightButton());
+
+    WorldMapService wms = ServiceLocator.getWorldMapService();
 
     // Up
     drawDirWithLabel(
         batch,
         keyUp,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
-        getPath(key, "W"),
+        wms.getPath(key, WorldMapService.Direction.UP),
         upKeyName,
         new Vector2(0f, +1f));
     // Down
@@ -212,7 +213,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyDown,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
-        getPath(key, "S"),
+        wms.getPath(key, WorldMapService.Direction.DOWN),
         downKeyName,
         new Vector2(0f, -1f));
     // Left
@@ -220,7 +221,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyLeft,
         new Vector2(cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
-        getPath(key, "A"),
+        wms.getPath(key, WorldMapService.Direction.LEFT),
         leftKeyName,
         new Vector2(-1f, 0f));
     // Right
@@ -228,19 +229,19 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyRight,
         new Vector2(cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
-        getPath(key, "D"),
+        wms.getPath(key, WorldMapService.Direction.RIGHT),
         rightKeyName,
         new Vector2(+1f, 0f));
 
     if (font != null && showPrompt) {
       // Get interaction key name from settings service
       String interactionKeyName =
-          Input.Keys.toString(settingsService.getSettings().getInteractionButton());
+          Input.Keys.toString(settings.getInteractionButton());
       String hint = "Press " + interactionKeyName + " to Enter";
       float sY = cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f;
 
       // Check if there's a down option - if not, move the hint 20px higher
-      boolean hasDownOption = getPath(key, "S") != null;
+      boolean hasDownOption = wms.getPath(key, WorldMapService.Direction.DOWN) != null;
       float verticalOffset = hasDownOption ? 0f : 20f;
 
       float oldScale = font.getData().scaleX;
@@ -277,6 +278,17 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     batch.setColor(1f, 1f, 1f, 1f);
   }
 
+  /**
+   * Draws a label.
+   * 
+   * @param batch the sprite batch
+   * @param name the name of the label
+   * @param midX the x position of the center
+   * @param midY the y position of the center
+   * @param bgW the width of the background
+   * @param bgH the height of the background
+   * @param gl the glyph layout
+   */
   private void drawLabel(
       SpriteBatch batch,
       String name,
@@ -291,9 +303,15 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     font.setColor(1f, 1f, 1f, 1f);
     float tx = midX - gl.width * 0.5f;
     float ty = midY + gl.height * 0.35f;
-    drawOutlinedText(batch, name, tx, ty);
+    drawText(batch, name, tx, ty);
   }
 
+  /**
+   * Gets the texture region for a given texture.
+   * 
+   * @param tex the texture
+   * @return the texture region
+   */
   private TextureRegion regionFor(Texture tex) {
     if (tex == keyUp) return keyUpR;
     if (tex == keyDown) return keyDownR;
@@ -302,20 +320,28 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     return null;
   }
 
+  /**
+   * Draws a direction with a label.
+   * 
+   * @param batch the sprite batch
+   * @param tex the texture
+   * @param pos the position
+   * @param def the path definition
+   * @param dir the direction
+   * @param labelOffset the offset of the label
+   */
   private void drawDirWithLabel(
-      SpriteBatch batch, Texture tex, Vector2 pos, WorldMapService.NodePath def, String dir, Vector2 labelOffset) {
-
+      SpriteBatch batch, Texture tex, Vector2 pos, WorldMapService.Path def, String dir, Vector2 labelOffset) {
     if (tex == null) return;
 
     // 1) Draw keycap
     batch.setColor(1f, 1f, 1f, def == null ? 0.35f : 1f);
-    TextureRegion keyRegion = regionFor(tex);
     batch.draw(
-        keyRegion != null ? keyRegion : new TextureRegion(tex),
-        pos.x,
-        pos.y,
-        ARROW_SIZE,
-        ARROW_SIZE);
+      regionFor(tex),
+      pos.x,
+      pos.y,
+      ARROW_SIZE,
+      ARROW_SIZE);
     batch.setColor(1f, 1f, 1f, 1f);
 
     // 2) Center Letter
@@ -329,8 +355,15 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     }
   }
 
-  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, WorldMapService.NodePath def) {
-    float originalScale = font.getData().scaleX;
+  /**
+   * Draws the center letter.
+   * 
+   * @param batch the sprite batch
+   * @param pos the position
+   * @param dir the direction
+   * @param def the path definition
+   */
+  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, WorldMapService.Path def) {
     font.getData().setScale(FONT_SCALE * 1.10f);
 
     GlyphLayout glyphLayout = new GlyphLayout(font, dir);
@@ -338,13 +371,11 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     float centerY = pos.y + ARROW_SIZE * 0.56f + glyphLayout.height * 0.45f;
 
     font.setColor(1f, 1f, 1f, def == null ? 0.55f : 1f);
-    drawOutlinedText(batch, dir, centerX, centerY);
-    font.getData().setScale(originalScale);
+    drawText(batch, dir, centerX, centerY);
   }
 
-  private void drawPathLabel(SpriteBatch batch, Vector2 pos, WorldMapService.NodePath def, Vector2 labelOffset) {
-    String nodeName = resolveDisplayName(def.destination());
-    float originalScale = font.getData().scaleX;
+  private void drawPathLabel(SpriteBatch batch, Vector2 pos, WorldMapService.Path def, Vector2 labelOffset) {
+    String nodeName = def.destination();
     font.getData().setScale(FONT_SCALE * 0.90f);
 
     GlyphLayout nameLayout = new GlyphLayout(font, nodeName);
@@ -367,68 +398,66 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     else if (sideY < 0f) labelY = pos.y - (NAME_GAP - VISUAL_TRIM_Y) - backgroundHeight * 0.5f;
 
     drawLabel(batch, nodeName, labelX, labelY, backgroundWidth, backgroundHeight, nameLayout);
-    font.getData().setScale(originalScale);
-  }
-
-  // White text without outline
-  private void drawOutlinedText(SpriteBatch b, String t, float x, float y) {
-    font.setColor(1f, 1f, 1f, 1f);
-    font.draw(b, t, x, y);
-  }
-
-  // Get path def from WorldMapService
-  private WorldMapService.NodePath getPath(String nodeKey, String dir) {
-    return ServiceLocator.getWorldMapService().getPath(nodeKey, dir);
   }
 
   /**
-   * Resolve the human-readable display name for a node key by querying the WorldMapService. Falls
-   * back to the key itself if the node cannot be found.
-   *
-   * @param nodeKey registration key from the path definition (def.next)
-   * @return display name (e.g., "Arcade", "Town", "Level 1") or the key if not found
+   * Draws text.
+   * 
+   * @param batch the sprite batch
+   * @param text the text to draw
+   * @param x the x position
+   * @param y the y position
    */
-  private String resolveDisplayName(String nodeKey) {
-    try {
-      var worldMapService = ServiceLocator.getWorldMapService();
-      java.util.List<WorldMapNode> nodes = worldMapService.getAllNodes();
-      if (nodes != null) {
-        for (WorldMapNode n : nodes) {
-          if (n != null && nodeKey != null && nodeKey.equals(n.getRegistrationKey())) {
-            // Prefer the node's name for display
-            return n.getLabel();
-          }
-        }
-      }
-    } catch (Exception ignored) {
-      // If service not ready or any other issue, fall back to key
-    }
-    // Fallback: show the key itself so users/devs can still see where it points
-    return nodeKey != null ? nodeKey : "";
+  private void drawText(SpriteBatch batch, String text, float x, float y) {
+    font.setColor(1f, 1f, 1f, 1f);
+    font.draw(batch, text, x, y);
   }
 
+  /**
+   * Gets the key of the node.
+   * 
+   * @return the key of the node
+   */
   public String getKey() {
     return node.getRegistrationKey();
   }
 
-  /** Access the underlying node data object */
+  /** 
+   * Access the underlying node data object
+   * 
+   * @return the underlying node data object
+   */
   public WorldMapNode getNode() {
     return node;
   }
 
-  /** Center position in world coordinates (used by render and hit test) */
+  /** 
+   * Center position in world coordinates (used by render and hit test)
+   * 
+   * @return the center position in world coordinates
+   */
   public Vector2 getCenterWorld() {
     float x = node.getPositionX() * worldSize.x;
     float y = node.getPositionY() * worldSize.y;
     return new Vector2(x + nodeSize * 0.5f, y + nodeSize * 0.5f);
   }
 
-  /** Hit radius consistent with on-node logic */
+  /** 
+   * Hit radius consistent with on-node logic
+   * 
+   * @return the hit radius
+   */
   public float getHitRadius() {
     return Math.max(nodeSize * 0.45f, 36f);
   }
 
-  /** Point-in-node test in world coords */
+  /** 
+   * Point-in-node test in world coords
+   * 
+   * @param worldX the x position in world coordinates
+   * @param worldY the y position in world coordinates
+   * @return true if the point is in the node, false otherwise
+   */
   public boolean hit(float worldX, float worldY) {
     Vector2 c = getCenterWorld();
     float r = getHitRadius();

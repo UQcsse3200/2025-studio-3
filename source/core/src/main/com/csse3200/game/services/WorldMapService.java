@@ -2,6 +2,7 @@ package com.csse3200.game.services;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.GdxGame.ScreenType;
+import com.csse3200.game.entities.Entity;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.ui.WorldMapNode;
 import com.csse3200.game.utils.LevelType;
@@ -21,6 +22,7 @@ public class WorldMapService {
     "You must complete the previous level to unlock this one.";
   private final Map<String, WorldMapNode> nodes;
   private final Map<String, Directions> nodePaths;
+  private Entity player;
 
   /**
    * Enum for the directions on the world map.
@@ -38,6 +40,31 @@ public class WorldMapService {
     this.nodePaths = new HashMap<>();
     loadNodes();
     loadPaths();
+  }
+
+  /**
+   * Set the player entity
+   * 
+   * @param player the player entity
+   */
+  public void setPlayer(Entity player) {
+    this.player = player;
+  }
+
+  /**
+   * Get the player entity
+   * 
+   * @return the player entity
+   */
+  public Entity getPlayer() {
+    return player;
+  }
+
+  /**
+   * Clear the player entity
+   */
+  public void clearPlayer() {
+    this.player = null;
   }
 
   /**
@@ -309,6 +336,16 @@ public class WorldMapService {
     logger.debug("[WorldMapService] Cleared all world map nodes and paths");
   }
 
+  /**
+   * Find a node at a given position
+   * 
+   * @param x the x position
+   * @param y the y position
+   * @return the node, or null if not found
+   */
+  public WorldMapNode findNodeAt(float x, float y) {
+    return nodes.values().stream().filter(node -> node.getPositionX() == x && node.getPositionY() == y).findFirst().orElse(null);
+  }
 
   /**
    * Gets a path definition for a specific node and direction.

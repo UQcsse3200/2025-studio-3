@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
@@ -19,7 +20,6 @@ import com.csse3200.game.components.worldmap.WorldMapRenderComponent;
 import com.csse3200.game.components.worldmap.WorldMapZoomInputComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.input.InputDecorator;
-import com.csse3200.game.progression.Profile;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
@@ -30,7 +30,6 @@ import com.csse3200.game.ui.tutorial.WorldMapTutorial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,16 +55,12 @@ public class WorldMapScreen extends BaseScreen {
   private static final float[] ZOOM_STEPS = {1.20f, 1.35f, 1.50f, 1.70f, 1.90f};
   private static final float CAMERA_LERP_SPEED = 8.0f;
   private static final String LOG_ZOOM_SAVE_FAIL = "[WorldMapScreen] Failed to save zoom idx: {}";
-
   private boolean followCamera = true; // When false, manual panning is active
   private int zoomIdx = 0;
   private Entity playerEntity;
   private final List<String> textures = new ArrayList<>();
-
-  // One-shot smooth recenter flag and threshold (in world units)
-  private boolean smoothRecentering = false;
+  private boolean smoothRecentering = false; // smooth recenter flag and threshold (in world units)
   private static final float RECENTER_STOP_EPSILON = 2f;
-  private static final Set<String> SPECIAL_NODES = Set.of("shop", "skills", "minigames");
 
   public WorldMapScreen(GdxGame game) {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
@@ -93,7 +88,7 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapPanInputComponent(this, 12))
         .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
     
-    if (ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial() == false) {
+    if (!ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial()) {
       ui.addComponent(new WorldMapTutorial());
       ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
     }
@@ -101,6 +96,11 @@ public class WorldMapScreen extends BaseScreen {
     return ui;
   }
 
+  /**
+   * Get the camera component
+   * 
+   * @return the camera component
+   */
   public CameraComponent getCameraComponent() {
     return renderer.getCamera();
   }
@@ -139,7 +139,6 @@ public class WorldMapScreen extends BaseScreen {
     playerEntity.setPosition(new Vector2(startX, startY));
     playerEntity.addComponent(new WorldMapPlayerComponent(WORLD_SIZE));
     ServiceLocator.getEntityService().register(playerEntity);
-    ServiceLocator.getWorldMapService().registerPlayer(playerEntity);
 
     // Setup camera to follow player and start at the same place
     CameraComponent camera = renderer.getCamera();
@@ -153,11 +152,13 @@ public class WorldMapScreen extends BaseScreen {
 
     // Listen for node events
     playerEntity.getEvents().addListener("enterNode", this::onNodeEnter);
+
+    ServiceLocator.getWorldMapService().setPlayer(playerEntity);
   }
 
   /** Loads the textures for the nodes. */
   private void loadTextures() {
-    for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
+    for (WorldMapNode node : ServiceLocator.getWorldMapService().getNodesList()) {
       textures.add(node.getNodeTexture());
     }
     ServiceLocator.getResourceService().loadTextures(textures.toArray(new String[0]));
@@ -167,35 +168,8 @@ public class WorldMapScreen extends BaseScreen {
   /** Creates the nodes for the world map. */
   private void createNodes() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    Set<String> unlockedNodes = ServiceLocator.getProfileService().getProfile().getUnlockedNodes();
-    handleDefaultNodeSetup(nodes);
-    registerNodeEntities(worldMapService, nodes);
-  }
-
-  /**
-   * Handles map setup when there is no active profile (first-time run or error). Only unlocks the
-   * default special nodes.
-   */
-  private void handleDefaultNodeSetup(List<WorldMapNode> nodes) {
-    for (WorldMapNode node : nodes) {
-      String key = node.getRegistrationKey();
-      if (SPECIAL_NODES.contains(key)) {
-        // Always unlocked, never completed
-        node.setUnlocked(true);
-        node.setCompleted(false);
-        node.setLockReason(null);
-      } else {
-        // Locked by default
-        node.setUnlocked(false);
-        node.setCompleted(false);
-        node.setLockReason("Locked until you reach this node.");
-      }
-    }
-  }
-
-  /** Registers node entities for rendering on the world map. */
-  private void registerNodeEntities(WorldMapService wms, List<WorldMapNode> nodes) {
+    worldMapService.applyState(); // Apply the profile state to the world map nodes.
+    List<WorldMapNode> nodes = worldMapService.getNodesList();
     for (WorldMapNode node : nodes) {
       Entity nodeEntity = new Entity();
       float worldX = node.getPositionX() * WORLD_WIDTH;
@@ -203,7 +177,6 @@ public class WorldMapScreen extends BaseScreen {
       nodeEntity.setPosition(worldX, worldY);
       WorldMapNodeRenderComponent comp = new WorldMapNodeRenderComponent(node, WORLD_SIZE, 80f);
       nodeEntity.addComponent(comp);
-      wms.registerNodeRenderComponent(comp);
       ServiceLocator.getEntityService().register(nodeEntity);
     }
   }
@@ -315,13 +288,17 @@ public class WorldMapScreen extends BaseScreen {
     smoothRecentering = true;
   }
 
-  /** Clamps the camera to the world bounds. */
+  /** 
+   * Clamps the camera to the world bounds.
+   * 
+   * @param camera the camera to clamp
+   */
   private void clampCamera(CameraComponent camera) {
     Vector2 cameraPos = camera.getEntity().getPosition();
-    com.badlogic.gdx.graphics.Camera gdxCamera = camera.getCamera();
+    Camera gdxCamera = camera.getCamera();
 
     float zoom = 1.0f;
-    if (gdxCamera instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+    if (gdxCamera instanceof OrthographicCamera orthographicCamera) {
       zoom = orthographicCamera.zoom;
     }
 
@@ -357,7 +334,7 @@ public class WorldMapScreen extends BaseScreen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
       zoomIdx++;
       if (camera.getCamera()
-          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+          instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom OUT → {}", ZOOM_STEPS[zoomIdx]);
@@ -368,7 +345,7 @@ public class WorldMapScreen extends BaseScreen {
     if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
       zoomIdx--;
       if (camera.getCamera()
-          instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+          instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom IN → {}", ZOOM_STEPS[zoomIdx]);
@@ -377,7 +354,11 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-  /** Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out). */
+  /** 
+   * Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out).
+   * 
+   * @param steps the number of steps to adjust the zoom by
+   */
   public void stepZoom(int steps) {
     int newIdx = MathUtils.clamp(zoomIdx + steps, 0, ZOOM_STEPS.length - 1);
     if (newIdx == zoomIdx) {
@@ -385,7 +366,7 @@ public class WorldMapScreen extends BaseScreen {
     }
     zoomIdx = newIdx;
     var camera = renderer.getCamera();
-    if (camera.getCamera() instanceof com.badlogic.gdx.graphics.OrthographicCamera oc) {
+    if (camera.getCamera() instanceof OrthographicCamera oc) {
       oc.zoom = ZOOM_STEPS[zoomIdx];
       clampCamera(camera);
       persistZoomIdx();
@@ -401,13 +382,16 @@ public class WorldMapScreen extends BaseScreen {
   /**
    * Pans the camera by the given screen-space delta (in pixels). Dragging moves the view with the
    * cursor (grab-and-drag behavior).
+   * 
+   * @param deltaScreenX the screen-space delta in the x direction
+   * @param deltaScreenY the screen-space delta in the y direction
    */
   public void panByScreenDelta(float deltaScreenX, float deltaScreenY) {
     CameraComponent camera = renderer.getCamera();
-    com.badlogic.gdx.graphics.Camera gdxCam = camera.getCamera();
+    Camera gdxCam = camera.getCamera();
 
     float zoom = 1.0f;
-    if (gdxCam instanceof com.badlogic.gdx.graphics.OrthographicCamera oc) {
+    if (gdxCam instanceof OrthographicCamera oc) {
       zoom = oc.zoom;
     }
 
@@ -435,12 +419,13 @@ public class WorldMapScreen extends BaseScreen {
     clampCamera(camera);
   }
 
-  /** Player enters a node. */
   /**
-   * Handles when player enters a node. Does NOT change currentLevel (it always points to last
-   * unlocked level). Only saves current world map position to the profile.
+   * Handles when player enters a node.
+   * 
+   * @param node the node the player has entered
    */
   private void onNodeEnter(WorldMapNode node) {
+    // Update the profile with the map location.
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
       ps.saveCurrentProfile();
@@ -458,7 +443,11 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-  /** Returns true if the world-map player is currently moving along a path or between nodes. */
+  /** 
+   * Returns true if the world-map player is currently moving along a path or between nodes.
+   * 
+   * @return true if the player is currently moving, false otherwise
+   */
   public boolean isPlayerCurrentlyMoving() {
     if (playerEntity == null) return false;
     WorldMapPlayerComponent comp = playerEntity.getComponent(WorldMapPlayerComponent.class);

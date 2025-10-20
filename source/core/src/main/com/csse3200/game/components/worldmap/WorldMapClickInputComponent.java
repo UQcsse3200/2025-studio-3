@@ -13,10 +13,16 @@ import org.slf4j.LoggerFactory;
 
 public class WorldMapClickInputComponent extends InputComponent {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapClickInputComponent.class);
-
   private final WorldMapScreen screen;
   private Entity player;
 
+  /**
+   * Constructor for the world map click input component.
+   * 
+   * @param screen the world map screen
+   * @param player the player entity
+   * @param priority the priority of the input component
+   */
   public WorldMapClickInputComponent(WorldMapScreen screen, Entity player, int priority) {
     super(priority);
     this.screen = screen;
@@ -33,7 +39,7 @@ public class WorldMapClickInputComponent extends InputComponent {
     // Try to resolve the player entity dynamically (in case it was not set during init)
     if (player == null) {
       try {
-        player = ServiceLocator.getWorldMapService().getPlayerEntity();
+        player = ServiceLocator.getWorldMapService().getPlayer();
       } catch (Exception e) {
         player = null;
       }
