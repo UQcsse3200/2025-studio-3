@@ -116,10 +116,13 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Immediately ends the current wave inside a level</div>
 </dd>
+<dt><a href="com/csse3200/game/ui/terminal/commands/SpawnNextRobot.html#action(java.util.ArrayList)" class="member-name-link">action(ArrayList&lt;String&gt;)</a> - Method in class com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/SpawnNextRobot.html" title="class in com.csse3200.game.ui.terminal.commands">SpawnNextRobot</a></dt>
+<dd>
+<div class="block">Spawns the next robot in the spawn queue.</div>
+</dd>
 <dt><a href="com/csse3200/game/ui/terminal/commands/SpawnRobot.html#action(java.util.ArrayList)" class="member-name-link">action(ArrayList&lt;String&gt;)</a> - Method in class com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/SpawnRobot.html" title="class in com.csse3200.game.ui.terminal.commands">SpawnRobot</a></dt>
 <dd>
-<div class="block">Spawns the next robot in the spawn queue in the lane corresponding to the first argument
- expressed as an int.</div>
+<div class="block">Spawns the specified robot.</div>
 </dd>
 <dt><a href="com/csse3200/game/ui/terminal/commands/UnlockEverything.html#action(java.util.ArrayList)" class="member-name-link">action(ArrayList&lt;String&gt;)</a> - Method in class com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/UnlockEverything.html" title="class in com.csse3200.game.ui.terminal.commands">UnlockEverything</a></dt>
 <dd>
@@ -7991,14 +7994,23 @@ loadScripts(document, 'script');</script>
 <div class="block">Builds a spawn queue for the current wave using the new system: - Each wave has a budget
  (waveWeight).</div>
 </dd>
-<dt><a href="com/csse3200/game/services/WaveService.html#spawnEnemy(int)" class="member-name-link">spawnEnemy(int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/WaveService.EnemySpawnCallback.html#spawnEnemy(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnEnemy(int, int, RobotFactory.RobotType)</a> - Method in interface com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.EnemySpawnCallback.html" title="interface in com.csse3200.game.services">WaveService.EnemySpawnCallback</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/WaveService.html#spawnEnemyDebug(int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnEnemyDebug(int, RobotFactory.RobotType)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
+<dd>
+<div class="block">A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+ function, this does not update the position in the wave</div>
+</dd>
 <dt><a href="com/csse3200/game/areas/GameArea.html#spawnEntity(com.csse3200.game.entities.Entity)" class="member-name-link">spawnEntity(Entity)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/GameArea.html" title="class in com.csse3200.game.areas">GameArea</a></dt>
 <dd>
 <div class="block">Spawn entity at its current position</div>
 </dd>
+<dt><a href="com/csse3200/game/services/WaveService.html#spawnNextEnemy(int)" class="member-name-link">spawnNextEnemy(int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/ui/terminal/commands/SpawnNextRobot.html" class="type-name-link" title="class in com.csse3200.game.ui.terminal.commands">SpawnNextRobot</a> - Class in <a href="com/csse3200/game/ui/terminal/commands/package-summary.html">com.csse3200.game.ui.terminal.commands</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/ui/terminal/commands/SpawnNextRobot.html#%3Cinit%3E()" class="member-name-link">SpawnNextRobot()</a> - Constructor for class com.csse3200.game.ui.terminal.commands.<a href="com/csse3200/game/ui/terminal/commands/SpawnNextRobot.html" title="class in com.csse3200.game.ui.terminal.commands">SpawnNextRobot</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameArea.html#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">spawnProjectile(Vector2, Entity, TargetDetectionTasks.AttackDirection)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/EnemySpawner.html#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot(int, int, RobotFactory.RobotType)</a> - Method in interface com.csse3200.game.areas.<a href="com/csse3200/game/areas/EnemySpawner.html" title="interface in com.csse3200.game.areas">EnemySpawner</a></dt>

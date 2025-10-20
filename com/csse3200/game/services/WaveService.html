@@ -252,11 +252,18 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWaveEventListener(com.csse3200.game.services.WaveService.WaveEventListener)" class="member-name-link">setWaveEventListener</a><wbr>(<a href="WaveService.WaveEventListener.html" title="interface in com.csse3200.game.services">WaveService.WaveEventListener</a>&nbsp;listener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemy(int)" class="member-name-link">spawnEnemy</a><wbr>(int&nbsp;laneNumber)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnEnemyDebug(int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnEnemyDebug</a><wbr>(int&nbsp;laneNumber,
+ <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+ function, this does not update the position in the wave</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;deltaTime)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnNextEnemy(int)" class="member-name-link">spawnNextEnemy</a><wbr>(int&nbsp;laneNumber)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update(float)" class="member-name-link">update</a><wbr>(float&nbsp;deltaTime)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update function to be called by main game loop.</div>
 </div>
 </div>
@@ -454,9 +461,23 @@ implements <a href="../entities/WaveConfigProvider.html" title="interface in com
 </section>
 </li>
 <li>
-<section class="detail" id="spawnEnemy(int)">
-<h3>spawnEnemy</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemy</span><wbr><span class="parameters">(int&nbsp;laneNumber)</span></div>
+<section class="detail" id="spawnNextEnemy(int)">
+<h3>spawnNextEnemy</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnNextEnemy</span><wbr><span class="parameters">(int&nbsp;laneNumber)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="spawnEnemyDebug(int,com.csse3200.game.entities.factories.RobotFactory.RobotType)">
+<h3>spawnEnemyDebug</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEnemyDebug</span><wbr><span class="parameters">(int&nbsp;laneNumber,
+ <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</span></div>
+<div class="block">A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+ function, this does not update the position in the wave</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>laneNumber</code> - The lane to spawn the enemy in</dd>
+<dd><code>robotType</code> - The robot type to spawn</dd>
+</dl>
 </section>
 </li>
 <li>
