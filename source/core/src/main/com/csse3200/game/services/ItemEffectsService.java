@@ -70,15 +70,16 @@ public class ItemEffectsService {
 
     // Play sound effect for item
     if (soundRequired) {
-      Sound effectSound =
-          ServiceLocator.getResourceService()
-              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
-
-      if (effectSound != null) {
-        float volume = ServiceLocator.getSettingsService().getSoundVolume();
-        effectSound.play(volume);
-        logger.info("Sound played {}", animatorName);
-      }
+      playSoundEffect(animatorName);
+      //      Sound effectSound =
+      //          ServiceLocator.getResourceService()
+      //              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+      //
+      //      if (effectSound != null) {
+      //        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      //        effectSound.play(volume);
+      //        logger.info("Sound played {}", animatorName);
+      //      }
     }
 
     // Attach component to handle optional movement and timed disposal
@@ -240,6 +241,18 @@ public class ItemEffectsService {
         break;
       default:
         logger.error("Unknown item name");
+    }
+  }
+
+  public static void playSoundEffect(String animatorName) {
+    Sound effectSound =
+        ServiceLocator.getResourceService()
+            .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+
+    if (effectSound != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      effectSound.play(volume);
+      logger.info("Sound played {}", animatorName);
     }
   }
 }

@@ -880,7 +880,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
-    // tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
