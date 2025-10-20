@@ -29,5 +29,7 @@ public class SlotMachineArea extends LevelGameArea {
     spawnEntity(ui);
 
     createGameOverEntity();
+    createGameOverEntity();
+    createLevelCompleteEntity();
   }
 }
