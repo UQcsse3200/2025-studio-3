@@ -96,6 +96,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/shock.png",
     "images/effects/default_projectile.png",
     "images/effects/sling_projectile_pad.png",
+    "images/effects/shell_explosion.png",
     "images/effects/harpoon_projectile.png",
     "images/entities/currency/scrap_metal.png",
     "images/effects/shell.png",
@@ -122,6 +123,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/effects/coffee.atlas",
     "images/effects/emp.atlas",
     "images/effects/buff.atlas",
+    "images/effects/shell_explosion.atlas",
     "images/entities/defences/forge.atlas",
     "images/effects/nuke.atlas",
     "images/entities/enemies/Scrap-titan.atlas",
@@ -179,6 +181,7 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/robot-death.mp3",
     "sounds/generator-death.mp3",
     "sounds/game-over-voice.mp3",
+    "sounds/item_shell_explosion.mp3",
     "sounds/harpoon-place.mp3",
     "sounds/healer-place.mp3",
     "sounds/boxer-place.mp3"
