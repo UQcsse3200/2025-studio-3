@@ -60,9 +60,7 @@ public class InventoryScreen extends ScreenAdapter {
     // Create batch and background texture
     batch = new SpriteBatch();
     background = new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
-
-
-   }
+  }
 
   @Override
   public void render(float delta) {
@@ -107,11 +105,10 @@ public class InventoryScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     // Set background image
-    Texture backgroundTexture =
-            new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+    Texture backgroundTexture = new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
-            stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
     stage.addActor(backgroundImage);
 
     Entity ui = new Entity();
