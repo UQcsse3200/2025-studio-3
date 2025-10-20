@@ -1,5 +1,7 @@
 package com.csse3200.game.areas;
 
+import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -49,7 +51,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.GameStateService;
-import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -550,8 +551,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       int num = random.nextInt(maxRange - 1) + 2; // pick random num between 2 and 7
       projectile.addComponent(new PhysicsProjectileComponent(num * tileSize, direction));
 
-      final ItemEffectsService itemEffects = ServiceLocator.getItemEffectsService();
-
       projectile
           .getEvents()
           .addListener(
@@ -566,7 +565,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 pos.x -= tileSize / 2f;
                 pos.y -= tileSize / 2f;
 
-                itemEffects.spawnEffect(
+                spawnEffect(
                     ServiceLocator.getResourceService()
                         .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
                     "shell_explosion",
