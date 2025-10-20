@@ -16,7 +16,7 @@
       "maxTeleports": 0,
 
       "explosionDelay": 0,
-      "explosionDamage": 0
+      "explosionDamage": 0,
     },
     "fastRobot": {
       "name": "Fast Robot",
@@ -30,7 +30,7 @@
       "description": "A smaller robot optimised for speed.",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
-      "coinsRewarded": 2,
+      "coinsRewarded": 3,
       "maxTeleports": 0,
 
       "explosionDelay": 0,
