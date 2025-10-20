@@ -9,17 +9,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.utils.JsonReader;
-import com.badlogic.gdx.utils.JsonValue;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
-import com.csse3200.game.services.WorldMapService.PathDef;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /** Renders a world map node using the engine's rendering system */
 public class WorldMapNodeRenderComponent extends UIComponent {
@@ -53,8 +47,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private static final float MIN_W_FACTOR = 2.2f;
   private static final float MIN_H_FACTOR = 1.35f;
 
-  // local JSON cache: nodeKey -> (dir -> PathDef)
-  private final Map<String, Map<String, WorldMapService.PathDef>> localPaths = new HashMap<>();
 
   /**
    * Constructor for the world map node render component.
@@ -73,8 +65,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   public void create() {
     super.create();
     ServiceLocator.getWorldMapService().registerNodeRenderComponent(this);
-    // read JSON locally
-    loadLocalPathConfig("configs/worldmap_paths.json");
 
     // get textures if preloaded
     var rs = ServiceLocator.getResourceService();
@@ -214,7 +204,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyUp,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
-        getLocalPath(key, "W"),
+        getPath(key, "W"),
         upKeyName,
         new Vector2(0f, +1f));
     // Down
@@ -222,7 +212,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyDown,
         new Vector2(cx - ARROW_SIZE * 0.5f, cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f),
-        getLocalPath(key, "S"),
+        getPath(key, "S"),
         downKeyName,
         new Vector2(0f, -1f));
     // Left
@@ -230,7 +220,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyLeft,
         new Vector2(cx - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
-        getLocalPath(key, "A"),
+        getPath(key, "A"),
         leftKeyName,
         new Vector2(-1f, 0f));
     // Right
@@ -238,7 +228,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
         batch,
         keyRight,
         new Vector2(cx + drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f, cy - ARROW_SIZE * 0.5f),
-        getLocalPath(key, "D"),
+        getPath(key, "D"),
         rightKeyName,
         new Vector2(+1f, 0f));
 
@@ -250,7 +240,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
       float sY = cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f;
 
       // Check if there's a down option - if not, move the hint 20px higher
-      boolean hasDownOption = getLocalPath(key, "S") != null;
+      boolean hasDownOption = getPath(key, "S") != null;
       float verticalOffset = hasDownOption ? 0f : 20f;
 
       float oldScale = font.getData().scaleX;
@@ -313,7 +303,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   }
 
   private void drawDirWithLabel(
-      SpriteBatch batch, Texture tex, Vector2 pos, PathDef def, String dir, Vector2 labelOffset) {
+      SpriteBatch batch, Texture tex, Vector2 pos, WorldMapService.NodePath def, String dir, Vector2 labelOffset) {
 
     if (tex == null) return;
 
@@ -339,7 +329,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     }
   }
 
-  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, PathDef def) {
+  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, WorldMapService.NodePath def) {
     float originalScale = font.getData().scaleX;
     font.getData().setScale(FONT_SCALE * 1.10f);
 
@@ -352,8 +342,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     font.getData().setScale(originalScale);
   }
 
-  private void drawPathLabel(SpriteBatch batch, Vector2 pos, PathDef def, Vector2 labelOffset) {
-    String nodeName = resolveDisplayName(def.getNext());
+  private void drawPathLabel(SpriteBatch batch, Vector2 pos, WorldMapService.NodePath def, Vector2 labelOffset) {
+    String nodeName = resolveDisplayName(def.destination());
     float originalScale = font.getData().scaleX;
     font.getData().setScale(FONT_SCALE * 0.90f);
 
@@ -386,47 +376,9 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     font.draw(b, t, x, y);
   }
 
-  // Load JSON to cache
-  private void loadLocalPathConfig(String internalPath) {
-    var file = Gdx.files.internal(internalPath);
-    if (!file.exists()) return;
-
-    localPaths.clear();
-    JsonReader reader = new JsonReader();
-    JsonValue root = reader.parse(file);
-
-    JsonValue nodesRoot = root.get("directions");
-    if (nodesRoot == null) {
-      return;
-    }
-
-    for (JsonValue nodeEntry = nodesRoot.child(); nodeEntry != null; nodeEntry = nodeEntry.next()) {
-      String nodeKey = nodeEntry.name();
-      Map<String, WorldMapService.PathDef> dirMap = new HashMap<>();
-
-      for (JsonValue keyEntry = nodeEntry.child(); keyEntry != null; keyEntry = keyEntry.next()) {
-        String dir = keyEntry.name();
-        var def = new WorldMapService.PathDef();
-        def.setNext(keyEntry.getString("next"));
-        def.setWaypoints(new ArrayList<>());
-        JsonValue pathArr = keyEntry.get("path");
-        if (pathArr != null) {
-          for (JsonValue p = pathArr.child(); p != null; p = p.next()) {
-            float wx = p.get(0).asFloat();
-            float wy = p.get(1).asFloat();
-            def.getWaypoints().add(new Vector2(wx, wy));
-          }
-        }
-        dirMap.put(dir, def);
-      }
-      localPaths.put(nodeKey, dirMap);
-    }
-  }
-
-  // Get path def
-  private WorldMapService.PathDef getLocalPath(String nodeKey, String dir) {
-    Map<String, WorldMapService.PathDef> m = localPaths.get(nodeKey);
-    return m == null ? null : m.get(dir);
+  // Get path def from WorldMapService
+  private WorldMapService.NodePath getPath(String nodeKey, String dir) {
+    return ServiceLocator.getWorldMapService().getPath(nodeKey, dir);
   }
 
   /**

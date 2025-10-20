@@ -95,8 +95,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     // Resolve a few special nodes used by legacy transitions
     resolveSpecialNodes();
 
-    // Load graph used by JSON path-based navigation
-    ServiceLocator.getWorldMapService().loadPathConfig("configs/worldmap_paths.json");
+    // Path data is now hardcoded in WorldMapService
   }
 
   @Override
@@ -167,7 +166,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
 
     WorldMapService svc = ServiceLocator.getWorldMapService();
-    WorldMapService.PathDef def = svc.getPath(at.getRegistrationKey(), pressed);
+    WorldMapService.NodePath def = svc.getPath(at.getRegistrationKey(), pressed);
 
     if (def == null) {
       // On a node but this direction is NOT defined → block movement this frame
@@ -180,12 +179,12 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     // Start JSON path from this node using the defined PathDef
     waypointQueue.clear();
-    if (def.getWaypoints() != null) {
-      for (Vector2 p : def.getWaypoints()) {
+    if (def.waypoints() != null) {
+      for (Vector2 p : def.waypoints()) {
         waypointQueue.add(new Vector2(p));
       }
     }
-    WorldMapNode nextNode = svc.getNode(def.getNext());
+    WorldMapNode nextNode = svc.getNode(def.destination());
     if (nextNode != null) {
       waypointQueue.add(getWorldCoords(nextNode));
     }
@@ -316,7 +315,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (start == null) return false;
 
     boolean snapToStart = !isOnNode(start, entity.getPosition());
-    List<WorldMapService.PathDef> steps =
+    List<WorldMapService.NodePath> steps =
         findJsonPath(start.getRegistrationKey(), target.getRegistrationKey());
 
     if (!snapToStart && (steps == null || steps.isEmpty())) return false;
@@ -336,11 +335,11 @@ public class WorldMapPlayerComponent extends UIComponent {
     return true;
   }
 
-  private void enqueueSteps(List<WorldMapService.PathDef> steps) {
+  private void enqueueSteps(List<WorldMapService.NodePath> steps) {
     if (steps == null) return;
 
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    for (WorldMapService.PathDef pathDef : steps) {
+    for (WorldMapService.NodePath pathDef : steps) {
       if (pathDef == null) continue;
 
       enqueueWaypoints(pathDef);
@@ -348,23 +347,23 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
   }
 
-  private void enqueueWaypoints(WorldMapService.PathDef pathDef) {
-    if (pathDef.getWaypoints() != null) {
-      for (Vector2 waypoint : pathDef.getWaypoints()) {
+  private void enqueueWaypoints(WorldMapService.NodePath pathDef) {
+    if (pathDef.waypoints() != null) {
+      for (Vector2 waypoint : pathDef.waypoints()) {
         waypointQueue.add(new Vector2(waypoint));
       }
     }
   }
 
-  private void enqueueEndNode(WorldMapService worldMapService, WorldMapService.PathDef pathDef) {
-    WorldMapNode endNode = worldMapService.getNode(pathDef.getNext());
+  private void enqueueEndNode(WorldMapService worldMapService, WorldMapService.NodePath pathDef) {
+    WorldMapNode endNode = worldMapService.getNode(pathDef.destination());
     if (endNode != null) {
       waypointQueue.add(getWorldCoords(endNode));
     }
   }
 
   /** BFS from startKey to targetKey using W/A/S/D edges defined in the JSON. */
-  private List<WorldMapService.PathDef> findJsonPath(String startKey, String targetKey) {
+  private List<WorldMapService.NodePath> findJsonPath(String startKey, String targetKey) {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
     if (worldMapService == null
         || startKey == null
@@ -376,7 +375,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     return performBreadthFirstSearch(worldMapService, startKey, targetKey);
   }
 
-  private List<WorldMapService.PathDef> performBreadthFirstSearch(
+  private List<WorldMapService.NodePath> performBreadthFirstSearch(
       WorldMapService worldMapService, String startKey, String targetKey) {
     Deque<String> queue = new ArrayDeque<>();
     Map<String, Prev> previousNodes = new HashMap<>();
@@ -402,20 +401,20 @@ public class WorldMapPlayerComponent extends UIComponent {
       Deque<String> queue,
       Map<String, Prev> previousNodes) {
     for (String direction : DIRS) {
-      WorldMapService.PathDef pathDef = worldMapService.getPath(currentNode, direction);
-      if (pathDef == null
-          || pathDef.getNext() == null
-          || previousNodes.containsKey(pathDef.getNext())) {
+      WorldMapService.NodePath pathDef = worldMapService.getPath(currentNode, direction);
+    if (pathDef == null
+        || pathDef.destination() == null
+        || previousNodes.containsKey(pathDef.destination())) {
         continue;
       }
-      previousNodes.put(pathDef.getNext(), new Prev(currentNode, pathDef));
-      queue.addLast(pathDef.getNext());
+      previousNodes.put(pathDef.destination(), new Prev(currentNode, pathDef));
+      queue.addLast(pathDef.destination());
     }
   }
 
-  private List<WorldMapService.PathDef> reconstructPath(
+  private List<WorldMapService.NodePath> reconstructPath(
       Map<String, Prev> previousNodes, String startKey, String targetKey) {
-    LinkedList<WorldMapService.PathDef> path = new LinkedList<>();
+    LinkedList<WorldMapService.NodePath> path = new LinkedList<>();
     String currentNode = targetKey;
 
     while (!currentNode.equals(startKey)) {
@@ -431,9 +430,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Small holder for BFS reconstruction. */
   private static final class Prev {
     final String prevKey;
-    final WorldMapService.PathDef def;
+    final WorldMapService.NodePath def;
 
-    Prev(String prevKey, WorldMapService.PathDef def) {
+    Prev(String prevKey, WorldMapService.NodePath def) {
       this.prevKey = prevKey;
       this.def = def;
     }

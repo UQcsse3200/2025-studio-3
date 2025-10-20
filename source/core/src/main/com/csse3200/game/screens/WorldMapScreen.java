@@ -65,6 +65,7 @@ public class WorldMapScreen extends BaseScreen {
   // One-shot smooth recenter flag and threshold (in world units)
   private boolean smoothRecentering = false;
   private static final float RECENTER_STOP_EPSILON = 2f;
+  private static final Set<String> SPECIAL_NODES = Set.of("shop", "skills", "minigames");
 
   public WorldMapScreen(GdxGame game) {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
