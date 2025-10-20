@@ -681,7 +681,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerGameStateService(state);
 
     area.checkLevelComplete();
-
+    area.checkLevelComplete();
     verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
     verify(state).lockPlacement();
   }

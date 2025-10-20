@@ -228,25 +228,25 @@ public class SkilltreeButtons extends UIComponent {
     float h;
 
     if (skillName.contains("Intermediate")) {
-      w = ui.getScaledWidth(width * 0.07f);
-      h = ui.getScaledHeight(height * 0.12f);
+      w = ui.getScaledWidth(width * 0.056f);
+      h = ui.getScaledHeight(height * 0.096f);
     } else if (skillName.contains("Advanced")) {
-      w = ui.getScaledWidth(width * 0.13f);
-      h = ui.getScaledHeight(height * 0.17f);
+      w = ui.getScaledWidth(width * 0.104f);
+      h = ui.getScaledHeight(height * 0.136f);
     } else if (skillName.contains("Expert")) {
       // Defaults for Expert
-      w = ui.getScaledWidth(width * 0.08f);
-      h = ui.getScaledHeight(height * 0.35f);
+      w = ui.getScaledWidth(width * 0.052f);
+      h = ui.getScaledHeight(height * 0.228f);
       if (skillName.equals("Health Expert")) {
-        w = ui.getScaledWidth(width * 0.25f);
-        h = ui.getScaledHeight(height * 0.18f);
+        w = ui.getScaledWidth(width * 0.2f);
+        h = ui.getScaledHeight(height * 0.144f);
       } else if (skillName.equals("Currency Expert")) {
-        w = ui.getScaledWidth(width * 0.21f);
-        h = ui.getScaledHeight(height * 0.30f);
+        w = ui.getScaledWidth(width * 0.168f);
+        h = ui.getScaledHeight(height * 0.24f);
       }
     } else {
-      w = ui.getScaledWidth(width * 0.10f);
-      h = ui.getScaledHeight(height * 0.10f);
+      w = ui.getScaledWidth(width * 0.08f);
+      h = ui.getScaledHeight(height * 0.08f);
     }
 
     skillButton.setSize(w, h);

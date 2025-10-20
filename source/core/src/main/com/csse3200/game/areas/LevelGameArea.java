@@ -1,11 +1,7 @@
 package com.csse3200.game.areas;
 
-import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
-
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -36,6 +32,11 @@ import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.factories.*;
+import com.csse3200.game.entities.factories.DefenceFactory;
+import com.csse3200.game.entities.factories.GridFactory;
+import com.csse3200.game.entities.factories.ItemFactory;
+import com.csse3200.game.entities.factories.ProjectileFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.arsenal.Arsenal;
@@ -44,7 +45,6 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
@@ -96,7 +96,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   // Level configuration
   private final String currentLevelKey;
-  private String nextLevel;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
@@ -139,7 +138,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     BaseLevelConfig levelConfig = configService.getLevelConfig(currentLevelKey);
 
     if (levelConfig != null) {
-      nextLevel = levelConfig.getNextLevel();
       levelRows = levelConfig.getRows();
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
@@ -214,11 +212,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(ui);
 
     createGameOverEntity();
-
-    // Handles the level completion window UI
-    this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
-    spawnEntity(this.levelCompleteEntity);
+    createLevelCompleteEntity();
   }
 
   /** Unlocks all entities that are listed as playing on the current game level */
@@ -289,6 +283,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   void createGameOverEntity() {
     gameOverEntity = new Entity().addComponent(new GameOverWindow());
     spawnEntity(gameOverEntity);
+  }
+
+  /** Creates and spawns the game-over UI entity. */
+  void createLevelCompleteEntity() {
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
   /** Creates and spawns the game background map and its boundary wall. */
@@ -839,23 +841,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Find all occupied cells (a placed defence or generator)
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
-      if (occ == null
-          || (occ.getComponent(GeneratorStatsComponent.class) != null
-              && occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0)) continue;
-
-      Vector2 pos = occ.getPosition();
-
-      // spawn heal effect on entity
-      spawnEffect(
-          ServiceLocator.getResourceService()
-              .getAsset("images/effects/hp-up.atlas", TextureAtlas.class),
-          "hp-up",
-          (new Vector2[] {pos, pos}),
-          (int) tileSize,
-          (new float[] {0.1f, 1.85f}),
-          Animation.PlayMode.NORMAL,
-          false,
-          true);
+      if (occ == null) continue;
 
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
@@ -880,6 +866,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
+    tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
@@ -930,10 +917,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
+        healDefences();
         // remove the healer after its animation
-        ServiceLocator.getRenderService()
-            .getStage()
-            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(this::healDefences)));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
@@ -1151,7 +1136,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
-        displayNewEntity();
         levelCompleteEntity.getEvents().trigger("levelComplete");
       }
 
@@ -1161,37 +1145,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         service.lockPlacement();
       }
     }
-  }
-
-  private void displayNewEntity() {
-    DialogService dialogService = ServiceLocator.getDialogService();
-    String unlockedDefences = unlockEntity();
-    String nextMessage =
-        (unlockedDefences.isEmpty())
-            ? "You have unlocked all defences"
-            : "You have unlocked the: \n";
-    dialogService.info(
-        "Congratulations!",
-        nextMessage + unlockedDefences + "\n Go to the dossier to check them out!");
-  }
-
-  private String unlockEntity() {
-    Profile profile = ServiceLocator.getProfileService().getProfile();
-    List<String> unlockedDefences = new ArrayList<>();
-    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-      if (Arsenal.ALL_DEFENCES.get(key).equals(this.nextLevel)
-          && !profile.getArsenal().contains(key)) {
-        profile.getArsenal().unlockDefence(key);
-        unlockedDefences.add(key);
-      }
-    }
-    for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-      if (Arsenal.ALL_GENERATORS.get(key).equals(this.nextLevel)) {
-        profile.getArsenal().unlockGenerator(key);
-        unlockedDefences.add(key);
-      }
-    }
-    return String.join(" and ", unlockedDefences);
   }
 
   /**
