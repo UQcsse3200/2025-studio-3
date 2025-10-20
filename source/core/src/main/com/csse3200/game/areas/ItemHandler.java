@@ -143,7 +143,6 @@ public class ItemHandler {
       return;
     }
 
-    logger.info("Spawning effect " + name + " onto entities");
     spawnEffect(
         ServiceLocator.getResourceService()
             .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class),

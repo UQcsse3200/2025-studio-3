@@ -85,15 +85,13 @@ public class LevelCompletedWindow extends UIComponent {
   }
 
   private String findNextLevel(String currentLevel) {
-    String nextLevel =
-        switch (currentLevel) {
-          case "levelOne" -> "levelTwo";
-          case "levelTwo" -> "levelThree";
-          case "levelThree" -> "levelFour";
-          case "levelFour" -> "levelFive";
-          default -> "end";
-        };
-    return nextLevel;
+    return switch (currentLevel) {
+      case "levelOne" -> "levelTwo";
+      case "levelTwo" -> "levelThree";
+      case "levelThree" -> "levelFour";
+      case "levelFour" -> "levelFive";
+      default -> "end";
+    };
   }
 
   /** Disposes of the window when the component is disposed. */
