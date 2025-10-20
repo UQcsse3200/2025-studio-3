@@ -128,9 +128,9 @@ public class GameSettingsMenu extends UIComponent {
     // Create reset button using UIFactory
     TextButton resetKeysBtn = ui.primaryButton("Reset Keys", buttonWidth);
     resetKeysBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.debug("Reset button clicked");
             resetKeyBinds();
             // Update keybind text fields
