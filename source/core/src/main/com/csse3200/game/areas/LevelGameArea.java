@@ -45,6 +45,7 @@ import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
@@ -95,6 +96,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   // Level configuration
   private final String currentLevelKey;
+  private String nextLevel;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
@@ -137,6 +139,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     BaseLevelConfig levelConfig = configService.getLevelConfig(currentLevelKey);
 
     if (levelConfig != null) {
+      nextLevel = levelConfig.getNextLevel();
       levelRows = levelConfig.getRows();
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
@@ -1110,9 +1113,41 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
+        displayNewEntity();
         levelCompleteEntity.getEvents().trigger("levelComplete");
       }
     }
+  }
+
+  private void displayNewEntity() {
+    DialogService dialogService = ServiceLocator.getDialogService();
+    String unlockedDefences = unlockEntity();
+    String nextMessage =
+        (unlockedDefences.isEmpty())
+            ? "You have unlocked all defences"
+            : "You have unlocked the: \n";
+    dialogService.info(
+        "Congratulations!",
+        nextMessage + unlockedDefences + "\n Go to the dossier to check them out!");
+  }
+
+  private String unlockEntity() {
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    List<String> unlockedDefences = new ArrayList<>();
+    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+      if (Arsenal.ALL_DEFENCES.get(key).equals(this.nextLevel)
+          && !profile.getArsenal().contains(key)) {
+        profile.getArsenal().unlockDefence(key);
+        unlockedDefences.add(key);
+      }
+    }
+    for (String key : Arsenal.ALL_GENERATORS.keySet()) {
+      if (Arsenal.ALL_GENERATORS.get(key).equals(this.nextLevel)) {
+        profile.getArsenal().unlockGenerator(key);
+        unlockedDefences.add(key);
+      }
+    }
+    return String.join(" and ", unlockedDefences);
   }
 
   /**
