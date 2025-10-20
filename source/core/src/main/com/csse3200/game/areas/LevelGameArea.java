@@ -319,6 +319,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     wall.getEvents().trigger("idleStart");
   }
 
+  /**
+   * Spawns a scrap entity to generate currency, linked to a generator entity
+   *
+   * @param entity the generator entity
+   */
   private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
     CurrencyGeneratorComponent currencyGenerator =
@@ -517,6 +522,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return (bestCol >= 0) ? new GridPoint2(bestCol, bestRow) : null;
   }
 
+  /**
+   * Spawns a projectile entity at a given position and initiates its behaviour, depending on the
+   * type of projectile (identified by the ProjectileTagComponent.
+   *
+   * @param spawnPos the coordinates the projectile should spawn at
+   * @param projectile the projectile entity to spawn
+   * @param direction the direction the projectile moves in, left or right
+   */
   public void spawnProjectile(
       Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
     // Safety check
@@ -526,6 +539,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    // find the type of projectile
     ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
 
     // Scale the projectile so it’s more visible

@@ -16,11 +16,39 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 
+/**
+ * Factory class for creating generator entities used to produce scrap (currency) in the game.
+ *
+ * <p>Generator entities are passive units with:
+ *
+ * <ul>
+ *   <li>Health
+ *   <li>Scrap generation interval and value
+ *   <li>Animations for idle and hit states
+ *   <li>Optional healing functionality
+ * </ul>
+ *
+ * <p>This class provides static factory methods and should not be instantiated.
+ */
 public class GeneratorFactory {
   private static final String HIT = "hit";
   private static final String IDLE = "idle";
   private static final String HEAL = "heal";
 
+  /**
+   * Creates a complete generator entity using the provided configuration.
+   *
+   * <p>Adds components for:
+   *
+   * <ul>
+   *   <li>Stats
+   *   <li>Animations
+   *   <li>Animation control logic
+   * </ul>
+   *
+   * @param config Configuration object specifying generator stats and visuals
+   * @return Fully constructed generator {@link Entity}
+   */
   public static Entity createGeneratorUnit(BaseGeneratorConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseGenerator();
@@ -48,11 +76,23 @@ public class GeneratorFactory {
     return defender;
   }
 
+  /**
+   * Creates a {@link GeneratorStatsComponent} from configuration.
+   *
+   * @param config Configuration containing health, interval, scrap value, and cost
+   * @return A new {@link GeneratorStatsComponent} with values from the config
+   */
   public static GeneratorStatsComponent getUnitStats(BaseGeneratorConfig config) {
     return new GeneratorStatsComponent(
         config.getHealth(), config.getInterval(), config.getScrapValue(), config.getCost());
   }
 
+  /**
+   * Creates an {@link AnimationRenderComponent} and adds animations defined in the config's atlas.
+   *
+   * @param config Configuration containing the path to the texture atlas
+   * @return A render component with idle and hit animations
+   */
   public static AnimationRenderComponent getAnimationComponent(BaseGeneratorConfig config) {
     AnimationRenderComponent animator =
         new AnimationRenderComponent(
@@ -67,7 +107,8 @@ public class GeneratorFactory {
   }
 
   /**
-   * Creates a base generator entity with default physics and collider setup.
+   * Creates a base generator entity with default physics and collider setup. Used as the foundation
+   * for all generators.
    *
    * @return entity with physics and collision components
    */
