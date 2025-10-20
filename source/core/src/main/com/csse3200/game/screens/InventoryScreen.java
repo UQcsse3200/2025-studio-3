@@ -1,9 +1,7 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.GdxGame;
@@ -34,8 +32,6 @@ public class InventoryScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(InventoryScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private final Texture background;
-  private final SpriteBatch batch;
 
   /**
    * Creates a new InventoryScreen and registers the services required, creates the renderer, and
@@ -44,7 +40,6 @@ public class InventoryScreen extends ScreenAdapter {
    * @param gdxGame current game instance
    */
   public InventoryScreen(GdxGame gdxGame) {
-
     this.game = gdxGame;
     logger.debug("Initialising inventory screen services");
     ServiceLocator.registerInputService(new InputService());
@@ -57,9 +52,6 @@ public class InventoryScreen extends ScreenAdapter {
     loadAssets();
     createUI();
     ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
-    // Create batch and background texture
-    batch = new SpriteBatch();
-    background = new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
   }
 
   @Override
@@ -81,6 +73,8 @@ public class InventoryScreen extends ScreenAdapter {
       itemTextures[i] = configService.getItemConfigValues()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
+    String[] backgroundTextures = {"images/backgrounds/bg.png"};
+    ServiceLocator.getResourceService().loadTextures(backgroundTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -105,7 +99,8 @@ public class InventoryScreen extends ScreenAdapter {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
     // Set background image
-    Texture backgroundTexture = new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+    Texture backgroundTexture =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
         stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
