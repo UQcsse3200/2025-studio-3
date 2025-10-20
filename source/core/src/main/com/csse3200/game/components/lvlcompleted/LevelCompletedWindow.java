@@ -6,15 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.csse3200.game.GdxGame;
-import com.csse3200.game.progression.Profile;
-import com.csse3200.game.progression.arsenal.Arsenal;
-import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /** Class to create and display a window when the level is completed. */
 public class LevelCompletedWindow extends UIComponent {
@@ -76,9 +70,6 @@ public class LevelCompletedWindow extends UIComponent {
 
   /** Displays the level completed window when the level is completed. */
   private void onLevelCompleted() {
-    DialogService dialogService = ServiceLocator.getDialogService();
-    displayNewEntity(dialogService);
-
     window.setVisible(true);
     isDisplayed = true;
   }
@@ -103,35 +94,6 @@ public class LevelCompletedWindow extends UIComponent {
           default -> "end";
         };
     return nextLevel;
-  }
-
-  private void displayNewEntity(DialogService dialogService) {
-    String unlockedDefences = unlockEntity();
-    String nextMessage = (unlockedDefences.isEmpty()) ? "You have unlocked all defences" : "You have unlocked the: \n";
-    dialogService.info(
-        "Congratulations!",
-        nextMessage
-            + unlockedDefences
-            + "\n Go to the dossier to check them out!");
-  }
-
-  private String unlockEntity() {
-    Profile profile = ServiceLocator.getProfileService().getProfile();
-    List<String> unlockedDefences = new ArrayList<>();
-    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-      if (Arsenal.ALL_DEFENCES.get(key).equals(findNextLevel(profile.getCurrentLevel()))
-          && !profile.getArsenal().contains(key)) {
-        profile.getArsenal().unlockDefence(key);
-        unlockedDefences.add(key);
-      }
-    }
-    for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-        if (Arsenal.ALL_GENERATORS.get(key).equals(findNextLevel(profile.getCurrentLevel()))) {
-            profile.getArsenal().unlockGenerator(key);
-            unlockedDefences.add(key);
-        }
-    }
-    return String.join(" and ", unlockedDefences);
   }
 
   /** Disposes of the window when the component is disposed. */

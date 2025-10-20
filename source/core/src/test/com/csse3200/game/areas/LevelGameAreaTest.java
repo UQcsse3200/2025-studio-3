@@ -587,6 +587,10 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     Field flag = LevelGameArea.class.getDeclaredField("isLevelComplete");
     flag.setAccessible(true);
     assertFalse(flag.getBoolean(area));
