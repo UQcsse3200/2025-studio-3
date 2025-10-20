@@ -104,9 +104,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private final ItemHandler itemHandler = new ItemHandler(this);
   private final WavePreviewManager wavePreview = new WavePreviewManager(this);
 
-  private static final List<String> levelOrder =
-      List.of("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
-
   /**
    * Initialise this LevelGameArea for a specific level.
    *
@@ -221,28 +218,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(this.levelCompleteEntity);
   }
 
-  /** Unlocks all entities that are listed as playing on the current game level */
-  private void unlockAllEntities(Profile profile) {
-    for (String level : levelOrder) {
-      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-        if (Arsenal.ALL_DEFENCES.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockDefence(key);
-        }
-      }
-      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-        if (Arsenal.ALL_GENERATORS.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockGenerator(key);
-        }
-      }
-      if (level.equals(currentLevelKey)) {
-        break;
-      }
-    }
-  }
-
   /** Populates unitList with all available defenders and generators from the player's arsenal. */
   private void populateUnitList(Profile profile, ConfigService configService) {
-    unlockAllEntities(profile);
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
       if (config != null) {
