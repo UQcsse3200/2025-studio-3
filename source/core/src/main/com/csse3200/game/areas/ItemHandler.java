@@ -1,5 +1,9 @@
 package com.csse3200.game.areas;
 
+import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
+
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.DefenderStatsComponent;
@@ -92,6 +96,7 @@ public class ItemHandler {
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
 
         entity.getEvents().trigger(trigger);
+        addAnimationOntoDefence(trigger, entity);
         logger.info("Start {} on {}", trigger, entity);
 
         Timer.schedule(
@@ -105,5 +110,49 @@ public class ItemHandler {
             30f);
       }
     }
+  }
+
+  /**
+   * Adds the visual cue animation onto each defender being buffed
+   *
+   * @param trigger the buff being activated
+   * @param entity the entity to spawn the effect above
+   */
+  private void addAnimationOntoDefence(String trigger, Entity entity) {
+    Vector2 pos = entity.getPosition();
+
+    // spawn trigger visual cue on entity
+    String name = "";
+    if (trigger.equals("doubleDamage")) {
+      name = "attack-up";
+    } else if (trigger.equals("doubleFireRate")) {
+      name = "speed-up";
+    }
+
+    // failsafe
+    if (name.equals("")) {
+      return;
+    }
+
+    // only apply the animations to damage dealing entities
+    if (entity.getComponent(DefenderStatsComponent.class) != null) {
+      if (entity.getComponent(DefenderStatsComponent.class).getBaseAttack() == 0) {
+        return;
+      }
+    } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+      return;
+    }
+
+    logger.info("Spawning effect " + name + " onto entities");
+    spawnEffect(
+        ServiceLocator.getResourceService()
+            .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class),
+        name,
+        (new Vector2[] {pos, pos}),
+        (int) area.getTileSize(),
+        (new float[] {0.1f, 5f}),
+        Animation.PlayMode.NORMAL,
+        false,
+        false);
   }
 }
