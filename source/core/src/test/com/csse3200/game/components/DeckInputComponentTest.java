@@ -7,14 +7,20 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.GridPoint2;
 import com.csse3200.game.areas.AreaAPI;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ServiceLocator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class DeckInputComponentTest {
 
   @Mock AreaAPI area;
@@ -37,6 +43,11 @@ class DeckInputComponentTest {
               return new GridPoint2(p.x, p.y);
             });
     when(area.getTileSize()).thenReturn(TILE);
+  }
+
+  @AfterEach
+  void afterEach() {
+    ServiceLocator.deregisterGameStateService();
   }
 
   @Test
@@ -116,5 +127,21 @@ class DeckInputComponentTest {
 
     assertFalse(handled);
     verify(area, never()).setSelectedUnit(any());
+  }
+
+  @Test
+  void leftClickIgnoredWhenPlacementLocked() {
+    GameStateService service = mock(GameStateService.class);
+    lenient().when(service.isPlacementLocked()).thenReturn(true);
+    ServiceLocator.registerGameStateService(service);
+
+    Entity inv = makeDeckEntity(10, 20);
+
+    boolean handled =
+        inv.getComponent(DeckInputComponent.class).touchDown(15, 25, 0, Input.Buttons.LEFT);
+
+    assertFalse(handled);
+    verify(area, never()).setSelectedUnit(any());
+    verify(service).isPlacementLocked();
   }
 }

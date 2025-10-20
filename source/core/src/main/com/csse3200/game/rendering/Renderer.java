@@ -121,6 +121,7 @@ public class Renderer implements Disposable {
     batch.end();
     debugRenderer.render(projMatrix);
 
+    // Use raw delta for UI so pause only affects game logic, not UI rendering/animations
     stage.act();
     stage.draw();
   }
