@@ -140,14 +140,31 @@ public class ProfileService {
       logger.warn("Attempted to mark level complete but profile is null.");
       return;
     }
-    final String next = nextMainlineOf(currentKey);
-    if (next != null) {
-      profile.setCurrentLevel(next);
-      logger.info("[ProfileService] Advanced currentLevel from '{}' to '{}'.", currentKey, next);
+
+    // Do not regress progression: only advance if this completion moves the mainline forward.
+    String currentPtr = profile.getCurrentLevel();
+    int curIdx = MAINLINE_LEVELS.indexOf(currentPtr);
+    if (curIdx < 0) curIdx = 0; // safety for unexpected values
+
+    final String nextOfKey = nextMainlineOf(currentKey);
+    int candIdx = (nextOfKey != null) ? MAINLINE_LEVELS.indexOf(nextOfKey) : curIdx;
+    if (candIdx < 0) candIdx = curIdx;
+
+    if (candIdx > curIdx) {
+      String newLevel = MAINLINE_LEVELS.get(candIdx);
+      profile.setCurrentLevel(newLevel);
+      logger.info(
+          "[ProfileService] Progress advanced: '{}' complete -> pointer '{}' -> '{}'",
+          currentKey,
+          currentPtr,
+          newLevel);
     } else {
       logger.debug(
-          "[ProfileService] No next mainline after '{}'; currentLevel unchanged.", currentKey);
+          "[ProfileService] Ignoring replay completion '{}' (pointer at '{}' not regressed)",
+          currentKey,
+          currentPtr);
     }
+
     // Persist only the updated currentLevel
     saveCurrentProfile();
   }
