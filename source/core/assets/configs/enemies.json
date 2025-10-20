@@ -179,7 +179,7 @@
       "atlasPath": "images/entities/enemies/bomber_robot.atlas",
       "assetPath": "images/entities/enemies/bomber_robot_default_sprite.png",
       "health": 30,
-      "attack": 1000,
+      "attack": 14,
       "movementSpeed": 30,
       "scale": 1,
       "description": "An old teleport robot. The warp core has been replaced with an explosive.",
