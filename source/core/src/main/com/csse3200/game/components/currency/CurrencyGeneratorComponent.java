@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -51,7 +52,18 @@ public class CurrencyGeneratorComponent extends Component {
    * @param scrapTexturePath texture path for the scrap image
    */
   public CurrencyGeneratorComponent(Entity entity, String scrapTexturePath) {
-    this.intervalSec = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+
+    int interval = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+    // adjust interval value with currency generation skill upgrade
+    if (ServiceLocator.getProfileService() != null) {
+      float scrapUpgrade =
+          ServiceLocator.getProfileService()
+              .getProfile()
+              .getSkillset()
+              .getUpgradeValue(Skill.StatType.CURRENCY_GEN);
+      interval = (int) Math.floor(interval / scrapUpgrade);
+    }
+    this.intervalSec = interval;
     this.scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
     this.targetX = entity.getPosition().x;
     this.targetY = entity.getPosition().y;

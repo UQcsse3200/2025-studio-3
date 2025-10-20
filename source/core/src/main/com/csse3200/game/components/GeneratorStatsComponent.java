@@ -1,8 +1,5 @@
 package com.csse3200.game.components;
 
-import com.csse3200.game.progression.skilltree.Skill;
-import com.csse3200.game.services.ServiceLocator;
-
 public class GeneratorStatsComponent extends CombatStatsComponent {
 
   private int interval;
@@ -44,16 +41,6 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
     if (interval < 0) {
       this.interval = 0;
     } else {
-      // adjust interval value with currency generation skill upgrade
-      if (ServiceLocator.getProfileService() != null) {
-        float SCRAP_UPGRADE =
-            ServiceLocator.getProfileService()
-                .getProfile()
-                .getSkillset()
-                .getUpgradeValue(Skill.StatType.CURRENCY_GEN);
-
-        interval = (int) Math.floor(interval / SCRAP_UPGRADE);
-      }
       this.interval = interval;
     }
   }
