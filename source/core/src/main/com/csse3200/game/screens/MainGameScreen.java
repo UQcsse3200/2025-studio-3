@@ -174,7 +174,7 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/robot-death.mp3",
     "sounds/generator-death.mp3",
     "sounds/game-over-voice.mp3",
-    "sounds/item_shell_explosion.mp3"
+    "sounds/item_shell_explosion.mp3",
     "sounds/harpoon-place.mp3",
     "sounds/healer-place.mp3",
     "sounds/boxer-place.mp3"
