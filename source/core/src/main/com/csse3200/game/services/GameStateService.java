@@ -167,4 +167,17 @@ public class GameStateService {
       logger.trace("Timer resumed");
     }
   }
+
+  /**
+   * Sets the preferred gameplay time scale that will be restored when the game unfreezes. If the
+   * game is not currently frozen, this will also apply immediately to the time source.
+   *
+   * @param scale the desired gameplay time scale (clamped to >= 0)
+   */
+  public void setPreferredTimeScale(float scale) {
+    cachedTimeScale = Math.max(0f, scale);
+    if (!isFrozen()) {
+      timeSource.setTimeScale(cachedTimeScale);
+    }
+  }
 }

@@ -17,6 +17,7 @@ public class SettingsService {
   private static final Logger logger = LoggerFactory.getLogger(SettingsService.class);
   private Settings settings;
   private static final String PATH = "The Day We Fought Back" + File.separator + "settings.json";
+  private float gameplaySpeedScale = 1.0f;
 
   /** Constructor for the SettingsService. */
   public SettingsService() {
@@ -40,6 +41,29 @@ public class SettingsService {
    */
   public Settings getSettings() {
     return settings;
+  }
+
+  /**
+   * Gets the current gameplay time scale (1.0 = normal speed). This value is runtime-only and is
+   * not persisted to disk.
+   *
+   * @return gameplay speed scale
+   */
+  public float getGameplaySpeedScale() {
+    return gameplaySpeedScale;
+  }
+
+  /**
+   * Sets the gameplay time scale (1.0 = normal speed). Value is clamped to be >= 0.
+   *
+   * @param scale target gameplay speed scale
+   */
+  public void setGameplaySpeedScale(float scale) {
+    if (scale < 0f) {
+      gameplaySpeedScale = 0f;
+    } else {
+      gameplaySpeedScale = scale;
+    }
   }
 
   /** Change the display mode. */
