@@ -18,6 +18,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
@@ -38,6 +39,7 @@ public class DossierDisplay extends UIComponent {
   private String[] entities;
   private int currentEntity = 0;
   private boolean enemyMode = true;
+  private Arsenal playerArsenal;
   private static final String CHANGE_TYPE = "change_type";
   private static final String CHANGE_INFO = "change_info";
 
@@ -58,6 +60,7 @@ public class DossierDisplay extends UIComponent {
     this.enemyConfigs = ServiceLocator.getConfigService().getEnemyConfigs();
     this.defenderConfigs = ServiceLocator.getConfigService().getDefenderConfigs();
     this.generatorConfigs = ServiceLocator.getConfigService().getGeneratorConfigs();
+    this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
     type = true;
     enemyMode = true;
     entities = this.enemyConfigs.keySet().toArray(new String[0]);
@@ -421,24 +424,44 @@ public class DossierDisplay extends UIComponent {
       String entityKey = entities[i];
       // Use the display name for button text
       String displayName = getEntityName(entityKey);
-      TextButton btn = ui.secondaryButton(displayName, buttonWidth);
+
+      // Check if entity is unlocked (only applies to human entities)
+      boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
+
+      // Create button with appropriate styling
+      TextButton btn;
+      if (isUnlocked) {
+        btn = ui.secondaryButton(displayName, buttonWidth);
+      } else {
+        // For locked entities, show with locked styling
+        btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
+        btn.setColor(0.5f, 0.5f, 0.5f, 0.7f); // Gray out locked entities
+        btn.setDisabled(true); // Disable interaction
+      }
+
       group.add(btn);
       buttonRow
           .add(btn)
           .size(buttonDimensions.getKey(), buttonDimensions.getValue())
           .pad(5f * uiScale);
 
-      btn.addListener(
-          new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-              if (btn.isChecked()) {
-                logger.info(
-                    "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
-                entity.getEvents().trigger(CHANGE_INFO, index);
+      // Only add listener for unlocked entities
+      if (isUnlocked) {
+        btn.addListener(
+            new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent changeEvent, Actor actor) {
+                if (btn.isChecked()) {
+                  logger.info(
+                      "Selected entity button {} (key: {}, name: {})",
+                      index,
+                      entityKey,
+                      displayName);
+                  entity.getEvents().trigger(CHANGE_INFO, index);
+                }
               }
-            }
-          });
+            });
+      }
     }
 
     // create horizontal ScrollPane for entity buttons
