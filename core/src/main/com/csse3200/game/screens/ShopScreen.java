@@ -32,7 +32,7 @@ public class ShopScreen extends ScreenAdapter {
   private final Renderer renderer;
   private final GdxGame game;
   private String[] shopTextures = {
-    "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
+      "images/ui/shop-popup.png", "images/entities/currency/coins.png", "images/ui/dialog.png"
   };
   private String[] itemTextures;
   private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
@@ -123,10 +123,10 @@ public class ShopScreen extends ScreenAdapter {
 
     // Set background image
     Texture backgroundTexture =
-            new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+        new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
-            stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
     stage.addActor(backgroundImage);
 
     Entity ui = new Entity();

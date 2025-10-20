@@ -6,6 +6,7 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import java.util.*;
 import java.util.LinkedList;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class WaveService implements WaveConfigProvider {
   private final EntitySpawn entitySpawn;
 
   public interface EnemySpawnCallback {
-    void spawnEnemy(int col, int row, String robotType);
+    void spawnEnemy(int col, int row, RobotFactory.RobotType robotType);
 
     void spawnBoss(int row, BossFactory.BossTypes bossType);
   }
@@ -114,7 +115,7 @@ public class WaveService implements WaveConfigProvider {
       timeSinceLastSpawn += deltaTime;
       float spawnInterval = 5.0f;
       if (timeSinceLastSpawn >= spawnInterval) {
-        spawnEnemy(getLane());
+        spawnNextEnemy(getLane());
         timeSinceLastSpawn -= spawnInterval;
       }
     }
@@ -164,7 +165,6 @@ public class WaveService implements WaveConfigProvider {
       bossActive = true;
     }
 
-    waveActive = false;
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -343,7 +343,7 @@ public class WaveService implements WaveConfigProvider {
     return lane;
   }
 
-  public void spawnEnemy(int laneNumber) {
+  public void spawnNextEnemy(int laneNumber) {
     if (currentEnemyPos >= enemiesToSpawn) {
       return;
     }
@@ -351,9 +351,25 @@ public class WaveService implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-    String robotType = entitySpawn.getNextRobotType();
+    RobotFactory.RobotType robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
+  }
+
+  /**
+   * A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+   * function, this does not update the position in the wave
+   *
+   * @param laneNumber The lane to spawn the enemy in
+   * @param robotType The robot type to spawn
+   */
+  public void spawnEnemyDebug(int laneNumber, RobotFactory.RobotType robotType) {
+    if (enemySpawnCallback == null) {
+      logger.warn("No enemy spawn callback set - cannot spawn {}", robotType.get());
+      return;
+    }
+
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
   }
 
   public int getWaveCountForLevel(String levelKey) {

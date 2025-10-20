@@ -62,7 +62,7 @@ public class InventoryScreen extends ScreenAdapter {
     background = new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
 
 
-   }
+  }
 
   @Override
   public void render(float delta) {
@@ -108,10 +108,10 @@ public class InventoryScreen extends ScreenAdapter {
     Stage stage = ServiceLocator.getRenderService().getStage();
     // Set background image
     Texture backgroundTexture =
-            new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+        new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
-            stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+        stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
     stage.addActor(backgroundImage);
 
     Entity ui = new Entity();
