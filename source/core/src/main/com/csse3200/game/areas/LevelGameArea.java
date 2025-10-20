@@ -641,6 +641,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     for (Entity r : robotsToRemove) {
       requestDespawn(r);
       robots.remove(r);
+      ServiceLocator.getWaveService().onEnemyDispose();
     }
   }
 
@@ -904,7 +905,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         }
       }
 
-      cost = generator.getCost() + (25 * furnaces);
+      cost = generator.getCost() + (50 * furnaces);
     } else if (defence != null) {
       cost = defence.getCost();
     }

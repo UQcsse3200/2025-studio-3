@@ -12,7 +12,7 @@
 "samuraiBot": {
     "name": "Samurai Bot",
     "atlasFilePath": "images/entities/enemies/samurai_Bot.atlas",
-    "health": 600,
+    "health": 800,
     "attack": 35,
     "scale": 2.5,
     "speed": 22,
@@ -21,7 +21,7 @@
   "gunBot": {
     "name": "Gun Bot",
     "atlasFilePath": "images/entities/enemies/gun_Bot.atlas",
-    "health": 800,
+    "health": 1000,
     "attack": 10,
     "scale": 2.0,
     "speed": 10,
