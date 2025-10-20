@@ -2,6 +2,8 @@
 - Gemini was used to help resolve a merge conflict in DossierDisplay after a merge.
 - Gemini was used to help merge WaveManager's functions into WaveService 
 - Generative AI was used to help resolve a merge conflict in LevelGameArea
+- Generative AI was used to assist in refactoring LevelCompletedWindow to use the same UI style as Game Over
+- Generative AI was used to assist in changing HotbarDisplay's update logic
 ## Pham
 - Generative AI was used to fix wave tests
 - Generative AI was used to write Javadocs and update the javadocs of waves
