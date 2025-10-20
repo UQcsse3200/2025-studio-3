@@ -209,11 +209,11 @@ public class DossierDisplay extends UIComponent {
     return table;
   }
 
-    /**
-     * Creates and returns a navigation UI table for browsing through a list of entities.
-     *
-     * @return a table containing navigation controls and the dossier display
-     */
+  /**
+   * Creates and returns a navigation UI table for browsing through a list of entities.
+   *
+   * @return a table containing navigation controls and the dossier display
+   */
   private Table navigateDossier() {
     float uiScale = ui.getUIScale();
     float arrowSize = 140f * uiScale;
@@ -227,25 +227,27 @@ public class DossierDisplay extends UIComponent {
     ImageButton leftArrow = new ImageButton(leftArrowDrawable);
     ImageButton rightArrow = new ImageButton(rightArrowDrawable);
 
-    leftArrow.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        if (entities.length > 0 && currentEntity > 0) {
-          currentEntity--;
-          entity.getEvents().trigger(CHANGE_INFO, currentEntity);
-        }
-      }
-    });
+    leftArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (entities.length > 0 && currentEntity > 0) {
+              currentEntity--;
+              entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+            }
+          }
+        });
 
-    rightArrow.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        if (entities.length > 0 && currentEntity < entities.length - 1) {
-          currentEntity++;
-          entity.getEvents().trigger(CHANGE_INFO, currentEntity);
-        }
-      }
-    });
+    rightArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (entities.length > 0 && currentEntity < entities.length - 1) {
+              currentEntity++;
+              entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+            }
+          }
+        });
 
     Table navigationTable = new Table();
     navigationTable.add(leftArrow).size(arrowSize);
@@ -457,12 +459,12 @@ public class DossierDisplay extends UIComponent {
     return root;
   }
 
-    /**
-     * Creates a horizontally scrollable ScrollPane to contain UI content.
-     *
-     * @param content the Actor to be wrapped inside the ScrollPane
-     * @return a configured ScrollPane for horizontal scrolling
-     */
+  /**
+   * Creates a horizontally scrollable ScrollPane to contain UI content.
+   *
+   * @param content the Actor to be wrapped inside the ScrollPane
+   * @return a configured ScrollPane for horizontal scrolling
+   */
   private ScrollPane createScrollPane(Actor content) {
     // define ScrollPane style
     ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
@@ -474,7 +476,8 @@ public class DossierDisplay extends UIComponent {
 
     // wrap the row in a scroll pane (horizontal scrolling)
     ScrollPane scrollPane = new ScrollPane(content, scrollStyle);
-    scrollPane.setScrollingDisabled(false, true); // allow horizontal scroll and disable vertical scroll
+    scrollPane.setScrollingDisabled(
+        false, true); // allow horizontal scroll and disable vertical scroll
     scrollPane.setFadeScrollBars(false);
     scrollPane.setScrollbarsOnTop(true);
     scrollPane.setSmoothScrolling(true);
@@ -482,35 +485,38 @@ public class DossierDisplay extends UIComponent {
     return scrollPane;
   }
 
-    /**
-     * Creates a table containing left and right arrow buttons to manually control a ScrollPane.
-     *
-     * @param scrollPane the ScrollPane to be controlled by the arrows
-     * @param arrowWidth the width of the arrow button
-     * @param arrowHeight the height of the arrow button
-     * @param uiScale the UI scale factor used for padding and sizing
-     * @return a table containing the scroll arrows and the scrollable content
-     */
-  private Table createScrollArrows(ScrollPane scrollPane, float arrowWidth, float arrowHeight, float uiScale) {
+  /**
+   * Creates a table containing left and right arrow buttons to manually control a ScrollPane.
+   *
+   * @param scrollPane the ScrollPane to be controlled by the arrows
+   * @param arrowWidth the width of the arrow button
+   * @param arrowHeight the height of the arrow button
+   * @param uiScale the UI scale factor used for padding and sizing
+   * @return a table containing the scroll arrows and the scrollable content
+   */
+  private Table createScrollArrows(
+      ScrollPane scrollPane, float arrowWidth, float arrowHeight, float uiScale) {
     TextButton leftArrow = new TextButton("<", skin);
     TextButton rightArrow = new TextButton(">", skin);
 
     // add listener to move the scroll pane left/right
-    leftArrow.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        float newScrollX = Math.max(scrollPane.getScrollX() - 200f, 0f);
-        scrollPane.setScrollX(newScrollX);
-      }
-    });
+    leftArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            float newScrollX = Math.max(scrollPane.getScrollX() - 200f, 0f);
+            scrollPane.setScrollX(newScrollX);
+          }
+        });
 
-    rightArrow.addListener(new ClickListener() {
-      @Override
-      public void clicked(InputEvent event, float x, float y) {
-        float newScrollX = Math.min(scrollPane.getScrollX() + 200f, scrollPane.getMaxX());
-        scrollPane.setScrollX(newScrollX);
-      }
-    });
+    rightArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            float newScrollX = Math.min(scrollPane.getScrollX() + 200f, scrollPane.getMaxX());
+            scrollPane.setScrollX(newScrollX);
+          }
+        });
 
     // wrap everything in a table
     Table arrowRow = new Table();
