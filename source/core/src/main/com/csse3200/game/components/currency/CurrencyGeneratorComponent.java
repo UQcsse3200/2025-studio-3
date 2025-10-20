@@ -9,6 +9,7 @@ import com.csse3200.game.components.Component;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.progression.skilltree.Skill;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -46,6 +47,12 @@ public class CurrencyGeneratorComponent extends Component {
   /** Whether the generator is paused */
   private boolean isPaused = false;
 
+  /** Tracks whether the action is currently scheduled on the stage. */
+  private boolean actionScheduled = false;
+
+  /** Listener for responding to global freeze state changes. */
+  private GameStateService.FreezeListener freezeListener;
+
   /**
    * Creates a new currency generator component with the specified parameters.
    *
@@ -73,18 +80,29 @@ public class CurrencyGeneratorComponent extends Component {
   @Override
   public void create() {
     super.create();
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    if (stage == null) {
+    if (getStage() == null) {
       logger.warn("RenderService or Stage is null.");
       return;
     }
 
-    generatorAction = buildGeneratorAction();
-    stage.getRoot().addAction(generatorAction);
-    logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
+    GameStateService gameStateService = ServiceLocator.getGameStateService();
+    if (gameStateService != null) {
+      freezeListener =
+          frozen -> {
+            if (frozen) {
+              pause();
+            } else {
+              resume();
+            }
+          };
+      gameStateService.registerFreezeListener(freezeListener);
+    }
+
+    if (gameStateService != null && gameStateService.isFrozen()) {
+      pause();
+    } else {
+      resume();
+    }
   }
 
   /** Spawns a scrap at the specified coordinates. */
@@ -133,32 +151,36 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Pauses the sunlight generation */
   public void pause() {
-    isPaused = true;
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    if (stage != null && generatorAction != null) {
+    Stage stage = getStage();
+    if (stage != null && generatorAction != null && actionScheduled) {
       stage.getRoot().removeAction(generatorAction);
-      generatorAction = null; // discard pooled action to avoid invalid reuse
+    }
+    actionScheduled = false;
+    generatorAction = null; // discard pooled action to avoid invalid reuse
+    if (!isPaused) {
+      isPaused = true;
       logger.debug("Paused CurrencyGenerator");
     }
   }
 
   /** Resumes the sunlight generation */
   public void resume() {
-    isPaused = false;
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    if (stage != null) {
-      if (generatorAction == null) {
-        generatorAction = buildGeneratorAction();
-      }
+    Stage stage = getStage();
+    if (stage == null) {
+      logger.warn("Stage unavailable; cannot resume CurrencyGenerator");
+      return;
+    }
+    if (generatorAction == null) {
+      generatorAction = buildGeneratorAction();
+    }
+    if (!actionScheduled) {
       stage.getRoot().addAction(generatorAction);
+      actionScheduled = true;
+    }
+    if (isPaused) {
       logger.debug("Resumed CurrencyGenerator");
     }
+    isPaused = false;
   }
 
   /**
@@ -173,20 +195,25 @@ public class CurrencyGeneratorComponent extends Component {
   @Override
   public void dispose() {
     super.dispose();
-    Stage stage =
-        ServiceLocator.getRenderService() != null
-            ? ServiceLocator.getRenderService().getStage()
-            : null;
-    if (stage != null && generatorAction != null) {
-      stage.getRoot().removeAction(generatorAction);
-      logger.debug("Removed generatorAction from Stage.");
+    if (freezeListener != null) {
+      GameStateService gameStateService = ServiceLocator.getGameStateService();
+      if (gameStateService != null) {
+        gameStateService.unregisterFreezeListener(freezeListener);
+      }
+      freezeListener = null;
     }
-    generatorAction = null;
+    pause();
   }
 
   /** Build a new, safe-to-add generator action instance. */
   private Action buildGeneratorAction() {
     return Actions.forever(
         Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
+  }
+
+  private Stage getStage() {
+    return ServiceLocator.getRenderService() != null
+        ? ServiceLocator.getRenderService().getStage()
+        : null;
   }
 }
