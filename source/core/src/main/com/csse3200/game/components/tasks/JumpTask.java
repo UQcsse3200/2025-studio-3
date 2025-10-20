@@ -8,7 +8,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class JumpTask extends RobotTargetDetectionTasks {
   private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(JumpTask.class);
   private boolean hasJumped = false;
-  private static float jumpDuration = 0.5f;
+  private static float jumpDuration = 0.75f;
   private float jumpTimer = 0f;
   private boolean isJumping = false;
   private float startY;
@@ -36,6 +36,7 @@ public class JumpTask extends RobotTargetDetectionTasks {
   public void start() {
     super.start();
     startY = this.owner.getEntity().getPosition().y;
+    logger.info("JumpTask started, startY: " + startY);
     this.owner.getEntity().getEvents().trigger("jumpStart");
   }
 
@@ -59,7 +60,7 @@ public class JumpTask extends RobotTargetDetectionTasks {
       if (jumpTimer <= 0) {
         isJumping = false;
         hasJumped = true;
-        body.setTransform(body.getPosition().x, startY, body.getAngle());
+        this.owner.getEntity().setPosition(this.owner.getEntity().getPosition().x, startY + 1);
         return;
       }
       return;
