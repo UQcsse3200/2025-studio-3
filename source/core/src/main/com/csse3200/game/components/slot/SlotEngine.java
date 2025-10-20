@@ -1,6 +1,7 @@
 package com.csse3200.game.components.slot;
 
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.services.ServiceLocator;
 import java.security.SecureRandom;
 import java.util.*;
 import java.util.concurrent.*;
@@ -37,7 +38,6 @@ public class SlotEngine {
   // Track which effects have already been logged once
   private final EnumSet<Effect> loggedOnce = EnumSet.noneOf(Effect.class);
 
-  // New: spin credits state
   private final AtomicInteger remainingSpins;
   private ScheduledExecutorService refillExec;
 
@@ -49,6 +49,20 @@ public class SlotEngine {
 
   /** Cached period in nanoseconds for faster comparisons. */
   private long refillPeriodNanos = TimeUnit.SECONDS.toNanos(10);
+
+  private volatile float refillSpeedMul = 1f;
+
+  public void setRefillSpeedMul(float m) {
+    this.refillSpeedMul = Math.max(0.1f, m);
+  }
+
+  public float getRefillSpeedMul() {
+    return refillSpeedMul;
+  }
+
+  public int getRefillPeriodSeconds() {
+    return config.getRefillPeriodSeconds();
+  }
 
   /** Try to consume one credit. */
   private boolean consumeOneCredit() {
@@ -387,14 +401,16 @@ public class SlotEngine {
             lastRefillNano += pausedDur;
             pausedAtNano = -1L;
           }
+          double timeMul =
+              ServiceLocator.getTimeSource().getTimeScale() * Math.max(0.1, refillSpeedMul);
+          long effectivePeriod = (long) Math.max(1_000_000L, refillPeriodNanos / timeMul);
           // How many whole periods have elapsed since the last logical tick?
           long elapsed = now - lastRefillNano;
-          if (elapsed >= refillPeriodNanos) {
-            long ticks = Math.max(1L, elapsed / refillPeriodNanos);
-            // Cap ticks to avoid burst if the game was backgrounded a long time.
+          if (elapsed >= effectivePeriod) {
+            long ticks = Math.max(1L, elapsed / effectivePeriod);
             int toApply = (int) Math.min(ticks, 3L);
             updateSpins(toApply, "auto_refill");
-            lastRefillNano += refillPeriodNanos * ticks;
+            lastRefillNano += effectivePeriod * ticks;
           }
         },
         0L,

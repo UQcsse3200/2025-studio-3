@@ -176,9 +176,6 @@ public class SlotMachineDisplay extends UIComponent {
   /** Cache of the last selected pie frame index to avoid redundant Drawable swaps. */
   private int currentPieIndex = -1;
 
-  /** Keep in sync with engine default: auto +1 credit every 5s (configurable in engine). */
-  private static final int REFILL_PERIOD_SECONDS = 10;
-
   /** Epoch (ms) when we last observed a +1 refill tick. */
   private long lastRefillEpochMs = System.currentTimeMillis();
 
@@ -219,6 +216,7 @@ public class SlotMachineDisplay extends UIComponent {
     if (entity != null && entity.getEvents() != null) {
       entity.getEvents().addListener("pause", this::pauseSpin);
       entity.getEvents().addListener("resume", this::resumeSpin);
+      entity.getEvents().addListener("speed_changed", slotEngine::setRefillSpeedMul);
     }
   }
 
@@ -725,7 +723,12 @@ public class SlotMachineDisplay extends UIComponent {
     // 2) Pie frame by time since last tick
     if (pieImage != null && !pieRegions.isEmpty()) {
       long now = System.currentTimeMillis();
-      double periodMs = Math.max(1.0, REFILL_PERIOD_SECONDS * 1000.0);
+      double baseSec = Math.max(0.001, slotEngine.getRefillPeriodSeconds());
+      double mul =
+          Math.max(
+              0.1, slotEngine.getRefillSpeedMul() * ServiceLocator.getTimeSource().getTimeScale());
+      double effSec = baseSec / mul;
+      double periodMs = Math.max(1.0, effSec * 1000.0);
       double f = (now - lastRefillEpochMs) / periodMs; // 0..1
       if (f < 0) f = 0;
       if (f > 1) f = 1;
