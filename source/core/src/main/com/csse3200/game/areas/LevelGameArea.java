@@ -190,7 +190,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
 
     // tutorial for Level 1
-    if ("levelOne".equals(currentLevelKey) && !ServiceLocator.getProfileService().getProfile().getPlayedTutorial()) {
+    if ("levelOne".equals(currentLevelKey)
+        && !ServiceLocator.getProfileService().getProfile().getPlayedTutorial()) {
       Entity tutorialEntity = new Entity();
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);

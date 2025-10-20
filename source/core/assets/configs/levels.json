@@ -144,7 +144,7 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 25,
+          "waveWeight": 15,
           "minZombiesSpawn": 4,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.5 },
@@ -155,7 +155,7 @@
           }
         },
         {
-          "waveWeight": 70,
+          "waveWeight": 50,
           "minZombiesSpawn": 10,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
@@ -166,8 +166,8 @@
           }
         },
         {
-          "waveWeight": 110,
-          "minZombiesSpawn": 18,
+          "waveWeight": 80,
+          "minZombiesSpawn": 10,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
             "fast": { "cost": 3, "chance": 0.35 },

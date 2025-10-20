@@ -68,8 +68,7 @@ public class LevelMapTutorial extends UIComponent {
   private static final float DIALOG_WIDTH_PAD = 100f;
 
   /** Constructs a new LevelMapTutorial with a reference to the game time controller. */
-  public LevelMapTutorial() {
-  }
+  public LevelMapTutorial() {}
 
   /**
    * Initialises the tutorial UI components, including the overlay, dialog box, message label, next
@@ -100,7 +99,8 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable = new Table();
     dialogTable.setBackground(dialogDrawable);
     dialogTable.setSize(
-        Math.floorDiv((int) screenSize.getWidth(), 3), Math.floorDiv((int) screenSize.getHeight(), 5));
+        Math.floorDiv((int) screenSize.getWidth(), 3),
+        Math.floorDiv((int) screenSize.getHeight(), 5));
     dialogTable.setPosition(
         (screenSize.getWidth() - dialogTable.getWidth()) / 2f,
         (screenSize.getHeight() - dialogTable.getHeight()) / 5f);
@@ -143,21 +143,21 @@ public class LevelMapTutorial extends UIComponent {
 
     // Listener for the "continue" button
     nextButton.addListener(
-            new ChangeListener() {
-              @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
-                entity.getEvents().trigger("traverse", true);
-              }
-            });
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            entity.getEvents().trigger("traverse", true);
+          }
+        });
 
     // Listener for the "previous" button
     previousButton.addListener(
-            new ChangeListener() {
-              @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
-                entity.getEvents().trigger("traverse", false);
-              }
-            });
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            entity.getEvents().trigger("traverse", false);
+          }
+        });
 
     skipTable = new Table();
     skipTable.bottom().right().pad(20f);
@@ -202,7 +202,8 @@ public class LevelMapTutorial extends UIComponent {
   }
 
   /**
-   * Shows the previous tutorial message. If it is pressed on the first tutorial message, nothing will happen.
+   * Shows the previous tutorial message. If it is pressed on the first tutorial message, nothing
+   * will happen.
    */
   private void previousStep() {
     step--;
@@ -218,7 +219,8 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable.setVisible(false);
     messageTable.setVisible((false));
     skipTable.setVisible(false);
-    ServiceLocator.getGameStateService().removeFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
+    ServiceLocator.getGameStateService()
+        .removeFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
   }
 
   /**
@@ -228,16 +230,17 @@ public class LevelMapTutorial extends UIComponent {
     endTutorial();
   }
 
-  /**
-   * A listener that determines whether the player clicks on the next tutorial message or not.
-   */
+  /** A listener that determines whether the player clicks on the next tutorial message or not. */
   private void traverseTutorial() {
-    entity.getEvents().addListener("traverse", input -> {
-      boolean value = (boolean) input;
-      changeText(value);
-    });
+    entity
+        .getEvents()
+        .addListener(
+            "traverse",
+            input -> {
+              boolean value = (boolean) input;
+              changeText(value);
+            });
   }
-
 
   /** Cleans up tutorial UI elements and removes them from the stage. */
   @Override

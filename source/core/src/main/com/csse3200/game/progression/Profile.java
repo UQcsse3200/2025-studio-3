@@ -244,11 +244,12 @@ public class Profile {
   }
 
   /** Returns true if the player has played the tutorial before. */
-  public boolean getPlayedTutorial () {
+  public boolean getPlayedTutorial() {
     return this.playedTutorial;
   }
+
   /** Sets a flag to show that the player has played the tutorial before. */
-  public void setPlayedTutorial () {
+  public void setPlayedTutorial() {
     this.playedTutorial = true;
   }
 }
