@@ -94,7 +94,9 @@ public class SkillTreeScreen extends ScreenAdapter {
     Stage stage = ServiceLocator.getRenderService().getStage();
 
     // Set background image
-    Texture backgroundTexture = ServiceLocator.getResourceService().getAsset("images/backgrounds/skilltree_background.png", Texture.class);
+    Texture backgroundTexture =
+        ServiceLocator.getResourceService()
+            .getAsset("images/backgrounds/skilltree_background.png", Texture.class);
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
         stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());

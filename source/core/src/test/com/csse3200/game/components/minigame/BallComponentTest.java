@@ -34,18 +34,18 @@ class BallComponentTest {
     // Setup service mocks
     ServiceLocator.registerTimeSource(mockTimeSource);
     ServiceLocator.registerMinigameService(mockMinigameService);
-    
+
     // Setup time source mock
     when(mockTimeSource.getDeltaTime()).thenReturn(0.016f); // 60 FPS
-    
+
     // Create ball component
     ballComponent = new BallComponent();
-    
+
     // Setup entity mock
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, 400f));
     when(mockEntity.getScale()).thenReturn(new Vector2(20f, 20f));
     doNothing().when(mockEntity).setPosition(anyFloat(), anyFloat());
-    
+
     // Attach component to entity
     ballComponent.setEntity(mockEntity);
   }
@@ -67,11 +67,11 @@ class BallComponentTest {
   void testHitPaddle() {
     // Test reverseY method
     ballComponent.hitPaddle();
-    
+
     assertEquals(-300f, ballComponent.getVelocityY());
     assertEquals(1, ballComponent.getScore());
     assertEquals(1, ballComponent.getBallsHit());
-    
+
     // Test multiple reverses
     ballComponent.hitPaddle();
     assertEquals(300f, ballComponent.getVelocityY());
@@ -84,14 +84,15 @@ class BallComponentTest {
     // Test ball movement during update
     Vector2 initialPos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(initialPos);
-    
+
     ballComponent.update();
-    
+
     // Verify position was updated based on velocity and delta time
-    verify(mockEntity).setPosition(
-        640f + 300f * 0.016f, // x + velocity.x * delta
-        400f + 300f * 0.016f  // y + velocity.y * delta
-    );
+    verify(mockEntity)
+        .setPosition(
+            640f + 300f * 0.016f, // x + velocity.x * delta
+            400f + 300f * 0.016f // y + velocity.y * delta
+            );
   }
 
   @Test
@@ -99,13 +100,13 @@ class BallComponentTest {
     // Position ball at left wall
     when(mockEntity.getPosition()).thenReturn(new Vector2(0f, 400f));
     when(mockEntity.getScale()).thenReturn(new Vector2(20f, 20f));
-    
+
     // Set negative X velocity to simulate moving left
     ballComponent = new BallComponent();
     ballComponent.setEntity(mockEntity);
-    
+
     ballComponent.update();
-    
+
     // Should reverse X velocity and clamp position to 0
     verify(mockEntity).setPosition(eq(0f), anyFloat());
   }
@@ -115,12 +116,12 @@ class BallComponentTest {
     // Position ball at right wall
     when(mockEntity.getPosition()).thenReturn(new Vector2(1260f, 400f)); // 1280 - 20
     when(mockEntity.getScale()).thenReturn(new Vector2(20f, 20f));
-    
+
     ballComponent = new BallComponent();
     ballComponent.setEntity(mockEntity);
-    
+
     ballComponent.update();
-    
+
     // Should reverse X velocity and clamp position
     verify(mockEntity).setPosition(eq(1260f), anyFloat());
   }
@@ -130,12 +131,12 @@ class BallComponentTest {
     // Position ball at top wall
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, 700f)); // 720 - 20
     when(mockEntity.getScale()).thenReturn(new Vector2(20f, 20f));
-    
+
     ballComponent = new BallComponent();
     ballComponent.setEntity(mockEntity);
-    
+
     ballComponent.update();
-    
+
     // Should reverse Y velocity and clamp position
     verify(mockEntity).setPosition(anyFloat(), eq(700f));
   }
@@ -145,12 +146,12 @@ class BallComponentTest {
     // Position ball at bottom wall
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, 0f));
     when(mockEntity.getScale()).thenReturn(new Vector2(20f, 20f));
-    
+
     ballComponent = new BallComponent();
     ballComponent.setEntity(mockEntity);
-    
+
     ballComponent.update();
-    
+
     // Should set velocity to 0 and trigger game over
     verify(mockEntity).setPosition(anyFloat(), eq(0f));
     verify(mockMinigameService).setGameOver(true);
@@ -161,12 +162,12 @@ class BallComponentTest {
     // Test multiple update calls
     Vector2 pos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(pos);
-    
+
     // Update multiple times
     ballComponent.update();
     ballComponent.update();
     ballComponent.update();
-    
+
     // Should call setPosition multiple times
     verify(mockEntity, atLeast(3)).setPosition(anyFloat(), anyFloat());
   }
@@ -176,9 +177,9 @@ class BallComponentTest {
     // Test that reverseY increments score and ballsHit
     int initialScore = ballComponent.getScore();
     int initialBallsHit = ballComponent.getBallsHit();
-    
+
     ballComponent.hitPaddle();
-    
+
     assertEquals(initialScore + 1, ballComponent.getScore());
     assertEquals(initialBallsHit + 1, ballComponent.getBallsHit());
   }
@@ -187,7 +188,7 @@ class BallComponentTest {
   void testVelocityYGetter() {
     // Test getVelocityY method
     assertEquals(300f, ballComponent.getVelocityY());
-    
+
     ballComponent.hitPaddle();
     assertEquals(-300f, ballComponent.getVelocityY());
   }

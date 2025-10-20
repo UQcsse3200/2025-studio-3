@@ -35,27 +35,27 @@ class LaneRunnerObstacleComponentTest {
 
   @BeforeEach
   void setUp() {
-    
+
     // Setup service mocks
     ServiceLocator.registerTimeSource(mockTimeSource);
     ServiceLocator.registerMinigameService(mockMinigameService);
     ServiceLocator.registerEntityService(mockEntityService);
-    
+
     // Setup time source mock
     when(mockTimeSource.getDeltaTime()).thenReturn(0.016f); // 60 FPS
     when(mockTimeSource.getTime()).thenReturn(1000L); // 1 second elapsed
-    
+
     // Setup minigame service mock
     when(mockMinigameService.getScore()).thenReturn(0);
-    
+
     // Create obstacle component
     obstacleComponent = new LaneRunnerObstacleComponent(BASE_SPEED);
-    
+
     // Setup entity mock
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, 400f));
     when(mockEntity.getScale()).thenReturn(new Vector2(50f, 50f));
     doNothing().when(mockEntity).setPosition(anyFloat(), anyFloat());
-    
+
     // Attach component to entity
     obstacleComponent.setEntity(mockEntity);
   }
@@ -77,13 +77,13 @@ class LaneRunnerObstacleComponentTest {
     // Test obstacle movement during update
     Vector2 initialPos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(initialPos);
-    
+
     obstacleComponent.update();
-    
+
     // Calculate expected speed: baseSpeed + (elapsedTime * SPEED_GROWTH)
     float expectedSpeed = BASE_SPEED + (1.0f * 100f); // 1 second * 100f growth
     float expectedY = 400f - (expectedSpeed * 0.016f);
-    
+
     verify(mockEntity).setPosition(640f, expectedY);
   }
 
@@ -91,16 +91,16 @@ class LaneRunnerObstacleComponentTest {
   void testSpeedGrowth() {
     // Test that speed increases over time
     when(mockTimeSource.getTime()).thenReturn(2000L); // 2 seconds elapsed
-    
+
     Vector2 initialPos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(initialPos);
-    
+
     obstacleComponent.update();
-    
+
     // Calculate expected speed: baseSpeed + (2.0f * 100f)
     float expectedSpeed = BASE_SPEED + (2.0f * 100f);
     float expectedY = 400f - (expectedSpeed * 0.016f);
-    
+
     verify(mockEntity).setPosition(640f, expectedY);
   }
 
@@ -109,9 +109,9 @@ class LaneRunnerObstacleComponentTest {
     // Position obstacle off screen (below bottom)
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, -60f)); // Below screen
     when(mockEntity.getScale()).thenReturn(new Vector2(50f, 50f));
-    
+
     obstacleComponent.update();
-    
+
     // Should set alive to false, increment score, and unregister entity
     assertFalse(obstacleComponent.isAlive());
     verify(mockMinigameService).setScore(1);
@@ -123,9 +123,9 @@ class LaneRunnerObstacleComponentTest {
     // Position obstacle on screen
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, 400f));
     when(mockEntity.getScale()).thenReturn(new Vector2(50f, 50f));
-    
+
     obstacleComponent.update();
-    
+
     // Should still be alive and not trigger score/removal
     assertTrue(obstacleComponent.isAlive());
     verify(mockMinigameService, never()).setScore(anyInt());
@@ -137,7 +137,7 @@ class LaneRunnerObstacleComponentTest {
     // Test setAlive method
     obstacleComponent.setAlive(false);
     assertFalse(obstacleComponent.isAlive());
-    
+
     obstacleComponent.setAlive(true);
     assertTrue(obstacleComponent.isAlive());
   }
@@ -146,12 +146,12 @@ class LaneRunnerObstacleComponentTest {
   void testUpdateWhenNotAlive() {
     // Test that update does nothing when not alive
     obstacleComponent.setAlive(false);
-    
+
     Vector2 initialPos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(initialPos);
-    
+
     obstacleComponent.update();
-    
+
     // Should not move or check bounds
     verify(mockEntity, never()).setPosition(anyFloat(), anyFloat());
     verify(mockMinigameService, never()).setScore(anyInt());
@@ -163,12 +163,12 @@ class LaneRunnerObstacleComponentTest {
     // Test multiple update calls
     Vector2 pos = new Vector2(640f, 400f);
     when(mockEntity.getPosition()).thenReturn(pos);
-    
+
     // Update multiple times
     obstacleComponent.update();
     obstacleComponent.update();
     obstacleComponent.update();
-    
+
     // Should call setPosition multiple times
     verify(mockEntity, atLeast(3)).setPosition(anyFloat(), anyFloat());
   }
@@ -183,7 +183,7 @@ class LaneRunnerObstacleComponentTest {
   void testIsAlive() {
     // Test isAlive method
     assertTrue(obstacleComponent.isAlive());
-    
+
     obstacleComponent.setAlive(false);
     assertFalse(obstacleComponent.isAlive());
   }
@@ -193,7 +193,7 @@ class LaneRunnerObstacleComponentTest {
     // Test constructor with different base speed
     float customSpeed = 150f;
     LaneRunnerObstacleComponent customObstacle = new LaneRunnerObstacleComponent(customSpeed);
-    
+
     assertEquals(customSpeed, customObstacle.getSpeed());
     assertTrue(customObstacle.isAlive());
   }
@@ -203,9 +203,9 @@ class LaneRunnerObstacleComponentTest {
     // Test edge case where obstacle is exactly at the boundary
     when(mockEntity.getPosition()).thenReturn(new Vector2(640f, -60f)); // Below boundary
     when(mockEntity.getScale()).thenReturn(new Vector2(50f, 50f));
-    
+
     obstacleComponent.update();
-    
+
     // Should trigger removal
     assertFalse(obstacleComponent.isAlive());
     verify(mockMinigameService).setScore(1);

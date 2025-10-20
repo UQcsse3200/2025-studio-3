@@ -5,9 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 
-/**
- * HUD for the minigames.
- */
+/** HUD for the minigames. */
 public class MinigameHUD extends UIComponent {
   private Label scoreLabel;
   private Label timeLabel;
@@ -24,11 +22,11 @@ public class MinigameHUD extends UIComponent {
     table.setFillParent(true);
     table.top().left();
     table.pad(ui.getScaledWidth(20f));
-    
+
     // Add labels to table
     table.add(scoreLabel).left().row();
     table.add(timeLabel).left().padTop(ui.getScaledHeight(10f)).row();
-    
+
     // Add table to stage
     stage.addActor(table);
   }
@@ -36,20 +34,20 @@ public class MinigameHUD extends UIComponent {
   @Override
   public void update() {
     super.update();
-    
+
     // Don't update HUD if game is over
     if (ServiceLocator.getMinigameService().isGameOver()) {
       return;
     }
-    
+
     // Update labels with current game state
     int score = ServiceLocator.getMinigameService().getScore();
     float time = ServiceLocator.getTimeSource().getTime();
-    
+
     if (scoreLabel != null) {
       scoreLabel.setText("Score: " + score);
     }
-    
+
     if (timeLabel != null) {
       timeLabel.setText(String.format("Time: %.2fs", time / 1000f));
     }
@@ -63,5 +61,3 @@ public class MinigameHUD extends UIComponent {
     }
   }
 }
-
-

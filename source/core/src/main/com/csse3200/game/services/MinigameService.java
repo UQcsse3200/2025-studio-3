@@ -1,17 +1,13 @@
 package com.csse3200.game.services;
 
-/**
- * Service for managing minigame data.
- */
+/** Service for managing minigame data. */
 public class MinigameService {
   private int score;
   private boolean gameOver;
   private boolean paused;
   private float finalTime;
-  
-  /**
-   * Creates a new MinigameService.
-   */
+
+  /** Creates a new MinigameService. */
   public MinigameService() {
     this.score = 0;
     this.gameOver = false;
@@ -20,16 +16,16 @@ public class MinigameService {
 
   /**
    * Gets the score.
-   * 
+   *
    * @return the score
    */
   public int getScore() {
     return score;
   }
-  
+
   /**
    * Checks if the game is over.
-   * 
+   *
    * @return true if the game is over, false otherwise
    */
   public boolean isGameOver() {
@@ -38,16 +34,16 @@ public class MinigameService {
 
   /**
    * Sets the score.
-   * 
+   *
    * @param score the score
    */
   public void setScore(int score) {
     this.score = score;
   }
-  
+
   /**
    * Sets the game over state.
-   * 
+   *
    * @param gameOver the game over state
    */
   public void setGameOver(boolean gameOver) {
@@ -60,7 +56,7 @@ public class MinigameService {
 
   /**
    * Checks if the game is paused.
-   * 
+   *
    * @return true if the game is paused, false otherwise
    */
   public boolean isPaused() {
@@ -69,7 +65,7 @@ public class MinigameService {
 
   /**
    * Sets the paused state.
-   * 
+   *
    * @param paused the paused state
    */
   public void setPaused(boolean paused) {
@@ -78,16 +74,14 @@ public class MinigameService {
 
   /**
    * Gets the final time when the game ended.
-   * 
+   *
    * @return the final time in milliseconds
    */
   public float getFinalTime() {
     return finalTime;
   }
 
-  /**
-   * Resets the minigame service.
-   */
+  /** Resets the minigame service. */
   public void reset() {
     this.score = 0;
     this.gameOver = false;

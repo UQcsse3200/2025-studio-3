@@ -172,6 +172,7 @@ public class DialogService {
 
   /**
    * Creates and shows a game over dialog with callbacks.
+   *
    * @param title
    * @param message
    * @param onPlayAgain
@@ -210,7 +211,8 @@ public class DialogService {
    * @param onContinue callback when user continues
    * @return the created dialog component
    */
-  public DialogComponent winGame(String title, String message, Consumer<DialogComponent> onContinue) {
+  public DialogComponent winGame(
+      String title, String message, Consumer<DialogComponent> onContinue) {
     float volume = ServiceLocator.getSettingsService().getSoundVolume();
     if (dialogSound == null) {
       initSounds();
@@ -218,7 +220,7 @@ public class DialogService {
     dialogSound.play(volume);
     return createAndShowDialog(DialogType.WIN_GAME, title, message, onContinue, null, null);
   }
-  
+
   /**
    * Creates and shows a skill dialog with callbacks.
    *

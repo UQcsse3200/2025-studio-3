@@ -214,10 +214,7 @@ public class DialogComponent extends UIComponent {
         .add(playAgainButton)
         .size(playAgainDimensions.getKey(), playAgainDimensions.getValue())
         .pad(5f);
-    buttonTable
-        .add(quitButton)
-        .size(quitDimensions.getKey(), quitDimensions.getValue())
-        .pad(5f);
+    buttonTable.add(quitButton).size(quitDimensions.getKey(), quitDimensions.getValue()).pad(5f);
   }
 
   /** Adds buttons for WIN_GAME dialog type. */
@@ -235,7 +232,7 @@ public class DialogComponent extends UIComponent {
             }
           }
         });
-    
+
     buttonTable
         .add(continueButton)
         .size(buttonDimensions.getKey(), buttonDimensions.getValue())

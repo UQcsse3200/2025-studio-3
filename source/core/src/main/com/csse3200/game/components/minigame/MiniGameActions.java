@@ -5,17 +5,14 @@ import com.csse3200.game.components.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Component for the mini game actions.
- */
+/** Component for the mini game actions. */
 public class MiniGameActions extends Component {
-  private static final Logger logger =
-      LoggerFactory.getLogger(MiniGameActions.class);
+  private static final Logger logger = LoggerFactory.getLogger(MiniGameActions.class);
   private GdxGame game;
 
   /**
    * Creates a new MiniGameActions component.
-   * 
+   *
    * @param game the game instance
    */
   public MiniGameActions(GdxGame game) {

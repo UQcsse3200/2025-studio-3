@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
-
 import net.dermetfan.utils.Pair;
 
 /**
@@ -145,7 +144,11 @@ public class WorldMapTutorial extends UIComponent {
     Table buttonTable = new Table();
     buttonTable.top().left().pad(TABLE_PAD);
     buttonTable.setFillParent(true);
-    buttonTable.add(toggleButton).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).left();
+    buttonTable
+        .add(toggleButton)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .left();
     stage.addActor(buttonTable);
   }
 

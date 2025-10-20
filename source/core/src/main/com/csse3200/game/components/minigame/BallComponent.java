@@ -3,13 +3,11 @@ package com.csse3200.game.components.minigame;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.services.ServiceLocator;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.Random;
 
-/**
- * Component for the ball in the minigame.
- */
+/** Component for the ball in the minigame. */
 public class BallComponent extends Component {
   private static final Logger logger = LoggerFactory.getLogger(BallComponent.class);
   private final Vector2 velocity;
@@ -23,9 +21,7 @@ public class BallComponent extends Component {
   private float decayFactor = 1f;
   private final Random random = new Random();
 
-  /**
-   * Creates a new BallComponent.
-   */
+  /** Creates a new BallComponent. */
   public BallComponent() {
     this.velocity = new Vector2(INITIAL_X_SPEED, INITIAL_Y_SPEED); // Start moving up and right
     this.score = 0;
@@ -34,7 +30,7 @@ public class BallComponent extends Component {
 
   /**
    * Gets the ball's Y velocity.
-   * 
+   *
    * @return the ball's Y velocity
    */
   public float getVelocityY() {
@@ -43,7 +39,7 @@ public class BallComponent extends Component {
 
   /**
    * Gets the score.
-   * 
+   *
    * @return the score
    */
   public int getScore() {
@@ -52,7 +48,7 @@ public class BallComponent extends Component {
 
   /**
    * Gets the number of balls hit.
-   * 
+   *
    * @return the number of balls hit
    */
   public int getBallsHit() {
@@ -61,26 +57,24 @@ public class BallComponent extends Component {
 
   /**
    * Generates a random number from a Gaussian distribution that is truncated with repeated draws.
-   * 
+   *
    * @return a random number from a Gaussian distribution
    */
   private float randomizer() {
     float res = Float.MAX_VALUE;
     while (res > 1.5f * this.mu || res < 0.3f * this.mu) {
-      res = (float) (this.mu + this.sigma * random.nextGaussian()); 
+      res = (float) (this.mu + this.sigma * random.nextGaussian());
     }
     return res;
   }
 
-  /**
-   * Reverses the ball's Y velocity and updates the score and balls hit.
-   */
+  /** Reverses the ball's Y velocity and updates the score and balls hit. */
   public void hitPaddle() {
     velocity.y *= -1;
     score++;
     ballsHit++;
-    this.mu += 0.1f*decayFactor;
-    this.sigma += 0.1f*decayFactor;
+    this.mu += 0.1f * decayFactor;
+    this.sigma += 0.1f * decayFactor;
     this.decayFactor *= 0.9f;
     speedMultiplier = randomizer();
   }
@@ -95,9 +89,7 @@ public class BallComponent extends Component {
     checkWallCollisions();
   }
 
-  /**
-   * Checks for wall collisions and updates the ball's position and velocity.
-   */
+  /** Checks for wall collisions and updates the ball's position and velocity. */
   private void checkWallCollisions() {
     Vector2 pos = entity.getPosition();
     Vector2 scale = entity.getScale();
@@ -105,7 +97,7 @@ public class BallComponent extends Component {
     float ballY = pos.y;
     float ballWidth = scale.x;
     float ballHeight = scale.y;
-    
+
     float worldWidth = 1280f;
     float worldHeight = 720f; // Match camera viewport
 
@@ -113,7 +105,7 @@ public class BallComponent extends Component {
     if (ballX <= 0) {
       velocity.x *= -1;
       entity.setPosition(0, ballY);
-    } 
+    }
     // Right wall collision
     else if (ballX + ballWidth >= worldWidth) {
       velocity.x *= -1;

@@ -23,7 +23,7 @@ class PaddleCollisionComponentTest {
   void setUp() {
     // Setup service mocks
     ServiceLocator.registerMinigameService(mockMinigameService);
-    
+
     // Create collision component
     collisionComponent = new PaddleCollisionComponent();
   }

@@ -10,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-
 import net.dermetfan.utils.Pair;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,7 +38,8 @@ public class MiniGameDisplay extends UIComponent {
     float frameHeight = ui.getScaledHeight(390);
     stack.setSize(frameWidth, frameHeight);
     stack.setPosition((stage.getWidth() - frameWidth) / 2f, (stage.getHeight() - frameHeight) / 2f);
-    Texture frameTexture = ServiceLocator.getGlobalResourceService().getAsset("images/ui/menu.png", Texture.class);
+    Texture frameTexture =
+        ServiceLocator.getGlobalResourceService().getAsset("images/ui/menu.png", Texture.class);
     Image frameImage = new Image(frameTexture);
     frameImage.setSize(frameWidth, frameHeight);
 
@@ -55,27 +54,37 @@ public class MiniGameDisplay extends UIComponent {
     TextButton wallPongBtn = ui.primaryButton("Wall Pong", 200f);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(200f);
 
-    laneRunnerBtn.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
+    laneRunnerBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Lane Runner button clicked");
             entity.getEvents().trigger("lanerunner");
-        }
-    });
+          }
+        });
 
-    wallPongBtn.addListener(new ChangeListener() {
-        @Override
-        public void changed(ChangeEvent changeEvent, Actor actor) {
+    wallPongBtn.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
             logger.debug("Wall Pong button clicked");
             entity.getEvents().trigger("wallpong");
-        }
-    });
+          }
+        });
 
     table.add(title);
     table.row();
-    table.add(laneRunnerBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padTop(30f);
+    table
+        .add(laneRunnerBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padTop(30f);
     table.row();
-    table.add(wallPongBtn).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padTop(30f);
+    table
+        .add(wallPongBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padTop(30f);
 
     stack.add(frameImage);
     stack.add(table);
@@ -85,7 +94,6 @@ public class MiniGameDisplay extends UIComponent {
     // Close button stays on top
     createCloseButton();
   }
-
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {

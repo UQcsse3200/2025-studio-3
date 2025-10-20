@@ -13,7 +13,6 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
-
 import net.dermetfan.utils.Pair;
 
 /**
@@ -125,8 +124,15 @@ public class LevelMapTutorial extends UIComponent {
     content.add(messageLabel).expand().fillX().pad(20f).row();
 
     Table buttonRow = new Table();
-    buttonRow.add(skipButton).width(buttonDimensions.getKey()).height(buttonDimensions.getValue()).padRight(20f);
-    buttonRow.add(continueButton).width(buttonDimensions.getKey()).height(buttonDimensions.getValue());
+    buttonRow
+        .add(skipButton)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padRight(20f);
+    buttonRow
+        .add(continueButton)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue());
 
     content.add(buttonRow).expandY().bottom().padBottom(20f);
 
