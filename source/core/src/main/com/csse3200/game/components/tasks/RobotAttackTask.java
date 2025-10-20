@@ -42,8 +42,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     timeLeft = TIME_BETWEEN_ATTACKS;
     soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     this.owner.getEntity().getEvents().trigger("attackStart");
-    PhysicsComponent phys =
-        owner.getEntity().getComponent(PhysicsComponent.class);
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
     if (phys == null || phys.getBody() == null) return;
     phys.getBody().setLinearVelocity(0f, 0f);
   }
