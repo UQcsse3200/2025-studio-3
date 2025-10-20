@@ -134,8 +134,17 @@ public class DossierDisplay extends UIComponent {
                     entities.length,
                     java.util.Arrays.toString(entities));
               } else {
-                // Combine defenders and generators
-                String[] defenderKeys = defenderConfigs.keySet().toArray(new String[0]);
+                // Combine defenders and generators, excluding the wall
+                java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
+
+                // Filter defenders (excluding wall)
+                for (String defenderKey : defenderConfigs.keySet()) {
+                  if (!defenderKey.equals("wall")) {
+                    filteredDefenderKeys.add(defenderKey);
+                  }
+                }
+
+                String[] defenderKeys = filteredDefenderKeys.toArray(new String[0]);
                 String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
                 entities = new String[defenderKeys.length + generatorKeys.length];
                 System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
