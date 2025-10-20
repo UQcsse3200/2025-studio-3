@@ -131,7 +131,7 @@
         "assetPath": "images/entities/defences/forge_1.png",
         "atlasPath": "images/entities/defences/forge.atlas",
         "health": 50,
-        "interval": 12,
+        "interval": 5,
         "scrapValue": 25,
         "cost": 50,
         "soundPath": "sounds/forge-place.mp3"
