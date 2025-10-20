@@ -225,6 +225,9 @@ public class RobotFactory {
       BomberDeathExplodeComponent explodeComp =
           new BomberDeathExplodeComponent(config.getExplosionDamage(), 1.0f);
       robot.addComponent(explodeComp);
+
+      animator.addAnimation("explosion", 0.1f, Animation.PlayMode.NORMAL);
+
       System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
     }
 
