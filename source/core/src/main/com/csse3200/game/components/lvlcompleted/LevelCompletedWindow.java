@@ -15,6 +15,12 @@ public class LevelCompletedWindow extends UIComponent {
   private Window window;
   private boolean isDisplayed = false;
   private final ProfileService profileService = ServiceLocator.getProfileService();
+  private final String levelKey;
+
+  public LevelCompletedWindow(String levelKey) {
+    super();
+    this.levelKey = levelKey;
+  }
 
   /** Creates the level completed window and sets up event listening for level completion. */
   @Override
@@ -57,8 +63,10 @@ public class LevelCompletedWindow extends UIComponent {
     if (Gdx.input.isKeyJustPressed(interactKey)) {
       window.setVisible(false);
       isDisplayed = false;
-      // Update the current level before changing screens
-      updateLevel();
+      // Update the level if the level completed is the highest available level
+      if (profileService.getProfile().getCurrentLevel().equals(this.levelKey)) {
+        updateLevel();
+      }
       // Return to main menu (world map) safely
       Gdx.app.postRunnable(
           () -> {
@@ -93,9 +101,8 @@ public class LevelCompletedWindow extends UIComponent {
    * profile's current level to the following level.
    */
   public void updateLevel() {
-    String currentLevel = profileService.getProfile().getCurrentLevel();
     String nextLevel =
-        switch (currentLevel) {
+        switch (this.levelKey) {
           case "levelOne" -> "levelTwo";
           case "levelTwo" -> "levelThree";
           case "levelThree" -> "levelFour";

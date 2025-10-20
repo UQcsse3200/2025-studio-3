@@ -30,6 +30,7 @@ class LevelCompletedWindowTest {
 
   HeadlessApplication app;
   private static final String EVENT_NAME = "levelComplete";
+  private static final String DEFAULT_LEVEL_KEY = "levelOne";
 
   @BeforeEach
   void setup() {
@@ -69,7 +70,7 @@ class LevelCompletedWindowTest {
   @Test
   void windowBecomesVisibleAfterEvent() {
     Entity ui = new Entity();
-    LevelCompletedWindow comp = new LevelCompletedWindow();
+    LevelCompletedWindow comp = new LevelCompletedWindow(DEFAULT_LEVEL_KEY);
     ui.addComponent(comp);
     ui.create();
 
@@ -85,7 +86,7 @@ class LevelCompletedWindowTest {
   @Test
   void windowStaysHiddenWithoutEvent() {
     Entity ui = new Entity();
-    LevelCompletedWindow comp = new LevelCompletedWindow();
+    LevelCompletedWindow comp = new LevelCompletedWindow(DEFAULT_LEVEL_KEY);
     ui.addComponent(comp);
     ui.create();
 
