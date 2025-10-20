@@ -1,6 +1,7 @@
 package com.csse3200.game.components.currency;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -51,8 +52,7 @@ public class CurrencyGeneratorComponent extends Component {
    * @param entity the furnace entity associated with the currency generator
    * @param scrapTexturePath texture path for the scrap image
    */
-  public CurrencyGeneratorComponent(Entity entity, String scrapTexturePath) {
-
+  public CurrencyGeneratorComponent(Entity entity, GridPoint2 stagePos, String scrapTexturePath) {
     int interval = entity.getComponent(GeneratorStatsComponent.class).getInterval();
     // adjust interval value with currency generation skill upgrade
     if (ServiceLocator.getProfileService() != null) {
@@ -65,8 +65,8 @@ public class CurrencyGeneratorComponent extends Component {
     }
     this.intervalSec = interval;
     this.scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
-    this.targetX = entity.getPosition().x;
-    this.targetY = entity.getPosition().y;
+    this.targetX = stagePos.x;
+    this.targetY = stagePos.y;
     this.scrapTexturePath = scrapTexturePath;
   }
 
@@ -87,7 +87,6 @@ public class CurrencyGeneratorComponent extends Component {
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
-  /** Spawn a scrap that falls from the top to (targetX, targetY) while rotating. */
   /** Spawns a scrap at the specified coordinates. */
   public void spawnScrapAt() {
     ResourceService rs = ServiceLocator.getResourceService();
@@ -116,7 +115,7 @@ public class CurrencyGeneratorComponent extends Component {
 
     stage.addActor(scrap);
 
-    scrap.setPosition(this.targetX, this.targetY);
+    scrap.setPosition(this.targetX, this.targetY); // STAGE POSITIONS
     scrap.addCurrencyAnimation();
   }
 

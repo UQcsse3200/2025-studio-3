@@ -42,7 +42,8 @@ public class ItemEffectsService {
       int scale,
       float[] frameAndEffectDuration,
       Animation.PlayMode playMode,
-      boolean movingAnimation) {
+      boolean movingAnimation,
+      boolean soundRequired) {
 
     Vector2 position = positions[0];
     Vector2 finalPosition = positions[1];
@@ -68,14 +69,8 @@ public class ItemEffectsService {
     logger.info("Started animation {}", animatorName);
 
     // Play sound effect for item
-    Sound effectSound =
-        ServiceLocator.getResourceService()
-            .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
-
-    if (effectSound != null) {
-      float volume = ServiceLocator.getSettingsService().getSoundVolume();
-      effectSound.play(volume);
-      logger.info("Sound played {}", animatorName);
+    if (soundRequired) {
+      playSoundEffect(animatorName);
     }
 
     // Attach component to handle optional movement and timed disposal
@@ -153,6 +148,7 @@ public class ItemEffectsService {
               0.1f, 30f
             }), // frame duration and total effect time (buff effects remain for 30 seconds)
             Animation.PlayMode.NORMAL,
+            true,
             true); // allows display in bottom right to indicate effect duration
 
         logger.info("Created buff effect");
@@ -174,6 +170,7 @@ public class ItemEffectsService {
               0.1f, 30f
             }), // frame duration and total effect time (coffee effects remain for 30 seconds)
             Animation.PlayMode.NORMAL,
+            true,
             true); // allows display in bottom right to indicate effect duration
 
         logger.info("Created coffee effect");
@@ -193,7 +190,8 @@ public class ItemEffectsService {
               0.1f, 1.5f
             }), // frame duration and total effect time (emp is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false);
+            false,
+            true);
         logger.info("Created emp effect");
         break;
       case "grenade":
@@ -211,7 +209,8 @@ public class ItemEffectsService {
               0.1f, 1.5f
             }), // frame duration and total effect time (grenade is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false);
+            false,
+            true);
         logger.info("Created grenade effect");
         break;
       case "nuke":
@@ -229,11 +228,24 @@ public class ItemEffectsService {
               0.1f, 1.5f
             }), // frame duration and total effect time (nuke is an instantaneous effect)
             Animation.PlayMode.NORMAL,
-            false);
+            false,
+            true);
         logger.info("Created nuke effect");
         break;
       default:
         logger.error("Unknown item name");
+    }
+  }
+
+  public static void playSoundEffect(String animatorName) {
+    Sound effectSound =
+        ServiceLocator.getResourceService()
+            .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+
+    if (effectSound != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      effectSound.play(volume);
+      logger.info("Sound played {}", animatorName);
     }
   }
 }
