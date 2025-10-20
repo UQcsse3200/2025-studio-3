@@ -1,18 +1,19 @@
 package com.csse3200.game.ui.tutorial;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 
 /**
@@ -43,9 +44,6 @@ public class LevelMapTutorial extends UIComponent {
   /** Label displaying the current tutorial message. */
   private Label messageLabel;
 
-  /** Reference to the game's time controller for pausing and resuming the game. */
-  private final GameTime gameTime;
-
   /** Current tutorial step index. */
   private int step = 0;
 
@@ -69,11 +67,8 @@ public class LevelMapTutorial extends UIComponent {
   /** Dialog width padding. */
   private static final float DIALOG_WIDTH_PAD = 100f;
 
-  /** Constructs a new LevelMapTutorial with a reference to the game time controller. */
-  public LevelMapTutorial() {
-    this.gameTime = ServiceLocator.getTimeSource();
-    this.gameTime.setTimeScale(0);
-  }
+  /** Traverse name constant. */
+  private static final String TRAVERSE = "traverse";
 
   /**
    * Initialises the tutorial UI components, including the overlay, dialog box, message label, next
@@ -82,6 +77,9 @@ public class LevelMapTutorial extends UIComponent {
   @Override
   public void create() {
     super.create();
+    traverseTutorial();
+
+    Stage screenSize = ServiceLocator.getRenderService().getStage();
 
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888); // create dark overlay
     pixmap.setColor(0, 0, 0, 1); // Solid black
@@ -90,8 +88,7 @@ public class LevelMapTutorial extends UIComponent {
     pixmap.dispose(); // clean up after creating texture
 
     overlay = new Image(new TextureRegionDrawable(blackTex));
-
-    overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    overlay.setSize(screenSize.getWidth(), screenSize.getHeight());
     overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
     overlay.setVisible(true);
     stage.addActor(overlay);
@@ -102,10 +99,11 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable = new Table();
     dialogTable.setBackground(dialogDrawable);
     dialogTable.setSize(
-        Math.floorDiv(Gdx.graphics.getWidth(), 3), Math.floorDiv(Gdx.graphics.getHeight(), 5));
+        Math.floorDiv((int) screenSize.getWidth(), 3),
+        Math.floorDiv((int) screenSize.getHeight(), 5));
     dialogTable.setPosition(
-        (Gdx.graphics.getWidth() - dialogTable.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - dialogTable.getHeight()) / 5f);
+        (screenSize.getWidth() - dialogTable.getWidth()) / 2f,
+        (screenSize.getHeight() - dialogTable.getHeight()) / 5f);
 
     Table contentTable = new Table();
     contentTable.setFillParent(true);
@@ -124,23 +122,40 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable.align(Align.center);
 
     stage.addActor(dialogTable);
-
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    String skipKeyName = Input.Keys.toString(settingsService.getSettings().getSkipButton());
-    Label hintLabel = ui.text("Press " + skipKeyName + " to continue");
+    TextButton nextButton = ui.primaryButton("CONTINUE", 150);
+    TextButton previousButton = ui.primaryButton("PREVIOUS", 150);
+    TextButton skipButton = ui.primaryButton("SKIP TUTORIAL", 100);
 
     messageTable = new Table();
     messageTable.setFillParent(true);
-    messageTable.add(hintLabel).expandY().bottom().padBottom(HINT_BOTTOM_PAD);
+    messageTable.add(previousButton).expandY().bottom().padBottom(HINT_BOTTOM_PAD).padRight(10);
+    messageTable.add(nextButton).expandY().bottom().padBottom(HINT_BOTTOM_PAD).padLeft(10);
+
     stage.addActor(messageTable);
 
-    // button to skip tutorial
-    TextButton skipButton = ui.primaryButton("SKIP TUTORIAL", 100);
     skipButton.addListener(
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
             skipTutorial();
+          }
+        });
+
+    // Listener for the "continue" button
+    nextButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            entity.getEvents().trigger(TRAVERSE, true);
+          }
+        });
+
+    // Listener for the "previous" button
+    previousButton.addListener(
+        new ChangeListener() {
+          @Override
+          public void changed(ChangeEvent changeEvent, Actor actor) {
+            entity.getEvents().trigger(TRAVERSE, false);
           }
         });
 
@@ -150,23 +165,26 @@ public class LevelMapTutorial extends UIComponent {
     skipTable.add(skipButton);
     stage.addActor(skipTable);
 
-    pauseGame();
+    ServiceLocator.getGameStateService().addFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
   }
 
   /**
-   * Updates the tutorial logic based on user input. Advances the tutorial when the space bar or the
-   * 'next' button is pressed. Ends the tutorial after the final step.
+   * Changes the tutorial message depending on which button the user presses.
+   *
+   * @param forward determines whether the user progresses through the tutorial or backwards.
    */
-  @Override
-  public void update() {
+  public void changeText(boolean forward) {
     if (!active) return;
 
-    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
-    if (Gdx.input.isKeyJustPressed(skipKey)) {
+    if (forward) {
       if (step < tutorialMessages.length - 1) {
-        nextStep(); // press space bar to move onto next message
+        nextStep();
       } else {
-        endTutorial(); // press space bar to end tutorial
+        endTutorial();
+      }
+    } else {
+      if (step > 0) {
+        previousStep();
       }
     }
   }
@@ -183,6 +201,17 @@ public class LevelMapTutorial extends UIComponent {
     }
   }
 
+  /**
+   * Shows the previous tutorial message. If it is pressed on the first tutorial message, nothing
+   * will happen.
+   */
+  private void previousStep() {
+    step--;
+    if (step >= 0) {
+      messageLabel.setText(tutorialMessages[step]);
+    }
+  }
+
   /** Ends the tutorial and resumes gameplay. Hides all tutorial UI elements. */
   private void endTutorial() {
     active = false;
@@ -190,8 +219,8 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable.setVisible(false);
     messageTable.setVisible((false));
     skipTable.setVisible(false);
-    this.gameTime.setTimeScale(1);
-    resumeGame();
+    ServiceLocator.getGameStateService()
+        .removeFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
   }
 
   /**
@@ -201,14 +230,16 @@ public class LevelMapTutorial extends UIComponent {
     endTutorial();
   }
 
-  /** Pauses the game by setting the timescale to zero. */
-  private void pauseGame() {
-    gameTime.setTimeScale(0f);
-  }
-
-  /** Resumes the game by restoring the timescale to normal. */
-  private void resumeGame() {
-    gameTime.setTimeScale(1f);
+  /** A listener that determines whether the player clicks on the next tutorial message or not. */
+  private void traverseTutorial() {
+    entity
+        .getEvents()
+        .addListener(
+            TRAVERSE,
+            input -> {
+              boolean value = (boolean) input;
+              changeText(value);
+            });
   }
 
   /** Cleans up tutorial UI elements and removes them from the stage. */

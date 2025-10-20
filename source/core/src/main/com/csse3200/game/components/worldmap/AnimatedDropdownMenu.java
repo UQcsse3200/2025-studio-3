@@ -1,5 +1,6 @@
 package com.csse3200.game.components.worldmap;
 
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -18,6 +19,7 @@ public class AnimatedDropdownMenu extends UIComponent {
   private boolean isOpen = false;
   private float startX;
   private float startY;
+  private Group root;
 
   @Override
   public void create() {
@@ -37,6 +39,9 @@ public class AnimatedDropdownMenu extends UIComponent {
     if (stage == null) {
       return;
     }
+
+    root = new Group();
+    stage.addActor(root);
 
     // Position in top right corner
     startX = stage.getWidth() - 80f;
@@ -68,6 +73,7 @@ public class AnimatedDropdownMenu extends UIComponent {
       float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
       button.setPosition(buttonX, buttonY);
       button.setVisible(false);
+      button.setZIndex(60);
 
       // Add click listener
       final String buttonText = buttonTexts[i];
@@ -80,7 +86,8 @@ public class AnimatedDropdownMenu extends UIComponent {
           });
 
       menuButtons[i] = button;
-      stage.addActor(button);
+      root.addActor(button);
+      root.toFront();
     }
   }
 
@@ -126,6 +133,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     isOpen = false;
     for (int i = 0; i < menuButtons.length; i++) {
       TextButton button = menuButtons[i];
+      button.setZIndex(60);
       button.addAction(
           Actions.sequence(
               Actions.parallel(Actions.moveBy(0, 50f, 0.2f), Actions.alpha(0f, 0.2f)),
@@ -192,6 +200,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     }
 
     updatePositions();
+    root.toFront();
   }
 
   /** Updates positions when window is resized */
@@ -208,6 +217,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     if (menuButtons != null) {
       for (int i = 0; i < menuButtons.length; i++) {
         TextButton button = menuButtons[i];
+        button.setZIndex(60);
         if (button != null) {
           float buttonX = startX - BUTTON_WIDTH + 57f;
           float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
