@@ -2,6 +2,7 @@ package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -31,6 +32,7 @@ public class WorldMapNavigationMenu extends UIComponent {
   private ImageButton menuButton;
   private Label settingsTooltip;
   private Label menuTooltip;
+  private Group root;
 
   @Override
   public void create() {
@@ -45,6 +47,9 @@ public class WorldMapNavigationMenu extends UIComponent {
       return;
     }
 
+    root = new Group();
+    stage.addActor(root);
+
     // Create the plaque background (using old architecture bc just an image)
     Texture plaqueTexture =
         ServiceLocator.getGlobalResourceService().getAsset("images/ui/plaque.png", Texture.class);
@@ -55,7 +60,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     float x = stage.getWidth() - PLAQUE_WIDTH - 20f - (2 * BUTTON_SIZE) - (2 * BUTTON_SPACING);
     float y = stage.getHeight() - PLAQUE_HEIGHT - 20f;
     plaqueBackground.setPosition(x, y);
-    stage.addActor(plaqueBackground);
+    root.addActor(plaqueBackground);
 
     // Create table for skill points and coins
     plaqueTable = new Table();
@@ -86,10 +91,11 @@ public class WorldMapNavigationMenu extends UIComponent {
     plaqueTable.add(skillPointsLabel).padRight(10f);
     plaqueTable.add(coinsIcon).size(ICON_SIZE, ICON_SIZE).padRight(5f);
     plaqueTable.add(coinsLabel);
-    plaqueBackground.toFront();
-    stage.addActor(plaqueTable);
+    root.addActor(plaqueTable);
     createButtons(x, y);
     updateDisplay();
+
+    root.toFront();
   }
 
   /**
@@ -108,7 +114,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     float settingsY = plaqueY + (PLAQUE_HEIGHT - BUTTON_SIZE) / 2f; // Center vertically with plaque
     settingsButton.setPosition(settingsX, settingsY);
     settingsButton.setVisible(true);
-    stage.addActor(settingsButton);
+    root.addActor(settingsButton);
 
     // Create menu button
     menuButton = ui.createImageButton("images/ui/menu-icon.png", BUTTON_SIZE, BUTTON_SIZE);
@@ -118,8 +124,7 @@ public class WorldMapNavigationMenu extends UIComponent {
     float menuX = settingsX + BUTTON_SIZE + BUTTON_SPACING;
     float menuY = settingsY; // Same Y as settings button
     menuButton.setPosition(menuX, menuY);
-    menuButton.setZIndex(10);
-    stage.addActor(menuButton);
+    root.addActor(menuButton);
 
     // Create tooltips
     createTooltips(settingsX, settingsY, menuX, menuY);
@@ -195,13 +200,13 @@ public class WorldMapNavigationMenu extends UIComponent {
     settingsTooltip.setPosition(
         settingsX + (BUTTON_SIZE - settingsTooltip.getPrefWidth()) / 2f, settingsY - 20f);
     settingsTooltip.setVisible(false);
-    stage.addActor(settingsTooltip);
+    root.addActor(settingsTooltip);
 
     // Create menu tooltip
     menuTooltip = ui.text("Menu");
     menuTooltip.setPosition(menuX + (BUTTON_SIZE - menuTooltip.getPrefWidth()) / 2f, menuY - 20f);
     menuTooltip.setVisible(false);
-    stage.addActor(menuTooltip);
+    root.addActor(menuTooltip);
   }
 
   /** Updates the display with current wallet amounts */
@@ -250,6 +255,7 @@ public class WorldMapNavigationMenu extends UIComponent {
 
     updateDisplay();
     updatePlaquePosition();
+    root.toFront();
   }
 
   /** Updates the plaque background position to stay in top right corner */

@@ -30,5 +30,6 @@ public class SlotMachineArea extends LevelGameArea {
     spawnEntity(ui);
     ServiceLocator.getMusicService().play("sounds/background-music/slot_music.mp3");
     createGameOverEntity();
+    createLevelCompleteEntity();
   }
 }

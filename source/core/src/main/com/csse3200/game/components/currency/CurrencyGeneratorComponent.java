@@ -82,10 +82,8 @@ public class CurrencyGeneratorComponent extends Component {
       return;
     }
 
-    generatorAction =
-        Actions.forever(
-            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
-    stage.addAction(generatorAction);
+    generatorAction = buildGeneratorAction();
+    stage.getRoot().addAction(generatorAction);
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
@@ -143,6 +141,7 @@ public class CurrencyGeneratorComponent extends Component {
             : null;
     if (stage != null && generatorAction != null) {
       stage.getRoot().removeAction(generatorAction);
+      generatorAction = null; // discard pooled action to avoid invalid reuse
       logger.debug("Paused CurrencyGenerator");
     }
   }
@@ -150,6 +149,17 @@ public class CurrencyGeneratorComponent extends Component {
   /** Resumes the sunlight generation */
   public void resume() {
     isPaused = false;
+    Stage stage =
+        ServiceLocator.getRenderService() != null
+            ? ServiceLocator.getRenderService().getStage()
+            : null;
+    if (stage != null) {
+      if (generatorAction == null) {
+        generatorAction = buildGeneratorAction();
+      }
+      stage.getRoot().addAction(generatorAction);
+      logger.debug("Resumed CurrencyGenerator");
+    }
   }
 
   /**
@@ -173,5 +183,11 @@ public class CurrencyGeneratorComponent extends Component {
       logger.debug("Removed generatorAction from Stage.");
     }
     generatorAction = null;
+  }
+
+  /** Build a new, safe-to-add generator action instance. */
+  private Action buildGeneratorAction() {
+    return Actions.forever(
+        Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
   }
 }
