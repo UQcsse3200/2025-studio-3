@@ -130,14 +130,18 @@ loadScripts(document, 'script');</script>
 <div class="block">Handles call to play a particular effect and then calls to spawn effect.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2%5B%5D,int,float%5B%5D,com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean)" class="member-name-link">spawnEffect</a><wbr>(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playSoundEffect(java.lang.String)" class="member-name-link">playSoundEffect</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2%5B%5D,int,float%5B%5D,com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean,boolean)" class="member-name-link">spawnEffect</a><wbr>(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName,
  com.badlogic.gdx.math.Vector2[]&nbsp;positions,
  int&nbsp;scale,
  float[]&nbsp;frameAndEffectDuration,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;playMode,
- boolean&nbsp;movingAnimation)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+ boolean&nbsp;movingAnimation,
+ boolean&nbsp;soundRequired)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Spawns the animation effect for the particular Item.</div>
 </div>
 </div>
@@ -172,7 +176,7 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2[],int,float[],com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean)">
+<section class="detail" id="spawnEffect(com.badlogic.gdx.graphics.g2d.TextureAtlas,java.lang.String,com.badlogic.gdx.math.Vector2[],int,float[],com.badlogic.gdx.graphics.g2d.Animation.PlayMode,boolean,boolean)">
 <h3>spawnEffect</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">spawnEffect</span><wbr><span class="parameters">(com.badlogic.gdx.graphics.g2d.TextureAtlas&nbsp;atlas,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName,
@@ -180,7 +184,8 @@ loadScripts(document, 'script');</script>
  int&nbsp;scale,
  float[]&nbsp;frameAndEffectDuration,
  com.badlogic.gdx.graphics.g2d.Animation.PlayMode&nbsp;playMode,
- boolean&nbsp;movingAnimation)</span></div>
+ boolean&nbsp;movingAnimation,
+ boolean&nbsp;soundRequired)</span></div>
 <div class="block">Spawns the animation effect for the particular Item.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -213,6 +218,12 @@ loadScripts(document, 'script');</script>
 <dd><code>tileSize</code> - Tile size of the level used to scale the effect</dd>
 <dd><code>bottomCorner</code> - Target position (bottom right corner) for moving effects</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="playSoundEffect(java.lang.String)">
+<h3>playSoundEffect</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">playSoundEffect</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;animatorName)</span></div>
 </section>
 </li>
 </ul>
