@@ -78,7 +78,6 @@ public class CurrencyGeneratorComponent extends Component {
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
-  /** Spawn a scrap that falls from the top to (targetX, targetY) while rotating. */
   /** Spawns a scrap at the specified coordinates. */
   public void spawnScrapAt() {
     ResourceService rs = ServiceLocator.getResourceService();
@@ -107,7 +106,7 @@ public class CurrencyGeneratorComponent extends Component {
 
     stage.addActor(scrap);
 
-    scrap.setPosition(this.targetX, this.targetY); //STAGE POSITIONS
+    scrap.setPosition(this.targetX, this.targetY); // STAGE POSITIONS
     scrap.addCurrencyAnimation();
   }
 
