@@ -8,7 +8,7 @@ import com.csse3200.game.components.Component;
  */
 public class ScrapComponent extends Component {
   /** how much currency this sun gives when collected */
-  private int value = 50;
+  private int value = 150;
 
   /**
    * @return configured currency value of this sun
