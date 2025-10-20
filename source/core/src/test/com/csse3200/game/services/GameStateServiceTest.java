@@ -7,6 +7,8 @@ import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.extensions.GameExtension;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,5 +84,37 @@ class GameStateServiceTest {
   void nullReasonRejected() {
     assertThrows(NullPointerException.class, () -> service.addFreezeReason(null));
     assertThrows(NullPointerException.class, () -> service.removeFreezeReason(null));
+  }
+
+  @Test
+  void freezeListenersNotifiedOnStateChanges() {
+    List<Boolean> events = new ArrayList<>();
+    GameStateService.FreezeListener listener = frozen -> events.add(frozen);
+
+    service.registerFreezeListener(listener);
+    service.addFreezeReason(USER_PAUSE);
+    service.addFreezeReason(INTRO_PAN);
+    service.removeFreezeReason(USER_PAUSE);
+    service.removeFreezeReason(INTRO_PAN);
+
+    assertEquals(List.of(true, false), events);
+  }
+
+  @Test
+  void unregisterStopsNotifications() {
+    List<Boolean> events = new ArrayList<>();
+    GameStateService.FreezeListener listener = frozen -> events.add(frozen);
+
+    service.registerFreezeListener(listener);
+    service.unregisterFreezeListener(listener);
+    service.addFreezeReason(USER_PAUSE);
+    service.removeFreezeReason(USER_PAUSE);
+
+    assertTrue(events.isEmpty());
+  }
+
+  @Test
+  void nullListenerRejected() {
+    assertThrows(NullPointerException.class, () -> service.registerFreezeListener(null));
   }
 }
