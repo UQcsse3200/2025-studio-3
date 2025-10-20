@@ -174,7 +174,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     var ws = ServiceLocator.getWaveService();
     if (ws != null) {
-        ws.setCurrentLevel(currentLevelKey);
+      ws.setCurrentLevel(currentLevelKey);
     }
 
     displayUI();
@@ -195,12 +195,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   protected void createLevelCompleteEntity() {
-      this.levelCompleteEntity = new Entity();
-      levelCompleteEntity.addComponent(new com.csse3200.game.components.lvlcompleted.LevelCompletedWindow());
-      spawnEntity(levelCompleteEntity);
-    }
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(
+        new com.csse3200.game.components.lvlcompleted.LevelCompletedWindow());
+    spawnEntity(levelCompleteEntity);
+  }
 
-    /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
+  /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   protected void displayUI() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
@@ -1156,35 +1157,36 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Checks if the level is complete */
   public void checkLevelComplete() {
-      if (isLevelComplete) return;
+    if (isLevelComplete) return;
 
-      var waveService = ServiceLocator.getWaveService();
-      int currentWave = waveService.getCurrentWave();
-      int maxWaves = waveService.getCurrentLevelWaveCount(); // 从配置读取当前关卡的总波数
+    var waveService = ServiceLocator.getWaveService();
+    int currentWave = waveService.getCurrentWave();
+    int maxWaves = waveService.getCurrentLevelWaveCount(); // 从配置读取当前关卡的总波数
 
-      if (currentWave >= maxWaves) {
-          logger.info("Level is complete!");
-          isLevelComplete = true;
+    if (currentWave >= maxWaves) {
+      logger.info("Level is complete!");
+      isLevelComplete = true;
 
-          var ps = ServiceLocator.getProfileService();
-          if (ps != null) {
-              try { ps.markLevelComplete(currentLevelKey); } catch (Exception e) {
-                  logger.warn("[LevelGameArea] Failed to advance profile level: {}", e.toString());
-              }
-          }
-
-          if (levelCompleteEntity != null) {
-              levelCompleteEntity.getEvents().trigger("levelComplete");
-          }
-
-          GameStateService service = ServiceLocator.getGameStateService();
-          if (service != null) {
-              service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
-              service.lockPlacement();
-          }
+      var ps = ServiceLocator.getProfileService();
+      if (ps != null) {
+        try {
+          ps.markLevelComplete(currentLevelKey);
+        } catch (Exception e) {
+          logger.warn("[LevelGameArea] Failed to advance profile level: {}", e.toString());
+        }
       }
-  }
 
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
+      }
+
+      GameStateService service = ServiceLocator.getGameStateService();
+      if (service != null) {
+        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+        service.lockPlacement();
+      }
+    }
+  }
 
   /**
    * Increases out-of-game currency upon enemy death.

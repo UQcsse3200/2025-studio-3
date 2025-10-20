@@ -208,6 +208,9 @@ public class WaveService implements WaveConfigProvider {
         logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
         levelComplete = true;
         waveActive = false;
+      } else {
+        waveActive = false;
+        initialiseNewWave();
       }
     }
   }
