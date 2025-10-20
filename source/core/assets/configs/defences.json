@@ -15,7 +15,8 @@
         "direction": "right",
         "numSprites": 46,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelOne"
       },
       "shield": {
         "health": 200,
@@ -30,7 +31,8 @@
         "direction": "right",
         "numSprites": 4,
         "attackSpeed": 1,
-        "critChance": 0
+        "critChance": 0,
+        "level": "levelOne"
       },
       "armyguy" : {
         "health": 80,
@@ -46,7 +48,8 @@
         "direction": "right",
         "numSprites": 14,
         "attackSpeed": 0.5,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelTwo"
       },
       "harpoon" : {
         "health": 50,
@@ -61,7 +64,8 @@
         "direction": "right",
         "numSprites": 26,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelThree"
       },
       "mortar" : {
         "health": 100,
@@ -76,7 +80,8 @@
         "direction": "right",
         "numSprites": 43,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "levelFour": "levelFour"
       },
       "shadow" : {
         "health": 20,
@@ -92,7 +97,8 @@
         "direction": "left",
         "numSprites": 4,
         "attackSpeed": 1.5,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelFive"
       },
       "wall": {
         "health": 100,
@@ -106,7 +112,8 @@
         "direction": "right",
         "numSprites": 2,
         "attackSpeed": 0,
-        "critChance": 0
+        "critChance": 0,
+        "level": "levelOne"
       },
       "boxer": {
         "health": 60,
@@ -121,7 +128,8 @@
         "direction": "right",
         "numSprites": 3,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelThree"
       }
     },
     "generators": {
@@ -134,7 +142,8 @@
         "interval": 12,
         "scrapValue": 25,
         "cost": 50,
-        "soundPath": "sounds/forge-place.mp3"
+        "soundPath": "sounds/forge-place.mp3",
+        "level": "levelOne"
       },
       "healer": {
         "name": "Healer",
@@ -144,7 +153,8 @@
         "health": 50,
         "interval": 0,
         "scrapValue": 0,
-        "cost": 200
+        "cost": 200,
+        "level": "levelFour"
       }
     }
   }
