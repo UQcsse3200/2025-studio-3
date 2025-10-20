@@ -674,6 +674,10 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     GameStateService state = mock(GameStateService.class);
     ServiceLocator.registerGameStateService(state);
 

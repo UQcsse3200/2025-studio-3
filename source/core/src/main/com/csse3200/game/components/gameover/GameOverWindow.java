@@ -93,7 +93,7 @@ public class GameOverWindow extends UIComponent {
           game.setScreen(target);
         });
   }
-  
+
   /** Frees the memory. */
   @Override
   public void dispose() {
