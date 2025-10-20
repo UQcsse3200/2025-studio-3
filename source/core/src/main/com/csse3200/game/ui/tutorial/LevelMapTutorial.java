@@ -67,8 +67,8 @@ public class LevelMapTutorial extends UIComponent {
   /** Dialog width padding. */
   private static final float DIALOG_WIDTH_PAD = 100f;
 
-  /** Constructs a new LevelMapTutorial with a reference to the game time controller. */
-  public LevelMapTutorial() {}
+  /** Traverse name constant. */
+  private static final String TRAVERSE = "traverse";
 
   /**
    * Initialises the tutorial UI components, including the overlay, dialog box, message label, next
@@ -146,7 +146,7 @@ public class LevelMapTutorial extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            entity.getEvents().trigger("traverse", true);
+            entity.getEvents().trigger(TRAVERSE, true);
           }
         });
 
@@ -155,7 +155,7 @@ public class LevelMapTutorial extends UIComponent {
         new ChangeListener() {
           @Override
           public void changed(ChangeEvent changeEvent, Actor actor) {
-            entity.getEvents().trigger("traverse", false);
+            entity.getEvents().trigger(TRAVERSE, false);
           }
         });
 
@@ -235,7 +235,7 @@ public class LevelMapTutorial extends UIComponent {
     entity
         .getEvents()
         .addListener(
-            "traverse",
+            TRAVERSE,
             input -> {
               boolean value = (boolean) input;
               changeText(value);
