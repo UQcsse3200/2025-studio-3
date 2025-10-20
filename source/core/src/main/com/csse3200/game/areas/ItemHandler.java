@@ -56,13 +56,13 @@ public class ItemHandler {
   }
 
   private boolean isDamagingItem(ItemComponent item) {
-    Set<String> damaging = Set.of("GRENADE", "EMP", "NUKE");
+    Set<String> damaging = Set.of("GRENADE", "EMP", "NUKE", "DOOMHACK");
     return damaging.contains(item.getType().toString());
   }
 
   /** Damages all robots in a small radius around entityPos. */
   private void applyAreaDamage(Vector2 entityPos) {
-    float radius = 1.5f * area.getTileSize();
+    float radius = 2.5f * area.getTileSize();
     List<Entity> toRemove =
         area.getRobots().stream()
             .filter(

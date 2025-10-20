@@ -77,6 +77,19 @@ public class ItemFactory {
         .addComponent(new ItemComponent(ItemComponent.Type.NUKE));
   }
 
+
+  /**
+   * Creates a doom hack entity. Place on a tile to kill all enemies on the tile.
+   *
+   * @return a doom hack item entity
+   */
+  public static Entity createdDoomHack() {
+    BaseItemConfig config = configService.getItemConfig("doomHack");
+    return createBaseItem()
+            .addComponent(new TextureRenderComponent(config.getAssetPath()))
+            .addComponent(new ItemComponent(ItemComponent.Type.DOOMHACK));
+  }
+
   /**
    * Creates a generic item to be used as a base entity by more specific item creation methods.
    *
