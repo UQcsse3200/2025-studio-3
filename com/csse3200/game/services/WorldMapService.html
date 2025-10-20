@@ -138,14 +138,13 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearNodes()" class="member-name-link">clearNodes</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Clear all registered nodes</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyStatesFrom(com.csse3200.game.progression.Profile,java.util.Set)" class="member-name-link">applyStatesFrom</a><wbr>(<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;defaultUnlocked)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#completeNode(java.lang.String)" class="member-name-link">completeNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearNodes()" class="member-name-link">clearNodes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Mark a node as completed</div>
+<div class="block">Clear all registered nodes</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findNodeAt(float,float)" class="member-name-link">findNodeAt</a><wbr>(float&nbsp;x,
@@ -192,13 +191,8 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerPlayer(com.csse3200.game.entities.Entity)" class="member-name-link">registerPlayer</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockNode(java.lang.String)" class="member-name-link">unlockNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateNodeProximity(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateNodeProximity</a><wbr>(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;nearbyNode)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Unlock a specific node</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateNodeProximity(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateNodeProximity</a><wbr>(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;nearbyNode)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Update all node render components with the current nearby node</div>
 </div>
 </div>
@@ -283,25 +277,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="completeNode(java.lang.String)">
-<h3>completeNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">completeNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Mark a node as completed</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - The key of the completed node</dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="unlockNode(java.lang.String)">
-<h3>unlockNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unlockNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Unlock a specific node</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - The key of the node to unlock</dd>
-</dl>
+<section class="detail" id="applyStatesFrom(com.csse3200.game.progression.Profile,java.util.Set)">
+<h3>applyStatesFrom</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyStatesFrom</span><wbr><span class="parameters">(<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile,
+ <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;defaultUnlocked)</span></div>
 </section>
 </li>
 <li>

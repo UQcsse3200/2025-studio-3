@@ -192,10 +192,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Adds a command to the list of valid terminal commands.</div>
 </dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#addCompletedNode(java.lang.String)" class="member-name-link">addCompletedNode(String)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Add a completed node to the profile.</div>
-</dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#addComponent(com.csse3200.game.components.Component)" class="member-name-link">addComponent(Component)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
 <div class="block">Add a component to the entity.</div>
@@ -382,6 +378,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Appends the character to the end of the entered message.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.html#applyEffect(com.csse3200.game.components.slot.SlotEngine.SpinResult)" class="member-name-link">applyEffect(SlotEngine.SpinResult)</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/services/WorldMapService.html#applyStatesFrom(com.csse3200.game.progression.Profile,java.util.Set)" class="member-name-link">applyStatesFrom(Profile, Set&lt;String&gt;)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/AreaAPI.html" class="type-name-link" title="interface in com.csse3200.game.areas">AreaAPI</a> - Interface in <a href="com/csse3200/game/areas/package-summary.html">com.csse3200.game.areas</a></dt>
 <dd>
@@ -1312,14 +1310,6 @@ loadScripts(document, 'script');</script>
 <div class="block">Compiles a <a href="com/csse3200/game/cutscene/models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> into a <a href="com/csse3200/game/cutscene/models/object/Cutscene.html" title="class in com.csse3200.game.cutscene.models.object"><code>Cutscene</code></a> No error checking is handled in this
  method as it assumed that the <a href="com/csse3200/game/cutscene/models/dto/CutsceneDocDTO.html" title="class in com.csse3200.game.cutscene.models.dto"><code>CutsceneDocDTO</code></a> has already been validated.</div>
 </dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#completeNode(java.lang.String)" class="member-name-link">completeNode(String)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Marks a node as completed and keeps it unlocked for replay.</div>
-</dd>
-<dt><a href="com/csse3200/game/services/WorldMapService.html#completeNode(java.lang.String)" class="member-name-link">completeNode(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
-<dd>
-<div class="block">Mark a node as completed</div>
-</dd>
 <dt><a href="com/csse3200/game/components/Component.html" class="type-name-link" title="class in com.csse3200.game.components">Component</a> - Class in <a href="com/csse3200/game/components/package-summary.html">com.csse3200.game.components</a></dt>
 <dd>
 <div class="block">Core component class from which all components inherit.</div>
@@ -1607,7 +1597,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Persistence.html#create(java.lang.String,int)" class="member-name-link">create(String, int)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Persistence.html" title="class in com.csse3200.game.persistence">Persistence</a></dt>
 <dd>
-<div class="block">Create a new user profile.</div>
+<div class="block">Creates a new user profile and immediately persists it to the given slot.</div>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/CutsceneCompiler.html#createActionData(com.csse3200.game.cutscene.models.dto.ActionDTO)" class="member-name-link">createActionData(ActionDTO)</a> - Method in class com.csse3200.game.cutscene.<a href="com/csse3200/game/cutscene/CutsceneCompiler.html" title="class in com.csse3200.game.cutscene">CutsceneCompiler</a></dt>
 <dd>
@@ -2557,9 +2547,25 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Draw a rectangle</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_BOXER_CARD" class="member-name-link">DROP_BOXER_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_HARPOON_CARD" class="member-name-link">DROP_HARPOON_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_MORTAR_CARD" class="member-name-link">DROP_MORTAR_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_SHIELD_CARD" class="member-name-link">DROP_SHIELD_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotEngine.Effect.html#DROP_SLINGSHOOTER_CARD" class="member-name-link">DROP_SLINGSHOOTER_CARD</a> - Enum constant in enum class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.Effect.html" title="enum class in com.csse3200.game.components.slot">SlotEngine.Effect</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropBoxerCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea)" class="member-name-link">dropBoxerCard(Stage, ScrollPane, LevelGameArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea,com.csse3200.game.components.slot.SlotCardEntity.CardSpec)" class="member-name-link">dropCard(Stage, ScrollPane, LevelGameArea, SlotCardEntity.CardSpec)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropHarpoonCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea)" class="member-name-link">dropHarpoonCard(Stage, ScrollPane, LevelGameArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropMortarCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea)" class="member-name-link">dropMortarCard(Stage, ScrollPane, LevelGameArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropShieldCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea)" class="member-name-link">dropShieldCard(Stage, ScrollPane, LevelGameArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/slot/SlotCardEntity.html#dropSlingShooterCard(com.badlogic.gdx.scenes.scene2d.Stage,com.badlogic.gdx.scenes.scene2d.ui.ScrollPane,com.csse3200.game.areas.LevelGameArea)" class="member-name-link">dropSlingShooterCard(Stage, ScrollPane, LevelGameArea)</a> - Static method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotCardEntity.html" title="class in com.csse3200.game.components.slot">SlotCardEntity</a></dt>
 <dd>
@@ -2796,7 +2802,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Persistence.html#fetch()" class="member-name-link">fetch()</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Persistence.html" title="class in com.csse3200.game.persistence">Persistence</a></dt>
 <dd>
-<div class="block">Fetch saves organized by slot.</div>
+<div class="block">Scans the save directory and returns the latest save per slot (1..3).</div>
 </dd>
 <dt><a href="com/csse3200/game/persistence/FileLoader.html" class="type-name-link" title="class in com.csse3200.game.persistence">FileLoader</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
 <dd>
@@ -3222,10 +3228,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/BaseLevelConfig.html#getCols()" class="member-name-link">getCols()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseLevelConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelConfig</a></dt>
 <dd>
 <div class="block">Get the number of columns</div>
-</dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#getCompletedNodes()" class="member-name-link">getCompletedNodes()</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Get the completed nodes associated with the profile.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/Entity.html#getComponent(java.lang.Class)" class="member-name-link">getComponent(Class&lt;T&gt;)</a> - Method in class com.csse3200.game.entities.<a href="com/csse3200/game/entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></dt>
 <dd>
@@ -4575,8 +4577,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Gets the list of unlocked achievement keys.</div>
 </dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#getUnlockedNodes()" class="member-name-link">getUnlockedNodes()</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/skilltree/SkillSet.html#getUnlockedSkills()" class="member-name-link">getUnlockedSkills()</a> - Method in class com.csse3200.game.progression.skilltree.<a href="com/csse3200/game/progression/skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></dt>
 <dd>
 <div class="block">Returns the list of skills that have been unlocked for this instance/player.</div>
@@ -5189,14 +5189,6 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/services/WaveService.html#isLevelComplete()" class="member-name-link">isLevelComplete()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#isNodeCompleted(java.lang.String)" class="member-name-link">isNodeCompleted(String)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Returns true if this node has been completed.</div>
-</dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#isNodeUnlocked(java.lang.String)" class="member-name-link">isNodeUnlocked(String)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Returns true if this node is unlocked and can be entered.</div>
-</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameGrid.html#isOccupied(int,int)" class="member-name-link">isOccupied(int, int)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/areas/LevelGameGrid.html#isOccupiedIndex(int)" class="member-name-link">isOccupiedIndex(int)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a></dt>
@@ -5225,6 +5217,8 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/services/WaveService.html#isPreparationPhaseActive()" class="member-name-link">isPreparationPhaseActive()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WaveService.html" title="class in com.csse3200.game.services">WaveService</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#isRefillPaused()" class="member-name-link">isRefillPaused()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html#isRuning()" class="member-name-link">isRuning()</a> - Method in interface com.csse3200.game.cutscene.runtime.<a href="com/csse3200/game/cutscene/runtime/CutsceneOrchestrator.html" title="interface in com.csse3200.game.cutscene.runtime">CutsceneOrchestrator</a></dt>
 <dd>
 <div class="block">Returns the running state of the orchestrator (to dispose)</div>
@@ -5240,6 +5234,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/entities/configs/BaseLevelConfig.html#isSlotMachine()" class="member-name-link">isSlotMachine()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseLevelConfig.html" title="class in com.csse3200.game.entities.configs">BaseLevelConfig</a></dt>
 <dd>
 <div class="block">Get the is slot machine</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#isSpinPaused()" class="member-name-link">isSpinPaused()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Optional helper for external query.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseEnemyConfig.html#isTeleportRobot()" class="member-name-link">isTeleportRobot()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEnemyConfig.html" title="class in com.csse3200.game.entities.configs">BaseEnemyConfig</a></dt>
 <dd>
@@ -5530,7 +5528,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/persistence/Persistence.html#load(com.csse3200.game.persistence.Savefile)" class="member-name-link">load(Savefile)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Persistence.html" title="class in com.csse3200.game.persistence">Persistence</a></dt>
 <dd>
-<div class="block">Load a user profile from a savefile.</div>
+<div class="block">Loads a profile from a savefile.</div>
 </dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html#LOAD_GAME" class="member-name-link">LOAD_GAME</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
 <dd>
@@ -6018,6 +6016,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Constructor for the PauseMenuActions class.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#pauseRefill()" class="member-name-link">pauseRefill()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>
+<div class="block">Pause auto-refill of spin credits (no credits will be added while paused).</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#pauseSpin()" class="member-name-link">pauseSpin()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Pause the slot machine spinning/animations.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/gamearea/PerformanceDisplay.html" class="type-name-link" title="class in com.csse3200.game.components.gamearea">PerformanceDisplay</a> - Class in <a href="com/csse3200/game/components/gamearea/package-summary.html">com.csse3200.game.components.gamearea</a></dt>
 <dd>
 <div class="block">Displays performance stats about the game for debugging purposes.</div>
@@ -6026,7 +6032,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Persistence.html" class="type-name-link" title="class in com.csse3200.game.persistence">Persistence</a> - Class in <a href="com/csse3200/game/persistence/package-summary.html">com.csse3200.game.persistence</a></dt>
 <dd>
-<div class="block">Class for loading and saving the user profile / savefile.</div>
+<div class="block">Persistence utilities for loading and saving user profiles.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html#physics" class="member-name-link">physics</a> - Variable in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/RobotTargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">RobotTargetDetectionTasks</a></dt>
 <dd>&nbsp;</dd>
@@ -6186,7 +6192,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates a new profile with default values.</div>
 </dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#%3Cinit%3E(net.dermetfan.utils.Pair,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal,java.util.List)" class="member-name-link">Profile(Pair&lt;String, String&gt;, Wallet, Inventory, SkillSet, Statistics, Arsenal, List&lt;String&gt;)</a> - Constructor for class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
+<dt><a href="com/csse3200/game/progression/Profile.html#%3Cinit%3E(net.dermetfan.utils.Pair,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal)" class="member-name-link">Profile(Pair&lt;String, String&gt;, Wallet, Inventory, SkillSet, Statistics, Arsenal)</a> - Constructor for class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
 <dd>
 <div class="block">Initialise a profile with the provided values.</div>
 </dd>
@@ -6672,6 +6678,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Resumes the currently paused music, if any.</div>
 </dd>
+<dt><a href="com/csse3200/game/components/slot/SlotEngine.html#resumeRefill()" class="member-name-link">resumeRefill()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotEngine.html" title="class in com.csse3200.game.components.slot">SlotEngine</a></dt>
+<dd>
+<div class="block">Resume auto-refill of spin credits.</div>
+</dd>
+<dt><a href="com/csse3200/game/components/slot/SlotMachineDisplay.html#resumeSpin()" class="member-name-link">resumeSpin()</a> - Method in class com.csse3200.game.components.slot.<a href="com/csse3200/game/components/slot/SlotMachineDisplay.html" title="class in com.csse3200.game.components.slot">SlotMachineDisplay</a></dt>
+<dd>
+<div class="block">Resume spinning/animations.</div>
+</dd>
 <dt><a href="com/csse3200/game/minigame/BallComponent.html#reverseY()" class="member-name-link">reverseY()</a> - Method in class com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/BallComponent.html" title="class in com.csse3200.game.minigame">BallComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.AttackDirection.html#RIGHT" class="member-name-link">RIGHT</a> - Enum constant in enum class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></dt>
@@ -6724,7 +6738,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/persistence/Persistence.html#save(int,com.csse3200.game.progression.Profile)" class="member-name-link">save(int, Profile)</a> - Static method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Persistence.html" title="class in com.csse3200.game.persistence">Persistence</a></dt>
 <dd>
-<div class="block">Save the current user profile to a specific slot.</div>
+<div class="block">Saves the given profile to the specified slot.</div>
 </dd>
 <dt><a href="com/csse3200/game/GdxGame.ScreenType.html#SAVE_GAME" class="member-name-link">SAVE_GAME</a> - Enum constant in enum class com.csse3200.game.<a href="com/csse3200/game/GdxGame.ScreenType.html" title="enum class in com.csse3200.game">GdxGame.ScreenType</a></dt>
 <dd>
@@ -6928,10 +6942,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/ui/WorldMapNode.html#setCompleted(boolean)" class="member-name-link">setCompleted(boolean)</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></dt>
 <dd>
 <div class="block">Sets the completed state of the node.</div>
-</dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#setCompletedNodes(java.util.List)" class="member-name-link">setCompletedNodes(List&lt;String&gt;)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Set the completed nodes associated with the profile.</div>
 </dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseAchievementConfig.DeserializedAchievementConfig.html#setConfig(java.util.Map)" class="member-name-link">setConfig(Map&lt;String, BaseAchievementConfig&gt;)</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseAchievementConfig.DeserializedAchievementConfig.html" title="class in com.csse3200.game.entities.configs">BaseAchievementConfig.DeserializedAchievementConfig</a></dt>
 <dd>
@@ -8705,14 +8715,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/progression/arsenal/Arsenal.html#unlockGenerator(java.lang.String)" class="member-name-link">unlockGenerator(String)</a> - Method in class com.csse3200.game.progression.arsenal.<a href="com/csse3200/game/progression/arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></dt>
 <dd>
 <div class="block">Adds a defence to the arsenal.</div>
-</dd>
-<dt><a href="com/csse3200/game/progression/Profile.html#unlockNode(java.lang.String)" class="member-name-link">unlockNode(String)</a> - Method in class com.csse3200.game.progression.<a href="com/csse3200/game/progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a></dt>
-<dd>
-<div class="block">Unlocks a node so the player can access it, even if not completed yet.</div>
-</dd>
-<dt><a href="com/csse3200/game/services/WorldMapService.html#unlockNode(java.lang.String)" class="member-name-link">unlockNode(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
-<dd>
-<div class="block">Unlock a specific node</div>
 </dd>
 <dt><a href="com/csse3200/game/services/GameStateService.html#unlockPlacement()" class="member-name-link">unlockPlacement()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
 <dd>

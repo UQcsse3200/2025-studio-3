@@ -91,9 +91,9 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">Persistence</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Class for loading and saving the user profile / savefile.
+<div class="block">Persistence utilities for loading and saving user profiles.
 
- <p>Save files should be in the format <code>&lt;profilename&gt;$&lt;unixtime&gt;$&lt;slot&gt;.json</code>.</div>
+ <p>Save files follow the format: <code>&lt;profilename&gt;$&lt;unixtime&gt;$&lt;slot&gt;.json</code></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,23 +112,23 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#create(java.lang.String,int)" class="member-name-link">create</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;profileName,
  int&nbsp;slot)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Create a new user profile.</div>
+<div class="block">Creates a new user profile and immediately persists it to the given slot.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetch()" class="member-name-link">fetch</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Fetch saves organized by slot.</div>
+<div class="block">Scans the save directory and returns the latest save per slot (1..3).</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.dermetfan.utils.Pair<wbr>&lt;<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#load(com.csse3200.game.persistence.Savefile)" class="member-name-link">load</a><wbr>(<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&nbsp;save)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Load a user profile from a savefile.</div>
+<div class="block">Loads a profile from a savefile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save(int,com.csse3200.game.progression.Profile)" class="member-name-link">save</a><wbr>(int&nbsp;slot,
  <a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Save the current user profile to a specific slot.</div>
+<div class="block">Saves the given profile to the specified slot.</div>
 </div>
 </div>
 </div>
@@ -151,12 +151,20 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="load(com.csse3200.game.persistence.Savefile)">
 <h3>load</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.dermetfan.utils.Pair&lt;<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&nbsp;save)</span></div>
-<div class="block">Load a user profile from a savefile.</div>
+<div class="block">Loads a profile from a savefile.
+
+ <p>Order of attempts:
+
+ <ol>
+   <li>Try reading the JSON directly into <a href="../progression/Profile.html" title="class in com.csse3200.game.progression"><code>Profile</code></a> (new snapshot JSON maps to the same
+       field names).
+   <li>If that fails, read <code>Persistence.ProfileSnapshot</code> and reconstruct a <a href="../progression/Profile.html" title="class in com.csse3200.game.progression"><code>Profile</code></a>.
+ </ol></div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>save</code> - the savefile object</dd>
+<dd><code>save</code> - Savefile descriptor</dd>
 <dt>Returns:</dt>
-<dd>the profile and the slot</dd>
+<dd>Pair of (Profile, slot)</dd>
 </dl>
 </section>
 </li>
@@ -165,13 +173,13 @@ loadScripts(document, 'script');</script>
 <h3>create</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.dermetfan.utils.Pair&lt;<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">create</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;profileName,
  int&nbsp;slot)</span></div>
-<div class="block">Create a new user profile.</div>
+<div class="block">Creates a new user profile and immediately persists it to the given slot.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>profileName</code> - the name of the profile, or null to use the default name</dd>
-<dd><code>slot</code> - the slot to save the profile to</dd>
+<dd><code>profileName</code> - Optional profile name (null = use default)</dd>
+<dd><code>slot</code> - Slot number (1-3)</dd>
 <dt>Returns:</dt>
-<dd>the profile and the slot</dd>
+<dd>Pair of (new Profile, slot)</dd>
 </dl>
 </section>
 </li>
@@ -179,10 +187,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fetch()">
 <h3>fetch</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&gt;</span>&nbsp;<span class="element-name">fetch</span>()</div>
-<div class="block">Fetch saves organized by slot.</div>
+<div class="block">Scans the save directory and returns the latest save per slot (1..3).</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the list of savefiles</dd>
+<dd>List of 3 entries (null = empty slot)</dd>
 </dl>
 </section>
 </li>
@@ -191,11 +199,13 @@ loadScripts(document, 'script');</script>
 <h3>save</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">save</span><wbr><span class="parameters">(int&nbsp;slot,
  <a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile)</span></div>
-<div class="block">Save the current user profile to a specific slot.</div>
+<div class="block">Saves the given profile to the specified slot.
+
+ <p>This writes a <code>Persistence.ProfileSnapshot</code> to guarantee 'currentLevel' is persisted.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>slot</code> - the slot to save the profile to</dd>
-<dd><code>profile</code> - the profile to save</dd>
+<dd><code>slot</code> - Slot number (1-3)</dd>
+<dd><code>profile</code> - Profile to persist</dd>
 </dl>
 </section>
 </li>
