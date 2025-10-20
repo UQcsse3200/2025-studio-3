@@ -49,7 +49,7 @@ public class ItemHandler {
                 (float) (area.getTileSize() * -0.75)));
 
     if (isDamagingItem(item)) {
-      applyAreaDamage(item,entityPos);
+      applyAreaDamage(item, entityPos);
     } else {
       applyBuff(item);
     }
@@ -64,15 +64,16 @@ public class ItemHandler {
   private void applyAreaDamage(ItemComponent item, Vector2 entityPos) {
 
     float radius = area.getTileSize();
-    if (item.getType() == ItemComponent.Type.EMP) {
-        radius *= 2.5f;
+    if (item.getType() == ItemComponent.Type.EMP || item.getType() == ItemComponent.Type.GRENADE) {
+      radius *= 2.5f;
     } else if (item.getType() == ItemComponent.Type.NUKE) {
-        radius *= 15f;
+      radius *= 15f;
     } else if (item.getType() == ItemComponent.Type.DOOMHACK) {
-        radius *= 1;
+      radius *= 1;
     }
-      float finalRadius = radius;
-      List<Entity> toRemove =
+
+    float finalRadius = radius;
+    List<Entity> toRemove =
         area.getRobots().stream()
             .filter(
                 r -> {
@@ -82,12 +83,16 @@ public class ItemHandler {
                 })
             .collect(Collectors.toList());
 
-    for (Entity r : toRemove) {
-      area.requestDespawn(r);
-      area.getRobots().remove(r);
-      ServiceLocator.getWaveService().onEnemyDispose();
+    if (item.getType() == ItemComponent.Type.EMP) {
+      area.damageRobotsAtPosition(entityPos, radius, 30);
+    } else {
+      for (Entity r : toRemove) {
+        area.requestDespawn(r);
+        area.getRobots().remove(r);
+        ServiceLocator.getWaveService().onEnemyDispose();
+      }
+      logger.info("Area damage applied to {} robots", toRemove.size());
     }
-    logger.info("Area damage applied to {} robots", toRemove.size());
   }
 
   /** Applies temporary buffs (coffee, buff, etc.) to all placed defences. */
