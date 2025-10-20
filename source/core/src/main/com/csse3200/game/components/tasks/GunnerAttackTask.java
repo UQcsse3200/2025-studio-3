@@ -52,7 +52,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         // Gunner animations could use a repass later after gunner robot kinks have been ironed out.
         this.owner.getEntity().getEvents().trigger("shootStart");
 
-        logger.info("Gunner firing at {} from {}", targetPos, myPos);
         owner.getEntity().getEvents().trigger("fire");
         timeSinceLastFire = 0f;
       }

@@ -3,6 +3,7 @@ package com.csse3200.game.entities.factories;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.TouchAttackComponent;
+import com.csse3200.game.components.projectiles.LifetimeComponent;
 import com.csse3200.game.components.projectiles.MoveDirectionComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.entities.Entity;
@@ -65,7 +66,9 @@ public class ProjectileFactory {
       proj.addComponent(new PhysicsComponent())
           .addComponent(collider)
           .addComponent(new HitboxComponent().setLayer(PhysicsLayer.PROJECTILE))
-          .addComponent(new TouchAttackComponent(PhysicsLayer.ENEMY, 0))
+          .addComponent(
+              new TouchAttackComponent((short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), 0))
+          .addComponent(new LifetimeComponent(10f))
           .addComponent(new CombatStatsComponent(1, damage)); // projectile should die on hit
     }
 
@@ -102,6 +105,7 @@ public class ProjectileFactory {
             .addComponent(new CombatStatsComponent(1, damage))
             .addComponent(
                 new MoveDirectionComponent(TargetDetectionTasks.AttackDirection.LEFT, speed))
+            .addComponent(new LifetimeComponent(10f))
             .addComponent(new TextureRenderComponent("images/effects/sling_projectile_pad.png"));
 
     gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
@@ -121,6 +125,7 @@ public class ProjectileFactory {
             .addComponent(collider)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.BOSS_PROJECTILE))
             .addComponent(new TouchAttackComponent(targetLayers, 0f))
+            .addComponent(new LifetimeComponent(10f))
             .addComponent(new CombatStatsComponent(1, damage));
     bossProjectile.addComponent(new TextureRenderComponent("images/effects/gun_bot_fireball.png"));
     bossProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
