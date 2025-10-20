@@ -183,10 +183,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
 
     // tutorial for Level 1
-    if ("levelOne".equals(currentLevelKey)) {
+    if ("levelOne".equals(currentLevelKey)
+        && !ServiceLocator.getProfileService().getProfile().getPlayedTutorial()) {
       Entity tutorialEntity = new Entity();
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);
+      ServiceLocator.getProfileService().getProfile().setPlayedTutorial();
     }
   }
 
@@ -197,7 +199,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     populateUnitList(profile, configService);
     populateItemList(profile.getInventory(), configService);
-
     ui =
         new Entity()
             .addComponent(new GameAreaDisplay(this.currentLevelKey))
@@ -205,11 +206,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(ui);
 
     createGameOverEntity();
-
-    // Handles the level completion window UI
-    this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
-    spawnEntity(this.levelCompleteEntity);
+    createLevelCompleteEntity();
   }
 
   /** Unlocks all entities that are listed as playing on the current game level */
@@ -280,6 +277,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   void createGameOverEntity() {
     gameOverEntity = new Entity().addComponent(new GameOverWindow());
     spawnEntity(gameOverEntity);
+  }
+
+  /** Creates and spawns the game-over UI entity. */
+  void createLevelCompleteEntity() {
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
   }
 
   /** Creates and spawns the game background map and its boundary wall. */
@@ -636,6 +641,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     for (Entity r : robotsToRemove) {
       requestDespawn(r);
       robots.remove(r);
+      ServiceLocator.getWaveService().onEnemyDispose();
     }
   }
 
@@ -889,7 +895,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
     int cost = 0;
     if (generator != null) {
-      cost = generator.getCost();
+      List<Entity> entities = new ArrayList<>(areaEntities);
+      int furnaces = 0;
+      for (Entity entity : entities) {
+        GeneratorStatsComponent generatorEntity =
+            entity.getComponent(GeneratorStatsComponent.class);
+        if (generatorEntity != null) {
+          furnaces++;
+        }
+      }
+
+      cost = generator.getCost() + (50 * furnaces);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1148,23 +1164,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /** Checks if the level is complete */
   public void checkLevelComplete() {
     if (isLevelComplete) {
-      return;
-      // level is already complete, don't check again
-    }
-
-    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    if (currentWave >= 4) {
-      logger.info("Level is complete!");
-      isLevelComplete = true;
-      if (levelCompleteEntity != null) {
-        levelCompleteEntity.getEvents().trigger("levelComplete");
-      }
-
       GameStateService service = ServiceLocator.getGameStateService();
       if (service != null) {
         service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
         service.lockPlacement();
       }
+      return;
+      // level is already complete, don't check again
+    }
+
+    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
+    if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
+      logger.info("Level is complete!");
+      isLevelComplete = true;
+      if (levelCompleteEntity != null) {
+        levelCompleteEntity.getEvents().trigger("levelComplete");
+      }
+      for (Entity r : getRobots()) {
+        requestDespawn(r);
+      }
+      getRobots().clear();
     }
   }
 

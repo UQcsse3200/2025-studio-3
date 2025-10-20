@@ -213,9 +213,10 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerCurrencyService(new CurrencyService(50, 10000));
+    ServiceLocator.registerCurrencyService(new CurrencyService(125, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
     ServiceLocator.registerWaveService(new WaveService());
+    ServiceLocator.getWaveService().setCurrentLevel(this.level);
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
@@ -242,6 +243,7 @@ public class MainGameScreen extends ScreenAdapter {
             });
     gameArea.create();
     snapCameraBottomLeft();
+
     ServiceLocator.getWaveService().initialiseNewWave();
 
     // Setup for camera pan
