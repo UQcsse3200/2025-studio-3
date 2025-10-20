@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +21,16 @@ public class PauseButton extends UIComponent {
   private static final int BUTTON_SIZE = 60;
   private ImageButton pauseButtonComponent;
   private Label pauseTooltip;
+  private boolean isPaused = false;
+  private InputListener pauseKeyListener;
 
   @Override
   public void create() {
     super.create();
     addActors();
+
+    // Listen for pause key pressed
+    addPauseKeyListener();
 
     // Listen for resume events to re-enable the button
     entity.getEvents().addListener("resume", this::handleResume);
@@ -134,6 +140,50 @@ public class PauseButton extends UIComponent {
     }
   }
 
+  /**
+   * Adds a key listener to the stage for handling the pause keybind functionality. Retrieves the
+   * pause keybinding from the settings and attaches a listener that pauses or resumes the game when
+   * the pause key is pressed.
+   */
+  private void addPauseKeyListener() {
+    try {
+      // Avoid double creating listener
+      if (pauseKeyListener != null) {
+        return;
+      }
+      // Get pause key from Settings
+      SettingsService settingsService = ServiceLocator.getSettingsService();
+      if (settingsService.getSettings() != null) {
+        int pauseKey = settingsService.getSettings().getPauseButton();
+        pauseKeyListener =
+            new InputListener() {
+              @Override
+              public boolean keyDown(InputEvent event, int keycode) {
+                // Listens for pause key
+                if (keycode == pauseKey) {
+                  // Pause or unpause game
+                  if (!isPaused) {
+                    logger.info("[PauseButton] Pause key pressed to pause game");
+                    setPaused(true);
+                    entity.getEvents().trigger("pause");
+                  } else {
+                    logger.info("[PauseButton] Pause key pressed to unpause game");
+                    // Trigger handle resume event in Pause Menu
+                    entity.getEvents().trigger("resumekeypressed");
+                  }
+                  return true;
+                }
+                return false;
+              }
+            };
+        stage.addListener(pauseKeyListener);
+      }
+    } catch (Exception e) {
+      // Do nothing if no button found eg due to no settings
+      logger.warn("[PauseButton] Failed to read pause key from settings: {}", e.getMessage());
+    }
+  }
+
   @Override
   public float getZIndex() {
     return Z_INDEX;
@@ -169,12 +219,14 @@ public class PauseButton extends UIComponent {
         pauseTooltip.setZIndex(40);
         pauseTooltip.setVisible(false); // Hide tooltip when paused
       }
+      this.isPaused = true;
     } else {
       pauseButtonComponent.setTouchable(com.badlogic.gdx.scenes.scene2d.Touchable.enabled);
       pauseButtonComponent.getColor().a = 1.0f; // 100% opacity
       if (pauseTooltip != null) {
         pauseTooltip.setZIndex(60); // Show tooltip when not paused
       }
+      this.isPaused = false;
     }
   }
 
@@ -187,6 +239,10 @@ public class PauseButton extends UIComponent {
     if (pauseTooltip != null) {
       pauseTooltip.remove();
       pauseTooltip = null;
+    }
+    if (pauseKeyListener != null) {
+      stage.removeListener(pauseKeyListener);
+      pauseKeyListener = null;
     }
     super.dispose();
   }
