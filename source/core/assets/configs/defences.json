@@ -81,7 +81,7 @@
         "numSprites": 43,
         "attackSpeed": 1,
         "critChance": 1,
-        "levelFour": "levelFour"
+        "level": "levelFour"
       },
       "shadow" : {
         "health": 20,
