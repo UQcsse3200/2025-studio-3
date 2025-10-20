@@ -388,7 +388,7 @@ public class DialogService {
     }
     AchievementDialogComponent dialogComponent =
         new AchievementDialogComponent(
-            name.toUpperCase(), description.toUpperCase(), skillPoints, tier != null ? tier : "T1");
+            name.toUpperCase(), skillPoints, tier != null ? tier : "T1");
     Entity dialogEntity = new Entity();
     dialogEntity.addComponent(dialogComponent);
     ServiceLocator.getEntityService().register(dialogEntity);

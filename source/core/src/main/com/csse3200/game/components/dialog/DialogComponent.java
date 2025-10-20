@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 public class DialogComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DialogComponent.class);
   private static final float Z_INDEX = 100f;
-  private static final float DEFAULT_WIDTH = 522f;
-  private static final float DEFAULT_HEIGHT = 366f;
   private static final float ANIMATION_DURATION = 0.3f;
   private Window dialog;
   private DialogType dialogType;
@@ -37,6 +35,9 @@ public class DialogComponent extends UIComponent {
   private Consumer<DialogComponent> onConfirm;
   private Consumer<DialogComponent> onCancel;
   private Consumer<DialogComponent> onClose;
+  private float uiScale = ui.getUIScale();
+  private float defaultWidth = 704f * uiScale;
+  private float defaultHeight = 352f * uiScale;
 
   /**
    * Creates a new dialog component with the specified type, title, and message.
@@ -60,7 +61,7 @@ public class DialogComponent extends UIComponent {
   /** Creates the dialog window with appropriate styling based on the dialog type. */
   private void createDialog() {
     dialog = new Window("", skin);
-    dialog.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    dialog.setSize(defaultWidth, defaultHeight);
     dialog.setMovable(false);
     dialog.setModal(true);
 
@@ -69,24 +70,25 @@ public class DialogComponent extends UIComponent {
 
     // Create content table & title label
     Table contentTable = new Table();
-    contentTable.pad(50f);
+    contentTable.pad(50f * uiScale);
     Color titleColor = getTextColor();
     Label titleLabel = ui.heading(title);
     titleLabel.setColor(titleColor);
     titleLabel.setAlignment(Align.center);
-    contentTable.add(titleLabel).width(DEFAULT_WIDTH - 80f).center().padTop(10f).padBottom(15f).row();
+    contentTable.add(titleLabel).width(defaultWidth - (120f * uiScale)).center().padBottom(20f * uiScale).row();
 
     // Add message label
     Label messageLabel = ui.text(message);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
-    contentTable.add(messageLabel).width(DEFAULT_WIDTH - 80f).center().padBottom(20f).row();
+    contentTable.add(messageLabel).width(defaultWidth - (120f * uiScale)).center().padBottom(20f*uiScale).row();
+    contentTable.center();
 
     // Add buttons based on dialog type
     addButtons(contentTable);
     dialog.add(contentTable);
     dialog.pack();
-    dialog.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    dialog.setSize(defaultWidth, defaultHeight);
 
     // Center the dialog
     centerDialog();
@@ -104,7 +106,7 @@ public class DialogComponent extends UIComponent {
     // Set the dialog background image
     try {
       Texture dialogTexture =
-          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog_new.png", Texture.class);
+          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog_new_new.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);

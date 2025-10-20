@@ -20,7 +20,6 @@ public class AchievementDialogComponent extends UIComponent {
   private static final float DISPLAY_DURATION = 4.0f;
   private static final float ANIMATION_DURATION = 0.5f;
   private String name;
-  private String description;
   private int skillPoints;
   private String tier;
   private Window dialog;
@@ -32,13 +31,11 @@ public class AchievementDialogComponent extends UIComponent {
    * Creates a new achievement dialog for the specified achievement.
    *
    * @param name the name of the achievement
-   * @param description the description of the achievement
    * @param skillPoints the skill points of the achievement
    * @param tier the tier of the achievement
    */
-  public AchievementDialogComponent(String name, String description, int skillPoints, String tier) {
+  public AchievementDialogComponent(String name, int skillPoints, String tier) {
     this.name = name;
-    this.description = description;
     this.skillPoints = skillPoints;
     this.tier = tier;
   }

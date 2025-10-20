@@ -57,7 +57,7 @@ public class AchievementsDisplay extends UIComponent {
     rootTable.add(title)
         .expandX()
         .center()
-        .padTop(30f * uiScale)
+        .padTop(25f * uiScale)
         .row();
     
     createAchievementDisplay();
