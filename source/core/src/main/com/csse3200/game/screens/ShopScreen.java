@@ -1,7 +1,11 @@
 package com.csse3200.game.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.shop.ShopActions;
 import com.csse3200.game.components.shop.ShopDisplay;
@@ -32,6 +36,7 @@ public class ShopScreen extends ScreenAdapter {
   };
   private String[] itemTextures;
   private static final String[] SHOP_SOUNDS = {"sounds/item_purchased_sound.mp3"};
+
 
   /**
    * Initialises the shop screen.
@@ -115,6 +120,15 @@ public class ShopScreen extends ScreenAdapter {
   private void createUI() {
     logger.debug("Creating shop ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
+
+    // Set background image
+    Texture backgroundTexture =
+            new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+    Image backgroundImage = new Image(backgroundTexture);
+    backgroundImage.setSize(
+            stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+    stage.addActor(backgroundImage);
+
     Entity ui = new Entity();
     ui.addComponent(new ShopDisplay())
         .addComponent(new ShopActions(this.game))
