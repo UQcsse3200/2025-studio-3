@@ -829,14 +829,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       Entity occ = grid.getOccupantIndex(i);
       if (occ == null) continue;
 
-      Vector2 pos = occ.getPosition();
-
       if (occ.getComponent(GeneratorStatsComponent.class) != null) {
         if (occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
           // must be a healer
           continue;
         }
       }
+
+      Vector2 pos = occ.getPosition();
 
       // spawn heal effect on entity
       spawnEffect(
@@ -873,7 +873,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
-    // tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
