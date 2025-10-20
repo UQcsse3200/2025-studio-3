@@ -35,7 +35,9 @@ public class GdxGame extends Game {
     "images/ui/speedup15x.png",
     "images/ui/speedup2x.png",
     "images/ui/dialog_new.png",
-    "images/ui/menu.png"
+    "images/ui/menu.png",
+    "images/ui/menu_card.png",
+    "images/ui/achievement_dialog_new.png"
   };
 
   private static final String[] GLOBAL_SOUNDS = {

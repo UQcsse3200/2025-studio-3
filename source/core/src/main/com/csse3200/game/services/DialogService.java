@@ -55,7 +55,7 @@ public class DialogService {
           ServiceLocator.getGlobalResourceService()
               .getAsset("sounds/achievement_unlock.mp3", Sound.class);
     } catch (Exception e) {
-      logger.debug("[DialogService] Dialog sound assets not loaded yet.");
+      logger.error("[DialogService] Dialog sound assets not loaded yet.");
     }
   }
 
@@ -83,7 +83,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.INFO, title, message, null, null, onClose);
   }
 
@@ -116,7 +118,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
   }
 
@@ -144,7 +148,9 @@ public class DialogService {
     if (errorSound == null) {
       initSounds();
     }
-    errorSound.play(volume);
+    if (errorSound != null) {
+      errorSound.play(volume);
+    }
     return createAndShowDialog(DialogType.ERROR, title, message, null, null, onClose);
   }
 
@@ -188,7 +194,9 @@ public class DialogService {
     if (errorSound == null) {
       initSounds();
     }
-    errorSound.play(volume);
+    if (errorSound != null) {
+      errorSound.play(volume);
+    }
     return createAndShowDialog(DialogType.GAME_OVER, title, message, onPlayAgain, onQuit, null);
   }
 
@@ -217,7 +225,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.WIN_GAME, title, message, onContinue, null, null);
   }
 
@@ -239,7 +249,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.SKILL, title, message, onUnlock, null, onClose);
   }
 
@@ -371,7 +383,9 @@ public class DialogService {
     if (achievementUnlockSound == null) {
       initSounds();
     }
-    achievementUnlockSound.play(volume);
+    if (achievementUnlockSound != null) {
+      achievementUnlockSound.play(volume);
+    }
     AchievementDialogComponent dialogComponent =
         new AchievementDialogComponent(
             name.toUpperCase(), description.toUpperCase(), skillPoints, tier != null ? tier : "T1");

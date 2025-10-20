@@ -10,8 +10,8 @@
     },
     "defenseExpert": {
       "name": "Defense Expert",
-      "description": "Purchased 5 different defenses",
-      "statistic": "defensesPurchased",
+      "description": "Unlocked 5 different defenses",
+      "statistic": "defencesUnlocked",
       "quota": 5,
       "skillPoints": 1,
       "tier": "T1"
@@ -37,8 +37,8 @@
       "description": "Successfully completed the first level",
       "statistic": "levelsCompleted",
       "quota": 1,
-      "skillPoints": 3,
-      "tier": "T3"
+      "skillPoints": 1,
+      "tier": "T1"
     },
     "firstBuy": {
       "name": "First Buy",
@@ -58,9 +58,9 @@
     },
     "waveSlayer": {
       "name": "Wave Slayer",
-      "description": "Completed 5 waves in a single level",
+      "description": "Completed 10 waves across levels",
       "statistic": "wavesCompleted",
-      "quota": 5,
+      "quota": 10,
       "skillPoints": 2,
       "tier": "T2"
     },
@@ -82,7 +82,7 @@
     }, 
     "laneRunnerMaster": {
       "name": "Lane Master",
-      "description": "Completed the lane runner minigame",
+      "description": "Reach 10 points in the lane runner minigame",
       "statistic": "laneRunnerCompleted",
       "quota": 1,
       "skillPoints": 3,
@@ -93,8 +93,8 @@
       "description": "Beat the slot machine level",
       "statistic": "slotMachineCompleted",  
       "quota": 1,
-      "skillPoints": 1,
-      "tier": "T1"
+      "skillPoints": 3,
+      "tier": "T3"
     }
   }
 }

@@ -55,11 +55,11 @@ public class AchievementDialogComponent extends UIComponent {
     try {
       Texture achievementTexture =
           ServiceLocator.getGlobalResourceService()
-              .getAsset("images/ui/achievement.png", Texture.class);
+              .getAsset("images/ui/achievement_dialog_new.png", Texture.class);
       if (achievementTexture != null) {
         TextureRegionDrawable achievementBackground = new TextureRegionDrawable(achievementTexture);
-        achievementBackground.setMinWidth(400f);
-        achievementBackground.setMinHeight(200f);
+        achievementBackground.setMinWidth(396f);
+        achievementBackground.setMinHeight(176f);
         Window.WindowStyle customStyle = new Window.WindowStyle(windowStyle);
         customStyle.background = achievementBackground;
         dialog = new Window("", customStyle);
@@ -73,7 +73,7 @@ public class AchievementDialogComponent extends UIComponent {
       dialog = new Window("", windowStyle);
     }
 
-    dialog.setSize(400f * uiScale, 200f * uiScale);
+    dialog.setSize(396f * uiScale, 176f * uiScale);
     dialog.setMovable(false);
     dialog.setModal(false); // Don't block interaction
 
@@ -92,12 +92,6 @@ public class AchievementDialogComponent extends UIComponent {
     nameLabel.setAlignment(Align.left);
     textTable.add(nameLabel).left().padTop(2f).row();
 
-    // Achievement description
-    Label descLabel = ui.subtext(description);
-    descLabel.setColor(Color.LIGHT_GRAY);
-    descLabel.setWrap(true);
-    descLabel.setAlignment(Align.left);
-    textTable.add(descLabel).width(320f * uiScale).left().padTop(2f).row();
 
     // Tier information
     if (tier != null && !tier.isEmpty()) {
