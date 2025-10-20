@@ -63,6 +63,7 @@ public class Statistics {
     stats.putIfAbsent("itemsCollected", 0);
     stats.putIfAbsent("paddleGameCompleted", 0);
     stats.putIfAbsent("laneRunnerCompleted", 0);
+    stats.putIfAbsent("slotMachineCompleted", 0);
   }
 
   /**

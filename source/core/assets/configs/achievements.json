@@ -87,6 +87,14 @@
       "quota": 1,
       "skillPoints": 3,
       "tier": "T3"
+    },
+    "gambler": {
+      "name": "Gambler",
+      "description": "Beat the slot machine level",
+      "statistic": "slotMachineCompleted",  
+      "quota": 1,
+      "skillPoints": 1,
+      "tier": "T1"
     }
   }
 }
