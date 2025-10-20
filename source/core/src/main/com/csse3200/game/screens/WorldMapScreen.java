@@ -29,6 +29,8 @@ import com.csse3200.game.ui.tutorial.WorldMapTutorial;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,11 +91,16 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
         .addComponent(new AnimatedDropdownMenu())
-        .addComponent(new WorldMapTutorial())
         .addComponent(new AnimatedDropdownMenu())
         .addComponent(new WorldMapZoomInputComponent(this, 12))
         .addComponent(new WorldMapPanInputComponent(this, 12))
         .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+    
+    if (ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial() == false) {
+      ui.addComponent(new WorldMapTutorial());
+      ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
+    }
+
     return ui;
   }
 
@@ -164,21 +171,10 @@ public class WorldMapScreen extends BaseScreen {
   private void createNodes() {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
     List<WorldMapNode> nodes = worldMapService.getAllNodes();
-    var profileService = ServiceLocator.getProfileService();
-
-    if (profileService != null && profileService.getProfile() != null) {
-      handleProfileBasedNodeSetup(worldMapService, profileService.getProfile());
-    } else {
-      handleDefaultNodeSetup(nodes);
-    }
-
+    Set<String> unlockedNodes = ServiceLocator.getProfileService().getProfile().getUnlockedNodes();
+    handleDefaultNodeSetup(nodes);
     registerNodeEntities(worldMapService, nodes);
   }
-
-  private void handleProfileBasedNodeSetup(WorldMapService wms, Profile profile) {
-    wms.applyStatesFrom(profile, Profile.DEFAULT_UNLOCKED);
-  }
-
   /**
    * Handles map setup when there is no active profile (first-time run or error). Only unlocks the
    * default special nodes.
