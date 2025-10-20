@@ -259,12 +259,11 @@ public class ShopDisplay extends UIComponent {
    */
   private void showShopItemPopUp(String itemKey) {
     BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKey);
-    int itemCost = itemConfig.getCost();
     String title = itemConfig.getName();
     String message =
         String.format(
-            "%s%n%nPrice: $%d%n%nDo you want to purchase this item?",
-            itemConfig.getDescription(), itemCost);
+            "%s Do you want to purchase this item?",
+            itemConfig.getDescription());
     ServiceLocator.getDialogService()
         .warning(
             title,

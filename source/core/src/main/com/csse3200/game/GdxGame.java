@@ -34,6 +34,7 @@ public class GdxGame extends Game {
     "images/ui/speedup1x.png",
     "images/ui/speedup15x.png",
     "images/ui/speedup2x.png",
+    "images/ui/dialog_new.png",
     "images/ui/menu.png"
   };
 

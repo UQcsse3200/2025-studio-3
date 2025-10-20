@@ -26,8 +26,8 @@ import org.slf4j.LoggerFactory;
 public class DialogComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(DialogComponent.class);
   private static final float Z_INDEX = 100f;
-  private static final float DEFAULT_WIDTH = 320f;
-  private static final float DEFAULT_HEIGHT = 240f;
+  private static final float DEFAULT_WIDTH = 522f;
+  private static final float DEFAULT_HEIGHT = 366f;
   private static final float ANIMATION_DURATION = 0.3f;
   private Window dialog;
   private DialogType dialogType;
@@ -69,23 +69,24 @@ public class DialogComponent extends UIComponent {
 
     // Create content table & title label
     Table contentTable = new Table();
-    contentTable.pad(20f);
+    contentTable.pad(50f);
     Color titleColor = getTextColor();
-    Label titleLabel = ui.title(title);
+    Label titleLabel = ui.heading(title);
     titleLabel.setColor(titleColor);
     titleLabel.setAlignment(Align.center);
-    contentTable.add(titleLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(15f).row();
+    contentTable.add(titleLabel).width(DEFAULT_WIDTH - 80f).center().padTop(10f).padBottom(15f).row();
 
     // Add message label
     Label messageLabel = ui.text(message);
     messageLabel.setWrap(true);
     messageLabel.setAlignment(Align.center);
-    contentTable.add(messageLabel).width(DEFAULT_WIDTH - 40f).center().padBottom(20f).row();
+    contentTable.add(messageLabel).width(DEFAULT_WIDTH - 80f).center().padBottom(20f).row();
 
     // Add buttons based on dialog type
     addButtons(contentTable);
     dialog.add(contentTable);
     dialog.pack();
+    dialog.setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
     // Center the dialog
     centerDialog();
@@ -103,7 +104,7 @@ public class DialogComponent extends UIComponent {
     // Set the dialog background image
     try {
       Texture dialogTexture =
-          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog.png", Texture.class);
+          ServiceLocator.getGlobalResourceService().getAsset("images/ui/dialog_new.png", Texture.class);
       if (dialogTexture != null) {
         TextureRegion dialogRegion = new TextureRegion(dialogTexture);
         Drawable dialogDrawable = new TextureRegionDrawable(dialogRegion);
@@ -111,7 +112,7 @@ public class DialogComponent extends UIComponent {
       }
     } catch (Exception e) {
       logger.warn(
-          "[DialogComponent] Could not load dialog.png background image: {}", e.getMessage());
+          "[DialogComponent] Could not load dialog background image: {}", e.getMessage());
     }
     dialog.setStyle(windowStyle);
   }
@@ -168,7 +169,7 @@ public class DialogComponent extends UIComponent {
   private void addInfoButtons(Table buttonTable) {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
 
-    TextButton okButton = ui.secondaryButton("OK", 120f);
+    TextButton okButton = ui.primaryButton("OK", 120f);
     okButton.addListener(
         new ClickListener() {
           @Override
@@ -187,7 +188,7 @@ public class DialogComponent extends UIComponent {
     Pair<Float, Float> quitDimensions = ui.getScaledDimensions(120f);
     Pair<Float, Float> playAgainDimensions = ui.getScaledDimensions(150f);
 
-    TextButton playAgainButton = ui.secondaryButton("Play Again", 150f);
+    TextButton playAgainButton = ui.primaryButton("Play Again", 150f);
     playAgainButton.addListener(
         new ClickListener() {
           @Override
@@ -199,7 +200,7 @@ public class DialogComponent extends UIComponent {
           }
         });
 
-    TextButton quitButton = ui.secondaryButton("Quit", 120f);
+    TextButton quitButton = ui.primaryButton("Quit", 120f);
     quitButton.addListener(
         new ClickListener() {
           @Override
@@ -221,7 +222,7 @@ public class DialogComponent extends UIComponent {
   private void addWinGameButtons(Table buttonTable) {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(150f);
 
-    TextButton continueButton = ui.secondaryButton("Continue", 150f);
+    TextButton continueButton = ui.primaryButton("Continue", 150f);
     continueButton.addListener(
         new ClickListener() {
           @Override
@@ -244,7 +245,7 @@ public class DialogComponent extends UIComponent {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
     Pair<Float, Float> cancelDimensions = ui.getScaledDimensions(150f);
 
-    TextButton cancelButton = ui.secondaryButton("Cancel", 150f);
+    TextButton cancelButton = ui.primaryButton("Cancel", 150f);
     cancelButton.addListener(
         new ClickListener() {
           @Override
@@ -256,7 +257,7 @@ public class DialogComponent extends UIComponent {
           }
         });
 
-    TextButton continueButton = ui.secondaryButton("Continue", 120f);
+    TextButton continueButton = ui.primaryButton("Continue", 120f);
     continueButton.addListener(
         new ClickListener() {
           @Override
@@ -282,7 +283,7 @@ public class DialogComponent extends UIComponent {
   private void addErrorButtons(Table buttonTable) {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
 
-    TextButton okButtonError = ui.secondaryButton("OK", 120f);
+    TextButton okButtonError = ui.primaryButton("OK", 120f);
     okButtonError.addListener(
         new ClickListener() {
           @Override
@@ -303,7 +304,7 @@ public class DialogComponent extends UIComponent {
   private void addSkillButtons(Table buttonTable) {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(120f);
 
-    TextButton closeButton = ui.secondaryButton("Close", 120f);
+    TextButton closeButton = ui.primaryButton("Close", 120f);
     closeButton.addListener(
         new ClickListener() {
           @Override
@@ -315,7 +316,7 @@ public class DialogComponent extends UIComponent {
           }
         });
 
-    TextButton unlockButton = ui.secondaryButton("Unlock", 150f);
+    TextButton unlockButton = ui.primaryButton("Unlock", 150f);
     unlockButton.addListener(
         new ClickListener() {
           @Override
