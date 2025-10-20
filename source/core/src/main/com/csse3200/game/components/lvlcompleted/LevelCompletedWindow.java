@@ -118,7 +118,6 @@ public class LevelCompletedWindow extends UIComponent {
           default -> "end";
         };
     profileService.getProfile().setCurrentLevel(nextLevel);
-    profileService.getProfile().unlockNode(nextLevel);
   }
 
   public Table getContainer() {
