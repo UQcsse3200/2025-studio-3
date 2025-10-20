@@ -7,12 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -25,6 +20,7 @@ import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
+import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
@@ -44,10 +40,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.GameStateService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
@@ -477,10 +470,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              increaseOutGameCurrency(coins);
               requestDespawn(unit);
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
@@ -645,6 +647,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
     boss.getEvents().addListener("despawnRobot", target -> {});
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     // --- BUG FIX STARTS HERE ---
     // Use a boolean flag to ensure the death logic only runs ONCE.
     final boolean[] isBossDead = {false};
@@ -673,6 +683,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   new Timer.Task() {
                     @Override
                     public void run() {
+                      increaseOutGameCurrency(coins);
                       requestDespawn(boss);
                       robots.remove(boss);
                       logger.info("Boss defeated");
@@ -1132,6 +1143,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         service.lockPlacement();
       }
     }
+  }
+
+  /**
+   * Increases out-of-game currency upon enemy death.
+   *
+   * @param coins the amount of coins to add to the player's wallet
+   */
+  public void increaseOutGameCurrency(int coins) {
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService == null || !profileService.isActive()) return;
+
+    int before = profileService.getProfile().getWallet().getCoins();
+    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+    profileService.getProfile().getWallet().addCoins(coins);
+    profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
+    logger.info(
+        "[Death] wallet: {} + {} -> {}",
+        before,
+        coins,
+        profileService.getProfile().getWallet().getCoins());
   }
 
   /**
