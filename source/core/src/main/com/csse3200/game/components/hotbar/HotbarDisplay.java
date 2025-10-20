@@ -74,7 +74,7 @@ public class HotbarDisplay extends UIComponent {
 
     // initialise the values needed for placing unit images in slots
     float hotbarWidth = unitLayers.getWidth();
-    cellWidth = hotbarWidth / 6;
+    cellWidth = hotbarWidth / 8;
     float startX = cellWidth / 4;
     float y = 30;
     float currentX = startX;
@@ -171,9 +171,9 @@ public class HotbarDisplay extends UIComponent {
 
     startX = cellWidth / 4;
     // creates down arrow image
-    Image downArrow = new Image(new Texture("images/ui/down_arrow_hotbar.png"));
-    downArrow.setSize(scaling, (float) (0.5 * scaling));
-    downArrow.setPosition((float) (0.45 * hotbarWidth), -40);
+    Image upDownArrow = new Image(new Texture("images/ui/up_down_arrow.png"));
+    upDownArrow.setSize(scaling, (float) (0.5 * scaling));
+    upDownArrow.setPosition((float) (0.45 * hotbarWidth), -40);
 
     // creates all the items
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
@@ -227,7 +227,7 @@ public class HotbarDisplay extends UIComponent {
 
     // handles the collapsing of the item hotbar
     final boolean[] isUp = {false};
-    downArrow.addListener(
+    upDownArrow.addListener(
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
@@ -235,16 +235,21 @@ public class HotbarDisplay extends UIComponent {
 
             if (!isUp[0]) {
               // Move up
-              itemLayers.addAction(Actions.moveBy(0, distance, 0.35f));
+              itemHotbarTable.addAction(Actions.moveBy(0, distance, 0.35f));
+              itemLayers.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.35f), Actions.run(() -> itemLayers.setVisible(false))));
               isUp[0] = true;
             } else {
               // Move down
-              itemLayers.addAction(Actions.moveBy(0, -distance, 0.35f));
+              itemHotbarTable.addAction(Actions.moveBy(0, -distance, 0.35f));
+              itemLayers.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.05f), Actions.run(() -> itemLayers.setVisible(true))));
               isUp[0] = false;
             }
           }
         });
-    itemLayers.addActor(downArrow);
 
     itemLayers.setScale(scale);
     itemLayers.toBack();
@@ -253,6 +258,10 @@ public class HotbarDisplay extends UIComponent {
         .size(itemLayers.getWidth() * scale, itemLayers.getHeight() * scale);
     // makes only the images touchable
     itemHotbarTable.setTouchable(Touchable.childrenOnly);
+    itemHotbarTable.row();
+    itemHotbarTable
+        .add(upDownArrow)
+        .size(upDownArrow.getWidth() * scale, upDownArrow.getHeight() * scale);
 
     stage.addActor(itemHotbarTable);
     itemHotbarTable.toBack();
