@@ -34,6 +34,7 @@ public class ColliderComponent extends Component {
 
     Body physBody = entity.getComponent(PhysicsComponent.class).getBody();
     fixture = physBody.createFixture(fixtureDef);
+    fixture.setUserData(entity);
   }
 
   /**

@@ -7,12 +7,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -25,6 +20,7 @@ import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
+import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
@@ -44,9 +40,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
@@ -476,10 +470,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              increaseOutGameCurrency(coins);
               requestDespawn(unit);
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
@@ -604,6 +607,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (distanceSq <= radius * radius) {
         // Apply damage by subtracting health
         stats.addHealth(-damage);
+        robot.getEvents().trigger("hitMarker", robot);
 
         logger.info(
             "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
@@ -643,6 +647,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
     boss.getEvents().addListener("despawnRobot", target -> {});
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     // --- BUG FIX STARTS HERE ---
     // Use a boolean flag to ensure the death logic only runs ONCE.
     final boolean[] isBossDead = {false};
@@ -671,6 +683,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   new Timer.Task() {
                     @Override
                     public void run() {
+                      increaseOutGameCurrency(coins);
                       requestDespawn(boss);
                       robots.remove(boss);
                       logger.info("Boss defeated");
@@ -716,6 +729,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
+    if (unit != null && isPlacementLocked()) {
+      logger.debug("Ignoring unit selection while placement is locked");
+      return;
+    }
     selectedUnit = unit;
   }
 
@@ -740,6 +757,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring spawn request while placement is locked");
+      resetSelectionUI();
+      return;
+    }
     // --- Step 1: Resolve grid/tile/selected entity ---
     Entity tile = grid.getTile(position);
 
@@ -789,6 +811,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
+  }
+
+  private boolean isPlacementLocked() {
+    GameStateService service = ServiceLocator.getGameStateService();
+    return service != null && service.isPlacementLocked();
   }
 
   /** Convert a tile index into its world position. */
@@ -1085,6 +1112,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+
+        GameStateService service = ServiceLocator.getGameStateService();
+        if (service != null) {
+          service.addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+          service.lockPlacement();
+        }
       }
     }
   }
@@ -1103,7 +1136,33 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
       }
+
+      GameStateService service = ServiceLocator.getGameStateService();
+      if (service != null) {
+        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+        service.lockPlacement();
+      }
     }
+  }
+
+  /**
+   * Increases out-of-game currency upon enemy death.
+   *
+   * @param coins the amount of coins to add to the player's wallet
+   */
+  public void increaseOutGameCurrency(int coins) {
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService == null || !profileService.isActive()) return;
+
+    int before = profileService.getProfile().getWallet().getCoins();
+    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+    profileService.getProfile().getWallet().addCoins(coins);
+    profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
+    logger.info(
+        "[Death] wallet: {} + {} -> {}",
+        before,
+        coins,
+        profileService.getProfile().getWallet().getCoins());
   }
 
   /**
@@ -1113,6 +1172,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void beginDrag(Texture texture) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring drag start while placement is locked");
+      return;
+    }
     if (dragOverlay != null && texture != null) {
       dragOverlay.begin(texture);
     }
@@ -1124,6 +1187,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (dragOverlay != null) {
       dragOverlay.cancel();
     }
+  }
+
+  /**
+   * Removes a preview entity created for wave previews. Uses {@link #despawnEntity(Entity)} so it
+   * is immediately cleaned up, independent of physics updates.
+   *
+   * @param entity preview entity to remove
+   */
+  public void removePreviewEntity(Entity entity) {
+    if (entity == null) {
+      return;
+    }
+    despawnEntity(entity);
   }
 
   /**

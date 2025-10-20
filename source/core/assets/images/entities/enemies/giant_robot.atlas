@@ -1,0 +1,83 @@
+giant_robot.png
+	size: 1024, 512
+	repeat: none
+attack
+	index: 0
+	bounds: 0, 0, 128, 128
+attack
+	index: 1
+	bounds: 128, 0, 128, 128
+attack
+	index: 2
+	bounds: 256, 0, 128, 128
+attack
+	index: 3
+	bounds: 384, 0, 128, 128
+attack
+	index: 4
+	bounds: 512, 0, 128, 128
+attack
+	index: 5
+	bounds: 640, 0, 128, 128
+attack
+	index: 6
+	bounds: 768, 0, 128, 128
+attack
+	index: 7
+	bounds: 896, 0, 128, 128
+attackDamaged
+	index: 0
+	bounds: 0, 128, 128, 128
+attackDamaged
+	index: 1
+	bounds: 128, 128, 128, 128
+attackDamaged
+	index: 2
+	bounds: 256, 128, 128, 128
+attackDamaged
+	index: 3
+	bounds: 384, 128, 128, 128
+attackDamaged
+	index: 4
+	bounds: 512, 128, 128, 128
+attackDamaged
+	index: 5
+	bounds: 640, 128, 128, 128
+attackDamaged
+	index: 6
+	bounds: 768, 128, 128, 128
+attackDamaged
+	index: 7
+	bounds: 896, 128, 128, 128
+moveLeft
+	index: 0
+	bounds: 128, 256, 128, 128
+default
+	bounds: 128, 256, 128, 128
+moveLeft
+	index: 1
+	bounds: 256, 256, 128, 128
+moveLeft
+	index: 2
+	bounds: 384, 256, 128, 128
+moveLeft
+	index: 3
+	bounds: 512, 256, 128, 128
+moveLeftDamaged
+	index: 0
+	bounds: 640, 256, 128, 128
+moveLeftDamaged
+	index: 1
+	bounds: 768, 256, 128, 128
+moveLeftDamaged
+	index: 2
+	bounds: 896, 256, 128, 128
+moveLeftDamaged
+	index: 3
+	bounds: 0, 384, 128, 128
+invalid
+	bounds: 0, 256, 128, 128
+teleport
+	bounds: 0, 256, 128, 128
+teleportDamaged
+	bounds: 0, 256, 128, 128
