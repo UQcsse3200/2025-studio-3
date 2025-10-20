@@ -1135,6 +1135,12 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/components/items/ItemComponent.Type.html#COFFEE" class="member-name-link">COFFEE</a> - Enum constant in enum class com.csse3200.game.components.items.<a href="com/csse3200/game/components/items/ItemComponent.Type.html" title="enum class in com.csse3200.game.components.items">ItemComponent.Type</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/worldmap/CoinRewardedComponent.html" class="type-name-link" title="class in com.csse3200.game.components.worldmap">CoinRewardedComponent</a> - Class in <a href="com/csse3200/game/components/worldmap/package-summary.html">com.csse3200.game.components.worldmap</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/worldmap/CoinRewardedComponent.html#%3Cinit%3E(int)" class="member-name-link">CoinRewardedComponent(int)</a> - Constructor for class com.csse3200.game.components.worldmap.<a href="com/csse3200/game/components/worldmap/CoinRewardedComponent.html" title="class in com.csse3200.game.components.worldmap">CoinRewardedComponent</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseBossConfig.html#coinsRewarded" class="member-name-link">coinsRewarded</a> - Variable in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseBossConfig.html" title="class in com.csse3200.game.entities.configs">BaseBossConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/physics/components/ColliderComponent.html" class="type-name-link" title="class in com.csse3200.game.physics.components">ColliderComponent</a> - Class in <a href="com/csse3200/game/physics/components/package-summary.html">com.csse3200.game.physics.components</a></dt>
 <dd>
 <div class="block">Attaches a physics collider to an entity.</div>
@@ -3193,10 +3199,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/exceptions/AuthoringError.html#getCode()" class="member-name-link">getCode()</a> - Method in exception class com.csse3200.game.exceptions.<a href="com/csse3200/game/exceptions/AuthoringError.html" title="class in com.csse3200.game.exceptions">AuthoringError</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/worldmap/CoinRewardedComponent.html#getCoinAmount()" class="member-name-link">getCoinAmount()</a> - Method in class com.csse3200.game.components.worldmap.<a href="com/csse3200/game/components/worldmap/CoinRewardedComponent.html" title="class in com.csse3200.game.components.worldmap">CoinRewardedComponent</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/progression/wallet/Wallet.html#getCoins()" class="member-name-link">getCoins()</a> - Method in class com.csse3200.game.progression.wallet.<a href="com/csse3200/game/progression/wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></dt>
 <dd>
 <div class="block">Gets the current amount of coins in the wallet.</div>
 </dd>
+<dt><a href="com/csse3200/game/entities/configs/BaseBossConfig.html#getCoinsRewarded()" class="member-name-link">getCoinsRewarded()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseBossConfig.html" title="class in com.csse3200.game.entities.configs">BaseBossConfig</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/entities/configs/BaseEnemyConfig.html#getCoinsRewarded()" class="member-name-link">getCoinsRewarded()</a> - Method in class com.csse3200.game.entities.configs.<a href="com/csse3200/game/entities/configs/BaseEnemyConfig.html" title="class in com.csse3200.game.entities.configs">BaseEnemyConfig</a></dt>
 <dd>
 <div class="block">Gets the coins rewarded value for this entity.</div>
@@ -4983,6 +4993,10 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/ai/tasks/Task.Status.html#INACTIVE" class="member-name-link">INACTIVE</a> - Enum constant in enum class com.csse3200.game.ai.tasks.<a href="com/csse3200/game/ai/tasks/Task.Status.html" title="enum class in com.csse3200.game.ai.tasks">Task.Status</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/areas/LevelGameArea.html#increaseOutGameCurrency(int)" class="member-name-link">increaseOutGameCurrency(int)</a> - Method in class com.csse3200.game.areas.<a href="com/csse3200/game/areas/LevelGameArea.html" title="class in com.csse3200.game.areas">LevelGameArea</a></dt>
+<dd>
+<div class="block">Increases out-of-game currency upon enemy death.</div>
+</dd>
 <dt><a href="com/csse3200/game/progression/statistics/Statistics.html#incrementStatistic(java.lang.String)" class="member-name-link">incrementStatistic(String)</a> - Method in class com.csse3200.game.progression.statistics.<a href="com/csse3200/game/progression/statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></dt>
 <dd>
 <div class="block">Increments a statistic by 1 and checks for achievement unlocks.</div>
@@ -8102,8 +8116,6 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/tasks/BossAttackTask.html#start()" class="member-name-link">start()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/BossAttackTask.html" title="class in com.csse3200.game.components.tasks">BossAttackTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/ChaseTask.html#start()" class="member-name-link">start()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/ChaseTask.html" title="class in com.csse3200.game.components.tasks">ChaseTask</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="com/csse3200/game/components/tasks/GunnerAttackTask.html#start()" class="member-name-link">start()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/GunnerAttackTask.html" title="class in com.csse3200.game.components.tasks">GunnerAttackTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/tasks/JumpTask.html#start()" class="member-name-link">start()</a> - Method in class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/JumpTask.html" title="class in com.csse3200.game.components.tasks">JumpTask</a></dt>
 <dd>&nbsp;</dd>
