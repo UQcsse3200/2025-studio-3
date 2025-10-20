@@ -4,10 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
+import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.ui.WorldMapNode;
+import net.dermetfan.utils.Pair;
 import java.util.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,23 +20,14 @@ import org.slf4j.LoggerFactory;
  */
 public class WorldMapService {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapService.class);
+  private static final String LOCK_REASON =
+    "You must complete the previous level to unlock this one.";
   private final Map<String, WorldMapNode> nodes;
-  private final List<WorldMapNodeRenderComponent> nodeRenderComponents;
-
-  private Entity playerEntity;
-
-  public void registerPlayer(Entity player) {
-    this.playerEntity = player;
-  }
-
-  public Entity getPlayerEntity() {
-    return this.playerEntity;
-  }
 
   /** Constructor for the world map service. */
   public WorldMapService() {
     this.nodes = new HashMap<>();
-    this.nodeRenderComponents = new ArrayList<>();
+    loadNodes();
   }
 
   /**
@@ -68,81 +61,116 @@ public class WorldMapService {
     return new ArrayList<>(nodes.values());
   }
 
-  // Put these helpers near WorldMapService (or the class where the method lives)
-  private static final String LOCK_MSG = "Locked until you reach this node.";
-  private static final Map<String, Integer> LEVEL_INDEX =
-      Map.of("levelOne", 1, "levelTwo", 2, "levelThree", 3, "levelFour", 4, "levelFive", 5);
-
-  private enum State {
-    UNLOCKED_DONE,
-    UNLOCKED_TODO,
-    LOCKED
+  /** 
+   * Registers the nodes on the world map. This is the default configuration for the nodes, 
+   * and is updated when the profile is loaded.
+   */
+  private void loadNodes() {
+    registerNode(
+        new WorldMapNode(
+            "Shop",
+            new Pair<>(0.75f, 0.40f),
+            false,
+            true,
+            ScreenType.SHOP,
+            "images/nodes/shop.png",
+            ""),
+        "shop");
+    registerNode(
+        new WorldMapNode(
+            "Town",
+            new Pair<>(0.20f, 0.80f),
+            false,
+            true,
+            ScreenType.SKILLTREE,
+            "images/nodes/skills.png",
+            ""),
+        "skills");
+    registerNode(
+        new WorldMapNode(
+            "Arcade",
+            new Pair<>(0.55f, 0.395f),
+            false,
+            true,
+            ScreenType.MINI_GAMES,
+            "images/nodes/arcade.png",
+            ""),
+        "minigames");
+    registerNode(
+        new WorldMapNode(
+            "Level 1",
+            new Pair<>(0.18f, 0.27f),
+            false,
+            false,
+            ScreenType.MAIN_GAME,
+            "images/nodes/level1.png",
+            LOCK_REASON),
+        "levelOne");
+    registerNode(
+        new WorldMapNode(
+            "Level 2",
+            new Pair<>(0.32f, 0.24f),
+            false,
+            false,
+            ScreenType.MAIN_GAME,
+            "images/nodes/level2.png",
+            LOCK_REASON),
+        "levelTwo");
+    registerNode(
+        new WorldMapNode(
+            "Level 3",
+            new Pair<>(0.42f, 0.412f),
+            false,
+            false,
+            ScreenType.MAIN_GAME,
+            "images/nodes/level3.png",
+            LOCK_REASON),
+        "levelThree");
+    registerNode(
+        new WorldMapNode(
+            "Level 4",
+            new Pair<>(0.7f, 0.55f),
+            false,
+            false,
+            ScreenType.MAIN_GAME,
+            "images/nodes/level4.png",
+            LOCK_REASON),
+        "levelFour");
+    registerNode(
+        new WorldMapNode(
+            "Level 5",
+            new Pair<>(0.85f, 0.78f),
+            false,
+            false,
+            ScreenType.MAIN_GAME,
+            "images/nodes/level5.png",
+            LOCK_REASON),
+        "levelFive");
   }
 
-  /** Returns true for "level*" keys. */
-  private static boolean isLevelKey(String key) {
-    return key != null && key.startsWith("level");
-  }
+  /**
+   * Apply the profile state to the world map nodes.
+   */
+  public void applyState() {
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    Set<String> unlocked = profile.getUnlockedNodes();
+    Set<String> completedLevels = profile.getCompletedLevels();
 
-  /** Returns level index; unknown/non-level = MAX_VALUE. */
-  private static int levelIndexOf(String key) {
-    if (key == null) return Integer.MAX_VALUE;
-    Integer idx = LEVEL_INDEX.get(key.trim());
-    return idx != null ? idx : Integer.MAX_VALUE;
-  }
-
-  /** Decide node state with simple, flat rules. */
-  private static State decideState(
-      String key, Set<String> defaultUnlocked, int currentIdx, boolean finished) {
-
-    // Special nodes (shop/minigames/skills) are always unlocked but not completed
-    if (defaultUnlocked != null && defaultUnlocked.contains(key)) {
-      return State.UNLOCKED_TODO;
-    }
-
-    // Non-level nodes (that are not special) are locked
-    if (!isLevelKey(key)) {
-      return State.LOCKED;
-    }
-
-    // Level nodes
-    int idx = levelIndexOf(key);
-    if (finished || idx < currentIdx) return State.UNLOCKED_DONE;
-    if (idx == currentIdx) return State.UNLOCKED_TODO;
-    return State.LOCKED;
-  }
-
-  /** Apply the decided state to a node. */
-  private static void apply(WorldMapNode node, State s) {
-    switch (s) {
-      case UNLOCKED_DONE:
+    // Unlock default nodes
+    for (String key : unlocked) {
+      WorldMapNode node = nodes.get(key);
+      if (node != null) {
         node.setUnlocked(true);
+        node.setLockReason(null);
+      }
+    }
+
+    // Mark completed levels
+    for (String levelKey : completedLevels) {
+      WorldMapNode node = nodes.get(levelKey);
+      if (node != null) {
         node.setCompleted(true);
-        node.setLockReason(null);
-        break;
-      case UNLOCKED_TODO:
-        node.setUnlocked(true);
-        node.setCompleted(false);
-        node.setLockReason(null);
-        break;
-      default: // LOCKED
-        node.setUnlocked(false);
-        node.setCompleted(false);
-        node.setLockReason(LOCK_MSG);
-    }
-  }
-
-  public void applyStatesFrom(Profile profile, Set<String> defaultUnlocked) {
-    if (profile == null) return;
-
-    String cur = profile.getCurrentLevel();
-    boolean finished = "end".equals(cur);
-    int currentIdx = finished ? Integer.MAX_VALUE - 1 : levelIndexOf(cur);
-
-    for (WorldMapNode node : getAllNodes()) {
-      String key = node.getRegistrationKey();
-      State s = decideState(key, defaultUnlocked, currentIdx, finished);
-      apply(node, s);
+      }
     }
   }
 
@@ -163,30 +191,9 @@ public class WorldMapService {
     logger.info("[WorldMapService] Locked node: {}", key);
   }
 
-  /**
-   * Register a node render component for proximity updates
-   *
-   * @param renderComponent the render component to register
-   */
-  public void registerNodeRenderComponent(WorldMapNodeRenderComponent renderComponent) {
-    nodeRenderComponents.add(renderComponent);
-  }
-
-  /**
-   * Update all node render components with the current nearby node
-   *
-   * @param nearbyNode the node that the player is currently near, or null if none
-   */
-  public void updateNodeProximity(WorldMapNode nearbyNode) {
-    for (WorldMapNodeRenderComponent renderComponent : nodeRenderComponents) {
-      renderComponent.updateProximityState(nearbyNode);
-    }
-  }
-
   /** Clear all registered nodes */
   public void clearNodes() {
     nodes.clear();
-    nodeRenderComponents.clear();
     logger.debug("[WorldMapService] Cleared all world map nodes");
   }
 

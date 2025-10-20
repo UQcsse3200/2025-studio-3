@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -30,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,10 +65,6 @@ public class WorldMapScreen extends BaseScreen {
   // One-shot smooth recenter flag and threshold (in world units)
   private boolean smoothRecentering = false;
   private static final float RECENTER_STOP_EPSILON = 2f;
-
-  // Special non-level nodes that should always be unlocked but never auto-completed
-  private static final java.util.Set<String> SPECIAL_NODES =
-      new java.util.HashSet<>(java.util.List.of("skills", "shop", "minigames"));
 
   public WorldMapScreen(GdxGame game) {
     super(game, Optional.empty(), Optional.of(ADDITIONAL_TEXTURES));
@@ -150,7 +146,7 @@ public class WorldMapScreen extends BaseScreen {
 
     // Set initial zoom on the underlying camera
     if (camera.getCamera()
-        instanceof com.badlogic.gdx.graphics.OrthographicCamera orthographicCamera) {
+        instanceof OrthographicCamera orthographicCamera) {
       orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
     }
 
@@ -175,6 +171,7 @@ public class WorldMapScreen extends BaseScreen {
     handleDefaultNodeSetup(nodes);
     registerNodeEntities(worldMapService, nodes);
   }
+
   /**
    * Handles map setup when there is no active profile (first-time run or error). Only unlocks the
    * default special nodes.

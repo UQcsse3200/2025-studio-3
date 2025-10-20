@@ -27,34 +27,26 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private final Vector2 worldSize;
   private final float nodeSize;
   private boolean showPrompt = false;
-
   private static final int KEY_INSET = 6;
   private static final int LABEL_INSET = 32;
-  // regions
   private TextureRegion keyUpR;
   private TextureRegion keyDownR;
   private TextureRegion keyLeftR;
   private TextureRegion keyRightR;
   private TextureRegion labelBgR;
-
-  // assets
   private Texture glow;
   private Texture labelBg;
   private Texture keyUp;
   private Texture keyDown;
   private Texture keyLeft;
   private Texture keyRight;
-
   private BitmapFont font;
   private float pulseT = 0f;
-
-  // visuals
   private static final float ARROW_SIZE = 44f;
   private static final float ARROW_OFFSET = 0.78f;
   private static final float LABEL_GAP = 5f;
   private static final float FONT_SCALE = 1.15f;
   private static final float VISUAL_TRIM_Y = 14f;
-
   private static final float NAME_GAP = -14f;
   private static final float LABEL_PAD_X = 45f;
   private static final float LABEL_PAD_Y = 36f;
