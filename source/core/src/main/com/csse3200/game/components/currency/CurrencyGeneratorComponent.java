@@ -38,14 +38,14 @@ public class CurrencyGeneratorComponent extends Component {
   /** Scrap visual size in pixels */
   private float scrapSizePx = 64f;
 
-  /** Scrap lifetime in seconds */
-  private static final float SCRAP_LIFETIME_SEC = 20f;
-
   /** Generator action */
   private Action generatorAction;
 
   /** Whether the generator is paused */
   private boolean isPaused = false;
+
+  /** Stage the generator action was scheduled against. */
+  private Stage scheduledStage;
 
   /** Tracks whether the action is currently scheduled on the stage. */
   private boolean actionScheduled = false;
@@ -151,12 +151,13 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Pauses the sunlight generation */
   public void pause() {
-    Stage stage = getStage();
+    Stage stage = scheduledStage != null ? scheduledStage : getStage();
     if (stage != null && generatorAction != null && actionScheduled) {
       stage.getRoot().removeAction(generatorAction);
     }
     actionScheduled = false;
     generatorAction = null; // discard pooled action to avoid invalid reuse
+    scheduledStage = null;
     if (!isPaused) {
       isPaused = true;
       logger.debug("Paused CurrencyGenerator");
@@ -175,6 +176,7 @@ public class CurrencyGeneratorComponent extends Component {
     }
     if (!actionScheduled) {
       stage.getRoot().addAction(generatorAction);
+      scheduledStage = stage;
       actionScheduled = true;
     }
     if (isPaused) {

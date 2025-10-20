@@ -29,21 +29,25 @@ class CurrencyGeneratorComponentTest {
   private static final String SCRAP_TEXTURE = "images/entities/currency/scrap_metal.png";
 
   @Mock private Stage stage;
+  @Mock private Stage replacementStage;
   @Mock private Group root;
+  @Mock private Group replacementRoot;
   @Mock private Timer timer;
 
   private GameStateService gameStateService;
 
   @BeforeEach
   void setUp() {
-    when(stage.getRoot()).thenReturn(root);
-    doNothing().when(root).addAction(any(Action.class));
+    lenient().when(stage.getRoot()).thenReturn(root);
+    lenient().when(replacementStage.getRoot()).thenReturn(replacementRoot);
+    lenient().doNothing().when(root).addAction(any(Action.class));
+    lenient().doNothing().when(root).removeAction(any(Action.class));
 
     RenderService renderService = new RenderService();
     renderService.setStage(stage);
     ServiceLocator.registerRenderService(renderService);
 
-    gameStateService = new GameStateService(new GameTime(), timer);
+    gameStateService = spy(new GameStateService(new GameTime(), timer));
     ServiceLocator.registerGameStateService(gameStateService);
   }
 
@@ -73,6 +77,9 @@ class CurrencyGeneratorComponentTest {
     ArgumentCaptor<Action> actionCaptor = ArgumentCaptor.forClass(Action.class);
     verify(root).addAction(actionCaptor.capture());
 
+    reset(root);
+    doNothing().when(root).removeAction(any(Action.class));
+
     component.dispose();
 
     verify(root).removeAction(actionCaptor.getValue());
@@ -80,6 +87,37 @@ class CurrencyGeneratorComponentTest {
     reset(root);
     gameStateService.addFreezeReason(USER_PAUSE);
     verifyNoInteractions(root);
+  }
+
+  @Test
+  void pausesAgainstOriginalStageWhenStageSwapped() {
+    CurrencyGeneratorComponent component = buildComponent();
+    Entity spawner = new Entity().addComponent(component);
+    spawner.create();
+
+    ArgumentCaptor<Action> actionCaptor = ArgumentCaptor.forClass(Action.class);
+    verify(root).addAction(actionCaptor.capture());
+
+    reset(root, replacementRoot);
+    doNothing().when(root).removeAction(any(Action.class));
+
+    ServiceLocator.getRenderService().setStage(replacementStage);
+
+    gameStateService.addFreezeReason(USER_PAUSE);
+
+    verify(root).removeAction(actionCaptor.getValue());
+    verifyNoInteractions(replacementRoot);
+  }
+
+  @Test
+  void createSkipsWhenStageNotReady() {
+    ServiceLocator.getRenderService().setStage(null);
+
+    CurrencyGeneratorComponent component = buildComponent();
+    Entity spawner = new Entity().addComponent(component);
+    spawner.create();
+
+    verify(gameStateService, never()).registerFreezeListener(any());
   }
 
   private static CurrencyGeneratorComponent buildComponent() {
