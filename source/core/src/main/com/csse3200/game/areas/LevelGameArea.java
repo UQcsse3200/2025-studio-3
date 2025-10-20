@@ -1145,6 +1145,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (currentWave >= 4) {
       logger.info("Level is complete!");
       isLevelComplete = true;
+
+      // Unlock next level immediately upon completion and persist profile
+      com.csse3200.game.services.ProfileService ps = ServiceLocator.getProfileService();
+      if (ps != null) {
+        try {
+          ps.markLevelComplete(currentLevelKey);
+        } catch (Exception e) {
+          logger.warn("[LevelGameArea] Failed to advance profile level: {}", e.toString());
+        }
+      }
+
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
       }
