@@ -38,7 +38,7 @@ public class SettingsMenu extends UIComponent {
     entity.getEvents().addListener("gamesettings", this::hideMenu);
     entity.getEvents().addListener("displaysettings", this::hideMenu);
     entity.getEvents().addListener("audiosettings", this::hideMenu);
-    entity.getEvents().addListener("uiscaleorqualitychanged", this::rebuild);
+    entity.getEvents().addListener("displayneedsupdate", this::rebuild);
   }
 
   /** Add actors to the UI. */
@@ -136,12 +136,11 @@ public class SettingsMenu extends UIComponent {
 
   /**
    * Reinitialises and updates the settings menu by disposing of the current Settings screen and
-   * setting it to a new Settings screen. This rebuilds the screen with the new UIScale and Quality
-   * settings.
+   * setting it to a new Settings screen. This rebuilds the screen with the new Display settings.
    */
   private void rebuild() {
     game.setScreen(ScreenType.SETTINGS);
-    logger.info("Set screen to new Settings Screen with updated UIScale and Quality settings");
+    logger.info("Set screen to new Settings Screen with updated Display settings");
   }
 
   @Override

@@ -26,6 +26,7 @@ public class DisplaySettingsMenu extends UIComponent {
   private CheckBox vsyncCheck;
   private SelectBox<String> uiScaleSelect;
   private SelectBox<String> qualitySelect;
+  private boolean displayModeChanged = false;
 
   /** Constructor for DisplaySettingsMenu. */
   public DisplaySettingsMenu() {
@@ -77,6 +78,7 @@ public class DisplaySettingsMenu extends UIComponent {
             resolutionLabel.setVisible(isWindowed);
             resolutionSelect.setVisible(isWindowed);
             applyDisplayModeChange(selectedMode);
+            displayModeChanged = true;
           }
         });
 
@@ -268,14 +270,18 @@ public class DisplaySettingsMenu extends UIComponent {
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[DisplaySettingsMenu] Remaining display settings applied");
 
+    // Check if display mode changed then reset
+    boolean displayChanged = displayModeChanged;
+    displayModeChanged = false;
+
     // Check if settings have changed that need to be applied immediately (trigger change event),
     // otherwise return to Settings menu
-    if (uiScaleChanged || qualityChanged) {
-      logger.info("[DisplaySettingsMenu] UIScale or Quality settings changed");
-      entity.getEvents().trigger("uiscaleorqualitychanged");
+    if (uiScaleChanged || qualityChanged || displayChanged) {
+      logger.info("[DisplaySettingsMenu] UIScale, Quality or Display Mode settings changed");
+      entity.getEvents().trigger("displayneedsupdate");
     } else {
       logger.info(
-          "[DisplaySettingsMenu] UIScale or Quality settings unchanged, back to settings menu");
+          "[DisplaySettingsMenu] UIScale, Quality and Display Mode settings unchanged, back to settings menu");
       entity.getEvents().trigger("backtosettingsmenu");
     }
   }
