@@ -2,92 +2,54 @@ package com.csse3200.game.ui.tutorial;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 import net.dermetfan.utils.Pair;
 
 /**
- * Displays an interactive tutorial overlay for the World Map screen.
- *
- * <p>The world map tutorial guides the player through basic controls such as movement, interaction
- * and zooming. It appears as a dialog box in the top-left corner of the screen and progresses based
- * on user inputs. A toggle button allows the player to show or hide the tutorial, and optionally
- * displays all steps at once. The tutorial fades out automatically after completion unless manually
- * toggled on again.
- *
- * <p>Tutorial steps: 1. Move using W/A/S/D 2. Interact using E 3. Zoom using Q/K
+ * Displays a step-by-step tutorial overlay for the World Map screen.
  */
 public class WorldMapTutorial extends UIComponent {
-  /** The main container for tutorial labels */
-  private Table table;
+  /** Full-screen dark overlay to dim the background. */
+  private Image overlay;
 
-  /** The label that is currently displayed during single step display */
-  private Label currentLabel;
+  /** Dialog window containing the tutorial messages. */
+  private Window dialogWindow;
 
-  /** Label for movement instructions */
-  private Label moveLabel;
+  /** Label displaying the current tutorial message. */
+  private Label messageLabel;
 
-  /** Label for interaction instructions */
-  private Label interactLabel;
-
-  /** Label for zoom instructions */
-  private Label zoomLabel;
-
-  /** Boolean to determine whether to display all tutorial labels at once */
-  private boolean displayAllLabels = false;
-
-  /** Current alpha transparency for fading effect */
-  private float alpha = 1f;
-
-  /** Boolean to determine whether the tutorial is currently fading out */
-  private boolean fadingOut = false;
-
-  /** Whether the tutorial is active and listening for input */
-  private boolean active = true;
-
-  /** Current tutorial step index */
+  /** Current tutorial step index. */
   private int step = 0;
 
-  /** Fade out speed for the tutorial. */
-  private static final float FADE_SPEED = 0.6f;
+  /** Whether the tutorial is active and listening for input. */
+  private boolean active = true;
 
-  /** Table padding value. */
-  private static final float TABLE_PAD = 20f;
+  /** Messages displayed in order. Populated using current key bindings. */
+  private String[] tutorialMessages;
 
-  /** Label bottom padding. */
-  private static final float LABEL_BOTTOM_PAD = 20f;
+  /** Alpha for overlay color. */
+  private static final float OVERLAY_ALPHA = 0.7f;
 
-  /** Table position offset from top. */
-  private static final float TABLE_TOP_OFFSET = 100f;
+  /** Common literal used in UI copy. */
+  private static final String PRESS = "Press ";
 
   /**
-   * Initialises the tutorial UI, including the dialog box and toggle button. Sets up the initial
-   * label and input listener for toggling visibility.
+   * Initialises the tutorial UI components, matching the style used by {@link LevelMapTutorial}.
    */
   @Override
   public void create() {
     super.create();
 
-    Texture overlayTexture = new Texture(Gdx.files.internal("images/ui/dialog.png"));
-    TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(overlayTexture);
-
-    // Create a table with the image as background
-    table = new Table();
-    table.setBackground(backgroundDrawable);
-    table.setSize(
-        Math.floorDiv(Gdx.graphics.getWidth(), 5), Math.floorDiv(Gdx.graphics.getHeight(), 5));
-    table.setPosition(
-        TABLE_PAD,
-        Gdx.graphics.getHeight() - table.getHeight() - TABLE_TOP_OFFSET); // top-left with padding
-    table.pad(TABLE_PAD); // inner padding for the label
-
+    // Build messages with current key bindings
     SettingsService settingsService = ServiceLocator.getSettingsService();
     String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
     String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
@@ -95,216 +57,124 @@ public class WorldMapTutorial extends UIComponent {
     String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
     String interactKeyName =
         Input.Keys.toString(settingsService.getSettings().getInteractionButton());
-    // For zoom, re-use current Q/K bindings for now (no settings provided for zoom)
+    // Zoom currently bound to fixed keys
     String zoomOutKeyName = Input.Keys.toString(Input.Keys.Q);
     String zoomInKeyName = Input.Keys.toString(Input.Keys.K);
 
-    this.moveLabel =
-        ui.text(
-            "Use "
-                + upKeyName
-                + "/"
-                + leftKeyName
-                + "/"
-                + downKeyName
-                + "/"
-                + rightKeyName
-                + " to move");
-    this.interactLabel = ui.text("Press " + interactKeyName + " to interact");
-    this.zoomLabel = ui.text("Press " + zoomOutKeyName + "/" + zoomInKeyName + " to zoom");
-    currentLabel = moveLabel;
+    tutorialMessages = new String[] {
+      ("Use " + upKeyName + "/" + leftKeyName + "/" + downKeyName + "/" + rightKeyName + " to move").toUpperCase(),
+      (PRESS + interactKeyName + " to interact").toUpperCase(),
+      (PRESS + zoomOutKeyName + "/" + zoomInKeyName + " to zoom").toUpperCase()
+    };
 
-    table.add(currentLabel).left();
-    moveLabel.setVisible(true); // set first label to visible and the rest invisible
+    // Root stack with overlay behind UI
+    Stack stack = new Stack();
+    stack.setFillParent(true);
 
-    stage.addActor(table);
+    Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+    pixmap.setColor(0, 0, 0, 1);
+    pixmap.fill();
+    Texture blackTex = new Texture(pixmap);
+    pixmap.dispose();
+    overlay = new Image(new TextureRegionDrawable(blackTex));
+    overlay.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
+    stack.add(overlay);
 
-    // Toggle button
-    TextButton toggleButton = ui.primaryButton("TUTORIAL", 150f);
+    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
+    String continueKeyName = Input.Keys.toString(skipKey);
+    String titleText = (PRESS + continueKeyName + " to continue").toUpperCase();
+
+    dialogWindow = ui.createWindow(titleText);
+    dialogWindow.setModal(true);
+    dialogWindow.setMovable(false);
+    dialogWindow.setResizable(false);
+    dialogWindow.getTitleLabel().setAlignment(Align.center);
+    dialogWindow.setSize(800f, 400f);
+
+    messageLabel = ui.subheading(tutorialMessages[step]);
+    messageLabel.setWrap(true);
+    messageLabel.setAlignment(Align.center);
+
+    TextButton skipButton = ui.primaryButton("Skip", 150f);
+    TextButton continueButton = ui.primaryButton("Continue", 150f);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(150f);
-    toggleButton.addListener(
+
+    skipButton.addListener(
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
-            boolean visible = table.isVisible();
-
-            if (!visible) {
-              displayAllLabels = true;
-              fadingOut = false;
-              alpha = 1f;
-              table.getColor().a = 1f;
-              resetTutorial();
-              table.setVisible(true);
-            } else {
-              table.setVisible(false);
-            }
+            endTutorial();
           }
         });
 
-    Table buttonTable = new Table();
-    buttonTable.top().left().pad(TABLE_PAD);
-    buttonTable.setFillParent(true);
-    buttonTable
-        .add(toggleButton)
+    continueButton.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            nextStep();
+          }
+        });
+
+    Table content = new Table();
+    content.add(messageLabel).expand().fillX().pad(20f).row();
+
+    Table buttonRow = new Table();
+    buttonRow
+        .add(skipButton)
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue())
-        .left();
-    stage.addActor(buttonTable);
+        .padRight(20f);
+    buttonRow
+        .add(continueButton)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue());
+
+    content.add(buttonRow).expandY().bottom().padBottom(20f);
+    dialogWindow.add(content).expand().fill();
+
+    Table rootTable = new Table();
+    rootTable.setFillParent(false);
+    rootTable.align(Align.bottom);
+    rootTable.add(dialogWindow).width(600f).height(200f).padBottom(80f);
+    stack.add(rootTable);
+    stage.addActor(stack);
   }
 
-  /**
-   * Resets the tutorial state and label visibility. If {@code displayAllLabels} is true, all steps
-   * are shown simultaneously. Otherwise, only display the current step.
-   */
-  private void resetTutorial() {
-    step = 0;
-    active = true;
-    alpha = 1f;
-    fadingOut = false;
-
-    // Reset label visibilities
-    moveLabel.setVisible(true);
-    interactLabel.setVisible(true);
-    zoomLabel.setVisible(true);
-
-    moveLabel.getStyle().fontColor.a = 1f;
-    interactLabel.getStyle().fontColor.a = 1f;
-    zoomLabel.getStyle().fontColor.a = 1f;
-
-    table.clearChildren();
-
-    if (displayAllLabels) {
-      moveLabel.setVisible(true);
-      interactLabel.setVisible(true);
-      zoomLabel.setVisible(true);
-      table.add(moveLabel).left().padBottom(LABEL_BOTTOM_PAD).row();
-      table.add(interactLabel).left().padBottom(LABEL_BOTTOM_PAD).row();
-      table.add(zoomLabel).left();
+  /** Advances to the next tutorial message, or ends when finished. */
+  private void nextStep() {
+    step++;
+    if (step < tutorialMessages.length) {
+      messageLabel.setText(tutorialMessages[step]);
     } else {
-      moveLabel.setVisible(true);
-      interactLabel.setVisible(false);
-      zoomLabel.setVisible(false);
-      currentLabel = moveLabel;
-      table.add(currentLabel).left();
+      endTutorial();
     }
   }
 
-  /**
-   * Updates the tutorial logic based on player input. Advances through tutorial steps and triggers
-   * fade-out of tutorial when complete. Skips updates if inactive or displaying all labels.
-   */
+  /** Ends the tutorial and hides UI elements. */
+  private void endTutorial() {
+    active = false;
+    overlay.setVisible(false);
+    dialogWindow.setVisible(false);
+  }
+
   @Override
   public void update() {
-    if (currentLabel != null) {
-      currentLabel.getStyle().fontColor.a = 1f;
-    }
+    if (!active) return;
 
-    if (!active || displayAllLabels) {
-      return;
-    }
-
-    updateTutorialStep();
-    updateFadeOut();
-  }
-
-  /** Updates the current tutorial step based on user input. */
-  private void updateTutorialStep() {
-    switch (step) {
-      case 0 -> handleMovementStep();
-      case 1 -> handleInteractionStep();
-      case 2 -> handleZoomStep();
-      default -> {
-        // No action needed for unknown steps
+    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
+    if (Gdx.input.isKeyJustPressed(skipKey)) {
+      if (step < tutorialMessages.length - 1) {
+        nextStep();
+      } else {
+        endTutorial();
       }
     }
   }
 
-  /** Handles the movement tutorial step (step 0). */
-  private void handleMovementStep() {
-    if (isMovementKeyPressed()) {
-      advanceToStep(interactLabel, 1);
-    }
-  }
-
-  /** Handles the interaction tutorial step (step 1). */
-  private void handleInteractionStep() {
-    int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
-    if (Gdx.input.isKeyJustPressed(interactKey)) {
-      advanceToStep(zoomLabel, 2);
-    }
-  }
-
-  /** Handles the zoom tutorial step (step 2). */
-  private void handleZoomStep() {
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q) || Gdx.input.isKeyJustPressed(Input.Keys.K)) {
-      fadingOut = true;
-    }
-  }
-
-  /**
-   * Checks if any movement key is currently pressed.
-   *
-   * @return true if a movement key is pressed, false otherwise
-   */
-  private boolean isMovementKeyPressed() {
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    int up = settingsService.getSettings().getUpButton();
-    int down = settingsService.getSettings().getDownButton();
-    int left = settingsService.getSettings().getLeftButton();
-    int right = settingsService.getSettings().getRightButton();
-    return Gdx.input.isKeyPressed(up)
-        || Gdx.input.isKeyPressed(left)
-        || Gdx.input.isKeyPressed(down)
-        || Gdx.input.isKeyPressed(right);
-  }
-
-  /**
-   * Advances to the next tutorial step with the given label.
-   *
-   * @param newLabel the label to display for the next step
-   * @param nextStep the step number to advance to
-   */
-  private void advanceToStep(Label newLabel, int nextStep) {
-    currentLabel = newLabel;
-    currentLabel.getStyle().fontColor.a = 1f;
-    currentLabel.setVisible(true);
-    table.clearChildren();
-    table.add(currentLabel).left();
-    step = nextStep;
-  }
-
-  /** Updates the fade-out effect if active. */
-  private void updateFadeOut() {
-    if (!fadingOut) {
-      return;
-    }
-
-    alpha -= Gdx.graphics.getDeltaTime() * FADE_SPEED;
-    if (alpha <= 0) {
-      alpha = 0;
-      active = false;
-      table.setVisible(false);
-      table.clearChildren();
-    } else {
-      table.getColor().a = alpha;
-    }
-  }
-
-  /** Cleans up the tutorial UI and resources. Clears the table and call superclass disposal. */
   @Override
   public void dispose() {
-    table.clear();
     super.dispose();
-  }
-
-  /**
-   * Draw method overridden from {@link UIComponent}. No manual drawing is required as Scene2D
-   * handles rendering.
-   *
-   * @param batch Batch that the SpriteBatch used for rendering.
-   */
-  @Override
-  protected void draw(SpriteBatch batch) {
-    // No manual drawing required
+    stage.clear();
   }
 }
