@@ -66,13 +66,15 @@ public class GdxGame extends Game {
     ServiceLocator.registerSettingsService(new SettingsService());
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
+    
+    loadGlobalAssets();
+
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
     ServiceLocator.registerMusicService(new MusicService());
 
-    // Initialize Discord Rich Presence
     DiscordRichPresenceService discordService = new DiscordRichPresenceService();
     discordService.initialize();
     ServiceLocator.registerDiscordRichPresenceService(discordService);
@@ -80,8 +82,6 @@ public class GdxGame extends Game {
       discordService.setPresence(null);
     }
 
-    // Asset configs
-    loadGlobalAssets();
     loadNodes();
     Gdx.gl.glClearColor(0f / 255f, 0f / 255f, 0f / 255f, 1);
     setCursor();

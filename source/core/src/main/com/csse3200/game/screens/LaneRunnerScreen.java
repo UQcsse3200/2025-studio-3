@@ -25,6 +25,9 @@ import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.MinigameService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +42,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
   public static final float LANE_CENTER = LANE_WIDTH / 2;
   private boolean gameOverDialogShown = false;
   private float spawnTimer = 0f;
-  private final java.util.Random random = new java.util.Random();
-  private com.badlogic.gdx.physics.box2d.Box2DDebugRenderer debugRenderer;
+  private final Random random = new java.util.Random();
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/lanes.png",
@@ -152,13 +154,6 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
     renderer.render();
 
-    // Render physics debug information
-    if (debugRenderer != null) {
-      debugRenderer.render(
-          ServiceLocator.getPhysicsService().getPhysics().getWorld(),
-          renderer.getCamera().getCamera().combined);
-    }
-
     if (ServiceLocator.getMinigameService().isGameOver() && !gameOverDialogShown) {
       handleGameOver();
     }
@@ -225,9 +220,6 @@ public class LaneRunnerScreen extends ScreenAdapter {
   public void dispose() {
     logger.debug("[LaneRunnerScreen] Disposing");
 
-    if (debugRenderer != null) {
-      debugRenderer.dispose();
-    }
     renderer.dispose();
     ServiceLocator.getRenderService().dispose();
     ServiceLocator.getEntityService().dispose();
