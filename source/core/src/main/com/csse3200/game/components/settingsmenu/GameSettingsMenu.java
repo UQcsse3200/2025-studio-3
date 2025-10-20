@@ -50,8 +50,8 @@ public class GameSettingsMenu extends UIComponent {
       ALLOWED_KEYS.add(l);
     }
 
-    // Numbers (0-9)
-    for (int n = Input.Keys.NUM_0; n <= Input.Keys.NUM_9; n++) {
+    // Numbers 1-9 (0 sometimes causes issues as a keycode of 0 can represent Unknown)
+    for (int n = Input.Keys.NUM_1; n <= Input.Keys.NUM_9; n++) {
       ALLOWED_KEYS.add(n);
     }
 
