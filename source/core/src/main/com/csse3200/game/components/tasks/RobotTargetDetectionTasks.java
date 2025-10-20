@@ -76,7 +76,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
       }
 
       Vector2 targetPos = target.getCenterPosition();
-      if (targetPos.x > from.x) {
+      if (targetPos.x >= from.x) {
         continue; // Target is behind the owner
       }
       // dst2 instead of dst to avoid square root calculation because calculating square root is
