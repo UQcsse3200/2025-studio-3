@@ -1,5 +1,7 @@
 package com.csse3200.game.areas;
 
+import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -44,7 +46,6 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
 import com.csse3200.game.services.GameStateService;
-import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -838,7 +839,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       }
 
       // spawn heal effect on entity
-      ItemEffectsService.spawnEffect(
+      spawnEffect(
           ServiceLocator.getResourceService()
               .getAsset("images/effects/hp-up.atlas", TextureAtlas.class),
           "hp-up",

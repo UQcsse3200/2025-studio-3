@@ -1,5 +1,7 @@
 package com.csse3200.game.areas;
 
+import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
+
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
@@ -10,7 +12,6 @@ import com.csse3200.game.components.items.ItemComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.progression.inventory.Inventory;
-import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -143,7 +144,7 @@ public class ItemHandler {
     }
 
     logger.info("Spawning effect " + name + " onto entities");
-    ItemEffectsService.spawnEffect(
+    spawnEffect(
         ServiceLocator.getResourceService()
             .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class),
         name,
