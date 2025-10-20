@@ -236,18 +236,16 @@ public class HotbarDisplay extends UIComponent {
             if (!isUp[0]) {
               // Move up
               itemHotbarTable.addAction(Actions.moveBy(0, distance, 0.35f));
-              itemLayers.addAction(Actions.sequence(
-                      Actions.delay(0.35f),
-                      Actions.run(() -> itemLayers.setVisible(false))
-              ));
+              itemLayers.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.35f), Actions.run(() -> itemLayers.setVisible(false))));
               isUp[0] = true;
             } else {
               // Move down
               itemHotbarTable.addAction(Actions.moveBy(0, -distance, 0.35f));
-              itemLayers.addAction(Actions.sequence(
-                      Actions.delay(0.05f),
-                      Actions.run(() -> itemLayers.setVisible(true))
-              ));
+              itemLayers.addAction(
+                  Actions.sequence(
+                      Actions.delay(0.05f), Actions.run(() -> itemLayers.setVisible(true))));
               isUp[0] = false;
             }
           }
@@ -261,7 +259,9 @@ public class HotbarDisplay extends UIComponent {
     // makes only the images touchable
     itemHotbarTable.setTouchable(Touchable.childrenOnly);
     itemHotbarTable.row();
-    itemHotbarTable.add(upDownArrow).size(upDownArrow.getWidth() * scale, upDownArrow.getHeight() * scale);
+    itemHotbarTable
+        .add(upDownArrow)
+        .size(upDownArrow.getWidth() * scale, upDownArrow.getHeight() * scale);
 
     stage.addActor(itemHotbarTable);
     itemHotbarTable.toBack();
