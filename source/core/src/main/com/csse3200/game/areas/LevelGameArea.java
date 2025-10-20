@@ -336,6 +336,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
     entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
+    entity.getEvents().addListener("entityDespawn", scrapSpawner::dispose);
     spawnEntity(scrapSpawner);
   }
 
