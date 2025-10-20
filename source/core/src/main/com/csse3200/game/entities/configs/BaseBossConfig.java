@@ -9,8 +9,13 @@ public class BaseBossConfig {
   public float speed = 0.5f;
   public String attackType = "";
   public float range = 0f;
+  public int coinsRewarded = 20;
 
   public float getRange() {
     return range;
+  }
+
+  public int getCoinsRewarded() {
+    return coinsRewarded;
   }
 }

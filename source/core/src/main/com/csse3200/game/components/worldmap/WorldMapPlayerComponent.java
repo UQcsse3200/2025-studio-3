@@ -1,6 +1,7 @@
 package com.csse3200.game.components.worldmap;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
@@ -91,12 +92,14 @@ public class WorldMapPlayerComponent extends UIComponent {
     playerTexture =
         ServiceLocator.getResourceService()
             .getAsset("images/entities/character.png", Texture.class);
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/node_sound.mp3"});
 
     // Resolve a few special nodes used by legacy transitions
     resolveSpecialNodes();
 
     // Load graph used by JSON path-based navigation
     ServiceLocator.getWorldMapService().loadPathConfig("configs/worldmap_paths.json");
+    ServiceLocator.getResourceService().loadAll();
   }
 
   @Override
@@ -591,7 +594,9 @@ public class WorldMapPlayerComponent extends UIComponent {
 
       // Character ~96x110 → measure from centre-ish points to feel natural
       float distance = Vector2.dst(playerPos.x + 48, playerPos.y + 55, nodeX + 40, nodeY + 40);
-      if (distance < INTERACTION_DISTANCE) return node; // <= single return/continue style
+      if (distance < INTERACTION_DISTANCE) {
+        return node; // <= single return/continue style
+      }
     }
     return null;
   }
@@ -654,7 +659,12 @@ public class WorldMapPlayerComponent extends UIComponent {
       waypointIndex++;
       if (waypointIndex >= waypointQueue.size()) {
         entity.setPosition(curTarget);
+        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+        Sound nodeSound =
+            ServiceLocator.getResourceService().getAsset("sounds/node_sound.mp3", Sound.class);
+        nodeSound.play(0.2f * volume);
         persistWorldPos();
+
         pathMoving = false;
         waypointIndex = -1;
         waypointQueue.clear();

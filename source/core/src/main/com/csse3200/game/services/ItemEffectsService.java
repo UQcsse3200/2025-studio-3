@@ -162,6 +162,8 @@ public class ItemEffectsService {
         // to cover 3x3 tiles)
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
+        bottomCorner.x = bottomCorner.x - tileSize * 1.5f;
+
         spawnEffect(
             ServiceLocator.getResourceService()
                 .getAsset("images/effects/coffee.atlas", TextureAtlas.class),

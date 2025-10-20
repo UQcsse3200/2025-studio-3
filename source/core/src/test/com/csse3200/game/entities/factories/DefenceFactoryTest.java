@@ -435,4 +435,15 @@ class DefenceFactoryTest {
         collider.getFixture().getFilterData().maskBits,
         "Collision mask should be correct");
   }
+
+  @Test
+  void testShellExplosionAssetsExist() {
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    assertNotNull(resourceService, "ResourceService should be registered");
+
+    // Verify that explosion atlas is loadable
+    TextureAtlas explosionAtlas =
+        resourceService.getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class);
+    assertNotNull(explosionAtlas, "Explosion atlas should be loaded");
+  }
 }

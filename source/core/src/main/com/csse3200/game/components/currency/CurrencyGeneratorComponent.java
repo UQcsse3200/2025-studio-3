@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.progression.skilltree.Skill;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
@@ -51,7 +52,18 @@ public class CurrencyGeneratorComponent extends Component {
    * @param scrapTexturePath texture path for the scrap image
    */
   public CurrencyGeneratorComponent(Entity entity, String scrapTexturePath) {
-    this.intervalSec = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+
+    int interval = entity.getComponent(GeneratorStatsComponent.class).getInterval();
+    // adjust interval value with currency generation skill upgrade
+    if (ServiceLocator.getProfileService() != null) {
+      float scrapUpgrade =
+          ServiceLocator.getProfileService()
+              .getProfile()
+              .getSkillset()
+              .getUpgradeValue(Skill.StatType.CURRENCY_GEN);
+      interval = (int) Math.floor(interval / scrapUpgrade);
+    }
+    this.intervalSec = interval;
     this.scrapValue = entity.getComponent(GeneratorStatsComponent.class).getScrapValue();
     this.targetX = entity.getPosition().x;
     this.targetY = entity.getPosition().y;
@@ -70,10 +82,8 @@ public class CurrencyGeneratorComponent extends Component {
       return;
     }
 
-    generatorAction =
-        Actions.forever(
-            Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
-    stage.addAction(generatorAction);
+    generatorAction = buildGeneratorAction();
+    stage.getRoot().addAction(generatorAction);
     logger.debug("CurrencyGenerator scheduled with interval={}s", intervalSec);
   }
 
@@ -131,6 +141,7 @@ public class CurrencyGeneratorComponent extends Component {
             : null;
     if (stage != null && generatorAction != null) {
       stage.getRoot().removeAction(generatorAction);
+      generatorAction = null; // discard pooled action to avoid invalid reuse
       logger.debug("Paused CurrencyGenerator");
     }
   }
@@ -138,6 +149,17 @@ public class CurrencyGeneratorComponent extends Component {
   /** Resumes the sunlight generation */
   public void resume() {
     isPaused = false;
+    Stage stage =
+        ServiceLocator.getRenderService() != null
+            ? ServiceLocator.getRenderService().getStage()
+            : null;
+    if (stage != null) {
+      if (generatorAction == null) {
+        generatorAction = buildGeneratorAction();
+      }
+      stage.getRoot().addAction(generatorAction);
+      logger.debug("Resumed CurrencyGenerator");
+    }
   }
 
   /**
@@ -161,5 +183,11 @@ public class CurrencyGeneratorComponent extends Component {
       logger.debug("Removed generatorAction from Stage.");
     }
     generatorAction = null;
+  }
+
+  /** Build a new, safe-to-add generator action instance. */
+  private Action buildGeneratorAction() {
+    return Actions.forever(
+        Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
   }
 }
