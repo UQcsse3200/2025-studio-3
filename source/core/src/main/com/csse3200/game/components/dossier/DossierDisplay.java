@@ -123,60 +123,83 @@ public class DossierDisplay extends UIComponent {
               if (value == type) {
                 return;
               }
+
               type = value;
               enemyMode = value;
               logger.info(
                   "[DossierDisplay] Mode changed - type: {}, enemyMode: {}", type, enemyMode);
-              if (type) {
-                entities = enemyConfigs.keySet().toArray(new String[0]);
-                logger.info(
-                    "[DossierDisplay] Enemy mode - entities count: {}, entities: {}",
-                    entities.length,
-                    java.util.Arrays.toString(entities));
-              } else {
-                // Combine defenders and generators, excluding the wall
-                java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
 
-                // Filter defenders (excluding wall)
-                for (String defenderKey : defenderConfigs.keySet()) {
-                  if (!defenderKey.equals("wall")) {
-                    filteredDefenderKeys.add(defenderKey);
-                  }
-                }
-
-                String[] defenderKeys = filteredDefenderKeys.toArray(new String[0]);
-                String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
-                entities = new String[defenderKeys.length + generatorKeys.length];
-                System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
-                System.arraycopy(
-                    generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
-                logger.info(
-                    "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
-                    defenderKeys.length,
-                    generatorKeys.length,
-                    entities.length);
-                logger.debug(
-                    "[DossierDisplay] Human mode entities: {}",
-                    java.util.Arrays.toString(entities));
-              }
+              loadEntitiesForCurrentMode();
               currentEntity = 0;
-              // Play page turn sound
-              Sound pageTurn =
-                  ServiceLocator.getResourceService()
-                      .getAsset("sounds/dossier_page_turn.mp3", Sound.class);
-              if (pageTurn != null) {
-                float volume = ServiceLocator.getSettingsService().getSoundVolume();
-                pageTurn.play(volume);
-                logger.info("Page turn sound played");
-              }
-              // Rebuild UI for the new type
-              stage.clear();
-              addActors();
-              // Trigger change_info event to update display with first entity
-              if (entities.length > 0) {
-                entity.getEvents().trigger(CHANGE_INFO, currentEntity);
-              }
+              playPageTurnSound();
+              rebuildUI();
             });
+  }
+
+  /** Loads entities based on the current mode (enemy or human) */
+  private void loadEntitiesForCurrentMode() {
+    if (type) {
+      loadEnemyEntities();
+    } else {
+      loadHumanEntities();
+    }
+  }
+
+  /** Loads enemy entities */
+  private void loadEnemyEntities() {
+    entities = enemyConfigs.keySet().toArray(new String[0]);
+    logger.info("[DossierDisplay] Enemy mode - entities count: {}", entities.length);
+    if (logger.isDebugEnabled()) {
+      logger.debug("[DossierDisplay] Enemy mode entities: {}", java.util.Arrays.toString(entities));
+    }
+  }
+
+  /** Loads human entities (defenders and generators, excluding wall) */
+  private void loadHumanEntities() {
+    // Combine defenders and generators, excluding the wall
+    java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
+
+    // Filter defenders (excluding wall)
+    for (String defenderKey : defenderConfigs.keySet()) {
+      if (!defenderKey.equals("wall")) {
+        filteredDefenderKeys.add(defenderKey);
+      }
+    }
+
+    String[] defenderKeys = filteredDefenderKeys.toArray(new String[0]);
+    String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
+    entities = new String[defenderKeys.length + generatorKeys.length];
+    System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
+    System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
+    logger.info(
+        "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
+        defenderKeys.length,
+        generatorKeys.length,
+        entities.length);
+    if (logger.isDebugEnabled()) {
+      logger.debug("[DossierDisplay] Human mode entities: {}", java.util.Arrays.toString(entities));
+    }
+  }
+
+  /** Plays the page turn sound effect */
+  private void playPageTurnSound() {
+    Sound pageTurn =
+        ServiceLocator.getResourceService().getAsset("sounds/dossier_page_turn.mp3", Sound.class);
+    if (pageTurn != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      pageTurn.play(volume);
+      logger.info("Page turn sound played");
+    }
+  }
+
+  /** Rebuilds the UI for the new entity type */
+  private void rebuildUI() {
+    stage.clear();
+    addActors();
+    // Trigger change_info event to update display with first entity
+    if (entities.length > 0) {
+      entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+    }
   }
 
   /** Sets up the buttons to swap between humans and robots. */
