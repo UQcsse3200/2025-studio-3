@@ -85,7 +85,7 @@ public class SlotEngine {
   public enum Effect {
     SUMMON_ENEMY(2, "SummonEnemy", 1),
     DESTROY_ENEMY(7, "DestroyEnemy", 1),
-    DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 10);
+    DROP_SLINGSHOOTER_CARD(8, "DropSlingShooterCard", 7);
 
     private final int id;
     private final String displayName;
