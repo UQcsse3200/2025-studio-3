@@ -1,0 +1,107 @@
+jumper_robot.png
+	size: 512, 256
+	repeat: none
+attack
+	index: 1
+	bounds: 0, 0, 64, 64
+attack
+	index: 3
+	bounds: 0, 0, 64, 64
+attack
+	index: 2
+	bounds: 0, 0, 64, 64
+attack
+	index: 4
+	bounds: 64, 0, 64, 64
+attack
+	index: 0
+	bounds: 64, 0, 64, 64
+attack
+	index: 6
+	bounds: 128, 0, 64, 64
+attack
+	index: 7
+	bounds: 128, 0, 64, 64
+attack
+	index: 5
+	bounds: 128, 0, 64, 64
+attackDamaged
+	index: 2
+	bounds: 192, 0, 64, 64
+attackDamaged
+	index: 3
+	bounds: 192, 0, 64, 64
+attackDamaged
+	index: 1
+	bounds: 192, 0, 64, 64
+attackDamaged
+	index: 4
+	bounds: 256, 0, 64, 64
+attackDamaged
+	index: 0
+	bounds: 256, 0, 64, 64
+attackDamaged
+	index: 7
+	bounds: 320, 0, 64, 64
+attackDamaged
+	index: 5
+	bounds: 320, 0, 64, 64
+attackDamaged
+	index: 6
+	bounds: 320, 0, 64, 64
+default
+	bounds: 384, 0, 64, 64
+moveLeft
+	index: 2
+	bounds: 384, 0, 64, 64
+moveLeft
+	index: 0
+	bounds: 0, 64, 64, 64
+moveLeft
+	index: 1
+	bounds: 64, 64, 64, 64
+moveLeft
+	index: 3
+	bounds: 128, 64, 64, 64
+moveLeft
+	index: 4
+	bounds: 192, 64, 64, 64
+moveLeft
+	index: 5
+	bounds: 256, 64, 64, 64
+moveLeft
+	index: 6
+	bounds: 320, 64, 64, 64
+moveLeft
+	index: 7
+	bounds: 384, 64, 64, 64
+moveLeftDamaged
+	index: 0
+	bounds: 448, 64, 64, 64
+moveLeftDamaged
+	index: 1
+	bounds: 0, 128, 64, 64
+moveLeftDamaged
+	index: 2
+	bounds: 64, 128, 64, 64
+moveLeftDamaged
+	index: 3
+	bounds: 128, 128, 64, 64
+moveLeftDamaged
+	index: 4
+	bounds: 192, 128, 64, 64
+moveLeftDamaged
+	index: 5
+	bounds: 256, 128, 64, 64
+moveLeftDamaged
+	index: 6
+	bounds: 320, 128, 64, 64
+moveLeftDamaged
+	index: 7
+	bounds: 384, 128, 64, 64
+invalid
+	bounds: 448, 0, 64, 64
+teleport
+    bounds: 448, 0, 64, 64
+teleportDamaged
+    bounds: 448, 0, 64, 64

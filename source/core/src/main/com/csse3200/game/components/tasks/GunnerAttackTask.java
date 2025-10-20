@@ -8,13 +8,9 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** GunnerAttackTask: Handles the gunner robot attacking tasks */
 public class GunnerAttackTask extends RobotTargetDetectionTasks {
-  private static final Logger logger = LoggerFactory.getLogger(GunnerAttackTask.class);
-
   private static final int GUNNER_TASK_PRIORITY = 10;
   private static final float FIRE_COOLDOWN = 0.95f;
 
@@ -32,17 +28,10 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
   }
 
   @Override
-  public void start() {
-    super.start();
-    logger.info("GunnerAttackTask started for {}", owner.getEntity());
-  }
-
-  @Override
   public void update() {
     // find nearest visible defense
     currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
-      logger.info("No visible defense for {}", owner.getEntity());
       return;
     }
     // check if the target is in range
@@ -54,7 +43,11 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
       timeSinceLastFire += ServiceLocator.getTimeSource().getDeltaTime();
       // if the time since last fire is greater than the cooldown, fire
       if (timeSinceLastFire >= FIRE_COOLDOWN) {
-        logger.info("Gunner firing at {} from {}", targetPos, myPos);
+        // This is a bit of a scuffed solution, but the gunnerAttack is very inconsistent about
+        // starting.
+        // Gunner animations could use a repass later after gunner robot kinks have been ironed out.
+        this.owner.getEntity().getEvents().trigger("shootStart");
+
         owner.getEntity().getEvents().trigger("fire");
         timeSinceLastFire = 0f;
       }
@@ -86,7 +79,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         defenses.add(entity);
       }
     }
-    logger.info("Found {} possible defense targets", defenses.size());
     return defenses;
   }
 
@@ -114,15 +106,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         nearestDistance = dist;
       }
     }
-    // log the nearest visible defense
-    if (nearest != null) {
-      logger.info(
-          "Nearest visible defense: {} at {} (dist = {})",
-          nearest,
-          nearest.getPosition(),
-          nearestDistance);
-    }
-
     return nearest;
   }
 

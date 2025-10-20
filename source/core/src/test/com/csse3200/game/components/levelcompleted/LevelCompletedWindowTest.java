@@ -9,15 +9,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.backends.headless.HeadlessApplicationConfiguration;
+import com.badlogic.gdx.backends.headless.HeadlessFiles;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.components.lvlcompleted.LevelCompletedWindow;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.UIExtension;
 import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +32,12 @@ class LevelCompletedWindowTest {
 
   HeadlessApplication app;
   private static final String EVENT_NAME = "levelComplete";
+  private static final String[] GLOBAL_SOUNDS = {
+    "sounds/achievement_unlock.mp3",
+    "sounds/error.mp3",
+    "sounds/dialog.mp3",
+    "sounds/button_clicked.mp3"
+  };
   private static final String DEFAULT_LEVEL_KEY = "levelOne";
 
   @BeforeEach
@@ -39,6 +47,7 @@ class LevelCompletedWindowTest {
         new HeadlessApplication(
             new ApplicationAdapter() {}, new HeadlessApplicationConfiguration());
 
+    Gdx.files = new HeadlessFiles();
     // Mock OpenGL calls
     Gdx.gl20 = Mockito.mock(GL20.class);
     Gdx.gl = Gdx.gl20;
@@ -60,6 +69,11 @@ class LevelCompletedWindowTest {
           }
         };
     ServiceLocator.registerRenderService(renderService);
+    ResourceService resourceService = new ResourceService();
+    ServiceLocator.registerGlobalResourceService(resourceService);
+    resourceService.loadFont("fonts/Jersey10-Regular.ttf", "Default");
+    resourceService.loadSounds(GLOBAL_SOUNDS);
+    resourceService.loadAll();
   }
 
   @AfterEach
@@ -74,7 +88,7 @@ class LevelCompletedWindowTest {
     ui.addComponent(comp);
     ui.create();
 
-    Window w = comp.getWindow();
+    Table w = comp.getContainer();
     assertNotNull(w, "Window should be created");
     assertFalse(w.isVisible(), "Window should start hidden");
 
@@ -90,7 +104,7 @@ class LevelCompletedWindowTest {
     ui.addComponent(comp);
     ui.create();
 
-    Window w = comp.getWindow();
+    Table w = comp.getContainer();
     assertNotNull(w);
     assertFalse(w.isVisible(), "Window should remain hidden if no event fired");
   }

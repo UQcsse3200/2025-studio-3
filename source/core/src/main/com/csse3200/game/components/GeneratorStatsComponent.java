@@ -18,7 +18,6 @@ public class GeneratorStatsComponent extends CombatStatsComponent {
    */
   public GeneratorStatsComponent(int health, int interval, int scrapValue, int cost) {
     super(health, 0); // no attack stat
-
     setInterval(interval);
     setScrapValue(scrapValue);
     setCost(cost);

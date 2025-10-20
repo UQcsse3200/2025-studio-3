@@ -1,9 +1,11 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
+import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.PhysicsEngine;
@@ -20,7 +22,12 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   protected final AttackDirection direction;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
-  protected final RaycastHit hit = new RaycastHit();
+
+  // temp variables to be reused when getting nearest target
+  private final Vector2 castDir = new Vector2();
+  private final Vector2 offsetFrom = new Vector2();
+  private final Vector2 end = new Vector2();
+  private final RaycastHit tempHit = new RaycastHit();
 
   public enum AttackDirection {
     LEFT,
@@ -94,56 +101,35 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   }
 
   /**
-   * Determines if a target is visible by checking for obstacles in the current entities line of
-   * sight
-   *
-   * @param target the target to check
-   * @return {@code true} if the target is visible, {@code false} otherwise
-   */
-  protected boolean isTargetVisible(Entity target) {
-    Vector2 from = owner.getEntity().getCenterPosition();
-    Vector2 to = target.getCenterPosition();
-
-    // If there is an obstacle in the path to the player, not visible.
-    if (physics.raycast(from, to, PhysicsLayer.NPC, hit)) {
-      debugRenderer.drawLine(from, hit.getPoint());
-      return false;
-    }
-    debugRenderer.drawLine(from, to);
-    return true;
-  }
-
-  /**
    * Finds the nearest visible target within attack range.
    *
    * @return the closest visible target within range, or {@code null} if none
    */
   protected Entity getNearestVisibleTarget() {
     Vector2 from = owner.getEntity().getCenterPosition();
-    Entity closestTarget = null;
-    float closestDist = Float.MAX_VALUE;
-    List<Entity> targets = getAllTargets();
+    castDir.set((direction == AttackDirection.RIGHT) ? 1f : -1f, 0f);
 
-    for (Entity target : targets) {
-      Vector2 targetPos = target.getCenterPosition();
+    LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
+    float tileSize = area.getTileSize();
 
-      // Skip targets that are not directly to the DIRECTION of the defense - OpenAI was used to
-      // only
-      // consider targets to the right of defender
-      if (direction == AttackDirection.RIGHT
-              && (targetPos.x <= from.x || Math.abs(targetPos.y - from.y) > 1)
-          || direction == AttackDirection.LEFT
-              && (targetPos.x >= from.x || Math.abs(targetPos.y - from.y) > 1)) {
-        continue;
-      }
+    // done with the help of OpenAI
+    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
+      offsetFrom.set(from.x, from.y + yOffset);
+      end.set(offsetFrom).mulAdd(castDir, attackRange);
 
-      float distance = from.dst(targetPos);
-      if (distance <= attackRange && distance < closestDist) {
-        closestDist = distance;
-        closestTarget = target;
+      // find first enemy entity in current entities line of sight in the given direction and range
+      boolean didHit =
+          physics.raycast(
+              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+
+      if (didHit) {
+        Fixture hitFixture = tempHit.getFixture();
+        if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
+          return entity;
+        }
       }
     }
-    return closestTarget;
+    return null;
   }
 
   protected List<Entity> getAllTargets() {
