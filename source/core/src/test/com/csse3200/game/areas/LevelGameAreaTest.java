@@ -32,6 +32,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.*;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
@@ -243,6 +244,26 @@ class LevelGameAreaTest {
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
     verify(storage).removeTileUnit();
+  }
+
+  @Test
+  void spawnUnitIgnoredWhenPlacementLocked() {
+    GameStateService service = mock(GameStateService.class);
+    when(service.isPlacementLocked()).thenReturn(true);
+    ServiceLocator.registerGameStateService(service);
+
+    CapturingLevelGameArea area = new CapturingLevelGameArea();
+    area.setGrid(new LevelGameGrid(5, 5));
+
+    Entity selection = new Entity().addComponent(new DeckInputComponent(area, Entity::new));
+    area.setSelectedUnit(selection);
+    area.setIsCharacterSelected(true);
+
+    area.spawnUnit(0);
+
+    assertFalse(area.getGrid().isOccupiedIndex(0));
+    assertNull(area.getSelectedUnit());
+    assertFalse(area.isCharacterSelected());
   }
 
   @Test
@@ -512,7 +533,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerPhysicsService(physicsService);
 
     Texture tex = mock(Texture.class);
-    when(resourceService.getAsset(eq(path), eq(Texture.class))).thenReturn(null, tex);
+    when(resourceService.getAsset(path, Texture.class)).thenReturn(null, tex);
 
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
     // Skip wall spawning to avoid PolygonShape native call
@@ -522,7 +543,7 @@ class LevelGameAreaTest {
 
     verify(resourceService).loadTextures(argThat(arr -> arr.length == 1 && path.equals(arr[0])));
     verify(resourceService).loadAll();
-    verify(resourceService, atLeast(2)).getAsset(eq(path), eq(Texture.class));
+    verify(resourceService, atLeast(2)).getAsset(path, Texture.class);
   }
 
   @Test
@@ -546,8 +567,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerSettingsService(settings);
 
     Sound goSound = mock(Sound.class);
-    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
-        .thenReturn(goSound);
+    when(resourceService.getAsset("sounds/game-over-voice.mp3", Sound.class)).thenReturn(goSound);
 
     // Create a robot that has crossed the left edge
     float t = area.getTileSize();
@@ -560,11 +580,45 @@ class LevelGameAreaTest {
     Field f = LevelGameArea.class.getDeclaredField("isGameOver");
     f.setAccessible(true);
     assertTrue(f.getBoolean(area));
-    verify(goSound, times(1)).play(eq(0.5f));
+    verify(goSound, times(1)).play(0.5f);
 
     // Idempotent re-check
     area.checkGameOver();
     verify(goSound, times(1)).play(anyFloat());
+  }
+
+  @Test
+  void checkGameOverAddsFreezeReason() {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    SettingsService settings = mock(SettingsService.class);
+    when(settings.getSoundVolume()).thenReturn(0.5f);
+    ServiceLocator.registerSettingsService(settings);
+
+    Sound goSound = mock(Sound.class);
+    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
+        .thenReturn(goSound);
+
+    Entity robot = new Entity();
+    robot.setPosition(area.getXOffset() - area.getTileSize(), area.getYOffset());
+    area.getRobots().add(robot);
+
+    area.checkGameOver();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+    verify(state).lockPlacement();
   }
 
   @Test
@@ -604,6 +658,32 @@ class LevelGameAreaTest {
   }
 
   @Test
+  void checkLevelCompleteAddsFreezeReason() {
+    BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
+    when(levelCfg.getRows()).thenReturn(5);
+    when(levelCfg.getCols()).thenReturn(10);
+    when(levelCfg.getMapFile()).thenReturn("images/backgrounds/level_map_grass.png");
+    when(configService.getLevelConfig(anyString())).thenReturn(levelCfg);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    doNothing().when(area).spawnWall();
+
+    area.create();
+
+    WaveService waves = mock(WaveService.class);
+    when(waves.getCurrentWave()).thenReturn(4);
+    ServiceLocator.registerWaveService(waves);
+
+    GameStateService state = mock(GameStateService.class);
+    ServiceLocator.registerGameStateService(state);
+
+    area.checkLevelComplete();
+
+    verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+    verify(state).lockPlacement();
+  }
+
+  @Test
   void create_spawnsOverlayAndGridWithoutError() {
     BaseLevelConfig levelCfg = mock(BaseLevelConfig.class);
     when(levelCfg.getRows()).thenReturn(5);
@@ -617,5 +697,60 @@ class LevelGameAreaTest {
 
     assertDoesNotThrow(area::create);
     assertNotNull(area.getGrid());
+  }
+
+  @Test
+  void placeDefenceUnit_playsSound() {
+    // Arrange
+    ResourceService resources = mock(ResourceService.class);
+    SettingsService settings = mock(SettingsService.class);
+    CurrencyService currencyService = mock(CurrencyService.class);
+    Sound sound = mock(Sound.class);
+    Entity unit = spy(new Entity());
+
+    // Expected values
+    String expectedPath = "sounds/slingshooter-place.mp3";
+    float expectedVolume = 0.7f;
+
+    // Mock service locator
+    ServiceLocator.registerResourceService(resources);
+    ServiceLocator.registerSettingsService(settings);
+    ServiceLocator.registerCurrencyService(currencyService);
+
+    // Mock behaviour
+    when(unit.getProperty(anyString())).thenReturn(null);
+    when(unit.getProperty("soundPath")).thenReturn(expectedPath);
+    when(resources.getAsset(expectedPath, Sound.class)).thenReturn(sound);
+    when(settings.getSoundVolume()).thenReturn(expectedVolume);
+
+    // area and grid
+    Entity tileEntity = mock(Entity.class);
+    TileStorageComponent tileStorage = mock(TileStorageComponent.class);
+    when(tileEntity.getComponent(TileStorageComponent.class)).thenReturn(tileStorage);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    LevelGameGrid grid = mock(LevelGameGrid.class);
+    when(grid.getTile(anyInt())).thenReturn(tileEntity);
+
+    // allow unit to be placed
+    unit.addComponent(
+        new DeckInputComponent(
+            area,
+            new Supplier<Entity>() {
+              @Override
+              public Entity get() {
+                return unit;
+              }
+            }));
+
+    // Act
+    area.setGrid(grid);
+    area.setSelectedUnit(unit);
+    area.markNextPlacementFree();
+    area.spawnUnit(0);
+
+    // Assert
+    verify(resources).getAsset(expectedPath, Sound.class);
+    verify(sound).play(expectedVolume);
   }
 }

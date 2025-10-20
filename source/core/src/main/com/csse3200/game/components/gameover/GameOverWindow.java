@@ -1,9 +1,9 @@
 package com.csse3200.game.components.gameover;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -14,10 +14,10 @@ import com.csse3200.game.ui.UIComponent;
  */
 public class GameOverWindow extends UIComponent {
   // Initialises the game over window.
-  private Window window;
+  private Table container;
+
   // Tracks the display status of the window.
   boolean isDisplayed = false;
-  private float uiScale = ui.getUIScale();
 
   /** Creates the game over window. */
   @Override
@@ -27,26 +27,39 @@ public class GameOverWindow extends UIComponent {
     // Listens for game over event
     entity.getEvents().addListener("gameOver", this::onGameOver);
 
-    // Creates popup display.
-    window = new Window("Game over.", skin);
-    window.setMovable(false);
-    window.setSize(500 * uiScale, 500 * uiScale);
-    window.setPosition(
-        (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
+    container = new Table();
+    container.setFillParent(true);
+    container.center();
 
-    // Adds text in the popup display.
     Label gameOverHeading = ui.heading("Game Over!");
-    String interactKeyName =
-        Input.Keys.toString(
-            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
-    Label message = ui.text("Press " + interactKeyName + " to go back to main menu.");
-    window.add(gameOverHeading).pad(20).row();
-    window.add(message).pad(10).row();
+    Label message = ui.text("You have failed to complete the level");
 
-    // Sets popup display to false when created.
-    window.setVisible(false);
-    stage.addActor(window);
+    TextButton mainMenuButton = ui.primaryButton("World Map", 250);
+    mainMenuButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          navigateTo(GdxGame.ScreenType.WORLD_MAP);
+          return true;
+        });
+
+    TextButton quitButton = ui.primaryButton("Quit Game", 250);
+    quitButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          Gdx.app.exit();
+          return true;
+        });
+
+    container.add(gameOverHeading).pad(20f).row();
+    container.add(message).pad(10f).row();
+    container.add(mainMenuButton).pad(8f).row();
+    container.add(quitButton).pad(8f).row();
+    container.setVisible(false);
+    stage.addActor(container);
   }
 
   /** Checks the status of the popup display */
@@ -61,32 +74,31 @@ public class GameOverWindow extends UIComponent {
     // Press 'E' to take the player back to the main menu.
     int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
     if (Gdx.input.isKeyJustPressed(interactKey)) {
-      // Closes popup window
-      window.setVisible(false);
-      isDisplayed = false;
-
-      // Updates next frame to return to the main menu without crashing.
-      Gdx.app.postRunnable(
-          () -> {
-            // Gets the game.
-            GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
-            // Switches to main menu.
-            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-          });
+      navigateTo(GdxGame.ScreenType.WORLD_MAP);
     }
   }
 
   /** Activates the popup display when game over event is listened for. */
   private void onGameOver() {
-    window.setVisible(true);
+    container.setVisible(true);
     isDisplayed = true;
   }
 
+  private void navigateTo(GdxGame.ScreenType target) {
+    container.setVisible(false);
+    isDisplayed = false;
+    Gdx.app.postRunnable(
+        () -> {
+          GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
+          game.setScreen(target);
+        });
+  }
+  
   /** Frees the memory. */
   @Override
   public void dispose() {
-    if (window != null) {
-      window.remove();
+    if (container != null) {
+      container.remove();
     }
 
     super.dispose();

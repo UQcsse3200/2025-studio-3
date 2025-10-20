@@ -47,6 +47,7 @@ import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -728,6 +729,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void setSelectedUnit(Entity unit) {
+    if (unit != null && isPlacementLocked()) {
+      logger.debug("Ignoring unit selection while placement is locked");
+      return;
+    }
     selectedUnit = unit;
   }
 
@@ -752,6 +757,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring spawn request while placement is locked");
+      resetSelectionUI();
+      return;
+    }
     // --- Step 1: Resolve grid/tile/selected entity ---
     Entity tile = grid.getTile(position);
 
@@ -801,6 +811,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
     cancelDrag();
+  }
+
+  private boolean isPlacementLocked() {
+    GameStateService service = ServiceLocator.getGameStateService();
+    return service != null && service.isPlacementLocked();
   }
 
   /** Convert a tile index into its world position. */
@@ -1097,6 +1112,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
+
+        GameStateService service = ServiceLocator.getGameStateService();
+        if (service != null) {
+          service.addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
+          service.lockPlacement();
+        }
       }
     }
   }
@@ -1115,6 +1136,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       if (levelCompleteEntity != null) {
         displayNewEntity();
         levelCompleteEntity.getEvents().trigger("levelComplete");
+      }
+
+      GameStateService service = ServiceLocator.getGameStateService();
+      if (service != null) {
+        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+        service.lockPlacement();
       }
     }
   }
@@ -1157,6 +1184,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void beginDrag(Texture texture) {
+    if (isPlacementLocked()) {
+      logger.debug("Ignoring drag start while placement is locked");
+      return;
+    }
     if (dragOverlay != null && texture != null) {
       dragOverlay.begin(texture);
     }
@@ -1168,6 +1199,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (dragOverlay != null) {
       dragOverlay.cancel();
     }
+  }
+
+  /**
+   * Removes a preview entity created for wave previews. Uses {@link #despawnEntity(Entity)} so it
+   * is immediately cleaned up, independent of physics updates.
+   *
+   * @param entity preview entity to remove
+   */
+  public void removePreviewEntity(Entity entity) {
+    if (entity == null) {
+      return;
+    }
+    despawnEntity(entity);
   }
 
   /**
