@@ -89,7 +89,7 @@ class GameStateServiceTest {
   @Test
   void freezeListenersNotifiedOnStateChanges() {
     List<Boolean> events = new ArrayList<>();
-    GameStateService.FreezeListener listener = frozen -> events.add(frozen);
+    GameStateService.FreezeListener listener = events::add;
 
     service.registerFreezeListener(listener);
     service.addFreezeReason(USER_PAUSE);
@@ -103,7 +103,7 @@ class GameStateServiceTest {
   @Test
   void unregisterStopsNotifications() {
     List<Boolean> events = new ArrayList<>();
-    GameStateService.FreezeListener listener = frozen -> events.add(frozen);
+    GameStateService.FreezeListener listener = events::add;
 
     service.registerFreezeListener(listener);
     service.unregisterFreezeListener(listener);
