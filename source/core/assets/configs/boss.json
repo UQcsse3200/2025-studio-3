@@ -6,7 +6,8 @@
     "attack": 50,
     "scale": 3.0,
     "speed": 18,
-    "attackType": "punch"
+    "attackType": "punch",
+    "coinsRewarded": 20
   },
 "samuraiBot": {
     "name": "Samurai Bot",
@@ -14,7 +15,8 @@
     "health": 20,
     "attack": 35,
     "scale": 2.5,
-    "speed": 22
+    "speed": 22,
+    "coinsRewarded": 30
 },
   "gunBot": {
     "name": "Gun Bot",
@@ -23,6 +25,7 @@
     "attack": 10,
     "scale": 2.0,
     "speed": 10,
-    "range": 250.0
+    "range": 250.0,
+    "coinsRewarded": 40
   }
   }
