@@ -71,8 +71,8 @@ public class ItemEffectsService {
     // Play sound effect for item
     if (soundRequired) {
       Sound effectSound =
-        ServiceLocator.getResourceService()
-        .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+          ServiceLocator.getResourceService()
+              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
 
       if (effectSound != null) {
         float volume = ServiceLocator.getSettingsService().getSoundVolume();

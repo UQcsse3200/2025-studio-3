@@ -222,7 +222,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void spawnUnitItemInInventoryConsumesOnePlaysEffectAndClearsTile() {
+  void spawnUnitItemInInventoryConsumesOnePlaysEffect() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     ItemComponent item = mock(ItemComponent.class);
@@ -243,7 +243,6 @@ class LevelGameAreaTest {
 
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
-    verify(storage).removeTileUnit();
   }
 
   @Test

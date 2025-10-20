@@ -111,6 +111,12 @@ public class ItemHandler {
     }
   }
 
+  /**
+   * Adds the visual cue animation onto each defender being buffed
+   *
+   * @param trigger the buff being activated
+   * @param entity the entity to spawn the effect above
+   */
   private void addAnimationOntoDefence(String trigger, Entity entity) {
     Vector2 pos = entity.getPosition();
 
@@ -137,14 +143,15 @@ public class ItemHandler {
     }
 
     logger.info("Spawning effect " + name + " onto entities");
-    ItemEffectsService.spawnEffect(ServiceLocator.getResourceService()
-          .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class), 
-          name,
-          (new Vector2[] {pos, pos}),
-          (int) area.getTileSize(),
-          (new float[] {0.1f, 5f}),
-          Animation.PlayMode.NORMAL,
-          false,
-          false);
+    ItemEffectsService.spawnEffect(
+        ServiceLocator.getResourceService()
+            .getAsset("images/effects/" + name + ".atlas", TextureAtlas.class),
+        name,
+        (new Vector2[] {pos, pos}),
+        (int) area.getTileSize(),
+        (new float[] {0.1f, 5f}),
+        Animation.PlayMode.NORMAL,
+        false,
+        false);
   }
 }

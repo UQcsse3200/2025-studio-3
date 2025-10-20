@@ -43,8 +43,8 @@ import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ItemEffectsService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
@@ -836,10 +836,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           continue;
         }
       }
-      
+
       // spawn heal effect on entity
-      ItemEffectsService.spawnEffect(ServiceLocator.getResourceService()
-          .getAsset("images/effects/hp-up.atlas", TextureAtlas.class), 
+      ItemEffectsService.spawnEffect(
+          ServiceLocator.getResourceService()
+              .getAsset("images/effects/hp-up.atlas", TextureAtlas.class),
           "hp-up",
           (new Vector2[] {pos, pos}),
           (int) tileSize,
@@ -871,7 +872,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
-    tile.getComponent(TileStorageComponent.class).removeTileUnit();
+    // tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
@@ -925,8 +926,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         // remove the healer after its animation
         ServiceLocator.getRenderService()
             .getStage()
-            .addAction(
-                Actions.sequence(Actions.delay(0.55f), Actions.run(() -> healDefences())));
+            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(() -> healDefences())));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
