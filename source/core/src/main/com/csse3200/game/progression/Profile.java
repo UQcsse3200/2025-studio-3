@@ -6,6 +6,8 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.progression.wallet.Wallet;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import net.dermetfan.utils.Pair;
 
@@ -27,6 +29,8 @@ public class Profile {
   private float worldMapY = -1f; // last saved Y on world map; -1 means unset
   private int worldMapZoomIdx = -1; // last saved zoom step index; -1 means unset
   private boolean playedTutorial; // whether the player has played the tutorial before
+  private List<String> completedNodes; // List of completed nodes/levels
+  private java.util.Set<String> unlockedNodes;
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -39,6 +43,7 @@ public class Profile {
     this.worldMapX = -1f;
     this.worldMapY = -1f;
     this.worldMapZoomIdx = -1;
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED); // include defaults
     this.currentLevel = "levelOne";
     this.playedTutorial = false;
   }
@@ -58,6 +63,11 @@ public class Profile {
     this.skillset = skillset;
     this.statistics = statistics != null ? statistics : new Statistics();
     this.arsenal = arsenal;
+    this.completedNodes = completedNodes != null ? completedNodes : new ArrayList<>();
+    this.unlockedNodes = new java.util.HashSet<>(DEFAULT_UNLOCKED);
+    if (this.currentLevel != null) {
+      this.unlockedNodes.add(this.currentLevel);
+    }
   }
 
   /**
@@ -167,13 +177,13 @@ public class Profile {
     this.worldMapY = worldMapY;
   }
 
-    /** Returns true if the player has played the tutorial before. */
-    public boolean getPlayedTutorial() {
-        return this.playedTutorial;
-    }
+  /** Returns true if the player has played the tutorial before. */
+  public boolean getPlayedTutorial() {
+    return this.playedTutorial;
+  }
 
-    /** Sets a flag to show that the player has played the tutorial before. */
-    public void setPlayedTutorial() {
-        this.playedTutorial = true;
-    }
+  /** Sets a flag to show that the player has played the tutorial before. */
+  public void setPlayedTutorial() {
+    this.playedTutorial = true;
+  }
 }
