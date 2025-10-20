@@ -1,0 +1,95 @@
+gunner_robot.png
+	size: 512, 256
+	repeat: none
+attack
+	index: 0
+	bounds: 0, 0, 64, 64
+attack
+	index: 1
+	bounds: 64, 0, 64, 64
+attack
+	index: 2
+	bounds: 128, 0, 64, 64
+attack
+	index: 3
+	bounds: 192, 0, 64, 64
+attack
+	index: 4
+	bounds: 256, 0, 64, 64
+attack
+	index: 5
+	bounds: 320, 0, 64, 64
+attackDamaged
+	index: 0
+	bounds: 384, 0, 64, 64
+attackDamaged
+	index: 1
+	bounds: 448, 0, 64, 64
+attackDamaged
+	index: 2
+	bounds: 0, 64, 64, 64
+attackDamaged
+	index: 3
+	bounds: 64, 64, 64, 64
+attackDamaged
+	index: 4
+	bounds: 128, 64, 64, 64
+attackDamaged
+	index: 5
+	bounds: 192, 64, 64, 64
+default
+	bounds: 256, 64, 64, 64
+shoot
+	index: 1
+	bounds: 256, 64, 64, 64
+moveLeft
+	index: 0
+	bounds: 384, 64, 64, 64
+moveLeft
+	index: 1
+	bounds: 448, 64, 64, 64
+moveLeft
+	index: 2
+	bounds: 0, 128, 64, 64
+moveLeft
+	index: 3
+	bounds: 64, 128, 64, 64
+moveLeftDamaged
+	index: 0
+	bounds: 128, 128, 64, 64
+moveLeftDamaged
+	index: 1
+	bounds: 192, 128, 64, 64
+moveLeftDamaged
+	index: 2
+	bounds: 256, 128, 64, 64
+moveLeftDamaged
+	index: 3
+	bounds: 320, 128, 64, 64
+shoot
+	index: 0
+	bounds: 384, 128, 64, 64
+shoot
+	index: 2
+	bounds: 448, 128, 64, 64
+shoot
+	index: 3
+	bounds: 0, 192, 64, 64
+shootDamaged
+	index: 0
+	bounds: 64, 192, 64, 64
+shootDamaged
+	index: 1
+	bounds: 128, 192, 64, 64
+shootDamaged
+	index: 2
+	bounds: 192, 192, 64, 64
+shootDamaged
+	index: 3
+	bounds: 256, 192, 64, 64
+invalid
+	bounds: 320, 64, 64, 64
+teleport
+    bounds: 320, 64, 64, 64
+teleportDamaged
+    bounds: 320, 64, 64, 64

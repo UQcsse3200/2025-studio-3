@@ -16,6 +16,7 @@ public class RobotAnimationController extends Component {
     MOVE_LEFT,
     ATTACK,
     TELEPORT,
+    SHOOT,
     NONE
   }
 
@@ -31,6 +32,7 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
     entity.getEvents().addListener("teleportStart", this::animateTeleport);
+    entity.getEvents().addListener("shootStart", this::animateShoot);
     // Explosion will have to be added later.
   }
 
@@ -67,6 +69,18 @@ public class RobotAnimationController extends Component {
     }
   }
 
+  // The gunner animation is kind of inconsistent, but this solution works
+  // Gunner animations could use a second pass after the gunner targeting kinks have been ironed
+  // out.
+  void animateShoot() {
+    currentState = State.SHOOT;
+    if (!belowHalfHealth) {
+      animator.startAnimation("shoot");
+    } else {
+      animator.startAnimation("shootDamaged");
+    }
+  }
+
   void updateHealth(int health, int maxHealth) {
     if (health <= maxHealth / 2) {
       belowHalfHealth = true;
@@ -80,6 +94,9 @@ public class RobotAnimationController extends Component {
           break;
         case ATTACK:
           animateAttack();
+          break;
+        case SHOOT:
+          animateShoot();
           break;
       }
     }
