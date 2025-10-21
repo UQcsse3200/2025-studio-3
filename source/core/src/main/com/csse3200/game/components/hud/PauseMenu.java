@@ -107,7 +107,7 @@ public class PauseMenu extends UIComponent {
     menuTable.add(mainMenuButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).padBottom(BUTTON_SPACING).row();
     menuTable.add(exitGameButton).size(BUTTON_WIDTH, BUTTON_HEIGHT).row();
     menuTable.setVisible(false);
-    menuTable.setZIndex(10); // Set Z-index to be above the dimmed background
+    // Z-order handled in show() via toFront()
     stage.addActor(menuTable);
   }
 
@@ -149,7 +149,6 @@ public class PauseMenu extends UIComponent {
 
     // Exit Game button
     exitGameButton = ui.primaryButton("Exit Game", BUTTON_WIDTH);
-    // exitGameButton = ui.createExitButton(entity.getEvents(), stage.getHeight());
     exitGameButton.addListener(
         new ClickListener() {
           @Override
@@ -171,6 +170,15 @@ public class PauseMenu extends UIComponent {
     label.setStyle(st);
   }
 
+  private void bringPauseUiToFront() {
+    if (dimBackground != null && dimBackground.hasParent()) {
+      dimBackground.toFront();
+    }
+    if (menuTable != null && menuTable.hasParent()) {
+      menuTable.toFront();
+    }
+  }
+
   /** Shows the pause menu with animation */
   public void show() {
     if (isVisible) return;
@@ -178,6 +186,7 @@ public class PauseMenu extends UIComponent {
     isVisible = true;
     dimBackground.setVisible(true);
     menuTable.setVisible(true);
+    bringPauseUiToFront();
 
     // Fade in animation
     dimBackground.getColor().a = 0f;

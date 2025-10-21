@@ -555,6 +555,17 @@ public class Settings {
     this.rightButton = rightButton;
   }
 
+  /** Resets the key binds to their default values. */
+  public void resetKeyBinds() {
+    pauseButton = Input.Keys.ESCAPE;
+    skipButton = Input.Keys.SPACE;
+    interactionButton = Input.Keys.E;
+    upButton = Input.Keys.W;
+    downButton = Input.Keys.S;
+    leftButton = Input.Keys.A;
+    rightButton = Input.Keys.D;
+  }
+
   /**
    * Sets the zoom in button.
    *
