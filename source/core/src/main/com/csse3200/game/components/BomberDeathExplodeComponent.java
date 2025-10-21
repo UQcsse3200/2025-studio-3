@@ -15,7 +15,7 @@ public class BomberDeathExplodeComponent extends Component {
   float tileSize = 1f;
   float worldRadius;
 
-  private static final float EXPLOSION_THRESHOLD = 0.1f; // 10% HP
+  private static final float EXPLOSION_THRESHOLD = 0.3f; // 10% HP
 
   public BomberDeathExplodeComponent(int explosionDamage, float explosionRadiusTiles) {
     this.explosionDamage = explosionDamage;
