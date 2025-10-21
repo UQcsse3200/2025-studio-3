@@ -56,7 +56,49 @@ In the world map menu use **WASD** to move between levels and **ENTER** to selec
 
 Once in a level, drag and drop items from the bar up the top to the game grid to place a defense. You must place these in the same row as a robot to deal damage. Each defence deals damage in unique ways so choose wisely!
 
+## Features
+- Multiple levels with increasing difficulty
+- Slot machine level
+- Power-ups and special items
+
+## Quick Useful Commands
+
+### Running the Game
+
+To run the game from the command line, use:
+```bash
+./gradlew run
+```
+
+### Running Unit Tests
+
+To execute the unit tests, use:
+```bash
+./gradlew check
+```
+
+### Format Checker
+
+The format checker must pass before any code is merged. To run the format checker, use:
+```bash
+./gradlew formatCheck
+```
+
+### Auto-formatting Code
+
+If the format checker fails, you can auto-format the code using:
+```bash
+./gradlew format
+```
+
+## Licensing
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Documentation and Reports
 
 - [JavaDoc](https://uqcsse3200.github.io/2025-studio-3/)
 - [SonarCloud](https://sonarcloud.io/project/overview?id=UQcsse3200_2025-studio-3)
+
+## AI usage
+
+AI usage for this project can be seen in the [ai](ai/) directory.
