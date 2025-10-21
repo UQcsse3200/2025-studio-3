@@ -17,6 +17,7 @@ public class RobotAnimationController extends Component {
     ATTACK,
     TELEPORT,
     EXPLODE,
+    SHOOT,
     NONE
   }
 
@@ -42,6 +43,7 @@ public class RobotAnimationController extends Component {
   void animatePreExplosion() {
     currentState = State.EXPLODE; // or a new state like CHARGING
     animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+    
   }
 
   void animateMoveLeft() {
@@ -77,6 +79,18 @@ public class RobotAnimationController extends Component {
     }
   }
 
+  // The gunner animation is kind of inconsistent, but this solution works
+  // Gunner animations could use a second pass after the gunner targeting kinks have been ironed
+  // out.
+  void animateShoot() {
+    currentState = State.SHOOT;
+    if (!belowHalfHealth) {
+      animator.startAnimation("shoot");
+    } else {
+      animator.startAnimation("shootDamaged");
+    }
+  }
+
   void updateHealth(int health, int maxHealth) {
     if (health <= maxHealth / 2) {
       belowHalfHealth = true;
@@ -94,6 +108,8 @@ public class RobotAnimationController extends Component {
 
         case EXPLODE:
           animatePreExplosion();
+        case SHOOT:
+          animateShoot();
           break;
       }
     }

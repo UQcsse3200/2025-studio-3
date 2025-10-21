@@ -3,6 +3,7 @@ package com.csse3200.game.areas;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.slot.SlotMachineDisplay;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Represents a dedicated game area for the slot machine level. Handles loading and unloading of
@@ -27,7 +28,8 @@ public class SlotMachineArea extends LevelGameArea {
     ui.addComponent(new GameAreaDisplay("Slot Machine Level"));
     ui.addComponent(new SlotMachineDisplay(this));
     spawnEntity(ui);
-
+    ServiceLocator.getMusicService().play("sounds/background-music/slot_music.mp3");
     createGameOverEntity();
+    createLevelCompleteEntity();
   }
 }

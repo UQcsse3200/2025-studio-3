@@ -6,8 +6,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
@@ -15,6 +18,7 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseEnemyConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import java.util.Map;
@@ -35,6 +39,7 @@ public class DossierDisplay extends UIComponent {
   private String[] entities;
   private int currentEntity = 0;
   private boolean enemyMode = true;
+  private Arsenal playerArsenal;
   private static final String CHANGE_TYPE = "change_type";
   private static final String CHANGE_INFO = "change_info";
 
@@ -55,6 +60,7 @@ public class DossierDisplay extends UIComponent {
     this.enemyConfigs = ServiceLocator.getConfigService().getEnemyConfigs();
     this.defenderConfigs = ServiceLocator.getConfigService().getDefenderConfigs();
     this.generatorConfigs = ServiceLocator.getConfigService().getGeneratorConfigs();
+    this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
     type = true;
     enemyMode = true;
     entities = this.enemyConfigs.keySet().toArray(new String[0]);
@@ -71,7 +77,6 @@ public class DossierDisplay extends UIComponent {
 
   /** Adds all tables to the stage. */
   private void addActors() {
-
     // add background back in between changes
     Texture bgTexture =
         ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
@@ -86,19 +91,20 @@ public class DossierDisplay extends UIComponent {
     // create rootTable
     rootTable = new Table();
     rootTable.setFillParent(true);
-    rootTable.padTop(100f);
-    rootTable.padBottom(100f);
+    float uiScale = ui.getUIScale();
+    rootTable.padTop(100f * uiScale);
+    rootTable.padBottom(100f * uiScale);
 
-    // title
-    rootTable.add(title).expandX().top().padTop(20f);
+    // title with proper scaling
+    rootTable.add(title).expandX().top().padTop(20f * uiScale);
 
     // button row to swap between humans and robots
-    rootTable.row().padTop(10f);
+    rootTable.row().padTop(10f * uiScale);
     rootTable.add(makeSwapBtn()).expandX().expandY();
 
     // main information of entity
-    rootTable.row().padTop(10f);
-    rootTable.add(makeDossierTable()).expand().fill().row();
+    rootTable.row().padTop(10f * uiScale);
+    rootTable.add(navigateDossier()).expand().fill().row();
 
     rootTable.add(makeEntitiesButtons()).expand().fill().row();
 
@@ -117,51 +123,83 @@ public class DossierDisplay extends UIComponent {
               if (value == type) {
                 return;
               }
+
               type = value;
               enemyMode = value;
               logger.info(
                   "[DossierDisplay] Mode changed - type: {}, enemyMode: {}", type, enemyMode);
-              if (type) {
-                entities = enemyConfigs.keySet().toArray(new String[0]);
-                logger.info(
-                    "[DossierDisplay] Enemy mode - entities count: {}, entities: {}",
-                    entities.length,
-                    java.util.Arrays.toString(entities));
-              } else {
-                // Combine defenders and generators
-                String[] defenderKeys = defenderConfigs.keySet().toArray(new String[0]);
-                String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
-                entities = new String[defenderKeys.length + generatorKeys.length];
-                System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
-                System.arraycopy(
-                    generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
-                logger.info(
-                    "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
-                    defenderKeys.length,
-                    generatorKeys.length,
-                    entities.length);
-                logger.debug(
-                    "[DossierDisplay] Human mode entities: {}",
-                    java.util.Arrays.toString(entities));
-              }
+
+              loadEntitiesForCurrentMode();
               currentEntity = 0;
-              // Play page turn sound
-              Sound pageTurn =
-                  ServiceLocator.getResourceService()
-                      .getAsset("sounds/dossier_page_turn.mp3", Sound.class);
-              if (pageTurn != null) {
-                float volume = ServiceLocator.getSettingsService().getSoundVolume();
-                pageTurn.play(volume);
-                logger.info("Page turn sound played");
-              }
-              // Rebuild UI for the new type
-              stage.clear();
-              addActors();
-              // Trigger change_info event to update display with first entity
-              if (entities.length > 0) {
-                entity.getEvents().trigger(CHANGE_INFO, currentEntity);
-              }
+              playPageTurnSound();
+              rebuildUI();
             });
+  }
+
+  /** Loads entities based on the current mode (enemy or human) */
+  private void loadEntitiesForCurrentMode() {
+    if (type) {
+      loadEnemyEntities();
+    } else {
+      loadHumanEntities();
+    }
+  }
+
+  /** Loads enemy entities */
+  private void loadEnemyEntities() {
+    entities = enemyConfigs.keySet().toArray(new String[0]);
+    logger.info("[DossierDisplay] Enemy mode - entities count: {}", entities.length);
+    if (logger.isDebugEnabled()) {
+      logger.debug("[DossierDisplay] Enemy mode entities: {}", java.util.Arrays.toString(entities));
+    }
+  }
+
+  /** Loads human entities (defenders and generators, excluding wall) */
+  private void loadHumanEntities() {
+    // Combine defenders and generators, excluding the wall
+    java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
+
+    // Filter defenders (excluding wall)
+    for (String defenderKey : defenderConfigs.keySet()) {
+      if (!defenderKey.equals("wall")) {
+        filteredDefenderKeys.add(defenderKey);
+      }
+    }
+
+    String[] defenderKeys = filteredDefenderKeys.toArray(new String[0]);
+    String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
+    entities = new String[defenderKeys.length + generatorKeys.length];
+    System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
+    System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
+    logger.info(
+        "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
+        defenderKeys.length,
+        generatorKeys.length,
+        entities.length);
+    if (logger.isDebugEnabled()) {
+      logger.debug("[DossierDisplay] Human mode entities: {}", java.util.Arrays.toString(entities));
+    }
+  }
+
+  /** Plays the page turn sound effect */
+  private void playPageTurnSound() {
+    Sound pageTurn =
+        ServiceLocator.getResourceService().getAsset("sounds/dossier_page_turn.mp3", Sound.class);
+    if (pageTurn != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      pageTurn.play(volume);
+      logger.info("Page turn sound played");
+    }
+  }
+
+  /** Rebuilds the UI for the new entity type */
+  private void rebuildUI() {
+    stage.clear();
+    addActors();
+    // Trigger change_info event to update display with first entity
+    if (entities.length > 0) {
+      entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+    }
   }
 
   /** Sets up the buttons to swap between humans and robots. */
@@ -193,10 +231,10 @@ public class DossierDisplay extends UIComponent {
 
     Table table = new Table();
     table.defaults().expandX().fillX().space(50f);
-    table.padTop(50f);
+    table.padTop(50f * ui.getUIScale());
 
-    float buttonWidth = 200f; // Fixed width
-    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+    // Use UIFactory scaling for consistent button sizing
+    Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(swapButtonWidth);
 
     table.add(humansBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
     table.add(robotsBtn).size(buttonDimensions.getKey(), buttonDimensions.getValue());
@@ -204,6 +242,54 @@ public class DossierDisplay extends UIComponent {
     table.row();
 
     return table;
+  }
+
+  /**
+   * Creates and returns a navigation UI table for browsing through a list of entities.
+   *
+   * @return a table containing navigation controls and the dossier display
+   */
+  private Table navigateDossier() {
+    float uiScale = ui.getUIScale();
+    float arrowSize = 140f * uiScale;
+
+    Texture leftArrowTexture = new Texture(Gdx.files.internal("images/ui/arrow_left.png"));
+    Texture rightArrowTexture = new Texture(Gdx.files.internal("images/ui/arrow_right.png"));
+
+    Drawable leftArrowDrawable = new TextureRegionDrawable(new TextureRegion(leftArrowTexture));
+    Drawable rightArrowDrawable = new TextureRegionDrawable(new TextureRegion(rightArrowTexture));
+
+    ImageButton leftArrow = new ImageButton(leftArrowDrawable);
+    ImageButton rightArrow = new ImageButton(rightArrowDrawable);
+
+    leftArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (entities.length > 0 && currentEntity > 0) {
+              currentEntity--;
+              entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+            }
+          }
+        });
+
+    rightArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            if (entities.length > 0 && currentEntity < entities.length - 1) {
+              currentEntity++;
+              entity.getEvents().trigger(CHANGE_INFO, currentEntity);
+            }
+          }
+        });
+
+    Table navigationTable = new Table();
+    navigationTable.add(leftArrow).size(arrowSize);
+    navigationTable.add(makeDossierTable()).center();
+    navigationTable.add(rightArrow).size(arrowSize);
+
+    return navigationTable;
   }
 
   private void updateDossierInfoListener(Label nameLabel, Label infoLabel, Image spriteImage) {
@@ -247,8 +333,9 @@ public class DossierDisplay extends UIComponent {
     float stageWidth = stage.getWidth();
     float stageHeight = stage.getHeight();
 
-    // Load book image as texture
-    Texture bookTexture = new Texture(Gdx.files.internal("images/ui/dossierBackground.png"));
+    // Load book image as texture based on current type
+    String backgroundPath = type ? "images/ui/robot-dossier.png" : "images/ui/human-dossier.png";
+    Texture bookTexture = new Texture(Gdx.files.internal(backgroundPath));
     bookTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
     // Create background image of dossier
@@ -261,11 +348,18 @@ public class DossierDisplay extends UIComponent {
     float targetHeight = targetWidth * ((float) bookTexture.getHeight() / bookTexture.getWidth());
     bookImage.setSize(targetWidth, targetHeight);
 
-    // Create content table
+    // Create content table with adjusted positioning for dossier pages
     Table contentTable = new Table(skin);
-    contentTable.defaults().pad(10);
+    float uiScale = ui.getUIScale();
 
-    // 1st column for Entity Image
+    // Adjust table positioning to better align with dossier background
+    contentTable.defaults().pad(15f * uiScale); // Increased padding
+    contentTable.padLeft(targetWidth * 0.08f); // Left margin for left page
+    contentTable.padRight(targetWidth * 0.08f); // Right margin for right page
+    contentTable.padTop(targetHeight * 0.12f); // Top margin
+    contentTable.padBottom(targetHeight * 0.12f); // Bottom margin
+
+    // 1st column for Entity Image (Left Page)
     String currentEntityKey = entities.length > 0 ? entities[currentEntity] : "";
     logger.debug(
         "[DossierDisplay] makeDossierTable - entities.length: {}, currentEntity: {}, currentEntityKey: '{}'",
@@ -277,18 +371,23 @@ public class DossierDisplay extends UIComponent {
     Table imageFrame = new Table(skin);
     imageFrame
         .add(entitySpriteImage)
-        .width(stageWidth * 0.3f)
-        .height(stageHeight * 0.3f)
-        .pad(stageHeight * 0.03f);
+        .width(stageWidth * 0.25f) // Reduced from 0.3f to 0.25f
+        .height(stageHeight * 0.25f) // Reduced from 0.3f to 0.25f
+        .pad(stageHeight * 0.02f); // Reduced padding
 
-    // 2nd column for Entity Info
+    // 2nd column for Entity Info (Right Page)
     Table infoTable = new Table(skin);
 
     String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
     Label entityNameLabel = ui.subheading(name);
     entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
-    infoTable.add(entityNameLabel).left().expandX().padRight(stageWidth * 0.09f).row();
+    infoTable
+        .add(entityNameLabel)
+        .left()
+        .expandX()
+        .padRight(stageWidth * 0.05f)
+        .row(); // Reduced padding
 
     String info = entities.length > 0 ? getEntityInfo(currentEntityKey) : "";
     Label entityInfoLabel = ui.text(info);
@@ -315,17 +414,19 @@ public class DossierDisplay extends UIComponent {
     // sizing content table
     Container<Table> contentContainer = new Container<>(contentTable);
     contentContainer.size(targetWidth, targetHeight);
-    contentContainer.fill().center();
+    contentContainer.fill();
 
     // Stack containing book image and content
     Stack stack = new Stack();
+    stack.setSize(targetWidth, targetHeight);
     stack.add(bookImage);
     stack.add(contentContainer);
     stack.setFillParent(false);
 
     // Wrap in outer table for positioning
     Table outerTable = new Table();
-    outerTable.add(stack).size(targetWidth, targetHeight).center();
+    outerTable.setSize(targetWidth, targetHeight);
+    outerTable.add(stack).size(targetWidth, targetHeight);
 
     return outerTable;
   }
@@ -338,39 +439,147 @@ public class DossierDisplay extends UIComponent {
   }
 
   /**
-   * Builds a table containing buttons to access different entities within either 'Human' or
-   * 'Robots' sections.
+   * Builds a horizontally scrollable table of buttons to access different entities within either
+   * 'Human' or 'Robots' sections.
    *
-   * @return table with exit button
+   * @return a horizontally scrollable table with entity buttons
    */
   private Table makeEntitiesButtons() {
     Table buttonRow = new Table();
-    buttonRow.bottom().padBottom(60f);
+    float uiScale = ui.getUIScale();
     ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener
       String entityKey = entities[i];
       // Use the display name for button text
       String displayName = getEntityName(entityKey);
-      TextButton btn = ui.secondaryButton(displayName, buttonWidth);
-      group.add(btn);
-      buttonRow.add(btn).size(buttonDimensions.getKey(), buttonDimensions.getValue()).pad(5);
 
-      btn.addListener(
-          new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent changeEvent, Actor actor) {
-              if (btn.isChecked()) {
-                logger.info(
-                    "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
-                entity.getEvents().trigger(CHANGE_INFO, index);
+      // Check if entity is unlocked (only applies to human entities)
+      boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
+
+      // Create button with appropriate styling
+      TextButton btn;
+      if (isUnlocked) {
+        btn = ui.secondaryButton(displayName, buttonWidth);
+      } else {
+        // For locked entities, show with locked styling
+        btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
+        btn.setColor(0.5f, 0.5f, 0.5f, 0.7f); // Gray out locked entities
+        btn.setDisabled(true); // Disable interaction
+      }
+
+      group.add(btn);
+      buttonRow
+          .add(btn)
+          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+          .pad(5f * uiScale);
+
+      // Only add listener for unlocked entities
+      if (isUnlocked) {
+        btn.addListener(
+            new ChangeListener() {
+              @Override
+              public void changed(ChangeEvent changeEvent, Actor actor) {
+                if (btn.isChecked()) {
+                  logger.info(
+                      "Selected entity button {} (key: {}, name: {})",
+                      index,
+                      entityKey,
+                      displayName);
+                  entity.getEvents().trigger(CHANGE_INFO, index);
+                }
               }
-            }
-          });
+            });
+      }
     }
-    return buttonRow;
+
+    // create horizontal ScrollPane for entity buttons
+    ScrollPane scrollPane = createScrollPane(buttonRow);
+
+    // create arrow button
+    float arrowWidth = 60f * uiScale;
+    float arrowHeight = buttonDimensions.getValue();
+    Table arrowRow = createScrollArrows(scrollPane, arrowWidth, arrowHeight, uiScale);
+
+    // wrap everything in a root table
+    Table root = new Table();
+    root.bottom().padBottom(60f * uiScale);
+    root.padLeft(200f * uiScale);
+    root.padRight(200f * uiScale);
+    root.add(arrowRow).expandX().fillX();
+
+    return root;
+  }
+
+  /**
+   * Creates a horizontally scrollable ScrollPane to contain UI content.
+   *
+   * @param content the Actor to be wrapped inside the ScrollPane
+   * @return a configured ScrollPane for horizontal scrolling
+   */
+  private ScrollPane createScrollPane(Actor content) {
+    // define ScrollPane style
+    ScrollPane.ScrollPaneStyle scrollStyle = new ScrollPane.ScrollPaneStyle();
+    scrollStyle.background = null; // optional, if you don’t want any background
+    scrollStyle.hScroll = null; // removes the horizontal scroll knob background
+    scrollStyle.hScrollKnob = null; // removes the horizontal scroll knob
+    scrollStyle.vScroll = null;
+    scrollStyle.vScrollKnob = null;
+
+    // wrap the row in a scroll pane (horizontal scrolling)
+    ScrollPane scrollPane = new ScrollPane(content, scrollStyle);
+    scrollPane.setScrollingDisabled(
+        false, true); // allow horizontal scroll and disable vertical scroll
+    scrollPane.setFadeScrollBars(false);
+    scrollPane.setScrollbarsOnTop(true);
+    scrollPane.setSmoothScrolling(true);
+
+    return scrollPane;
+  }
+
+  /**
+   * Creates a table containing left and right arrow buttons to manually control a ScrollPane.
+   *
+   * @param scrollPane the ScrollPane to be controlled by the arrows
+   * @param arrowWidth the width of the arrow button
+   * @param arrowHeight the height of the arrow button
+   * @param uiScale the UI scale factor used for padding and sizing
+   * @return a table containing the scroll arrows and the scrollable content
+   */
+  private Table createScrollArrows(
+      ScrollPane scrollPane, float arrowWidth, float arrowHeight, float uiScale) {
+    TextButton leftArrow = new TextButton("<", skin);
+    TextButton rightArrow = new TextButton(">", skin);
+
+    // add listener to move the scroll pane left/right
+    leftArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            float newScrollX = Math.max(scrollPane.getScrollX() - 200f, 0f);
+            scrollPane.setScrollX(newScrollX);
+          }
+        });
+
+    rightArrow.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent event, float x, float y) {
+            float newScrollX = Math.min(scrollPane.getScrollX() + 200f, scrollPane.getMaxX());
+            scrollPane.setScrollX(newScrollX);
+          }
+        });
+
+    // wrap everything in a table
+    Table arrowRow = new Table();
+    arrowRow.add(leftArrow).size(arrowWidth, arrowHeight).padRight(20f * uiScale);
+    arrowRow.add(scrollPane).height(arrowHeight).expandX().fillX();
+    arrowRow.add(rightArrow).size(arrowWidth, arrowHeight).padLeft(20f * uiScale);
+
+    return arrowRow;
   }
 
   /**

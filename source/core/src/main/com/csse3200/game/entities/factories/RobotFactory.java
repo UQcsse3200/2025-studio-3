@@ -13,6 +13,7 @@ import com.csse3200.game.components.tasks.JumpTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
 import com.csse3200.game.components.tasks.TeleportTask;
+import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
@@ -175,6 +176,7 @@ public class RobotFactory {
             .addComponent(new RobotAnimationController())
             .addComponent(new HitMarkerComponent())
             .addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f))
+            .addComponent(new CoinRewardedComponent(config.getCoinsRewarded()))
             .addComponent(animator);
 
     // Default attack type is melee if not specified
@@ -206,6 +208,7 @@ public class RobotFactory {
 
     if (config.getName() != null && config.getName().contains("Teleport")) {
       animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportDamaged", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
       if (laneYs.length >= 2) {
         AITaskComponent ai = robot.getComponent(AITaskComponent.class);
@@ -218,6 +221,11 @@ public class RobotFactory {
                   laneYs));
         }
       }
+    }
+
+    if (config.getName() != null && config.getName().contains("Gunner")) {
+      animator.addAnimation("shoot", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("shootDamaged", 0.1f, Animation.PlayMode.NORMAL);
     }
 
     // ✅ Add explosion-on-death component for bomber

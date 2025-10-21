@@ -51,10 +51,6 @@ class AttackTaskTest {
   void attackWhenInRange() {
     AttackTask attackTask =
         new AttackTask(5f, 0.5f, TargetDetectionTasks.AttackDirection.RIGHT) {
-          @Override
-          protected boolean isTargetVisible(Entity target) {
-            return true;
-          }
 
           @Override
           protected Entity getNearestVisibleTarget() {
