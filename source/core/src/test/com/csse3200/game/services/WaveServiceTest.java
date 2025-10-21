@@ -60,6 +60,24 @@ class WaveServiceTest {
     when(level.getWaves()).thenReturn(Arrays.asList(waves));
   }
 
+  private void runBossSpawnTest(String levelKey, BossFactory.BossTypes expected) {
+    WaveService svc = new WaveService();
+    List<BossFactory.BossTypes> bosses = new ArrayList<>();
+
+    svc.setEnemySpawnCallback(new WaveService.EnemySpawnCallback() {
+      @Override public void spawnEnemy(int col, int row, RobotType robotType) {}
+      @Override public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+        bosses.add(bossType);
+      }
+    });
+
+    svc.setCurrentLevel(levelKey);
+    svc.initialiseNewWave();
+    svc.update(0.0f);
+
+    assertEquals(List.of(expected), bosses, "Boss should spawn once for " + levelKey);
+  }
+
   // --- tests ---
 
   @Test
@@ -127,55 +145,33 @@ class WaveServiceTest {
   }
 
   @Test
-  void bossQueue_spawnsBossOnUpdate_forFirstThreeWaves() {
-    // 3 waves to test boss spawning order
-    setWaves(
-        mockLevelConfig,
-        wave(10, 1, simpleSpawnCfg()),
-        wave(10, 1, simpleSpawnCfg()),
-        wave(10, 1, simpleSpawnCfg()));
+  void bossQueue_spawnsBossOnFinalWave_forSpecificLevelKeys() {
+    // Setup mock levels
+    BaseLevelConfig levelTwo = mock(BaseLevelConfig.class);
+    setWaves(levelTwo, wave(10, 1, simpleSpawnCfg()));
+    when(mockConfigService.getLevelConfig("levelTwo")).thenReturn(levelTwo);
 
-    WaveService svc = new WaveService();
-    List<BossFactory.BossTypes> bosses = new ArrayList<>();
+    BaseLevelConfig levelFour = mock(BaseLevelConfig.class);
+    setWaves(levelFour, wave(10, 1, simpleSpawnCfg()));
+    when(mockConfigService.getLevelConfig("levelFour")).thenReturn(levelFour);
 
-    // Track spawned bosses
-    svc.setEnemySpawnCallback(
-        new WaveService.EnemySpawnCallback() {
-          @Override
-          public void spawnEnemy(int col, int row, RobotType robotType) {}
+    BaseLevelConfig levelFive = mock(BaseLevelConfig.class);
+    setWaves(levelFive, wave(10, 1, simpleSpawnCfg()));
+    when(mockConfigService.getLevelConfig("levelFive")).thenReturn(levelFive);
 
-          @Override
-          public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-            bosses.add(bossType);
-          }
-        });
-
-    // Wave 1
-    svc.initialiseNewWave();
-    svc.update(0.0f);
-
-    // Wave 2
-    svc.endWave();
-    svc.update(0.0f);
-
-    // Wave 3
-    svc.endWave();
-    svc.update(0.0f);
-
-    // Expected boss order
-    assertEquals(
-        List.of(
-            BossFactory.BossTypes.SCRAP_TITAN,
-            BossFactory.BossTypes.SAMURAI_BOT,
-            BossFactory.BossTypes.GUN_BOT),
-        bosses);
+    // Run tests using helper
+    runBossSpawnTest("levelTwo",  BossFactory.BossTypes.SCRAP_TITAN);
+    runBossSpawnTest("levelFour", BossFactory.BossTypes.SAMURAI_BOT);
+    runBossSpawnTest("levelFive", BossFactory.BossTypes.GUN_BOT);
   }
 
   @Test
-  void onBossDefeated_progressesWaves_andCompletesLevelOnLastWave() {
+  void onBossDefeated_progressesWaves_and_CompletesLevelOnLastWave() {
     setWaves(mockLevelConfig, wave(10, 1, simpleSpawnCfg()), wave(10, 1, simpleSpawnCfg()));
 
     WaveService svc = new WaveService();
+    when(mockConfigService.getLevelConfig("testLevel")).thenReturn(mockLevelConfig);
+    svc.setCurrentLevel("testLevel");
 
     // Wave 1
     svc.initialiseNewWave();
@@ -240,9 +236,11 @@ class WaveServiceTest {
   }
 
   @Test
-  void spawnEnemy_triggersCallback_whenWaveActive() {
+  void spawnNextEnemy_triggersCallback_whenWaveActive() {
     setWaves(mockLevelConfig, wave(10, 2, simpleSpawnCfg()));
     WaveService svc = new WaveService();
+    when(mockConfigService.getLevelConfig("testLevel")).thenReturn(mockLevelConfig);
+    svc.setCurrentLevel("testLevel");  // **required** in new WaveService
 
     final int[] spawned = {0};
 
@@ -260,7 +258,7 @@ class WaveServiceTest {
 
     svc.initialiseNewWave();
     svc.update(5.1f); // Start the wave
-    svc.spawnEnemy(0);
+    svc.spawnNextEnemy(0);
 
     // Verify it calls the callback at least once.
     assertTrue(spawned[0] >= 1, "Expected at least one enemy spawn via callback");
@@ -289,7 +287,7 @@ class WaveServiceTest {
 
     svc.initialiseNewWave();
     svc.update(5.2f); // start wave
-    svc.spawnEnemy(0);
+    svc.spawnNextEnemy(0);
 
     svc.resetLevel(); // Reset progress and counters
 
