@@ -67,7 +67,9 @@ class WaveServiceTest {
     svc.setEnemySpawnCallback(
         new WaveService.EnemySpawnCallback() {
           @Override
-          public void spawnEnemy(int col, int row, RobotType robotType) {}
+          public void spawnEnemy(int col, int row, RobotType robotType) {
+            // Empty implementation - this test only tracks boss spawns, not enemy spawns
+          }
 
           @Override
           public void spawnBoss(int row, BossFactory.BossTypes bossType) {
@@ -105,7 +107,9 @@ class WaveServiceTest {
           }
 
           @Override
-          public void onWaveStarted(int waveNumber) {}
+          public void onWaveStarted(int waveNumber) {
+            // Empty implementation - this test only tracks preparation phase events
+          }
         });
 
     svc.initialiseNewWave(); // Start wave 1
@@ -129,10 +133,14 @@ class WaveServiceTest {
     svc.setWaveEventListener(
         new WaveService.WaveEventListener() {
           @Override
-          public void onPreparationPhaseStarted(int waveNumber) {}
+          public void onPreparationPhaseStarted(int waveNumber) {
+            // Empty implementation - this test only tracks wave start events
+          }
 
           @Override
-          public void onWaveChanged(int waveNumber) {}
+          public void onWaveChanged(int waveNumber) {
+            // Empty implementation - this test only tracks wave start events
+          }
 
           @Override
           public void onWaveStarted(int waveNumber) {
@@ -257,7 +265,9 @@ class WaveServiceTest {
           }
 
           @Override
-          public void spawnBoss(int row, BossFactory.BossTypes bossType) {}
+          public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+            // Empty implementation - this test only tracks enemy spawns, not boss spawns
+          }
         });
 
     svc.initialiseNewWave();
