@@ -1,8 +1,8 @@
 package com.csse3200.game.components.minigame;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
-import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.Random;
 import org.slf4j.Logger;

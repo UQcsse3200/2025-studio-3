@@ -1,6 +1,7 @@
 package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.screens.LaneRunnerScreen;
 import com.csse3200.game.services.ServiceLocator;
@@ -35,6 +36,13 @@ public class LaneRunnerPlayerComponent extends Component {
       moveRight();
     }
     rightPressed = rightKeyPressed;
+
+    if (ServiceLocator.getSettingsService() != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      Sound move =
+          ServiceLocator.getResourceService().getAsset("sounds/lane_move.mp3", Sound.class);
+      move.play(0.1f * volume);
+    }
   }
 
   /** Moves the player to the left. */

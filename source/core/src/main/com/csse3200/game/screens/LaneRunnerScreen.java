@@ -82,6 +82,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     ServiceLocator.getResourceService().loadSounds(new String[] {MOVESOUND});
     ServiceLocator.getResourceService().loadAll();
   }
+
   /** Creates the UI for the lane runner game. */
   private void createUI() {
     logger.debug("[LaneRunnerScreen] Creating UI");
