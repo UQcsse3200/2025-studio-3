@@ -126,14 +126,13 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     boolean didHit =
         physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
-
     if (didHit) {
       Fixture f = tempHit.getFixture();
       if (f != null && f.getUserData() instanceof Entity e) return e;
     }
 
     // second raycast with small backward offset to catch targets just behind cover
-    offsetFrom.set(from.x, from.y - 20).mulAdd(castDir, -backupOffset);
+    offsetFrom.set(from.x - 20, from.y - 20).mulAdd(castDir, -backupOffset);
     end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset + backupOffset);
 
     didHit =
