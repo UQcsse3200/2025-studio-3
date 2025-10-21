@@ -221,4 +221,41 @@ public class BossFactory {
     boss.setScale(config.scale, config.scale);
     return boss;
   }
+    public static Entity createPreviewBoss(BossTypes bossType) {
+        BaseBossConfig config = null;
+        switch (bossType) {
+            case SCRAP_TITAN -> config = configs.scrapTitan;
+            case GUN_BOT -> config = configs.gunBot;
+            case SAMURAI_BOT -> config = configs.samuraiBot;
+        }
+
+        if (config == null) {
+            throw new IllegalArgumentException("Boss config cannot be null for preview");
+        }
+
+        boolean isSamurai = config.atlasFilePath.contains("samurai");
+        boolean isGunBot = config.atlasFilePath.contains("gun_Bot");
+
+        AnimationRenderComponent animator =
+                new AnimationRenderComponent(
+                        ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
+
+        if (isSamurai) {
+            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
+        } else if (isGunBot) {
+            animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP_REVERSED);
+        } else {
+            animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
+        }
+
+        Entity preview = new Entity().addComponent(animator);
+
+        if (isSamurai || isGunBot) {
+            animator.startAnimation("walk");
+        } else {
+            animator.startAnimation("moveLeft");
+        }
+        preview.setScale(config.scale, config.scale);
+        return preview;
+    }
 }
