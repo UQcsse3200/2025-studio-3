@@ -1,4 +1,6 @@
-# The Day We Fought Back - Year 3200
+<!-- # The Day We Fought Back - Year 3200 -->
+
+![The Day We Fought Back - Year 3200](assets/images/home_bg_with_title.png "The Day We Fought Back - Year 3200")
 
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/UQcsse3200/2025-studio-3/game_tests.yaml?style=for-the-badge&label=Game%20Unit%20Tests)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/UQcsse3200/2025-studio-3/javadoc_build.yaml?style=for-the-badge&label=Javadoc%20Test%20Build)
