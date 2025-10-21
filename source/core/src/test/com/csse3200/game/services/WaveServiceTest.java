@@ -64,12 +64,16 @@ class WaveServiceTest {
     WaveService svc = new WaveService();
     List<BossFactory.BossTypes> bosses = new ArrayList<>();
 
-    svc.setEnemySpawnCallback(new WaveService.EnemySpawnCallback() {
-      @Override public void spawnEnemy(int col, int row, RobotType robotType) {}
-      @Override public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-        bosses.add(bossType);
-      }
-    });
+    svc.setEnemySpawnCallback(
+        new WaveService.EnemySpawnCallback() {
+          @Override
+          public void spawnEnemy(int col, int row, RobotType robotType) {}
+
+          @Override
+          public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+            bosses.add(bossType);
+          }
+        });
 
     svc.setCurrentLevel(levelKey);
     svc.initialiseNewWave();
@@ -160,7 +164,7 @@ class WaveServiceTest {
     when(mockConfigService.getLevelConfig("levelFive")).thenReturn(levelFive);
 
     // Run tests using helper
-    runBossSpawnTest("levelTwo",  BossFactory.BossTypes.SCRAP_TITAN);
+    runBossSpawnTest("levelTwo", BossFactory.BossTypes.SCRAP_TITAN);
     runBossSpawnTest("levelFour", BossFactory.BossTypes.SAMURAI_BOT);
     runBossSpawnTest("levelFive", BossFactory.BossTypes.GUN_BOT);
   }
@@ -240,7 +244,7 @@ class WaveServiceTest {
     setWaves(mockLevelConfig, wave(10, 2, simpleSpawnCfg()));
     WaveService svc = new WaveService();
     when(mockConfigService.getLevelConfig("testLevel")).thenReturn(mockLevelConfig);
-    svc.setCurrentLevel("testLevel");  // **required** in new WaveService
+    svc.setCurrentLevel("testLevel"); // **required** in new WaveService
 
     final int[] spawned = {0};
 
