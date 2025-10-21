@@ -154,6 +154,7 @@ public class Persistence {
     // 1) Prefer reading JSON directly into Profile (field names match the snapshot keys).
     Profile asProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
     if (asProfile != null) {
+      asProfile.setPlayedTutorial();
       // Backward compatibility: ensure currentLevel has a default if missing in old saves.
       if (asProfile.getCurrentLevel() == null || asProfile.getCurrentLevel().isEmpty()) {
         asProfile.setCurrentLevel("levelOne");
