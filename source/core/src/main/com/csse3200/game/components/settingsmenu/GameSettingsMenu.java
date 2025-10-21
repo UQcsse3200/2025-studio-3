@@ -532,11 +532,6 @@ public class GameSettingsMenu extends UIComponent {
     ServiceLocator.getSettingsService().resetKeyBinds();
   }
 
-  /** Reset keybinds to default keys. */
-  private void resetKeyBinds() {
-    ServiceLocator.getSettingsService().resetKeyBinds();
-  }
-
   /** Show the game settings menu. */
   private void showMenu() {
     rootTable.setVisible(true);

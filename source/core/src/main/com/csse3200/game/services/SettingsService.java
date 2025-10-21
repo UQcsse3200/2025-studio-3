@@ -199,11 +199,6 @@ public class SettingsService {
     settings.resetKeyBinds();
   }
 
-  /** Resets all key bindings to their default values. */
-  public void resetKeyBinds() {
-    settings.resetKeyBinds();
-  }
-
   /**
    * Get the sound volume.
    *
