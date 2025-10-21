@@ -82,7 +82,8 @@ public class BallComponent extends Component {
     this.decayFactor *= 0.9f;
     speedMultiplier = randomizer();
 
-    if (ServiceLocator.getSettingsService() != null) {
+    if (ServiceLocator.getSettingsService() != null
+        && ServiceLocator.getResourceService() != null) {
       float volume = ServiceLocator.getSettingsService().getSoundVolume();
 
       Sound bounce = ServiceLocator.getResourceService().getAsset("sounds/bounce.mp3", Sound.class);

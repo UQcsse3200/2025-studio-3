@@ -21,11 +21,16 @@ public class LaneRunnerPlayerComponent extends Component {
 
   /** Handles the input for the player. */
   private void handleInput() {
+    if (ServiceLocator.getSettingsService() == null) {
+      return;
+    }
+
     // Check for left movement
     int left = ServiceLocator.getSettingsService().getSettings().getLeftButton();
     boolean leftKeyPressed = Gdx.input.isKeyPressed(left);
     if (leftKeyPressed && !leftPressed) {
       moveLeft();
+      playLaneMoveSound();
     }
     leftPressed = leftKeyPressed;
 
@@ -34,10 +39,15 @@ public class LaneRunnerPlayerComponent extends Component {
     boolean rightKeyPressed = Gdx.input.isKeyPressed(right);
     if (rightKeyPressed && !rightPressed) {
       moveRight();
+      playLaneMoveSound();
     }
     rightPressed = rightKeyPressed;
+  }
 
-    if (ServiceLocator.getSettingsService() != null) {
+  /** Plays the lane move sound. */
+  private void playLaneMoveSound() {
+    if (ServiceLocator.getSettingsService() != null
+        && ServiceLocator.getResourceService() != null) {
       float volume = ServiceLocator.getSettingsService().getSoundVolume();
       Sound move =
           ServiceLocator.getResourceService().getAsset("sounds/lane_move.mp3", Sound.class);
