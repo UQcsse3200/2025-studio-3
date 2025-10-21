@@ -2,9 +2,7 @@ package com.csse3200.game.components.currency;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csse3200.game.components.Component;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
@@ -38,17 +36,11 @@ public class CurrencyGeneratorComponent extends Component {
   /** Scrap visual size in pixels */
   private float scrapSizePx = 64f;
 
-  /** Generator action */
-  private Action generatorAction;
+  /** Accumulated time for generation tracking (uses GameTime delta) */
+  private float generationAccumulator = 0f;
 
   /** Whether the generator is paused */
   private boolean isPaused = false;
-
-  /** Stage the generator action was scheduled against. */
-  private Stage scheduledStage;
-
-  /** Tracks whether the action is currently scheduled on the stage. */
-  private boolean actionScheduled = false;
 
   /** Listener for responding to global freeze state changes. */
   private GameStateService.FreezeListener freezeListener;
@@ -105,6 +97,22 @@ public class CurrencyGeneratorComponent extends Component {
     }
   }
 
+  @Override
+  public void update() {
+    super.update();
+    // Update generation logic using GameTime delta
+    if (!isPaused) {
+      float deltaTime = ServiceLocator.getTimeSource().getDeltaTime();
+      generationAccumulator += deltaTime;
+
+      // Check if enough time has passed for a generation
+      if (generationAccumulator >= intervalSec) {
+        spawnScrapAt();
+        generationAccumulator -= intervalSec; // Keep remainder for next cycle
+      }
+    }
+  }
+
   /** Spawns a scrap at the specified coordinates. */
   public void spawnScrapAt() {
     ResourceService rs = ServiceLocator.getResourceService();
@@ -151,13 +159,6 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Pauses the sunlight generation */
   public void pause() {
-    Stage stage = scheduledStage != null ? scheduledStage : getStage();
-    if (stage != null && generatorAction != null && actionScheduled) {
-      stage.getRoot().removeAction(generatorAction);
-    }
-    actionScheduled = false;
-    generatorAction = null; // discard pooled action to avoid invalid reuse
-    scheduledStage = null;
     if (!isPaused) {
       isPaused = true;
       logger.debug("Paused CurrencyGenerator");
@@ -166,23 +167,10 @@ public class CurrencyGeneratorComponent extends Component {
 
   /** Resumes the sunlight generation */
   public void resume() {
-    Stage stage = getStage();
-    if (stage == null) {
-      logger.warn("Stage unavailable; cannot resume CurrencyGenerator");
-      return;
-    }
-    if (generatorAction == null) {
-      generatorAction = buildGeneratorAction();
-    }
-    if (!actionScheduled) {
-      stage.getRoot().addAction(generatorAction);
-      scheduledStage = stage;
-      actionScheduled = true;
-    }
     if (isPaused) {
+      isPaused = false;
       logger.debug("Resumed CurrencyGenerator");
     }
-    isPaused = false;
   }
 
   /**
@@ -205,12 +193,6 @@ public class CurrencyGeneratorComponent extends Component {
       freezeListener = null;
     }
     pause();
-  }
-
-  /** Build a new, safe-to-add generator action instance. */
-  private Action buildGeneratorAction() {
-    return Actions.forever(
-        Actions.sequence(Actions.delay(intervalSec), Actions.run(this::spawnScrapAt)));
   }
 
   private Stage getStage() {
