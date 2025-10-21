@@ -70,12 +70,12 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
 
     for (Entity target : targets) {
       HitboxComponent hitbox = target.getComponent(HitboxComponent.class);
+      Vector2 targetPos = target.getCenterPosition();
 
-      if (hitbox == null || hitbox.getLayer() != targetLayer) {
+      if (hitbox == null || hitbox.getLayer() != targetLayer || targetPos.x > from.x) {
         continue;
       }
 
-      Vector2 targetPos = target.getCenterPosition();
       // dst2 instead of dst to avoid square root calculation because calculating square root is
       // expensive.
       float distance = from.dst2(targetPos);
