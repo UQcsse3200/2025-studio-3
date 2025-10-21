@@ -664,7 +664,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Entity boss = BossFactory.createBossType(bossType);
 
     int spawnCol = levelCols;
-    int spawnRow = Math.clamp(row, 0, levelRows - 1); // Bottom row for now
+    int spawnRow = Math.clamp(row, 0, levelRows - 1);
 
     float spawnX = xOffset + tileSize * spawnCol;
     float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
@@ -725,7 +725,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Vector2 spawnPos = boss.getCenterPosition().cpy();
     spawnPos.x -= 1.0f;
     spawnPos.y -= (tileSize / 6f);
-
     projectile.setPosition(spawnPos.x, spawnPos.y);
     projectile.scaleHeight(0.5f * tileSize);
     projectile.scaleWidth(0.5f * tileSize);
