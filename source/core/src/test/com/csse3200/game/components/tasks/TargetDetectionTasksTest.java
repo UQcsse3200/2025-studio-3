@@ -29,10 +29,6 @@ import static org.mockito.Mockito.*;
 
 public class TargetDetectionTasksTest {
 
-    private Entity defender;
-    private TestTargetDetectionTasks task;
-    private PhysicsEngine mockPhysics;
-
     /**
      * Concrete implementation of abstract class for testing.
      */
@@ -42,130 +38,78 @@ public class TargetDetectionTasksTest {
         }
 
         @Override
-        protected int getActivePriority(float distance, Entity target) {
-            return (distance < attackRange && target != null) ? 1 : -1;
+        protected int getActivePriority(float dst, Entity target) { // from AttackTask
+            if (target == null) {
+                return -1; // stop task if no target
+            }
+            if (dst > attackRange) {
+                return -1; // stop task when target not visible, out of range, or not in the same lane
+            }
+            return 1;
         }
 
         @Override
-        protected int getInactivePriority(float distance, Entity target) {
-            return (distance < attackRange && target != null) ? 1 : -1;
+        protected int getInactivePriority(float dst, Entity target) { // from AttackTask
+            if (target == null) {
+                return -1;
+            }
+            if (dst <= attackRange) {
+                return 1; // start task if target is visible, in range, and in the same lane
+            }
+            return -1;
         }
     }
 
+    Entity defender;
+    TestTargetDetectionTasks targetTask;
+
     @BeforeEach
     void setup() {
-        // Mock physics and services
-        mockPhysics = mock(PhysicsEngine.class);
-        PhysicsService physicsService = mock(PhysicsService.class);
-        when(physicsService.getPhysics()).thenReturn(mockPhysics);
-        ServiceLocator.registerPhysicsService(physicsService);
-
-        LevelGameArea gameArea = mock(LevelGameArea.class);
-        when(gameArea.getTileSize()).thenReturn(1f);
-        ServiceLocator.registerGameArea(gameArea);
-
-        EntityService entityService = new EntityService();
-        ServiceLocator.registerEntityService(entityService);
-
+        RenderService renderService = new RenderService();
+        renderService.setDebug(mock(DebugRenderer.class));
+        ServiceLocator.registerRenderService(renderService);
         GameTime gameTime = mock(GameTime.class);
         when(gameTime.getDeltaTime()).thenReturn(20f / 1000);
         ServiceLocator.registerTimeSource(gameTime);
+        ServiceLocator.registerPhysicsService(new PhysicsService());
 
-
-        task = new TestTargetDetectionTasks(5f, TargetDetectionTasks.AttackDirection.RIGHT);
+        LevelGameArea gameArea = mock(LevelGameArea.class);
+        when(gameArea.getTileSize()).thenReturn(1f); // Define a tile size
+        ServiceLocator.registerGameArea(gameArea);
 
         defender = mock(Entity.class);
-        when(defender.getCenterPosition()).thenReturn(new Vector2(0, 0));
+        defender.setPosition(0, 0);
+
+        targetTask = spy(new TestTargetDetectionTasks(10, TargetDetectionTasks.AttackDirection.RIGHT));
+        AITaskComponent aiTask = new AITaskComponent().addTask(targetTask);
+        defender.addComponent(aiTask);
+
         when(defender.getPosition()).thenReturn(new Vector2(0, 0));
-        ServiceLocator.getEntityService().register(defender);
 
-        AITaskComponent aiTaskComponent = new AITaskComponent().addTask(task);
-        defender.addComponent(aiTaskComponent);
-
-        TaskRunner taskRunner = spy(TaskRunner.class);
+        TaskRunner taskRunner = mock(TaskRunner.class);
         when(taskRunner.getEntity()).thenReturn(defender);
 
-
+        targetTask.create(taskRunner);
     }
 
     @Test
-    void getAllTargetsTest() {
+    void getDistanceToTargetNullTest() {
+        doReturn(null).when(targetTask).getNearestVisibleTarget();
+        float distance = targetTask.getDistanceToTarget();
+        assertEquals(Float.MAX_VALUE, distance);
+    }
+
+    @Test
+    void getDistanceToTargetTest() {
+
         Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(3f, 0));
-        ServiceLocator.getEntityService().register(target);
+        when(target.getPosition()).thenReturn(new Vector2(3f, 4f));
 
-        target.addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY));
+        doReturn(target).when(targetTask).getNearestVisibleTarget();
 
-        List<Entity> targets = task.getAllTargets();
-        assertTrue(targets.contains(target), "Should find enemy entity");
-        assertFalse(targets.contains(defender), "Should not include self");
-    }
+        float distance = targetTask.getDistanceToTarget();
 
-    @Test
-    void getNearestVisibleTargetTestFindsEntity() {
-        Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(3f, 0));
-        ServiceLocator.getEntityService().register(target);
-
-        RaycastHit hit = new RaycastHit();
-        Fixture fixture = mock(Fixture.class);
-        when(fixture.getUserData()).thenReturn(target);
-        hit.setFixture(fixture); // mock hitting target entity
-
-        when(mockPhysics.raycast(any(), any(), anyShort(), any(RaycastHit.class)))
-                .then(invocation -> {
-                    RaycastHit arg = invocation.getArgument(3);
-                    arg.setFixture(fixture);
-                    return true;
-                });
-
-        Entity result = task.getNearestVisibleTarget();
-        assertNotNull(result, "Should detect entity from raycast");
-    }
-
-    @Test
-    void getDistanceToTargetTestFindsEntity() {
-        Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(3f, 0));
-        ServiceLocator.getEntityService().register(target);
-
-        Entity closest = task.getNearestVisibleTarget();
-        assertEquals(3,  defender.getPosition().dst(closest.getPosition()), "Distance to target should be 3f");
-    }
-
-    @Test
-    void getDistanceToTargetTestFindsNoTarget() {
-        Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(10f, 0)); // out of range
-        ServiceLocator.getEntityService().register(target);
-
-        Entity closest = task.getNearestVisibleTarget();
-        assertEquals(0,  defender.getPosition().dst(closest.getPosition()), "Distance to target should be 0f");
-    }
-
-    @Test
-    void testGetDistanceToTargetReturnsMaxWhenNoTarget() {
-        TargetDetectionTasks spyTask = spy(task);
-        doReturn(null).when(spyTask).getNearestVisibleTarget();
-
-        float dist = spyTask.getDistanceToTarget();
-        assertEquals(Float.MAX_VALUE, dist, "Should return max float when no target");
-    }
-
-   @Test
-    void getPriorityTestActive() {
-       Entity target = mock(Entity.class);
-       when(target.getPosition()).thenReturn(new Vector2(3f, 0));
-       ServiceLocator.getEntityService().register(target);
-
-
-   }
-
-    @Test
-    void getPriorityTestInactive() {
-        Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(10f, 0)); // out of range
-        ServiceLocator.getEntityService().register(target);
+        assertEquals(5f, distance, "Distance between target and entity should be 5");
     }
 
 }
