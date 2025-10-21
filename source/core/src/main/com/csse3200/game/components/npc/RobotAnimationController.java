@@ -43,7 +43,6 @@ public class RobotAnimationController extends Component {
   void animatePreExplosion() {
     currentState = State.EXPLODE; // or a new state like CHARGING
     animator.startAnimation("explosion"); // e.g. flickering or glowing animation
-    
   }
 
   void animateMoveLeft() {
