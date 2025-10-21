@@ -1322,4 +1322,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
   }
+    /**
+     * Getter for currentLevel
+     */
+    public String getCurrentLevelKey() {
+        return currentLevelKey;
+    }
 }
