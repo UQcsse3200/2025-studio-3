@@ -3,7 +3,6 @@ package com.csse3200.game.components.shop;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -49,6 +48,8 @@ public class ShopDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    // Check and reset shop period if needed
+    ServiceLocator.getProfileService().getProfile().checkAndResetShopPeriod();
     addActors();
   }
 
@@ -73,10 +74,6 @@ public class ShopDisplay extends UIComponent {
     rootTable.setSize(870f * uiScale, 610f * uiScale);
     rootTable.center();
 
-    // Add title at the top of the background image
-    Label title = ui.title("Shop");
-    rootTable.add(title).expandX().center().padTop(25f * uiScale).row();
-
     createShopDisplay();
 
     // Create stack with background and content
@@ -87,7 +84,12 @@ public class ShopDisplay extends UIComponent {
     stack.setPosition(
         (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
 
-    stage.addActor(stack);
+    // Add title at the top of the background image (outside the content table)
+    Label title = ui.title("Shop");
+    title.setPosition(
+        stack.getX() + (stack.getWidth() - title.getWidth()) / 2,
+        stack.getY() + stack.getHeight() - 50f * uiScale);
+    stage.addActor(title);
     createCloseButton();
   }
 
@@ -376,16 +378,7 @@ public class ShopDisplay extends UIComponent {
             "Purchase Successful",
             String.format("You have successfully purchased %s!", itemConfig.getName()));
     
-    // Reset the shop screen to show updated sold status
-    // We need to get the game instance to reset the screen
-    // This will be handled by the ShopActions component
     entity.getEvents().trigger("resetShop");
-  }
-
-
-  @Override
-  public void draw(SpriteBatch batch) {
-    // Do nothing, handled by the stage
   }
 
   @Override

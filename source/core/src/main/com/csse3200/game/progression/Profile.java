@@ -30,6 +30,7 @@ public class Profile {
   private Set<String> completedLevels; // List of completed levels
   private Set<String> unlockedNodes; // List of unlocked nodes
   private boolean[] soldItems; // Track which shop items are sold (length 3)
+  private long lastShopPeriod; // Track the last 15-minute period for shop reset
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -48,6 +49,7 @@ public class Profile {
     this.playedLevelTutorial = false;
     this.playedMapTutorial = false;
     this.soldItems = new boolean[3]; // Initialize all items as not sold
+    this.lastShopPeriod = System.currentTimeMillis() / (15 * 60 * 1000); // Current 15-minute period
   }
 
   /** 
@@ -87,6 +89,7 @@ public class Profile {
     this.worldMapZoomIdx = zoomAndArsenal.getKey();
     this.arsenal = zoomAndArsenal.getValue();
     this.soldItems = new boolean[3]; // Initialize all items as not sold
+    this.lastShopPeriod = System.currentTimeMillis() / (15 * 60 * 1000); // Current 15-minute period
   }
 
   /**
@@ -315,5 +318,36 @@ public class Profile {
    */
   public void resetSoldItems() {
     soldItems = new boolean[3];
+  }
+
+  /**
+   * Get the last shop period.
+   *
+   * @return the last shop period timestamp
+   */
+  public long getLastShopPeriod() {
+    return lastShopPeriod;
+  }
+
+  /**
+   * Set the last shop period.
+   *
+   * @param period the period timestamp
+   */
+  public void setLastShopPeriod(long period) {
+    this.lastShopPeriod = period;
+  }
+
+  /**
+   * Check if the shop period has changed and reset sold items if needed.
+   * This should be called when entering the shop.
+   */
+  public void checkAndResetShopPeriod() {
+    long currentPeriod = System.currentTimeMillis() / (15 * 60 * 1000);
+    if (currentPeriod != lastShopPeriod) {
+      // Period has changed, reset sold items
+      resetSoldItems();
+      setLastShopPeriod(currentPeriod);
+    }
   }
 }

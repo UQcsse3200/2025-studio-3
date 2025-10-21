@@ -222,6 +222,7 @@ public class WaveService implements WaveConfigProvider {
 
   public void endWave() {
     waveActive = false;
+    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("levelsCompleted");
     initialiseNewWave();
   }
 

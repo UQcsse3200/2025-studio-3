@@ -52,6 +52,7 @@ import org.slf4j.LoggerFactory;
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  * inventory allowing the player to add units to the grid.
  */
+ @SuppressWarnings("java:S1854") // SonarQube is throwing false positives for useless variables.
 public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float X_MARGIN_TILES = 2f;
   private static final float Y_MARGIN_TILES = 1f;
@@ -580,6 +581,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
+
+    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("shotsFired");
     spawnEntity(projectile); // adds to area and entity service
   }
 
@@ -774,6 +777,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
+    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("defencesPlanted");
     if (isPlacementLocked()) {
       logger.debug("Ignoring spawn request while placement is locked");
       resetSelectionUI();
@@ -970,6 +974,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   float vol = ServiceLocator.getSettingsService().getSoundVolume();
                   Sound s = ServiceLocator.getResourceService().getAsset(p.toString(), Sound.class);
                   if (s != null) s.play(vol);
+                  // team 8 here - added this to track defences lost as deathSfxPath is only used for defences. Feel free to move.
+                  ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("defencesLost");
                 }
               } catch (Exception e) {
                 logger.debug("Skip death SFX: {}", e.toString());
