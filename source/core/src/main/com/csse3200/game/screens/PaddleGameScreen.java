@@ -71,11 +71,11 @@ public class PaddleGameScreen extends ScreenAdapter {
       "images/backgrounds/WallPongbg.png"
     };
     resourceService.loadTextures(textures);
-    
+
     // Load sounds
     String[] sounds = {"sounds/bounce.mp3"};
     resourceService.loadSounds(sounds);
-    
+
     resourceService.loadAll();
   }
 
@@ -166,7 +166,10 @@ public class PaddleGameScreen extends ScreenAdapter {
           .incrementStatistic("paddleGameCompleted");
     }
     ServiceLocator.getProfileService().getProfile().getWallet().addCoins(score);
-    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("coinsCollected", score);
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("coinsCollected", score);
 
     // Show game over dialog
     gameOverDialogShown = true;

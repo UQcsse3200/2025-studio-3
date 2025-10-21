@@ -10,13 +10,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.statistics.Statistics;
+import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
-import com.csse3200.game.progression.Profile;
-import com.csse3200.game.progression.statistics.Statistics;
-import com.csse3200.game.progression.wallet.Wallet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,7 +45,7 @@ class DamageMappingSystemTest {
     Profile mockProfile = mock(Profile.class);
     Statistics mockStatistics = mock(Statistics.class);
     Wallet mockWallet = mock(Wallet.class);
-    
+
     when(mockProfileService.getProfile()).thenReturn(mockProfile);
     when(mockProfile.getStatistics()).thenReturn(mockStatistics);
     when(mockProfile.getWallet()).thenReturn(mockWallet);

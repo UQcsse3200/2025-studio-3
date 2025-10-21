@@ -197,7 +197,10 @@ public class LaneRunnerScreen extends ScreenAdapter {
           .incrementStatistic("laneRunnerCompleted");
     }
     ServiceLocator.getProfileService().getProfile().getWallet().addCoins(Math.floorDiv(score, 3));
-    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("coinsCollected", Math.floorDiv(score, 3));
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("coinsCollected", Math.floorDiv(score, 3));
 
     // Show game over dialog
     gameOverDialogShown = true;
