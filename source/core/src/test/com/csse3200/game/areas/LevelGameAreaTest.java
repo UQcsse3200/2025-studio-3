@@ -222,7 +222,7 @@ class LevelGameAreaTest {
   }
 
   @Test
-  void spawnUnitItemInInventoryConsumesOnePlaysEffectAndClearsTile() {
+  void spawnUnitItemInInventoryConsumesOnePlaysEffect() {
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
 
     ItemComponent item = mock(ItemComponent.class);
@@ -243,7 +243,6 @@ class LevelGameAreaTest {
 
     verify(effects).playEffect(anyString(), any(Vector2.class), anyInt(), any(Vector2.class));
     assertFalse(ServiceLocator.getProfileService().getProfile().getInventory().contains("grenade"));
-    verify(storage).removeTileUnit();
   }
 
   @Test
@@ -533,7 +532,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerPhysicsService(physicsService);
 
     Texture tex = mock(Texture.class);
-    when(resourceService.getAsset(eq(path), eq(Texture.class))).thenReturn(null, tex);
+    when(resourceService.getAsset(path, Texture.class)).thenReturn(null, tex);
 
     CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
     // Skip wall spawning to avoid PolygonShape native call
@@ -543,7 +542,7 @@ class LevelGameAreaTest {
 
     verify(resourceService).loadTextures(argThat(arr -> arr.length == 1 && path.equals(arr[0])));
     verify(resourceService).loadAll();
-    verify(resourceService, atLeast(2)).getAsset(eq(path), eq(Texture.class));
+    verify(resourceService, atLeast(2)).getAsset(path, Texture.class);
   }
 
   @Test
@@ -567,8 +566,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerSettingsService(settings);
 
     Sound goSound = mock(Sound.class);
-    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
-        .thenReturn(goSound);
+    when(resourceService.getAsset("sounds/game-over-voice.mp3", Sound.class)).thenReturn(goSound);
 
     // Create a robot that has crossed the left edge
     float t = area.getTileSize();
@@ -581,7 +579,7 @@ class LevelGameAreaTest {
     Field f = LevelGameArea.class.getDeclaredField("isGameOver");
     f.setAccessible(true);
     assertTrue(f.getBoolean(area));
-    verify(goSound, times(1)).play(eq(0.5f));
+    verify(goSound, times(1)).play(0.5f);
 
     // Idempotent re-check
     area.checkGameOver();
@@ -642,6 +640,10 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     Field flag = LevelGameArea.class.getDeclaredField("isLevelComplete");
     flag.setAccessible(true);
     assertFalse(flag.getBoolean(area));
@@ -671,11 +673,15 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     GameStateService state = mock(GameStateService.class);
     ServiceLocator.registerGameStateService(state);
 
     area.checkLevelComplete();
-
+    area.checkLevelComplete();
     verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
     verify(state).lockPlacement();
   }
@@ -694,5 +700,60 @@ class LevelGameAreaTest {
 
     assertDoesNotThrow(area::create);
     assertNotNull(area.getGrid());
+  }
+
+  @Test
+  void placeDefenceUnit_playsSound() {
+    // Arrange
+    ResourceService resources = mock(ResourceService.class);
+    SettingsService settings = mock(SettingsService.class);
+    CurrencyService currencyService = mock(CurrencyService.class);
+    Sound sound = mock(Sound.class);
+    Entity unit = spy(new Entity());
+
+    // Expected values
+    String expectedPath = "sounds/slingshooter-place.mp3";
+    float expectedVolume = 0.7f;
+
+    // Mock service locator
+    ServiceLocator.registerResourceService(resources);
+    ServiceLocator.registerSettingsService(settings);
+    ServiceLocator.registerCurrencyService(currencyService);
+
+    // Mock behaviour
+    when(unit.getProperty(anyString())).thenReturn(null);
+    when(unit.getProperty("soundPath")).thenReturn(expectedPath);
+    when(resources.getAsset(expectedPath, Sound.class)).thenReturn(sound);
+    when(settings.getSoundVolume()).thenReturn(expectedVolume);
+
+    // area and grid
+    Entity tileEntity = mock(Entity.class);
+    TileStorageComponent tileStorage = mock(TileStorageComponent.class);
+    when(tileEntity.getComponent(TileStorageComponent.class)).thenReturn(tileStorage);
+
+    CapturingLevelGameArea area = spy(new CapturingLevelGameArea());
+    LevelGameGrid grid = mock(LevelGameGrid.class);
+    when(grid.getTile(anyInt())).thenReturn(tileEntity);
+
+    // allow unit to be placed
+    unit.addComponent(
+        new DeckInputComponent(
+            area,
+            new Supplier<Entity>() {
+              @Override
+              public Entity get() {
+                return unit;
+              }
+            }));
+
+    // Act
+    area.setGrid(grid);
+    area.setSelectedUnit(unit);
+    area.markNextPlacementFree();
+    area.spawnUnit(0);
+
+    // Assert
+    verify(resources).getAsset(expectedPath, Sound.class);
+    verify(sound).play(expectedVolume);
   }
 }

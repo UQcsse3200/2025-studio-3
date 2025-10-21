@@ -20,6 +20,7 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -42,6 +43,8 @@ public class HotbarDisplay extends UIComponent {
   private Label insufficientScrapMessage;
   private long insufficientScrapStartTime = -1; // -1 means not active
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
+  private final Map<Entity, Label> generatorCostLabels = new HashMap<>();
+  private int lastFurnaceCount = -1;
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -65,11 +68,9 @@ public class HotbarDisplay extends UIComponent {
    */
   private void addActors() {
     Group unitLayers = new Group();
-
     // create hotbar image
     Image hotbar = new Image(new Texture("images/ui/hotbar.png"));
     unitLayers.addActor(hotbar);
-
     unitLayers.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
     // initialise the values needed for placing unit images in slots
@@ -82,26 +83,24 @@ public class HotbarDisplay extends UIComponent {
     // creates unit images and places in slots
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
       Table slot = new Table();
-
       Image tempUnit = new Image(new Texture(unit.getKey()));
       tempUnit.setSize(scaling, scaling);
-
       slotImages.add(tempUnit);
 
       // Get the cost of the entity
       Entity entity = unit.getValue().get();
       GeneratorStatsComponent generator = entity.getComponent(GeneratorStatsComponent.class);
       DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
-      int entityCost;
-
-      if (generator != null) {
-        entityCost = generator.getCost();
-      } else {
-        entityCost = defender.getCost();
-      }
 
       // Handles displaying the cost in the hotbar
-      Label displayCost = new Label(String.valueOf(entityCost), skin);
+      Label displayCost = new Label("50", skin);
+
+      if (generator != null) {
+        generatorCostLabels.put(entity, displayCost);
+      } else {
+        int entityCost = defender.getCost();
+        displayCost.setText(String.valueOf(entityCost));
+      }
 
       displayCost.setPosition(
           tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
@@ -110,9 +109,7 @@ public class HotbarDisplay extends UIComponent {
       slot.add(tempUnit).row();
       slot.add(displayCost);
       slot.setPosition(currentX, y);
-
       currentX += cellWidth;
-
       // listener for selection/use
       tempUnit.addListener(
           new ClickListener() {
@@ -126,7 +123,6 @@ public class HotbarDisplay extends UIComponent {
                     new Entity()
                         .addComponent(new DeckInputComponent(game, unit.getValue()))
                         .addComponent(new TextureRenderComponent(unit.getKey()));
-
                 game.setSelectedUnit(tempPlaceableUnit);
               } else if (event.getButton() == Input.Buttons.RIGHT) {
                 game.setSelectedUnit(null);
@@ -137,7 +133,6 @@ public class HotbarDisplay extends UIComponent {
       unitLayers.addActor(tempUnit);
       unitLayers.addActor(slot);
     }
-    // lays out the units
     layoutUnits(startX, y, cellWidth, slotImages);
 
     // sets the position to the top middle of screen
@@ -349,12 +344,31 @@ public class HotbarDisplay extends UIComponent {
   /** Handles how long the message gets displayed for. */
   @Override
   public void update() {
-    // Hide message after 2 seconds
+
+    int currentFurnaceCount = 0;
+    if (ServiceLocator.getGameArea() != null) {
+      for (Entity entity : ServiceLocator.getGameArea().getEntities()) {
+        if (entity.getComponent(GeneratorStatsComponent.class) != null) {
+          currentFurnaceCount++;
+        }
+      }
+    }
+    if (currentFurnaceCount != lastFurnaceCount) {
+      for (Map.Entry<Entity, Label> entry : generatorCostLabels.entrySet()) {
+        Entity generatorEntity = entry.getKey();
+        Label costLabel = entry.getValue();
+        GeneratorStatsComponent stats = generatorEntity.getComponent(GeneratorStatsComponent.class);
+
+        int newCost = stats.getCost() + (currentFurnaceCount * 50);
+        costLabel.setText(String.valueOf(newCost));
+      }
+      lastFurnaceCount = currentFurnaceCount;
+    }
     if (insufficientScrapStartTime != -1) {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {
         insufficientScrapMessage.setVisible(false);
-        insufficientScrapStartTime = -1; // reset timer
+        insufficientScrapStartTime = -1;
       }
     }
   }
