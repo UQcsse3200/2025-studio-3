@@ -12,6 +12,8 @@ hit
   bounds: 64, 0, 64, 64
 hit
   bounds: 128, 0, 64, 64
+hit
+  bounds: 0, 0, 64, 64
 broken-top
   bounds: 128, 64, 64, 64
 broken-middle
