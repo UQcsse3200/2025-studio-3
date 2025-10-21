@@ -182,9 +182,9 @@ public class RobotFactory {
 
     // Default attack type is melee if not specified
     if (config.getAttackType() == null) {
-      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(50f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(40f, PhysicsLayer.NPC));
     } else if (config.getAttackType().equals("melee")) {
-      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(50f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(40f, PhysicsLayer.NPC));
     } else {
       // handle gunner attack type
       if (config.getName() != null && config.getName().contains("Gunner")) {
