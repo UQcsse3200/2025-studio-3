@@ -16,6 +16,7 @@ public class DefenceAnimationController extends Component {
     animator = this.entity.getComponent(AnimationRenderComponent.class);
     entity.getEvents().addListener("idleStart", this::animateIdle);
     entity.getEvents().addListener("attackStart", this::animateAttack);
+    // entity.getEvents().addListener("hitMarker", this::animateHit);
   }
 
   void animateIdle() {
@@ -24,5 +25,10 @@ public class DefenceAnimationController extends Component {
 
   void animateAttack() {
     animator.startAnimation("attack");
+  }
+
+  void animateHit() {
+
+    animator.startAnimation("hit");
   }
 }

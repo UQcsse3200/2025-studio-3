@@ -174,6 +174,7 @@ public class DefenceFactory {
     wall.addComponent(stats).addComponent(animator).addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
+    animator.addAnimation("hit", 0.3f, Animation.PlayMode.LOOP);
     animator.scaleEntity();
     return wall;
   }

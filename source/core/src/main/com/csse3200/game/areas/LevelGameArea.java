@@ -661,7 +661,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       float distanceSq = dx * dx + dy * dy;
 
       if (distanceSq <= tileSize * tileSize) {
-        // Apply damage by subtracting health
+        // offset entity position
         robot.setPosition(robotPos.x + dist * tileSize, robotPos.y);
 
         logger.info("Robot knocked back {} tiles", dist);
