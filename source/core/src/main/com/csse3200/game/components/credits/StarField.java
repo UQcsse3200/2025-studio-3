@@ -14,12 +14,11 @@ import java.util.Random;
 public class StarField extends Actor {
   private final List<Star> stars = new ArrayList<>();
   private final Random random = new Random();
-  private Texture starTexture;
-  private float time;
+  private final Texture starTexture;
   private boolean initialized = false;
 
   // config
-  private final int STAR_COUNT = 100;
+  private static final int STAR_COUNT = 100;
 
   public void setDriftY(float driftY) {
     this.driftY = driftY;
@@ -52,7 +51,6 @@ public class StarField extends Actor {
   @Override
   public void act(float delta) {
     super.act(delta);
-    this.time += delta;
 
     for (Star star : stars) {
       float speedMul = MathUtils.lerp(1.2f, 0.35f, star.getZ()); // closer are faster

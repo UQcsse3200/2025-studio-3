@@ -1,8 +1,10 @@
 package com.csse3200.game.data.credits;
 
 public class Star {
-  float x, y, z;
-  float size;
+  private float x;
+  private float y;
+  private float z;
+  private float size;
 
   public float getX() {
     return x;
