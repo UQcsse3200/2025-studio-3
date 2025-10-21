@@ -15,7 +15,6 @@ import com.csse3200.game.data.credits.Entry;
 import com.csse3200.game.data.credits.Section;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
-
 import java.util.List;
 
 public class CreditsDisplay extends UIComponent {
@@ -44,7 +43,7 @@ public class CreditsDisplay extends UIComponent {
     layers.setFillParent(true);
     stage.addActor(layers);
 
-    Image background = new Image(colorTexture(new Color(14f/255, 10f/255, 20f/255, 1f)));
+    Image background = new Image(colorTexture(new Color(14f / 255, 10f / 255, 20f / 255, 1f)));
     background.setScaling(Scaling.fill);
     background.setAlign(Align.center);
     background.setFillParent(true);
@@ -77,7 +76,10 @@ public class CreditsDisplay extends UIComponent {
     root.defaults().pad(10);
 
     // Title Card
-    Image titleCard = new Image(ServiceLocator.getResourceService().getAsset("images/backgrounds/bg-text.png", Texture.class));
+    Image titleCard =
+        new Image(
+            ServiceLocator.getResourceService()
+                .getAsset("images/backgrounds/bg-text.png", Texture.class));
     titleCard.setScaling(Scaling.fillX);
     titleCard.setAlign(Align.center);
     root.add(titleCard).width(Value.percentWidth(0.4f, root)).padTop(200f * ui.getUIScale()).row();
@@ -103,7 +105,10 @@ public class CreditsDisplay extends UIComponent {
     }
 
     // add a thank you for playing section that fills the whole screen
-    root.add(ui.title("Thank you for playing!")).padTop(510f * ui.getUIScale()).padBottom(510f * ui.getUIScale()).row();
+    root.add(ui.title("Thank you for playing!"))
+        .padTop(510f * ui.getUIScale())
+        .padBottom(510f * ui.getUIScale())
+        .row();
   }
 
   @Override
