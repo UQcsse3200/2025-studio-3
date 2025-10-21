@@ -113,7 +113,13 @@ public class LevelCompletedWindow extends UIComponent {
   public void updateLevel() {
     String currentLevel = profileService.getProfile().getCurrentLevel();
     updateStatistics(currentLevel);
+    
+    // Mark the current level as completed
+    profileService.getProfile().completeLevel(currentLevel);
+    
+    // Find and unlock the next level
     String nextLevel = findNextLevel(currentLevel);
+    profileService.getProfile().unlockNode(nextLevel);
     profileService.getProfile().setCurrentLevel(nextLevel);
   }
 
