@@ -44,7 +44,8 @@ public class GdxGame extends Game {
     "sounds/achievement_unlock.mp3",
     "sounds/error.mp3",
     "sounds/dialog.mp3",
-    "sounds/button_clicked.mp3"
+    "sounds/button_clicked.mp3",
+    "sounds/node_sound.mp3"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");

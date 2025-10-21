@@ -37,7 +37,7 @@ public class ShopDisplay extends UIComponent {
   private TextButton closeButton;
   private final Sound purchasedSound =
       ServiceLocator.getResourceService().getAsset("sounds/item_purchased_sound.mp3", Sound.class);
-  float uiScale = ui.getUIScale();
+  private float uiScale;
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -48,6 +48,7 @@ public class ShopDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
+    uiScale = ui.getUIScale();
     // Check and reset shop period if needed
     ServiceLocator.getProfileService().getProfile().checkAndResetShopPeriod();
     addActors();
@@ -84,12 +85,16 @@ public class ShopDisplay extends UIComponent {
     stack.setPosition(
         (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
 
+    // Add stack to stage
+    stage.addActor(stack);
+
     // Add title at the top of the background image (outside the content table)
     Label title = ui.title("Shop");
     title.setPosition(
         stack.getX() + (stack.getWidth() - title.getWidth()) / 2,
-        stack.getY() + stack.getHeight() - 50f * uiScale);
+        stack.getY() + stack.getHeight() - 85f * uiScale);
     stage.addActor(title);
+    
     createCloseButton();
   }
 

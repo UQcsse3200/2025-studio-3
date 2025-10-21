@@ -225,7 +225,7 @@ public class WaveService implements WaveConfigProvider {
     ServiceLocator.getProfileService()
         .getProfile()
         .getStatistics()
-        .incrementStatistic("levelsCompleted");
+        .incrementStatistic("wavesCompleted");
     initialiseNewWave();
   }
 

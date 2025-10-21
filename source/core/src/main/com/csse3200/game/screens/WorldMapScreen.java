@@ -414,12 +414,6 @@ public class WorldMapScreen extends BaseScreen {
    * @param node the node the player has entered
    */
   private void onNodeEnter(WorldMapNode node) {
-    // Update the profile with the map location.
-    var ps = ServiceLocator.getProfileService();
-    if (ps != null && ps.getProfile() != null) {
-      ps.saveCurrentProfile();
-    }
-
     logger.info(
         "[WorldMapScreen] Entering node: {} (key={})", node.getLabel(), node.getRegistrationKey());
 

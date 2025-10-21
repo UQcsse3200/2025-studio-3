@@ -116,12 +116,6 @@ public class WorldMapPlayerComponent extends UIComponent {
     var pos = entity.getPosition();
     ps.getProfile().setWorldMapX(pos.x);
     ps.getProfile().setWorldMapY(pos.y);
-
-    try {
-      ps.saveCurrentProfile();
-    } catch (Exception e) {
-      logger.warn("[WorldMapPlayerComponent] Failed to save position: {}", e.getMessage());
-    }
   }
 
   // --------------------------------------------------------------------- //
@@ -423,7 +417,7 @@ public class WorldMapPlayerComponent extends UIComponent {
 
     String currentNode = targetKey;
     while (!currentNode.equals(startKey)) {
-      Prev previousNode = previousNodes.get(targetKey);
+      Prev previousNode = previousNodes.get(currentNode);
       if (previousNode == null) break;
       path.addFirst(previousNode.def);
       currentNode = previousNode.prevKey;
@@ -673,7 +667,7 @@ public class WorldMapPlayerComponent extends UIComponent {
         entity.setPosition(curTarget);
         float volume = ServiceLocator.getSettingsService().getSoundVolume();
         Sound nodeSound =
-            ServiceLocator.getResourceService().getAsset("sounds/node_sound.mp3", Sound.class);
+            ServiceLocator.getGlobalResourceService().getAsset("sounds/node_sound.mp3", Sound.class);
         nodeSound.play(0.2f * volume);
         persistWorldPos();
 
