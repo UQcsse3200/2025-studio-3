@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 
 class DefenceFactoryTest {
   private ConfigService mockConfigService;
+  private static final String HEAL = "heal";
 
   @BeforeEach
   void setUp() {
@@ -290,6 +291,20 @@ class DefenceFactoryTest {
       assertNotNull(
           defender.getComponent(HitMarkerComponent.class),
           () -> defense + ": missing HitMarkerComponent");
+    }
+  }
+
+  @Test
+  void testDefenderListenForHeal() {
+    for (String defense : new String[] {"slingshooter", "armyguy", "shadow"}) {
+      Entity defender =
+          DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+
+      int oldHealth = defender.getComponent(DefenderStatsComponent.class).getHealth();
+      defender.getEvents().trigger(HEAL);
+      int newHealth = defender.getComponent(DefenderStatsComponent.class).getHealth();
+
+      assert (newHealth == oldHealth + 20);
     }
   }
 
