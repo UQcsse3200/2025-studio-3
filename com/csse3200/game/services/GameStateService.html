@@ -110,9 +110,14 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="GameStateService.FreezeReason.html" class="type-name-link" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></code></div>
+<div class="col-first even-row-color"><code>static interface&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="GameStateService.FreezeListener.html" class="type-name-link" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a></code></div>
 <div class="col-last even-row-color">
+<div class="block">Receives notifications when the game enters or exits a frozen state.</div>
+</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="GameStateService.FreezeReason.html" class="type-name-link" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Reasons that the game can be frozen.</div>
 </div>
 </div>
@@ -175,14 +180,24 @@ loadScripts(document, 'script');</script>
 <div class="block">Locks placement interactions.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeFreezeReason(com.csse3200.game.services.GameStateService.FreezeReason)" class="member-name-link">removeFreezeReason</a><wbr>(<a href="GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a>&nbsp;reason)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">registerFreezeListener</a><wbr>(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Removes a freeze reason.</div>
+<div class="block">Registers a listener that is notified whenever the frozen state toggles.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockPlacement()" class="member-name-link">unlockPlacement</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeFreezeReason(com.csse3200.game.services.GameStateService.FreezeReason)" class="member-name-link">removeFreezeReason</a><wbr>(<a href="GameStateService.FreezeReason.html" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a>&nbsp;reason)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Removes a freeze reason.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockPlacement()" class="member-name-link">unlockPlacement</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Unlocks placement interactions.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregisterFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">unregisterFreezeListener</a><wbr>(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Unregisters a previously registered freeze listener.</div>
 </div>
 </div>
 </div>
@@ -302,6 +317,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>true if placement is locked</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="registerFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)">
+<h3>registerFreezeListener</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerFreezeListener</span><wbr><span class="parameters">(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</span></div>
+<div class="block">Registers a listener that is notified whenever the frozen state toggles.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - callback to receive freeze updates</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="unregisterFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)">
+<h3>unregisterFreezeListener</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unregisterFreezeListener</span><wbr><span class="parameters">(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</span></div>
+<div class="block">Unregisters a previously registered freeze listener.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>listener</code> - listener to remove</dd>
 </dl>
 </section>
 </li>

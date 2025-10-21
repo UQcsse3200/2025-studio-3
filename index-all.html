@@ -2937,6 +2937,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Creates the service with explicit dependencies.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeListener.html" class="type-name-link" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a> - Interface in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
+<dd>
+<div class="block">Receives notifications when the game enters or exits a frozen state.</div>
+</dd>
 <dt><a href="com/csse3200/game/services/GameStateService.FreezeReason.html" class="type-name-link" title="enum class in com.csse3200.game.services">GameStateService.FreezeReason</a> - Enum Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
 <dd>
 <div class="block">Reasons that the game can be frozen.</div>
@@ -5890,6 +5894,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Method to be called when an enemy dies, to track wave end conditions</div>
 </dd>
+<dt><a href="com/csse3200/game/services/GameStateService.FreezeListener.html#onFreezeStateChanged(boolean)" class="member-name-link">onFreezeStateChanged(boolean)</a> - Method in interface com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/DynamicMenuSpriteScreen.html#onMenuEnter(E)" class="member-name-link">onMenuEnter(E)</a> - Method in interface com.csse3200.game.screens.<a href="com/csse3200/game/screens/DynamicMenuSpriteScreen.html" title="interface in com.csse3200.game.screens">DynamicMenuSpriteScreen</a></dt>
 <dd>
 <div class="block">Runs on screen activation.</div>
@@ -6345,6 +6351,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerEntityService(com.csse3200.game.entities.EntityService)" class="member-name-link">registerEntityService(EntityService)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Registers the entity service.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#registerFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">registerFreezeListener(GameStateService.FreezeListener)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Registers a listener that is notified whenever the frozen state toggles.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#registerGameArea(com.csse3200.game.areas.GameArea)" class="member-name-link">registerGameArea(GameArea)</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -8749,6 +8759,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/rendering/RenderService.html#unregister(com.csse3200.game.rendering.Renderable)" class="member-name-link">unregister(Renderable)</a> - Method in class com.csse3200.game.rendering.<a href="com/csse3200/game/rendering/RenderService.html" title="class in com.csse3200.game.rendering">RenderService</a></dt>
 <dd>
 <div class="block">Unregister a renderable.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#unregisterFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">unregisterFreezeListener(GameStateService.FreezeListener)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Unregisters a previously registered freeze listener.</div>
 </dd>
 <dt><a href="com/csse3200/game/utils/math/Vector2Utils.html#UP" class="member-name-link">UP</a> - Static variable in class com.csse3200.game.utils.math.<a href="com/csse3200/game/utils/math/Vector2Utils.html" title="class in com.csse3200.game.utils.math">Vector2Utils</a></dt>
 <dd>&nbsp;</dd>
