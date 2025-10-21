@@ -126,6 +126,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     boolean didHit =
         physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
+
     if (didHit) {
       Fixture f = tempHit.getFixture();
       if (f != null && f.getUserData() instanceof Entity e) return e;
@@ -142,24 +143,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
       Fixture f = tempHit.getFixture();
       if (f != null && f.getUserData() instanceof Entity e) return e;
     }
-
-    // fallback
-    Entity best = null;
-    float bestDst2 = Float.MAX_VALUE;
-    for (Entity e : getAllTargets()) {
-      Vector2 ec = e.getCenterPosition();
-      float dy = Math.abs(ec.y - from.y);
-      float dx = ec.x - from.x;
-      boolean inFront = (direction == AttackDirection.RIGHT) ? dx > 0f : dx < 0f;
-      if (dy <= tileSize && inFront) {
-        float d2 = ec.dst2(from);
-        if (d2 <= attackRange * attackRange && d2 < bestDst2) {
-          best = e;
-          bestDst2 = d2;
-        }
-      }
-    }
-    return best;
+    return null;
   }
 
   protected List<Entity> getAllTargets() {
