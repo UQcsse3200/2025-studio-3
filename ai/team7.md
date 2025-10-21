@@ -11,6 +11,7 @@
   * to speed up refactoring/cleaning of LevelGameArea
   * to assist with creation of additional unit tests in LevelGameArea
   * plan pause functionality changes and ensure they did not break other features
+  * for assistance in implementing pause functionality and determining where guards/checks were needed.
 
 ## Nathan Vassie
 * ChatGPT was used to create the image of the hotbar.

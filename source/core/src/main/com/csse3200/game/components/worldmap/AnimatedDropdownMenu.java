@@ -73,6 +73,7 @@ public class AnimatedDropdownMenu extends UIComponent {
       float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
       button.setPosition(buttonX, buttonY);
       button.setVisible(false);
+      button.setZIndex(60);
 
       // Add click listener
       final String buttonText = buttonTexts[i];
@@ -132,6 +133,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     isOpen = false;
     for (int i = 0; i < menuButtons.length; i++) {
       TextButton button = menuButtons[i];
+      button.setZIndex(60);
       button.addAction(
           Actions.sequence(
               Actions.parallel(Actions.moveBy(0, 50f, 0.2f), Actions.alpha(0f, 0.2f)),
@@ -215,6 +217,7 @@ public class AnimatedDropdownMenu extends UIComponent {
     if (menuButtons != null) {
       for (int i = 0; i < menuButtons.length; i++) {
         TextButton button = menuButtons[i];
+        button.setZIndex(60);
         if (button != null) {
           float buttonX = startX - BUTTON_WIDTH + 57f;
           float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
