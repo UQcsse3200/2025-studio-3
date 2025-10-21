@@ -1,13 +1,22 @@
 package com.csse3200.game.areas;
 
+import static com.csse3200.game.services.ItemEffectsService.spawnEffect;
+
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.*;
+import com.csse3200.game.components.CombatStatsComponent;
+import com.csse3200.game.components.DeckInputComponent;
+import com.csse3200.game.components.DefenderStatsComponent;
+import com.csse3200.game.components.GeneratorStatsComponent;
+import com.csse3200.game.components.ProjectileComponent;
+import com.csse3200.game.components.ProjectileTagComponent;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -20,7 +29,6 @@ import com.csse3200.game.components.projectiles.MoveLeftComponent;
 import com.csse3200.game.components.projectiles.PhysicsProjectileComponent;
 import com.csse3200.game.components.tasks.TargetDetectionTasks;
 import com.csse3200.game.components.tile.TileStorageComponent;
-import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.ProjectileType;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
@@ -40,7 +48,10 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.*;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.GameStateService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
@@ -205,11 +216,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(ui);
 
     createGameOverEntity();
-
-    // Handles the level completion window UI
-    this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
-    spawnEntity(this.levelCompleteEntity);
+    createLevelCompleteEntity();
   }
 
   /** Unlocks all entities that are listed as playing on the current game level */
@@ -282,6 +289,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(gameOverEntity);
   }
 
+  /** Creates and spawns the game-over UI entity. */
+  void createLevelCompleteEntity() {
+    // Handles the level completion window UI
+    this.levelCompleteEntity = new Entity();
+    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    spawnEntity(this.levelCompleteEntity);
+  }
+
   /** Creates and spawns the game background map and its boundary wall. */
   private void spawnMap() {
     Texture texture = loadMapTexture(mapFilePath);
@@ -312,13 +327,22 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     wall.getEvents().trigger("idleStart");
   }
 
+  /**
+   * Spawns a currency generating entity which increments scrap
+   *
+   * @param entity the generator entity that the currency is connected to
+   */
   private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
+    GridPoint2 stagePos =
+        worldToStage(new GridPoint2((int) entity.getPosition().x, (int) entity.getPosition().y));
     CurrencyGeneratorComponent currencyGenerator =
-        new CurrencyGeneratorComponent(entity, "images/entities/currency/scrap_metal.png");
+        new CurrencyGeneratorComponent(
+            entity, stagePos, "images/entities/currency/scrap_metal.png");
     scrapSpawner.addComponent(currencyGenerator);
     // if furnace dies, dispose of its currency generator
     entity.getEvents().addListener(ENTITY_DEATH_EVENT, scrapSpawner::dispose);
+    entity.getEvents().addListener("entityDespawn", scrapSpawner::dispose);
     spawnEntity(scrapSpawner);
   }
 
@@ -470,33 +494,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
-    int coins;
-    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
-    if (coinsRewarded == null) {
-      coins = 0;
-    } else {
-      coins = coinsRewarded.getCoinAmount();
-    }
-
     unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
-              try {
-                float vol = ServiceLocator.getSettingsService().getSoundVolume();
-                Sound s =
-                    ServiceLocator.getResourceService()
-                        .getAsset("sounds/robot-death.mp3", Sound.class);
-                if (s != null) s.play(vol);
-              } catch (Exception e) {
-                logger.debug("Skip death sfx: {}", e.toString());
-              }
-
-              increaseOutGameCurrency(coins);
               requestDespawn(unit);
-              if (ServiceLocator.getWaveService() != null) {
-                ServiceLocator.getWaveService().onEnemyDispose();
-              }
+              ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
             });
 
@@ -532,7 +535,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnProjectile(
-      Vector2 spawnPos, Entity projectile, TargetDetectionTasks.AttackDirection direction) {
+      Vector2 spawnPos,
+      Entity projectile,
+      TargetDetectionTasks.AttackDirection direction,
+      int damage) {
     // Safety check
     if (projectile == null || spawnPos == null || direction == null) {
       logger.warn("Invalid projectile spawn parameters");
@@ -563,10 +569,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           .addListener(
               "despawnShell",
               e -> {
-                Vector2 pos = projectile.getPosition();
-                int damage = 5; // or configurable
+                Vector2 pos = projectile.getPosition().cpy();
                 float radius = tileSize; // 1 tile radius
-                damageRobotsAtPosition(pos, radius, damage);
+                damageRobotsAtPosition(
+                    pos, radius, damage); // this damage value is now passed into spawnProjectile
+
+                // Spawn shell explosion effect
+                pos.x -= tileSize / 2f;
+                pos.y -= tileSize / 2f;
+
+                spawnEffect(
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                    "shell_explosion",
+                    new Vector2[] {pos, pos}, // effect stays in place
+                    (int) tileSize, // scale to match tile size
+                    new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                    Animation.PlayMode.NORMAL,
+                    false, // not moving
+                    false);
               });
     } else {
       projectile.addComponent(new MoveDirectionComponent(direction, 150f)); // pass velocity
@@ -657,14 +678,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(boss);
     robots.add(boss);
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
-
-    int coins;
-    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
-    if (coinsRewarded == null) {
-      coins = 0;
-    } else {
-      coins = coinsRewarded.getCoinAmount();
-    }
+    boss.getEvents().addListener("despawnRobot", target -> {});
 
     // --- BUG FIX STARTS HERE ---
     // Use a boolean flag to ensure the death logic only runs ONCE.
@@ -694,7 +708,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   new Timer.Task() {
                     @Override
                     public void run() {
-                      increaseOutGameCurrency(coins);
                       requestDespawn(boss);
                       robots.remove(boss);
                       logger.info("Boss defeated");
@@ -887,6 +900,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Check for enough scrap (unless next placement flagged free)
     GeneratorStatsComponent generator = unit.getComponent(GeneratorStatsComponent.class);
     DefenderStatsComponent defence = unit.getComponent(DefenderStatsComponent.class);
+    final int damage = (defence != null) ? defence.getBaseAttack() : 0;
     int cost = 0;
     if (generator != null) {
       cost = generator.getCost();
@@ -948,22 +962,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
-              try {
-                Object p = unit.getProperty("deathSfxPath");
-                if (p != null) {
-                  float vol = ServiceLocator.getSettingsService().getSoundVolume();
-                  Sound s = ServiceLocator.getResourceService().getAsset(p.toString(), Sound.class);
-                  if (s != null) s.play(vol);
-                }
-              } catch (Exception e) {
-                logger.debug("Skip death SFX: {}", e.toString());
-              }
-
               requestDespawn(unit);
               clearTile.run();
               robots.remove(unit);
             });
-
     unit.getEvents().addListener("despawned", clearTile::run);
 
     unit.getEvents()
@@ -972,7 +974,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             (TargetDetectionTasks.AttackDirection dir) -> {
               if (unit.getComponent(ProjectileComponent.class) != null) {
                 spawnProjectile(
-                    worldPos, unit.getComponent(ProjectileComponent.class).getProjectile(), dir);
+                    worldPos,
+                    unit.getComponent(ProjectileComponent.class).getProjectile(),
+                    dir,
+                    damage);
               }
               unit.getEvents().trigger("attackStart");
             });
@@ -1166,26 +1171,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         service.lockPlacement();
       }
     }
-  }
-
-  /**
-   * Increases out-of-game currency upon enemy death.
-   *
-   * @param coins the amount of coins to add to the player's wallet
-   */
-  public void increaseOutGameCurrency(int coins) {
-    ProfileService profileService = ServiceLocator.getProfileService();
-    if (profileService == null || !profileService.isActive()) return;
-
-    int before = profileService.getProfile().getWallet().getCoins();
-    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
-    profileService.getProfile().getWallet().addCoins(coins);
-    profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
-    logger.info(
-        "[Death] wallet: {} + {} -> {}",
-        before,
-        coins,
-        profileService.getProfile().getWallet().getCoins());
   }
 
   /**

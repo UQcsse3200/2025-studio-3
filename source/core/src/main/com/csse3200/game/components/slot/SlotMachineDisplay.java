@@ -1,5 +1,6 @@
 package com.csse3200.game.components.slot;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -239,6 +240,7 @@ public class SlotMachineDisplay extends UIComponent {
     TextureRegion upRegion = atlas.findRegion("slot_frame_up");
     TextureRegion downRegion = atlas.findRegion("slot_frame_down");
     TextureRegion lockedRegion = atlas.findRegion("slot_frame_locked");
+    ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/slotmachine_effect.mp3"});
     if (lockedRegion == null) {
       logger.warn("slot_frame_locked not found in atlas; falling back to up state.");
       lockedRegion = upRegion;
@@ -280,8 +282,14 @@ public class SlotMachineDisplay extends UIComponent {
               return;
             }
             if (isSpinning) return;
+
             int remaining = slotEngine.getRemainingSpins();
             int activeCards = SlotEffect.getActiveCardCount();
+            float volume = ServiceLocator.getSettingsService().getSoundVolume();
+            Sound spin =
+                ServiceLocator.getResourceService()
+                    .getAsset("sounds/slotmachine_effect.mp3", Sound.class);
+            spin.play(0.2f * volume);
             if (remaining <= 0 || activeCards >= MAX_ACTIVE_CARDS) {
               logger.info(
                   "Spin blocked: credits={}, fieldCards={} (limit={})",

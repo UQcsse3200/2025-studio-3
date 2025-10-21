@@ -1,8 +1,11 @@
 package com.csse3200.game.services;
 
 import com.badlogic.gdx.utils.Timer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -27,6 +30,7 @@ public class GameStateService {
   private float cachedTimeScale;
   private boolean timerStoppedByService;
   private boolean placementLocked;
+  private final Set<FreezeListener> freezeListeners = new LinkedHashSet<>();
 
   /**
    * Reasons that the game can be frozen.
@@ -75,6 +79,7 @@ public class GameStateService {
       logger.debug("Added freeze reason {}. Reasons now: {}", reason, activeReasons);
       if (activeReasons.size() == 1) {
         freezeTime();
+        notifyFreezeListeners(true);
       }
     } else {
       logger.trace("Freeze reason {} already active. No state change.", reason);
@@ -97,6 +102,7 @@ public class GameStateService {
     logger.debug("Removed freeze reason {}. Remaining: {}", reason, activeReasons);
     if (activeReasons.isEmpty()) {
       unfreezeTime();
+      notifyFreezeListeners(false);
     }
   }
 
@@ -145,6 +151,28 @@ public class GameStateService {
     return placementLocked;
   }
 
+  /**
+   * Registers a listener that is notified whenever the frozen state toggles.
+   *
+   * @param listener callback to receive freeze updates
+   */
+  public void registerFreezeListener(FreezeListener listener) {
+    Objects.requireNonNull(listener, "listener must not be null");
+    freezeListeners.add(listener);
+  }
+
+  /**
+   * Unregisters a previously registered freeze listener.
+   *
+   * @param listener listener to remove
+   */
+  public void unregisterFreezeListener(FreezeListener listener) {
+    if (listener == null) {
+      return;
+    }
+    freezeListeners.remove(listener);
+  }
+
   private void freezeTime() {
     cachedTimeScale = timeSource.getTimeScale();
     if (cachedTimeScale > 0f) {
@@ -166,5 +194,21 @@ public class GameStateService {
       timerStoppedByService = false;
       logger.trace("Timer resumed");
     }
+  }
+
+  private void notifyFreezeListeners(boolean frozen) {
+    if (freezeListeners.isEmpty()) {
+      return;
+    }
+    List<FreezeListener> snapshot = new ArrayList<>(freezeListeners);
+    for (FreezeListener listener : snapshot) {
+      listener.onFreezeStateChanged(frozen);
+    }
+  }
+
+  /** Receives notifications when the game enters or exits a frozen state. */
+  @FunctionalInterface
+  public interface FreezeListener {
+    void onFreezeStateChanged(boolean frozen);
   }
 }

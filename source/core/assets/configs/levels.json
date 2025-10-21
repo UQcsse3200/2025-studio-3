@@ -8,24 +8,23 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 20,
-          "minZombiesSpawn": 5,
+          "waveWeight": 8,
+          "minZombiesSpawn": 1,
           "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.5 },
+            "standard": { "cost": 2, "chance": 0.55 },
             "fast": { "cost": 3, "chance": 0.3 },
             "jumper": { "cost": 3, "chance": 0.2 },
             "tanky": { "cost": 5, "chance": 0.15 },
-            "bungee": { "cost": 4, "chance": 0.05 },
+            "bungee": { "cost": 4, "chance": 0 },
             "teleport": { "cost": 6, "chance": 0.05 },
             "bomber": { "cost": 6, "chance": 0.05 },
             "gunner": { "cost": 6, "chance": 0.05 },
             "giant": { "cost": 10, "chance": 0.1 }
-
           }
         },
         {
-          "waveWeight": 50,
-          "minZombiesSpawn": 10,
+          "waveWeight": 20,
+          "minZombiesSpawn": 5,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
             "fast": { "cost": 3, "chance": 0.35 },
@@ -39,8 +38,8 @@
           }
         },
         {
-          "waveWeight": 75,
-          "minZombiesSpawn": 15,
+          "waveWeight": 32,
+          "minZombiesSpawn": 8,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
             "fast": { "cost": 3, "chance": 0.35 },
@@ -64,13 +63,13 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 25,
-          "minZombiesSpawn": 8,
+          "waveWeight": 20,
+          "minZombiesSpawn": 6,
           "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.3 },
+            "standard": { "cost": 2, "chance": 0.4 },
             "fast": { "cost": 3, "chance": 0.4 },
             "tanky": { "cost": 5, "chance": 0.2 },
-            "bungee": { "cost": 4, "chance": 0.1 },
+            "bungee": { "cost": 4, "chance": 0 },
             "teleport": { "cost": 6, "chance": 0.05 },
             "bomber": { "cost": 6, "chance": 0.05 },
             "gunner": { "cost": 6, "chance": 0.05 },
@@ -78,8 +77,8 @@
           }
         },
         {
-          "waveWeight": 45,
-          "minZombiesSpawn": 10,
+          "waveWeight": 40,
+          "minZombiesSpawn": 9,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.25 },
             "fast": { "cost": 3, "chance": 0.35 },
@@ -92,8 +91,8 @@
           }
         },
         {
-          "waveWeight": 60,
-          "minZombiesSpawn": 12,
+          "waveWeight": 65,
+          "minZombiesSpawn": 13,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.25 },
             "fast": { "cost": 3, "chance": 0.35 },
@@ -106,8 +105,8 @@
           }
         },
         {
-          "waveWeight": 80,
-          "minZombiesSpawn": 15,
+          "waveWeight": 90,
+          "minZombiesSpawn": 17,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.2 },
             "fast": { "cost": 3, "chance": 0.3 },
@@ -120,8 +119,8 @@
           }
         },
         {
-          "waveWeight": 100,
-          "minZombiesSpawn": 18,
+          "waveWeight": 115,
+          "minZombiesSpawn": 21,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.2 },
             "fast": { "cost": 3, "chance": 0.3 },
@@ -144,18 +143,18 @@
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 20,
-          "minZombiesSpawn": 5,
+          "waveWeight": 10,
+          "minZombiesSpawn": 4,
           "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.5 },
-            "fast": { "cost": 3, "chance": 0.3 },
-            "tanky": { "cost": 5, "chance": 0.15 },
-            "bungee": { "cost": 4, "chance": 0.05 },
+            "standard": { "cost": 2, "chance": 0.55 },
+            "fast": { "cost": 3, "chance": 0.25 },
+            "tanky": { "cost": 5, "chance": 0.2 },
+            "bungee": { "cost": 4, "chance": 0 },
             "teleport": { "cost": 6, "chance": 0.05 }
           }
         },
         {
-          "waveWeight": 50,
+          "waveWeight": 30,
           "minZombiesSpawn": 10,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
@@ -166,8 +165,8 @@
           }
         },
         {
-          "waveWeight": 75,
-          "minZombiesSpawn": 15,
+          "waveWeight": 40,
+          "minZombiesSpawn": 10,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
             "fast": { "cost": 3, "chance": 0.35 },
@@ -180,86 +179,160 @@
       "nextLevel": "levelFour"
     },
     "levelFour": {
-      "levelNumber": 1,
+      "levelNumber": 4,
       "mapFile": "images/backgrounds/level_map_town.png",
       "isSlotMachine": false,
       "rows": 5,
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 20,
-          "minZombiesSpawn": 5,
-          "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.5 },
-            "fast": { "cost": 3, "chance": 0.3 },
-            "tanky": { "cost": 5, "chance": 0.15 },
-            "bungee": { "cost": 4, "chance": 0.05 },
-            "teleport": { "cost": 6, "chance": 0.05 }
-          }
-        },
-        {
-          "waveWeight": 50,
-          "minZombiesSpawn": 10,
-          "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.4 },
-            "fast": { "cost": 3, "chance": 0.35 },
-            "tanky": { "cost": 5, "chance": 0.2 },
-            "bungee": { "cost": 4, "chance": 0.05 },
-            "teleport": { "cost": 6, "chance": 0.1 }
-          }
-        },
-        {
-          "waveWeight": 75,
+          "waveWeight": 90,
           "minZombiesSpawn": 15,
           "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.35 },
-            "fast": { "cost": 3, "chance": 0.35 },
+            "standard": { "cost": 2, "chance": 0.4 },
+            "fast": { "cost": 3, "chance": 0.4 },
             "tanky": { "cost": 5, "chance": 0.2 },
-            "bungee": { "cost": 4, "chance": 0.1 },
-            "teleport": { "cost": 6, "chance": 0.15 }
+            "bungee": { "cost": 4, "chance": 0 },
+            "teleport": { "cost": 6, "chance": 0.05 },
+            "bomber": { "cost": 6, "chance": 0.05 },
+            "gunner": { "cost": 6, "chance": 0.05 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 120,
+          "minZombiesSpawn": 20,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.25 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.1 },
+            "bomber": { "cost": 6, "chance": 0.1 },
+            "gunner": { "cost": 6, "chance": 0.1 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 155,
+          "minZombiesSpawn": 25,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.25 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.12 },
+            "bomber": { "cost": 6, "chance": 0.12 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 185,
+          "minZombiesSpawn": 30,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.15 },
+            "bomber": { "cost": 6, "chance": 0.15 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 210,
+          "minZombiesSpawn": 35,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.2 },
+            "bomber": { "cost": 6, "chance": 0.2 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
           }
         }
       ],
       "nextLevel": "levelFive"
     },
     "levelFive": {
-      "levelNumber": 1,
+      "levelNumber": 5,
       "mapFile": "images/backgrounds/level_map_final.png",
       "isSlotMachine": false,
       "rows": 5,
       "cols": 10,
       "waves": [
         {
-          "waveWeight": 20,
-          "minZombiesSpawn": 5,
-          "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.5 },
-            "fast": { "cost": 3, "chance": 0.3 },
-            "tanky": { "cost": 5, "chance": 0.15 },
-            "bungee": { "cost": 4, "chance": 0.05 },
-            "teleport": { "cost": 6, "chance": 0.05 }
-          }
-        },
-        {
-          "waveWeight": 50,
-          "minZombiesSpawn": 10,
+          "waveWeight": 120,
+          "minZombiesSpawn": 20,
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
-            "fast": { "cost": 3, "chance": 0.35 },
+            "fast": { "cost": 3, "chance": 0.4 },
             "tanky": { "cost": 5, "chance": 0.2 },
-            "bungee": { "cost": 4, "chance": 0.05 },
-            "teleport": { "cost": 6, "chance": 0.1 }
+            "bungee": { "cost": 4, "chance": 0 },
+            "teleport": { "cost": 6, "chance": 0.05 },
+            "bomber": { "cost": 6, "chance": 0.05 },
+            "gunner": { "cost": 6, "chance": 0.05 },
+            "giant": { "cost": 10, "chance": 0.1}
           }
         },
         {
-          "waveWeight": 75,
-          "minZombiesSpawn": 15,
+          "waveWeight": 180,
+          "minZombiesSpawn": 30,
           "spawnConfigs": {
-            "standard": { "cost": 2, "chance": 0.35 },
+            "standard": { "cost": 2, "chance": 0.25 },
             "fast": { "cost": 3, "chance": 0.35 },
-            "tanky": { "cost": 5, "chance": 0.2 },
-            "bungee": { "cost": 4, "chance": 0.1 },
-            "teleport": { "cost": 6, "chance": 0.15 }
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.1 },
+            "bomber": { "cost": 6, "chance": 0.1 },
+            "gunner": { "cost": 6, "chance": 0.1 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 240,
+          "minZombiesSpawn": 40,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.25 },
+            "fast": { "cost": 3, "chance": 0.35 },
+            "tanky": { "cost": 5, "chance": 0.25 },
+            "bungee": { "cost": 4, "chance": 0.15 },
+            "teleport": { "cost": 6, "chance": 0.12 },
+            "bomber": { "cost": 6, "chance": 0.12 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 260,
+          "minZombiesSpawn": 45,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.15 },
+            "bomber": { "cost": 6, "chance": 0.15 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
+          }
+        },
+        {
+          "waveWeight": 300,
+          "minZombiesSpawn": 50,
+          "spawnConfigs": {
+            "standard": { "cost": 2, "chance": 0.2 },
+            "fast": { "cost": 3, "chance": 0.3 },
+            "tanky": { "cost": 5, "chance": 0.3 },
+            "bungee": { "cost": 4, "chance": 0.2 },
+            "teleport": { "cost": 6, "chance": 0.2 },
+            "bomber": { "cost": 6, "chance": 0.2 },
+            "gunner": { "cost": 6, "chance": 0.15 },
+            "giant": { "cost": 10, "chance": 0.1}
           }
         }
       ],
