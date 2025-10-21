@@ -221,6 +221,7 @@ public class BossFactory {
     boss.setScale(config.scale, config.scale);
     return boss;
   }
+
     public static Entity createPreviewBoss(BossTypes bossType) {
         BaseBossConfig config = null;
         switch (bossType) {
