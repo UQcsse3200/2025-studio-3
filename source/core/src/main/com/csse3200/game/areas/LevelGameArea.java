@@ -1165,7 +1165,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     List<String> unlockedDefences = new ArrayList<>();
 
-      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
+    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
       if (Arsenal.ALL_DEFENCES.get(key).getLevelUnlockedOn().equals(this.nextLevel)
           && !profile.getArsenal().contains(key)) {
         profile.getArsenal().unlockDefence(key);

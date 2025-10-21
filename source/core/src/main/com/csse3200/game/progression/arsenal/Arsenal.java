@@ -6,7 +6,6 @@ import com.badlogic.gdx.utils.Json;
 import com.csse3200.game.entities.configs.BaseDefenderConfig;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
 import com.csse3200.game.entities.configs.DefenceAndGeneratorConfig;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,29 +25,28 @@ public class Arsenal {
   public static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();
 
   static {
-      loadFromConfig();
+    loadFromConfig();
   }
 
   private static void loadFromConfig() {
-      try {
-          FileHandle file = Gdx.files.internal("configs/defences.json");
-          Json json = new Json();
+    try {
+      FileHandle file = Gdx.files.internal("configs/defences.json");
+      Json json = new Json();
 
-          DefenceAndGeneratorConfig data = json.fromJson(DefenceAndGeneratorConfig.class, file);
+      DefenceAndGeneratorConfig data = json.fromJson(DefenceAndGeneratorConfig.class, file);
 
-          for (Map.Entry<String, BaseDefenderConfig> entry : data.config.defenders.entrySet()) {
-              if (!entry.getKey().equals("wall")) {
-                  ALL_DEFENCES.put(entry.getKey(), entry.getValue());
-              }
-          }
-
-          for (Map.Entry<String, BaseGeneratorConfig> entry : data.config.generators.entrySet()) {
-              ALL_GENERATORS.put(entry.getKey(), entry.getValue());
-          }
-          System.out.println("Loaded defenders: " + data.config.defenders);
-      } catch (Exception e) {
-          Gdx.app.error("Arsenal", "Failed to load defenders/generators config", e);
+      for (Map.Entry<String, BaseDefenderConfig> entry : data.getConfig().defenders.entrySet()) {
+        if (!entry.getKey().equals("wall")) {
+          ALL_DEFENCES.put(entry.getKey(), entry.getValue());
+        }
       }
+
+      for (Map.Entry<String, BaseGeneratorConfig> entry : data.getConfig().generators.entrySet()) {
+        ALL_GENERATORS.put(entry.getKey(), entry.getValue());
+      }
+    } catch (Exception e) {
+      Gdx.app.error("Arsenal", "Failed to load defenders/generators config", e);
+    }
   }
 
   /** Constructor for the Arsenal class. */
