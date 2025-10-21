@@ -24,12 +24,11 @@ import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import com.csse3200.game.ui.UIFactory;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
-
-import com.csse3200.game.ui.UIFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
