@@ -109,70 +109,86 @@ public class WorldMapService {
    * and is updated when the profile is loaded.
    */
   private void loadNodes() {
-    nodes.put(LevelType.SHOP.toKey(), new WorldMapNode(
+    WorldMapNode shopNode = new WorldMapNode(
             LevelType.SHOP.toString(),
             new Pair<>(0.75f, 0.40f),
             false,
             true,
             ScreenType.SHOP,
             "images/nodes/shop.png",
-            ""));
-    nodes.put(LevelType.TOWN.toKey(), new WorldMapNode(
+            "");
+    shopNode.setRegistrationKey(LevelType.SHOP.toKey());
+    nodes.put(LevelType.SHOP.toKey(), shopNode);
+    WorldMapNode townNode = new WorldMapNode(
             LevelType.TOWN.toString(),
             new Pair<>(0.20f, 0.80f),
             false,
             true,
             ScreenType.SKILLTREE,
             "images/nodes/skills.png",
-            ""));
-    nodes.put(LevelType.MINIGAMES.toKey(), new WorldMapNode(
+            "");
+    townNode.setRegistrationKey(LevelType.TOWN.toKey());
+    nodes.put(LevelType.TOWN.toKey(), townNode);
+    WorldMapNode minigamesNode = new WorldMapNode(
             LevelType.MINIGAMES.toString(),
             new Pair<>(0.55f, 0.395f),
             false,
             true,
             ScreenType.MINI_GAMES,
             "images/nodes/arcade.png",
-            ""));
-    nodes.put(LevelType.LEVEL_ONE.toKey(), new WorldMapNode(
+            "");
+    minigamesNode.setRegistrationKey(LevelType.MINIGAMES.toKey());
+    nodes.put(LevelType.MINIGAMES.toKey(), minigamesNode);
+    WorldMapNode levelOneNode = new WorldMapNode(
             LevelType.LEVEL_ONE.toString(),
             new Pair<>(0.18f, 0.27f),
             false,
-            false,
+            true,
             ScreenType.MAIN_GAME,
             "images/nodes/level1.png",
-            LOCK_REASON));
-    nodes.put(LevelType.LEVEL_TWO.toKey(), new WorldMapNode(
+            LOCK_REASON);
+    levelOneNode.setRegistrationKey(LevelType.LEVEL_ONE.toKey());
+    nodes.put(LevelType.LEVEL_ONE.toKey(), levelOneNode);
+    WorldMapNode levelTwoNode = new WorldMapNode(
             LevelType.LEVEL_TWO.toString(),
             new Pair<>(0.32f, 0.24f),
             false,
             false,
             ScreenType.MAIN_GAME,
             "images/nodes/level2.png",
-            LOCK_REASON));
-    nodes.put(LevelType.LEVEL_THREE.toKey(), new WorldMapNode(
+            LOCK_REASON);
+    levelTwoNode.setRegistrationKey(LevelType.LEVEL_TWO.toKey());
+    nodes.put(LevelType.LEVEL_TWO.toKey(), levelTwoNode);
+    WorldMapNode levelThreeNode = new WorldMapNode(
             LevelType.LEVEL_THREE.toString(),
             new Pair<>(0.42f, 0.412f),
             false,
             false,
             ScreenType.MAIN_GAME,
             "images/nodes/level3.png",
-            LOCK_REASON));
-    nodes.put(LevelType.LEVEL_FOUR.toKey(), new WorldMapNode(
+            LOCK_REASON);
+    levelThreeNode.setRegistrationKey(LevelType.LEVEL_THREE.toKey());
+    nodes.put(LevelType.LEVEL_THREE.toKey(), levelThreeNode);
+    WorldMapNode levelFourNode = new WorldMapNode(
             LevelType.LEVEL_FOUR.toString(),
             new Pair<>(0.7f, 0.55f),
             false,
             false,
             ScreenType.MAIN_GAME,
             "images/nodes/level4.png",
-            LOCK_REASON));
-    nodes.put(LevelType.LEVEL_FIVE.toKey(), new WorldMapNode(
+            LOCK_REASON);
+    levelFourNode.setRegistrationKey(LevelType.LEVEL_FOUR.toKey());
+    nodes.put(LevelType.LEVEL_FOUR.toKey(), levelFourNode);
+    WorldMapNode levelFiveNode = new WorldMapNode(
             LevelType.LEVEL_FIVE.toString(),
             new Pair<>(0.85f, 0.78f),
             false,
             false,
             ScreenType.MAIN_GAME,
             "images/nodes/level5.png",
-            LOCK_REASON));
+            LOCK_REASON);
+    levelFiveNode.setRegistrationKey(LevelType.LEVEL_FIVE.toKey());
+    nodes.put(LevelType.LEVEL_FIVE.toKey(), levelFiveNode);
   }
 
   /**
@@ -191,21 +207,21 @@ public class WorldMapService {
     ));
     nodePaths.put(LevelType.LEVEL_TWO.toKey(), new Directions(
         null,
-        new Path(LevelType.LEVEL_THREE.toKey(), Arrays.asList(
-            new Vector2(1096, 593),
-            new Vector2(1096, 693),
-            new Vector2(1207, 693),
-            new Vector2(1260, 824)
-        )), 
+        null,
         new Path(LevelType.LEVEL_ONE.toKey(), Arrays.asList(
             new Vector2(726, 507),
             new Vector2(593, 597),
             new Vector2(540, 540)
         )),
-        null
+        new Path(LevelType.LEVEL_THREE.toKey(), Arrays.asList(
+            new Vector2(1096, 593),
+            new Vector2(1096, 693),
+            new Vector2(1207, 693),
+            new Vector2(1260, 824)
+        ))
     ));
     nodePaths.put(LevelType.LEVEL_THREE.toKey(), new Directions(
-        new Path(LevelType.MINIGAMES.toKey(), Arrays.asList(
+        new Path(LevelType.TOWN.toKey(), Arrays.asList(
             new Vector2(1246, 824),
             new Vector2(1250, 977),
             new Vector2(1200, 977),
@@ -228,19 +244,19 @@ public class WorldMapService {
             new Vector2(2342, 1347),
             new Vector2(2550, 1560)
         )),
+        new Path(LevelType.SHOP.toKey(), Arrays.asList(
+            new Vector2(2092, 1024),
+            new Vector2(2135, 997),
+            new Vector2(2225, 967),
+            new Vector2(2220, 800)
+        )),
         new Path(LevelType.MINIGAMES.toKey(), Arrays.asList(
             new Vector2(2012, 1133),
             new Vector2(2012, 1050),
             new Vector2(1909, 1000),
             new Vector2(1650, 790)
         )),
-        null,
-        new Path(LevelType.SHOP.toKey(), Arrays.asList(
-            new Vector2(2092, 1024),
-            new Vector2(2135, 997),
-            new Vector2(2225, 967),
-            new Vector2(2220, 800)
-        ))
+        null
     ));
     nodePaths.put(LevelType.LEVEL_FIVE.toKey(), new Directions(
         null,
@@ -252,17 +268,7 @@ public class WorldMapService {
         null
     ));
     nodePaths.put(LevelType.MINIGAMES.toKey(), new Directions(
-        new Path(LevelType.LEVEL_FOUR.toKey(), Arrays.asList(
-            new Vector2(1909, 1000),
-            new Vector2(2012, 1050),
-            new Vector2(2012, 1133),
-            new Vector2(2100, 1100)
-        )),
         null,
-        new Path(LevelType.LEVEL_THREE.toKey(), Arrays.asList(
-            new Vector2(1425, 687),
-            new Vector2(1350, 800)
-        )),
         new Path(LevelType.SHOP.toKey(), Arrays.asList(
             new Vector2(1650, 706),
             new Vector2(1800, 620),
@@ -270,6 +276,16 @@ public class WorldMapService {
             new Vector2(2135, 577),
             new Vector2(2294, 727),
             new Vector2(2220, 800)
+        )),
+        new Path(LevelType.LEVEL_THREE.toKey(), Arrays.asList(
+            new Vector2(1425, 687),
+            new Vector2(1350, 800)
+        )),
+        new Path(LevelType.LEVEL_FOUR.toKey(), Arrays.asList(
+            new Vector2(1909, 1000),
+            new Vector2(2012, 1050),
+            new Vector2(2012, 1133),
+            new Vector2(2100, 1100)
         ))
     ));
     nodePaths.put(LevelType.SHOP.toKey(), new Directions(

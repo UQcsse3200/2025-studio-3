@@ -47,4 +47,24 @@ public enum LevelType {
         case LEVEL_FIVE -> "levelFive";
       };
     }
+
+    /**
+     * Converts the key to the level type.
+     * 
+     * @param key the key to convert
+     * @return the level type
+     */
+    public static LevelType fromKey(String key) {
+      return switch (key) {
+        case "town" -> TOWN;
+        case "minigames" -> MINIGAMES;
+        case "shop" -> SHOP;
+        case "levelOne" -> LEVEL_ONE;
+        case "levelTwo" -> LEVEL_TWO;
+        case "levelThree" -> LEVEL_THREE;
+        case "levelFour" -> LEVEL_FOUR;
+        case "levelFive" -> LEVEL_FIVE;
+        default -> null;
+      };
+    }
   }

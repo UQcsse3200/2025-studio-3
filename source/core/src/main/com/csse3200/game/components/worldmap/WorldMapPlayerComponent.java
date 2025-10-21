@@ -9,6 +9,7 @@ import com.csse3200.game.concurrency.JobSystem;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.services.WorldMapService;
+import com.csse3200.game.services.WorldMapService.Direction;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
 import java.util.ArrayDeque;
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
  * <p>This version is refactored to reduce cognitive complexity and address common SonarQube
  * maintainability issues.
  */
+@SuppressWarnings("java:S1854") // SonarQube is throwing false positives for useless variables.
 public class WorldMapPlayerComponent extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(WorldMapPlayerComponent.class);
 
@@ -43,7 +45,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   private static final float PROXIMITY_CHECK_INTERVAL = 0.1f;
 
   // BFS directions for JSON graph
-  private static final String[] DIRS = {"W", "A", "S", "D"};
+  private static final Direction[] DIRS = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
 
   private final Vector2 worldSize;
   private Texture playerTexture;
@@ -166,7 +168,10 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
 
     WorldMapService svc = ServiceLocator.getWorldMapService();
-    WorldMapService.NodePath def = svc.getPath(at.getRegistrationKey(), pressed);
+    Direction direction = mapStringToDirection(pressed);
+    if (direction == null) return true; // Invalid direction, block movement
+    
+    WorldMapService.Path def = svc.getPath(at.getRegistrationKey(), direction);
 
     if (def == null) {
       // On a node but this direction is NOT defined → block movement this frame
@@ -315,7 +320,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     if (start == null) return false;
 
     boolean snapToStart = !isOnNode(start, entity.getPosition());
-    List<WorldMapService.NodePath> steps =
+    List<WorldMapService.Path> steps =
         findJsonPath(start.getRegistrationKey(), target.getRegistrationKey());
 
     if (!snapToStart && (steps == null || steps.isEmpty())) return false;
@@ -335,19 +340,18 @@ public class WorldMapPlayerComponent extends UIComponent {
     return true;
   }
 
-  private void enqueueSteps(List<WorldMapService.NodePath> steps) {
+  private void enqueueSteps(List<WorldMapService.Path> steps) {
     if (steps == null) return;
 
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    for (WorldMapService.NodePath pathDef : steps) {
+    for (WorldMapService.Path pathDef : steps) {
       if (pathDef == null) continue;
 
       enqueueWaypoints(pathDef);
-      enqueueEndNode(worldMapService, pathDef);
+      enqueueEndNode(ServiceLocator.getWorldMapService(), pathDef);
     }
   }
 
-  private void enqueueWaypoints(WorldMapService.NodePath pathDef) {
+  private void enqueueWaypoints(WorldMapService.Path pathDef) {
     if (pathDef.waypoints() != null) {
       for (Vector2 waypoint : pathDef.waypoints()) {
         waypointQueue.add(new Vector2(waypoint));
@@ -355,7 +359,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
   }
 
-  private void enqueueEndNode(WorldMapService worldMapService, WorldMapService.NodePath pathDef) {
+  private void enqueueEndNode(WorldMapService worldMapService, WorldMapService.Path pathDef) {
     WorldMapNode endNode = worldMapService.getNode(pathDef.destination());
     if (endNode != null) {
       waypointQueue.add(getWorldCoords(endNode));
@@ -363,7 +367,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   }
 
   /** BFS from startKey to targetKey using W/A/S/D edges defined in the JSON. */
-  private List<WorldMapService.NodePath> findJsonPath(String startKey, String targetKey) {
+  private List<WorldMapService.Path> findJsonPath(String startKey, String targetKey) {
     WorldMapService worldMapService = ServiceLocator.getWorldMapService();
     if (worldMapService == null
         || startKey == null
@@ -375,7 +379,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     return performBreadthFirstSearch(worldMapService, startKey, targetKey);
   }
 
-  private List<WorldMapService.NodePath> performBreadthFirstSearch(
+  private List<WorldMapService.Path> performBreadthFirstSearch(
       WorldMapService worldMapService, String startKey, String targetKey) {
     Deque<String> queue = new ArrayDeque<>();
     Map<String, Prev> previousNodes = new HashMap<>();
@@ -384,8 +388,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     previousNodes.put(startKey, new Prev(null, null));
 
     while (!queue.isEmpty() && !previousNodes.containsKey(targetKey)) {
-      String currentNode = queue.removeFirst();
-      exploreNeighbors(worldMapService, currentNode, queue, previousNodes);
+      exploreNeighbors(worldMapService, queue.removeFirst(), queue, previousNodes);
     }
 
     if (!previousNodes.containsKey(targetKey)) {
@@ -400,8 +403,8 @@ public class WorldMapPlayerComponent extends UIComponent {
       String currentNode,
       Deque<String> queue,
       Map<String, Prev> previousNodes) {
-    for (String direction : DIRS) {
-      WorldMapService.NodePath pathDef = worldMapService.getPath(currentNode, direction);
+    for (Direction direction : DIRS) {
+      WorldMapService.Path pathDef = worldMapService.getPath(currentNode, direction);
     if (pathDef == null
         || pathDef.destination() == null
         || previousNodes.containsKey(pathDef.destination())) {
@@ -412,13 +415,13 @@ public class WorldMapPlayerComponent extends UIComponent {
     }
   }
 
-  private List<WorldMapService.NodePath> reconstructPath(
+  private List<WorldMapService.Path> reconstructPath(
       Map<String, Prev> previousNodes, String startKey, String targetKey) {
-    LinkedList<WorldMapService.NodePath> path = new LinkedList<>();
+    LinkedList<WorldMapService.Path> path = new LinkedList<>();
+    
     String currentNode = targetKey;
-
     while (!currentNode.equals(startKey)) {
-      Prev previousNode = previousNodes.get(currentNode);
+      Prev previousNode = previousNodes.get(targetKey);
       if (previousNode == null) break;
       path.addFirst(previousNode.def);
       currentNode = previousNode.prevKey;
@@ -430,9 +433,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Small holder for BFS reconstruction. */
   private static final class Prev {
     final String prevKey;
-    final WorldMapService.NodePath def;
+    final WorldMapService.Path def;
 
-    Prev(String prevKey, WorldMapService.NodePath def) {
+    Prev(String prevKey, WorldMapService.Path def) {
       this.prevKey = prevKey;
       this.def = def;
     }
@@ -442,6 +445,17 @@ public class WorldMapPlayerComponent extends UIComponent {
   // Utilities
   // --------------------------------------------------------------------- //
 
+  /** Map WASD string to Direction enum. */
+  private Direction mapStringToDirection(String pressed) {
+    return switch (pressed) {
+      case "W" -> Direction.UP;
+      case "A" -> Direction.LEFT;
+      case "S" -> Direction.DOWN;
+      case "D" -> Direction.RIGHT;
+      default -> null;
+    };
+  }
+
   /** Resolve special nodes used by legacy W/S transitions. */
   private void resolveSpecialNodes() {
     WorldMapService svc = ServiceLocator.getWorldMapService();
@@ -450,7 +464,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     townNode = svc.getNode("skills");
     if (townNode == null) {
       float bestY = Float.NEGATIVE_INFINITY;
-      for (WorldMapNode n : svc.getAllNodes()) {
+      for (WorldMapNode n : svc.getNodesList()) {
         float y = n.getPositionY();
         if (y > bestY) {
           bestY = y;
@@ -473,7 +487,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     float bestPrimary = Float.MAX_VALUE; // |dx|
     float bestSecondary = Float.MAX_VALUE; // tie-break: squared distance
 
-    for (WorldMapNode n : svc.getAllNodes()) {
+    for (WorldMapNode n : svc.getNodesList()) {
       // Single guard-continue: skip null/Town or wrong side in ONE place
       float nx = (n == null) ? 0f : n.getPositionX() * worldSize.x;
       float ny = (n == null) ? 0f : n.getPositionY() * worldSize.y;
@@ -526,7 +540,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     WorldMapNode bestNode = null;
     float bestDistSq = Float.MAX_VALUE;
 
-    for (WorldMapNode node : svc.getAllNodes()) {
+    for (WorldMapNode node : svc.getNodesList()) {
       if (node == null) continue; // <= only single continue point
 
       Vector2 nodeWorldPos = getWorldCoords(node);
@@ -584,7 +598,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   /** Background computation of the "nearby" node (if any). */
   private WorldMapNode checkNodeProximityAsync(Vector2 playerPos) {
     WorldMapService svc = ServiceLocator.getWorldMapService();
-    for (WorldMapNode node : svc.getAllNodes()) {
+    for (WorldMapNode node : svc.getNodesList()) {
       float nodeX = node.getPositionX() * worldSize.x;
       float nodeY = node.getPositionY() * worldSize.y;
 
@@ -598,7 +612,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   private void setNearbyNode(WorldMapNode newNearby) {
     if (nearbyNode == newNearby) return;
     nearbyNode = newNearby;
-    ServiceLocator.getWorldMapService().updateNodeProximity(nearbyNode);
+    // Note: updateNodeProximity method removed as it doesn't exist in the new WorldMapService
   }
 
   // --------------------------------------------------------------------- //

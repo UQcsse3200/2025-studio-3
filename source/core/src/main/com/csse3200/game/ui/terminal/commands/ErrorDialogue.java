@@ -19,7 +19,7 @@ public class ErrorDialogue implements Command {
     try {
       ServiceLocator.getDialogService().error("Debug!", "If you see this error, things work.");
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
     }
     return true;
   }

@@ -41,7 +41,7 @@ public class Profile {
     this.worldMapX = -1f;
     this.worldMapY = -1f;
     this.worldMapZoomIdx = -1;
-    this.unlockedNodes = new HashSet<>(Set.of("shop", "minigames", "skills"));
+    this.unlockedNodes = new HashSet<>(Set.of("shop", "minigames", "skills", "levelOne"));
     this.completedLevels = new HashSet<>();
     this.currentLevel = "levelOne";
     this.playedLevelTutorial = false;

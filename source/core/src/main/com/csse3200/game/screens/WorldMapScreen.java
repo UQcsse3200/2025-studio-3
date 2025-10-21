@@ -54,7 +54,6 @@ public class WorldMapScreen extends BaseScreen {
   private static final Vector2 WORLD_SIZE = new Vector2(WORLD_WIDTH, WORLD_HEIGHT);
   private static final float[] ZOOM_STEPS = {1.20f, 1.35f, 1.50f, 1.70f, 1.90f};
   private static final float CAMERA_LERP_SPEED = 8.0f;
-  private static final String LOG_ZOOM_SAVE_FAIL = "[WorldMapScreen] Failed to save zoom idx: {}";
   private boolean followCamera = true; // When false, manual panning is active
   private int zoomIdx = 0;
   private Entity playerEntity;
@@ -82,8 +81,6 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new AnimatedDropdownMenu())
-        .addComponent(new AnimatedDropdownMenu())
         .addComponent(new WorldMapZoomInputComponent(this, 12))
         .addComponent(new WorldMapPanInputComponent(this, 12))
         .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
@@ -319,11 +316,6 @@ public class WorldMapScreen extends BaseScreen {
     var ps = ServiceLocator.getProfileService();
     if (ps != null && ps.getProfile() != null) {
       ps.getProfile().setWorldMapZoomIdx(zoomIdx);
-      try {
-        ps.saveCurrentProfile();
-      } catch (Exception e) {
-        logger.debug(LOG_ZOOM_SAVE_FAIL, e.getMessage());
-      }
     }
   }
 

@@ -22,19 +22,19 @@ public class SpawnNextRobot implements Command {
   public boolean action(ArrayList<String> args) {
     WaveService waveService = ServiceLocator.getWaveService();
     if (waveService == null) {
-      logger.debug("spawnRobot service is not available on this screen.");
+      logger.warn("spawnRobot service is not available on this screen.");
       return false;
     }
 
     if (args.isEmpty()) {
       waveService.spawnNextEnemy(DEFAULT_LANE);
-      logger.debug("No lane given to spawnNextRobot. Spawning in lane {}.", DEFAULT_LANE);
+      logger.warn("No lane given to spawnNextRobot. Spawning in lane {}.", DEFAULT_LANE);
     } else {
       int lane = DEFAULT_LANE;
       try {
         lane = Integer.parseInt(args.getFirst());
       } catch (NumberFormatException e) {
-        logger.debug(
+        logger.warn(
             "{} is not a valid number. Spawning in lane {}", args.getFirst(), DEFAULT_LANE);
       }
       waveService.spawnNextEnemy(lane);

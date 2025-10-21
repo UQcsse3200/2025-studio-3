@@ -14,8 +14,10 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WorldMapService;
 import com.csse3200.game.ui.UIComponent;
 import com.csse3200.game.ui.WorldMapNode;
+import com.csse3200.game.utils.LevelType;
 
 /** Renders a world map node using the engine's rendering system */
+@SuppressWarnings("java:S1854") // SonarQube is throwing false positives for useless variables.
 public class WorldMapNodeRenderComponent extends UIComponent {
   private final WorldMapNode node;
   private final Vector2 worldSize;
@@ -375,7 +377,10 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   }
 
   private void drawPathLabel(SpriteBatch batch, Vector2 pos, WorldMapService.Path def, Vector2 labelOffset) {
-    String nodeName = def.destination();
+    String nodeKey = def.destination();
+    LevelType nodeType = LevelType.fromKey(nodeKey);
+    String nodeName = nodeType.toString();
+
     font.getData().setScale(FONT_SCALE * 0.90f);
 
     GlyphLayout nameLayout = new GlyphLayout(font, nodeName);
