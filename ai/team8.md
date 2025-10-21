@@ -16,6 +16,7 @@ code coverage was missing and how to fix it.
 - AI was used to assist with the creation and writing tests of the Settings system.
 - AI was used to assist with the refactoring of the minigames and writing new tests for it.
 - AI was used to assist with converting the WorldMapTutorial once I edited the LevelMapTutorial.
+- AI was used to assist in refactoring the WorldMap node loading.
 
 ## Jackie
 

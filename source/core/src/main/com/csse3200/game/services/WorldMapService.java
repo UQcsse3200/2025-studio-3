@@ -353,14 +353,34 @@ public class WorldMapService {
   }
 
   /**
-   * Find a node at a given position
+   * Find a node at a given position with tolerance for click detection
    * 
-   * @param x the x position
-   * @param y the y position
+   * @param x the x position in world coordinates
+   * @param y the y position in world coordinates
    * @return the node, or null if not found
    */
   public WorldMapNode findNodeAt(float x, float y) {
-    return nodes.values().stream().filter(node -> node.getPositionX() == x && node.getPositionY() == y).findFirst().orElse(null);
+    // World size constants - should match WorldMapScreen
+    final float WORLD_WIDTH = 3000f;
+    final float WORLD_HEIGHT = 2000f;
+    final float HIT_RADIUS = 120f;
+    
+    return nodes.values().stream()
+        .filter(node -> {
+          // Calculate node center position in world coordinates
+          float nodeX = node.getPositionX() * WORLD_WIDTH;
+          float nodeY = node.getPositionY() * WORLD_HEIGHT;
+          
+          // Calculate distance from click point to node center
+          float dx = x - nodeX;
+          float dy = y - nodeY;
+          float distanceSquared = dx * dx + dy * dy;
+          
+          // Check if click is within hit radius
+          return distanceSquared <= (HIT_RADIUS * HIT_RADIUS);
+        })
+        .findFirst()
+        .orElse(null);
   }
 
   /**
