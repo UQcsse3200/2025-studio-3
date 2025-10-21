@@ -75,7 +75,7 @@ public class HotbarDisplay extends UIComponent {
 
     // initialise the values needed for placing unit images in slots
     float hotbarWidth = unitLayers.getWidth();
-    cellWidth = hotbarWidth / 8;
+    cellWidth = hotbarWidth / 9;
     float startX = cellWidth / 4;
     float y = 30;
     float currentX = startX;
