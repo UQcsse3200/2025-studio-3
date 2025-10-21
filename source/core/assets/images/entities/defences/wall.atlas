@@ -1,5 +1,5 @@
 wall.png
-size: 192, 192
+size: 192, 64
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
@@ -14,11 +14,3 @@ hit
   bounds: 128, 0, 64, 64
 hit
   bounds: 0, 0, 64, 64
-broken-top
-  bounds: 128, 64, 64, 64
-broken-middle
-  bounds: 0, 64, 64, 64
-broken-bottom
-  bounds: 64, 64, 64, 64
-broken-full
-  bounds: 0, 128, 64, 64
