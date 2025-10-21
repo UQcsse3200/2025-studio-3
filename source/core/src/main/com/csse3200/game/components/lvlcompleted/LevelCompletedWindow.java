@@ -1,10 +1,10 @@
 package com.csse3200.game.components.lvlcompleted;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
@@ -12,7 +12,7 @@ import com.csse3200.game.ui.UIComponent;
 
 /** Class to create and display a window when the level is completed. */
 public class LevelCompletedWindow extends UIComponent {
-  private Window window;
+  private Table container;
   private boolean isDisplayed = false;
   private final ProfileService profileService = ServiceLocator.getProfileService();
 
@@ -24,24 +24,41 @@ public class LevelCompletedWindow extends UIComponent {
     // Listen for level complete event
     entity.getEvents().addListener("levelComplete", this::onLevelCompleted);
 
-    // Create popup window
-    window = new Window("Level Completed!", skin);
-    window.setMovable(false);
-    window.setSize(500, 500);
-    window.setPosition(
-        (Gdx.graphics.getWidth() - window.getWidth()) / 2f,
-        (Gdx.graphics.getHeight() - window.getHeight()) / 2f);
+    // Create container table
+    container = new Table();
+    container.setFillParent(true);
+    container.center();
 
-    String interactKeyName =
-        Input.Keys.toString(
-            ServiceLocator.getSettingsService().getSettings().getInteractionButton());
-    Label message =
-        new Label(
-            "Congratulations!\nPress " + interactKeyName + " to return to the main menu.", skin);
-    window.add(message).pad(10).row();
+    Label levelCompletedHeading = ui.heading("Level Completed!");
+    Label message = new Label("Congratulations!", skin);
 
-    window.setVisible(false);
-    stage.addActor(window);
+    TextButton mainMenuButton = ui.primaryButton("World Map", 250);
+    mainMenuButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          navigateTo();
+          return true;
+        });
+
+    TextButton quitButton = ui.primaryButton("Quit Game", 250);
+    quitButton.addListener(
+        event -> {
+          if (!event.toString().equals("touchDown")) {
+            return false;
+          }
+          Gdx.app.exit();
+          return true;
+        });
+
+    container.add(levelCompletedHeading).pad(20f).row();
+    container.add(message).pad(10f).row();
+    container.add(mainMenuButton).pad(8f).row();
+    container.add(quitButton).pad(8f).row();
+
+    container.setVisible(false);
+    stage.addActor(container);
   }
 
   /**
@@ -50,37 +67,61 @@ public class LevelCompletedWindow extends UIComponent {
    */
   @Override
   public void update() {
-    if (!isDisplayed) return;
+    if (!isDisplayed) {
+      return;
+    }
 
-    // Check for 'E' key press to close window and return to main menu
+    // Check for interact key press to navigate to the world map
     int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
     if (Gdx.input.isKeyJustPressed(interactKey)) {
-      window.setVisible(false);
-      isDisplayed = false;
-      // Update the current level before changing screens
-      updateLevel();
-      // Return to main menu (world map) safely
-      Gdx.app.postRunnable(
-          () -> {
-            GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
-            game.setScreen(GdxGame.ScreenType.WORLD_MAP);
-          });
+      navigateTo();
     }
+  }
+
+  private void navigateTo() {
+    container.setVisible(false);
+    isDisplayed = false;
+    updateLevel(); // Update the current level before changing screens
+    Gdx.app.postRunnable(
+        () -> {
+          GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
+          game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+        });
   }
 
   /** Displays the level completed window when the level is completed. */
   private void onLevelCompleted() {
-    window.setVisible(true);
+    container.setVisible(true);
     isDisplayed = true;
   }
 
-  /** Disposes of the window when the component is disposed. */
+  /** Disposes of the container when the component is disposed. */
   @Override
   public void dispose() {
-    if (window != null) {
-      window.remove();
+    if (container != null) {
+      container.remove();
     }
     super.dispose();
+  }
+
+  /**
+   * Called when level is completed, before changing back to world map screen and updates the
+   * profile's current level to the following level.
+   */
+  public void updateLevel() {
+    String currentLevel = profileService.getProfile().getCurrentLevel();
+    String nextLevel = findNextLevel(currentLevel);
+    profileService.getProfile().setCurrentLevel(nextLevel);
+  }
+
+  private String findNextLevel(String currentLevel) {
+    return switch (currentLevel) {
+      case "levelOne" -> "levelTwo";
+      case "levelTwo" -> "levelThree";
+      case "levelThree" -> "levelFour";
+      case "levelFour" -> "levelFive";
+      default -> "end";
+    };
   }
 
   @Override
@@ -88,24 +129,7 @@ public class LevelCompletedWindow extends UIComponent {
     // Stage handles drawing
   }
 
-  /**
-   * Called when level is completed, before changing back to world map screen and update's the
-   * profile's current level to the following level.
-   */
-  public void updateLevel() {
-    String currentLevel = profileService.getProfile().getCurrentLevel();
-    String nextLevel =
-        switch (currentLevel) {
-          case "levelOne" -> "levelTwo";
-          case "levelTwo" -> "levelThree";
-          case "levelThree" -> "levelFour";
-          case "levelFour" -> "levelFive";
-          default -> "end";
-        };
-    profileService.getProfile().setCurrentLevel(nextLevel);
-  }
-
-  public Window getWindow() {
-    return window;
+  public Table getContainer() {
+    return container;
   }
 }

@@ -70,15 +70,7 @@ public class ItemEffectsService {
 
     // Play sound effect for item
     if (soundRequired) {
-      Sound effectSound =
-          ServiceLocator.getResourceService()
-              .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
-
-      if (effectSound != null) {
-        float volume = ServiceLocator.getSettingsService().getSoundVolume();
-        effectSound.play(volume);
-        logger.info("Sound played {}", animatorName);
-      }
+      playSoundEffect(animatorName);
     }
 
     // Attach component to handle optional movement and timed disposal
@@ -166,6 +158,8 @@ public class ItemEffectsService {
         // to cover 3x3 tiles)
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
+        bottomCorner.x = bottomCorner.x - tileSize * 1.5f;
+
         spawnEffect(
             ServiceLocator.getResourceService()
                 .getAsset("images/effects/coffee.atlas", TextureAtlas.class),
@@ -240,6 +234,18 @@ public class ItemEffectsService {
         break;
       default:
         logger.error("Unknown item name");
+    }
+  }
+
+  public static void playSoundEffect(String animatorName) {
+    Sound effectSound =
+        ServiceLocator.getResourceService()
+            .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);
+
+    if (effectSound != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      effectSound.play(volume);
+      logger.info("Sound played {}", animatorName);
     }
   }
 }

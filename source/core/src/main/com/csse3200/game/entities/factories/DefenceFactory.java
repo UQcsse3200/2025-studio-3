@@ -104,6 +104,7 @@ public class DefenceFactory {
 
     // add sound path
     defender.setProperty("soundPath", config.getSoundPath());
+    defender.setProperty("deathSfxPath", "sounds/human-death.mp3");
     return defender;
   }
 

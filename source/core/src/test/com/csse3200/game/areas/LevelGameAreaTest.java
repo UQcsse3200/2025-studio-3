@@ -640,6 +640,10 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     Field flag = LevelGameArea.class.getDeclaredField("isLevelComplete");
     flag.setAccessible(true);
     assertFalse(flag.getBoolean(area));
@@ -669,11 +673,15 @@ class LevelGameAreaTest {
     when(waves.getCurrentWave()).thenReturn(4);
     ServiceLocator.registerWaveService(waves);
 
+    // Fake DialogService
+    DialogService dialog = mock(DialogService.class);
+    ServiceLocator.registerDialogService(dialog);
+
     GameStateService state = mock(GameStateService.class);
     ServiceLocator.registerGameStateService(state);
 
     area.checkLevelComplete();
-
+    area.checkLevelComplete();
     verify(state).addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
     verify(state).lockPlacement();
   }

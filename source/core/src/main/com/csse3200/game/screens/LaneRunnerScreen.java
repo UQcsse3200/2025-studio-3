@@ -2,6 +2,7 @@ package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -40,6 +41,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private float scoreTimer = 0f;
   private Label scoreLabel;
   private Label timeLabel;
+  private static final String MOVESOUND = "sounds/lane_move.mp3";
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/Background.png",
@@ -70,6 +72,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
     logger.debug("Loading assets");
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(laneRunnerTextures);
+    ServiceLocator.getResourceService().loadSounds(new String[] {MOVESOUND});
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -165,6 +168,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   private void movePlayerRight() {
     if (cureentLane < laneManager.getNumLanes() - 1) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      Sound move = ServiceLocator.getResourceService().getAsset(MOVESOUND, Sound.class);
+      move.play(0.1f * volume);
       cureentLane++;
       updatePlayerPosition();
       logger.info("Moved Right to lane: {}", cureentLane);
@@ -178,6 +184,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
 
   private void movePLayerLeft() {
     if (cureentLane > 0) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      Sound move = ServiceLocator.getResourceService().getAsset(MOVESOUND, Sound.class);
+      move.play(0.1f * volume);
       cureentLane--;
       updatePlayerPosition();
       logger.info("Moved Left to lane: {}", cureentLane);
