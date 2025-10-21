@@ -38,7 +38,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
     phys.getBody().setLinearVelocity(0f, 0f);
   }
 
-
   @Override
   public void update() {
     // find nearest visible defense
