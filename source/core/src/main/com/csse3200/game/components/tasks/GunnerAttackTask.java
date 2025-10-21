@@ -29,7 +29,6 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
     super(attackRange, targetLayer);
   }
 
-
   @Override
   public void update() {
     // find nearest visible defense
@@ -113,5 +112,4 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
 
     return nearest;
   }
-
 }
