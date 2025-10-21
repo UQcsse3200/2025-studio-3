@@ -140,28 +140,31 @@ public class CombatStatsComponent extends Component {
 
       // sound
       Sound deathSound;
-      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+      // checks for components unique to defenders
       String soundPath =
           (String) entity.getProperty("soundPath"); // only way I am aware of to find unit type :/
-      // checks for components unique to defenders
-      if (entity.getComponent(DefenderStatsComponent.class) != null && !soundPath.contains("mortar")) {
+      if (soundPath == null) return;
+      if (entity.getComponent(DefenderStatsComponent.class) != null
+          && !soundPath.contains("mortar")) {
         // entity is a defence
         logger.info("Defence has died!");
         deathSound =
-                ServiceLocator.getResourceService()
-                        .getAsset("sounds/generator-death.mp3", Sound.class);
-      } else if (entity.getComponent(GeneratorStatsComponent.class) != null || soundPath.contains("mortar")) {
+            ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
+      } else if (entity.getComponent(GeneratorStatsComponent.class) != null
+          || soundPath.contains("mortar")) {
         // entity is a generator / mortar
         logger.info("Generator has died!");
         deathSound =
-                ServiceLocator.getResourceService()
-                        .getAsset("sounds/generator-death.mp3", Sound.class);
+            ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
       } else {
         // entity is a robot
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }
-      deathSound.play(volume);
+      if (deathSound != null) {
+        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+        deathSound.play(volume);
+      }
     }
   }
 }
