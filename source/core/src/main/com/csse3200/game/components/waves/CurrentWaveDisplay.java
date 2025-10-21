@@ -27,8 +27,6 @@ public class CurrentWaveDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-    entity.getEvents().addListener("pause", this::handlePause);
-    entity.getEvents().addListener("resume", this::handleResume);
     addActors();
 
     // Listen directly to WaveService events
@@ -123,26 +121,6 @@ public class CurrentWaveDisplay extends UIComponent {
    */
   public void setWave(int waveNumber) {
     updateWaveDisplay(waveNumber);
-  }
-
-  /** Handles pause events to dim the HUD */
-  private void handlePause() {
-    if (waveLabel != null) {
-      waveLabel.getColor().a = 0.3f; // Dim to 30% opacity
-    }
-    if (waveNumberLabel != null) {
-      waveNumberLabel.getColor().a = 0.3f; // Dim to 30% opacity
-    }
-  }
-
-  /** Handles resume events to restore the HUD */
-  private void handleResume() {
-    if (waveLabel != null) {
-      waveLabel.getColor().a = 1.0f; // Restore to 100% opacity
-    }
-    if (waveNumberLabel != null) {
-      waveNumberLabel.getColor().a = 1.0f; // Restore to 100% opacity
-    }
   }
 
   @Override
