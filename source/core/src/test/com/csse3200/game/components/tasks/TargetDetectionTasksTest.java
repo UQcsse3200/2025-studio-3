@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.ai.tasks.TaskRunner;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.Entity;
@@ -101,9 +102,8 @@ public class TargetDetectionTasksTest {
 
     @Test
     void getDistanceToTargetTest() {
-
         Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(3f, 4f));
+        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
 
         doReturn(target).when(targetTask).getNearestVisibleTarget();
 
@@ -112,4 +112,59 @@ public class TargetDetectionTasksTest {
         assertEquals(5f, distance, "Distance between target and entity should be 5");
     }
 
+    @Test
+    void getPriorityActiveTest() {
+        try {
+            java.lang.reflect.Field status = TargetDetectionTasks.class.getSuperclass().getDeclaredField("status");
+            status.setAccessible(true);
+            status.set(targetTask, Task.Status.ACTIVE);
+        } catch (Exception e) {
+            throw new RuntimeException("Status field not found");
+        }
+
+        // in range
+        Entity target = mock(Entity.class);
+        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
+
+        doReturn(target).when(targetTask).getNearestVisibleTarget();
+
+        int priority = targetTask.getPriority();
+        assertEquals(1, priority);
+
+        // out of range
+        Entity targetOut = mock(Entity.class);
+        when(targetOut.getPosition()).thenReturn(new Vector2(15f, 0f));
+        doReturn(targetOut).when(targetTask).getNearestVisibleTarget();
+
+        int priorityOut = targetTask.getPriority();
+        assertEquals(-1, priorityOut);
+    }
+
+    @Test
+    void getPriorityInactiveTest() {
+        try {
+            java.lang.reflect.Field status = TargetDetectionTasks.class.getSuperclass().getDeclaredField("status");
+            status.setAccessible(true);
+            status.set(targetTask, Task.Status.INACTIVE);
+        } catch (Exception e) {
+            throw new RuntimeException("Status field not found");
+        }
+
+        // in range
+        Entity target = mock(Entity.class);
+        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
+        doReturn(target).when(targetTask).getNearestVisibleTarget();
+
+        int priority = targetTask.getPriority();
+        assertEquals(1, priority);
+
+
+        // out of range
+        Entity targetOut = mock(Entity.class);
+        when(targetOut.getPosition()).thenReturn(new Vector2(15f, 0f));
+        doReturn(targetOut).when(targetTask).getNearestVisibleTarget();
+
+        int priorityOut = targetTask.getPriority();
+        assertEquals(-1, priorityOut);
+    }
 }
