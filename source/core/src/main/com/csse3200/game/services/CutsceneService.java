@@ -39,7 +39,7 @@ public class CutsceneService {
 
     end();
     callback.accept(name);
-
+    ServiceLocator.getMusicService().play("sounds/background-music/cutscene_background.mp3");
     cutsceneEntity =
         new Entity()
             .addComponent(new CutsceneTickComponent(orchestrator))
@@ -52,6 +52,7 @@ public class CutsceneService {
   public void end() {
     if (cutsceneEntity != null) {
       cutsceneEntity.setEnabled(false);
+      ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
       cutsceneEntity.dispose();
     }
   }
