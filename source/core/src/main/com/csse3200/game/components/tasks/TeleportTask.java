@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.TaskRunner;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -25,7 +26,14 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   // Timing and state
   private float timer;
   private int teleportsDone;
-  private boolean isTeleporting = false;
+
+  private enum State {
+    NOT_TELEPORTING,
+    DISAPPEARING,
+    REAPPEARING
+  }
+
+  private State currentState;
   private float animTimer = 0.5f;
   private final float teleportAnimTime = 2f; // Duration to hold animation before teleport happens
 
@@ -53,7 +61,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     super.start();
     timer = cooldownSec;
     teleportsDone = 0;
-    isTeleporting = false;
+    currentState = State.NOT_TELEPORTING;
   }
 
   /**
@@ -65,7 +73,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     if (maxTeleports > 0 && teleportsDone >= maxTeleports) {
       return -1;
     }
-    if (isTeleporting) {
+    if (currentState != State.NOT_TELEPORTING) {
       return teleportPriority;
     }
     return readyToTeleport() ? teleportPriority : -1;
@@ -77,21 +85,32 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
       return;
     }
 
-    GameTime time = ServiceLocator.getTimeSource();
-    float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
-
-    if (isTeleporting) {
-      animTimer -= dt;
-      if (animTimer <= 0f) {
+    if (currentState == State.NOT_TELEPORTING) {
+      // Update will only be called if ready to teleport, otherwise TeleportTask has
+      // a priority of -1. Therefore, if we aren't teleporting, we should start teleporting.
+      currentState = State.DISAPPEARING;
+      owner.getEntity().getEvents().trigger("teleportDisappearStart");
+    } else if (currentState == State.DISAPPEARING) {
+      AnimationRenderComponent animator =
+          owner.getEntity().getComponent(AnimationRenderComponent.class);
+      // If the animator is null, something went wrong, and we should skip ahead.
+      // Otherwise, we wait until the disappear animation is done to teleport.
+      if (animator == null || animator.isFinished()) {
+        // The start animation is finished.
+        currentState = State.REAPPEARING;
         performTeleport();
-        isTeleporting = false;
+        owner.getEntity().getEvents().trigger("teleportReappearStart");
       }
-      return;
+    } else if (currentState == State.REAPPEARING) {
+      AnimationRenderComponent animator =
+          owner.getEntity().getComponent(AnimationRenderComponent.class);
+      // If the animator is null, something went wrong, and we should skip ahead.
+      // Otherwise, we wait until the reappear animation is done to reset state.
+      if (animator == null || animator.isFinished()) {
+        // The teleport is finished.
+        currentState = State.NOT_TELEPORTING;
+      }
     }
-
-    isTeleporting = true;
-    animTimer = teleportAnimTime;
-    owner.getEntity().getEvents().trigger("teleportStart");
   }
 
   /** Check if teleport conditions are met (cooldown elapsed, chance succeeded, etc.). */

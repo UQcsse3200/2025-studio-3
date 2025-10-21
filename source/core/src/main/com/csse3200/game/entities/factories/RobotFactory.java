@@ -203,12 +203,15 @@ public class RobotFactory {
     }
 
     if (config.getName() != null && config.getName().contains("Bungee")) {
-      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEnd", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEndDamaged", 0.1f, Animation.PlayMode.NORMAL);
     }
 
     if (config.getName() != null && config.getName().contains("Teleport")) {
-      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
-      animator.addAnimation("teleportDamaged", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportStart", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportStartDamaged", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEnd", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEndDamaged", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
       if (laneYs.length >= 2) {
         AITaskComponent ai = robot.getComponent(AITaskComponent.class);
