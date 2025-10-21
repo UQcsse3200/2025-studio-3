@@ -29,8 +29,12 @@ import com.csse3200.game.services.ServiceLocator;
 public class DefenceFactory {
   private static final String ATTACK = "attack";
   private static final String IDLE = "idle";
+  private static final String MORTAR = "Mortar";
+  private static final String WALL = "wall";
   private static final String BUFF = "doubleDamage";
   private static final String UNBUFF = "doubleDamageStop";
+  private static final String DOUBLE_FIRE = "doubleFireRate";
+  private static final String HALVE_FIRE = "doubleFireRateStop";
   private static final String HEAL = "heal";
 
   /** Gets the config service for accessing defence configurations. */
@@ -48,8 +52,8 @@ public class DefenceFactory {
   public static Entity createDefenceUnit(BaseDefenderConfig config) {
     // start with a base defender (physics + collider)
     Entity defender = createBaseDefender();
-    if (config.getName() != null && config.getName().equals("Mortar")) {
-      defender.setProperty("unitType", "mortar");
+    if (config.getName() != null && config.getName().equals(MORTAR)) {
+      defender.setProperty("unitType", MORTAR.toLowerCase());
     }
 
     // --- Create and attach task component ---
@@ -95,8 +99,8 @@ public class DefenceFactory {
         .addListener(HEAL, () -> defender.getComponent(DefenderStatsComponent.class).addHealth(20));
 
     // Wire up fire-rate event listeners directly — no iteration
-    defender.getEvents().addListener("doubleFireRate", attackTask::enableDoubleFireRate);
-    defender.getEvents().addListener("doubleFireRateStop", attackTask::resetFireRate);
+    defender.getEvents().addListener(DOUBLE_FIRE, attackTask::enableDoubleFireRate);
+    defender.getEvents().addListener(HALVE_FIRE, attackTask::resetFireRate);
 
     // add sound path
     defender.setProperty("soundPath", config.getSoundPath());
@@ -163,7 +167,7 @@ public class DefenceFactory {
    * @return the wall entity to be placed
    */
   public static Entity createWall() {
-    BaseDefenderConfig config = getConfigService().getDefenderConfig("wall");
+    BaseDefenderConfig config = getConfigService().getDefenderConfig(WALL);
     // start with a base defender (physics + collider)
     Entity wall = createBaseDefender();
 
