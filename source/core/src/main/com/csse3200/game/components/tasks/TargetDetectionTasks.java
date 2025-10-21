@@ -16,12 +16,15 @@ import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class TargetDetectionTasks extends DefaultTask implements PriorityTask {
   protected final float attackRange;
   protected final AttackDirection direction;
   protected final PhysicsEngine physics;
   protected final DebugRenderer debugRenderer;
+  private static final Logger logger = LoggerFactory.getLogger(TargetDetectionTasks.class);
 
   // temp variables to be reused when getting nearest target
   private final Vector2 castDir = new Vector2();
@@ -110,25 +113,22 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     castDir.set((direction == AttackDirection.RIGHT) ? 1f : -1f, 0f);
 
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
-    float tileSize = area.getTileSize();
 
     // done with the help of OpenAI
-    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
-      offsetFrom.set(from.x, from.y + yOffset);
-      end.set(offsetFrom).mulAdd(castDir, attackRange);
+    offsetFrom.set(from.x, from.y - 10);
+    end.set(offsetFrom).mulAdd(castDir, attackRange);
 
-      // find first enemy entity in current entities line of sight in the given direction and range
-      boolean didHit =
-          physics.raycast(
-              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+    // find first enemy entity in current entities line of sight in the given direction and range
+    boolean didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
-      if (didHit) {
-        Fixture hitFixture = tempHit.getFixture();
-        if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
-          return entity;
-        }
+    if (didHit) {
+      Fixture hitFixture = tempHit.getFixture();
+      if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
+        return entity;
       }
     }
+
     return null;
   }
 
