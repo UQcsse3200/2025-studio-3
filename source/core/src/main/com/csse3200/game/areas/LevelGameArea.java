@@ -958,7 +958,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
-        healDefences();
         // remove the healer after its animation
         ServiceLocator.getRenderService()
             .getStage()
