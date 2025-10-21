@@ -166,6 +166,7 @@ public class PaddleGameScreen extends ScreenAdapter {
           .incrementStatistic("paddleGameCompleted");
     }
     ServiceLocator.getProfileService().getProfile().getWallet().addCoins(score);
+    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("coinsCollected", score);
 
     // Show game over dialog
     gameOverDialogShown = true;

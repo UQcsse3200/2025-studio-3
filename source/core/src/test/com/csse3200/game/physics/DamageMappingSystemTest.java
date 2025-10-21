@@ -10,9 +10,13 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.attacking_system.DamageMappingSystem;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.statistics.Statistics;
+import com.csse3200.game.progression.wallet.Wallet;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,11 +40,23 @@ class DamageMappingSystemTest {
     ServiceLocator.registerSettingsService(mockSettingsService);
     when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
 
+    // Mock ProfileService
+    ProfileService mockProfileService = mock(ProfileService.class);
+    Profile mockProfile = mock(Profile.class);
+    Statistics mockStatistics = mock(Statistics.class);
+    Wallet mockWallet = mock(Wallet.class);
+    
+    when(mockProfileService.getProfile()).thenReturn(mockProfile);
+    when(mockProfile.getStatistics()).thenReturn(mockStatistics);
+    when(mockProfile.getWallet()).thenReturn(mockWallet);
+    ServiceLocator.registerProfileService(mockProfileService);
+
     Sound mockSound = mock(Sound.class);
     // Mock the sound assets that CombatStatsComponent might request
     when(resources.getAsset("sounds/human-death.mp3", Sound.class)).thenReturn(mockSound);
     when(resources.getAsset("sounds/robot-death.mp3", Sound.class)).thenReturn(mockSound);
     when(resources.getAsset("sounds/damage.mp3", Sound.class)).thenReturn(mockSound);
+    when(resources.getAsset("sounds/generator-death.mp3", Sound.class)).thenReturn(mockSound);
 
     attacker = new Entity();
     attackerStats = new CombatStatsComponent(100, 10);
