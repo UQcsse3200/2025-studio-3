@@ -1,5 +1,12 @@
 package com.csse3200.game.progression.arsenal;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.Json;
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.entities.configs.DefenceAndGeneratorConfig;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,18 +26,29 @@ public class Arsenal {
   public static final Map<String, String> ALL_GENERATORS = new HashMap<>();
 
   static {
-    ALL_DEFENCES.put("slingshooter", INITIAL_DEFENCE);
-    ALL_DEFENCES.put("shield", INITIAL_DEFENCE);
-    ALL_DEFENCES.put("armyguy", "levelTwo");
-    ALL_DEFENCES.put("boxer", "levelThree");
-    ALL_DEFENCES.put("harpoon", "levelThree");
-    ALL_DEFENCES.put("mortar", "levelFour");
-    ALL_DEFENCES.put("shadow", "levelFive");
+      loadFromConfig();
   }
 
-  static {
-    ALL_GENERATORS.put("furnace", INITIAL_DEFENCE);
-    ALL_GENERATORS.put("healer", "levelFour");
+  private static void loadFromConfig() {
+      try {
+          FileHandle file = Gdx.files.internal("configs/defences.json");
+          Json json = new Json();
+
+          DefenceAndGeneratorConfig data = json.fromJson(DefenceAndGeneratorConfig.class, file);
+
+          for (Map.Entry<String, BaseDefenderConfig> entry : data.config.defenders.entrySet()) {
+              if (!entry.getKey().equals("wall")) {
+                  ALL_DEFENCES.put(entry.getKey(), entry.getValue().getLevelUnlockedOn());
+              }
+          }
+
+          for (Map.Entry<String, BaseGeneratorConfig> entry : data.config.generators.entrySet()) {
+              ALL_GENERATORS.put(entry.getKey(), entry.getValue().getLevelUnlockedOn());
+          }
+          System.out.println("Loaded defenders: " + data.config.defenders);
+      } catch (Exception e) {
+          Gdx.app.error("Arsenal", "Failed to load defenders/generators config", e);
+      }
   }
 
   /** Constructor for the Arsenal class. */
