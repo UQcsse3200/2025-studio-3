@@ -36,7 +36,9 @@ public class GdxGame extends Game {
     "images/ui/dialog_new_new.png",
     "images/ui/menu.png",
     "images/ui/menu_card.png",
-    "images/ui/achievement_dialog_new.png"
+    "images/ui/achievement_dialog_new.png",
+    "images/ui/human-dossier.png",
+    "images/ui/robot-dossier.png"
   };
   private static final String[] GLOBAL_SOUNDS = {
     "sounds/achievement_unlock.mp3",

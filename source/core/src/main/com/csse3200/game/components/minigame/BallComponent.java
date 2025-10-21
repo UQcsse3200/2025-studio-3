@@ -2,6 +2,7 @@ package com.csse3200.game.components.minigame;
 
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.components.Component;
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.Random;
 import org.slf4j.Logger;
@@ -26,6 +27,9 @@ public class BallComponent extends Component {
     this.velocity = new Vector2(INITIAL_X_SPEED, INITIAL_Y_SPEED); // Start moving up and right
     this.score = 0;
     this.ballsHit = 0;
+    if (ServiceLocator.getResourceService() != null) {
+      ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/bounce.mp3"});
+    }
   }
 
   /**
@@ -77,6 +81,13 @@ public class BallComponent extends Component {
     this.sigma += 0.1f * decayFactor;
     this.decayFactor *= 0.9f;
     speedMultiplier = randomizer();
+
+    if (ServiceLocator.getSettingsService() != null) {
+      float volume = ServiceLocator.getSettingsService().getSoundVolume();
+
+      Sound bounce = ServiceLocator.getResourceService().getAsset("sounds/bounce.mp3", Sound.class);
+      bounce.play(0.7f * volume);
+    }
   }
 
   @Override

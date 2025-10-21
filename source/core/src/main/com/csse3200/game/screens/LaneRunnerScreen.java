@@ -41,6 +41,7 @@ public class LaneRunnerScreen extends ScreenAdapter {
   private boolean gameOverDialogShown = false;
   private float spawnTimer = 0f;
   private final Random random = new java.util.Random();
+  private static final String MOVESOUND = "sounds/lane_move.mp3";
   private static final String[] laneRunnerTextures = {
     "images/entities/minigames/Bomb.png",
     "images/backgrounds/lanes.png",
@@ -78,8 +79,9 @@ public class LaneRunnerScreen extends ScreenAdapter {
     ResourceService resourceService = ServiceLocator.getResourceService();
     resourceService.loadTextures(laneRunnerTextures);
     resourceService.loadAll();
+    ServiceLocator.getResourceService().loadSounds(new String[] {MOVESOUND});
+    ServiceLocator.getResourceService().loadAll();
   }
-
   /** Creates the UI for the lane runner game. */
   private void createUI() {
     logger.debug("[LaneRunnerScreen] Creating UI");

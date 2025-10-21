@@ -16,7 +16,7 @@
       "maxTeleports": 0,
 
       "explosionDelay": 0,
-      "explosionDamage": 0,
+      "explosionDamage": 0
     },
     "fastRobot": {
       "name": "Fast Robot",
@@ -190,7 +190,7 @@
       "coinsRewarded": 2,
 
       "explosionDelay": 2.5,
-      "explosionDamage": 10000 // instant death right now
+      "explosionDamage": 10000
     }
   }
 }

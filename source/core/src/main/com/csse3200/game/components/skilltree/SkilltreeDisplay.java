@@ -9,6 +9,8 @@ import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.services.DialogService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * SkilltreeDisplay is a UI component responsible for rendering the skill tree interface. It
@@ -17,6 +19,8 @@ import com.csse3200.game.ui.UIComponent;
  */
 public class SkilltreeDisplay extends UIComponent {
   /** Creates a new SkilltreeDisplay. */
+  private static final Logger logger = LoggerFactory.getLogger(SkilltreeDisplay.class);
+
   public SkilltreeDisplay() {
     super();
   }
@@ -63,7 +67,7 @@ public class SkilltreeDisplay extends UIComponent {
           if (points >= cost && locked && skillSet.isUnlockable(skill.getName())) {
             skillSet.addSkill(skill);
             ServiceLocator.getProfileService().getProfile().getWallet().unlockSkill(cost);
-
+            logger.info("new upgrade value is: {}", skillSet.getUpgradeValue(skill.getStatType()));
             // Replace button with unlocked image
             Image unlockedImage = new Image(unlockedTexture);
             unlockedImage.setSize(skillButton.getWidth(), skillButton.getHeight());

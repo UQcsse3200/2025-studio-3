@@ -1,6 +1,7 @@
 package com.csse3200.game.components.lvlcompleted;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -112,15 +113,23 @@ public class LevelCompletedWindow extends UIComponent {
   public void updateLevel() {
     String currentLevel = profileService.getProfile().getCurrentLevel();
     updateStatistics(currentLevel);
-    String nextLevel =
-        switch (currentLevel) {
-          case "levelOne" -> "levelTwo";
-          case "levelTwo" -> "levelThree";
-          case "levelThree" -> "levelFour";
-          case "levelFour" -> "levelFive";
-          default -> "end";
-        };
+    String nextLevel = findNextLevel(currentLevel);
     profileService.getProfile().setCurrentLevel(nextLevel);
+  }
+
+  private String findNextLevel(String currentLevel) {
+    return switch (currentLevel) {
+      case "levelOne" -> "levelTwo";
+      case "levelTwo" -> "levelThree";
+      case "levelThree" -> "levelFour";
+      case "levelFour" -> "levelFive";
+      default -> "end";
+    };
+  }
+
+  @Override
+  protected void draw(SpriteBatch batch) {
+    // Stage handles drawing
   }
 
   public Table getContainer() {
