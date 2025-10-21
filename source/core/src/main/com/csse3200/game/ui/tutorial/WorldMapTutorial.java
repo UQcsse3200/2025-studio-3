@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
@@ -40,6 +41,21 @@ public class WorldMapTutorial extends UIComponent {
   /** Common literal used in UI copy. */
   private static final String PRESS = "Press ";
 
+  /** Whether the tutorial is fading out. */
+  private boolean fadingOut = false;
+
+  /** Current alpha value for fade out effect. */
+  private float alpha = 1.0f;
+
+  /** Speed of the fade out effect. */
+  private static final float FADE_SPEED = 2.0f;
+
+  /** Main table container for the tutorial UI. */
+  private Table table;
+
+  /** Stack containing all tutorial UI elements. */
+  private Stack stack;
+
   /**
    * Initialises the tutorial UI components, matching the style used by {@link LevelMapTutorial}.
    */
@@ -48,16 +64,15 @@ public class WorldMapTutorial extends UIComponent {
     super.create();
 
     // Build messages with current key bindings
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
-    String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
-    String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
-    String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
-    String interactKeyName =
-        Input.Keys.toString(settingsService.getSettings().getInteractionButton());
-    // Zoom currently bound to fixed keys
-    String zoomOutKeyName = Input.Keys.toString(Input.Keys.Q);
-    String zoomInKeyName = Input.Keys.toString(Input.Keys.K);
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    settings.checkButtonSettings();
+    String upKeyName = Input.Keys.toString(settings.getUpButton());
+    String downKeyName = Input.Keys.toString(settings.getDownButton());
+    String leftKeyName = Input.Keys.toString(settings.getLeftButton());
+    String rightKeyName = Input.Keys.toString(settings.getRightButton());
+    String interactKeyName = Input.Keys.toString(settings.getInteractionButton());
+    String zoomOutKeyName = Input.Keys.toString(settings.getZoomOutButton());
+    String zoomInKeyName = Input.Keys.toString(settings.getZoomInButton());
 
     tutorialMessages =
         new String[] {
@@ -76,7 +91,7 @@ public class WorldMapTutorial extends UIComponent {
         };
 
     // Root stack with overlay behind UI
-    Stack stack = new Stack();
+    stack = new Stack();
     stack.setFillParent(true);
 
     Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
@@ -89,11 +104,7 @@ public class WorldMapTutorial extends UIComponent {
     overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
     stack.add(overlay);
 
-    int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
-    String continueKeyName = Input.Keys.toString(skipKey);
-    String titleText = (PRESS + continueKeyName + " to continue").toUpperCase();
-
-    dialogWindow = ui.createWindow(titleText);
+    dialogWindow = ui.createWindow("TUTORIAL");
     dialogWindow.setModal(true);
     dialogWindow.setMovable(false);
     dialogWindow.setResizable(false);
@@ -141,11 +152,11 @@ public class WorldMapTutorial extends UIComponent {
     content.add(buttonRow).expandY().bottom().padBottom(20f);
     dialogWindow.add(content).expand().fill();
 
-    Table rootTable = new Table();
-    rootTable.setFillParent(false);
-    rootTable.align(Align.bottom);
-    rootTable.add(dialogWindow).width(600f).height(200f).padBottom(80f);
-    stack.add(rootTable);
+    table = new Table();
+    table.setFillParent(false);
+    table.align(Align.bottom);
+    table.add(dialogWindow).width(600f).height(200f).padBottom(80f);
+    stack.add(table);
     stage.addActor(stack);
   }
 
@@ -172,6 +183,9 @@ public class WorldMapTutorial extends UIComponent {
   public void update() {
     if (!active) return;
 
+    updateFadeOut();
+
+    // Allow skip button to advance or end tutorial
     int skipKey = ServiceLocator.getSettingsService().getSettings().getSkipButton();
     if (Gdx.input.isKeyJustPressed(skipKey)) {
       if (step < tutorialMessages.length - 1) {
@@ -180,8 +194,102 @@ public class WorldMapTutorial extends UIComponent {
         endTutorial();
       }
     }
+
+    // Handle interactive tutorial progression based on current step
+    switch (step) {
+      case 0:
+        handleMovementStep();
+        break;
+      case 1:
+        handleInteractionStep();
+        break;
+      case 2:
+        handleZoomStep();
+        break;
+      default:
+        break;
+    }
   }
 
+  /** Handles the movement tutorial step (step 0). */
+  private void handleMovementStep() {
+    if (isMovementKeyPressed()) {
+      advanceToStep(1);
+    }
+  }
+
+  /** Handles the interaction tutorial step (step 1). */
+  private void handleInteractionStep() {
+    int interactKey = ServiceLocator.getSettingsService().getSettings().getInteractionButton();
+    if (Gdx.input.isKeyJustPressed(interactKey)) {
+      advanceToStep(2);
+    }
+  }
+
+  /** Handles the zoom tutorial step (step 2). */
+  private void handleZoomStep() {
+    if (Gdx.input.isKeyJustPressed(
+            ServiceLocator.getSettingsService().getSettings().getZoomInButton())
+        || Gdx.input.isKeyJustPressed(
+            ServiceLocator.getSettingsService().getSettings().getZoomOutButton())) {
+      fadingOut = true;
+    }
+  }
+
+  /**
+   * Checks if any movement key is currently pressed.
+   *
+   * @return true if a movement key is pressed, false otherwise
+   */
+  private boolean isMovementKeyPressed() {
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    int up = settingsService.getSettings().getUpButton();
+    int down = settingsService.getSettings().getDownButton();
+    int left = settingsService.getSettings().getLeftButton();
+    int right = settingsService.getSettings().getRightButton();
+    return Gdx.input.isKeyPressed(up)
+        || Gdx.input.isKeyPressed(left)
+        || Gdx.input.isKeyPressed(down)
+        || Gdx.input.isKeyPressed(right);
+  }
+
+  /**
+   * Advances to the next tutorial step with the given label.
+   *
+   * @param nextStep the step number to advance to
+   */
+  private void advanceToStep(int nextStep) {
+    messageLabel.setText(tutorialMessages[nextStep]);
+    messageLabel.setAlignment(Align.center);
+    messageLabel.setWrap(true);
+    dialogWindow.clearChildren();
+    dialogWindow.add(messageLabel).expand().fill();
+    step = nextStep;
+  }
+
+  /** Updates the fade-out effect if active. */
+  private void updateFadeOut() {
+    if (!fadingOut) {
+      return;
+    }
+
+    alpha -= Gdx.graphics.getDeltaTime() * FADE_SPEED;
+    if (alpha <= 0) {
+      alpha = 0;
+      active = false;
+      stack.setVisible(false);
+      table.clearChildren();
+      // Mark the tutorial as complete when fade-out finishes
+      ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
+    } else {
+      // Fade out both the overlay and the dialog elements
+      overlay.getColor().a = OVERLAY_ALPHA * alpha;
+      table.getColor().a = alpha;
+      dialogWindow.getColor().a = alpha;
+    }
+  }
+
+  /** Cleans up the tutorial UI and resources. Clears the table and call superclass disposal. */
   @Override
   public void dispose() {
     super.dispose();

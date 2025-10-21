@@ -1,7 +1,6 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.CameraComponent;
 import com.csse3200.game.components.worldmap.AnimatedDropdownMenu;
-import com.csse3200.game.components.worldmap.WorldMapClickInputComponent;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenu;
 import com.csse3200.game.components.worldmap.WorldMapNavigationMenuActions;
 import com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent;
@@ -82,13 +80,10 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
         .addComponent(new WorldMapZoomInputComponent(this, 12))
-        .addComponent(new WorldMapPanInputComponent(this, 12))
-        .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
+        .addComponent(new WorldMapPanInputComponent(this, 12));
 
     if (!ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial()) {
       ui.addComponent(new WorldMapTutorial());
-      // Mark as played only after the tutorial is actually shown
-      // This is deferred to when the tutorial ends, not at creation time
     }
 
     return ui;
@@ -323,7 +318,11 @@ public class WorldMapScreen extends BaseScreen {
   private void handleZoomInput() {
     CameraComponent camera = renderer.getCamera();
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
+    // Get keybind for Zoom Out
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    int zoomOutButton = settingsService.getSettings().getZoomOutButton();
+
+    if (Gdx.input.isKeyJustPressed(zoomOutButton) && zoomIdx < ZOOM_STEPS.length - 1) {
       zoomIdx++;
       if (camera.getCamera() instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
@@ -333,7 +332,10 @@ public class WorldMapScreen extends BaseScreen {
       }
     }
 
-    if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
+    // Get keybind for Zoom In
+    int zoomInButton = settingsService.getSettings().getZoomInButton();
+
+    if (Gdx.input.isKeyJustPressed(zoomInButton) && zoomIdx > 0) {
       zoomIdx--;
       if (camera.getCamera() instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];

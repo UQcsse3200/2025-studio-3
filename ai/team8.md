@@ -28,6 +28,7 @@ code coverage was missing and how to fix it.
 - Generative AI was used to understand and help implement ItemEffectsService tests.
 - Generative AI was used to generate sprite sheets and associated atlases for the item effect animations.
 - Generative AI was used to generate the item purchased sound (all other sounds from Pixabay).
+- Generative AI was used to help understand and implement using images of keys for keybinds with Stacks
 - Generative AI was used to understand and help implement layering in staging using Groups (ensuring the World Map Navigation Menu and Animated Drop Down Menu display front-most).
 
 ## Jack

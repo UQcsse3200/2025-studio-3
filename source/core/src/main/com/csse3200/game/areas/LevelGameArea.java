@@ -876,7 +876,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Find all occupied cells (a placed defence or generator)
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
-      if (occ == null) continue;
+
+      if (occ == null
+          || occ.getComponent(GeneratorStatsComponent.class) != null
+              && occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
+        // must be a healer
+        continue;
+      }
+
+      Vector2 pos = occ.getPosition();
+      // spawn heal effect on entity
+      spawnEffect(
+          ServiceLocator.getResourceService()
+              .getAsset("images/effects/hp-up.atlas", TextureAtlas.class),
+          "hp-up",
+          (new Vector2[] {pos, pos}),
+          (int) tileSize,
+          (new float[] {0.1f, 1.85f}),
+          Animation.PlayMode.NORMAL,
+          false,
+          true);
 
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
@@ -901,7 +920,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
-    tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
@@ -953,8 +971,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
-        healDefences();
         // remove the healer after its animation
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(this::healDefences)));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(

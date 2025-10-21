@@ -1,7 +1,6 @@
 package com.csse3200.game.ui.tutorial;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -74,11 +73,7 @@ public class LevelMapTutorial extends UIComponent {
     overlay.setColor(0, 0, 0, OVERLAY_ALPHA);
     stack.add(overlay);
 
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    String continueKeyName = Input.Keys.toString(settingsService.getSettings().getSkipButton());
-    String titleText = "Press " + continueKeyName + " to continue";
-
-    dialogWindow = ui.createWindow(titleText.toUpperCase());
+    dialogWindow = ui.createWindow("TUTORIAL");
     dialogWindow.setModal(true);
     dialogWindow.setMovable(false);
     dialogWindow.setResizable(false);
