@@ -113,16 +113,16 @@ public class BossFactory {
       animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
       animator.addAnimation("death", 0.08f, Animation.PlayMode.REVERSED);
     }
-      ColliderComponent colliderComponent =
-              new ColliderComponent()
-                      .setCollisionFilter(
-                              PhysicsLayer.BOSS,
-                              (short)
-                                      (PhysicsLayer.DEFAULT
-                                              | PhysicsLayer.NPC
-                                              | PhysicsLayer.OBSTACLE
-                                              | PhysicsLayer.ENEMY))
-                      .setFriction(0f);
+    ColliderComponent colliderComponent =
+        new ColliderComponent()
+            .setCollisionFilter(
+                PhysicsLayer.BOSS,
+                (short)
+                    (PhysicsLayer.DEFAULT
+                        | PhysicsLayer.NPC
+                        | PhysicsLayer.OBSTACLE
+                        | PhysicsLayer.ENEMY))
+            .setFriction(0f);
 
     Entity boss =
         new Entity()

@@ -199,7 +199,7 @@ public class DefenceFactory {
                         | PhysicsLayer.OBSTACLE
                         | PhysicsLayer.ENEMY
                         | PhysicsLayer.BOSS
-                    | PhysicsLayer.BOSS_PROJECTILE));
+                        | PhysicsLayer.BOSS_PROJECTILE));
 
     Entity npc =
         new Entity()

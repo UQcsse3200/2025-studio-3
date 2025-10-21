@@ -659,103 +659,118 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-    public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-        logger.info("Spawning Boss of type {}", bossType);
-        Entity boss = BossFactory.createBossType(bossType);
+  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+    logger.info("Spawning Boss of type {}", bossType);
+    Entity boss = BossFactory.createBossType(bossType);
 
-        int spawnCol = levelCols;
-        int spawnRow = Math.clamp(row, 0, levelRows - 1);
+    int spawnCol = levelCols;
+    int spawnRow = Math.clamp(row, 0, levelRows - 1);
 
-        float spawnX = xOffset + tileSize * spawnCol;
-        float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
+    float spawnX = xOffset + tileSize * spawnCol;
+    float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
 
-        boss.setPosition(spawnX, spawnY);
-        boss.scaleHeight(tileSize * 3.0f);
+    boss.setPosition(spawnX, spawnY);
+    boss.scaleHeight(tileSize * 3.0f);
 
-        logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
 
-        spawnEntity(boss);
-        robots.add(boss);
+    spawnEntity(boss);
+    robots.add(boss);
 
-        boss.getEvents().addListener("fireProjectile", (Entity bossEntity) -> {
-            spawnBossProjectile(bossEntity);
-        });
+    boss.getEvents()
+        .addListener(
+            "fireProjectile",
+            (Entity bossEntity) -> {
+              spawnBossProjectile(bossEntity);
+            });
 
-        boss.getEvents().addListener("despawnRobot", (Entity target) -> {
-        });
+    boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
-        final boolean[] isBossDead = {false};
-        boss.getEvents()
-                .addListener(
-                        ENTITY_DEATH_EVENT,
-                        () -> {
-                            if (isBossDead[0]) {
-                                return;
-                            }
-                            isBossDead[0] = true;
+    final boolean[] isBossDead = {false};
+    boss.getEvents()
+        .addListener(
+            ENTITY_DEATH_EVENT,
+            () -> {
+              if (isBossDead[0]) {
+                return;
+              }
+              isBossDead[0] = true;
 
-                            logger.info("Boss death triggered");
+              logger.info("Boss death triggered");
 
-                            AITaskComponent ai = boss.getComponent(AITaskComponent.class);
-                            if (ai != null) {
-                                ai.dispose();
-                            }
+              AITaskComponent ai = boss.getComponent(AITaskComponent.class);
+              if (ai != null) {
+                ai.dispose();
+              }
 
-                            AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
-                            if (anim != null) {
-                                anim.startAnimation("death");
-                            }
+              AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
+              if (anim != null) {
+                anim.startAnimation("death");
+              }
 
-                            Timer.schedule(
-                                    new Timer.Task() {
-                                        @Override
-                                        public void run() {
-                                            requestDespawn(boss);
-                                            robots.remove(boss);
-                                            logger.info("Boss defeated");
-                                            if (ServiceLocator.getWaveService() != null) {
-                                                ServiceLocator.getWaveService().onBossDefeated();
-                                            }
-                                        }
-                                    },
-                                    1.84f);
-                        });
-    }
+              Timer.schedule(
+                  new Timer.Task() {
+                    @Override
+                    public void run() {
+                      requestDespawn(boss);
+                      robots.remove(boss);
+                      logger.info("Boss defeated");
+                      if (ServiceLocator.getWaveService() != null) {
+                        ServiceLocator.getWaveService().onBossDefeated();
+                      }
+                    }
+                  },
+                  1.84f);
+            });
+  }
 
-    public void spawnBossProjectile(Entity boss) {
-        System.out.println("DEBUG: spawnBossProjectile called for boss at " + boss.getPosition());
+  public void spawnBossProjectile(Entity boss) {
+    System.out.println("DEBUG: spawnBossProjectile called for boss at " + boss.getPosition());
 
-        Entity projectile = ProjectileFactory.createBossProjectile(5);
+    Entity projectile = ProjectileFactory.createBossProjectile(5);
 
-        Vector2 bossPos = boss.getPosition();
-        float projectileX = bossPos.x - (tileSize * 0.5f);
-        float projectileY = bossPos.y + (tileSize * 1f);
+    Vector2 bossPos = boss.getPosition();
+    float projectileX = bossPos.x - (tileSize * 0.5f);
+    float projectileY = bossPos.y + (tileSize * 1f);
 
-        projectile.setPosition(projectileX, projectileY);
-        projectile.scaleHeight(0.6f * tileSize);
-        projectile.scaleWidth(0.6f * tileSize);
+    projectile.setPosition(projectileX, projectileY);
+    projectile.scaleHeight(0.6f * tileSize);
+    projectile.scaleWidth(0.6f * tileSize);
 
-        projectile.addComponent(new MoveLeftComponent(150f));
+    projectile.addComponent(new MoveLeftComponent(150f));
 
-        projectile.getEvents().addListener("attack", (Entity target) -> {
-            System.out.println("DEBUG: Boss projectile hit defense at " + target.getPosition());
+    projectile
+        .getEvents()
+        .addListener(
+            "attack",
+            (Entity target) -> {
+              System.out.println("DEBUG: Boss projectile hit defense at " + target.getPosition());
 
-            requestDespawn(projectile);
-        });
+              requestDespawn(projectile);
+            });
 
-        projectile.getEvents().addListener("despawnSlingshot", (projectileEntity) -> {
-            System.out.println("DEBUG: Boss projectile hit defense - despawning");
-            requestDespawn(projectile);
-        });
+    projectile
+        .getEvents()
+        .addListener(
+            "despawnSlingshot",
+            (projectileEntity) -> {
+              System.out.println("DEBUG: Boss projectile hit defense - despawning");
+              requestDespawn(projectile);
+            });
 
-        projectile.getEvents().addListener("despawn", () -> {
-            System.out.println("DEBUG: Boss projectile lifetime expired");
-            requestDespawn(projectile);
-        });
+    projectile
+        .getEvents()
+        .addListener(
+            "despawn",
+            () -> {
+              System.out.println("DEBUG: Boss projectile lifetime expired");
+              requestDespawn(projectile);
+            });
 
-        spawnEntity(projectile);
-        System.out.println("DEBUG: Boss projectile spawned at (" + projectileX + ", " + projectileY + ")");
-    }
+    spawnEntity(projectile);
+    System.out.println(
+        "DEBUG: Boss projectile spawned at (" + projectileX + ", " + projectileY + ")");
+  }
 
   /**
    * Getter for selected_unit
