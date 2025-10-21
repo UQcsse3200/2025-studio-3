@@ -104,6 +104,9 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.setFillParent(true);
     rootTable.center(); // Center the entire table content
 
+    // Check there were no issues with saved button settings
+    checkButtonSettings();
+
     // Create title with proper UI scaling
     Label title = ui.title("Game Settings");
     float uiScale = ui.getUIScale();
@@ -313,6 +316,38 @@ public class GameSettingsMenu extends UIComponent {
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue());
     stage.addActor(bottomRow);
+  }
+
+  /**
+   * Validates the button settings to ensure they use allowed key bindings and none are Unknown. If
+   * any button is found to have a key that is not allowed, key bindings are set to their default
+   * values.
+   */
+  private void checkButtonSettings() {
+    // Get all currently saved button keys
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    ArrayList<Integer> buttons = new ArrayList<>();
+    buttons.add(settings.getPauseButton());
+    buttons.add(settings.getSkipButton());
+    buttons.add(settings.getInteractionButton());
+    buttons.add(settings.getUpButton());
+    buttons.add(settings.getDownButton());
+    buttons.add(settings.getLeftButton());
+    buttons.add(settings.getRightButton());
+    buttons.add(settings.getZoomInButton());
+    buttons.add(settings.getZoomOutButton());
+    logger.info("Current button keys: {}", buttons);
+
+    // Check each button key is valid
+    for (int button : buttons) {
+      if (!ALLOWED_KEYS.contains(button)) { // also ensures none are Unknown (0)
+        // If any is invalid, reset all to default
+        resetKeyBinds();
+        logger.info("Invalid button key found, resetting to defaults.");
+        return;
+      }
+    }
+    logger.info("All button keys valid.");
   }
 
   /**
