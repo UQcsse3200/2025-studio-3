@@ -164,6 +164,8 @@ public class WorldMapTutorial extends UIComponent {
     active = false;
     overlay.setVisible(false);
     dialogWindow.setVisible(false);
+    // Mark the tutorial as played when it actually ends
+    ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
   }
 
   @Override

@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.csse3200.game.services.GameStateService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
@@ -136,7 +135,7 @@ public class LevelMapTutorial extends UIComponent {
     stack.add(rootTable);
     stage.addActor(stack);
 
-    ServiceLocator.getGameStateService().addFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
+    // Don't freeze the game - players need to interact with the hotbar during the tutorial
   }
 
   /**
@@ -188,8 +187,27 @@ public class LevelMapTutorial extends UIComponent {
     active = false;
     overlay.setVisible(false);
     dialogWindow.setVisible(false);
-    ServiceLocator.getGameStateService()
-        .removeFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
+    // Mark the tutorial as played when it actually ends
+    ServiceLocator.getProfileService().getProfile().setPlayedLevelTutorial();
+  }
+
+  /**
+   * Updates the tutorial every frame, checking for keyboard input to advance through steps.
+   */
+  @Override
+  public void update() {
+    if (!active) return;
+
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    int skipKey = settingsService.getSettings().getSkipButton();
+    
+    if (Gdx.input.isKeyJustPressed(skipKey)) {
+      if (step < tutorialMessages.length - 1) {
+        nextStep();
+      } else {
+        endTutorial();
+      }
+    }
   }
 
   /** Cleans up tutorial UI elements and removes them from the stage. */

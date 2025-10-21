@@ -87,7 +87,8 @@ public class WorldMapScreen extends BaseScreen {
 
     if (!ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial()) {
       ui.addComponent(new WorldMapTutorial());
-      ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
+      // Mark as played only after the tutorial is actually shown
+      // This is deferred to when the tutorial ends, not at creation time
     }
 
     return ui;
