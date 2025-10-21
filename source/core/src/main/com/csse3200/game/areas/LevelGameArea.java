@@ -828,11 +828,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
 
-      if (occ == null || 
-        occ.getComponent(GeneratorStatsComponent.class) != null && 
-        occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
-          // must be a healer
-          continue;
+      if (occ == null
+          || occ.getComponent(GeneratorStatsComponent.class) != null
+              && occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
+        // must be a healer
+        continue;
       }
 
       Vector2 pos = occ.getPosition();
