@@ -36,21 +36,16 @@ public class BomberDeathExplodeComponent extends Component {
     if (currentHealth <= maxHealth * EXPLOSION_THRESHOLD) {
       // Play explosion animation early (visual warning)
       entity.getEvents().trigger("bomberPreExplode");
-      System.out.println(
-          "[BomberExplosion] Explosion animation started early for " + entity.getId());
     }
   }
 
   /** On death, apply AOE damage immediately. */
   private void onDeath() {
-    System.out.println("[BomberExplosion] Bomber died, triggering damage.");
     explode();
   }
 
   /** Performs AOE explosion damage around the bomber’s position. */
   private void explode() {
-    System.out.println("[BomberExplosion] Triggered for " + entity.getId());
-
     Vector2 center = entity.getPosition();
     if (center == null) return;
 
@@ -82,13 +77,6 @@ public class BomberDeathExplodeComponent extends Component {
         if (defence != null) {
           defence.setHealth(defence.getHealth() - explosionDamage);
           defence.handleDeath();
-          System.out.println(
-              "[BomberExplosion] Damaged target "
-                  + target.getId()
-                  + " at row="
-                  + targetRow
-                  + ", col="
-                  + targetCol);
         }
       }
     }

@@ -104,9 +104,9 @@ public class RobotAnimationController extends Component {
         case ATTACK:
           animateAttack();
           break;
-
         case EXPLODE:
           animatePreExplosion();
+          break;
         case SHOOT:
           animateShoot();
           break;
