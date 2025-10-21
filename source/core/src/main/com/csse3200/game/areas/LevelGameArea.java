@@ -269,7 +269,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             "buff", ItemFactory::createBuff,
             "emp", ItemFactory::createEmp,
             "nuke", ItemFactory::createNuke,
-            "doomHack", ItemFactory::createdDoomHack);
+            "doomhack", ItemFactory::createdDoomHack);
 
     for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
       String key = entry.getKey();

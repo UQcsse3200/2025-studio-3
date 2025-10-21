@@ -83,7 +83,7 @@ public class ItemFactory {
    * @return a doom hack item entity
    */
   public static Entity createdDoomHack() {
-    BaseItemConfig config = configService.getItemConfig("doomHack");
+    BaseItemConfig config = configService.getItemConfig("doomhack");
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.DOOMHACK));

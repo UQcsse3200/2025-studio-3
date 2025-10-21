@@ -69,7 +69,7 @@ public class ItemHandler {
     } else if (item.getType() == ItemComponent.Type.NUKE) {
       radius *= 15f;
     } else if (item.getType() == ItemComponent.Type.DOOMHACK) {
-      radius *= 1;
+      radius *= 0.75f;
     }
 
     float finalRadius = radius;

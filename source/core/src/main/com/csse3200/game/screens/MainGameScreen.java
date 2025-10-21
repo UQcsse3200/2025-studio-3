@@ -134,7 +134,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/slotmachine/slot_reels.atlas",
     "images/entities/slotmachine/pie_filled.atlas",
     "images/entities/enemies/fast_robot.atlas",
-    "images/entities/enemies/tanky_robot.atlas"
+    "images/entities/enemies/tanky_robot.atlas",
+    "images/effects/doomhack.atlas",
+    "images/effects/doomhack.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
@@ -184,7 +186,8 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/item_shell_explosion.mp3",
     "sounds/harpoon-place.mp3",
     "sounds/healer-place.mp3",
-    "sounds/boxer-place.mp3"
+    "sounds/boxer-place.mp3",
+    "sounds/item_doomhack.mp3"
   };
 
   /**
