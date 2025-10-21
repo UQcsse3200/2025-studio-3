@@ -8,6 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
@@ -87,15 +88,15 @@ public class WorldMapTutorial extends UIComponent {
         Gdx.graphics.getHeight() - table.getHeight() - TABLE_TOP_OFFSET); // top-left with padding
     table.pad(TABLE_PAD); // inner padding for the label
 
-    SettingsService settingsService = ServiceLocator.getSettingsService();
-    String upKeyName = Input.Keys.toString(settingsService.getSettings().getUpButton());
-    String downKeyName = Input.Keys.toString(settingsService.getSettings().getDownButton());
-    String leftKeyName = Input.Keys.toString(settingsService.getSettings().getLeftButton());
-    String rightKeyName = Input.Keys.toString(settingsService.getSettings().getRightButton());
-    String interactKeyName =
-        Input.Keys.toString(settingsService.getSettings().getInteractionButton());
-    String zoomOutKeyName = Input.Keys.toString(settingsService.getSettings().getZoomOutButton());
-    String zoomInKeyName = Input.Keys.toString(settingsService.getSettings().getZoomInButton());
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    settings.checkButtonSettings();
+    String upKeyName = Input.Keys.toString(settings.getUpButton());
+    String downKeyName = Input.Keys.toString(settings.getDownButton());
+    String leftKeyName = Input.Keys.toString(settings.getLeftButton());
+    String rightKeyName = Input.Keys.toString(settings.getRightButton());
+    String interactKeyName = Input.Keys.toString(settings.getInteractionButton());
+    String zoomOutKeyName = Input.Keys.toString(settings.getZoomOutButton());
+    String zoomInKeyName = Input.Keys.toString(settings.getZoomInButton());
 
     this.moveLabel =
         ui.text(

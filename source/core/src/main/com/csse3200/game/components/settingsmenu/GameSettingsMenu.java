@@ -41,31 +41,9 @@ public class GameSettingsMenu extends UIComponent {
   private static final String RIGHT_KEY = "right";
   private static final String ZOOM_IN_KEY = "zoomin";
   private static final String ZOOM_OUT_KEY = "zoomout";
-  private static final ArrayList<Integer> ALLOWED_KEYS = new ArrayList<>();
+  private static final ArrayList<Integer> ALLOWED_KEYS =
+      ServiceLocator.getSettingsService().getSettings().getAllowedKeys();
 
-  // Set Allowed Keys
-  static {
-    // Letters (A-Z)
-    for (int l = Input.Keys.A; l <= Input.Keys.Z; l++) {
-      ALLOWED_KEYS.add(l);
-    }
-
-    // Numbers 1-9 (0 sometimes causes issues as a keycode of 0 can represent Unknown)
-    for (int n = Input.Keys.NUM_1; n <= Input.Keys.NUM_9; n++) {
-      ALLOWED_KEYS.add(n);
-    }
-
-    // Special keys
-    ALLOWED_KEYS.add(Input.Keys.SPACE);
-    ALLOWED_KEYS.add(Input.Keys.ESCAPE);
-    ALLOWED_KEYS.add(Input.Keys.UP);
-    ALLOWED_KEYS.add(Input.Keys.DOWN);
-    ALLOWED_KEYS.add(Input.Keys.LEFT);
-    ALLOWED_KEYS.add(Input.Keys.RIGHT);
-    ALLOWED_KEYS.add(Input.Keys.TAB);
-  }
-
-  /** Constructor for GameSettingsMenu. */
   public GameSettingsMenu() {
     super();
   }
@@ -105,7 +83,7 @@ public class GameSettingsMenu extends UIComponent {
     rootTable.center(); // Center the entire table content
 
     // Check there were no issues with saved button settings
-    checkButtonSettings();
+    ServiceLocator.getSettingsService().getSettings().checkButtonSettings();
 
     // Create title with proper UI scaling
     Label title = ui.title("Game Settings");
@@ -316,38 +294,6 @@ public class GameSettingsMenu extends UIComponent {
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue());
     stage.addActor(bottomRow);
-  }
-
-  /**
-   * Validates the button settings to ensure they use allowed key bindings and none are Unknown. If
-   * any button is found to have a key that is not allowed, key bindings are set to their default
-   * values.
-   */
-  private void checkButtonSettings() {
-    // Get all currently saved button keys
-    Settings settings = ServiceLocator.getSettingsService().getSettings();
-    ArrayList<Integer> buttons = new ArrayList<>();
-    buttons.add(settings.getPauseButton());
-    buttons.add(settings.getSkipButton());
-    buttons.add(settings.getInteractionButton());
-    buttons.add(settings.getUpButton());
-    buttons.add(settings.getDownButton());
-    buttons.add(settings.getLeftButton());
-    buttons.add(settings.getRightButton());
-    buttons.add(settings.getZoomInButton());
-    buttons.add(settings.getZoomOutButton());
-    logger.info("Current button keys: {}", buttons);
-
-    // Check each button key is valid
-    for (int button : buttons) {
-      if (!ALLOWED_KEYS.contains(button)) { // also ensures none are Unknown (0)
-        // If any is invalid, reset all to default
-        resetKeyBinds();
-        logger.info("Invalid button key found, resetting to defaults.");
-        return;
-      }
-    }
-    logger.info("All button keys valid.");
   }
 
   /**
