@@ -16,8 +16,6 @@ public class ScrapHudDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-    entity.getEvents().addListener("pause", this::handlePause);
-    entity.getEvents().addListener("resume", this::handleResume);
     float width = stage.getViewport().getWorldWidth();
     Texture sunTex =
         ServiceLocator.getResourceService()
@@ -40,20 +38,6 @@ public class ScrapHudDisplay extends UIComponent {
   public void update() {
     CurrencyService cs = ServiceLocator.getCurrencyService();
     amountLabel.setText(String.valueOf(cs.get()));
-  }
-
-  /** Handles pause events to dim the HUD */
-  private void handlePause() {
-    if (table != null) {
-      table.getColor().a = 0.3f; // Dim to 30% opacity
-    }
-  }
-
-  /** Handles resume events to restore the HUD */
-  private void handleResume() {
-    if (table != null) {
-      table.getColor().a = 1.0f; // Restore to 100% opacity
-    }
   }
 
   @Override
