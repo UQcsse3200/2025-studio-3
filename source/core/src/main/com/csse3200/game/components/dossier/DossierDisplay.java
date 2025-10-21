@@ -454,80 +454,21 @@ public class DossierDisplay extends UIComponent {
    * @return a horizontally scrollable table with entity buttons
    */
   private Table makeEntitiesButtons() {
-    Table buttonRow = new Table();
     float uiScale = ui.getUIScale();
-    ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
-    // Get all entities (including locked ones) for the button bar
-    String[] allEntities = getAllEntitiesForButtons();
+    // Create button row with all entities
+    Table buttonRow = createEntityButtonRow(buttonWidth, buttonDimensions, uiScale);
 
-    for (int i = 0; i < allEntities.length; i++) {
-      final int index = i; // capture index for listener
-      String entityKey = allEntities[i];
-      // Use the display name for button text
-      String displayName = getEntityName(entityKey);
-
-      // Check if entity is unlocked (only applies to human entities)
-      boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
-
-      // Create button with appropriate styling
-      TextButton btn;
-      if (isUnlocked) {
-        btn = ui.secondaryButton(displayName, buttonWidth);
-      } else {
-        // For locked entities, show with locked styling
-        btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
-        btn.setColor(0.5f, 0.5f, 0.5f, 0.7f); // Gray out locked entities
-        btn.setDisabled(true); // Disable interaction
-      }
-
-      group.add(btn);
-      buttonRow
-          .add(btn)
-          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
-          .pad(5f * uiScale);
-
-      // Only add listener for unlocked entities
-      if (isUnlocked) {
-        btn.addListener(
-            new ChangeListener() {
-              @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
-                if (btn.isChecked()) {
-                  logger.info(
-                      "Selected entity button {} (key: {}, name: {})",
-                      index,
-                      entityKey,
-                      displayName);
-                  // Find the corresponding index in the unlocked entities array
-                  int unlockedIndex = findUnlockedEntityIndex(entityKey);
-                  if (unlockedIndex >= 0) {
-                    entity.getEvents().trigger(CHANGE_INFO, unlockedIndex);
-                  }
-                }
-              }
-            });
-      }
-    }
-
-    // create horizontal ScrollPane for entity buttons
+    // Create scroll pane and arrows
     ScrollPane scrollPane = createScrollPane(buttonRow);
-
-    // create arrow button
     float arrowWidth = 60f * uiScale;
     float arrowHeight = buttonDimensions.getValue();
     Table arrowRow = createScrollArrows(scrollPane, arrowWidth, arrowHeight, uiScale);
 
-    // wrap everything in a root table
-    Table root = new Table();
-    root.bottom().padBottom(60f * uiScale);
-    root.padLeft(200f * uiScale);
-    root.padRight(200f * uiScale);
-    root.add(arrowRow).expandX().fillX();
-
-    return root;
+    // Wrap everything in a root table
+    return createButtonRootTable(arrowRow, uiScale);
   }
 
   /**
@@ -722,6 +663,105 @@ public class DossierDisplay extends UIComponent {
 
       return "No information available";
     }
+  }
+
+  /**
+   * Creates the button row containing all entity buttons.
+   *
+   * @param buttonWidth the width of each button
+   * @param buttonDimensions the scaled dimensions of buttons
+   * @param uiScale the UI scaling factor
+   * @return a table containing all entity buttons
+   */
+  private Table createEntityButtonRow(
+      float buttonWidth, Pair<Float, Float> buttonDimensions, float uiScale) {
+    Table buttonRow = new Table();
+    ButtonGroup<TextButton> group = new ButtonGroup<>();
+    String[] allEntities = getAllEntitiesForButtons();
+
+    for (int i = 0; i < allEntities.length; i++) {
+      final int index = i;
+      String entityKey = allEntities[i];
+      TextButton btn = createEntityButton(entityKey, index, buttonWidth);
+
+      group.add(btn);
+      buttonRow
+          .add(btn)
+          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+          .pad(5f * uiScale);
+    }
+
+    return buttonRow;
+  }
+
+  /**
+   * Creates a single entity button with appropriate styling and listener.
+   *
+   * @param entityKey the entity key
+   * @param index the button index
+   * @param buttonWidth the button width
+   * @return the created button
+   */
+  private TextButton createEntityButton(String entityKey, int index, float buttonWidth) {
+    String displayName = getEntityName(entityKey);
+    boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
+
+    TextButton btn;
+    if (isUnlocked) {
+      btn = ui.secondaryButton(displayName, buttonWidth);
+    } else {
+      btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
+      btn.setColor(0.5f, 0.5f, 0.5f, 0.7f);
+      btn.setDisabled(true);
+    }
+
+    // Only add listener for unlocked entities
+    if (isUnlocked) {
+      btn.addListener(createEntityButtonListener(entityKey, index, displayName));
+    }
+
+    return btn;
+  }
+
+  /**
+   * Creates a change listener for entity buttons.
+   *
+   * @param entityKey the entity key
+   * @param index the button index
+   * @param displayName the display name
+   * @return the change listener
+   */
+  private ChangeListener createEntityButtonListener(
+      String entityKey, int index, String displayName) {
+    return new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent changeEvent, Actor actor) {
+        if (((TextButton) actor).isChecked()) {
+          logger.info(
+              "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
+          int unlockedIndex = findUnlockedEntityIndex(entityKey);
+          if (unlockedIndex >= 0) {
+            entity.getEvents().trigger(CHANGE_INFO, unlockedIndex);
+          }
+        }
+      }
+    };
+  }
+
+  /**
+   * Creates the root table for the button section.
+   *
+   * @param arrowRow the arrow row table
+   * @param uiScale the UI scaling factor
+   * @return the root table
+   */
+  private Table createButtonRootTable(Table arrowRow, float uiScale) {
+    Table root = new Table();
+    root.bottom().padBottom(60f * uiScale);
+    root.padLeft(200f * uiScale);
+    root.padRight(200f * uiScale);
+    root.add(arrowRow).expandX().fillX();
+    return root;
   }
 
   /**
