@@ -3,6 +3,7 @@ package com.csse3200.game.components.slot;
 import com.csse3200.game.areas.SlotMachineArea;
 import java.security.SecureRandom;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,12 +39,16 @@ public class SlotEngine {
 
   // New: spin credits state
   private final AtomicInteger remainingSpins;
+  private ScheduledExecutorService refillExec;
 
-  /** Accumulated time for refill tracking (uses GameTime delta) */
-  private float refillAccumulator = 0f;
+  /** High-precision clock of the last (logical) refill tick (excludes paused time). */
+  private long lastRefillNano = System.nanoTime();
 
-  /** Refill period in seconds */
-  private float refillPeriodSeconds = 10f;
+  /** When paused, record start time to offset lastRefillNano on resume; -1 means not paused. */
+  private long pausedAtNano = -1L;
+
+  /** Cached period in nanoseconds for faster comparisons. */
+  private long refillPeriodNanos = TimeUnit.SECONDS.toNanos(10);
 
   /** Try to consume one credit. */
   private boolean consumeOneCredit() {
@@ -321,10 +326,10 @@ public class SlotEngine {
     this.config = Objects.requireNonNull(config, "config");
     this.random = Objects.requireNonNull(random, "random");
     this.remainingSpins = new AtomicInteger(config.getInitialSpins());
-    this.refillPeriodSeconds = config.getRefillPeriodSeconds();
-    this.refillAccumulator = 0f;
-    LOG.info(
-        () -> String.format("[Slot] engine initialized, +1 credit per %.1fs", refillPeriodSeconds));
+    this.refillPeriodNanos = TimeUnit.SECONDS.toNanos(config.getRefillPeriodSeconds());
+    this.lastRefillNano = System.nanoTime();
+    this.pausedAtNano = -1L;
+    startAutoRefill();
   }
 
   private SlotMachineArea slotMachineArea;
@@ -351,45 +356,79 @@ public class SlotEngine {
     if (delta > 0) updateSpins(delta, "manual_add");
   }
 
-  /**
-   * Update slot machine refill logic using GameTime delta. This method should be called every frame
-   * from the main game loop.
-   *
-   * @param deltaTime The scaled delta time from GameTime service
-   */
-  public void update(float deltaTime) {
-    if (refillPaused) {
-      return; // Don't accumulate time while paused
+  public synchronized void startAutoRefill() {
+    if (refillExec != null && !refillExec.isShutdown()) {
+      LOG.fine("[Slot] auto_refill already running, skip start");
+      return;
     }
-
-    refillAccumulator += deltaTime;
-
-    // Check if enough time has passed for a refill
-    if (refillAccumulator >= refillPeriodSeconds) {
-      int ticks = (int) (refillAccumulator / refillPeriodSeconds);
-      // Cap ticks to avoid burst if the game was backgrounded a long time
-      int toApply = Math.min(ticks, 3);
-      updateSpins(toApply, "auto_refill");
-
-      // Keep the remainder for next cycle
-      refillAccumulator -= ticks * refillPeriodSeconds;
-    }
+    refillExec =
+        Executors.newSingleThreadScheduledExecutor(
+            r -> {
+              Thread t = new Thread(r, "SlotEngine-Refill");
+              t.setDaemon(true);
+              return t;
+            });
+    int period = config.getRefillPeriodSeconds();
+    this.refillPeriodNanos = TimeUnit.SECONDS.toNanos(period);
+    // Poll at a short fixed delay and compute logical ticks so pause truly "freezes" time.
+    refillExec.scheduleWithFixedDelay(
+        () -> {
+          final long now = System.nanoTime();
+          if (refillPaused) {
+            // Mark the start of a paused interval (only once)
+            if (pausedAtNano < 0L) {
+              pausedAtNano = now;
+            }
+            return;
+          }
+          // If we just resumed, shift the epoch forward by paused duration so phase is preserved
+          if (pausedAtNano >= 0L) {
+            long pausedDur = now - pausedAtNano;
+            lastRefillNano += pausedDur;
+            pausedAtNano = -1L;
+          }
+          // How many whole periods have elapsed since the last logical tick?
+          long elapsed = now - lastRefillNano;
+          if (elapsed >= refillPeriodNanos) {
+            long ticks = Math.max(1L, elapsed / refillPeriodNanos);
+            // Cap ticks to avoid burst if the game was backgrounded a long time.
+            int toApply = (int) Math.min(ticks, 3L);
+            updateSpins(toApply, "auto_refill");
+            lastRefillNano += refillPeriodNanos * ticks;
+          }
+        },
+        0L,
+        100L,
+        TimeUnit.MILLISECONDS);
+    LOG.info(() -> String.format("[Slot] auto_refill started, +1 per %ds", period));
   }
 
   public synchronized void stopAutoRefill() {
-    // No-op: refill is now handled by update() method
-    LOG.info("[Slot] auto_refill stopped (now using GameTime-based updates)");
+    if (refillExec != null) {
+      refillExec.shutdownNow();
+      refillExec = null;
+      LOG.info("[Slot] auto_refill stopped");
+    }
   }
 
   /** Pause auto-refill of spin credits (no credits will be added while paused). */
   public void pauseRefill() {
     this.refillPaused = true;
+    if (pausedAtNano < 0L) {
+      pausedAtNano = System.nanoTime();
+    }
     LOG.info("[Slot] refill paused");
   }
 
   /** Resume auto-refill of spin credits. */
   public void resumeRefill() {
     this.refillPaused = false;
+    if (pausedAtNano >= 0L) {
+      long now = System.nanoTime();
+      long pausedDur = now - pausedAtNano;
+      lastRefillNano += pausedDur; // preserve phase; do NOT "lose" time across pause
+      pausedAtNano = -1L;
+    }
     LOG.info("[Slot] refill resumed");
   }
 
@@ -402,7 +441,6 @@ public class SlotEngine {
 
   public void dispose() {
     stopAutoRefill();
-    LOG.info("[Slot] engine disposed");
   }
 
   /**

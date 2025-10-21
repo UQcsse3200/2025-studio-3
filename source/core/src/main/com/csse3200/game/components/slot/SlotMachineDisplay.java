@@ -180,11 +180,14 @@ public class SlotMachineDisplay extends UIComponent {
   /** Keep in sync with engine default: auto +1 credit every 5s (configurable in engine). */
   private static final int REFILL_PERIOD_SECONDS = 10;
 
+  /** Epoch (ms) when we last observed a +1 refill tick. */
+  private long lastRefillEpochMs = System.currentTimeMillis();
+
   /** Snapshot of last seen remaining spins to detect +1 ticks. */
   private int lastSeenSpins = -1;
 
-  /** Accumulated time for visual progress tracking (uses GameTime delta) */
-  private float visualProgressAccumulator = 0f;
+  /** Epoch (ms) when local pause started; -1 means not paused. */
+  private long pauseStartMs = -1L;
 
   // ---------- Constructors ---------
 
@@ -212,26 +215,11 @@ public class SlotMachineDisplay extends UIComponent {
     lastStageW = stage.getWidth();
     lastStageH = stage.getHeight();
     lastSeenSpins = slotEngine.getRemainingSpins();
-    visualProgressAccumulator = 0f;
+    lastRefillEpochMs = System.currentTimeMillis();
     updateAvailabilityVisual();
     if (entity != null && entity.getEvents() != null) {
       entity.getEvents().addListener("pause", this::pauseSpin);
       entity.getEvents().addListener("resume", this::resumeSpin);
-    }
-  }
-
-  @Override
-  public void update() {
-    super.update();
-    // Update slot engine refill logic using GameTime delta
-    if (slotEngine != null) {
-      float deltaTime = ServiceLocator.getTimeSource().getDeltaTime();
-      slotEngine.update(deltaTime);
-
-      // Update visual progress using GameTime delta
-      if (!spinPaused) {
-        visualProgressAccumulator += deltaTime;
-      }
     }
   }
 
@@ -733,7 +721,7 @@ public class SlotMachineDisplay extends UIComponent {
 
     // Detect auto-refill tick (remaining spins increased)
     if (lastSeenSpins >= 0 && cur > lastSeenSpins) {
-      visualProgressAccumulator = 0f; // Reset visual progress on refill
+      lastRefillEpochMs = System.currentTimeMillis();
     }
     lastSeenSpins = cur;
 
@@ -741,9 +729,11 @@ public class SlotMachineDisplay extends UIComponent {
       return;
     }
 
-    // 2) Pie frame by visual progress accumulator (respects GameTime speed)
+    // 2) Pie frame by time since last tick
     if (pieImage != null && !pieRegions.isEmpty()) {
-      double f = visualProgressAccumulator / REFILL_PERIOD_SECONDS; // 0..1
+      long now = System.currentTimeMillis();
+      double periodMs = Math.max(1.0, REFILL_PERIOD_SECONDS * 1000.0);
+      double f = (now - lastRefillEpochMs) / periodMs; // 0..1
       if (f < 0) f = 0;
       if (f > 1) f = 1;
 
@@ -833,6 +823,8 @@ public class SlotMachineDisplay extends UIComponent {
   public void pauseSpin() {
     if (spinPaused) return;
     spinPaused = true;
+    // Record when the pause starts so we can offset the HUD clock on resume
+    pauseStartMs = System.currentTimeMillis();
     slotEngine.pauseRefill();
     logger.info("SlotMachineDisplay: paused (test-local).");
   }
@@ -841,6 +833,12 @@ public class SlotMachineDisplay extends UIComponent {
   public void resumeSpin() {
     if (!spinPaused) return;
     spinPaused = false;
+    // Offset the lastRefillEpochMs by the time spent paused so the pie does not "jump ahead"
+    if (pauseStartMs > 0L) {
+      long pausedDuration = System.currentTimeMillis() - pauseStartMs;
+      lastRefillEpochMs += pausedDuration;
+      pauseStartMs = -1L;
+    }
     slotEngine.resumeRefill();
     logger.info("SlotMachineDisplay: resumed (test-local).");
   }
