@@ -94,7 +94,7 @@ public class ShopDisplay extends UIComponent {
         stack.getX() + (stack.getWidth() - title.getWidth()) / 2,
         stack.getY() + stack.getHeight() - 85f * uiScale);
     stage.addActor(title);
-    
+
     createCloseButton();
   }
 

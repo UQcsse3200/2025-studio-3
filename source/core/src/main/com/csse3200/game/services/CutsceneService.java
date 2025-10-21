@@ -61,7 +61,7 @@ public class CutsceneService {
     if (callback != null) {
       callback.accept(cutsceneName);
     }
-    
+
     this.callback = null;
     this.cutsceneName = null;
   }

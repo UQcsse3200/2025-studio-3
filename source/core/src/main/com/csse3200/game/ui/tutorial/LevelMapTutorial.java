@@ -191,16 +191,14 @@ public class LevelMapTutorial extends UIComponent {
     ServiceLocator.getProfileService().getProfile().setPlayedLevelTutorial();
   }
 
-  /**
-   * Updates the tutorial every frame, checking for keyboard input to advance through steps.
-   */
+  /** Updates the tutorial every frame, checking for keyboard input to advance through steps. */
   @Override
   public void update() {
     if (!active) return;
 
     SettingsService settingsService = ServiceLocator.getSettingsService();
     int skipKey = settingsService.getSettings().getSkipButton();
-    
+
     if (Gdx.input.isKeyJustPressed(skipKey)) {
       if (step < tutorialMessages.length - 1) {
         nextStep();

@@ -667,7 +667,8 @@ public class WorldMapPlayerComponent extends UIComponent {
         entity.setPosition(curTarget);
         float volume = ServiceLocator.getSettingsService().getSoundVolume();
         Sound nodeSound =
-            ServiceLocator.getGlobalResourceService().getAsset("sounds/node_sound.mp3", Sound.class);
+            ServiceLocator.getGlobalResourceService()
+                .getAsset("sounds/node_sound.mp3", Sound.class);
         nodeSound.play(0.2f * volume);
         persistWorldPos();
 
