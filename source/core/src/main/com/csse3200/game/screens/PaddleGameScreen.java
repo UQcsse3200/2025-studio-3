@@ -71,6 +71,11 @@ public class PaddleGameScreen extends ScreenAdapter {
       "images/backgrounds/WallPongbg.png"
     };
     resourceService.loadTextures(textures);
+    
+    // Load sounds
+    String[] sounds = {"sounds/bounce.mp3"};
+    resourceService.loadSounds(sounds);
+    
     resourceService.loadAll();
   }
 

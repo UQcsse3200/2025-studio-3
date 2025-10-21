@@ -27,9 +27,6 @@ public class BallComponent extends Component {
     this.velocity = new Vector2(INITIAL_X_SPEED, INITIAL_Y_SPEED); // Start moving up and right
     this.score = 0;
     this.ballsHit = 0;
-    if (ServiceLocator.getResourceService() != null) {
-      ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/bounce.mp3"});
-    }
   }
 
   /**
