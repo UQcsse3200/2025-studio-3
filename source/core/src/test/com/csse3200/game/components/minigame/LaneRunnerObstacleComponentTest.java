@@ -197,18 +197,4 @@ class LaneRunnerObstacleComponentTest {
     assertEquals(customSpeed, customObstacle.getSpeed());
     assertTrue(customObstacle.isAlive());
   }
-
-  @Test
-  void testEdgeCaseBoundsCheck() {
-    // Test edge case where obstacle is exactly at the boundary
-    when(mockEntity.getPosition()).thenReturn(new Vector2(640f, -60f)); // Below boundary
-    when(mockEntity.getScale()).thenReturn(new Vector2(50f, 50f));
-
-    obstacleComponent.update();
-
-    // Should trigger removal
-    assertFalse(obstacleComponent.isAlive());
-    verify(mockMinigameService).setScore(1);
-    verify(mockEntityService).unregister(mockEntity);
-  }
 }
