@@ -921,7 +921,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     final int damage = (defence != null) ? defence.getBaseAttack() : 0;
     int cost = 0;
     if (generator != null) {
-      cost = generator.getCost();
+      List<Entity> entities = new ArrayList<>(areaEntities);
+      int furnaces = 0;
+      for (Entity entity : entities) {
+        GeneratorStatsComponent generatorEntity =
+            entity.getComponent(GeneratorStatsComponent.class);
+        if (generatorEntity != null) {
+          furnaces++;
+        }
+      }
+      cost = generator.getCost() + (50 * furnaces);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1178,7 +1187,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    if (currentWave >= 4) {
+      if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {

@@ -23,11 +23,24 @@ public class UnlockEverything implements Command {
       profile.getWallet().addSkillsPoints(99);
       for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
         node.setUnlocked(true);
+          String currentLevel = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
+          String nextLevel = findNextLevel(currentLevel);
+          ServiceLocator.getProfileService().getProfile().setCurrentLevel(nextLevel);
       }
+      ServiceLocator.getProfileService().saveCurrentProfile();
     } catch (NullPointerException e) {
       logger.debug("This service is not available on this screen.");
       return false;
     }
     return true;
   }
+    private String findNextLevel(String currentLevel) {
+        return switch (currentLevel) {
+            case "levelOne" -> "levelTwo";
+            case "levelTwo" -> "levelThree";
+            case "levelThree" -> "levelFour";
+            case "levelFour" -> "levelFive";
+            default -> "end";
+        };
+    }
 }
