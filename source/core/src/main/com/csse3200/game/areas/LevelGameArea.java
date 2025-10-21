@@ -827,17 +827,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Find all occupied cells (a placed defence or generator)
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
-      if (occ == null) continue;
 
-      if (occ.getComponent(GeneratorStatsComponent.class) != null) {
-        if (occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
+      if (occ == null || 
+        occ.getComponent(GeneratorStatsComponent.class) != null && 
+        occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
           // must be a healer
           continue;
-        }
       }
 
       Vector2 pos = occ.getPosition();
-
       // spawn heal effect on entity
       spawnEffect(
           ServiceLocator.getResourceService()
@@ -926,7 +924,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         // remove the healer after its animation
         ServiceLocator.getRenderService()
             .getStage()
-            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(() -> healDefences())));
+            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(this::healDefences)));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
