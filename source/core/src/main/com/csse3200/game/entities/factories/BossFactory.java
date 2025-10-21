@@ -11,6 +11,7 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.BossAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
+import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.persistence.FileLoader;
@@ -133,6 +134,7 @@ public class BossFactory {
             .addComponent(aiComponent)
             .addComponent(new RobotAnimationController())
             .addComponent(new HitMarkerComponent())
+            .addComponent(new CoinRewardedComponent(config.getCoinsRewarded()))
             .addComponent(animator);
     if (!isGunBot) {
       boss.addComponent(new TouchAttackComponent(PhysicsLayer.NPC, 0f));

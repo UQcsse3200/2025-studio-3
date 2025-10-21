@@ -1,7 +1,9 @@
 package com.csse3200.game.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.inventory.InventoryDisplay;
 import com.csse3200.game.entities.Entity;
@@ -71,6 +73,8 @@ public class InventoryScreen extends ScreenAdapter {
       itemTextures[i] = configService.getItemConfigValues()[i].getAssetPath();
     }
     ServiceLocator.getResourceService().loadTextures(itemTextures);
+    String[] backgroundTextures = {"images/backgrounds/bg.png"};
+    ServiceLocator.getResourceService().loadTextures(backgroundTextures);
     ServiceLocator.getResourceService().loadAll();
   }
 
@@ -94,6 +98,14 @@ public class InventoryScreen extends ScreenAdapter {
   private void createUI() {
     logger.debug("Creating ui");
     Stage stage = ServiceLocator.getRenderService().getStage();
+    // Set background image
+    Texture backgroundTexture =
+        ServiceLocator.getResourceService().getAsset("images/backgrounds/bg.png", Texture.class);
+    Image backgroundImage = new Image(backgroundTexture);
+    backgroundImage.setSize(
+        stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());
+    stage.addActor(backgroundImage);
+
     Entity ui = new Entity();
     ui.addComponent(new InventoryDisplay(game))
         .addComponent(new InputDecorator(stage, 10))
