@@ -130,7 +130,8 @@ public class RobotFactory {
    * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
    * robots.
-   * Note: Gunner Robot does not currently spawn (was removed from levels.json due to projectile issues)
+   * Note: Gunner Robot does not currently spawn (probability of spawning
+   *  was set to 0 to stop it from spawning from levels.json due to projectile issues)
    * @param config A config file that contains the robot's stats.
    * @return A robot entity.
    */
