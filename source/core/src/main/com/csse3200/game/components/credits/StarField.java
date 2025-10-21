@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.csse3200.game.data.credits.Star;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,7 +29,7 @@ public class StarField extends Actor {
 
   private Pixmap makeStar() {
     Pixmap pm = new Pixmap(4, 4, Pixmap.Format.RGBA8888);
-    pm.setColor(new Color(64f/255, 68f/255, 99f/255, 1f));
+    pm.setColor(new Color(64f / 255, 68f / 255, 99f / 255, 1f));
     pm.fillCircle(2, 2, 2);
     return pm;
   }

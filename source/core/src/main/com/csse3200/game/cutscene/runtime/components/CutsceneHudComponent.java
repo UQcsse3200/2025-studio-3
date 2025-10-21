@@ -321,9 +321,10 @@ public class CutsceneHudComponent extends UIComponent {
     characterName.setText(dialogueState.getSpeaker());
     text.setText(dialogueState.getText());
 
-    String skipKey = Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getSkipButton());
+    String skipKey =
+        Input.Keys.toString(ServiceLocator.getSettingsService().getSettings().getSkipButton());
 
-    if (!orchestratorState.getChoiceState().isActive()){
+    if (!orchestratorState.getChoiceState().isActive()) {
       if (dialogueState.isDone()) {
         continueText.setText("Press \"" + skipKey + "\" to continue");
       } else {

@@ -5,11 +5,10 @@ import com.csse3200.game.GdxGame;
 import com.csse3200.game.components.credits.CreditsDisplay;
 import com.csse3200.game.components.credits.CreditsInput;
 import com.csse3200.game.entities.Entity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.List;
 import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CreditsScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(CreditsScreen.class);
@@ -18,10 +17,13 @@ public class CreditsScreen extends BaseScreen {
   /**
    * Constructor for BaseScreen.
    *
-   * @param game               the game instance
+   * @param game the game instance
    */
   public CreditsScreen(GdxGame game) {
-    super(game, Optional.empty(), Optional.of(List.of("images/backgrounds/bg-text.png").toArray(new String[0])));
+    super(
+        game,
+        Optional.empty(),
+        Optional.of(List.of("images/backgrounds/bg-text.png").toArray(new String[0])));
   }
 
   /**
