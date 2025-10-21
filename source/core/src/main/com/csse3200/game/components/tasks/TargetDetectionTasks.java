@@ -1,5 +1,6 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
@@ -119,32 +120,27 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
 
     final float backupOffset = 0.10f;
 
-    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5f) {
+    offsetFrom.set(from.x, from.y - 20).mulAdd(castDir, forwardOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset);
 
-      offsetFrom.set(from.x, from.y + yOffset).mulAdd(castDir, forwardOffset);
-      end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset);
+    boolean didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
-      boolean didHit =
-          physics.raycast(
-              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
+    }
 
-      if (didHit) {
-        Fixture f = tempHit.getFixture();
-        if (f != null && f.getUserData() instanceof Entity e) return e;
-      }
+    // second raycast with small backward offset to catch targets just behind cover
+    offsetFrom.set(from.x, from.y - 20).mulAdd(castDir, -backupOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset + backupOffset);
 
-      // second raycast with small backward offset to catch targets just behind cover
-      offsetFrom.set(from.x, from.y + yOffset).mulAdd(castDir, -backupOffset);
-      end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset + backupOffset);
+    didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
 
-      didHit =
-          physics.raycast(
-              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
-
-      if (didHit) {
-        Fixture f = tempHit.getFixture();
-        if (f != null && f.getUserData() instanceof Entity e) return e;
-      }
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
     }
 
     // fallback
