@@ -286,7 +286,6 @@ public class HotbarDisplay extends UIComponent {
 
     bottomOfScreenTooltip =
         ui.text("""
-                     Left click to drag units onto the map.
                  Right click to cancel drag / delete placed unit.
                   [Deleting a unit refunds half the scrap cost]""");
     Table messageTable = new Table();
@@ -387,7 +386,6 @@ public class HotbarDisplay extends UIComponent {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {
         bottomOfScreenTooltip.setText("""
-                     Left click to drag units onto the map.
                  Right click to cancel drag / delete placed unit.
                   [Deleting a unit refunds half the scrap cost]""");
         insufficientScrapStartTime = -1;

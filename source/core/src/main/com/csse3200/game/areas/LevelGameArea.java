@@ -1085,7 +1085,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Sound sound = ServiceLocator.getResourceService().getAsset("sounds/cha-ching.mp3", Sound.class);
     float volume = ServiceLocator.getSettingsService().getSoundVolume();
     sound.play(volume);
-    logger.info("Playing sound: {}", "sounds/cha-ching.mp3");
+    logger.info("Playing sound: sounds/cha-ching.mp3");
 
     logger.info("Unit deleted at position {}", position);
   }
@@ -1230,6 +1230,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
+        // play win sound
+        Sound sound = ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
+        float volume = ServiceLocator.getSettingsService().getSoundVolume();
+        sound.play(volume);
+        logger.info("Played sound: sounds/level-win.mp3");
       }
 
       GameStateService service = ServiceLocator.getGameStateService();
