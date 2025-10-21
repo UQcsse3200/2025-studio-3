@@ -138,6 +138,8 @@ public class WaveService implements WaveConfigProvider {
 
   /** Tells WaveService to start spawning the next wave */
   public void initialiseNewWave() {
+      logger.info("DEBUG: initialiseNewWave called. currentLevelKey='{}', currentWave will be {}",
+              getCurrentLevelKey(), currentWave + 1);
     // Don't start new waves if level is complete
     if (levelComplete) {
       logger.info("Level complete - no more waves will spawn");
