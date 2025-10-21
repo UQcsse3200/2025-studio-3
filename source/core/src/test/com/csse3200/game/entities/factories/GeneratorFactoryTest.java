@@ -1,6 +1,8 @@
 package com.csse3200.game.entities.factories;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -8,17 +10,20 @@ import static org.mockito.Mockito.when;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.progression.Profile;
 import com.csse3200.game.progression.skilltree.SkillSet;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.ConfigService;
@@ -229,5 +234,55 @@ public class GeneratorFactoryTest {
 
       assert (newHealth == oldHealth + 20);
     }
+  }
+
+  @Test
+  void testGetAnimation() {
+    BaseGeneratorConfig furnace =
+        cfg(
+            "Furnace",
+            "images/entities/defences/forge_1.png",
+            "images/entities/defences/forge.atlas",
+            1,
+            7,
+            25,
+            50);
+    AnimationRenderComponent animator = GeneratorFactory.getAnimationComponent(furnace);
+    assertNotNull(animator);
+    assertTrue(animator.hasAnimation("idle"), "Should have idle animation");
+  }
+
+  @Test
+  void testCreateBaseGenerator() {
+    Entity baseGenerator = GeneratorFactory.createBaseGenerator();
+    baseGenerator.create();
+
+    assertNotNull(baseGenerator, "Entity should not be null");
+
+    assertNotNull(
+        baseGenerator.getComponent(ColliderComponent.class), "ColliderComponent should exist");
+    assertNotNull(
+        baseGenerator.getComponent(PhysicsComponent.class), "PhysicsComponent should exist");
+    assertNotNull(
+        baseGenerator.getComponent(HitboxComponent.class), "HitboxComponent should exist");
+    assertNotNull(
+        baseGenerator.getComponent(HitMarkerComponent.class), "HitMarkerComponent should exist");
+
+    PhysicsComponent physics = baseGenerator.getComponent(PhysicsComponent.class);
+    assertEquals(
+        BodyDef.BodyType.StaticBody, physics.getBody().getType(), "Body type should be StaticBody");
+
+    ColliderComponent collider = baseGenerator.getComponent(ColliderComponent.class);
+    short expectedFilter =
+        (short)
+            (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY | PhysicsLayer.BOSS);
+    assertEquals(
+        PhysicsLayer.NPC,
+        collider.getFixture().getFilterData().categoryBits,
+        "Collision layer should be NPC");
+    assertEquals(
+        expectedFilter,
+        collider.getFixture().getFilterData().maskBits,
+        "Collision mask should be correct");
   }
 }
