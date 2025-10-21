@@ -6,14 +6,12 @@ import static org.mockito.Mockito.when;
 
 import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
+import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WaveService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -124,10 +122,10 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(10, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(5, counts.getOrDefault("standard", 0));
-    assertEquals(3, counts.getOrDefault("fast", 0));
-    assertEquals(2, counts.getOrDefault("tanky", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    assertEquals(5, counts.getOrDefault(RobotType.STANDARD, 0));
+    assertEquals(3, counts.getOrDefault(RobotType.FAST, 0));
+    assertEquals(2, counts.getOrDefault(RobotType.TANKY, 0));
   }
 
   @Test
@@ -161,11 +159,11 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(7, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(7, counts.getOrDefault("fast", 0));
-    assertEquals(0, counts.getOrDefault("standard", 0));
-    assertEquals(0, counts.getOrDefault("tanky", 0));
-    assertEquals(0, counts.getOrDefault("bungee", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    assertEquals(7, counts.getOrDefault(RobotType.FAST, 0));
+    assertEquals(0, counts.getOrDefault(RobotType.STANDARD, 0));
+    assertEquals(0, counts.getOrDefault(RobotType.TANKY, 0));
+    assertEquals(0, counts.getOrDefault(RobotType.BUNGEE, 0));
   }
 
   @Test
@@ -187,9 +185,9 @@ class EntitySpawnTest {
           @Override
           public Map<String, BaseSpawnConfig> getEnemyConfigs() {
             Map<String, BaseSpawnConfig> m = new HashMap<>();
-            m.put("alpha", mockCfg(2, 0.0f));
-            m.put("beta", mockCfg(2, 0.0f));
-            m.put("gamma", mockCfg(2, 0.0f));
+            m.put("fast", mockCfg(2, 0.0f));
+            m.put("tanky", mockCfg(2, 0.0f));
+            m.put("bungee", mockCfg(2, 0.0f));
             return m;
           }
         };
@@ -198,10 +196,10 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(6, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(2, counts.getOrDefault("alpha", 0));
-    assertEquals(2, counts.getOrDefault("beta", 0));
-    assertEquals(2, counts.getOrDefault("gamma", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    assertEquals(2, counts.getOrDefault(RobotType.FAST, 0));
+    assertEquals(2, counts.getOrDefault(RobotType.TANKY, 0));
+    assertEquals(2, counts.getOrDefault(RobotType.BUNGEE, 0));
   }
 
   @Test
@@ -232,8 +230,8 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(4, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(4, counts.getOrDefault("standard", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    assertEquals(4, counts.getOrDefault(RobotType.STANDARD, 0));
   }
 
   @Test
@@ -255,8 +253,8 @@ class EntitySpawnTest {
           @Override
           public Map<String, BaseSpawnConfig> getEnemyConfigs() {
             Map<String, BaseSpawnConfig> m = new HashMap<>();
-            m.put("cheap", mockCfg(2, 0.1f));
-            m.put("expensive", mockCfg(6, 0.9f));
+            m.put("fast", mockCfg(2, 0.1f));
+            m.put("tanky", mockCfg(6, 0.9f));
             return m;
           }
         };
@@ -266,9 +264,9 @@ class EntitySpawnTest {
 
     // 5 budget, cheapest=2 -> expect 2 spawns (2+2=4) and remaining 1 can't afford anything else
     assertEquals(2, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(2, counts.getOrDefault("cheap", 0));
-    assertEquals(0, counts.getOrDefault("expensive", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    assertEquals(2, counts.getOrDefault(RobotType.FAST, 0));
+    assertEquals(0, counts.getOrDefault(RobotType.TANKY, 0));
   }
 
   @Test
@@ -289,8 +287,8 @@ class EntitySpawnTest {
           @Override
           public Map<String, BaseSpawnConfig> getEnemyConfigs() {
             Map<String, BaseSpawnConfig> m = new HashMap<>();
-            m.put("alpha", mockCfg(2, 1.0f));
-            m.put("beta", mockCfg(2, 1.0f));
+            m.put("fast", mockCfg(2, 1.0f));
+            m.put("tanky", mockCfg(2, 1.0f));
             return m;
           }
         };
@@ -299,9 +297,9 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(4, spawner.getSpawnCount());
-    List<String> order = drainOrder(spawner);
-    // Expected deterministic alternation start: alpha, beta, alpha, beta
-    assertEquals(List.of("alpha", "beta", "alpha", "beta"), order);
+    List<RobotType> order = drainOrder(spawner);
+    // Expected deterministic alternation start: fast, tanky, fast, tanky
+    assertEquals(List.of(RobotType.FAST, RobotType.TANKY, RobotType.FAST, RobotType.TANKY), order);
   }
 
   @Test
@@ -322,8 +320,8 @@ class EntitySpawnTest {
           @Override
           public Map<String, BaseSpawnConfig> getEnemyConfigs() {
             Map<String, BaseSpawnConfig> m = new HashMap<>();
-            m.put("freebie", mockCfg(0, 1.0f)); // invalid, should be skipped
-            m.put("soldier", mockCfg(2, 1.0f));
+            m.put("fast", mockCfg(0, 1.0f)); // invalid, should be skipped
+            m.put("tanky", mockCfg(2, 1.0f));
             return m;
           }
         };
@@ -332,9 +330,10 @@ class EntitySpawnTest {
     spawner.spawnEnemiesFromConfig();
 
     assertEquals(3, spawner.getSpawnCount());
-    Map<String, Integer> counts = drainCounts(spawner);
-    assertEquals(3, counts.getOrDefault("soldier", 0));
-    assertEquals(0, counts.getOrDefault("freebie", 0));
+    Map<RobotType, Integer> counts = drainCounts(spawner);
+    // Fast is free, so should be skipped
+    assertEquals(3, counts.getOrDefault(RobotType.TANKY, 0));
+    assertEquals(0, counts.getOrDefault(RobotType.FAST, 0));
   }
 
   // --- helpers ---
@@ -346,18 +345,18 @@ class EntitySpawnTest {
     return cfg;
   }
 
-  private static Map<String, Integer> drainCounts(EntitySpawn spawner) {
-    Map<String, Integer> counts = new HashMap<>();
+  private static Map<RobotType, Integer> drainCounts(EntitySpawn spawner) {
+    Map<RobotType, Integer> counts = new EnumMap<>(RobotType.class);
     int n = spawner.getSpawnCount();
     for (int i = 0; i < n; i++) {
-      String type = spawner.getNextRobotType();
+      RobotType type = spawner.getNextRobotType();
       counts.merge(type, 1, Integer::sum);
     }
     return counts;
   }
 
-  private static List<String> drainOrder(EntitySpawn spawner) {
-    List<String> out = new ArrayList<>();
+  private static List<RobotType> drainOrder(EntitySpawn spawner) {
+    List<RobotType> out = new ArrayList<>();
     int n = spawner.getSpawnCount();
     for (int i = 0; i < n; i++) {
       out.add(spawner.getNextRobotType());

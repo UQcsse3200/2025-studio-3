@@ -4,7 +4,7 @@
       "name": "Standard Robot",
       "atlasPath": "images/entities/enemies/standard_robot.atlas",
       "assetPath": "images/entities/enemies/standard_robot_default_sprite.png",
-      "health": 36,
+      "health": 50,
       "attack": 8,
       "movementSpeed": 20,
       "attackType": "melee",
@@ -22,7 +22,7 @@
       "name": "Fast Robot",
       "atlasPath": "images/entities/enemies/fast_robot.atlas",
       "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
-      "health": 24,
+      "health": 32,
       "attack": 8,
       "movementSpeed": 55,
       "attackType": "melee",
@@ -30,7 +30,7 @@
       "description": "A smaller robot optimised for speed.",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
-      "coinsRewarded": 2,
+      "coinsRewarded": 3,
       "maxTeleports": 0,
 
       "explosionDelay": 0,
@@ -93,8 +93,8 @@
     },
     "jumperRobot": {
       "name": "Jumper Robot",
-      "atlasPath": "images/entities/enemies/fast_robot.atlas",
-      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/jumper_robot.atlas",
+      "assetPath": "images/entities/enemies/jumper_robot_default_sprite.png",
       "health": 40,
       "attack": 10,
       "movementSpeed": 48,
@@ -112,13 +112,13 @@
     },
     "giantRobot": {
       "name": "Giant Robot",
-      "atlasPath": "images/entities/enemies/tanky_robot.atlas",
-      "assetPath": "images/entities/enemies/tanky_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/giant_robot.atlas",
+      "assetPath": "images/entities/enemies/giant_robot_default_sprite.png",
       "health": 200,
       "attack": 18,
       "movementSpeed": 7,
       "attackType": "melee",
-      "scale": 1.5,
+      "scale": 2,
       "description": "A hulking carrier that spawns a minion when low.",
       "teleportCooldownSeconds": 0,
       "teleportChance": 0,
@@ -131,8 +131,8 @@
     },
     "miniRobot": {
       "name": "Mini Robot",
-      "atlasPath": "images/entities/enemies/fast_robot.atlas",
-      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/mini_robot.atlas",
+      "assetPath": "images/entities/enemies/mini_robot_default_sprite.png",
       "health": 24,
       "attack": 6,
       "movementSpeed": 50,
@@ -150,10 +150,10 @@
     },
     "gunnerRobot": {
       "name": "Gunner Robot",
-      "atlasPath": "images/entities/enemies/fast_robot.atlas",
-      "assetPath": "images/entities/enemies/fast_robot_default_sprite.png",
+      "atlasPath": "images/entities/enemies/gunner_robot.atlas",
+      "assetPath": "images/entities/enemies/gunner_robot_default_sprite.png",
       "health": 25,
-      "attack": 8,
+      "attack": 10,
       "attackRange": 500,
       "attackSpeed": 1.5,
       "movementSpeed": 20,
@@ -179,7 +179,7 @@
       "atlasPath": "images/entities/enemies/bomber_robot.atlas",
       "assetPath": "images/entities/enemies/bomber_robot_default_sprite.png",
       "health": 30,
-      "attack": 1000,
+      "attack": 14,
       "movementSpeed": 30,
       "scale": 1,
       "description": "An old teleport robot. The warp core has been replaced with an explosive.",
@@ -190,7 +190,7 @@
       "coinsRewarded": 2,
 
       "explosionDelay": 2.5,
-      "explosionDamage": 10000 // instant death right now
+      "explosionDamage": 10000
     }
   }
 }

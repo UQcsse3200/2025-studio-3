@@ -6,6 +6,7 @@ import com.csse3200.game.entities.configs.BaseLevelConfig;
 import com.csse3200.game.entities.configs.BaseSpawnConfig;
 import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
+import com.csse3200.game.entities.factories.RobotFactory;
 import java.util.*;
 import java.util.LinkedList;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ public class WaveService implements WaveConfigProvider {
   private static final Logger logger = LoggerFactory.getLogger(WaveService.class);
 
   private int currentWave = 0;
-  private String currentLevelKey = "LevelOne";
+  private String currentLevelKey;
   private final List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
@@ -30,7 +31,7 @@ public class WaveService implements WaveConfigProvider {
   private final EntitySpawn entitySpawn;
 
   public interface EnemySpawnCallback {
-    void spawnEnemy(int col, int row, String robotType);
+    void spawnEnemy(int col, int row, RobotFactory.RobotType robotType);
 
     void spawnBoss(int row, BossFactory.BossTypes bossType);
   }
@@ -65,14 +66,8 @@ public class WaveService implements WaveConfigProvider {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
-    this.currentLevelKey = "levelOne";
     resetToInitialState();
     Collections.shuffle(laneOrder);
-    this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
-    if (levelConfig == null) {
-      logger.warn("Level config not found for level {}", this.currentLevelKey);
-      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("levelOne");
-    }
     logger.debug("[WaveService] Wave service created.");
   }
 
@@ -98,7 +93,7 @@ public class WaveService implements WaveConfigProvider {
   public void update(float deltaTime) {
     if (!bossSpawnQueue.isEmpty()) {
       BossFactory.BossTypes bossToSpawn = bossSpawnQueue.poll();
-      if (enemySpawnCallback != null) {
+      if (enemySpawnCallback != null && getCurrentLevelWaveCount() == getCurrentWave()) {
         enemySpawnCallback.spawnBoss(2, bossToSpawn);
       }
     }
@@ -112,10 +107,10 @@ public class WaveService implements WaveConfigProvider {
 
     if (waveActive) {
       timeSinceLastSpawn += deltaTime;
-      float spawnInterval = 5.0f;
+      double spawnInterval = 8.0f / Math.pow(currentWave, 1.5f);
       if (timeSinceLastSpawn >= spawnInterval) {
-        spawnEnemy(getLane());
-        timeSinceLastSpawn -= spawnInterval;
+        spawnNextEnemy(getLane());
+        timeSinceLastSpawn -= (float) spawnInterval;
       }
     }
   }
@@ -148,23 +143,21 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    setCurrentWave(currentWave + 1);
-
-    if (currentWave == 1) {
-      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
+    if (Objects.equals(getCurrentLevelKey(), "levelTwo")) {
+      logger.info("Queuing boss spawn for level 2: SCRAP_TITAN");
       bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
       bossActive = true;
-    } else if (currentWave == 2) {
-      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFour")) {
+      logger.info("Queuing boss spawn for level 4: SAMURAI_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
       bossActive = true;
-    } else if (currentWave == 3) {
-      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFive")) {
+      logger.info("Queuing boss spawn for level 5: GUN_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
       bossActive = true;
     }
 
-    waveActive = false;
+    setCurrentWave(currentWave + 1);
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -202,9 +195,9 @@ public class WaveService implements WaveConfigProvider {
 
     if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
       logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
-
+      endWave();
       int maxWaves = getCurrentLevelWaveCount();
-      if (currentWave >= maxWaves) {
+      if (currentWave >= maxWaves && !bossActive) {
         logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
         levelComplete = true;
         waveActive = false;
@@ -222,7 +215,6 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Final boss defeated! Level complete!");
       levelComplete = true;
       waveActive = false;
-      return;
     }
 
     endWave();
@@ -343,7 +335,7 @@ public class WaveService implements WaveConfigProvider {
     return lane;
   }
 
-  public void spawnEnemy(int laneNumber) {
+  public void spawnNextEnemy(int laneNumber) {
     if (currentEnemyPos >= enemiesToSpawn) {
       return;
     }
@@ -351,9 +343,25 @@ public class WaveService implements WaveConfigProvider {
       logger.warn("No enemy spawn callback set - cannot spawn enemy");
       return;
     }
-    String robotType = entitySpawn.getNextRobotType();
+    RobotFactory.RobotType robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
+  }
+
+  /**
+   * A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+   * function, this does not update the position in the wave
+   *
+   * @param laneNumber The lane to spawn the enemy in
+   * @param robotType The robot type to spawn
+   */
+  public void spawnEnemyDebug(int laneNumber, RobotFactory.RobotType robotType) {
+    if (enemySpawnCallback == null) {
+      logger.warn("No enemy spawn callback set - cannot spawn {}", robotType.get());
+      return;
+    }
+
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
   }
 
   public int getWaveCountForLevel(String levelKey) {
