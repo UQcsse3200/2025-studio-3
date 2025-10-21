@@ -5,7 +5,7 @@
     "health": 1000,
     "attack": 50,
     "scale": 3.0,
-    "speed": 15,
+    "speed": 18,
     "attackType": "punch",
     "coinsRewarded": 20
   },
@@ -13,9 +13,9 @@
     "name": "Samurai Bot",
     "atlasFilePath": "images/entities/enemies/samurai_Bot.atlas",
     "health": 1000,
-    "attack": 35,
+    "attack": 65,
     "scale": 2.5,
-    "speed": 15,
+    "speed": 18,
     "coinsRewarded": 30
 },
   "gunBot": {

@@ -727,7 +727,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void spawnBossProjectile(Entity boss) {
     System.out.println("DEBUG: spawnBossProjectile called for boss at " + boss.getPosition());
 
-    Entity projectile = ProjectileFactory.createBossProjectile(5);
+    Entity projectile = ProjectileFactory.createBossProjectile(35);
 
     Vector2 bossPos = boss.getPosition();
     float projectileX = bossPos.x - (tileSize * 0.5f);
