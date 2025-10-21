@@ -140,39 +140,48 @@ public class CombatStatsComponent extends Component {
 
           // sound
           Sound deathSound;
-          float volume = ServiceLocator.getSettingsService().getSoundVolume();
-          String soundPath = (String) entity.getProperty("soundPath"); // only way I am aware of to find unit type :/
-
           // checks for components unique to defenders
-          if (entity.getComponent(DefenderStatsComponent.class) != null) {
+          String soundPath =
+                  (String) entity.getProperty("soundPath"); // only way I am aware of to find unit type :/
+          if (soundPath == null) return;
+          if (entity.getComponent(DefenderStatsComponent.class) != null
+                  && !soundPath.contains("mortar")) {
               // entity is a defence
               logger.info("Defence has died!");
-              if (soundPath.contains("mortar")) {
-                  deathSound =
-                          ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
-              } else {
-                  deathSound =
-                          ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
-              }
-
-          } else if (entity.getComponent(GeneratorStatsComponent.class) != null) {
-              // entity is a generator
+              ServiceLocator.getProfileService()
+                      .getProfile()
+                      .getStatistics()
+                      .incrementStatistic("defencesLost");
+              deathSound =
+                      ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
+          } else if (entity.getComponent(GeneratorStatsComponent.class) != null
+                  || soundPath.contains("mortar")) {
+              // entity is a generator / mortar
               logger.info("Generator has died!");
-              if (soundPath.contains("healer")) {
-                  deathSound =
-                          ServiceLocator.getResourceService().getAsset("sounds/human-death.mp3", Sound.class);
-              } else {
-                  deathSound =
-                          ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
-              }
-
+              ServiceLocator.getProfileService()
+                      .getProfile()
+                      .getStatistics()
+                      .incrementStatistic("defencesLost");
+              deathSound =
+                      ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
           } else {
               // entity is a robot
+              ServiceLocator.getProfileService()
+                      .getProfile()
+                      .getStatistics()
+                      .incrementStatistic("enemiesKilled");
+              ServiceLocator.getProfileService().getProfile().getWallet().addCoins(1);
+              ServiceLocator.getProfileService()
+                      .getProfile()
+                      .getStatistics()
+                      .incrementStatistic("coinsCollected");
               deathSound =
                       ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
           }
-
-          deathSound.play(volume);
+          if (deathSound != null) {
+              float volume = ServiceLocator.getSettingsService().getSoundVolume();
+              deathSound.play(volume);
+          }
       }
   }
 }

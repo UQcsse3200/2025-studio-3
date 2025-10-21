@@ -285,7 +285,8 @@ public class HotbarDisplay extends UIComponent {
     // Sets a placeholder message and an event to be called from other classes
 
     bottomOfScreenTooltip =
-        ui.text("""
+        ui.text(
+            """
                  Right click to cancel drag / delete placed unit.
                   [Deleting a unit refunds half the scrap cost]""");
     Table messageTable = new Table();
@@ -385,7 +386,8 @@ public class HotbarDisplay extends UIComponent {
     if (insufficientScrapStartTime != -1) {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {
-        bottomOfScreenTooltip.setText("""
+        bottomOfScreenTooltip.setText(
+            """
                  Right click to cancel drag / delete placed unit.
                   [Deleting a unit refunds half the scrap cost]""");
         insufficientScrapStartTime = -1;
