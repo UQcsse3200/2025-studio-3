@@ -21,9 +21,9 @@ public class Arsenal {
    * 0 indicates level 1 is initialised with three defences. This will be used to track which
    * defences should be unlocked on each level */
   private static final String INITIAL_DEFENCE = "levelOne";
-  public static final Map<String, String> ALL_DEFENCES = new HashMap<>();
+  public static final Map<String, BaseDefenderConfig> ALL_DEFENCES = new HashMap<>();
   /* The same as above for generators*/
-  public static final Map<String, String> ALL_GENERATORS = new HashMap<>();
+  public static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();
 
   static {
       loadFromConfig();
@@ -38,12 +38,12 @@ public class Arsenal {
 
           for (Map.Entry<String, BaseDefenderConfig> entry : data.config.defenders.entrySet()) {
               if (!entry.getKey().equals("wall")) {
-                  ALL_DEFENCES.put(entry.getKey(), entry.getValue().getLevelUnlockedOn());
+                  ALL_DEFENCES.put(entry.getKey(), entry.getValue());
               }
           }
 
           for (Map.Entry<String, BaseGeneratorConfig> entry : data.config.generators.entrySet()) {
-              ALL_GENERATORS.put(entry.getKey(), entry.getValue().getLevelUnlockedOn());
+              ALL_GENERATORS.put(entry.getKey(), entry.getValue());
           }
           System.out.println("Loaded defenders: " + data.config.defenders);
       } catch (Exception e) {
@@ -56,16 +56,16 @@ public class Arsenal {
     defences = new ArrayList<>();
     // Adds all default defences to the arsenal
 
-    for (Map.Entry<String, String> entry : ALL_DEFENCES.entrySet()) {
-      if (entry.getValue().equals(INITIAL_DEFENCE)) {
+    for (Map.Entry<String, BaseDefenderConfig> entry : ALL_DEFENCES.entrySet()) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)) {
         defences.add(entry.getKey());
       }
     }
 
     generators = new ArrayList<>();
     // Adds all default generators to the arsenal
-    for (Map.Entry<String, String> entry : ALL_GENERATORS.entrySet()) {
-      if (entry.getValue().equals(INITIAL_DEFENCE)) {
+    for (Map.Entry<String, BaseGeneratorConfig> entry : ALL_GENERATORS.entrySet()) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)) {
         generators.add(entry.getKey());
       }
     }
