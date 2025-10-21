@@ -165,7 +165,7 @@ public class LevelMapTutorial extends UIComponent {
     skipTable.add(skipButton);
     stage.addActor(skipTable);
 
-    ServiceLocator.getGameStateService().addFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
+    ServiceLocator.getTimeSource().setTimeScale(0.01f);
   }
 
   /**
@@ -219,8 +219,7 @@ public class LevelMapTutorial extends UIComponent {
     dialogTable.setVisible(false);
     messageTable.setVisible((false));
     skipTable.setVisible(false);
-    ServiceLocator.getGameStateService()
-        .removeFreezeReason(GameStateService.FreezeReason.USER_PAUSE);
+    ServiceLocator.getTimeSource().setTimeScale(1f);
   }
 
   /**
