@@ -29,6 +29,7 @@ public class Profile {
   private boolean playedMapTutorial; // Whether the player has played the map tutorial before
   private Set<String> completedLevels; // List of completed levels
   private Set<String> unlockedNodes; // List of unlocked nodes
+  private boolean[] soldItems; // Track which shop items are sold (length 3)
 
   /** Creates a new profile with default values. */
   public Profile() {
@@ -46,6 +47,7 @@ public class Profile {
     this.currentLevel = "levelOne";
     this.playedLevelTutorial = false;
     this.playedMapTutorial = false;
+    this.soldItems = new boolean[3]; // Initialize all items as not sold
   }
 
   /** 
@@ -84,6 +86,7 @@ public class Profile {
     this.worldMapY = worldMapCoords.getValue();
     this.worldMapZoomIdx = zoomAndArsenal.getKey();
     this.arsenal = zoomAndArsenal.getValue();
+    this.soldItems = new boolean[3]; // Initialize all items as not sold
   }
 
   /**
@@ -285,5 +288,32 @@ public class Profile {
    */
   public void completeLevel(String levelId) {
     this.completedLevels.add(levelId);
+  }
+
+  /**
+   * Get the sold items array.
+   *
+   * @return the sold items array (length 3)
+   */
+  public boolean[] getSoldItems() {
+    return soldItems;
+  }
+
+  /**
+   * Mark an item as sold.
+   *
+   * @param itemIndex the index of the item to mark as sold (0-2)
+   */
+  public void markItemAsSold(int itemIndex) {
+    if (itemIndex >= 0 && itemIndex < 3) {
+      soldItems[itemIndex] = true;
+    }
+  }
+
+  /**
+   * Reset all sold items (called when shop resets).
+   */
+  public void resetSoldItems() {
+    soldItems = new boolean[3];
   }
 }

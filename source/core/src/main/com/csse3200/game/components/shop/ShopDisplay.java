@@ -9,8 +9,10 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.entities.configs.BaseItemConfig;
@@ -32,10 +34,11 @@ public class ShopDisplay extends UIComponent {
   private ImageButton[] itemSlots = new ImageButton[3];
   private String[] itemKeys = new String[3];
   private Label timerLabel;
-  private Table mainTable;
+  private Table rootTable;
   private TextButton closeButton;
   private final Sound purchasedSound =
       ServiceLocator.getResourceService().getAsset("sounds/item_purchased_sound.mp3", Sound.class);
+  float uiScale = ui.getUIScale();
 
   /** Creates a new ShopDisplay. */
   public ShopDisplay() {
@@ -58,23 +61,34 @@ public class ShopDisplay extends UIComponent {
 
   /** Adds actors to the stage. */
   private void addActors() {
-    // Create main table with fixed dimensions
-    mainTable = new Table();
-    mainTable.setSize(778f, 564f);
-    mainTable.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
+    // Create background image
+    Texture backgroundTexture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/menu_card.png", Texture.class);
+    Image backgroundImage = new Image(backgroundTexture);
+    backgroundImage.setSize(870f * uiScale, 610f * uiScale);
 
-    // Set shop-popup.png as background with fixed size
-    Image backgroundImage =
-        new Image(
-            ServiceLocator.getGlobalResourceService()
-                .getAsset("images/ui/shop-popup.png", Texture.class));
-    backgroundImage.setSize(778f, 564f);
-    backgroundImage.setPosition((stage.getWidth() - 778f) / 2f, (stage.getHeight() - 564f) / 2f);
-    stage.addActor(backgroundImage);
+    // Create content table for shop
+    rootTable = new Table();
+    rootTable.setSize(870f * uiScale, 610f * uiScale);
+    rootTable.center();
 
+    // Add title at the top of the background image
+    Label title = ui.title("Shop");
+    rootTable.add(title).expandX().center().padTop(25f * uiScale).row();
+
+    createShopDisplay();
+
+    // Create stack with background and content
+    Stack stack = new Stack();
+    stack.add(backgroundImage);
+    stack.add(rootTable);
+    stack.setSize(1044f * uiScale, 732f * uiScale);
+    stack.setPosition(
+        (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
+
+    stage.addActor(stack);
     createCloseButton();
-    createShopUI();
-    stage.addActor(mainTable);
   }
 
   /** Creates the close button in the top-left corner. */
@@ -84,33 +98,17 @@ public class ShopDisplay extends UIComponent {
     stage.addActor(closeButton);
   }
 
-  /**
-   * Sets the label's font color to white
-   *
-   * @param label The label to set the font color of
-   */
-  private void whiten(Label label) {
-    Label.LabelStyle st = new Label.LabelStyle(label.getStyle());
-    st.fontColor = Color.WHITE;
-    label.setStyle(st);
-  }
 
-  /** Creates the main shop UI layout. */
-  private void createShopUI() {
-    mainTable.clear();
-    Label titleLabel = ui.title("SHOP");
-    titleLabel.setColor(Color.BLACK);
-    titleLabel.setFontScale(1.5f);
-    mainTable.add(titleLabel).colspan(3).center().padTop(-40).padBottom(34f).row();
+  /** Creates the main shop display layout. */
+  private void createShopDisplay() {
     createTimerDisplay();
-    mainTable.add(timerLabel).colspan(3).center().padBottom(30f).row();
+    rootTable.add(timerLabel).center().padBottom(20f * uiScale).row();
     createItemSlots();
   }
 
   /** Creates and displays the reset timer. */
   private void createTimerDisplay() {
-    timerLabel = new Label("", skin);
-    whiten(timerLabel);
+    timerLabel = ui.subheading("");
     updateTimer();
   }
 
@@ -119,23 +117,26 @@ public class ShopDisplay extends UIComponent {
     if (timerLabel == null) return;
 
     LocalDateTime now = LocalDateTime.now();
-    LocalDateTime nextHour = now.truncatedTo(ChronoUnit.HOURS).plusHours(1);
-    long minutesLeft = ChronoUnit.MINUTES.between(now, nextHour);
-    long secondsLeft = ChronoUnit.SECONDS.between(now, nextHour) % 60;
+    // Calculate next 15-minute interval
+    int currentMinute = now.getMinute();
+    int nextInterval = ((currentMinute / 15) + 1) * 15;
+    if (nextInterval >= 60) {
+      nextInterval = 0;
+    }
+    LocalDateTime nextReset = now.withMinute(nextInterval).withSecond(0).withNano(0);
+    if (nextInterval == 0) {
+      nextReset = nextReset.plusHours(1);
+    }
+    
+    long minutesLeft = ChronoUnit.MINUTES.between(now, nextReset);
+    long secondsLeft = ChronoUnit.SECONDS.between(now, nextReset) % 60;
 
     timerLabel.setText(String.format("Shop resets in: %02d:%02d", minutesLeft, secondsLeft));
   }
 
   /** Recenters the table and background to ensure they stay centered on screen. */
   private void recenterTable() {
-    if (mainTable == null) return;
-
-    // Calculate center position for the fixed 778x564 dimensions
-    float centerX = (stage.getWidth() - 778f) / 2f;
-    float centerY = (stage.getHeight() - 564f) / 2f;
-
-    // Recenter the main table
-    mainTable.setPosition(centerX, centerY);
+    if (rootTable == null) return;
 
     // Update close button position
     if (closeButton != null) {
@@ -145,10 +146,12 @@ public class ShopDisplay extends UIComponent {
           );
     }
 
-    // Recenter the background image if it exists
+    // Recenter the stack if it exists
     for (Actor actor : stage.getActors()) {
-      if (actor instanceof Image image && image.getWidth() == 778f && image.getHeight() == 564f) {
-        image.setPosition(centerX, centerY);
+      if (actor instanceof Stack stack && stack.getWidth() == 1044f * uiScale) {
+        stack.setPosition(
+            (stage.getWidth() - stack.getWidth()) / 2, 
+            (stage.getHeight() - stack.getHeight()) / 2);
         break;
       }
     }
@@ -180,6 +183,8 @@ public class ShopDisplay extends UIComponent {
 
     for (int i = 0; i < 3; i++) {
       BaseItemConfig itemConfig = ServiceLocator.getConfigService().getItemConfig(itemKeys[i]);
+      boolean[] soldItems = ServiceLocator.getProfileService().getProfile().getSoldItems();
+      boolean isSold = soldItems != null && i < soldItems.length && soldItems[i];
 
       // Create item column
       Table itemColumn = new Table();
@@ -187,27 +192,31 @@ public class ShopDisplay extends UIComponent {
       // Item image button
       createItemSlot(i, itemConfig, itemColumn);
 
+      // Always create price table but set visibility for sold items
       Table priceTable = new Table();
 
       Image coinIcon =
           new Image(
               ServiceLocator.getGlobalResourceService()
                   .getAsset("images/entities/currency/coins.png", Texture.class));
-      coinIcon.setSize(COIN_ICON_SIZE, COIN_ICON_SIZE);
-      priceTable.add(coinIcon).size(COIN_ICON_SIZE).padRight(8f);
+      coinIcon.setSize(COIN_ICON_SIZE * uiScale, COIN_ICON_SIZE * uiScale);
+      priceTable.add(coinIcon).size(COIN_ICON_SIZE * uiScale).padRight(8f * uiScale);
 
-      Label priceLabel = new Label(String.valueOf(itemConfig.getCost()), skin);
-      whiten(priceLabel);
-      priceLabel.setFontScale(1.2f);
+      Label priceLabel = ui.subheading(String.valueOf(itemConfig.getCost()));
       priceTable.add(priceLabel);
 
-      itemColumn.add(priceTable).padTop(25f);
+      // Set visibility/opacity for sold items
+      if (isSold) {
+        priceTable.setVisible(false);
+      }
+
+      itemColumn.add(priceTable).padTop(25f * uiScale);
 
       // Add to main item table
-      itemTable.add(itemColumn).padLeft(30f).padRight(30f);
+      itemTable.add(itemColumn).padLeft(30f * uiScale).padRight(30f * uiScale);
     }
 
-    mainTable.add(itemTable).center();
+    rootTable.add(itemTable).center();
   }
 
   /**
@@ -222,23 +231,51 @@ public class ShopDisplay extends UIComponent {
     Texture itemTex =
         ServiceLocator.getResourceService().getAsset(itemConfig.getAssetPath(), Texture.class);
 
+    // Create background window using ui.createWindow
+    Window backgroundWindow = ui.createWindow("");
+    backgroundWindow.setSize(ITEM_SIZE * uiScale, ITEM_SIZE * uiScale);
+
     // Create ImageButton with the item texture
     ImageButton slot = new ImageButton(new TextureRegionDrawable(itemTex));
-    slot.setSize(ITEM_SIZE, ITEM_SIZE);
+    slot.setSize(ITEM_SIZE * uiScale, ITEM_SIZE * uiScale);
 
-    // Add click listener
-    slot.addListener(
-        new ClickListener() {
-          @Override
-          public void clicked(InputEvent event, float x, float y) {
-            logger.debug("Item slot {} clicked ({})", slotIndex, itemConfig.getName());
-            onItemSlotClicked(slotIndex, itemConfig.getAssetPath());
-          }
-        });
+    // Check if item is sold
+    boolean[] soldItems = ServiceLocator.getProfileService().getProfile().getSoldItems();
+    boolean isSold = soldItems != null && slotIndex < soldItems.length && soldItems[slotIndex];
 
-    // Store reference and add to container
+    if (isSold) {
+      // Create sold out overlay - hide the item image
+      Label soldOutLabel = ui.text("Sold Out");
+      soldOutLabel.setColor(Color.GRAY);
+      soldOutLabel.setAlignment(com.badlogic.gdx.utils.Align.center);
+      
+      // Create stack with just background and sold out overlay (no item image)
+      Stack itemStack = new Stack();
+      itemStack.add(backgroundWindow);
+      itemStack.add(soldOutLabel);
+      
+      container.add(itemStack).size(ITEM_SIZE * uiScale).row();
+    } else {
+      // Add click listener only if not sold
+      slot.addListener(
+          new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+              logger.debug("Item slot {} clicked ({})", slotIndex, itemConfig.getName());
+              onItemSlotClicked(slotIndex, itemConfig.getAssetPath());
+            }
+          });
+
+      // Create stack with background and item
+      Stack itemStack = new Stack();
+      itemStack.add(backgroundWindow);
+      itemStack.add(slot);
+      
+      container.add(itemStack).size(ITEM_SIZE * uiScale).row();
+    }
+
+    // Store reference
     itemSlots[slotIndex] = slot;
-    container.add(slot).size(ITEM_SIZE).row();
   }
 
   /**
@@ -301,6 +338,18 @@ public class ShopDisplay extends UIComponent {
         .purchaseShopItem(itemConfig.getCost());
     ServiceLocator.getProfileService().getProfile().getInventory().addItem(itemKey);
 
+    // Mark item as sold
+    int slotIndex = -1;
+    for (int i = 0; i < itemKeys.length; i++) {
+      if (itemKeys[i].equals(itemKey)) {
+        slotIndex = i;
+        break;
+      }
+    }
+    if (slotIndex >= 0) {
+      ServiceLocator.getProfileService().getProfile().markItemAsSold(slotIndex);
+    }
+
     // Play Item purchased sound
     float volume = ServiceLocator.getSettingsService().getSoundVolume();
     purchasedSound.play(volume);
@@ -326,7 +375,13 @@ public class ShopDisplay extends UIComponent {
         .info(
             "Purchase Successful",
             String.format("You have successfully purchased %s!", itemConfig.getName()));
+    
+    // Reset the shop screen to show updated sold status
+    // We need to get the game instance to reset the screen
+    // This will be handled by the ShopActions component
+    entity.getEvents().trigger("resetShop");
   }
+
 
   @Override
   public void draw(SpriteBatch batch) {
@@ -342,5 +397,13 @@ public class ShopDisplay extends UIComponent {
   public void resize() {
     super.resize();
     recenterTable();
+  }
+
+  @Override
+  public void dispose() {
+    if (rootTable != null) {
+      rootTable.clear();
+    }
+    super.dispose();
   }
 }

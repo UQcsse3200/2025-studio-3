@@ -25,11 +25,13 @@ public class ShopRandomizer {
    * @return the indexes of the shop items
    */
   public static int[] getShopItemIndexes(String seed, int min, int max, LocalDateTime dateTime) {
-    // Round down to the nearest hour
-    LocalDateTime hourDateTime = dateTime.withMinute(0).withSecond(0).withNano(0);
+    // Round down to the nearest 15-minute interval
+    int currentMinute = dateTime.getMinute();
+    int intervalMinute = (currentMinute / 15) * 15;
+    LocalDateTime intervalDateTime = dateTime.withMinute(intervalMinute).withSecond(0).withNano(0);
 
-    // Combine seed with the hour timestamp
-    String combinedSeed = seed + "-" + hourDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
+    // Combine seed with the interval timestamp
+    String combinedSeed = seed + "-" + intervalDateTime.toInstant(ZoneOffset.UTC).toEpochMilli();
 
     // Hash the combined seed into an int
     int hash = combinedSeed.hashCode();
@@ -37,10 +39,18 @@ public class ShopRandomizer {
     // Use as seed for Random
     Random random = new Random(hash);
 
-    // Generate 3 random numbers in [min, max]
+    // Generate 3 unique random numbers in [min, max]
     int[] results = new int[3];
+    boolean[] used = new boolean[max - min + 1];
+    
     for (int i = 0; i < 3; i++) {
-      results[i] = random.nextInt((max - min) + 1) + min;
+      int randomIndex;
+      do {
+        randomIndex = random.nextInt((max - min) + 1) + min;
+      } while (used[randomIndex - min]);
+      
+      used[randomIndex - min] = true;
+      results[i] = randomIndex;
     }
 
     return results;
