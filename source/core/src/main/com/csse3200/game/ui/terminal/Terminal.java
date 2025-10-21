@@ -34,7 +34,6 @@ public class Terminal extends Component {
     addCommand("spawnNextRobot", new SpawnNextRobot());
     addCommand("errorDialogue", new ErrorDialogue());
     addCommand("unlockEverything", new UnlockEverything());
-    addCommand("setLevel", new SetLevel());
   }
 
   /**
