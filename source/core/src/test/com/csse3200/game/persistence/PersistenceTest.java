@@ -74,9 +74,7 @@ class PersistenceTest {
           .when(
               () ->
                   FileLoader.writeClass(
-                      any(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
+                      any(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenAnswer(inv -> null);
 
       Files mockFiles = mock(Files.class);
@@ -90,7 +88,7 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  any(Persistence.ProfileSnapshot.class),
+                  any(Profile.class),
                   matches(".*testProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
           atLeastOnce());
@@ -131,14 +129,6 @@ class PersistenceTest {
                   FileLoader.readClass(
                       eq(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenReturn(null);
-      mockFileLoader
-          .when(
-              () ->
-                  FileLoader.readClass(
-                      eq(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
-          .thenReturn(null);
       Savefile savefile = new Savefile("testProfile", 1234567890L, 1);
 
       assertThrows(IllegalStateException.class, () -> Persistence.load(savefile));
@@ -152,9 +142,7 @@ class PersistenceTest {
           .when(
               () ->
                   FileLoader.writeClass(
-                      any(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
+                      any(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenAnswer(inv -> null);
       Files mockFiles = mock(Files.class);
       FileHandle mockRoot = mock(FileHandle.class);
@@ -172,7 +160,7 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  any(Persistence.ProfileSnapshot.class),
+                  any(Profile.class),
                   matches(".*testProfile\\$\\d+\\$2\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
           atLeastOnce());
@@ -186,9 +174,7 @@ class PersistenceTest {
           .when(
               () ->
                   FileLoader.writeClass(
-                      any(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
+                      any(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenAnswer(inv -> null);
       Files mockFiles = mock(Files.class);
       FileHandle mockRoot = mock(FileHandle.class);
@@ -205,7 +191,7 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  any(Persistence.ProfileSnapshot.class),
+                  any(Profile.class),
                   matches(".*\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
           atLeastOnce());
@@ -219,9 +205,7 @@ class PersistenceTest {
           .when(
               () ->
                   FileLoader.writeClass(
-                      any(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
+                      any(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenAnswer(inv -> null);
       Files mockFiles = mock(Files.class);
       FileHandle mockRoot = mock(FileHandle.class);
@@ -235,7 +219,7 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  any(Persistence.ProfileSnapshot.class),
+                  any(Profile.class),
                   matches(".*\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
           atLeastOnce());
@@ -377,9 +361,7 @@ class PersistenceTest {
           .when(
               () ->
                   FileLoader.writeClass(
-                      any(Persistence.ProfileSnapshot.class),
-                      anyString(),
-                      eq(FileLoader.Location.EXTERNAL)))
+                      any(Profile.class), anyString(), eq(FileLoader.Location.EXTERNAL)))
           .thenAnswer(inv -> null);
 
       Persistence.create("newProfile", 1);
@@ -387,7 +369,7 @@ class PersistenceTest {
       mockFileLoader.verify(
           () ->
               FileLoader.writeClass(
-                  any(Persistence.ProfileSnapshot.class),
+                  any(Profile.class),
                   matches(".*newProfile\\$\\d+\\$1\\.json"),
                   eq(FileLoader.Location.EXTERNAL)),
           atLeastOnce());

@@ -100,7 +100,6 @@ public class ShopDisplay extends UIComponent {
     stage.addActor(closeButton);
   }
 
-
   /** Creates the main shop display layout. */
   private void createShopDisplay() {
     createTimerDisplay();
@@ -129,7 +128,7 @@ public class ShopDisplay extends UIComponent {
     if (nextInterval == 0) {
       nextReset = nextReset.plusHours(1);
     }
-    
+
     long minutesLeft = ChronoUnit.MINUTES.between(now, nextReset);
     long secondsLeft = ChronoUnit.SECONDS.between(now, nextReset) % 60;
 
@@ -152,8 +151,7 @@ public class ShopDisplay extends UIComponent {
     for (Actor actor : stage.getActors()) {
       if (actor instanceof Stack stack && stack.getWidth() == 1044f * uiScale) {
         stack.setPosition(
-            (stage.getWidth() - stack.getWidth()) / 2, 
-            (stage.getHeight() - stack.getHeight()) / 2);
+            (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
         break;
       }
     }
@@ -250,12 +248,12 @@ public class ShopDisplay extends UIComponent {
       Label soldOutLabel = ui.text("Sold Out");
       soldOutLabel.setColor(Color.GRAY);
       soldOutLabel.setAlignment(com.badlogic.gdx.utils.Align.center);
-      
+
       // Create stack with just background and sold out overlay (no item image)
       Stack itemStack = new Stack();
       itemStack.add(backgroundWindow);
       itemStack.add(soldOutLabel);
-      
+
       container.add(itemStack).size(ITEM_SIZE * uiScale).row();
     } else {
       // Add click listener only if not sold
@@ -272,7 +270,7 @@ public class ShopDisplay extends UIComponent {
       Stack itemStack = new Stack();
       itemStack.add(backgroundWindow);
       itemStack.add(slot);
-      
+
       container.add(itemStack).size(ITEM_SIZE * uiScale).row();
     }
 
@@ -377,7 +375,7 @@ public class ShopDisplay extends UIComponent {
         .info(
             "Purchase Successful",
             String.format("You have successfully purchased %s!", itemConfig.getName()));
-    
+
     entity.getEvents().trigger("resetShop");
   }
 

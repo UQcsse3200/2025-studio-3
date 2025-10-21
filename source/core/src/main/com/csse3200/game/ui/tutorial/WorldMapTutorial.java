@@ -14,9 +14,7 @@ import com.csse3200.game.services.SettingsService;
 import com.csse3200.game.ui.UIComponent;
 import net.dermetfan.utils.Pair;
 
-/**
- * Displays a step-by-step tutorial overlay for the World Map screen.
- */
+/** Displays a step-by-step tutorial overlay for the World Map screen. */
 public class WorldMapTutorial extends UIComponent {
   /** Full-screen dark overlay to dim the background. */
   private Image overlay;
@@ -61,11 +59,21 @@ public class WorldMapTutorial extends UIComponent {
     String zoomOutKeyName = Input.Keys.toString(Input.Keys.Q);
     String zoomInKeyName = Input.Keys.toString(Input.Keys.K);
 
-    tutorialMessages = new String[] {
-      ("Use " + upKeyName + "/" + leftKeyName + "/" + downKeyName + "/" + rightKeyName + " to move").toUpperCase(),
-      (PRESS + interactKeyName + " to interact").toUpperCase(),
-      (PRESS + zoomOutKeyName + "/" + zoomInKeyName + " to zoom").toUpperCase()
-    };
+    tutorialMessages =
+        new String[] {
+          ("Use "
+                  + upKeyName
+                  + "/"
+                  + leftKeyName
+                  + "/"
+                  + downKeyName
+                  + "/"
+                  + rightKeyName
+                  + " to move")
+              .toUpperCase(),
+          (PRESS + interactKeyName + " to interact").toUpperCase(),
+          (PRESS + zoomOutKeyName + "/" + zoomInKeyName + " to zoom").toUpperCase()
+        };
 
     // Root stack with overlay behind UI
     Stack stack = new Stack();

@@ -52,12 +52,12 @@ public class Profile {
     this.lastShopPeriod = System.currentTimeMillis() / (15 * 60 * 1000); // Current 15-minute period
   }
 
-  /** 
-   * Initialise a profile with the provided values. 
-   * 
-   * Using pairs to avoid a constructor with too many parameters. This is an antipattern and I
-   * do not care. Why is this a thing that can't be turned off?!
-   * 
+  /**
+   * Initialise a profile with the provided values.
+   *
+   * <p>Using pairs to avoid a constructor with too many parameters. This is an antipattern and I do
+   * not care. Why is this a thing that can't be turned off?!
+   *
    * @param nameAndLevel Pair containing the profile name and current level.
    * @param walletAndInventory Pair containing the wallet and inventory.
    * @param skillsetAndStatistics Pair containing the skillset and statistics.
@@ -175,16 +175,16 @@ public class Profile {
 
   /**
    * Gets the saved world map X coordinate.
-   * 
+   *
    * @return the world map X coordinate.
    */
   public float getWorldMapX() {
     return worldMapX;
   }
 
-  /** 
+  /**
    * Gets the saved world map Y coordinate (-1 if unset).
-   * 
+   *
    * @return the world map Y coordinate.
    */
   public float getWorldMapY() {
@@ -193,14 +193,14 @@ public class Profile {
 
   /**
    * Sets the saved world map X coordinate (-1 if unset).
-   * 
+   *
    * @param worldMapX the world map X coordinate.
    */
   public void setWorldMapX(float worldMapX) {
     this.worldMapX = worldMapX;
   }
 
-  /** 
+  /**
    * Gets the saved world map zoom step index (-1 if unset).
    *
    * @return the world map zoom step index.
@@ -209,9 +209,9 @@ public class Profile {
     return worldMapZoomIdx;
   }
 
-  /** 
+  /**
    * Sets the saved world map zoom step index.
-   * 
+   *
    * @param worldMapZoomIdx the world map zoom step index.
    */
   public void setWorldMapZoomIdx(int worldMapZoomIdx) {
@@ -220,7 +220,7 @@ public class Profile {
 
   /**
    * Sets the saved world map Y coordinate.
-   * 
+   *
    * @param worldMapY the world map Y coordinate.
    */
   public void setWorldMapY(float worldMapY) {
@@ -229,23 +229,21 @@ public class Profile {
 
   /**
    * Whether the player has played the level tutorial before.
-   * 
+   *
    * @return true if the player has played the level tutorial before, false otherwise.
    */
   public boolean getPlayedLevelTutorial() {
     return this.playedLevelTutorial;
   }
 
-  /**
-   * Sets a flag to show that the player has played the level tutorial before.
-   */
+  /** Sets a flag to show that the player has played the level tutorial before. */
   public void setPlayedLevelTutorial() {
     this.playedLevelTutorial = true;
   }
 
   /**
    * Whether the player has played the map tutorial before.
-   * 
+   *
    * @return true if the player has played the map tutorial before, false otherwise.
    */
   public boolean getPlayedMapTutorial() {
@@ -313,9 +311,7 @@ public class Profile {
     }
   }
 
-  /**
-   * Reset all sold items (called when shop resets).
-   */
+  /** Reset all sold items (called when shop resets). */
   public void resetSoldItems() {
     soldItems = new boolean[3];
   }
@@ -339,8 +335,8 @@ public class Profile {
   }
 
   /**
-   * Check if the shop period has changed and reset sold items if needed.
-   * This should be called when entering the shop.
+   * Check if the shop period has changed and reset sold items if needed. This should be called when
+   * entering the shop.
    */
   public void checkAndResetShopPeriod() {
     long currentPeriod = System.currentTimeMillis() / (15 * 60 * 1000);

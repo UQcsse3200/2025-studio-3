@@ -49,7 +49,6 @@ public class WorldMapNodeRenderComponent extends UIComponent {
   private static final float MIN_W_FACTOR = 2.2f;
   private static final float MIN_H_FACTOR = 1.35f;
 
-
   /**
    * Constructor for the world map node render component.
    *
@@ -237,8 +236,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
     if (font != null && showPrompt) {
       // Get interaction key name from settings service
-      String interactionKeyName =
-          Input.Keys.toString(settings.getInteractionButton());
+      String interactionKeyName = Input.Keys.toString(settings.getInteractionButton());
       String hint = "Press " + interactionKeyName + " to Enter";
       float sY = cy - drawSize * ARROW_OFFSET - ARROW_SIZE * 0.5f;
 
@@ -282,7 +280,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Draws a label.
-   * 
+   *
    * @param batch the sprite batch
    * @param name the name of the label
    * @param midX the x position of the center
@@ -310,7 +308,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Gets the texture region for a given texture.
-   * 
+   *
    * @param tex the texture
    * @return the texture region
    */
@@ -324,7 +322,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Draws a direction with a label.
-   * 
+   *
    * @param batch the sprite batch
    * @param tex the texture
    * @param pos the position
@@ -333,17 +331,17 @@ public class WorldMapNodeRenderComponent extends UIComponent {
    * @param labelOffset the offset of the label
    */
   private void drawDirWithLabel(
-      SpriteBatch batch, Texture tex, Vector2 pos, WorldMapService.Path def, String dir, Vector2 labelOffset) {
+      SpriteBatch batch,
+      Texture tex,
+      Vector2 pos,
+      WorldMapService.Path def,
+      String dir,
+      Vector2 labelOffset) {
     if (tex == null) return;
 
     // 1) Draw keycap
     batch.setColor(1f, 1f, 1f, def == null ? 0.35f : 1f);
-    batch.draw(
-      regionFor(tex),
-      pos.x,
-      pos.y,
-      ARROW_SIZE,
-      ARROW_SIZE);
+    batch.draw(regionFor(tex), pos.x, pos.y, ARROW_SIZE, ARROW_SIZE);
     batch.setColor(1f, 1f, 1f, 1f);
 
     // 2) Center Letter
@@ -359,13 +357,14 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Draws the center letter.
-   * 
+   *
    * @param batch the sprite batch
    * @param pos the position
    * @param dir the direction
    * @param def the path definition
    */
-  private void drawCenterLetter(SpriteBatch batch, Vector2 pos, String dir, WorldMapService.Path def) {
+  private void drawCenterLetter(
+      SpriteBatch batch, Vector2 pos, String dir, WorldMapService.Path def) {
     font.getData().setScale(FONT_SCALE * 1.10f);
 
     GlyphLayout glyphLayout = new GlyphLayout(font, dir);
@@ -376,7 +375,8 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     drawText(batch, dir, centerX, centerY);
   }
 
-  private void drawPathLabel(SpriteBatch batch, Vector2 pos, WorldMapService.Path def, Vector2 labelOffset) {
+  private void drawPathLabel(
+      SpriteBatch batch, Vector2 pos, WorldMapService.Path def, Vector2 labelOffset) {
     String nodeKey = def.destination();
     LevelType nodeType = LevelType.fromKey(nodeKey);
     String nodeName = nodeType.toString();
@@ -407,7 +407,7 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Draws text.
-   * 
+   *
    * @param batch the sprite batch
    * @param text the text to draw
    * @param x the x position
@@ -420,25 +420,25 @@ public class WorldMapNodeRenderComponent extends UIComponent {
 
   /**
    * Gets the key of the node.
-   * 
+   *
    * @return the key of the node
    */
   public String getKey() {
     return node.getRegistrationKey();
   }
 
-  /** 
+  /**
    * Access the underlying node data object
-   * 
+   *
    * @return the underlying node data object
    */
   public WorldMapNode getNode() {
     return node;
   }
 
-  /** 
+  /**
    * Center position in world coordinates (used by render and hit test)
-   * 
+   *
    * @return the center position in world coordinates
    */
   public Vector2 getCenterWorld() {
@@ -447,18 +447,18 @@ public class WorldMapNodeRenderComponent extends UIComponent {
     return new Vector2(x + nodeSize * 0.5f, y + nodeSize * 0.5f);
   }
 
-  /** 
+  /**
    * Hit radius consistent with on-node logic
-   * 
+   *
    * @return the hit radius
    */
   public float getHitRadius() {
     return Math.max(nodeSize * 0.45f, 36f);
   }
 
-  /** 
+  /**
    * Point-in-node test in world coords
-   * 
+   *
    * @param worldX the x position in world coordinates
    * @param worldY the y position in world coordinates
    * @return true if the point is in the node, false otherwise

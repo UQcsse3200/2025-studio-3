@@ -40,17 +40,27 @@ public class ShopRandomizer {
     Random random = new Random(hash);
 
     // Generate 3 unique random numbers in [min, max]
+    // If the range has fewer than 3 values, allow duplicates
     int[] results = new int[3];
-    boolean[] used = new boolean[max - min + 1];
-    
-    for (int i = 0; i < 3; i++) {
-      int randomIndex;
-      do {
-        randomIndex = random.nextInt((max - min) + 1) + min;
-      } while (used[randomIndex - min]);
-      
-      used[randomIndex - min] = true;
-      results[i] = randomIndex;
+    int rangeSize = max - min + 1;
+
+    if (rangeSize < 3) {
+      // Range too small for 3 unique values, allow duplicates
+      for (int i = 0; i < 3; i++) {
+        results[i] = random.nextInt(rangeSize) + min;
+      }
+    } else {
+      // Generate 3 unique values
+      boolean[] used = new boolean[rangeSize];
+      for (int i = 0; i < 3; i++) {
+        int randomIndex;
+        do {
+          randomIndex = random.nextInt(rangeSize) + min;
+        } while (used[randomIndex - min]);
+
+        used[randomIndex - min] = true;
+        results[i] = randomIndex;
+      }
     }
 
     return results;

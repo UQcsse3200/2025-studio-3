@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.csse3200.game.services.ServiceLocator;
-
 /** Arsenal class to manage the player's unlocked defences. */
 public class Arsenal {
   private final List<String> defences;
@@ -62,7 +60,6 @@ public class Arsenal {
    */
   public void unlockDefence(String defenceKey) {
     defences.add(defenceKey);
-    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("defencesUnlocked");
   }
 
   /**

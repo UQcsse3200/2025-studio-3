@@ -34,8 +34,7 @@ public class SpawnNextRobot implements Command {
       try {
         lane = Integer.parseInt(args.getFirst());
       } catch (NumberFormatException e) {
-        logger.warn(
-            "{} is not a valid number. Spawning in lane {}", args.getFirst(), DEFAULT_LANE);
+        logger.warn("{} is not a valid number. Spawning in lane {}", args.getFirst(), DEFAULT_LANE);
       }
       waveService.spawnNextEnemy(lane);
     }

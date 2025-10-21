@@ -18,7 +18,7 @@ public class WorldMapClickInputComponent extends InputComponent {
 
   /**
    * Constructor for the world map click input component.
-   * 
+   *
    * @param screen the world map screen
    * @param player the player entity
    * @param priority the priority of the input component

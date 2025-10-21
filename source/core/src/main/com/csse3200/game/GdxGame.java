@@ -93,7 +93,7 @@ public class GdxGame extends Game {
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 
-  /** 
+  /**
    * Used for backward compatibility.
    *
    * @param screenType The type of screen to set.
@@ -104,7 +104,7 @@ public class GdxGame extends Game {
 
   /**
    * Sets the game screen to the provided type.
-   * 
+   *
    * @param screenType The type of screen to set.
    * @param levelKey The level key to load (only used for MAIN_GAME screen type).
    */

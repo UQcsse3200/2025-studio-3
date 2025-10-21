@@ -84,7 +84,7 @@ public class WorldMapScreen extends BaseScreen {
         .addComponent(new WorldMapZoomInputComponent(this, 12))
         .addComponent(new WorldMapPanInputComponent(this, 12))
         .addComponent(new WorldMapClickInputComponent(this, playerEntity, 12));
-    
+
     if (!ServiceLocator.getProfileService().getProfile().getPlayedMapTutorial()) {
       ui.addComponent(new WorldMapTutorial());
       ServiceLocator.getProfileService().getProfile().setPlayedMapTutorial();
@@ -95,7 +95,7 @@ public class WorldMapScreen extends BaseScreen {
 
   /**
    * Get the camera component
-   * 
+   *
    * @return the camera component
    */
   public CameraComponent getCameraComponent() {
@@ -142,8 +142,7 @@ public class WorldMapScreen extends BaseScreen {
     camera.getEntity().setPosition(startX, startY);
 
     // Set initial zoom on the underlying camera
-    if (camera.getCamera()
-        instanceof OrthographicCamera orthographicCamera) {
+    if (camera.getCamera() instanceof OrthographicCamera orthographicCamera) {
       orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
     }
 
@@ -285,9 +284,9 @@ public class WorldMapScreen extends BaseScreen {
     smoothRecentering = true;
   }
 
-  /** 
+  /**
    * Clamps the camera to the world bounds.
-   * 
+   *
    * @param camera the camera to clamp
    */
   private void clampCamera(CameraComponent camera) {
@@ -325,8 +324,7 @@ public class WorldMapScreen extends BaseScreen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.Q) && zoomIdx < ZOOM_STEPS.length - 1) {
       zoomIdx++;
-      if (camera.getCamera()
-          instanceof OrthographicCamera orthographicCamera) {
+      if (camera.getCamera() instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom OUT → {}", ZOOM_STEPS[zoomIdx]);
@@ -336,8 +334,7 @@ public class WorldMapScreen extends BaseScreen {
 
     if (Gdx.input.isKeyJustPressed(Input.Keys.K) && zoomIdx > 0) {
       zoomIdx--;
-      if (camera.getCamera()
-          instanceof OrthographicCamera orthographicCamera) {
+      if (camera.getCamera() instanceof OrthographicCamera orthographicCamera) {
         orthographicCamera.zoom = ZOOM_STEPS[zoomIdx];
         clampCamera(camera);
         logger.info("Zoom IN → {}", ZOOM_STEPS[zoomIdx]);
@@ -346,9 +343,9 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-  /** 
+  /**
    * Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out).
-   * 
+   *
    * @param steps the number of steps to adjust the zoom by
    */
   public void stepZoom(int steps) {
@@ -374,7 +371,7 @@ public class WorldMapScreen extends BaseScreen {
   /**
    * Pans the camera by the given screen-space delta (in pixels). Dragging moves the view with the
    * cursor (grab-and-drag behavior).
-   * 
+   *
    * @param deltaScreenX the screen-space delta in the x direction
    * @param deltaScreenY the screen-space delta in the y direction
    */
@@ -413,7 +410,7 @@ public class WorldMapScreen extends BaseScreen {
 
   /**
    * Handles when player enters a node.
-   * 
+   *
    * @param node the node the player has entered
    */
   private void onNodeEnter(WorldMapNode node) {
@@ -435,9 +432,9 @@ public class WorldMapScreen extends BaseScreen {
     }
   }
 
-  /** 
+  /**
    * Returns true if the world-map player is currently moving along a path or between nodes.
-   * 
+   *
    * @return true if the player is currently moving, false otherwise
    */
   public boolean isPlayerCurrentlyMoving() {

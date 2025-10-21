@@ -1,8 +1,6 @@
 package com.csse3200.game.utils;
 
-/**
- * Enum for the names of all the levels and nodes on the world map.
- */
+/** Enum for the names of all the levels and nodes on the world map. */
 public enum LevelType {
   TOWN,
   MINIGAMES,
@@ -15,7 +13,7 @@ public enum LevelType {
 
   /**
    * Converts the level to the display name.
-   * 
+   *
    * @return The display name of the level.
    */
   @Override
@@ -32,9 +30,7 @@ public enum LevelType {
     };
   }
 
-  /**
-   * Converts the level to the key used in the config
-   */
+  /** Converts the level to the key used in the config */
   public String toKey() {
     return switch (this) {
       case TOWN -> "town";
@@ -50,7 +46,7 @@ public enum LevelType {
 
   /**
    * Converts the key to the level type.
-   * 
+   *
    * @param key the key to convert
    * @return the level type
    */

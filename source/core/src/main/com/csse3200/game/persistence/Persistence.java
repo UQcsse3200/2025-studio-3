@@ -32,7 +32,7 @@ public class Persistence {
   private static String getPath(Savefile save) {
     return ROOT_DIR + File.separator + save.toString() + FILE_EXTENSION;
   }
-  
+
   /**
    * Load a user profile from a savefile.
    *
@@ -48,7 +48,6 @@ public class Persistence {
       throw new IllegalStateException("Failed to load profile.");
     }
   }
-
 
   /**
    * Creates a new user profile and immediately persists it to the given slot.

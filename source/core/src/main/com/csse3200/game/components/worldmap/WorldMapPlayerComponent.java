@@ -45,7 +45,9 @@ public class WorldMapPlayerComponent extends UIComponent {
   private static final float PROXIMITY_CHECK_INTERVAL = 0.1f;
 
   // BFS directions for JSON graph
-  private static final Direction[] DIRS = {Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT};
+  private static final Direction[] DIRS = {
+    Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT
+  };
 
   private final Vector2 worldSize;
   private Texture playerTexture;
@@ -170,7 +172,7 @@ public class WorldMapPlayerComponent extends UIComponent {
     WorldMapService svc = ServiceLocator.getWorldMapService();
     Direction direction = mapStringToDirection(pressed);
     if (direction == null) return true; // Invalid direction, block movement
-    
+
     WorldMapService.Path def = svc.getPath(at.getRegistrationKey(), direction);
 
     if (def == null) {
@@ -405,9 +407,9 @@ public class WorldMapPlayerComponent extends UIComponent {
       Map<String, Prev> previousNodes) {
     for (Direction direction : DIRS) {
       WorldMapService.Path pathDef = worldMapService.getPath(currentNode, direction);
-    if (pathDef == null
-        || pathDef.destination() == null
-        || previousNodes.containsKey(pathDef.destination())) {
+      if (pathDef == null
+          || pathDef.destination() == null
+          || previousNodes.containsKey(pathDef.destination())) {
         continue;
       }
       previousNodes.put(pathDef.destination(), new Prev(currentNode, pathDef));
@@ -418,7 +420,7 @@ public class WorldMapPlayerComponent extends UIComponent {
   private List<WorldMapService.Path> reconstructPath(
       Map<String, Prev> previousNodes, String startKey, String targetKey) {
     LinkedList<WorldMapService.Path> path = new LinkedList<>();
-    
+
     String currentNode = targetKey;
     while (!currentNode.equals(startKey)) {
       Prev previousNode = previousNodes.get(targetKey);

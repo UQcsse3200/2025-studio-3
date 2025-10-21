@@ -65,7 +65,10 @@ public class GameOverWindow extends UIComponent {
     container.add(quitButton).pad(8f).row();
     container.setVisible(false);
     stage.addActor(container);
-    ServiceLocator.getProfileService().getProfile().getStatistics().incrementStatistic("levelsLost");
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("levelsLost");
   }
 
   /** Checks the status of the popup display */
