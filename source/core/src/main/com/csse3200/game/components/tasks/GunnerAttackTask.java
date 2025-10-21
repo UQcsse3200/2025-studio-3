@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.components.GeneratorStatsComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,14 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
    */
   public GunnerAttackTask(float attackRange, short targetLayer) {
     super(attackRange, targetLayer);
+  }
+
+  @Override
+  public void start() {
+    super.start();
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+    if (phys == null || phys.getBody() == null) return;
+    phys.getBody().setLinearVelocity(0f, 0f);
   }
 
   @Override
