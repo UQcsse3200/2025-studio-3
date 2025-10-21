@@ -210,6 +210,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the windowed resolution.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZoomInButton()" class="member-name-link">getZoomInButton</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the key assigned to the zoom in button.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZoomOutButton()" class="member-name-link">getZoomOutButton</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the key assigned to the zoom out button.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isVsync()" class="member-name-link">isVsync</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -304,6 +314,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWindowedResolution(net.dermetfan.utils.Pair)" class="member-name-link">setWindowedResolution</a><wbr>(net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;windowedResolution)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the windowed resolution.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setZoomInButton(int)" class="member-name-link">setZoomInButton</a><wbr>(int&nbsp;zoomInButton)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the key assigned to the zoom in button.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setZoomOutButton(int)" class="member-name-link">setZoomOutButton</a><wbr>(int&nbsp;zoomOutButton)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the key assigned to the zoom out button.</div>
 </div>
 </div>
 </div>
@@ -477,6 +497,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the right button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getZoomInButton()">
+<h3>getZoomInButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getZoomInButton</span>()</div>
+<div class="block">Gets the key assigned to the zoom in button.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the zoom in button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getZoomOutButton()">
+<h3>getZoomOutButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getZoomOutButton</span>()</div>
+<div class="block">Gets the key assigned to the zoom out button.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the zoom out button.</dd>
 </dl>
 </section>
 </li>
@@ -675,6 +717,28 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>rightButton</code> - the key assigned to the right button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setZoomInButton(int)">
+<h3>setZoomInButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setZoomInButton</span><wbr><span class="parameters">(int&nbsp;zoomInButton)</span></div>
+<div class="block">Sets the key assigned to the zoom in button.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>zoomInButton</code> - the key assigned to the zoom in button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setZoomOutButton(int)">
+<h3>setZoomOutButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setZoomOutButton</span><wbr><span class="parameters">(int&nbsp;zoomOutButton)</span></div>
+<div class="block">Sets the key assigned to the zoom out button.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>zoomOutButton</code> - the key assigned to the zoom out button.</dd>
 </dl>
 </section>
 </li>

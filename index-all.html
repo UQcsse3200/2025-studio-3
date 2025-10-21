@@ -916,7 +916,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Change the display settings.</div>
 </dd>
-<dt><a href="com/csse3200/game/services/SettingsService.html#changeKeybinds(int,int,int,int,int,int,int)" class="member-name-link">changeKeybinds(int, int, int, int, int, int, int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dt><a href="com/csse3200/game/services/SettingsService.html#changeKeybinds(int,int,int,int,int,int,int,int,int)" class="member-name-link">changeKeybinds(int, int, int, int, int, int, int, int, int)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
 <dd>
 <div class="block">Change the keybinds.</div>
 </dd>
@@ -1021,6 +1021,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/components/tasks/ChaseTask.html#%3Cinit%3E(com.csse3200.game.entities.Entity,int,float,float)" class="member-name-link">ChaseTask(Entity, int, float, float)</a> - Constructor for class com.csse3200.game.components.tasks.<a href="com/csse3200/game/components/tasks/ChaseTask.html" title="class in com.csse3200.game.components.tasks">ChaseTask</a></dt>
 <dd>
 <div class="block">Creates a new chase task.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#checkButtonSettings()" class="member-name-link">checkButtonSettings()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Validates the button settings to ensure they use allowed key bindings and none are Unknown.</div>
 </dd>
 <dt><a href="com/csse3200/game/minigame/CollisionComponent.html#checkCollision(float)" class="member-name-link">checkCollision(float)</a> - Method in class com.csse3200.game.minigame.<a href="com/csse3200/game/minigame/CollisionComponent.html" title="class in com.csse3200.game.minigame">CollisionComponent</a></dt>
 <dd>&nbsp;</dd>
@@ -2920,9 +2924,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Game settings menu component.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html#%3Cinit%3E()" class="member-name-link">GameSettingsMenu()</a> - Constructor for class com.csse3200.game.components.settingsmenu.<a href="com/csse3200/game/components/settingsmenu/GameSettingsMenu.html" title="class in com.csse3200.game.components.settingsmenu">GameSettingsMenu</a></dt>
-<dd>
-<div class="block">Constructor for GameSettingsMenu.</div>
-</dd>
+<dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/screens/MainGameScreen.html#gameStateService" class="member-name-link">gameStateService</a> - Variable in class com.csse3200.game.screens.<a href="com/csse3200/game/screens/MainGameScreen.html" title="class in com.csse3200.game.screens">MainGameScreen</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/services/GameStateService.html" class="type-name-link" title="class in com.csse3200.game.services">GameStateService</a> - Class in <a href="com/csse3200/game/services/package-summary.html">com.csse3200.game.services</a></dt>
@@ -3062,6 +3064,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/WorldMapService.html#getAllNodes()" class="member-name-link">getAllNodes()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/WorldMapService.html" title="class in com.csse3200.game.services">WorldMapService</a></dt>
 <dd>
 <div class="block">Get all registered nodes</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getAllowedKeys()" class="member-name-link">getAllowedKeys()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Retrieves the list of allowed keys for the keybinds.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ProfileService.html#getAllSaves()" class="member-name-link">getAllSaves()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ProfileService.html" title="class in com.csse3200.game.services">ProfileService</a></dt>
 <dd>
@@ -4763,6 +4769,22 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/ui/UIComponent.html#getZIndex()" class="member-name-link">getZIndex()</a> - Method in class com.csse3200.game.ui.<a href="com/csse3200/game/ui/UIComponent.html" title="class in com.csse3200.game.ui">UIComponent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getZoomInButton()" class="member-name-link">getZoomInButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the zoom in button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getZoomInButton()" class="member-name-link">getZoomInButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the zoom in button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#getZoomOutButton()" class="member-name-link">getZoomOutButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the zoom out button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#getZoomOutButton()" class="member-name-link">getZoomOutButton()</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Gets the key assigned to the zoom out button.</div>
+</dd>
 <dt><a href="com/csse3200/game/components/npc/GhostAnimationController.html" class="type-name-link" title="class in com.csse3200.game.components.npc">GhostAnimationController</a> - Class in <a href="com/csse3200/game/components/npc/package-summary.html">com.csse3200.game.components.npc</a></dt>
 <dd>
 <div class="block">This class listens to events relevant to a ghost entity's state and plays the animation when one
@@ -7714,6 +7736,22 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/csse3200/game/cutscene/runtime/components/CharacterImageData.html#setzIndex(int)" class="member-name-link">setzIndex(int)</a> - Method in class com.csse3200.game.cutscene.runtime.components.<a href="com/csse3200/game/cutscene/runtime/components/CharacterImageData.html" title="class in com.csse3200.game.cutscene.runtime.components">CharacterImageData</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setZoomInButton(int)" class="member-name-link">setZoomInButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the zoom in button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setZoomInButton(int)" class="member-name-link">setZoomInButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the zoom in button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/DeserializedSettings.html#setZoomOutButton(int)" class="member-name-link">setZoomOutButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/DeserializedSettings.html" title="class in com.csse3200.game.persistence">DeserializedSettings</a></dt>
+<dd>
+<div class="block">Sets the key assigned to the zoom out button.</div>
+</dd>
+<dt><a href="com/csse3200/game/persistence/Settings.html#setZoomOutButton(int)" class="member-name-link">setZoomOutButton(int)</a> - Method in class com.csse3200.game.persistence.<a href="com/csse3200/game/persistence/Settings.html" title="class in com.csse3200.game.persistence">Settings</a></dt>
+<dd>
+<div class="block">Sets the zoom out button.</div>
+</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/AudioBus.html#SFX" class="member-name-link">SFX</a> - Enum constant in enum class com.csse3200.game.cutscene.models.object.<a href="com/csse3200/game/cutscene/models/object/AudioBus.html" title="enum class in com.csse3200.game.cutscene.models.object">AudioBus</a></dt>
 <dd>
 <div class="block">For (usually) single, quick audio effects.</div>

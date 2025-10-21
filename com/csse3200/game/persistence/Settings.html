@@ -156,6 +156,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkButtonSettings()" class="member-name-link">checkButtonSettings</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Validates the button settings to ensure they use allowed key bindings and none are Unknown.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllowedKeys()" class="member-name-link">getAllowedKeys</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves the list of allowed keys for the keybinds.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="Settings.Mode.html" title="enum class in com.csse3200.game.persistence">Settings.Mode</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAvailableModes()" class="member-name-link">getAvailableModes</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -270,6 +280,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWindowedResolution()" class="member-name-link">getWindowedResolution</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the windowed resolution.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZoomInButton()" class="member-name-link">getZoomInButton</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the key assigned to the zoom in button.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getZoomOutButton()" class="member-name-link">getZoomOutButton</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the key assigned to the zoom out button.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isVsync()" class="member-name-link">isVsync</a>()</code></div>
@@ -390,6 +410,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWindowedResolution(net.dermetfan.utils.Pair)" class="member-name-link">setWindowedResolution</a><wbr>(net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&nbsp;windowedResolution)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the windowed resolution.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setZoomInButton(int)" class="member-name-link">setZoomInButton</a><wbr>(int&nbsp;zoomInButton)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the zoom in button.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setZoomOutButton(int)" class="member-name-link">setZoomOutButton</a><wbr>(int&nbsp;zoomOutButton)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the zoom out button.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
@@ -576,6 +606,28 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="getZoomInButton()">
+<h3>getZoomInButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getZoomInButton</span>()</div>
+<div class="block">Gets the key assigned to the zoom in button.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the zoom in button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getZoomOutButton()">
+<h3>getZoomOutButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getZoomOutButton</span>()</div>
+<div class="block">Gets the key assigned to the zoom out button.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the zoom out button.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="getAvailableResolutions()">
 <h3>getAvailableResolutions</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&gt;</span>&nbsp;<span class="element-name">getAvailableResolutions</span>()</div>
@@ -693,6 +745,17 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>the current mode.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getAllowedKeys()">
+<h3>getAllowedKeys</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html" title="class or interface in java.util" class="external-link">ArrayList</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">getAllowedKeys</span>()</div>
+<div class="block">Retrieves the list of allowed keys for the keybinds.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>a list of integers representing the allowed keys.</dd>
 </dl>
 </section>
 </li>
@@ -829,10 +892,41 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="setZoomInButton(int)">
+<h3>setZoomInButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setZoomInButton</span><wbr><span class="parameters">(int&nbsp;zoomInButton)</span></div>
+<div class="block">Sets the zoom in button.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>zoomInButton</code> - the zoom in button.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setZoomOutButton(int)">
+<h3>setZoomOutButton</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setZoomOutButton</span><wbr><span class="parameters">(int&nbsp;zoomOutButton)</span></div>
+<div class="block">Sets the zoom out button.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>zoomOutButton</code> - the zoom out button.</dd>
+</dl>
+</section>
+</li>
+<li>
 <section class="detail" id="resetKeyBinds()">
 <h3>resetKeyBinds</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetKeyBinds</span>()</div>
 <div class="block">Resets the key binds to their default values.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="checkButtonSettings()">
+<h3>checkButtonSettings</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkButtonSettings</span>()</div>
+<div class="block">Validates the button settings to ensure they use allowed key bindings and none are Unknown. If
+ any button is found to have a key that is not allowed, key bindings are set to their default
+ values.</div>
 </section>
 </li>
 <li>
