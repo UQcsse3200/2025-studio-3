@@ -82,11 +82,23 @@ public class ItemFactory {
    *
    * @return a doom hack item entity
    */
-  public static Entity createdDoomHack() {
+  public static Entity createDoomHack() {
     BaseItemConfig config = configService.getItemConfig("doomhack");
     return createBaseItem()
         .addComponent(new TextureRenderComponent(config.getAssetPath()))
         .addComponent(new ItemComponent(ItemComponent.Type.DOOMHACK));
+  }
+
+  /**
+   * Creates a scrapper entity. Place on a tile to double value of scrap metal for 30 seconds.
+   *
+   * @return a scrapper item entity
+   */
+  public static Entity createScrapper() {
+    BaseItemConfig config = configService.getItemConfig("scrapper");
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.SCRAPPER));
   }
 
   /**

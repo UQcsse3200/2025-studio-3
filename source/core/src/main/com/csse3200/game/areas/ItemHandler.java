@@ -48,7 +48,9 @@ public class ItemHandler {
                 (float) (area.getXOffset() * 0.25 + area.getLevelCols() * area.getTileSize()),
                 (float) (area.getTileSize() * -0.75)));
 
-    if (isDamagingItem(item)) {
+    if (item.getType() == ItemComponent.Type.SCRAPPER) {
+      ServiceLocator.getCurrencyService().add(100);
+    } else if (isDamagingItem(item)) {
       applyAreaDamage(item, entityPos);
     } else {
       applyBuff(item);
@@ -103,15 +105,20 @@ public class ItemHandler {
     String trigger = config.getTrigger();
 
     int total = area.getGrid().getRows() * area.getGrid().getCols();
+
     for (int i = 0; i < total; i++) {
       Entity entity = area.getGrid().getOccupantIndex(i);
-      if (entity == null) continue;
+
+      if (entity == null) {
+        continue;
+      }
 
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
 
         entity.getEvents().trigger(trigger);
         addAnimationOntoDefence(trigger, entity);
+
         logger.info("Start {} on {}", trigger, entity);
 
         Timer.schedule(

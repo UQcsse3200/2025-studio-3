@@ -18,6 +18,7 @@ public class ItemComponent extends Component {
     EMP,
     NUKE,
     DOOMHACK,
+    SCRAPPER
   }
 
   /** Immutable item type assigned upon construction of ItemComponent. */

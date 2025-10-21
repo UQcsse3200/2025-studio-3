@@ -26,7 +26,7 @@ public class CurrencyGeneratorComponent extends Component {
   private final float intervalSec;
 
   /** Currency amount each scrap grants on pick-up */
-  private final int scrapValue;
+  private int scrapValue;
 
   /** Texture path for the scrap sprite */
   private final String scrapTexturePath;

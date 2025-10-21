@@ -246,6 +246,19 @@ public class ItemEffectsService {
             true);
         logger.info("Created doom hack effect");
         break;
+      case "scrapper":
+        spawnEffect(
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/scrapper.atlas", TextureAtlas.class),
+            "scrapper.png",
+            (new Vector2[] {position, bottomCorner}),
+            tileSize,
+            (new float[] {0.1f, 1.5f}),
+            Animation.PlayMode.NORMAL,
+            false,
+            true);
+        logger.info("Created scrapper effect");
+        break;
       default:
         logger.error("Unknown item name");
     }

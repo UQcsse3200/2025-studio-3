@@ -21,7 +21,7 @@
       "description": "Shocks everything within a 3x3 square area. One time use.",
       "eventName": "emp",
       "assetPath": "images/entities/items/emp.png",
-      "cost": 30,
+      "cost": 20,
       "trigger": "damage3x3"
     },
     "grenade": {
@@ -29,7 +29,7 @@
       "description": "Destroys everything within a 3x3 square area. One time use.",
       "eventName": "grenade",
       "assetPath": "images/entities/items/grenade.png",
-      "cost": 30,
+      "cost": 50,
       "trigger": "kill3x3"
     },
     "nuke": {
@@ -58,18 +58,18 @@
     },
     "scrapper": {
       "name": "Scrapper",
-      "description": "All scrap metal recovered from destroyed enemies doubles for 30s. One time use.",
+      "description": "Instantly grants 100 scrap metal in game. One time use",
       "eventName": "scrapper",
       "assetPath": "images/entities/items/scrapper.png",
-      "cost": 40,
-      "trigger": ""
+      "cost": 20,
+      "trigger": "doubleScrapValue"
     },
     "conscriptionOrder": {
       "name": "Conscription Order",
       "description": "The next human placed is placed for free. One time use.",
       "eventName": "conscriptionOrder",
       "assetPath": "images/entities/items/conscriptionOrder.png",
-      "cost": 60,
+      "cost": 30,
       "trigger": ""
     },
     "doomhack": {
