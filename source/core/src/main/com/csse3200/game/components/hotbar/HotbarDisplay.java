@@ -45,7 +45,7 @@ public class HotbarDisplay extends UIComponent {
   private final Array<Image> slotImages = new Array<>();
   private final Array<Image> itemImages = new Array<>();
   private float cellWidth;
-  private Label insufficientScrapMessage;
+  private Label bottomOfScreenTooltip;
   private long insufficientScrapStartTime = -1; // -1 means not active
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
   private final Map<Entity, Label> generatorCostLabels = new HashMap<>();
@@ -109,6 +109,7 @@ public class HotbarDisplay extends UIComponent {
         displayCost.setText(String.valueOf(entityCost));
       }
 
+      displayCost.setFontScale(2f);
       displayCost.setPosition(
           tempUnit.getWidth() / 2f - displayCost.getPrefWidth() / 2f,
           -displayCost.getPrefHeight() - 5f);
@@ -283,11 +284,14 @@ public class HotbarDisplay extends UIComponent {
 
     // Sets a placeholder message and an event to be called from other classes
 
-    insufficientScrapMessage = ui.text("Insufficient Scrap");
-    insufficientScrapMessage.setVisible(false);
+    bottomOfScreenTooltip =
+        ui.text("""
+                     Left click to drag units onto the map.
+                 Right click to cancel drag / delete placed unit.
+                  [Deleting a unit refunds half the scrap cost]""");
     Table messageTable = new Table();
     messageTable.setFillParent(true);
-    messageTable.add(insufficientScrapMessage).expandY().bottom().padBottom(20f);
+    messageTable.add(bottomOfScreenTooltip).expandY().bottom().padBottom(20f);
     stage.addActor(messageTable);
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
   }
@@ -352,8 +356,7 @@ public class HotbarDisplay extends UIComponent {
 
   /** Displays a message when called and starts a timer. */
   private void insufficientScrap() {
-    insufficientScrapMessage.setText("Not enough scrap!");
-    insufficientScrapMessage.setVisible(true);
+    bottomOfScreenTooltip.setText("Not enough scrap!");
     insufficientScrapStartTime = ServiceLocator.getTimeSource().getTime();
   }
 
@@ -383,7 +386,10 @@ public class HotbarDisplay extends UIComponent {
     if (insufficientScrapStartTime != -1) {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {
-        insufficientScrapMessage.setVisible(false);
+        bottomOfScreenTooltip.setText("""
+                     Left click to drag units onto the map.
+                 Right click to cancel drag / delete placed unit.
+                  [Deleting a unit refunds half the scrap cost]""");
         insufficientScrapStartTime = -1;
       }
     }
