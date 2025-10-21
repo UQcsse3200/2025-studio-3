@@ -113,7 +113,8 @@ class ItemEffectsServiceTest {
         3,
         new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
 
     Entity e = captureRegisteredEntity();
     assertEquals(10f, e.getPosition().x);
@@ -135,7 +136,8 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
     verify(entities, never()).register(any());
     verifyNoInteractions(app); // no disposal posted either
   }
@@ -149,7 +151,8 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
 
     Entity e = captureRegisteredEntity();
 
@@ -179,6 +182,7 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 5f},
         Animation.PlayMode.NORMAL,
+        true,
         true);
 
     Entity e = captureRegisteredEntity();
@@ -280,7 +284,8 @@ class ItemEffectsServiceTest {
         2,
         new float[] {0.1f, 30f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
 
     // Registered as usual
     captureRegisteredEntity();
@@ -306,7 +311,8 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 0.2f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
 
     captureRegisteredEntity();
 
@@ -331,7 +337,7 @@ class ItemEffectsServiceTest {
         RuntimeException.class,
         () ->
             ItemEffectsService.spawnEffect(
-                atlas, animator, positions, 1, durations, Animation.PlayMode.NORMAL, false));
+                atlas, animator, positions, 1, durations, Animation.PlayMode.NORMAL, false, true));
 
     // No captureRegisteredEntity() here because never get that far
     verify(resources).getAsset(expectedPath, Sound.class);
@@ -346,7 +352,8 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 1.5f},
         Animation.PlayMode.NORMAL,
-        false);
+        false,
+        true);
 
     verify(entities, never()).register(any());
     // Ensure didn't try to fetch a sound
@@ -418,6 +425,7 @@ class ItemEffectsServiceTest {
         1,
         new float[] {0.1f, 2.0f},
         Animation.PlayMode.NORMAL,
+        true,
         true);
 
     captureRegisteredEntity();

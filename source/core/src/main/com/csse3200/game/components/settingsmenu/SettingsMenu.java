@@ -151,6 +151,7 @@ public class SettingsMenu extends UIComponent {
   @Override
   public void dispose() {
     rootTable.clear();
+    stage.dispose();
     super.dispose();
   }
 }

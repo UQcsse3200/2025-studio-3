@@ -198,6 +198,36 @@ class SettingsTest {
   }
 
   @Test
+  void testGamePlaySettingsResetKeyBindsResetsToDefaults() {
+    Settings settings = new Settings();
+
+    // Change everything away from defaults
+    settings.setDifficulty(Settings.Difficulty.HARD);
+    settings.setPauseButton(Input.Keys.P);
+    settings.setSkipButton(Input.Keys.ENTER);
+    settings.setInteractionButton(Input.Keys.F);
+    settings.setUpButton(Input.Keys.UP);
+    settings.setDownButton(Input.Keys.DOWN);
+    settings.setLeftButton(Input.Keys.LEFT);
+    settings.setRightButton(Input.Keys.RIGHT);
+
+    // Reset and assert defaults
+    settings.resetKeyBinds();
+
+    // Difficulty should not reset
+    assertEquals(Settings.Difficulty.HARD, settings.getDifficulty());
+
+    // Keybinds should reset to defaults (ESCAPE, SPACE, E, W, S, A, D)
+    assertEquals(Input.Keys.ESCAPE, settings.getPauseButton());
+    assertEquals(Input.Keys.SPACE, settings.getSkipButton());
+    assertEquals(Input.Keys.E, settings.getInteractionButton());
+    assertEquals(Input.Keys.W, settings.getUpButton());
+    assertEquals(Input.Keys.S, settings.getDownButton());
+    assertEquals(Input.Keys.A, settings.getLeftButton());
+    assertEquals(Input.Keys.D, settings.getRightButton());
+  }
+
+  @Test
   void testDisplaySettings() {
     try (MockedStatic<EnvironmentUtils> environmentUtilsMock =
         Mockito.mockStatic(EnvironmentUtils.class)) {
