@@ -330,15 +330,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               ENTITY_DEATH_EVENT,
               () -> {
                 spawnEffect(
-                        ServiceLocator.getResourceService()
-                                .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
-                        "shell_explosion",
-                        new Vector2[] {damageTile, damageTile}, // effect stays in place
-                        (int) tileSize, // scale to match tile size
-                        new float[] {0.05f, 0.5f}, // frame duration & total effect time
-                        Animation.PlayMode.NORMAL,
-                        false, // not moving
-                        false);
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                    "shell_explosion",
+                    new Vector2[] {damageTile, damageTile}, // effect stays in place
+                    (int) tileSize, // scale to match tile size
+                    new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                    Animation.PlayMode.NORMAL,
+                    false, // not moving
+                    false);
                 damageRobotsAtPosition(
                     damageTile,
                     tileSize,
