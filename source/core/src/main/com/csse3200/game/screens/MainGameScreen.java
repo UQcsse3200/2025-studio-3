@@ -184,7 +184,8 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/item_shell_explosion.mp3",
     "sounds/harpoon-place.mp3",
     "sounds/healer-place.mp3",
-    "sounds/boxer-place.mp3"
+    "sounds/boxer-place.mp3",
+    "sounds/cha-ching.mp3"
   };
 
   /**
