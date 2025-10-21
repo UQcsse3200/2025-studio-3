@@ -1,5 +1,6 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
@@ -115,13 +116,12 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
 
     // done with the help of OpenAI
-    offsetFrom.set(from.x, from.y - 10);
+    offsetFrom.set(from.x, from.y - 20);
     end.set(offsetFrom).mulAdd(castDir, attackRange);
 
     // find first enemy entity in current entities line of sight in the given direction and range
     boolean didHit =
         physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
-
     if (didHit) {
       Fixture hitFixture = tempHit.getFixture();
       if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
