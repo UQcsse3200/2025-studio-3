@@ -17,7 +17,7 @@ public class WaveService implements WaveConfigProvider {
   private static final Logger logger = LoggerFactory.getLogger(WaveService.class);
 
   private int currentWave = 0;
-  private String currentLevelKey = "LevelOne";
+  private String currentLevelKey;
   private final List<Integer> laneOrder = new ArrayList<>(List.of(0, 1, 2, 3, 4));
   private int enemiesToSpawn = 0;
   private int currentEnemyPos;
@@ -66,14 +66,8 @@ public class WaveService implements WaveConfigProvider {
     this.preparationPhaseActive = false;
     this.preparationPhaseTimer = 0.0f;
     this.enemiesDisposed = 0;
-    this.currentLevelKey = "levelOne";
     resetToInitialState();
     Collections.shuffle(laneOrder);
-    this.levelConfig = ServiceLocator.getConfigService().getLevelConfig(this.currentLevelKey);
-    if (levelConfig == null) {
-      logger.warn("Level config not found for level {}", this.currentLevelKey);
-      this.levelConfig = ServiceLocator.getConfigService().getLevelConfig("levelOne");
-    }
     logger.debug("[WaveService] Wave service created.");
   }
 
@@ -113,10 +107,10 @@ public class WaveService implements WaveConfigProvider {
 
     if (waveActive) {
       timeSinceLastSpawn += deltaTime;
-      float spawnInterval = 5.0f;
+      double spawnInterval = 8.0f / Math.pow(currentWave, 1.5f);
       if (timeSinceLastSpawn >= spawnInterval) {
-        spawnEnemy(getLane());
-        timeSinceLastSpawn -= spawnInterval;
+        spawnNextEnemy(getLane());
+        timeSinceLastSpawn -= (float) spawnInterval;
       }
     }
   }
@@ -149,23 +143,21 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Level complete - no more waves will spawn");
     }
 
-    setCurrentWave(currentWave + 1);
-
-    if (currentWave == 1) {
-      logger.info("Queuing boss spawn for wave 1: SCRAP_TITAN");
+    if (Objects.equals(getCurrentLevelKey(), "levelTwo") && currentWave + 1 == getCurrentLevelWaveCount()) {
+      logger.info("Queuing boss spawn for level 2: SCRAP_TITAN");
       bossSpawnQueue.add(BossFactory.BossTypes.SCRAP_TITAN);
       bossActive = true;
-    } else if (currentWave == 2) {
-      logger.info("Queuing boss spawn for wave 2: SAMURAI_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFour") && currentWave + 1 == getCurrentLevelWaveCount()) {
+      logger.info("Queuing boss spawn for level 4: SAMURAI_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.SAMURAI_BOT);
       bossActive = true;
-    } else if (currentWave == 3) {
-      logger.info("Queuing boss spawn for wave 3: GUN_BOT");
+    } else if (Objects.equals(getCurrentLevelKey(), "levelFive") && currentWave + 1 == getCurrentLevelWaveCount()) {
+      logger.info("Queuing boss spawn for level 5: GUN_BOT");
       bossSpawnQueue.add(BossFactory.BossTypes.GUN_BOT);
       bossActive = true;
     }
 
-    waveActive = false;
+    setCurrentWave(currentWave + 1);
     waveActive = false;
     preparationPhaseActive = true;
     preparationPhaseTimer = 0.0f;
@@ -173,8 +165,13 @@ public class WaveService implements WaveConfigProvider {
     enemiesDisposed = 0;
     int maxLanes = Math.min(currentWave + 1, 5);
 
-    entitySpawn.spawnEnemiesFromConfig();
-    enemiesToSpawn = entitySpawn.getSpawnCount();
+    if(!bossActive){
+        entitySpawn.spawnEnemiesFromConfig();
+        enemiesToSpawn = entitySpawn.getSpawnCount();
+    }else{
+        enemiesToSpawn = 0;
+    }
+
     waveLaneSequence = new ArrayList<>(laneOrder.subList(0, maxLanes));
     Collections.shuffle(waveLaneSequence);
     waveLanePointer = 0;
@@ -203,9 +200,9 @@ public class WaveService implements WaveConfigProvider {
 
     if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
       logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
-
+      endWave();
       int maxWaves = getCurrentLevelWaveCount();
-      if (currentWave >= maxWaves) {
+      if (currentWave >= maxWaves && !bossActive) {
         logger.info("All waves completed for level {}! Level complete!", currentLevelKey);
         levelComplete = true;
         waveActive = false;
@@ -223,7 +220,6 @@ public class WaveService implements WaveConfigProvider {
       logger.info("Final boss defeated! Level complete!");
       levelComplete = true;
       waveActive = false;
-      return;
     }
 
     endWave();
@@ -344,7 +340,7 @@ public class WaveService implements WaveConfigProvider {
     return lane;
   }
 
-  public void spawnEnemy(int laneNumber) {
+  public void spawnNextEnemy(int laneNumber) {
     if (currentEnemyPos >= enemiesToSpawn) {
       return;
     }
@@ -355,6 +351,22 @@ public class WaveService implements WaveConfigProvider {
     RobotFactory.RobotType robotType = entitySpawn.getNextRobotType();
     enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
     currentEnemyPos++;
+  }
+
+  /**
+   * A function to allow debug commands to spawn a specific enemy type Unlike the regular spawnEnemy
+   * function, this does not update the position in the wave
+   *
+   * @param laneNumber The lane to spawn the enemy in
+   * @param robotType The robot type to spawn
+   */
+  public void spawnEnemyDebug(int laneNumber, RobotFactory.RobotType robotType) {
+    if (enemySpawnCallback == null) {
+      logger.warn("No enemy spawn callback set - cannot spawn {}", robotType.get());
+      return;
+    }
+
+    enemySpawnCallback.spawnEnemy(9, laneNumber, robotType);
   }
 
   public int getWaveCountForLevel(String levelKey) {

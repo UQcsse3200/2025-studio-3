@@ -42,6 +42,9 @@ public class GeneratorFactory {
         .getEvents()
         .addListener(
             HEAL, () -> defender.getComponent(GeneratorStatsComponent.class).addHealth(20));
+
+    // add sound path
+    defender.setProperty("soundPath", config.getSoundPath());
     return defender;
   }
 
