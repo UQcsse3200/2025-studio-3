@@ -40,22 +40,6 @@
       "cost": 100,
       "trigger": "killOnScreen"
     },
-    "shield": {
-      "name": "Shield",
-      "description": "Provides placed defences with temporary invincibility for 15s. One time use.",
-      "eventName": "shield",
-      "assetPath": "images/entities/items/shield.png",
-      "cost": 50,
-      "trigger": ""
-    },
-    "charmHack": {
-      "name": "Charm Hack",
-      "description": "Hacks an enemy robot, turning it to your side. One time use.",
-      "eventName": "charmHack",
-      "assetPath": "images/entities/items/charmHack.png",
-      "cost": 75,
-      "trigger": ""
-    },
     "scrapper": {
       "name": "Scrapper",
       "description": "Instantly grants 100 scrap metal in game. One time use",
@@ -63,14 +47,6 @@
       "assetPath": "images/entities/items/scrapper.png",
       "cost": 20,
       "trigger": "doubleScrapValue"
-    },
-    "conscriptionOrder": {
-      "name": "Conscription Order",
-      "description": "The next human placed is placed for free. One time use.",
-      "eventName": "conscriptionOrder",
-      "assetPath": "images/entities/items/conscriptionOrder.png",
-      "cost": 30,
-      "trigger": ""
     },
     "doomhack": {
       "name": "Doom Hack",
