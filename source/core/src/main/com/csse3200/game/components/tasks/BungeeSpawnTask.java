@@ -1,8 +1,10 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.rendering.AnimationRenderComponent;
+import com.csse3200.game.services.ServiceLocator;
 
 /**
  * Spawning behaviour component for bungee robots. Upon spawning, play teleport animation, and don't
@@ -22,6 +24,10 @@ public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
     // Starts the teleport animation
     this.finished = false;
     this.owner.getEntity().getEvents().trigger("teleportReappearStart");
+    // Plays the teleport sound
+    Sound teleportSound =
+        ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
+    teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
   }
 
   /**

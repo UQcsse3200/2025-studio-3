@@ -1,5 +1,6 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
@@ -90,6 +91,10 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
       // a priority of -1. Therefore, if we aren't teleporting, we should start teleporting.
       currentState = State.DISAPPEARING;
       owner.getEntity().getEvents().trigger("teleportDisappearStart");
+      // Plays the teleport sound
+      Sound teleportSound =
+          ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
+      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
     } else if (currentState == State.DISAPPEARING) {
       AnimationRenderComponent animator =
           owner.getEntity().getComponent(AnimationRenderComponent.class);
@@ -100,6 +105,10 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
         currentState = State.REAPPEARING;
         performTeleport();
         owner.getEntity().getEvents().trigger("teleportReappearStart");
+        // Plays the teleport sound
+        Sound teleportSound =
+            ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
+        teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
       }
     } else if (currentState == State.REAPPEARING) {
       AnimationRenderComponent animator =
