@@ -167,9 +167,6 @@
       "projectileType": "enemyProjectile",
       "targetLayer": "DEFENCE",
       "attackType": "ranged",
-      "teleportCooldownSeconds": 4,
-      "teleportChance": 0.6,
-      "maxTeleports": 3,
 
       "explosionDelay": 0,
       "explosionDamage": 0

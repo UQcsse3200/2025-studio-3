@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Allows an entity to attack the closest target entity from a list of potential targets. This task
- * runs when there is a target within the entities range of attack and in the same lane.
+ * Allows an entity to attack the closest target entity. This task runs when there is a target
+ * within the defense entities range of attack, in the given direction and in the same lane.
  */
 public class AttackTask extends TargetDetectionTasks {
   // cooldown fields
@@ -22,7 +22,7 @@ public class AttackTask extends TargetDetectionTasks {
    *
    * @param attackRange the maximum distance the entity can find a target to attack
    * @param attackSpeed attacking speed of the entity
-   * @param direction the direction the projectile will travel
+   * @param direction the direction the projectile will travel/the direction of attack
    */
   public AttackTask(float attackRange, float attackSpeed, AttackDirection direction) {
     super(attackRange, direction);
@@ -44,7 +44,7 @@ public class AttackTask extends TargetDetectionTasks {
 
   /**
    * Starts the attack task. The closest visible target within the entity's attack range is found
-   * and ATTACK LOGIC BEGINS.
+   * and an event listener is triggered to start attack logic.
    */
   @Override
   public void start() {
@@ -55,6 +55,11 @@ public class AttackTask extends TargetDetectionTasks {
   }
 
   /** Updates the task each game frame */
+  /**
+   * Updates the attack logic each game frame. If a valid target is found in range and the correct
+   * lane, and enough time has passed since the last attack, a "fire" event is triggered to spawn
+   * and fire a projectile.
+   */
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
