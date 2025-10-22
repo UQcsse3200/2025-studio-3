@@ -246,6 +246,9 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getWaveService().setCurrentLevel(this.level);
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+    // Apply saved gameplay speed so effect matches HUD selection across screen transitions
+    float savedScale = ServiceLocator.getSettingsService().getGameplaySpeedScale();
+    ServiceLocator.getTimeSource().setTimeScale(savedScale);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
     loadAssets();

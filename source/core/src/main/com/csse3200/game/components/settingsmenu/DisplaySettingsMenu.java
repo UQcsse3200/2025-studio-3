@@ -1,8 +1,10 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
@@ -70,9 +72,9 @@ public class DisplaySettingsMenu extends UIComponent {
 
     // Add change listener to show/hide resolution row based on display mode
     displayModeSelect.addListener(
-        new ClickListener() {
+        new ChangeListener() {
           @Override
-          public void clicked(InputEvent event, float x, float y) {
+          public void changed(ChangeEvent event, Actor actor) {
             String selectedMode = displayModeSelect.getSelected();
             boolean isWindowed = "WINDOWED".equals(selectedMode);
             resolutionLabel.setVisible(isWindowed);
@@ -100,9 +102,9 @@ public class DisplaySettingsMenu extends UIComponent {
 
     // Add change listener to apply resolution change immediately
     resolutionSelect.addListener(
-        new ClickListener() {
+        new ChangeListener() {
           @Override
-          public void clicked(InputEvent event, float x, float y) {
+          public void changed(ChangeEvent event, Actor actor) {
             applyResolutionChange();
           }
         });
