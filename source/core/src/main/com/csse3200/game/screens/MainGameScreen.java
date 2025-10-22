@@ -65,7 +65,6 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/enemies/samurai_Bot8.png",
     "images/entities/enemies/samurai_Bot9.png",
     "images/entities/enemies/samurai_Bot10.png",
-    "images/entities/enemies/samurai_Bot11.png",
     "images/entities/enemies/gun_Bot.png",
     "images/entities/enemies/gun_Bot2.png",
     "images/entities/enemies/gun_Bot3.png",
