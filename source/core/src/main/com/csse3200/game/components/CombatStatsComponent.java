@@ -148,16 +148,33 @@ public class CombatStatsComponent extends Component {
           && !soundPath.contains("mortar")) {
         // entity is a defence
         logger.info("Defence has died!");
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesLost");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
       } else if (entity.getComponent(GeneratorStatsComponent.class) != null
           || soundPath.contains("mortar")) {
         // entity is a generator / mortar
         logger.info("Generator has died!");
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesLost");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/generator-death.mp3", Sound.class);
       } else {
         // entity is a robot
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("enemiesKilled");
+        ServiceLocator.getProfileService().getProfile().getWallet().addCoins(1);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("coinsCollected");
         deathSound =
             ServiceLocator.getResourceService().getAsset("sounds/robot-death.mp3", Sound.class);
       }

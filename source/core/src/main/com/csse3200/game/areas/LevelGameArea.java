@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
  * Creates a level in the game, creates the map, a tiled grid for the playing area and a player unit
  * inventory allowing the player to add units to the grid.
  */
+@SuppressWarnings("java:S1854") // SonarQube is throwing false positives for useless variables.
 public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float X_MARGIN_TILES = 2f;
   private static final float Y_MARGIN_TILES = 1f;
@@ -194,10 +195,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(overlayEntity);
 
     // tutorial for Level 1
-    if ("levelOne".equals(currentLevelKey)) {
+    if ("levelOne".equals(currentLevelKey)
+        && !ServiceLocator.getProfileService().getProfile().getPlayedLevelTutorial()) {
       Entity tutorialEntity = new Entity();
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);
+      // Mark as played only after the tutorial is shown
+      // This is deferred to when the tutorial ends
     }
   }
 
@@ -293,7 +297,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   void createLevelCompleteEntity() {
     // Handles the level completion window UI
     this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    levelCompleteEntity.addComponent(new LevelCompletedWindow(currentLevelKey));
     spawnEntity(this.levelCompleteEntity);
   }
 
@@ -596,6 +600,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         && tag.getType() != ProjectileType.SHELL) {
       projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
     }
+
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("shotsFired");
     spawnEntity(projectile); // adds to area and entity service
   }
 
@@ -781,6 +790,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   @Override
   public void spawnUnit(int position) {
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("defencesPlanted");
     if (isPlacementLocked()) {
       logger.debug("Ignoring spawn request while placement is locked");
       resetSelectionUI();
@@ -863,7 +876,26 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     // Find all occupied cells (a placed defence or generator)
     for (int i = 0; i < total; i++) {
       Entity occ = grid.getOccupantIndex(i);
-      if (occ == null) continue;
+
+      if (occ == null
+          || occ.getComponent(GeneratorStatsComponent.class) != null
+              && occ.getComponent(GeneratorStatsComponent.class).getScrapValue() == 0) {
+        // must be a healer
+        continue;
+      }
+
+      Vector2 pos = occ.getPosition();
+      // spawn heal effect on entity
+      spawnEffect(
+          ServiceLocator.getResourceService()
+              .getAsset("images/effects/hp-up.atlas", TextureAtlas.class),
+          "hp-up",
+          (new Vector2[] {pos, pos}),
+          (int) tileSize,
+          (new float[] {0.1f, 1.85f}),
+          Animation.PlayMode.NORMAL,
+          false,
+          true);
 
       logger.info("Healing entity at grid index {}", i);
       occ.getEvents().trigger(HEAL);
@@ -888,7 +920,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     itemHandler.handleItemUse(item, worldPos);
-    tile.getComponent(TileStorageComponent.class).removeTileUnit();
     return true;
   }
 
@@ -940,8 +971,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       } else {
         // healer entity, no scrap & kills itself after one animation cycle
         logger.info("Healer placed");
-        healDefences();
         // remove the healer after its animation
+        ServiceLocator.getRenderService()
+            .getStage()
+            .addAction(Actions.sequence(Actions.delay(0.55f), Actions.run(this::healDefences)));
         ServiceLocator.getRenderService()
             .getStage()
             .addAction(
