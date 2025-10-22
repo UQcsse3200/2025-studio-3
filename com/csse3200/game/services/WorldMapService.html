@@ -91,8 +91,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">WorldMapService</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
-<div class="block">Service for managing world map nodes dynamically. Allows registration of screens/levels without
- requiring a static JSON file.</div>
+<div class="block">Service for managing world map nodes and their navigation paths. Uses hardcoded path data instead
+ of JSON configuration.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -105,9 +105,21 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Class</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="WorldMapService.PathDef.html" class="type-name-link" title="class in com.csse3200.game.services">WorldMapService.PathDef</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="WorldMapService.Direction.html" class="type-name-link" title="enum class in com.csse3200.game.services">WorldMapService.Direction</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Enum for the directions on the world map.</div>
+</div>
+<div class="col-first odd-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="WorldMapService.Directions.html" class="type-name-link" title="class in com.csse3200.game.services">WorldMapService.Directions</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Record type for directions.</div>
+</div>
+<div class="col-first even-row-color"><code>static final record&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="WorldMapService.Path.html" class="type-name-link" title="class in com.csse3200.game.services">WorldMapService.Path</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Record type for a path.</div>
+</div>
 </div>
 </section>
 </li>
@@ -138,62 +150,61 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyStatesFrom(com.csse3200.game.progression.Profile,java.util.Set)" class="member-name-link">applyStatesFrom</a><wbr>(<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;defaultUnlocked)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#applyState()" class="member-name-link">applyState</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Apply the profile state to the world map nodes.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearNodes()" class="member-name-link">clearNodes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Clear all registered nodes</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findNodeAt(float,float)" class="member-name-link">findNodeAt</a><wbr>(float&nbsp;x,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearPlayer()" class="member-name-link">clearPlayer</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Clear the player entity</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findNodeAt(float,float)" class="member-name-link">findNodeAt</a><wbr>(float&nbsp;x,
  float&nbsp;y)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllNodes()" class="member-name-link">getAllNodes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Get all registered nodes</div>
+<div class="block">Find a node at a given position with tolerance for click detection</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNode(java.lang.String)" class="member-name-link">getNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Retrieve a map node</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="WorldMapService.PathDef.html" title="class in com.csse3200.game.services">WorldMapService.PathDef</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPath(java.lang.String,java.lang.String)" class="member-name-link">getPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentNodeKey,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyName)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayerEntity()" class="member-name-link">getPlayerEntity</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#loadPathConfig(java.lang.String)" class="member-name-link">loadPathConfig</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;internalPath)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lockNode(java.lang.String,java.lang.String)" class="member-name-link">lockNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lockReason)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Lock a specific node</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerNode(com.csse3200.game.ui.WorldMapNode,java.lang.String)" class="member-name-link">registerNode</a><wbr>(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;node,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodesList()" class="member-name-link">getNodesList</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Register a new node on the world map</div>
+<div class="block">Get all registered nodes</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNodesMap()" class="member-name-link">getNodesMap</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get all registered nodes as a map</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="WorldMapService.Path.html" title="class in com.csse3200.game.services">WorldMapService.Path</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPath(java.lang.String,com.csse3200.game.services.WorldMapService.Direction)" class="member-name-link">getPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentNodeKey,
+ <a href="WorldMapService.Direction.html" title="enum class in com.csse3200.game.services">WorldMapService.Direction</a>&nbsp;direction)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets a path definition for a specific node and direction.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="WorldMapService.Directions.html" title="class in com.csse3200.game.services">WorldMapService.Directions</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPathsMap()" class="member-name-link">getPathsMap</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get all registered paths</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayer()" class="member-name-link">getPlayer</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the player entity</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerNodeRenderComponent(com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent)" class="member-name-link">registerNodeRenderComponent</a><wbr>(<a href="../components/worldmap/WorldMapNodeRenderComponent.html" title="class in com.csse3200.game.components.worldmap">WorldMapNodeRenderComponent</a>&nbsp;renderComponent)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayer(com.csse3200.game.entities.Entity)" class="member-name-link">setPlayer</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Register a node render component for proximity updates</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerPlayer(com.csse3200.game.entities.Entity)" class="member-name-link">registerPlayer</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateNodeProximity(com.csse3200.game.ui.WorldMapNode)" class="member-name-link">updateNodeProximity</a><wbr>(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;nearbyNode)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Update all node render components with the current nearby node</div>
+<div class="block">Set the player entity</div>
 </div>
 </div>
 </div>
@@ -228,28 +239,32 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="registerPlayer(com.csse3200.game.entities.Entity)">
-<h3>registerPlayer</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerPlayer</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getPlayerEntity()">
-<h3>getPlayerEntity</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getPlayerEntity</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="registerNode(com.csse3200.game.ui.WorldMapNode,java.lang.String)">
-<h3>registerNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerNode</span><wbr><span class="parameters">(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;node,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key)</span></div>
-<div class="block">Register a new node on the world map</div>
+<section class="detail" id="setPlayer(com.csse3200.game.entities.Entity)">
+<h3>setPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlayer</span><wbr><span class="parameters">(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;player)</span></div>
+<div class="block">Set the player entity</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>node</code> - The node to register</dd>
-<dd><code>key</code> - The key to register the node with</dd>
+<dd><code>player</code> - the player entity</dd>
 </dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPlayer()">
+<h3>getPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getPlayer</span>()</div>
+<div class="block">Get the player entity</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the player entity</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="clearPlayer()">
+<h3>clearPlayer</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearPlayer</span>()</div>
+<div class="block">Clear the player entity</div>
 </section>
 </li>
 <li>
@@ -266,9 +281,9 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="getAllNodes()">
-<h3>getAllNodes</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</span>&nbsp;<span class="element-name">getAllNodes</span>()</div>
+<section class="detail" id="getNodesList()">
+<h3>getNodesList</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</span>&nbsp;<span class="element-name">getNodesList</span>()</div>
 <div class="block">Get all registered nodes</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -277,45 +292,32 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="applyStatesFrom(com.csse3200.game.progression.Profile,java.util.Set)">
-<h3>applyStatesFrom</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyStatesFrom</span><wbr><span class="parameters">(<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;defaultUnlocked)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="lockNode(java.lang.String,java.lang.String)">
-<h3>lockNode</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">lockNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;key,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;lockReason)</span></div>
-<div class="block">Lock a specific node</div>
+<section class="detail" id="getNodesMap()">
+<h3>getNodesMap</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&gt;</span>&nbsp;<span class="element-name">getNodesMap</span>()</div>
+<div class="block">Get all registered nodes as a map</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>key</code> - The key of the node to lock</dd>
-<dd><code>lockReason</code> - The reason the node is locked</dd>
+<dt>Returns:</dt>
+<dd>Map of all nodes</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="registerNodeRenderComponent(com.csse3200.game.components.worldmap.WorldMapNodeRenderComponent)">
-<h3>registerNodeRenderComponent</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerNodeRenderComponent</span><wbr><span class="parameters">(<a href="../components/worldmap/WorldMapNodeRenderComponent.html" title="class in com.csse3200.game.components.worldmap">WorldMapNodeRenderComponent</a>&nbsp;renderComponent)</span></div>
-<div class="block">Register a node render component for proximity updates</div>
+<section class="detail" id="getPathsMap()">
+<h3>getPathsMap</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="WorldMapService.Directions.html" title="class in com.csse3200.game.services">WorldMapService.Directions</a>&gt;</span>&nbsp;<span class="element-name">getPathsMap</span>()</div>
+<div class="block">Get all registered paths</div>
 <dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>renderComponent</code> - the render component to register</dd>
+<dt>Returns:</dt>
+<dd>Map of all paths</dd>
 </dl>
 </section>
 </li>
 <li>
-<section class="detail" id="updateNodeProximity(com.csse3200.game.ui.WorldMapNode)">
-<h3>updateNodeProximity</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateNodeProximity</span><wbr><span class="parameters">(<a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a>&nbsp;nearbyNode)</span></div>
-<div class="block">Update all node render components with the current nearby node</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>nearbyNode</code> - the node that the player is currently near, or null if none</dd>
-</dl>
+<section class="detail" id="applyState()">
+<h3>applyState</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">applyState</span>()</div>
+<div class="block">Apply the profile state to the world map nodes.</div>
 </section>
 </li>
 <li>
@@ -326,23 +328,33 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="loadPathConfig(java.lang.String)">
-<h3>loadPathConfig</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">loadPathConfig</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;internalPath)</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="getPath(java.lang.String,java.lang.String)">
-<h3>getPath</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="WorldMapService.PathDef.html" title="class in com.csse3200.game.services">WorldMapService.PathDef</a></span>&nbsp;<span class="element-name">getPath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentNodeKey,
- <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;keyName)</span></div>
-</section>
-</li>
-<li>
 <section class="detail" id="findNodeAt(float,float)">
 <h3>findNodeAt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../ui/WorldMapNode.html" title="class in com.csse3200.game.ui">WorldMapNode</a></span>&nbsp;<span class="element-name">findNodeAt</span><wbr><span class="parameters">(float&nbsp;x,
  float&nbsp;y)</span></div>
+<div class="block">Find a node at a given position with tolerance for click detection</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - the x position in world coordinates</dd>
+<dd><code>y</code> - the y position in world coordinates</dd>
+<dt>Returns:</dt>
+<dd>the node, or null if not found</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getPath(java.lang.String,com.csse3200.game.services.WorldMapService.Direction)">
+<h3>getPath</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="WorldMapService.Path.html" title="class in com.csse3200.game.services">WorldMapService.Path</a></span>&nbsp;<span class="element-name">getPath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentNodeKey,
+ <a href="WorldMapService.Direction.html" title="enum class in com.csse3200.game.services">WorldMapService.Direction</a>&nbsp;direction)</span></div>
+<div class="block">Gets a path definition for a specific node and direction.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>currentNodeKey</code> - the current node's key</dd>
+<dd><code>direction</code> - the direction</dd>
+<dt>Returns:</dt>
+<dd>the path definition, or null if not found</dd>
+</dl>
 </section>
 </li>
 </ul>

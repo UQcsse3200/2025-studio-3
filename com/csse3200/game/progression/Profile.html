@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <p>Summary:</p>
 <ul>
 <li>Nested</li>
-<li><a href="#field-summary">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
@@ -46,7 +46,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Detail:</p>
 <ul>
-<li><a href="#field-detail">Field</a></li>
+<li>Field</li>
 <li><a href="#constructor-detail">Constr</a></li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -58,13 +58,13 @@ loadScripts(document, 'script');</script>
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
 <li>Nested&nbsp;|&nbsp;</li>
-<li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
-<li><a href="#field-detail">Field</a>&nbsp;|&nbsp;</li>
+<li>Field&nbsp;|&nbsp;</li>
 <li><a href="#constructor-detail">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-detail">Method</a></li>
 </ul>
@@ -96,21 +96,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== FIELD SUMMARY =========== -->
-<li>
-<section class="field-summary" id="field-summary">
-<h2>Field Summary</h2>
-<div class="caption"><span>Fields</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Field</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color"><code><a href="#DEFAULT_UNLOCKED" class="member-name-link">DEFAULT_UNLOCKED</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -123,12 +108,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">Creates a new profile with default values.</div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(net.dermetfan.utils.Pair,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal)" class="member-name-link">Profile</a><wbr>(net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;nameAndLevel,
- <a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>&nbsp;wallet,
- <a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&nbsp;inventory,
- <a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>&nbsp;skillset,
- <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics,
- <a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&nbsp;arsenal)</code></div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair)" class="member-name-link">Profile</a><wbr>(net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;nameAndLevel,
+ net.dermetfan.utils.Pair&lt;<a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>,<wbr><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&gt;&nbsp;walletAndInventory,
+ net.dermetfan.utils.Pair&lt;<a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>,<wbr><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&gt;&nbsp;skillsetAndStatistics,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;nodes,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;tutorialsPlayed,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&gt;&nbsp;worldMapCoords,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&gt;&nbsp;zoomAndArsenal)</code></div>
 <div class="col-last odd-row-color">
 <div class="block">Initialise a profile with the provided values.</div>
 </div>
@@ -146,20 +132,40 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#checkAndResetShopPeriod()" class="member-name-link">checkAndResetShopPeriod</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check if the shop period has changed and reset sold items if needed.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#completeLevel(java.lang.String)" class="member-name-link">completeLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelId)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mark a level as completed.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getArsenal()" class="member-name-link">getArsenal</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the arsenal associated with the profile.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentLevel()" class="member-name-link">getCurrentLevel</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCompletedLevels()" class="member-name-link">getCompletedLevels</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the set of completed levels.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCurrentLevel()" class="member-name-link">getCurrentLevel</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the current level of the profile.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInventory()" class="member-name-link">getInventory</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInventory()" class="member-name-link">getInventory</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the inventory associated with the profile.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLastShopPeriod()" class="member-name-link">getLastShopPeriod</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the last shop period.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getName()" class="member-name-link">getName</a>()</code></div>
@@ -167,40 +173,74 @@ loadScripts(document, 'script');</script>
 <div class="block">Get the name of the profile.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayedTutorial()" class="member-name-link">getPlayedTutorial</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayedLevelTutorial()" class="member-name-link">getPlayedLevelTutorial</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Returns true if the player has played the tutorial before.</div>
+<div class="block">Whether the player has played the level tutorial before.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSkillset()" class="member-name-link">getSkillset</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlayedMapTutorial()" class="member-name-link">getPlayedMapTutorial</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Whether the player has played the map tutorial before.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSkillset()" class="member-name-link">getSkillset</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the skillset associated with the profile.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSoldItems()" class="member-name-link">getSoldItems</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the sold items array.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStatistics()" class="member-name-link">getStatistics</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the statistics associated with the profile.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWallet()" class="member-name-link">getWallet</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUnlockedNodes()" class="member-name-link">getUnlockedNodes</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the set of unlocked nodes.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWallet()" class="member-name-link">getWallet</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the wallet associated with the profile.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapX()" class="member-name-link">getWorldMapX</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapY()" class="member-name-link">getWorldMapY</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapZoomIdx()" class="member-name-link">getWorldMapZoomIdx</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapX()" class="member-name-link">getWorldMapX</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the saved world map X coordinate.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapY()" class="member-name-link">getWorldMapY</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the saved world map Y coordinate (-1 if unset).</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldMapZoomIdx()" class="member-name-link">getWorldMapZoomIdx</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Gets the saved world map zoom step index (-1 if unset).</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markItemAsSold(int)" class="member-name-link">markItemAsSold</a><wbr>(int&nbsp;itemIndex)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Mark an item as sold.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentLevel(java.lang.String)" class="member-name-link">setCurrentLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resetSoldItems()" class="member-name-link">resetSoldItems</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Reset all sold items (called when shop resets).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCurrentLevel(java.lang.String)" class="member-name-link">setCurrentLevel</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;currentLevel)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set the current level of the profile.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setLastShopPeriod(long)" class="member-name-link">setLastShopPeriod</a><wbr>(long&nbsp;period)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Set the last shop period.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
@@ -208,20 +248,34 @@ loadScripts(document, 'script');</script>
 <div class="block">Change the name of the profile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayedTutorial()" class="member-name-link">setPlayedTutorial</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayedLevelTutorial()" class="member-name-link">setPlayedLevelTutorial</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets a flag to show that the player has played the tutorial before.</div>
+<div class="block">Sets a flag to show that the player has played the level tutorial before.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapX(float)" class="member-name-link">setWorldMapX</a><wbr>(float&nbsp;worldMapX)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapY(float)" class="member-name-link">setWorldMapY</a><wbr>(float&nbsp;worldMapY)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapZoomIdx(int)" class="member-name-link">setWorldMapZoomIdx</a><wbr>(int&nbsp;worldMapZoomIdx)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayedMapTutorial()" class="member-name-link">setPlayedMapTutorial</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets a flag to show that the player has played the map tutorial before.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapX(float)" class="member-name-link">setWorldMapX</a><wbr>(float&nbsp;worldMapX)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the saved world map X coordinate (-1 if unset).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapY(float)" class="member-name-link">setWorldMapY</a><wbr>(float&nbsp;worldMapY)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the saved world map Y coordinate.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setWorldMapZoomIdx(int)" class="member-name-link">setWorldMapZoomIdx</a><wbr>(int&nbsp;worldMapZoomIdx)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the saved world map zoom step index.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockNode(java.lang.String)" class="member-name-link">unlockNode</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nodeId)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Unlock a new node.</div>
 </div>
 </div>
 </div>
@@ -235,20 +289,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="details">
 <ul class="details-list">
-<!-- ============ FIELD DETAIL =========== -->
-<li>
-<section class="field-details" id="field-detail">
-<h2>Field Details</h2>
-<ul class="member-list">
-<li>
-<section class="detail" id="DEFAULT_UNLOCKED">
-<h3>DEFAULT_UNLOCKED</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">DEFAULT_UNLOCKED</span></div>
-</section>
-</li>
-</ul>
-</section>
-</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -262,15 +302,29 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="&lt;init&gt;(net.dermetfan.utils.Pair,com.csse3200.game.progression.wallet.Wallet,com.csse3200.game.progression.inventory.Inventory,com.csse3200.game.progression.skilltree.SkillSet,com.csse3200.game.progression.statistics.Statistics,com.csse3200.game.progression.arsenal.Arsenal)">
+<section class="detail" id="&lt;init&gt;(net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair,net.dermetfan.utils.Pair)">
 <h3>Profile</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Profile</span><wbr><span class="parameters">(net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;nameAndLevel,
- <a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>&nbsp;wallet,
- <a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&nbsp;inventory,
- <a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>&nbsp;skillset,
- <a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&nbsp;statistics,
- <a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&nbsp;arsenal)</span></div>
-<div class="block">Initialise a profile with the provided values.</div>
+ net.dermetfan.utils.Pair&lt;<a href="wallet/Wallet.html" title="class in com.csse3200.game.progression.wallet">Wallet</a>,<wbr><a href="inventory/Inventory.html" title="class in com.csse3200.game.progression.inventory">Inventory</a>&gt;&nbsp;walletAndInventory,
+ net.dermetfan.utils.Pair&lt;<a href="skilltree/SkillSet.html" title="class in com.csse3200.game.progression.skilltree">SkillSet</a>,<wbr><a href="statistics/Statistics.html" title="class in com.csse3200.game.progression.statistics">Statistics</a>&gt;&nbsp;skillsetAndStatistics,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;&nbsp;nodes,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;tutorialsPlayed,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Float.html" title="class or interface in java.lang" class="external-link">Float</a>&gt;&nbsp;worldMapCoords,
+ net.dermetfan.utils.Pair&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="arsenal/Arsenal.html" title="class in com.csse3200.game.progression.arsenal">Arsenal</a>&gt;&nbsp;zoomAndArsenal)</span></div>
+<div class="block">Initialise a profile with the provided values.
+
+ <p>Using pairs to avoid a constructor with too many parameters. This is an antipattern and I do
+ not care. Why is this a thing that can't be turned off?!</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>nameAndLevel</code> - Pair containing the profile name and current level.</dd>
+<dd><code>walletAndInventory</code> - Pair containing the wallet and inventory.</dd>
+<dd><code>skillsetAndStatistics</code> - Pair containing the skillset and statistics.</dd>
+<dd><code>nodes</code> - Pair containing the unlocked nodes and completed levels.</dd>
+<dd><code>tutorialsPlayed</code> - Pair containing whether the level and map tutorials have been played.</dd>
+<dd><code>worldMapCoords</code> - Pair containing the world map X and Y coordinates.</dd>
+<dd><code>zoomAndArsenal</code> - Pair containing the world map zoom index and arsenal.</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -384,18 +438,33 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getWorldMapX()">
 <h3>getWorldMapX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getWorldMapX</span>()</div>
+<div class="block">Gets the saved world map X coordinate.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the world map X coordinate.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getWorldMapY()">
 <h3>getWorldMapY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getWorldMapY</span>()</div>
+<div class="block">Gets the saved world map Y coordinate (-1 if unset).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the world map Y coordinate.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setWorldMapX(float)">
 <h3>setWorldMapX</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setWorldMapX</span><wbr><span class="parameters">(float&nbsp;worldMapX)</span></div>
+<div class="block">Sets the saved world map X coordinate (-1 if unset).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>worldMapX</code> - the world map X coordinate.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -403,6 +472,10 @@ loadScripts(document, 'script');</script>
 <h3>getWorldMapZoomIdx</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getWorldMapZoomIdx</span>()</div>
 <div class="block">Gets the saved world map zoom step index (-1 if unset).</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the world map zoom step index.</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -410,26 +483,160 @@ loadScripts(document, 'script');</script>
 <h3>setWorldMapZoomIdx</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setWorldMapZoomIdx</span><wbr><span class="parameters">(int&nbsp;worldMapZoomIdx)</span></div>
 <div class="block">Sets the saved world map zoom step index.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>worldMapZoomIdx</code> - the world map zoom step index.</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="setWorldMapY(float)">
 <h3>setWorldMapY</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setWorldMapY</span><wbr><span class="parameters">(float&nbsp;worldMapY)</span></div>
+<div class="block">Sets the saved world map Y coordinate.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>worldMapY</code> - the world map Y coordinate.</dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="getPlayedTutorial()">
-<h3>getPlayedTutorial</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getPlayedTutorial</span>()</div>
-<div class="block">Returns true if the player has played the tutorial before.</div>
+<section class="detail" id="getPlayedLevelTutorial()">
+<h3>getPlayedLevelTutorial</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getPlayedLevelTutorial</span>()</div>
+<div class="block">Whether the player has played the level tutorial before.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the player has played the level tutorial before, false otherwise.</dd>
+</dl>
 </section>
 </li>
 <li>
-<section class="detail" id="setPlayedTutorial()">
-<h3>setPlayedTutorial</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlayedTutorial</span>()</div>
-<div class="block">Sets a flag to show that the player has played the tutorial before.</div>
+<section class="detail" id="setPlayedLevelTutorial()">
+<h3>setPlayedLevelTutorial</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlayedLevelTutorial</span>()</div>
+<div class="block">Sets a flag to show that the player has played the level tutorial before.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getPlayedMapTutorial()">
+<h3>getPlayedMapTutorial</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getPlayedMapTutorial</span>()</div>
+<div class="block">Whether the player has played the map tutorial before.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the player has played the map tutorial before, false otherwise.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPlayedMapTutorial()">
+<h3>setPlayedMapTutorial</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPlayedMapTutorial</span>()</div>
+<div class="block">Sets a flag to show that the player has played the map tutorial before.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getCompletedLevels()">
+<h3>getCompletedLevels</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getCompletedLevels</span>()</div>
+<div class="block">Get the set of completed levels.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the set of completed levels.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getUnlockedNodes()">
+<h3>getUnlockedNodes</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getUnlockedNodes</span>()</div>
+<div class="block">Get the set of unlocked nodes.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the set of unlocked nodes.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="unlockNode(java.lang.String)">
+<h3>unlockNode</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">unlockNode</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;nodeId)</span></div>
+<div class="block">Unlock a new node.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>nodeId</code> - the ID of the node to unlock.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="completeLevel(java.lang.String)">
+<h3>completeLevel</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">completeLevel</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;levelId)</span></div>
+<div class="block">Mark a level as completed.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>levelId</code> - the ID of the level to mark as completed.</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="getSoldItems()">
+<h3>getSoldItems</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean[]</span>&nbsp;<span class="element-name">getSoldItems</span>()</div>
+<div class="block">Get the sold items array.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the sold items array (length 3)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="markItemAsSold(int)">
+<h3>markItemAsSold</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">markItemAsSold</span><wbr><span class="parameters">(int&nbsp;itemIndex)</span></div>
+<div class="block">Mark an item as sold.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>itemIndex</code> - the index of the item to mark as sold (0-2)</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="resetSoldItems()">
+<h3>resetSoldItems</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">resetSoldItems</span>()</div>
+<div class="block">Reset all sold items (called when shop resets).</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getLastShopPeriod()">
+<h3>getLastShopPeriod</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getLastShopPeriod</span>()</div>
+<div class="block">Get the last shop period.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the last shop period timestamp</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setLastShopPeriod(long)">
+<h3>setLastShopPeriod</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setLastShopPeriod</span><wbr><span class="parameters">(long&nbsp;period)</span></div>
+<div class="block">Set the last shop period.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>period</code> - the period timestamp</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="checkAndResetShopPeriod()">
+<h3>checkAndResetShopPeriod</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">checkAndResetShopPeriod</span>()</div>
+<div class="block">Check if the shop period has changed and reset sold items if needed. This should be called when
+ entering the shop.</div>
 </section>
 </li>
 </ul>

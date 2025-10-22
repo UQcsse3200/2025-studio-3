@@ -164,7 +164,9 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCameraComponent()" class="member-name-link">getCameraComponent</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the camera component</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isPlayerCurrentlyMoving()" class="member-name-link">isPlayerCurrentlyMoving</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -281,6 +283,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getCameraComponent()">
 <h3>getCameraComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../components/CameraComponent.html" title="class in com.csse3200.game.components">CameraComponent</a></span>&nbsp;<span class="element-name">getCameraComponent</span>()</div>
+<div class="block">Get the camera component</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>the camera component</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -305,6 +312,10 @@ loadScripts(document, 'script');</script>
 <h3>stepZoom</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">stepZoom</span><wbr><span class="parameters">(int&nbsp;steps)</span></div>
 <div class="block">Adjust zoom by a number of discrete steps (negative to zoom in, positive to zoom out).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>steps</code> - the number of steps to adjust the zoom by</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -321,6 +332,11 @@ loadScripts(document, 'script');</script>
  float&nbsp;deltaScreenY)</span></div>
 <div class="block">Pans the camera by the given screen-space delta (in pixels). Dragging moves the view with the
  cursor (grab-and-drag behavior).</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>deltaScreenX</code> - the screen-space delta in the x direction</dd>
+<dd><code>deltaScreenY</code> - the screen-space delta in the y direction</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -335,6 +351,10 @@ loadScripts(document, 'script');</script>
 <h3>isPlayerCurrentlyMoving</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isPlayerCurrentlyMoving</span>()</div>
 <div class="block">Returns true if the world-map player is currently moving along a path or between nodes.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>true if the player is currently moving, false otherwise</dd>
+</dl>
 </section>
 </li>
 <li>

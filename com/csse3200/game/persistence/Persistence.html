@@ -122,13 +122,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static net.dermetfan.utils.Pair<wbr>&lt;<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#load(com.csse3200.game.persistence.Savefile)" class="member-name-link">load</a><wbr>(<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&nbsp;save)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Loads a profile from a savefile.</div>
+<div class="block">Load a user profile from a savefile.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#save(int,com.csse3200.game.progression.Profile)" class="member-name-link">save</a><wbr>(int&nbsp;slot,
  <a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Saves the given profile to the specified slot.</div>
+<div class="block">Save the current user profile to a specific slot.</div>
 </div>
 </div>
 </div>
@@ -151,20 +151,12 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="load(com.csse3200.game.persistence.Savefile)">
 <h3>load</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">net.dermetfan.utils.Pair&lt;<a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">load</span><wbr><span class="parameters">(<a href="Savefile.html" title="class in com.csse3200.game.persistence">Savefile</a>&nbsp;save)</span></div>
-<div class="block">Loads a profile from a savefile.
-
- <p>Order of attempts:
-
- <ol>
-   <li>Try reading the JSON directly into <a href="../progression/Profile.html" title="class in com.csse3200.game.progression"><code>Profile</code></a> (new snapshot JSON maps to the same
-       field names).
-   <li>If that fails, read <code>Persistence.ProfileSnapshot</code> and reconstruct a <a href="../progression/Profile.html" title="class in com.csse3200.game.progression"><code>Profile</code></a>.
- </ol></div>
+<div class="block">Load a user profile from a savefile.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>save</code> - Savefile descriptor</dd>
+<dd><code>save</code> - the savefile object</dd>
 <dt>Returns:</dt>
-<dd>Pair of (Profile, slot)</dd>
+<dd>the profile and the slot</dd>
 </dl>
 </section>
 </li>
@@ -199,13 +191,11 @@ loadScripts(document, 'script');</script>
 <h3>save</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">save</span><wbr><span class="parameters">(int&nbsp;slot,
  <a href="../progression/Profile.html" title="class in com.csse3200.game.progression">Profile</a>&nbsp;profile)</span></div>
-<div class="block">Saves the given profile to the specified slot.
-
- <p>This writes a <code>Persistence.ProfileSnapshot</code> to guarantee 'currentLevel' is persisted.</div>
+<div class="block">Save the current user profile to a specific slot.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>slot</code> - Slot number (1-3)</dd>
-<dd><code>profile</code> - Profile to persist</dd>
+<dd><code>slot</code> - the slot to save the profile to</dd>
+<dd><code>profile</code> - the profile to save</dd>
 </dl>
 </section>
 </li>

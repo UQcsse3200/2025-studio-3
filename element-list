@@ -15,6 +15,7 @@ com.csse3200.game.components.inventory
 com.csse3200.game.components.items
 com.csse3200.game.components.lvlcompleted
 com.csse3200.game.components.mainmenu
+com.csse3200.game.components.minigame
 com.csse3200.game.components.npc
 com.csse3200.game.components.persistence
 com.csse3200.game.components.player
@@ -46,7 +47,6 @@ com.csse3200.game.events
 com.csse3200.game.events.listeners
 com.csse3200.game.exceptions
 com.csse3200.game.input
-com.csse3200.game.minigame
 com.csse3200.game.persistence
 com.csse3200.game.physics
 com.csse3200.game.physics.attacking_system
