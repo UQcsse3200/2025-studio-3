@@ -2,7 +2,7 @@
   "scrapTitan": {
     "name": "Scrap Titan",
     "atlasFilePath": "images/entities/enemies/Scrap-titan.atlas",
-    "health": 250,
+    "health": 600,
     "attack": 50,
     "scale": 3.0,
     "speed": 15,
@@ -12,7 +12,7 @@
 "samuraiBot": {
     "name": "Samurai Bot",
     "atlasFilePath": "images/entities/enemies/samurai_Bot.atlas",
-    "health": 300,
+    "health": 800,
     "attack": 65,
     "scale": 2.5,
     "speed": 18,
@@ -21,7 +21,7 @@
   "gunBot": {
     "name": "Gun Bot",
     "atlasFilePath": "images/entities/enemies/gun_Bot.atlas",
-    "health": 500,
+    "health": 1000,
     "attack": 10,
     "scale": 2.0,
     "speed": 15,
