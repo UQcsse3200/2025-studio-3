@@ -2,6 +2,7 @@ package com.csse3200.game.entities.factories;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.components.BomberDeathExplodeComponent;
 import com.csse3200.game.components.CombatStatsComponent;
@@ -125,7 +126,8 @@ public class RobotFactory {
   /**
    * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
    * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
-   * robots.
+   * robots. Note: Gunner Robot does not currently spawn (spawning chance was set to 0 to stop it
+   * from spawning from levels.json due to projectile issues)
    *
    * @param config A config file that contains the robot's stats.
    * @return A robot entity.
@@ -163,7 +165,7 @@ public class RobotFactory {
 
     Entity robot =
         new Entity()
-            .addComponent(new PhysicsComponent())
+            .addComponent(new PhysicsComponent().setBodyType(BodyDef.BodyType.KinematicBody))
             .addComponent(new PhysicsMovementComponent())
             .addComponent(solid)
             .addComponent(new HitboxComponent().setLayer(PhysicsLayer.ENEMY))
@@ -177,9 +179,9 @@ public class RobotFactory {
 
     // Default attack type is melee if not specified
     if (config.getAttackType() == null) {
-      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(40f, PhysicsLayer.NPC));
     } else if (config.getAttackType().equals("melee")) {
-      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(20f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new RobotAttackTask(40f, PhysicsLayer.NPC));
     } else {
       // handle gunner attack type
       if (config.getName() != null && config.getName().contains("Gunner")) {
@@ -195,7 +197,7 @@ public class RobotFactory {
 
     // Special abilities for specific robot types
     if (config.getName() != null && config.getName().contains("Jumper")) {
-      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(30f, PhysicsLayer.NPC));
+      robot.getComponent(AITaskComponent.class).addTask(new JumpTask(55f, PhysicsLayer.NPC));
     }
 
     if (config.getName() != null && config.getName().contains("Bungee")) {
