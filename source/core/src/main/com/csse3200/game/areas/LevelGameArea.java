@@ -734,11 +734,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     firstboss
         .getEvents()
-        .addListener(
-            "fireProjectile",
-            (Entity bossEntity) ->
-              spawnBossProjectile(bossEntity));
-
+        .addListener("fireProjectile", (Entity bossEntity) -> spawnBossProjectile(bossEntity));
 
     firstboss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
