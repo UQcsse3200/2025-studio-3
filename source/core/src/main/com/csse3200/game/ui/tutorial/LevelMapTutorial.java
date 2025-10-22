@@ -46,7 +46,9 @@ public class LevelMapTutorial extends UIComponent {
     "Welcome to Level 1!",
     "Drag defence units from the hot-bar onto the grid.",
     "Generators produce scrap metal which can be used to place defences.",
-    "Human defenders attack incoming robot enemies."
+    "Human defenders attack incoming robot enemies.",
+    "Right click to cancel drag / delete placed unit.",
+    "Deleting a unit refunds half the scrap cost"
   };
 
   /** Alpha transparency value for the overlay. */
@@ -129,29 +131,6 @@ public class LevelMapTutorial extends UIComponent {
     rootTable.add(dialogWindow).width(600f).height(200f).padBottom(80f);
     stack.add(rootTable);
     stage.addActor(stack);
-
-    // Don't freeze the game - players need to interact with the hotbar during the tutorial
-  }
-
-  /**
-   * Changes the tutorial message depending on which button the user presses.
-   *
-   * @param forward determines whether the user progresses through the tutorial or backwards.
-   */
-  public void changeText(boolean forward) {
-    if (!active) return;
-
-    if (forward) {
-      if (step < tutorialMessages.length - 1) {
-        nextStep();
-      } else {
-        endTutorial();
-      }
-    } else {
-      if (step > 0) {
-        previousStep();
-      }
-    }
   }
 
   /**
@@ -163,17 +142,6 @@ public class LevelMapTutorial extends UIComponent {
       messageLabel.setText(tutorialMessages[step].toUpperCase());
     } else {
       endTutorial();
-    }
-  }
-
-  /**
-   * Shows the previous tutorial message. If it is pressed on the first tutorial message, nothing
-   * will happen.
-   */
-  private void previousStep() {
-    step--;
-    if (step >= 0) {
-      messageLabel.setText(tutorialMessages[step]);
     }
   }
 

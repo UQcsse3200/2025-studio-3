@@ -38,7 +38,27 @@ public class SpeedControlDisplay extends UIComponent {
   public void create() {
     super.create();
     addActors();
-    updateSpeedFromTimeSource();
+    // Initialise from saved speed in settings so the icon and effect are consistent
+    float saved = ServiceLocator.getSettingsService().getGameplaySpeedScale();
+    // Map saved to nearest of available speeds
+    int nearestIdx = 0;
+    float nearest = speeds[0];
+    for (int i = 0; i < speeds.length; i++) {
+      if (Math.abs(speeds[i] - saved) < Math.abs(nearest - saved)) {
+        nearest = speeds[i];
+        nearestIdx = i;
+      }
+    }
+    speedIndex = nearestIdx;
+    ServiceLocator.getTimeSource().setTimeScale(nearest);
+    // Also set preferred scale for when the game unfreezes from intro/pause flows
+    if (ServiceLocator.getGameStateService() != null) {
+      ServiceLocator.getGameStateService().setPreferredTimeScale(nearest);
+    }
+    updateButtonTexture();
+    if (badgeLabel != null) {
+      badgeLabel.setText(formatSpeedLabel(nearest));
+    }
   }
 
   /** Adds the speed control button and UI elements to the stage */
@@ -80,8 +100,12 @@ public class SpeedControlDisplay extends UIComponent {
     logger.info("[SpeedControl] Setting time scale to {}x", newScale);
     // Apply the new time scale to affect all time-dependent systems
     ServiceLocator.getTimeSource().setTimeScale(newScale);
+    if (ServiceLocator.getGameStateService() != null) {
+      ServiceLocator.getGameStateService().setPreferredTimeScale(newScale);
+    }
 
-    // Update UI to reflect the new speed
+    // Persist selection and update UI to reflect the new speed
+    ServiceLocator.getSettingsService().setGameplaySpeedScale(newScale);
     updateButtonTexture();
     badgeLabel.setText(formatSpeedLabel(newScale));
     updatePosition();
@@ -90,31 +114,7 @@ public class SpeedControlDisplay extends UIComponent {
     entity.getEvents().trigger("speed_changed");
   }
 
-  /** Updates the current speed display to match the time source's time scale */
-  private void updateSpeedFromTimeSource() {
-    // Calculate current time scale by comparing scaled vs raw delta time
-    float ts =
-        ServiceLocator.getTimeSource().getDeltaTime()
-            / ServiceLocator.getTimeSource().getRawDeltaTime();
-
-    // Find the closest matching speed from our available options
-    float nearest = speeds[0];
-    int nearestIdx = 0;
-    for (int i = 0; i < speeds.length; i++) {
-      if (Math.abs(speeds[i] - ts) < Math.abs(nearest - ts)) {
-        nearest = speeds[i];
-        nearestIdx = i;
-      }
-    }
-
-    // Update display to match the detected speed
-    speedIndex = nearestIdx;
-    if (badgeLabel != null) {
-      badgeLabel.setText(formatSpeedLabel(nearest));
-      updateButtonTexture();
-      updatePosition();
-    }
-  }
+  // (No longer needed) Previously used to infer speed from time source deltas
 
   /** Creates the tooltip for the speed button */
   private void createTooltip() {
