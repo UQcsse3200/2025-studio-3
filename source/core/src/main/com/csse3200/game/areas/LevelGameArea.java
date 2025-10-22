@@ -1145,6 +1145,23 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         float volume = ServiceLocator.getSettingsService().getSoundVolume();
         sound.play(volume);
 
+        List<Entity> robotsCopy = new ArrayList<>(robots);
+
+        for(Entity r : robotsCopy){
+            try{
+                AITaskComponent ai = r.getComponent(AITaskComponent.class);
+                if(ai != null){
+                    ai.dispose();;
+                }
+
+                despawnEntity(r);
+            }catch(Exception e){
+                logger.warn("Error despawning robot during game over: {}", e.getMessage());
+            }
+        }
+        robots.clear();
+        logger.info("All robots and bosses despawned after game over");
+
         // Window activation trigger
         gameOverEntity.getEvents().trigger("gameOver");
 
@@ -1153,6 +1170,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           service.addFreezeReason(GameStateService.FreezeReason.GAME_OVER);
           service.lockPlacement();
         }
+
+        break;
       }
     }
   }
