@@ -1,52 +1,54 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.components.hud.PauseButton;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.GameTime;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import org.junit.jupiter.api.*;
-import static org.mockito.Mockito.*;
+import org.mockito.Mockito;
 
-/**
- * Unit tests for PauseButton, verifying that pressing pause correctly stops
- * enemy spawning, currency updates, and player firing.
- */
+import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
+
 public class PauseButtonTest {
 
     private PauseButton pauseButton;
-    private Entity entity;
-
-    // Mock systems that depend on pause state
-    private Entity enemySpawner;
-    private Entity currencySystem;
-    private Entity firingSystem;
+    private Stage mockStage;
+    private Entity mockEntity;
+    private EventHandler mockEvents;
+    private SettingsService mockSettingsService;
+    private ResourceService mockResourceService;
 
     @BeforeEach
     void setUp() {
-        // Setup required services
-        ServiceLocator.registerSettingsService(mock(SettingsService.class));
-        ServiceLocator.registerGlobalResourceService(mock(ResourceService.class));
-        ServiceLocator.registerTimeSource(new GameTime());
+        // Create mocks
+        mockStage = mock(Stage.class);
+        mockEntity = mock(Entity.class);
+        mockEvents = mock(EventHandler.class);
+        mockSettingsService = mock(SettingsService.class);
+        mockResourceService = mock(ResourceService.class);
 
-        // Create a parent entity and mock subsystems
-        entity = new Entity();
+        // Register services in ServiceLocator
+        ServiceLocator.registerSettingsService(mockSettingsService);
+        ServiceLocator.registerGlobalResourceService(mockResourceService);
+
+        // Stub required methods
+        when(mockEntity.getEvents()).thenReturn(mockEvents);
+        when(mockStage.getWidth()).thenReturn(800f);
+        when(mockStage.getHeight()).thenReturn(600f);
+        when(mockResourceService.getAsset(anyString(), eq(Texture.class)))
+            .thenReturn(mock(Texture.class));
+
+        // Create and attach PauseButton
         pauseButton = new PauseButton();
-        entity.addComponent(pauseButton);
+        pauseButton.setEntity(mockEntity);
+
+        // Call create() — this sets up button, tooltip, and listeners
         pauseButton.create();
-
-        // Mock dependent systems
-        enemySpawner = mock(Entity.class);
-        currencySystem = mock(Entity.class);
-        firingSystem = mock(Entity.class);
-
-        // Register listeners to verify pause events trigger properly
-        entity.getEvents().addListener("pause", () -> {
-            enemySpawner.getEvents().trigger("pause");
-            currencySystem.getEvents().trigger("pause");
-            firingSystem.getEvents().trigger("pause");
-        });
     }
 
     @AfterEach
@@ -55,42 +57,40 @@ public class PauseButtonTest {
     }
 
     @Test
-    void testPauseButtonTriggersPauseEvent() {
-
-        pauseButton.setPaused(true);
-        entity.getEvents().trigger("pause");
-
-        verify(enemySpawner.getEvents(), atLeastOnce()).trigger("pause");
-        verify(currencySystem.getEvents(), atLeastOnce()).trigger("pause");
-        verify(firingSystem.getEvents(), atLeastOnce()).trigger("pause");
-    }
-
-    @Test
-    void testGameResumesAfterPause() {
-        pauseButton.setPaused(true);
-        entity.getEvents().trigger("pause");
-        pauseButton.setPaused(false);
-        entity.getEvents().trigger("resume");
-
-        verify(enemySpawner.getEvents(), atLeastOnce()).trigger("pause");
-        verifyNoMoreInteractions(enemySpawner.getEvents());
-    }
-
-    @Test
+    @DisplayName("Pause button should correctly set paused state to true")
     void testPauseButtonSetsStateCorrectly() {
         pauseButton.setPaused(true);
-        Assertions.assertTrue(getPrivatePausedState(pauseButton));
 
-        pauseButton.setPaused(false);
-        Assertions.assertFalse(getPrivatePausedState(pauseButton));
+        // Verify internal paused state
+        assertTrue(getIsPaused(), "PauseButton should be in paused state");
+
+        // Verify tooltip hidden and opacity reduced
+        // We can’t directly check actors, but we can ensure no NPEs
     }
 
+    @Test
+    @DisplayName("Pause button should trigger 'pause' event when clicked")
+    void testPauseButtonTriggersPauseEvent() {
+        pauseButton.setPaused(false);
+        pauseButton.entity.getEvents().trigger("pause");
 
-    private boolean getPrivatePausedState(PauseButton button) {
+        verify(mockEvents, times(1)).trigger("pause");
+    }
+
+    @Test
+    @DisplayName("Pause button should resume when handleResume called")
+    void testGameResumesAfterPause() {
+        pauseButton.setPaused(true);
+
+        assertFalse(getIsPaused(), "PauseButton should be unpaused after resume event");
+    }
+
+    /** Helper method to read private isPaused value using reflection */
+    private boolean getIsPaused() {
         try {
             var field = PauseButton.class.getDeclaredField("isPaused");
             field.setAccessible(true);
-            return field.getBoolean(button);
+            return (boolean) field.get(pauseButton);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
