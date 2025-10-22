@@ -268,7 +268,7 @@ public class MainGameScreen extends ScreenAdapter {
 
               @Override
               public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-                gameArea.spawnBoss( bossType);
+                gameArea.spawnBoss(bossType);
               }
             });
     gameArea.create();

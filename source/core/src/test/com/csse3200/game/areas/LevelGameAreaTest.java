@@ -403,7 +403,7 @@ class LevelGameAreaTest {
           .when(() -> BossFactory.createBossType(any(BossFactory.BossTypes.class)))
           .thenReturn(fakeBoss);
 
-      area.spawnBoss( BossFactory.BossTypes.SCRAP_TITAN);
+      area.spawnBoss(BossFactory.BossTypes.SCRAP_TITAN);
 
       mockedBossFactory.verify(
           () -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN), atLeastOnce());
