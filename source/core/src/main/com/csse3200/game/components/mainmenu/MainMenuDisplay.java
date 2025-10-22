@@ -71,9 +71,9 @@ public class MainMenuDisplay extends UIComponent {
         });
 
     creditsBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent changeEvent, float x, float y) {
             logger.info("[MainMenuDisplay] Credits button clicked");
             entity.getEvents().trigger("credits");
           }
