@@ -9,40 +9,51 @@ import com.csse3200.game.services.ServiceLocator;
  * death, and start the explosion animation when health drops below 30%.
  */
 public class BomberDeathExplodeComponent extends Component {
-  private final int explosionDamage;
-  private final float explosionRadiusTiles;
+    private final int explosionDamage;
+    private final float explosionRadiusTiles;
 
-  float tileSize = 1f;
-  float worldRadius;
+    float tileSize = 1f;
+    float worldRadius;
+    boolean triggered = false;
 
-  private static final float EXPLOSION_THRESHOLD = 0.3f; // 10% HP
-
-  public BomberDeathExplodeComponent(int explosionDamage, float explosionRadiusTiles) {
-    this.explosionDamage = explosionDamage;
-    this.explosionRadiusTiles = explosionRadiusTiles;
-    this.worldRadius = explosionRadiusTiles * tileSize;
-  }
-
-  @Override
-  public void create() {
-    super.create();
-    System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
-    entity.getEvents().addListener("updateHealth", this::onHealthUpdate);
-    entity.getEvents().addListener("entityDeath", this::onDeath);
-  }
-
-  /** When HP drops below 30%, start playing the explosion animation. */
-  private void onHealthUpdate(int currentHealth, int maxHealth) {
-    if (currentHealth <= maxHealth * EXPLOSION_THRESHOLD) {
-      // Play explosion animation early (visual warning)
-      entity.getEvents().trigger("bomberPreExplode");
+    public BomberDeathExplodeComponent(int explosionDamage, float explosionRadiusTiles) {
+        this.explosionDamage = explosionDamage;
+        this.explosionRadiusTiles = explosionRadiusTiles;
+        this.worldRadius = explosionRadiusTiles * tileSize;
     }
-  }
 
-  /** On death, apply AOE damage immediately. */
-  private void onDeath() {
-    explode();
-  }
+    @Override
+    public void create() {
+        super.create();
+        System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
+        entity.getEvents().addListener("updateHealth", this::onHealthUpdate);
+        entity.getEvents().addListener("entityDeath", this::onDeath);
+        entity.getEvents().addListener("bomberExplodeAnimComplete", this::explodeAndDispose);
+    }
+
+    /** Called when health changes. If health hits zero, trigger explosion animation. */
+    private void onHealthUpdate(int currentHealth, int maxHealth) {
+        if(triggered) {
+            return; // Already triggered
+        }
+        if (currentHealth <= maxHealth * 0.3f) {
+            // Trigger the explosion animation on death moment
+            entity.getEvents().trigger("bomberPreExplode");
+            triggered = true;
+        }
+    }
+
+    /** On death event (entityDeath) — start the animation if not already started. */
+    private void onDeath() {
+        // If not already triggered, trigger it
+        entity.getEvents().trigger("bomberPreExplode");
+    }
+
+    /** Called after animation completes: apply AOE explosion damage, then dispose entity. */
+    private void explodeAndDispose() {
+        explode();
+        entity.dispose();
+    }
 
   /** Performs AOE explosion damage around the bomber’s position. */
   private void explode() {
