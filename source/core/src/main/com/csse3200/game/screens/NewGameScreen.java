@@ -23,7 +23,7 @@ public class NewGameScreen extends BaseScreen {
    * @param game the game instance
    */
   public NewGameScreen(GdxGame game) {
-    super(game, Optional.of("images/backgrounds/bg.png"), Optional.empty());
+    super(game, Optional.of("images/backgrounds/title.png"), Optional.empty());
   }
 
   /**

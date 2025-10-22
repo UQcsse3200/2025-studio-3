@@ -1,12 +1,18 @@
 wall.png
-size: 1000, 2500
+size: 192, 64
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 pma: false
 default
-  bounds: 500, 0, 500, 2500
+  bounds: 0, 0, 64, 64
 idle
-  bounds: 500, 0, 500, 2500
+  bounds: 0, 0, 64, 64
 hit
-  bounds: 0, 0, 500, 2500
+  bounds: 64, 0, 64, 64
+hit
+  bounds: 128, 0, 64, 64
+hit
+  bounds: 128, 0, 64, 64
+hit
+  bounds: 0, 0, 64, 64

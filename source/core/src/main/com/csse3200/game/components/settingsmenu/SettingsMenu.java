@@ -1,20 +1,23 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import net.dermetfan.utils.Pair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** Main settings menu component. */
 public class SettingsMenu extends UIComponent {
   private final GdxGame game;
   private Table rootTable;
   private TextButton exitBtn;
+  private static final Logger logger = LoggerFactory.getLogger(SettingsMenu.class);
 
   /**
    * Constructor for SettingsMenu.
@@ -35,6 +38,7 @@ public class SettingsMenu extends UIComponent {
     entity.getEvents().addListener("gamesettings", this::hideMenu);
     entity.getEvents().addListener("displaysettings", this::hideMenu);
     entity.getEvents().addListener("audiosettings", this::hideMenu);
+    entity.getEvents().addListener("displayneedsupdate", this::rebuild);
   }
 
   /** Add actors to the UI. */
@@ -59,25 +63,25 @@ public class SettingsMenu extends UIComponent {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
     displayBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("displaysettings");
           }
         });
 
     gameBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("gamesettings");
           }
         });
 
     audioBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("audiosettings");
           }
         });
@@ -128,6 +132,15 @@ public class SettingsMenu extends UIComponent {
   private void hideMenu() {
     rootTable.setVisible(false);
     exitBtn.setVisible(false);
+  }
+
+  /**
+   * Reinitialises and updates the settings menu by disposing of the current Settings screen and
+   * setting it to a new Settings screen. This rebuilds the screen with the new Display settings.
+   */
+  private void rebuild() {
+    game.setScreen(ScreenType.SETTINGS);
+    logger.info("Set screen to new Settings Screen with updated Display settings");
   }
 
   @Override

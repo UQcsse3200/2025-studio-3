@@ -138,6 +138,7 @@ public class ItemEffectsService {
         // to cover 3x3 tiles)
         position.x = position.x - tileSize;
         position.y = position.y - tileSize;
+
         spawnEffect(
             ServiceLocator.getResourceService()
                 .getAsset("images/effects/buff.atlas", TextureAtlas.class),
@@ -232,12 +233,41 @@ public class ItemEffectsService {
             true);
         logger.info("Created nuke effect");
         break;
+      case "doomhack":
+        spawnEffect(
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/doomhack.atlas", TextureAtlas.class),
+            "doomhack.png",
+            (new Vector2[] {position, bottomCorner}),
+            tileSize,
+            (new float[] {0.1f, 1.5f}),
+            Animation.PlayMode.NORMAL,
+            false,
+            true);
+        logger.info("Created doom hack effect");
+        break;
+      case "scrapper":
+        spawnEffect(
+            ServiceLocator.getResourceService()
+                .getAsset("images/effects/scrapper.atlas", TextureAtlas.class),
+            "scrapper.png",
+            (new Vector2[] {position, bottomCorner}),
+            tileSize,
+            (new float[] {0.1f, 1.5f}),
+            Animation.PlayMode.NORMAL,
+            false,
+            true);
+        logger.info("Created scrapper effect");
+        break;
       default:
         logger.error("Unknown item name");
     }
   }
 
   public static void playSoundEffect(String animatorName) {
+    if (animatorName.endsWith(".png")) {
+      animatorName = animatorName.substring(0, animatorName.length() - 4);
+    }
     Sound effectSound =
         ServiceLocator.getResourceService()
             .getAsset("sounds/item_" + animatorName + ".mp3", Sound.class);

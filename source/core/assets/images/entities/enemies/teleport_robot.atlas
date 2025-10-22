@@ -54,11 +54,11 @@ moveLeft
 	bounds: 448, 2, 64, 64
 default
 	bounds: 448, 2, 64, 64
-teleport
+teleportStart
 	index: 0
 	bounds: 448, 2, 64, 64
-teleport
-	index: 19
+teleportEnd
+	index: 9
 	bounds: 448, 2, 64, 64
 moveLeft
 	index: 1
@@ -102,121 +102,121 @@ moveLeftDamaged
 moveLeftDamaged
 	index: 7
 	bounds: 320, 134, 64, 64
-teleport
+teleportStart
 	index: 3
 	bounds: 384, 134, 64, 64
-teleport
-	index: 16
+teleportEnd
+	index: 6
 	bounds: 384, 134, 64, 64
-teleport
+teleportStart
 	index: 5
 	bounds: 448, 134, 64, 64
-teleport
-	index: 14
+teleportEnd
+	index: 4
 	bounds: 448, 134, 64, 64
-teleport
+teleportStart
 	index: 6
 	bounds: 0, 200, 64, 64
-teleport
-	index: 13
+teleportEnd
+	index: 3
 	bounds: 0, 200, 64, 64
-teleport
+teleportStart
 	index: 8
 	bounds: 64, 200, 64, 64
-teleport
-	index: 11
+teleportEnd
+	index: 1
 	bounds: 64, 200, 64, 64
-teleport
-	index: 10
+teleportEnd
+	index: 0
 	bounds: 128, 200, 64, 64
-teleport
+teleportStart
 	index: 9
 	bounds: 128, 200, 64, 64
-teleportDamaged
-	index: 10
+teleportDamagedEnd
+	index: 0
 	bounds: 128, 200, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 9
 	bounds: 128, 200, 64, 64
-teleport
-	index: 12
+teleportEnd
+	index: 2
 	bounds: 192, 200, 64, 64
-teleport
+teleportStart
 	index: 7
 	bounds: 192, 200, 64, 64
-teleportDamaged
-	index: 12
+teleportDamagedEnd
+	index: 2
 	bounds: 192, 200, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 7
 	bounds: 192, 200, 64, 64
-teleport
-	index: 15
+teleportEnd
+	index: 5
 	bounds: 256, 200, 64, 64
-teleport
+teleportStart
 	index: 4
 	bounds: 256, 200, 64, 64
-teleport
-	index: 17
+teleportEnd
+	index: 7
 	bounds: 320, 200, 64, 64
-teleport
+teleportStart
 	index: 2
 	bounds: 320, 200, 64, 64
-teleport
-	index: 18
+teleportEnd
+	index: 8
 	bounds: 384, 200, 64, 64
-teleport
+teleportStart
 	index: 1
 	bounds: 384, 200, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 0
 	bounds: 448, 200, 64, 64
 moveLeftDamaged
 	index: 0
 	bounds: 448, 200, 64, 64
-teleportDamaged
-	index: 19
+teleportDamagedEnd
+	index: 9
 	bounds: 448, 200, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 2
 	bounds: 0, 266, 64, 64
-teleportDamaged
-	index: 17
+teleportDamagedEnd
+	index: 7
 	bounds: 0, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 5
 	bounds: 64, 266, 64, 64
-teleportDamaged
-	index: 14
+teleportDamagedEnd
+	index: 4
 	bounds: 64, 266, 64, 64
-teleportDamaged
-	index: 11
+teleportDamagedEnd
+	index: 1
 	bounds: 128, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 8
 	bounds: 128, 266, 64, 64
-teleportDamaged
-	index: 13
+teleportDamagedEnd
+	index: 3
 	bounds: 192, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 6
 	bounds: 192, 266, 64, 64
-teleportDamaged
-	index: 15
+teleportDamagedEnd
+	index: 5
 	bounds: 256, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 4
 	bounds: 256, 266, 64, 64
-teleportDamaged
-	index: 16
+teleportDamagedEnd
+	index: 6
 	bounds: 320, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 3
 	bounds: 320, 266, 64, 64
-teleportDamaged
-	index: 18
+teleportDamagedEnd
+	index: 8
 	bounds: 384, 266, 64, 64
-teleportDamaged
+teleportDamagedStart
 	index: 1
 	bounds: 384, 266, 64, 64
 invalid

@@ -2,6 +2,7 @@ package com.csse3200.game.components.achievements;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -20,7 +21,6 @@ import java.util.Map;
 public class AchievementsDisplay extends UIComponent {
   private final GdxGame game;
   private Table rootTable;
-
   float uiScale = ui.getUIScale();
 
   /**
@@ -41,17 +41,33 @@ public class AchievementsDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Achievements screen. */
   private void addActors() {
-    Label title = ui.title("Achievements");
+    // Create background image
+    Texture backgroundTexture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/menu_card.png", Texture.class);
+    Image backgroundImage = new Image(backgroundTexture);
+    backgroundImage.setSize(870f * uiScale, 610f * uiScale);
+
+    // Create content table for achievements
     rootTable = new Table();
-    rootTable.setFillParent(true);
-    rootTable.top().padTop(20);
-    rootTable
-        .add(title)
-        .size(title.getWidth() * 0.5f * uiScale, title.getHeight() * 0.5f * uiScale)
-        .center()
-        .row();
+    rootTable.setSize(870f * uiScale, 610f * uiScale);
+    rootTable.center();
+
+    // Add title with 10f padding from top
+    Label title = ui.title("Achievements");
+    rootTable.add(title).expandX().center().padTop(25f * uiScale).row();
+
     createAchievementDisplay();
-    stage.addActor(rootTable);
+
+    // Create stack with background and content
+    Stack stack = new Stack();
+    stack.add(backgroundImage);
+    stack.add(rootTable);
+    stack.setSize(1044f * uiScale, 732f * uiScale);
+    stack.setPosition(
+        (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
+
+    stage.addActor(stack);
     createCloseButton();
   }
 
@@ -86,18 +102,18 @@ public class AchievementsDisplay extends UIComponent {
     Table allTables = new Table();
 
     allTables.add(ui.subheading("Tier 1")).center().row();
-    allTables.add(t1Table).left().padBottom(20).row();
+    allTables.add(t1Table).left().padBottom(20f * uiScale).row();
 
     allTables.add(ui.subheading("Tier 2")).center().row();
-    allTables.add(t2Table).left().padBottom(20).row();
+    allTables.add(t2Table).left().padBottom(20 * uiScale).row();
 
     allTables.add(ui.subheading("Tier 3")).center().row();
-    allTables.add(t3Table).left().padBottom(20).row();
+    allTables.add(t3Table).left().padBottom(20 * uiScale).row();
 
     ScrollPane scrollPane = new ScrollPane(allTables, skin);
     scrollPane.setFadeScrollBars(false);
 
-    rootTable.row().padTop(20);
+    rootTable.row();
     rootTable.add(scrollPane).expand().fill().row();
   }
 
@@ -177,8 +193,8 @@ public class AchievementsDisplay extends UIComponent {
     achButton.addListener(
         new ClickListener() {
           @Override
-          public void clicked(com.badlogic.gdx.scenes.scene2d.InputEvent event, float x, float y) {
-            showAchievementDialog(config, isUnlocked, currentProgress);
+          public void clicked(InputEvent event, float x, float y) {
+            showAchievementDialog(config, currentProgress);
           }
         });
 
@@ -189,24 +205,20 @@ public class AchievementsDisplay extends UIComponent {
    * Shows an info dialog with achievement details using DialogService.
    *
    * @param config the achievement config to show details for
-   * @param isUnlocked whether the achievement is unlocked
    * @param currentProgress current progress towards the achievement
    */
-  private void showAchievementDialog(
-      BaseAchievementConfig config, boolean isUnlocked, int currentProgress) {
+  private void showAchievementDialog(BaseAchievementConfig config, int currentProgress) {
     String title = config.getName();
 
     // Build the message content
     StringBuilder messageBuilder = new StringBuilder();
     messageBuilder
         .append(config.getDescription())
-        .append("\n\n")
+        .append("\n")
         .append("Progress: ")
         .append(currentProgress)
         .append("/")
-        .append(config.getQuota())
-        .append("\n");
-    messageBuilder.append("Status: ").append(isUnlocked ? "Unlocked" : "Locked");
+        .append(config.getQuota());
 
     String message = messageBuilder.toString();
 

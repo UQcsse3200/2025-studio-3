@@ -18,11 +18,11 @@ public class MainMenuScreen extends BaseScreen {
   private static final Logger logger = LoggerFactory.getLogger(MainMenuScreen.class);
 
   private static final String[] MAIN_MENU_TEXTURES = {
-    "images/backgrounds/bg.png", "images/backgrounds/bg-text.png", "images/ui/settings-icon.png"
+    "images/backgrounds/title.png", "images/backgrounds/bg-text.png", "images/ui/settings-icon.png"
   };
 
   public MainMenuScreen(GdxGame game) {
-    super(game, Optional.of("images/backgrounds/bg.png"), Optional.of(MAIN_MENU_TEXTURES));
+    super(game, Optional.of("images/backgrounds/title.png"), Optional.of(MAIN_MENU_TEXTURES));
   }
 
   /**

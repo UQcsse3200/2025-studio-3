@@ -41,6 +41,12 @@ public class ProjectileFactory {
     // add more mappings as needed
   }
 
+  /**
+   * Gets the {@link ProjectileType} corresponding to a texture path.
+   *
+   * @param path the texture file path
+   * @return the {@link ProjectileType} associated with the path, or {@code SLINGSHOT} by default
+   */
   public static ProjectileType getProjectileTypeFromPath(String path) {
     return pathToTypeMap.getOrDefault(
         path, ProjectileType.SLINGSHOT); // default type or handle null
@@ -51,7 +57,7 @@ public class ProjectileFactory {
    *
    * @param path the file path of the projectile's sprite
    * @param damage amount of damage that the projectile does
-   * @return projectile entity
+   * @return fully configured projectile entity
    */
   public static Entity createProjectile(String path, int damage) {
     ProjectileType type = getProjectileTypeFromPath(path);
@@ -110,9 +116,17 @@ public class ProjectileFactory {
 
     gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
+    // enable continuous collision detection for projectiles
+    gunnerProjectile.getComponent(PhysicsComponent.class).getBody().setBullet(true);
     return gunnerProjectile;
   }
 
+  /**
+   * Creates a projectile entity for boss enemies to target defenses.
+   *
+   * @param damage the amount of damage the projectile deals
+   * @return a configured projectile entity
+   */
   public static Entity createBossProjectile(int damage) {
     short targetLayers = PhysicsLayer.NPC;
     ColliderComponent collider = new ColliderComponent();

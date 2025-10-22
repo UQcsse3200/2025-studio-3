@@ -19,8 +19,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.extensions.UIExtension;
-import com.csse3200.game.progression.Profile;
-import com.csse3200.game.progression.skilltree.SkillSet;
 import com.csse3200.game.rendering.TextureRenderComponent;
 import com.csse3200.game.services.ConfigService;
 import com.csse3200.game.services.CurrencyService;
@@ -75,12 +73,8 @@ class TileStorageComponentTest {
     ServiceLocator.registerConfigService(configService);
 
     // creates mock profile service with skillset chain for DefenderStatsComponent static init
-    ProfileService profileService = mock(ProfileService.class);
-    Profile mockProfile = mock(Profile.class);
-    SkillSet mockSkillset = mock(SkillSet.class);
-    lenient().when(profileService.getProfile()).thenReturn(mockProfile);
-    lenient().when(mockProfile.getSkillset()).thenReturn(mockSkillset);
-    lenient().when(mockSkillset.getUpgradeValue(any())).thenReturn(1.0f);
+    ProfileService profileService = new ProfileService();
+    profileService.createProfile("TestProfile", 1);
     ServiceLocator.registerProfileService(profileService);
 
     // creates mock discord rich presence service
