@@ -27,6 +27,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
 
+  // Random number gen for crit chance
+  private Random rand = new Random();
+
   /** Maxhealth upper bound */
   private int maxHealth;
 
@@ -199,7 +202,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
       damageSound.play(0.5f * volume);
     }
 
-    Random rand = new Random();
     if (rand.nextDouble() < critChance) {
       setHealth(getHealth() - target.getBaseAttack() * 2);
       logger.info("Entity just landed a critical hit!");
