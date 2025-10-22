@@ -18,7 +18,7 @@ public class SkipWave implements Command {
     try {
       ServiceLocator.getWaveService().endWave();
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
       return false;
     }
     return true;

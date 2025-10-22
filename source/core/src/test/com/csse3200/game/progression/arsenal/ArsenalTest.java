@@ -3,7 +3,10 @@ package com.csse3200.game.progression.arsenal;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.services.ProfileService;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +19,16 @@ class ArsenalTest {
 
   @BeforeEach
   void setUp() {
+    ServiceLocator.clear();
+    ProfileService profileService = new ProfileService();
+    profileService.createProfile("TestProfile", 1);
+    ServiceLocator.registerProfileService(profileService);
     arsenal = new Arsenal();
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.clear();
   }
 
   @Test

@@ -183,6 +183,8 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/shield-place.mp3",
     "sounds/shooter-place.mp3",
     "sounds/robot-death.mp3",
+    "sounds/teleport_end.mp3",
+    "sounds/teleport_start.mp3",
     "sounds/generator-death.mp3",
     "sounds/game-over-voice.mp3",
     "sounds/item_shell_explosion.mp3",
@@ -190,7 +192,10 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/healer-place.mp3",
     "sounds/boxer-place.mp3",
     "sounds/item_doomhack.mp3",
-    "sounds/item_scrapper.mp3"
+    "sounds/item_scrapper.mp3",
+    "sounds/boxer-place.mp3",
+    "sounds/cha-ching.mp3",
+    "sounds/level-win.mp3"
   };
 
   /**

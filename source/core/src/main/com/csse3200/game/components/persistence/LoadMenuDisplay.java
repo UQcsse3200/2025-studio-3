@@ -1,10 +1,10 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.ui.UIComponent;
@@ -48,9 +48,9 @@ public class LoadMenuDisplay extends UIComponent {
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
-            new ChangeListener() {
+            new ClickListener() {
               @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
+              public void clicked(InputEvent event, float x, float y) {
                 logger.debug(
                     "Save slot {} clicked: {}", slotIndex, saveFiles.get(slotIndex).getName());
                 entity.getEvents().trigger("loadGame", saveFiles.get(slotIndex));
