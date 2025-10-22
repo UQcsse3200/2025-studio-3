@@ -662,7 +662,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void damageRobotsAtPosition(Vector2 pos, float radius, int damage) {
     if (robots.isEmpty()) return;
 
-    List<Entity> robotsToRemove = new ArrayList<>();
+    List<Entity> robotsInRange = new ArrayList<>();
 
     for (Entity robot : robots) {
       CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
@@ -679,20 +679,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         robot.getEvents().trigger("hitMarker", robot);
 
         logger.info(
-            "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
+            "Damaged robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
 
-        // Mark robot for removal if dead
-        boolean mark = stats.isDead();
-        if (mark) {
-          robotsToRemove.add(robot);
-        }
+        robotsInRange.add(robot);
       }
     }
 
-    // Despawn dead robots
-    for (Entity r : robotsToRemove) {
-      requestDespawn(r);
-      robots.remove(r);
+    for (Entity e : robotsInRange) {
+        e.getComponent(CombatStatsComponent.class).handleDeath();
     }
   }
 
