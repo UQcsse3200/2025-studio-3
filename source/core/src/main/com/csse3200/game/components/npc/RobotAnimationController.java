@@ -15,7 +15,8 @@ public class RobotAnimationController extends Component {
   private enum State {
     MOVE_LEFT,
     ATTACK,
-    TELEPORT,
+    TELEPORT_START,
+    TELEPORT_END,
     EXPLODE,
     SHOOT,
     NONE
@@ -29,21 +30,36 @@ public class RobotAnimationController extends Component {
     belowHalfHealth = false;
     currentState = State.NONE;
     animator = this.entity.getComponent(AnimationRenderComponent.class);
-
     entity.getEvents().addListener("moveLeftStart", this::animateMoveLeft);
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
-    entity.getEvents().addListener("teleportStart", this::animateTeleport);
-    entity
-        .getEvents()
-        .addListener(
-            "bomberPreExplode",
-            this::animatePreExplosion); // Explosion will have to be added later.
+    entity.getEvents().addListener("teleportDisappearStart", this::animateTeleportStart);
+    entity.getEvents().addListener("teleportReappearStart", this::animateTeleportEnd);
+    entity.getEvents().addListener("shootStart", this::animateShoot);
+    entity.getEvents().addListener("bomberPreExplode", this::animatePreExplosion);
   }
 
   void animatePreExplosion() {
     currentState = State.EXPLODE; // or a new state like CHARGING
     animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+  }
+
+  void animateTeleportStart() {
+    currentState = State.TELEPORT_START;
+    if (!belowHalfHealth) {
+      animator.startAnimation("teleportStart");
+    } else {
+      animator.startAnimation("teleportDamagedStart");
+    }
+  }
+
+  void animateTeleportEnd() {
+    currentState = State.TELEPORT_END;
+    if (!belowHalfHealth) {
+      animator.startAnimation("teleportEnd");
+    } else {
+      animator.startAnimation("teleportDamagedEnd");
+    }
   }
 
   void animateMoveLeft() {
@@ -55,15 +71,6 @@ public class RobotAnimationController extends Component {
       animator.startAnimation("moveLeft");
     } else {
       animator.startAnimation("moveLeftDamaged");
-    }
-  }
-
-  void animateTeleport() {
-    currentState = State.TELEPORT;
-    if (!belowHalfHealth) {
-      animator.startAnimation("teleport");
-    } else {
-      animator.startAnimation("teleportDamaged");
     }
   }
 
@@ -99,17 +106,20 @@ public class RobotAnimationController extends Component {
         case MOVE_LEFT:
           animateMoveLeft();
           break;
-        case TELEPORT:
-          animateTeleport();
+        case TELEPORT_START:
+          animateTeleportStart();
+          break;
+        case TELEPORT_END:
+          animateTeleportEnd();
           break;
         case ATTACK:
           animateAttack();
           break;
-
-        case EXPLODE:
-          animatePreExplosion();
         case SHOOT:
           animateShoot();
+          break;
+        case EXPLODE:
+          animatePreExplosion();
           break;
       }
     }
