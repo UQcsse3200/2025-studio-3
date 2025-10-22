@@ -266,11 +266,20 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private void populateItemList(Inventory inventory, ConfigService configService) {
     Map<String, Supplier<Entity>> itemFactories =
         Map.of(
-            "grenade", ItemFactory::createGrenade,
-            "coffee", ItemFactory::createCoffee,
-            "buff", ItemFactory::createBuff,
-            "emp", ItemFactory::createEmp,
-            "nuke", ItemFactory::createNuke);
+            "grenade",
+            ItemFactory::createGrenade,
+            "coffee",
+            ItemFactory::createCoffee,
+            "buff",
+            ItemFactory::createBuff,
+            "emp",
+            ItemFactory::createEmp,
+            "nuke",
+            ItemFactory::createNuke,
+            "doomhack",
+            ItemFactory::createDoomHack,
+            "scrapper",
+            ItemFactory::createScrapper);
 
     for (Map.Entry<String, Supplier<Entity>> entry : itemFactories.entrySet()) {
       String key = entry.getKey();

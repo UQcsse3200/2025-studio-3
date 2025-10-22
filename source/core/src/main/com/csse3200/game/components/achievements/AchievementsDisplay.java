@@ -205,7 +205,6 @@ public class AchievementsDisplay extends UIComponent {
    * Shows an info dialog with achievement details using DialogService.
    *
    * @param config the achievement config to show details for
-   * @param isUnlocked whether the achievement is unlocked
    * @param currentProgress current progress towards the achievement
    */
   private void showAchievementDialog(BaseAchievementConfig config, int currentProgress) {
