@@ -178,7 +178,7 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Create symbolic entities to preview the upcoming wave.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#damageRobotsAtPosition(com.badlogic.gdx.math.Vector2,float,int)" class="member-name-link">damageRobotsAtPosition</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;landingPos,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#damageRobotsAtPosition(com.badlogic.gdx.math.Vector2,float,int)" class="member-name-link">damageRobotsAtPosition</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;pos,
  float&nbsp;radius,
  int&nbsp;damage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -245,97 +245,103 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <div class="block">Checks if a character is currently selected.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markNextPlacementFree()" class="member-name-link">markNextPlacementFree</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#knockbackRobotsAtPosition(com.badlogic.gdx.math.Vector2,int)" class="member-name-link">knockbackRobotsAtPosition</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;pos,
+ int&nbsp;dist)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Knockback all robots in a circular area around the given world position.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#markNextPlacementFree()" class="member-name-link">markNextPlacementFree</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Mark the next unit placement as free (used by slot-machine rewards).</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePreviewEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removePreviewEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePreviewEntity(com.csse3200.game.entities.Entity)" class="member-name-link">removePreviewEntity</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;entity)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Removes a preview entity created for wave previews.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removeUnit(int)" class="member-name-link">removeUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Remove a unit form a tile</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resize()" class="member-name-link">resize</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adjusts all entities after a window resize by recalculating world scale and layout.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#screenToGridIndex(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">screenToGridIndex</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;screenPx)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#screenToGridIndex(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">screenToGridIndex</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;screenPx)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Convert SCREEN pixel coordinates (window pixels) into a grid index.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setGrid(com.csse3200.game.areas.LevelGameGrid)" class="member-name-link">setGrid</a><wbr>(<a href="LevelGameGrid.html" title="class in com.csse3200.game.areas">LevelGameGrid</a>&nbsp;newGrid)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Setter to set grid in LevelGameArea</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsCharacterSelected(boolean)" class="member-name-link">setIsCharacterSelected</a><wbr>(boolean&nbsp;status)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIsCharacterSelected(boolean)" class="member-name-link">setIsCharacterSelected</a><wbr>(boolean&nbsp;status)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets whether a character is currently selected.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScaling()" class="member-name-link">setScaling</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setScaling()" class="member-name-link">setScaling</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Uses stage height and width to set variables relating to tile, grid and character sizing and
  placement.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSelectedUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setSelectedUnit</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSelectedUnit(com.csse3200.game.entities.Entity)" class="member-name-link">setSelectedUnit</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;unit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Setter for selected_unit</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnBoss(int,com.csse3200.game.entities.factories.BossFactory.BossTypes)" class="member-name-link">spawnBoss</a><wbr>(int&nbsp;row,
- <a href="../entities/factories/BossFactory.BossTypes.html" title="enum class in com.csse3200.game.entities.factories">BossFactory.BossTypes</a>&nbsp;bossType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnBossProjectile(com.csse3200.game.entities.Entity)" class="member-name-link">spawnBossProjectile</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;boss)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnBoss(int,com.csse3200.game.entities.factories.BossFactory.BossTypes)" class="member-name-link">spawnBoss</a><wbr>(int&nbsp;row,
+ <a href="../entities/factories/BossFactory.BossTypes.html" title="enum class in com.csse3200.game.entities.factories">BossFactory.BossTypes</a>&nbsp;bossType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection,int)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnBossProjectile(com.csse3200.game.entities.Entity)" class="member-name-link">spawnBossProjectile</a><wbr>(<a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;boss)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnProjectile(com.badlogic.gdx.math.Vector2,com.csse3200.game.entities.Entity,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection,int)" class="member-name-link">spawnProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos,
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction,
  int&nbsp;damage)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns a projectile entity at a given position and initiates its behaviour, depending on the
  type of projectile (identified by the ProjectileTagComponent.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
  int&nbsp;row,
  <a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawn a robot at the specified grid location.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotOnDefence(com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobotOnDefence</a><wbr>(<a href="../entities/factories/RobotFactory.RobotType.html" title="enum class in com.csse3200.game.entities.factories">RobotFactory.RobotType</a>&nbsp;robotType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns a robot directly on top of an existing defence (placed unit) on the grid.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnRobotProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobotProjectile(com.badlogic.gdx.math.Vector2)" class="member-name-link">spawnRobotProjectile</a><wbr>(com.badlogic.gdx.math.Vector2&nbsp;spawnPos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Spawns a projectile (bullet) for the gunner robot type</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnUnit(int)" class="member-name-link">spawnUnit</a><wbr>(int&nbsp;position)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Adds a unit to the grid</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#stageToWorld(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">stageToWorld</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts stage (mouse/screen) coordinates into world (entity placement) coordinates</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>com.badlogic.gdx.math.GridPoint2</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#worldToStage(com.badlogic.gdx.math.GridPoint2)" class="member-name-link">worldToStage</a><wbr>(com.badlogic.gdx.math.GridPoint2&nbsp;pos)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Converts world (entity placement) coordinates into stage (mouse/screen) coordinates</div>
 </div>
 </div>
@@ -467,15 +473,28 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
 <li>
 <section class="detail" id="damageRobotsAtPosition(com.badlogic.gdx.math.Vector2,float,int)">
 <h3>damageRobotsAtPosition</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">damageRobotsAtPosition</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;landingPos,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">damageRobotsAtPosition</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;pos,
  float&nbsp;radius,
  int&nbsp;damage)</span></div>
 <div class="block">Deal damage to all robots in a circular area around the given world position.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>landingPos</code> - The world coordinates where the projectile landed</dd>
+<dd><code>pos</code> - The world coordinates where the damage is applied</dd>
 <dd><code>radius</code> - Radius of effect in world units (e.g., 1 tile = tileSize)</dd>
 <dd><code>damage</code> - Amount of damage to apply</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="knockbackRobotsAtPosition(com.badlogic.gdx.math.Vector2,int)">
+<h3>knockbackRobotsAtPosition</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">knockbackRobotsAtPosition</span><wbr><span class="parameters">(com.badlogic.gdx.math.Vector2&nbsp;pos,
+ int&nbsp;dist)</span></div>
+<div class="block">Knockback all robots in a circular area around the given world position.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>pos</code> - The world coordinates where the effect happens</dd>
+<dd><code>dist</code> - the distance that the robots get knocked back (in tile numbers)</dd>
 </dl>
 </section>
 </li>
