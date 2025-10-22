@@ -13,7 +13,7 @@ import com.csse3200.game.services.ServiceLocator;
 public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
   // Priority during spawn is higher than attack to stop bungee from moving or
   // attacking during the teleport animation.
-  private final int spawnPriority = 200;
+  private static final int SPAWN_PRIORITY = 200;
 
   // Stores whether the task is finished
   private boolean finished;
@@ -39,7 +39,7 @@ public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
     if (finished) {
       return -1;
     } else {
-      return spawnPriority;
+      return SPAWN_PRIORITY;
     }
   }
 

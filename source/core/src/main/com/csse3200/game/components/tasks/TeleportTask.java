@@ -24,7 +24,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
 
   // Priority for teleporting is higher than walking and attacks, so you can't just wall them with
   // one defence
-  private final int teleportPriority = 200;
+  private static final int TELEPORT_PRIORITY = 200;
 
   // Timing and state
   private float timer;
@@ -75,9 +75,9 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
       return -1;
     }
     if (currentState != State.NOT_TELEPORTING) {
-      return teleportPriority;
+      return TELEPORT_PRIORITY;
     }
-    return readyToTeleport() ? teleportPriority : -1;
+    return readyToTeleport() ? TELEPORT_PRIORITY : -1;
   }
 
   @Override
