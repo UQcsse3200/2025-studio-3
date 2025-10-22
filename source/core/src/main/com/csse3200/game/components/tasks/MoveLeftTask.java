@@ -45,10 +45,6 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
 
     AnimationRenderComponent anim = owner.getEntity().getComponent(AnimationRenderComponent.class);
-    // defensive programming
-    if (anim == null) {
-      return;
-    }
   }
 
   // This was used to switch between moving and waiting when this was wanderTask.
