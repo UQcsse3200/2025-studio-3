@@ -56,13 +56,13 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   public void create(TaskRunner taskRunner) {
     super.create(taskRunner);
     this.timer = cooldownSec;
+    teleportsDone = 0;
   }
 
   @Override
   public void start() {
     super.start();
     timer = cooldownSec;
-    teleportsDone = 0;
     currentState = State.NOT_TELEPORTING;
   }
 
