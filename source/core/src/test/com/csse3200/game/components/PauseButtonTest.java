@@ -36,8 +36,7 @@ class PauseButtonTest {
 
     when(stage.getWidth()).thenReturn(800f);
     when(stage.getHeight()).thenReturn(600f);
-    when(resourceService.getAsset(anyString(), eq(Texture.class))).
-        thenReturn(mock(Texture.class));
+    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
     when(entity.getEvents()).thenReturn(events);
 
     pauseButton = new PauseButton();
