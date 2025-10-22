@@ -6,8 +6,6 @@ import com.csse3200.game.entities.Entity;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.RenderComponent;
 import com.csse3200.game.rendering.TextureRenderComponent;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class HitMarkerComponent extends Component {
   protected static final float FLASH_DURATION = 0.13f;
