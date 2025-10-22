@@ -1033,10 +1033,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         position % levelCols);
   }
 
-    /**
-     * Counts the number of placed generator units on the grid
-     * @return number of placed generators
-     */
+  /**
+   * Counts the number of placed generator units on the grid
+   *
+   * @return number of placed generators
+   */
   private int countPlacedGenerators() {
     int count = 0;
     if (ServiceLocator.getGameArea() != null) {
