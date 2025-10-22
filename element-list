@@ -4,6 +4,7 @@ com.csse3200.game.ai.tasks
 com.csse3200.game.areas
 com.csse3200.game.components
 com.csse3200.game.components.achievements
+com.csse3200.game.components.credits
 com.csse3200.game.components.currency
 com.csse3200.game.components.dialog
 com.csse3200.game.components.dossier
@@ -40,6 +41,7 @@ com.csse3200.game.cutscene.runtime.components
 com.csse3200.game.cutscene.runtime.states
 com.csse3200.game.cutscene.validators
 com.csse3200.game.cutscene.validators.actionvalidators
+com.csse3200.game.data.credits
 com.csse3200.game.entities
 com.csse3200.game.entities.configs
 com.csse3200.game.entities.factories
