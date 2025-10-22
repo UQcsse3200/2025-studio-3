@@ -15,7 +15,8 @@
         "direction": "right",
         "numSprites": 46,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelOne"
       },
       "shield": {
         "health": 200,
@@ -31,13 +32,14 @@
         "direction": "right",
         "numSprites": 4,
         "attackSpeed": 1,
-        "critChance": 0
+        "critChance": 0,
+        "level": "levelOne"
       },
       "armyguy" : {
         "health": 65,
         "range": 1000,
         "name": "Army Guy",
-        "description": "",
+        "description": "RapidFire is his middle name. Which is crazy because he's slower than the slingshooter... what were his parents thinking?",
         "assetPath": "images/entities/defences/army_guy_1.png",
         "atlasPath": "images/entities/defences/machine_gun.atlas",
         "projectilePath": "images/effects/bullet.png",
@@ -47,13 +49,14 @@
         "direction": "right",
         "numSprites": 14,
         "attackSpeed": 0.5,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelTwo"
       },
       "harpoon" : {
         "health": 50,
         "range": 750,
         "name": "Harpoon",
-        "description": "",
+        "description": "He has a harpoon that will go right through you. Literally! Wipe out a whole lane with just one harpoon",
         "assetPath": "images/entities/defences/harpoon0.png",
         "atlasPath": "images/entities/defences/harpoon.atlas",
         "projectilePath": "images/effects/harpoon_projectile.png",
@@ -63,52 +66,8 @@
         "direction": "right",
         "numSprites": 26,
         "attackSpeed": 1,
-        "critChance": 1
-      },
-      "mortar" : {
-        "health": 100,
-        "range": 1000,
-        "name": "Mortar",
-        "description": "",
-        "assetPath": "images/entities/defences/mortar0.png",
-        "atlasPath": "images/entities/defences/mortar.atlas",
-        "projectilePath": "images/effects/shell.png",
-        "cost": 75,
-        "damage": 12,
-        "soundPath": "sounds/mortar-place.mp3",
-        "direction": "right",
-        "numSprites": 43,
-        "attackSpeed": 1,
-        "critChance": 1
-      },
-      "shadow" : {
-        "health": 20,
-        "range": 250,
-        "name": "Shadow",
-        "description": "",
-        "assetPath": "images/entities/defences/shadow_idle1.png",
-        "atlasPath": "images/entities/defences/shadow.atlas",
-        "projectilePath": "images/effects/shock.png",
-        "cost": 50,
-        "damage": 10,
-        "soundPath": "sounds/shadow-place.mp3",
-        "direction": "left",
-        "numSprites": 4,
-        "attackSpeed": 1.5,
-        "critChance": 1
-      },
-      "wall": {
-        "health": 100,
-        "range": 0,
-        "name": "Wall",
-        "assetPath": "images/entities/defences/wall.png",
-        "atlasPath": "images/entities/defences/wall.atlas",
-        "projectilePath": "",
-        "damage": 0,
-        "direction": "right",
-        "numSprites": 2,
-        "attackSpeed": 0,
-        "critChance": 0
+        "critChance": 1,
+        "level": "levelThree"
       },
       "boxer": {
         "health": 60,
@@ -124,7 +83,56 @@
         "direction": "right",
         "numSprites": 3,
         "attackSpeed": 1,
-        "critChance": 1
+        "critChance": 1,
+        "level": "levelThree"
+      },
+      "mortar" : {
+        "health": 100,
+        "range": 1000,
+        "name": "Mortar",
+        "description": "It may not always hit. But when it does? Ouch.",
+        "assetPath": "images/entities/defences/mortar0.png",
+        "atlasPath": "images/entities/defences/mortar.atlas",
+        "projectilePath": "images/effects/shell.png",
+        "cost": 75,
+        "damage": 12,
+        "soundPath": "sounds/mortar-place.mp3",
+        "direction": "right",
+        "numSprites": 43,
+        "attackSpeed": 1,
+        "critChance": 1,
+        "level": "levelFour"
+      },
+      "shadow" : {
+        "health": 20,
+        "range": 250,
+        "name": "Shadow",
+        "description": "Pesky robots gone too far? Shoot backwards with the shadow man",
+        "assetPath": "images/entities/defences/shadow_idle1.png",
+        "atlasPath": "images/entities/defences/shadow.atlas",
+        "projectilePath": "images/effects/shock.png",
+        "cost": 50,
+        "damage": 10,
+        "soundPath": "sounds/shadow-place.mp3",
+        "direction": "left",
+        "numSprites": 4,
+        "attackSpeed": 1.5,
+        "critChance": 1,
+        "level": "levelFive"
+      },
+      "wall": {
+        "health": 100,
+        "range": 0,
+        "name": "Wall",
+        "assetPath": "images/entities/defences/wall.png",
+        "atlasPath": "images/entities/defences/wall.atlas",
+        "projectilePath": "",
+        "damage": 0,
+        "direction": "right",
+        "numSprites": 2,
+        "attackSpeed": 0,
+        "critChance": 0,
+        "level": "levelOne"
       }
     },
     "generators": {
@@ -137,18 +145,20 @@
         "interval": 7,
         "scrapValue": 25,
         "cost": 50,
-        "soundPath": "sounds/forge-place.mp3"
+        "soundPath": "sounds/forge-place.mp3",
+        "level": "levelOne"
       },
       "healer": {
         "name": "Healer",
-        "description": "Skibidi",
+        "description": "Low HP getting you down? The healer can heal all your active defences. What a lad",
         "assetPath": "images/entities/defences/healer_1.png",
         "atlasPath": "images/entities/defences/healer.atlas",
         "soundPath": "sounds/healer-place.mp3",
         "health": 50,
         "interval": 0,
         "scrapValue": 0,
-        "cost": 200
+        "cost": 200,
+        "level": "levelFour"
       }
     }
   }

@@ -11,6 +11,7 @@ public class BaseDefenderConfig extends BaseEntityConfig {
   private int numSprites;
   private String projectilePath;
   private String soundPath;
+  private String level;
 
   /** Creates a new BaseDefenceConfig with default values. */
   public BaseDefenderConfig() {
@@ -96,5 +97,14 @@ public class BaseDefenderConfig extends BaseEntityConfig {
    */
   public String getSoundPath() {
     return soundPath;
+  }
+
+  /**
+   * Gets the first level that the defence entity is playable on
+   *
+   * @return the level key
+   */
+  public String getLevelUnlockedOn() {
+    return level;
   }
 }

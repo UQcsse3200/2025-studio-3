@@ -8,8 +8,16 @@ import org.slf4j.LoggerFactory;
 /**
  * An extensions of CombatStatsComponent for defender-type entities.
  *
- * <p>This component stores additional combat-related stats beyond health and base attack, such as
- * range, attack speed, and critical hit chance.
+ * <p>In addition to health and base attack, this component manages stats like:
+ *
+ * <ul>
+ *   <li>Attack range
+ *   <li>Attack speed
+ *   <li>Critical hit chance
+ *   <li>Scrap cost
+ * </ul>
+ *
+ * These values may be adjusted based on unlocked player skills from the skill tree.
  */
 public class DefenderStatsComponent extends CombatStatsComponent {
   private static final Logger logger = LoggerFactory.getLogger(DefenderStatsComponent.class);
@@ -22,9 +30,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
-
-  /** Maxhealth upper bound */
-  private int maxHealth;
 
   /** Scrap cost of the defender. */
   private int cost;
@@ -52,7 +57,7 @@ public class DefenderStatsComponent extends CombatStatsComponent {
           .getUpgradeValue(Skill.StatType.CRIT_CHANCE);
 
   /**
-   * Creates a new DefenceStatsComponent with the given stats.
+   * Creates a new {@code DefenderStatsComponent} with the given stats.
    *
    * @param health the maximum health of the defender
    * @param baseAttack the base attack damage
@@ -68,29 +73,10 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
-    maxHealth = (int) Math.ceil(health * HEALTH_UPGRADE);
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
     setCost(cost);
-  }
-
-  // unused atm
-  public void healthBuff() {
-    int newHealth = getMaxHealth() * 2;
-    setMaxHealth(newHealth);
-    heal(newHealth);
-    logger.info("Defender buffed! New max health: {}", getMaxHealth());
-  }
-
-  // unused atm
-  public void healthUnBuff() {
-    int newHealth = getMaxHealth() / 2;
-    setMaxHealth(newHealth);
-    if (getHealth() > newHealth) {
-      setHealth(newHealth);
-    }
-    logger.info("Defender unbuffed! New max health: {}", getMaxHealth());
   }
 
   /** Doubles the defender's attack damage. */
@@ -109,18 +95,11 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
   }
 
-  /** Sets the defender's max health limit */
-  private void setMaxHealth(int newHealth) {
-    this.maxHealth = newHealth;
-  }
-
-  /** Heals the defender by the specified amount, up to its maximum health. */
-  private void heal(int amount) {
-    int newHealth = Math.min(getHealth() + amount, getMaxHealth());
-    setHealth(newHealth);
-  }
-
-  /** Sets the defender's attack range. */
+  /**
+   * Sets the defender's attack range.
+   *
+   * @param range the maximum range; must be non-negative
+   */
   public void setRange(int range) {
     if (range < 0) {
       this.range = 0;
@@ -130,13 +109,19 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   }
 
   /**
-   * @return the defender's maximum attack range
+   * Returns the attack range of the defender.
+   *
+   * @return range value in world units
    */
   public int getRange() {
     return range;
   }
 
-  /** Sets the defender's attack speed. */
+  /**
+   * Sets the defender's attack speed.
+   *
+   * @param attackSpeed the base speed; must be non-negative
+   */
   public void setAttackSpeed(float attackSpeed) {
     if (attackSpeed < 0) {
       this.attackSpeed = 0;
@@ -146,22 +131,21 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   }
 
   /**
-   * @return the defender's attack speed
+   * Returns the attack speed of the defender.
+   *
+   * @return the speed value (e.g., attacks per second)
    */
   public float getAttackSpeed() {
     return attackSpeed;
   }
 
-  /** Sets the defender's critical hit chance (as a percentage). */
+  /**
+   * Sets the critical hit chance.
+   *
+   * @param critChance percentage chance (e.g., 0.25 for 25%)
+   */
   public void setCritChance(float critChance) {
     this.critChance = critChance * CRIT_UPGRADE;
-  }
-
-  /**
-   * @return the defender's critical hit chance (percentage)
-   */
-  public float getCritChance() {
-    return critChance;
   }
 
   /**
