@@ -46,7 +46,9 @@ public class LevelMapTutorial extends UIComponent {
     "Welcome to Level 1!",
     "Drag defence units from the hot-bar onto the grid.",
     "Generators produce scrap metal which can be used to place defences.",
-    "Human defenders attack incoming robot enemies."
+    "Human defenders attack incoming robot enemies.",
+    "Right click to cancel drag / delete placed unit.",
+    "Deleting a unit refunds half the scrap cost"
   };
 
   /** Alpha transparency value for the overlay. */
