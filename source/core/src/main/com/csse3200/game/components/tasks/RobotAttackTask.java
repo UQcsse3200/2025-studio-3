@@ -47,9 +47,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     phys.getBody().setLinearVelocity(0f, 0f);
   }
 
-  /**
-   * Updates the task each game frame
-   */
+  /** Updates the task each game frame */
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
@@ -65,7 +63,7 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     // play sound every 0.5s regardless of attack timing
     if (soundTimeLeft - Gdx.graphics.getDeltaTime() < 0) {
       Sound attackSound =
-              ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
+          ServiceLocator.getResourceService().getAsset("sounds/robot-attack.mp3", Sound.class);
       attackSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.3f);
       soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     }
