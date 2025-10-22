@@ -63,31 +63,31 @@ class RobotAttackTaskTest {
 
   @Test
   void foundWhenInRange() {
-    attacker.setPosition(0, 0);
-    defender.setPosition(50, 0);
-    assertEquals(task.getNearestVisibleTarget(), defender);
+    attacker.setPosition(10, 0);
+    defender.setPosition(0, 0);
+    assertEquals(defender, task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenTargetNotMatchLayer() {
     when(defender.getComponent(HitboxComponent.class).getLayer())
         .thenReturn((short) (defenderLayer + 1));
-    attacker.setPosition(0, 0);
-    defender.setPosition(10, 0);
+    attacker.setPosition(10, 0);
+    defender.setPosition(0, 0);
     assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenTargetNotInSameLane() {
-    attacker.setPosition(0, 0);
-    defender.setPosition(10, 1000);
+    attacker.setPosition(10, 0);
+    defender.setPosition(0, 1000);
     assertNull(task.getNearestVisibleTarget());
   }
 
   @Test
   void noFoundWhenAttackerNotInSameLane() {
-    attacker.setPosition(0, 1000);
-    defender.setPosition(10, 0);
+    attacker.setPosition(10, 1000);
+    defender.setPosition(0, 0);
     assertNull(task.getNearestVisibleTarget());
   }
 

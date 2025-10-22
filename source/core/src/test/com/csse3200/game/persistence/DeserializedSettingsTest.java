@@ -46,6 +46,8 @@ class DeserializedSettingsTest {
     assertEquals(Input.Keys.S, settingsFromMock.getDownButton());
     assertEquals(Input.Keys.A, settingsFromMock.getLeftButton());
     assertEquals(Input.Keys.D, settingsFromMock.getRightButton());
+    assertEquals(Input.Keys.Z, settingsFromMock.getZoomInButton());
+    assertEquals(Input.Keys.X, settingsFromMock.getZoomOutButton());
     assertEquals(Settings.UIScale.MEDIUM, settingsFromMock.getCurrentUIScale());
     assertEquals(Settings.Quality.HIGH, settingsFromMock.getQuality());
     assertEquals(Settings.Mode.WINDOWED, settingsFromMock.getCurrentMode());
@@ -121,6 +123,12 @@ class DeserializedSettingsTest {
 
     deserializedSettings.setRightButton(Input.Keys.RIGHT);
     assertEquals(Input.Keys.RIGHT, deserializedSettings.getRightButton());
+
+    deserializedSettings.setZoomInButton(Input.Keys.Z);
+    assertEquals(Input.Keys.Z, deserializedSettings.getZoomInButton());
+
+    deserializedSettings.setZoomOutButton(Input.Keys.X);
+    assertEquals(Input.Keys.X, deserializedSettings.getZoomOutButton());
   }
 
   @Test
@@ -293,6 +301,8 @@ class DeserializedSettingsTest {
     when(mockSettings.getDownButton()).thenReturn(Input.Keys.S);
     when(mockSettings.getLeftButton()).thenReturn(Input.Keys.A);
     when(mockSettings.getRightButton()).thenReturn(Input.Keys.D);
+    when(mockSettings.getZoomInButton()).thenReturn(Input.Keys.Z);
+    when(mockSettings.getZoomOutButton()).thenReturn(Input.Keys.X);
     when(mockSettings.getCurrentUIScale()).thenReturn(Settings.UIScale.MEDIUM);
     when(mockSettings.getQuality()).thenReturn(Settings.Quality.HIGH);
     when(mockSettings.getCurrentMode()).thenReturn(Settings.Mode.WINDOWED);

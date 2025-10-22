@@ -78,7 +78,7 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     if (target == null) {
       return Float.MAX_VALUE;
     }
-    return owner.getEntity().getPosition().dst(target.getPosition());
+    return owner.getEntity().getCenterPosition().dst(target.getCenterPosition());
   }
 
   /**
@@ -136,23 +136,34 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
     float tileSize = area.getTileSize();
 
-    // done with the help of OpenAI
-    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
-      offsetFrom.set(from.x, from.y + yOffset);
-      end.set(offsetFrom).mulAdd(castDir, attackRange);
+    float forwardOffset = tileSize * 0.45f + 0.05f;
+    if (forwardOffset > attackRange - 0.01f) {
+      forwardOffset = Math.max(0f, attackRange - 0.01f);
+    }
 
-      // find first enemy entity in current entities line of sight in the given direction and range
-      boolean didHit =
-          physics.raycast(
-              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+    final float backupOffset = 0.10f;
 
-      // if enemy in front of defender within the attack range, return enemy
-      if (didHit) {
-        Fixture hitFixture = tempHit.getFixture();
-        if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
-          return entity;
-        }
-      }
+    offsetFrom.set(from.x, from.y - 20).mulAdd(castDir, forwardOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset);
+
+    boolean didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
+    }
+
+    // second raycast with small backward offset to catch targets just behind cover
+    offsetFrom.set(from.x - 20, from.y - 20).mulAdd(castDir, -backupOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset + backupOffset);
+
+    didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
     }
     return null;
   }

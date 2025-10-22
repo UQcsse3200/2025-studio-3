@@ -63,7 +63,7 @@ public class AttackTask extends TargetDetectionTasks {
   @Override
   public void update() {
     Entity target = getNearestVisibleTarget();
-    if (target == null || !isTargetInSameLane(target)) {
+    if (target == null) {
       return;
     }
 
@@ -89,7 +89,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1; // stop task if no target
     }
-    if (dst > attackRange || !isTargetInSameLane(target)) {
+    if (dst > attackRange) {
       return -1; // stop task when target not visible, out of range, or not in the same lane
     }
     return 1;
@@ -106,7 +106,7 @@ public class AttackTask extends TargetDetectionTasks {
     if (target == null) {
       return -1;
     }
-    if (dst <= attackRange && isTargetInSameLane(target)) {
+    if (dst <= attackRange) {
       return 1; // start task if target is visible, in range, and in the same lane
     }
     return -1;
