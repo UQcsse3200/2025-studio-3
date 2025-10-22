@@ -381,6 +381,7 @@ public class HotbarDisplay extends UIComponent {
       }
       lastFurnaceCount = currentFurnaceCount;
     }
+    // Handles the message pop-up when the player doesn't have enough scrap
     if (insufficientScrapStartTime != -1) {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {

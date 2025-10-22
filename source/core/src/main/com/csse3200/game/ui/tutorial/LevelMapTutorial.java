@@ -134,27 +134,6 @@ public class LevelMapTutorial extends UIComponent {
   }
 
   /**
-   * Changes the tutorial message depending on which button the user presses.
-   *
-   * @param forward determines whether the user progresses through the tutorial or backwards.
-   */
-  public void changeText(boolean forward) {
-    if (!active) return;
-
-    if (forward) {
-      if (step < tutorialMessages.length - 1) {
-        nextStep();
-      } else {
-        endTutorial();
-      }
-    } else {
-      if (step > 0) {
-        previousStep();
-      }
-    }
-  }
-
-  /**
    * Advances to the next tutorial message. If the final message has been shown, end the tutorial.
    */
   private void nextStep() {
@@ -163,17 +142,6 @@ public class LevelMapTutorial extends UIComponent {
       messageLabel.setText(tutorialMessages[step].toUpperCase());
     } else {
       endTutorial();
-    }
-  }
-
-  /**
-   * Shows the previous tutorial message. If it is pressed on the first tutorial message, nothing
-   * will happen.
-   */
-  private void previousStep() {
-    step--;
-    if (step >= 0) {
-      messageLabel.setText(tutorialMessages[step]);
     }
   }
 
