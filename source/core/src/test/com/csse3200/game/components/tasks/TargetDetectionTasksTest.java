@@ -102,7 +102,7 @@ class TargetDetectionTasksTest {
     @Test
     void getDistanceToTargetTest() {
         Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
+        when(target.getCenterPosition()).thenReturn(new Vector2(5f, 0f));
 
         doReturn(target).when(targetTask).getNearestVisibleTarget();
 
@@ -123,7 +123,7 @@ class TargetDetectionTasksTest {
 
         // in range
         Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
+        when(target.getCenterPosition()).thenReturn(new Vector2(5f, 0f));
 
         doReturn(target).when(targetTask).getNearestVisibleTarget();
 
@@ -132,7 +132,7 @@ class TargetDetectionTasksTest {
 
         // out of range
         Entity targetOut = mock(Entity.class);
-        when(targetOut.getPosition()).thenReturn(new Vector2(15f, 0f));
+        when(targetOut.getCenterPosition()).thenReturn(new Vector2(15f, 0f));
         doReturn(targetOut).when(targetTask).getNearestVisibleTarget();
 
         int priorityOut = targetTask.getPriority();
@@ -151,7 +151,7 @@ class TargetDetectionTasksTest {
 
         // in range
         Entity target = mock(Entity.class);
-        when(target.getPosition()).thenReturn(new Vector2(5f, 0f));
+        when(target.getCenterPosition()).thenReturn(new Vector2(5f, 0f));
         doReturn(target).when(targetTask).getNearestVisibleTarget();
 
         int priority = targetTask.getPriority();
@@ -160,7 +160,7 @@ class TargetDetectionTasksTest {
 
         // out of range
         Entity targetOut = mock(Entity.class);
-        when(targetOut.getPosition()).thenReturn(new Vector2(15f, 0f));
+        when(targetOut.getCenterPosition()).thenReturn(new Vector2(15f, 0f));
         doReturn(targetOut).when(targetTask).getNearestVisibleTarget();
 
         int priorityOut = targetTask.getPriority();
