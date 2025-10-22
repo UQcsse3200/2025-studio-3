@@ -665,7 +665,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     Entity firstboss = BossFactory.createBossType(bossType);
     int spawnCol = levelCols;
-    final Random random = new Random();
+    final Random random = new Random(System.nanoTime());
     final int firstspawnRow = random.nextInt(levelRows);
 
     float spawnX = xOffset + tileSize * spawnCol;
@@ -737,10 +737,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             logger.info("Spawning second boss after delay");
             Entity secondBoss = BossFactory.createBossType(bossType);
 
-            int secondBossRow;
-            do {
-              secondBossRow = random.nextInt(levelRows);
-            } while (secondBossRow == firstspawnRow);
+              Random secondRandom = new Random(System.nanoTime() + System.currentTimeMillis());
+              int secondBossRow = secondRandom.nextInt(levelRows);
 
             float secondSpawnY = yOffset + tileSize * secondBossRow - (tileSize / 1.5f);
             secondBoss.setPosition(spawnX, secondSpawnY);
