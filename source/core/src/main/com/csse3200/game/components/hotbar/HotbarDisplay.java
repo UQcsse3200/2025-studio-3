@@ -172,7 +172,7 @@ public class HotbarDisplay extends UIComponent {
     startX = cellWidth / 6;
     // creates down arrow image
     Image upDownArrow = new Image(new Texture("images/ui/up_down_arrow.png"));
-    upDownArrow.setSize(scaling, (float) (0.5 * scaling));
+    upDownArrow.setSize((float) (1.5 * scaling), (float) (0.6 * scaling));
     upDownArrow.setPosition((float) (0.45 * hotbarWidth), -40);
 
     // creates all the items
