@@ -621,7 +621,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
     if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
-      projectile.getEvents().addListener("DESPAWN_SLINGSHOT_EVENT", this::requestDespawn);
+      projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
     }
 
     ServiceLocator.getProfileService()
@@ -642,7 +642,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     projectile.scaleHeight(30f);
     projectile.scaleWidth(30f);
-    projectile.getEvents().addListener("DESPAWN_SLINGSHOT_EVENT", this::requestDespawn);
+    projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
 
     spawnEntity(projectile);
     logger.info("Gunner projectile spawned at {}", spawnPos);
@@ -879,7 +879,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile
         .getEvents()
         .addListener(
-            "DESPAWN_SLINGSHOT_EVENT",
+            DESPAWN_SLINGSHOT_EVENT,
             (projectileEntity) -> {
               System.out.println("DEBUG: Boss projectile hit defense - despawning");
               requestDespawn(projectile);
