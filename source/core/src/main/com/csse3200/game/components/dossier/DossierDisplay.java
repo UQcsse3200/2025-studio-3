@@ -147,7 +147,14 @@ public class DossierDisplay extends UIComponent {
 
   /** Loads enemy entities */
   private void loadEnemyEntities() {
-    entities = enemyConfigs.keySet().toArray(new String[0]);
+    // Exclude gunner robot from the dossier
+    java.util.List<String> filtered = new java.util.ArrayList<>();
+    for (String key : enemyConfigs.keySet()) {
+      if (!"gunnerRobot".equals(key)) {
+        filtered.add(key);
+      }
+    }
+    entities = filtered.toArray(new String[0]);
     logger.info("[DossierDisplay] Enemy mode - entities count: {}", entities.length);
     if (logger.isDebugEnabled()) {
       logger.debug("[DossierDisplay] Enemy mode entities: {}", java.util.Arrays.toString(entities));
@@ -772,8 +779,14 @@ public class DossierDisplay extends UIComponent {
    */
   private String[] getAllEntitiesForButtons() {
     if (type) {
-      // For enemies, return all enemy entities
-      return enemyConfigs.keySet().toArray(new String[0]);
+      // For enemies, return all enemy entities excluding gunner robot
+      java.util.List<String> filtered = new java.util.ArrayList<>();
+      for (String key : enemyConfigs.keySet()) {
+        if (!"gunnerRobot".equals(key)) {
+          filtered.add(key);
+        }
+      }
+      return filtered.toArray(new String[0]);
     } else {
       // For humans, return all defenders and generators (excluding wall)
       java.util.List<String> allDefenderKeys = new java.util.ArrayList<>();
