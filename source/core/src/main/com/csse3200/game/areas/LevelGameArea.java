@@ -732,9 +732,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     firstboss
         .getEvents()
-        .addListener("fireProjectile", (Entity bossEntity) -> spawnBossProjectile(bossEntity));
+            .addListener("fireProjectile", this::spawnBossProjectile);
 
-    firstboss.getEvents().addListener("despawnRobot", (Entity target) -> {});
+      firstboss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
     final boolean[] isFirstBossDead = {false};
     firstboss
@@ -799,8 +799,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
             secondBoss
                 .getEvents()
-                .addListener(
-                    "fireProjectile", (Entity bossEntity) -> spawnBossProjectile(bossEntity));
+                    .addListener("fireProjectile", LevelGameArea.this::spawnBossProjectile);
+
             secondBoss.getEvents().addListener("despawnRobot", (Entity target) -> {});
             final boolean[] isSecondBossDead = {false};
             secondBoss
