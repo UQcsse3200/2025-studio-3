@@ -48,10 +48,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.GameStateService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
@@ -101,15 +98,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   // Level configuration
   private final String currentLevelKey;
+  private String nextLevel;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
   private final ItemHandler itemHandler = new ItemHandler(this);
   private final WavePreviewManager wavePreview = new WavePreviewManager(this);
-
-  private static final List<String> levelOrder =
-      List.of("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -143,6 +138,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     BaseLevelConfig levelConfig = configService.getLevelConfig(currentLevelKey);
 
     if (levelConfig != null) {
+      nextLevel = levelConfig.getNextLevel();
       levelRows = levelConfig.getRows();
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
@@ -223,28 +219,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     createLevelCompleteEntity();
   }
 
-  /** Unlocks all entities that are listed as playing on the current game level */
-  private void unlockAllEntities(Profile profile) {
-    for (String level : levelOrder) {
-      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-        if (Arsenal.ALL_DEFENCES.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockDefence(key);
-        }
-      }
-      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-        if (Arsenal.ALL_GENERATORS.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockGenerator(key);
-        }
-      }
-      if (level.equals(currentLevelKey)) {
-        break;
-      }
-    }
-  }
-
   /** Populates unitList with all available defenders and generators from the player's arsenal. */
   private void populateUnitList(Profile profile, ConfigService configService) {
-    unlockAllEntities(profile);
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
       if (config != null) {
@@ -329,15 +305,42 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   /** Spawns a static defensive wall at the left edge of the map. */
   void spawnWall() {
-    float tileY = yOffset - tileSize / 5;
-    float wallSize = tileSize * 6;
+    for (int i = 0; i < 5; i++) {
+      Entity wall = DefenceFactory.createWall();
 
-    Entity wall = DefenceFactory.createWall();
-    wall.setPosition(xOffset + tileSize * -1, tileY);
-    wall.scaleHeight(wallSize);
+      Vector2 damageTile = new Vector2(xOffset + tileSize * -1, yOffset + (i * tileSize));
+      wall.setPosition(damageTile);
+      wall.scaleHeight(tileSize);
+      Vector2 knockbackTile = new Vector2(damageTile.x + tileSize, damageTile.y);
+      Vector2 knockbackTile2 = new Vector2(damageTile.x + 2 * tileSize, damageTile.y);
 
-    spawnEntity(wall);
-    wall.getEvents().trigger("idleStart");
+      wall.getEvents()
+          .addListener(
+              ENTITY_DEATH_EVENT,
+              () -> {
+                spawnEffect(
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                    "shell_explosion",
+                    new Vector2[] {damageTile, damageTile}, // effect stays in place
+                    (int) tileSize, // scale to match tile size
+                    new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                    Animation.PlayMode.NORMAL,
+                    false, // not moving
+                    false);
+                damageRobotsAtPosition(
+                    damageTile,
+                    tileSize,
+                    wall.getComponent(DefenderStatsComponent.class).getBaseAttack());
+                knockbackRobotsAtPosition(knockbackTile, 3);
+                knockbackRobotsAtPosition(knockbackTile2, 3);
+                requestDespawn(wall);
+                robots.remove(wall);
+              });
+
+      spawnEntity(wall);
+      wall.getEvents().trigger("idleStart");
+    }
   }
 
   /**
@@ -547,6 +550,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return (bestCol >= 0) ? new GridPoint2(bestCol, bestRow) : null;
   }
 
+  /**
+   * Spawns a projectile entity at a given position and initiates its behaviour, depending on the
+   * type of projectile (identified by the ProjectileTagComponent.
+   *
+   * @param spawnPos the coordinates the projectile should spawn at
+   * @param projectile the projectile entity to spawn
+   * @param direction the direction the projectile moves in, left or right
+   */
   public void spawnProjectile(
       Vector2 spawnPos,
       Entity projectile,
@@ -559,6 +570,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    // find the type of projectile
     ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
 
     // Scale the projectile so it’s more visible
@@ -637,22 +649,22 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /**
    * Deal damage to all robots in a circular area around the given world position.
    *
-   * @param landingPos The world coordinates where the projectile landed
+   * @param pos The world coordinates where the damage is applied
    * @param radius Radius of effect in world units (e.g., 1 tile = tileSize)
    * @param damage Amount of damage to apply
    */
-  public void damageRobotsAtPosition(Vector2 landingPos, float radius, int damage) {
+  public void damageRobotsAtPosition(Vector2 pos, float radius, int damage) {
     if (robots.isEmpty()) return;
 
-    List<Entity> robotsToRemove = new ArrayList<>();
+    List<Entity> robotsInRange = new ArrayList<>();
 
     for (Entity robot : robots) {
       CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
       if (stats == null) continue;
 
       Vector2 robotPos = robot.getPosition();
-      float dx = robotPos.x - landingPos.x;
-      float dy = robotPos.y - landingPos.y;
+      float dx = robotPos.x - pos.x;
+      float dy = robotPos.y - pos.y;
       float distanceSq = dx * dx + dy * dy;
 
       if (distanceSq <= radius * radius) {
@@ -660,22 +672,41 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         stats.addHealth(-damage);
         robot.getEvents().trigger("hitMarker", robot);
 
-        logger.info(
-            "Mortar shell hit robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
+        logger.info("Damaged robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
 
-        // Mark robot for removal if dead
-        boolean mark = stats.isDead();
-        if (mark) {
-          robotsToRemove.add(robot);
-        }
+        robotsInRange.add(robot);
       }
     }
 
-    // Despawn dead robots
-    for (Entity r : robotsToRemove) {
-      requestDespawn(r);
-      robots.remove(r);
-      ServiceLocator.getWaveService().onEnemyDispose();
+    for (Entity e : robotsInRange) {
+      e.getComponent(CombatStatsComponent.class).handleDeath();
+    }
+  }
+
+  /**
+   * Knockback all robots in a circular area around the given world position.
+   *
+   * @param pos The world coordinates where the effect happens
+   * @param dist the distance that the robots get knocked back (in tile numbers)
+   */
+  public void knockbackRobotsAtPosition(Vector2 pos, int dist) {
+    if (robots.isEmpty()) return;
+
+    for (Entity robot : robots) {
+      CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
+      if (stats == null) continue;
+
+      Vector2 robotPos = robot.getPosition();
+      float dx = robotPos.x - pos.x;
+      float dy = robotPos.y - pos.y;
+      float distanceSq = dx * dx + dy * dy;
+
+      if (distanceSq <= tileSize * tileSize) {
+        // offset entity position
+        robot.setPosition(robotPos.x + dist * tileSize, robotPos.y);
+
+        logger.info("Robot knocked back {} tiles", dist);
+      }
     }
   }
 
@@ -1235,10 +1266,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
+    if (currentWave >= 4) {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
+        displayNewEntity();
         levelCompleteEntity.getEvents().trigger("levelComplete");
         // play win sound
         if (ServiceLocator.getResourceService() != null
@@ -1259,6 +1291,54 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         service.lockPlacement();
       }
     }
+  }
+
+  /** Display a dialog box informing the user of any new unlocked entities */
+  private void displayNewEntity() {
+    DialogService dialogService = ServiceLocator.getDialogService();
+    String unlockedDefences = unlockEntity();
+    String nextMessage =
+        (unlockedDefences.isEmpty())
+            ? "You have unlocked all defences"
+            : "You have unlocked the: \n"
+                + unlockedDefences
+                + "\n Go to the dossier to check them out!";
+    dialogService.info("Congratulations!", nextMessage);
+  }
+
+  /**
+   * Unlocks any new entities that the player has unlocked
+   *
+   * @return a readable string listing all unlocked entities
+   */
+  private String unlockEntity() {
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    List<String> unlockedDefences = new ArrayList<>();
+
+    for (String key : Arsenal.getAllDefences().keySet()) {
+      if (Arsenal.getAllDefences().get(key).getLevelUnlockedOn().equals(this.nextLevel)
+          && !profile.getArsenal().contains(key)) {
+        profile.getArsenal().unlockDefence(key);
+        String name = Arsenal.getAllDefences().get(key).getName();
+        unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
+      }
+    }
+    for (String key : Arsenal.getAllGenerators().keySet()) {
+      if (Arsenal.getAllGenerators().get(key).getLevelUnlockedOn().equals(this.nextLevel)) {
+        profile.getArsenal().unlockGenerator(key);
+        String name = Arsenal.getAllGenerators().get(key).getName();
+        unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
+      }
+    }
+    return String.join(" and ", unlockedDefences);
   }
 
   /**
@@ -1409,6 +1489,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
+  }
+
+  /** Getter for currentLevel */
+  public String getCurrentLevelKey() {
+    return currentLevelKey;
   }
 
   private int getFurnaceCost(GeneratorStatsComponent generator) {

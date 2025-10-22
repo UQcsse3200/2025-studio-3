@@ -1,5 +1,9 @@
 package com.csse3200.game.progression.arsenal;
 
+import com.csse3200.game.entities.configs.BaseDefenderConfig;
+import com.csse3200.game.entities.configs.BaseGeneratorConfig;
+import com.csse3200.game.services.ConfigService;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,43 +18,71 @@ public class Arsenal {
    * 0 indicates level 1 is initialised with three defences. This will be used to track which
    * defences should be unlocked on each level */
   private static final String INITIAL_DEFENCE = "levelOne";
-  public static final Map<String, String> ALL_DEFENCES = new HashMap<>();
+  private static final Map<String, BaseDefenderConfig> ALL_DEFENCES = new HashMap<>();
   /* The same as above for generators*/
-  public static final Map<String, String> ALL_GENERATORS = new HashMap<>();
+  private static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();
 
-  static {
-    ALL_DEFENCES.put("slingshooter", INITIAL_DEFENCE);
-    ALL_DEFENCES.put("shield", INITIAL_DEFENCE);
-    ALL_DEFENCES.put("armyguy", "levelTwo");
-    ALL_DEFENCES.put("boxer", "levelThree");
-    ALL_DEFENCES.put("harpoon", "levelThree");
-    ALL_DEFENCES.put("mortar", "levelFour");
-    ALL_DEFENCES.put("shadow", "levelFive");
+  /**
+   * Gets a record of all defences in the defender config file
+   *
+   * @return a map of defender keys to the respective defender config
+   */
+  public static Map<String, BaseDefenderConfig> getAllDefences() {
+    return ALL_DEFENCES;
   }
 
-  static {
-    ALL_GENERATORS.put("furnace", INITIAL_DEFENCE);
-    ALL_GENERATORS.put("healer", "levelFour");
+  /**
+   * Gets a record of all generators in the defender config file
+   *
+   * @return a map of generator keys to respective generator config
+   */
+  public static Map<String, BaseGeneratorConfig> getAllGenerators() {
+    return ALL_GENERATORS;
+  }
+
+  /**
+   * Sets the all defences map to be a given map
+   *
+   * @param allDefences the map that will replace the previous allDefences map
+   */
+  public static void setAllDefences(Map<String, BaseDefenderConfig> allDefences) {
+    for (Map.Entry<String, BaseDefenderConfig> entry : allDefences.entrySet()) {
+      if (!entry.getKey().equals("wall")) {
+        ALL_DEFENCES.put(entry.getKey(), entry.getValue());
+      }
+    }
+  }
+
+  /**
+   * Sets the all generators map to be a given map
+   *
+   * @param allGenerators the map that will replace the previous allGenerators map
+   */
+  public static void setAllGenerators(Map<String, BaseGeneratorConfig> allGenerators) {
+    ALL_GENERATORS.putAll(allGenerators);
+  }
+
+  /** Loads the defence and generator maps from the defender config file */
+  private static void loadFromConfig() {
+    ConfigService configService = ServiceLocator.getConfigService();
+
+    if (configService == null) return;
+    ALL_DEFENCES.clear();
+    ALL_GENERATORS.clear();
+
+    setAllDefences(configService.getDefenderConfigs());
+    setAllGenerators(configService.getGeneratorConfigs());
   }
 
   /** Constructor for the Arsenal class. */
   public Arsenal() {
     defences = new ArrayList<>();
-    // Adds all default defences to the arsenal
-
-    for (Map.Entry<String, String> entry : ALL_DEFENCES.entrySet()) {
-      if (entry.getValue().equals(INITIAL_DEFENCE)) {
-        defences.add(entry.getKey());
-      }
-    }
-
     generators = new ArrayList<>();
-    // Adds all default generators to the arsenal
-    for (Map.Entry<String, String> entry : ALL_GENERATORS.entrySet()) {
-      if (entry.getValue().equals(INITIAL_DEFENCE)) {
-        generators.add(entry.getKey());
-      }
-    }
+
+    ConfigService configService = ServiceLocator.getConfigService();
+    if (configService == null) return;
+
+    initialiseArsenal();
   }
 
   /**
@@ -87,6 +119,26 @@ public class Arsenal {
    */
   public void lockGenerator(String defenceKey) {
     generators.remove(defenceKey);
+  }
+
+  /** Unlocks all initial entities to initialise the arsenal */
+  public void initialiseArsenal() {
+    loadFromConfig();
+
+    for (Map.Entry<String, BaseDefenderConfig> entry : getAllDefences().entrySet()) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)
+          && !entry.getKey().equals("wall")
+          && !defences.contains(entry.getKey())) {
+        defences.add(entry.getKey());
+      }
+    }
+
+    for (Map.Entry<String, BaseGeneratorConfig> entry : getAllGenerators().entrySet()) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)
+          && !generators.contains(entry.getKey())) {
+        generators.add(entry.getKey());
+      }
+    }
   }
 
   /**
