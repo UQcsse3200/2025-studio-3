@@ -13,7 +13,7 @@
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.55 },
             "fast": { "cost": 3, "chance": 0.3 },
-            "jumper": { "cost": 3, "chance": 0.2 },
+            "jumper": { "cost": 3, "chance": 0.00 },
             "tanky": { "cost": 5, "chance": 0.15 },
             "bungee": { "cost": 4, "chance": 0 },
             "teleport": { "cost": 6, "chance": 0.05 },
@@ -28,7 +28,7 @@
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.4 },
             "fast": { "cost": 3, "chance": 0.35 },
-            "jumper": { "cost": 3, "chance": 0.2 },
+            "jumper": { "cost": 3, "chance": 0.00 },
             "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.05 },
             "teleport": { "cost": 6, "chance": 0.1 },
@@ -43,7 +43,7 @@
           "spawnConfigs": {
             "standard": { "cost": 2, "chance": 0.35 },
             "fast": { "cost": 3, "chance": 0.35 },
-            "jumper": { "cost": 3, "chance": 0.2 },
+            "jumper": { "cost": 3, "chance": 0.00 },
             "tanky": { "cost": 5, "chance": 0.2 },
             "bungee": { "cost": 4, "chance": 0.1 },
             "teleport": { "cost": 6, "chance": 0.15 },
