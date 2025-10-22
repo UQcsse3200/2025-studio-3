@@ -304,7 +304,7 @@ class DefenceFactoryTest {
       defender.getEvents().trigger(HEAL);
       int newHealth = defender.getComponent(DefenderStatsComponent.class).getHealth();
 
-      assert (newHealth == oldHealth + 20);
+      assertEquals(oldHealth + 20, newHealth, "Health should increase by 20 after healing");
     }
   }
 

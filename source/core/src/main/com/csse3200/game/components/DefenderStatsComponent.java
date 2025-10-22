@@ -31,9 +31,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
 
-  /** Maxhealth upper bound */
-  private int maxHealth;
-
   /** Scrap cost of the defender. */
   private int cost;
 
@@ -76,7 +73,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     super((int) Math.ceil(health * HEALTH_UPGRADE), (int) Math.ceil(baseAttack * ATTACK_UPGRADE));
 
     // Initialise all additional defence stats
-    maxHealth = (int) Math.ceil(health * HEALTH_UPGRADE);
     setRange(range);
     setAttackSpeed(attackSpeed);
     setCritChance(critChance);
@@ -97,25 +93,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     int newAttack = getBaseAttack() / 2;
     setBaseAttack(newAttack);
     logger.info("Defender unbuffed! New attack: {}", getBaseAttack());
-  }
-
-  /**
-   * Sets the maximum health value (used for clamping healing).
-   *
-   * @param newHealth new max health value
-   */
-  private void setMaxHealth(int newHealth) {
-    this.maxHealth = newHealth;
-  }
-
-  /**
-   * Heals the entity by a specific amount up to its max health.
-   *
-   * @param amount amount to heal
-   */
-  private void heal(int amount) {
-    int newHealth = Math.min(getHealth() + amount, getMaxHealth());
-    setHealth(newHealth);
   }
 
   /**

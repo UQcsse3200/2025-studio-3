@@ -35,7 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class GeneratorFactoryTest {
+class GeneratorFactoryTest {
   private ConfigService mockConfigService;
   private static final String HEAL = "heal";
 
@@ -232,7 +232,7 @@ public class GeneratorFactoryTest {
       generator.getEvents().trigger(HEAL);
       int newHealth = generator.getComponent(GeneratorStatsComponent.class).getHealth();
 
-      assert (newHealth == oldHealth + 20);
+      assertEquals(oldHealth + 20, newHealth, "Health should increase by 20 after healing");
     }
   }
 
