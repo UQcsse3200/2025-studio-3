@@ -16,6 +16,8 @@ public class DeserializedSettings {
   private int downButton;
   private int leftButton;
   private int rightButton;
+  private int zoomInButton;
+  private int zoomOutButton;
   private Settings.UIScale currentUIScale;
   private Settings.Quality quality;
   private Settings.Mode currentMode;
@@ -47,6 +49,8 @@ public class DeserializedSettings {
     this.downButton = settings.getDownButton();
     this.leftButton = settings.getLeftButton();
     this.rightButton = settings.getRightButton();
+    this.zoomInButton = settings.getZoomInButton();
+    this.zoomOutButton = settings.getZoomOutButton();
     this.currentUIScale = settings.getCurrentUIScale();
     this.quality = settings.getQuality();
     this.currentMode = settings.getCurrentMode();
@@ -163,6 +167,24 @@ public class DeserializedSettings {
    */
   public int getRightButton() {
     return rightButton;
+  }
+
+  /**
+   * Gets the key assigned to the zoom in button.
+   *
+   * @return the zoom in button.
+   */
+  public int getZoomInButton() {
+    return zoomInButton;
+  }
+
+  /**
+   * Gets the key assigned to the zoom out button.
+   *
+   * @return the zoom out button.
+   */
+  public int getZoomOutButton() {
+    return zoomOutButton;
   }
 
   /**
@@ -325,6 +347,24 @@ public class DeserializedSettings {
    */
   public void setRightButton(int rightButton) {
     this.rightButton = rightButton;
+  }
+
+  /**
+   * Sets the key assigned to the zoom in button.
+   *
+   * @param zoomInButton the key assigned to the zoom in button.
+   */
+  public void setZoomInButton(int zoomInButton) {
+    this.zoomInButton = zoomInButton;
+  }
+
+  /**
+   * Sets the key assigned to the zoom out button.
+   *
+   * @param zoomOutButton the key assigned to the zoom out button.
+   */
+  public void setZoomOutButton(int zoomOutButton) {
+    this.zoomOutButton = zoomOutButton;
   }
 
   /**

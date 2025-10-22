@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Cursor;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.csse3200.game.screens.*;
 import com.csse3200.game.services.*;
-import com.csse3200.game.ui.WorldMapNode;
 import net.dermetfan.utils.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,20 +33,22 @@ public class GdxGame extends Game {
     "images/ui/speedup1x.png",
     "images/ui/speedup15x.png",
     "images/ui/speedup2x.png",
+    "images/ui/dialog_new_new.png",
+    "images/ui/menu.png",
+    "images/ui/menu_card.png",
+    "images/ui/achievement_dialog_new.png",
     "images/ui/human-dossier.png",
     "images/ui/robot-dossier.png"
   };
-
   private static final String[] GLOBAL_SOUNDS = {
     "sounds/achievement_unlock.mp3",
     "sounds/error.mp3",
     "sounds/dialog.mp3",
-    "sounds/button_clicked.mp3"
+    "sounds/button_clicked.mp3",
+    "sounds/node_sound.mp3"
   };
   private static final Pair<String, String> GLOBAL_FONT =
       new Pair<>("Default", "fonts/Jersey10-Regular.ttf");
-  private static final String LOCK_REASON =
-      "You must complete the previous level to unlock this one.";
 
   @Override
   public void create() {
@@ -64,13 +65,15 @@ public class GdxGame extends Game {
     ServiceLocator.registerSettingsService(new SettingsService());
     ServiceLocator.registerProfileService(new ProfileService());
     ServiceLocator.registerGlobalResourceService(new ResourceService());
+
+    loadGlobalAssets();
+
     ServiceLocator.registerDialogService(new DialogService());
     ServiceLocator.registerConfigService(new ConfigService());
     ServiceLocator.registerCutsceneService(new CutsceneService());
     ServiceLocator.registerWorldMapService(new WorldMapService());
     ServiceLocator.registerMusicService(new MusicService());
 
-    // Initialize Discord Rich Presence
     DiscordRichPresenceService discordService = new DiscordRichPresenceService();
     discordService.initialize();
     ServiceLocator.registerDiscordRichPresenceService(discordService);
@@ -78,97 +81,9 @@ public class GdxGame extends Game {
       discordService.setPresence(null);
     }
 
-    // Asset configs
-    loadGlobalAssets();
-    loadNodes();
     Gdx.gl.glClearColor(0f / 255f, 0f / 255f, 0f / 255f, 1);
     setCursor();
     setScreen(ScreenType.MAIN_MENU, null);
-  }
-
-  /** Registers the nodes on the world map. */
-  private void loadNodes() {
-    WorldMapService worldMapService = ServiceLocator.getWorldMapService();
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Shop",
-            new Pair<>(0.75f, 0.40f),
-            false,
-            true,
-            ScreenType.SHOP,
-            "images/nodes/shop.png",
-            ""),
-        "shop");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Town",
-            new Pair<>(0.20f, 0.80f),
-            false,
-            true,
-            ScreenType.SKILLTREE,
-            "images/nodes/skills.png",
-            ""),
-        "skills");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Arcade",
-            new Pair<>(0.55f, 0.395f),
-            false,
-            true,
-            ScreenType.MINI_GAMES,
-            "images/nodes/arcade.png",
-            ""),
-        "minigames");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Level 1",
-            new Pair<>(0.18f, 0.27f),
-            false,
-            false,
-            ScreenType.MAIN_GAME,
-            "images/nodes/level1.png",
-            LOCK_REASON),
-        "levelOne");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Level 2",
-            new Pair<>(0.32f, 0.24f),
-            false,
-            false,
-            ScreenType.MAIN_GAME,
-            "images/nodes/level2.png",
-            LOCK_REASON),
-        "levelTwo");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Level 3",
-            new Pair<>(0.42f, 0.412f),
-            false,
-            false,
-            ScreenType.MAIN_GAME,
-            "images/nodes/level3.png",
-            LOCK_REASON),
-        "levelThree");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Level 4",
-            new Pair<>(0.7f, 0.55f),
-            false,
-            false,
-            ScreenType.MAIN_GAME,
-            "images/nodes/level4.png",
-            LOCK_REASON),
-        "levelFour");
-    worldMapService.registerNode(
-        new WorldMapNode(
-            "Level 5",
-            new Pair<>(0.85f, 0.78f),
-            false,
-            false,
-            ScreenType.MAIN_GAME,
-            "images/nodes/level5.png",
-            LOCK_REASON),
-        "levelFive");
   }
 
   /** Loads the game's global assets. */
@@ -181,12 +96,21 @@ public class GdxGame extends Game {
     ServiceLocator.getGlobalResourceService().loadAll();
   }
 
-  /** Used for backward compatibility. */
+  /**
+   * Used for backward compatibility.
+   *
+   * @param screenType The type of screen to set.
+   */
   public void setScreen(ScreenType screenType) {
     setScreen(screenType, null);
   }
 
-  /** Sets the game screen to the provided type. */
+  /**
+   * Sets the game screen to the provided type.
+   *
+   * @param screenType The type of screen to set.
+   * @param levelKey The level key to load (only used for MAIN_GAME screen type).
+   */
   public void setScreen(ScreenType screenType, String levelKey) {
     logger.info("[GdxGame] Setting game screen to {}", screenType);
     Screen currentScreen = getScreen();

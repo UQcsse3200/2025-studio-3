@@ -12,7 +12,11 @@ import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.statistics.Statistics;
+import com.csse3200.game.progression.wallet.Wallet;
 import com.csse3200.game.services.CurrencyService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
@@ -33,6 +37,17 @@ class TouchAttackComponentTest {
     SettingsService mockSettingsService = mock(SettingsService.class);
     ServiceLocator.registerSettingsService(mockSettingsService);
     when(mockSettingsService.getSoundVolume()).thenReturn(1.0f);
+
+    // Mock ProfileService
+    ProfileService mockProfileService = mock(ProfileService.class);
+    Profile mockProfile = mock(Profile.class);
+    Statistics mockStatistics = mock(Statistics.class);
+    Wallet mockWallet = mock(Wallet.class);
+
+    when(mockProfileService.getProfile()).thenReturn(mockProfile);
+    when(mockProfile.getStatistics()).thenReturn(mockStatistics);
+    when(mockProfile.getWallet()).thenReturn(mockWallet);
+    ServiceLocator.registerProfileService(mockProfileService);
 
     Sound mockSound = mock(Sound.class);
     // Mock the sound assets that CombatStatsComponent might request

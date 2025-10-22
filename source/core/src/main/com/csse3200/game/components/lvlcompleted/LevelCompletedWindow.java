@@ -6,9 +6,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.progression.statistics.Statistics;
 import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
+import com.csse3200.game.utils.LevelType;
 
 /** Class to create and display a window when the level is completed. */
 public class LevelCompletedWindow extends UIComponent {
@@ -118,7 +120,14 @@ public class LevelCompletedWindow extends UIComponent {
    */
   public void updateLevel() {
     String currentLevel = profileService.getProfile().getCurrentLevel();
+    updateStatistics(currentLevel);
+
+    // Mark the current level as completed
+    profileService.getProfile().completeLevel(currentLevel);
+
+    // Find and unlock the next level
     String nextLevel = findNextLevel(currentLevel);
+    profileService.getProfile().unlockNode(nextLevel);
     profileService.getProfile().setCurrentLevel(nextLevel);
   }
 
@@ -139,5 +148,14 @@ public class LevelCompletedWindow extends UIComponent {
 
   public Table getContainer() {
     return container;
+  }
+
+  private void updateStatistics(String currentLevel) {
+    Statistics statistics = profileService.getProfile().getStatistics();
+    statistics.incrementStatistic("levelsCompleted");
+
+    if (currentLevel.equals(LevelType.LEVEL_THREE.toKey())) {
+      statistics.incrementStatistic("slotMachineCompleted");
+    }
   }
 }
