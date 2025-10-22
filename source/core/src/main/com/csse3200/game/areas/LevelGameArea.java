@@ -724,8 +724,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     boss.setPosition(spawnX, firstspawnY);
     boss.scaleHeight(tileSize * 3.0f);
 
-    logger.info(
-        "Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
+    logger.info("Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
 
     spawnEntity(boss);
     robots.add(boss);
@@ -735,8 +734,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
     final boolean[] isBossDead = {false};
-    boss
-        .getEvents()
+    boss.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
@@ -752,8 +750,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 ai.dispose();
               }
 
-              AnimationRenderComponent anim =
-                  boss.getComponent(AnimationRenderComponent.class);
+              AnimationRenderComponent anim = boss.getComponent(AnimationRenderComponent.class);
               if (anim != null) {
                 anim.startAnimation("death");
               }
