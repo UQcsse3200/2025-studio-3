@@ -1,6 +1,7 @@
 package com.csse3200.game.ui.terminal.commands;
 
 import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.arsenal.Arsenal;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.WorldMapNode;
 import java.util.ArrayList;
@@ -19,13 +20,20 @@ public class UnlockEverything implements Command {
   public boolean action(ArrayList<String> args) {
     try {
       Profile profile = ServiceLocator.getProfileService().getProfile();
+
       profile.getWallet().addCoins(9999);
       profile.getWallet().addSkillsPoints(99);
       for (WorldMapNode node : ServiceLocator.getWorldMapService().getNodesList()) {
         node.setUnlocked(true);
-        String currentLevel = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
+        String currentLevel = profile.getCurrentLevel();
         String nextLevel = findNextLevel(currentLevel);
-        ServiceLocator.getProfileService().getProfile().setCurrentLevel(nextLevel);
+        profile.setCurrentLevel(nextLevel);
+      }
+      for (String defence : Arsenal.getAllDefences().keySet()) {
+        profile.getArsenal().unlockDefence(defence);
+      }
+      for (String generator : Arsenal.getAllGenerators().keySet()) {
+        profile.getArsenal().unlockGenerator(generator);
       }
       ServiceLocator.getProfileService().saveCurrentProfile();
     } catch (NullPointerException e) {

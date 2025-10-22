@@ -156,6 +156,7 @@ public class DossierDisplay extends UIComponent {
 
   /** Loads human entities (defenders and generators, excluding wall) */
   private void loadHumanEntities() {
+    this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
     java.util.List<String> unlockedDefenders = new java.util.ArrayList<>();
     java.util.List<String> lockedDefenders = new java.util.ArrayList<>();
 
