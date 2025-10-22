@@ -194,6 +194,8 @@ public class SettingsService {
    * @param downButton the down button to set.
    * @param leftButton the left button to set.
    * @param rightButton the right button to set.
+   * @param zoomInButton the zoom in button to set.
+   * @param zoomOutButton the zoom out button to set.
    */
   public void changeKeybinds(
       int pauseButton,
@@ -202,7 +204,9 @@ public class SettingsService {
       int upButton,
       int downButton,
       int leftButton,
-      int rightButton) {
+      int rightButton,
+      int zoomInButton,
+      int zoomOutButton) {
     settings.setPauseButton(pauseButton);
     settings.setSkipButton(skipButton);
     settings.setInteractionButton(interactionButton);
@@ -210,6 +214,8 @@ public class SettingsService {
     settings.setDownButton(downButton);
     settings.setLeftButton(leftButton);
     settings.setRightButton(rightButton);
+    settings.setZoomInButton(zoomInButton);
+    settings.setZoomOutButton(zoomOutButton);
   }
 
   /** Resets all key bindings to their default values. */
