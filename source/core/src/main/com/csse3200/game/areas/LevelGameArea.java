@@ -11,12 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -510,10 +505,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              increaseOutGameCurrency(coins);
               requestDespawn(unit);
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
@@ -730,6 +734,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(boss);
     robots.add(boss);
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
 
     boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
@@ -743,7 +755,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               if (isBossDead[0]) {
                 return;
               }
-              isBossDead[0] = true;
+              isBossDead[0] = true; // Set flag to prevent re-entry.
+              increaseOutGameCurrency(coins);
 
               logger.info("Boss death triggered");
 
@@ -1562,5 +1575,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       }
     }
     return generator.getCost() * (numFurnaces + 1);
+  }
+
+  /**
+   * Increases out-of-game currency upon enemy death.
+   *
+   * @param coins the amount of coins to add to the player's wallet
+   */
+  public void increaseOutGameCurrency(int coins) {
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService == null || !profileService.isActive()) return;
+
+    int before = profileService.getProfile().getWallet().getCoins();
+    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+    profileService.getProfile().getWallet().addCoins(coins);
+    profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
+    logger.info(
+        "[Death] wallet: {} + {} -> {}",
+        before,
+        coins,
+        profileService.getProfile().getWallet().getCoins());
   }
 }
