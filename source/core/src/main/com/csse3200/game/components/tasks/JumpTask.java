@@ -1,14 +1,14 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.physics.box2d.Body;
+import com.csse3200.game.components.DefenderStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class JumpTask extends RobotTargetDetectionTasks {
-  private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(JumpTask.class);
   private boolean hasJumped = false;
-  private static float jumpDuration = 0.5f;
+  private static float jumpDuration = 0.75f;
   private float jumpTimer = 0f;
   private boolean isJumping = false;
   private float startY;
@@ -28,6 +28,10 @@ public class JumpTask extends RobotTargetDetectionTasks {
     Entity target = getNearestVisibleTarget();
     if (target == null) {
       return -1; // No target, low priority
+    }
+    if (target.getComponent(DefenderStatsComponent.class) != null
+        && target.getComponent(DefenderStatsComponent.class).getBaseAttack() == 1000) {
+      return -1; // the entity is the wall, don't allow jump
     }
     return 200;
   }
@@ -59,7 +63,7 @@ public class JumpTask extends RobotTargetDetectionTasks {
       if (jumpTimer <= 0) {
         isJumping = false;
         hasJumped = true;
-        body.setTransform(body.getPosition().x, startY, body.getAngle());
+        this.owner.getEntity().setPosition(this.owner.getEntity().getPosition().x, startY + 1);
         return;
       }
       return;

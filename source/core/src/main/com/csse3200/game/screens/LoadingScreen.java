@@ -43,7 +43,7 @@ public class LoadingScreen implements Screen {
 
   private void loadBackground() {
     try {
-      backgroundTexture = new Texture(Gdx.files.internal("images/backgrounds/bg.png"));
+      backgroundTexture = new Texture(Gdx.files.internal("images/backgrounds/title.png"));
     } catch (Exception e) {
       logger.warn("Could not load background image, using default.");
       backgroundTexture = null;
@@ -51,7 +51,7 @@ public class LoadingScreen implements Screen {
   }
 
   private void createUI() {
-    loadingLabel = new Label("Loading...", skin);
+    loadingLabel = new Label("LOADING...", skin);
     Label.LabelStyle st = new Label.LabelStyle(loadingLabel.getStyle());
     loadingLabel.setStyle(st);
     loadingLabel.setFontScale(2f);

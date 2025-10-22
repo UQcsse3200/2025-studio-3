@@ -38,10 +38,10 @@ class LevelCompletedWindowTest {
     "sounds/dialog.mp3",
     "sounds/button_clicked.mp3"
   };
+  private static final String DEFAULT_LEVEL_KEY = "levelOne";
 
   @BeforeEach
   void setup() {
-
     // Headless app
     app =
         new HeadlessApplication(
@@ -84,7 +84,7 @@ class LevelCompletedWindowTest {
   @Test
   void windowBecomesVisibleAfterEvent() {
     Entity ui = new Entity();
-    LevelCompletedWindow comp = new LevelCompletedWindow();
+    LevelCompletedWindow comp = new LevelCompletedWindow(DEFAULT_LEVEL_KEY);
     ui.addComponent(comp);
     ui.create();
 
@@ -100,7 +100,7 @@ class LevelCompletedWindowTest {
   @Test
   void windowStaysHiddenWithoutEvent() {
     Entity ui = new Entity();
-    LevelCompletedWindow comp = new LevelCompletedWindow();
+    LevelCompletedWindow comp = new LevelCompletedWindow(DEFAULT_LEVEL_KEY);
     ui.addComponent(comp);
     ui.create();
 
