@@ -48,7 +48,7 @@ public class CurrentWaveDisplay extends UIComponent {
               @Override
               public void onWaveChanged(int waveNumber) {
                 updateWaveDisplay(waveNumber);
-                updateProgressBar(waveNumber);
+                updateWaveProgressBar(waveNumber);
               }
 
               @Override
@@ -78,8 +78,10 @@ public class CurrentWaveDisplay extends UIComponent {
     // Wave number label - start at 0 (no wave active)
     waveNumberLabel = ui.text(NO_WAVE_TEXT);
 
-    progressBar = createProgressBar();
+    // Creates progress bar
+    progressBar = createWaveProgressBar();
 
+    // Adds all elements to a table
     table.add(progressBar).padTop(10f).padRight(10f);
     table.add(waveLabel).padRight(10f).padRight(10f);
     table.add(waveNumberLabel).padRight(10f);
@@ -87,13 +89,18 @@ public class CurrentWaveDisplay extends UIComponent {
     stage.addActor(table);
   }
 
-  private ProgressBar createProgressBar() {
+    /**
+     * Creates a ProgressBar that displays the current progress
+     * through the current level's waves
+     *
+     * @return The created progress bar
+     */
+  private ProgressBar createWaveProgressBar() {
     // Initialise progress bar textures and nine patch textures
     Texture backgroundTex = new Texture("images/ui/progress_bar.png");
     Texture fillTex = new Texture("images/ui/progress_bar_fill.png");
     NinePatch backgroundNine = new NinePatch(new TextureRegion(backgroundTex),   0, 0, 8, 8);
     NinePatch fillNine = new NinePatch(new TextureRegion(fillTex), 8, 8, 8, 8);
-
     NinePatchDrawable backgroundDrawable = new NinePatchDrawable(backgroundNine);
     NinePatchDrawable fillDrawable = new NinePatchDrawable(fillNine);
 
@@ -138,7 +145,7 @@ public class CurrentWaveDisplay extends UIComponent {
      *
      * @param waveNumber the new wave number
      */
-  public void updateProgressBar(int waveNumber) {
+  public void updateWaveProgressBar(int waveNumber) {
       progressBar.setValue((float) waveNumber / (ServiceLocator.getWaveService().getTotalWaves() + 1));
   }
 
