@@ -1,18 +1,12 @@
 package com.csse3200.game.components.tasks;
 
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
-import com.csse3200.game.ai.tasks.TaskRunner;
 import com.csse3200.game.rendering.AnimationRenderComponent;
-import com.csse3200.game.services.GameTime;
-import com.csse3200.game.services.ServiceLocator;
 
 /**
- * Spawning behaviour component for bungee robots. Upon spawning, play teleport animation,
- * and don't allow other tasks to run. Once teleport is complete, set priority low and do
- * not run again.
+ * Spawning behaviour component for bungee robots. Upon spawning, play teleport animation, and don't
+ * allow other tasks to run. Once teleport is complete, set priority low and do not run again.
  */
 public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
   // Priority during spawn is higher than attack to stop bungee from moving or
@@ -31,8 +25,8 @@ public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
   }
 
   /**
-   * Return priority dynamically: - High priority during the teleport animation
-   * -1 otherwise (lets MoveLeftTask and RobotAttackTask run)
+   * Return priority dynamically: - High priority during the teleport animation -1 otherwise (lets
+   * MoveLeftTask and RobotAttackTask run)
    */
   @Override
   public int getPriority() {
@@ -50,7 +44,7 @@ public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
     }
 
     AnimationRenderComponent animator =
-            owner.getEntity().getComponent(AnimationRenderComponent.class);
+        owner.getEntity().getComponent(AnimationRenderComponent.class);
     // If the animator is null, something went wrong, and we should skip ahead.
     // Otherwise, we wait until the teleport animation is done and then set finished
     if (animator == null || animator.isFinished()) {
