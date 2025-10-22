@@ -198,8 +198,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       Entity tutorialEntity = new Entity();
       tutorialEntity.addComponent(new LevelMapTutorial());
       spawnEntity(tutorialEntity);
-      // Mark as played only after the tutorial is shown
-      // This is deferred to when the tutorial ends
     }
   }
 
@@ -1375,9 +1373,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     int maxWaves = ServiceLocator.getWaveService().getCurrentLevelWaveCount();
     int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    boolean levelComplete = ServiceLocator.getWaveService().isLevelComplete();
-
-    if (levelComplete || currentWave > maxWaves) {
+    if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
