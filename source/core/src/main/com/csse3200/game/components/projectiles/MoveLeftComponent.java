@@ -16,11 +16,11 @@ public class MoveLeftComponent extends Component {
   }
 
   @Override
-  public void create(){
-      physicsComponent = entity.getComponent(PhysicsComponent.class);
-      if(physicsComponent != null){
-          physicsComponent.getBody().setLinearVelocity(-speed, 0);
-      }
+  public void create() {
+    physicsComponent = entity.getComponent(PhysicsComponent.class);
+    if (physicsComponent != null) {
+      physicsComponent.getBody().setLinearVelocity(-speed, 0);
+    }
   }
 
   @Override
