@@ -678,7 +678,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       }
     }
 
-    for (Entity e : robotshInRange) {
+    for (Entity e : robotsInRange) {
       e.getComponent(CombatStatsComponent.class).handleDeath();
     }
   }
