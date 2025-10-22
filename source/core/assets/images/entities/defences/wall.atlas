@@ -13,4 +13,6 @@ hit
 hit
   bounds: 128, 0, 64, 64
 hit
+  bounds: 128, 0, 64, 64
+hit
   bounds: 0, 0, 64, 64
