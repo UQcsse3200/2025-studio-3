@@ -934,7 +934,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     final int damage = (defence != null) ? defence.getBaseAttack() : 0;
     int cost = 0;
     if (generator != null) {
-      cost = getFurnaceCost(generator);
+      cost = 50 + (countPlacedGenerators() * 50);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1031,6 +1031,21 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         position,
         position / levelCols,
         position % levelCols);
+  }
+
+  /**
+   * Counts the number of placed generator units on the grid
+   *
+   * @return number of placed generators
+   */
+  private int countPlacedGenerators() {
+    int count = 0;
+    if (ServiceLocator.getGameArea() != null) {
+      for (Entity e : ServiceLocator.getGameArea().getEntities()) {
+        if (e.getComponent(GeneratorStatsComponent.class) != null) count++;
+      }
+    }
+    return count;
   }
 
   /**
