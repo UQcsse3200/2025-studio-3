@@ -9,11 +9,7 @@ import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
-import com.csse3200.game.components.tasks.GunnerAttackTask;
-import com.csse3200.game.components.tasks.JumpTask;
-import com.csse3200.game.components.tasks.MoveLeftTask;
-import com.csse3200.game.components.tasks.RobotAttackTask;
-import com.csse3200.game.components.tasks.TeleportTask;
+import com.csse3200.game.components.tasks.*;
 import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
@@ -205,12 +201,16 @@ public class RobotFactory {
     }
 
     if (config.getName() != null && config.getName().contains("Bungee")) {
-      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEnd", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportDamagedEnd", 0.1f, Animation.PlayMode.NORMAL);
+      robot.getComponent(AITaskComponent.class).addTask(new BungeeSpawnTask());
     }
 
     if (config.getName() != null && config.getName().contains("Teleport")) {
-      animator.addAnimation("teleport", 0.1f, Animation.PlayMode.NORMAL);
-      animator.addAnimation("teleportDamaged", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportStart", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportDamagedStart", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportEnd", 0.1f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("teleportDamagedEnd", 0.1f, Animation.PlayMode.NORMAL);
       float[] laneYs = discoverLaneYsFromTiles();
       if (laneYs.length >= 2) {
         AITaskComponent ai = robot.getComponent(AITaskComponent.class);
