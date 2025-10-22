@@ -5,14 +5,11 @@ import java.util.List;
 public final class CreditsData {
   private CreditsData() {}
 
-  private static final Section tutors =
-      new Section(
-          "Super duper cool tutors",
-          List.of(new Entry("Rachel", "Leathers"), new Entry("Lucas", "Hicks")));
-
   public static final List<Section> SECTIONS =
       List.of(
-          tutors,
+          new Section(
+              "Super duper cool tutors",
+              List.of(new Entry("Rachel", "Leathers"), new Entry("Lucas", "Hicks"))),
           new Section(
               "TEAM 1",
               List.of(
@@ -76,6 +73,5 @@ public final class CreditsData {
                   new Entry("Jack", "Limmage"),
                   new Entry("Brandon", "Lee"),
                   new Entry("Jackie", "Ding"),
-                  new Entry("Ben", "Schenk"))),
-          tutors);
+                  new Entry("Ben", "Schenk"))));
 }
