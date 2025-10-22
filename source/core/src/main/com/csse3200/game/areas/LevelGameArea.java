@@ -88,9 +88,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   // Next placement comes from slot-machine reward and should be free (one-shot flag)
   private boolean nextPlacementFree = false;
 
-  /**
-   * Mark the next unit placement as free (used by slot-machine rewards). One-shot flag.
-   */
+  /** Mark the next unit placement as free (used by slot-machine rewards). One-shot flag. */
   public void markNextPlacementFree() {
     this.nextPlacementFree = true;
   }
@@ -124,10 +122,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Loads level configuration from ConfigService.
-   *
-   */
+  /** Loads level configuration from ConfigService. */
   private void loadLevelConfiguration() {
     logger.debug(
         "[LevelGameArea] Attempting to load configuration for level key: '{}'", currentLevelKey);
@@ -165,7 +160,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /**
    * Uses stage height and width to set variables relating to tile, grid and character sizing and
    * placement.
-   *
    */
   public void setScaling() {
     stageHeight = ServiceLocator.getRenderService().getStage().getHeight();
@@ -179,10 +173,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     yOffset = Y_MARGIN_TILES * tileSize;
   }
 
-  /**
-   * Creates the game area by calling helper methods as required.
-   *
-   */
+  /** Creates the game area by calling helper methods as required. */
   @Override
   public void create() {
     // Register the game area with the service locator
@@ -206,10 +197,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Spawns the level UI, including hotbar, item/defence lists, and game-over window.
-   *
-   */
+  /** Spawns the level UI, including hotbar, item/defence lists, and game-over window. */
   protected void displayUI() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     ConfigService configService = ServiceLocator.getConfigService();
@@ -290,19 +278,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Creates and spawns the game-over UI entity.
-   *
-   */
+  /** Creates and spawns the game-over UI entity. */
   void createGameOverEntity() {
     gameOverEntity = new Entity().addComponent(new GameOverWindow());
     spawnEntity(gameOverEntity);
   }
 
-  /**
-   * Creates and spawns the game-over UI entity.
-   *
-   */
+  /** Creates and spawns the game-over UI entity. */
   void createLevelCompleteEntity() {
     // Handles the level completion window UI
     this.levelCompleteEntity = new Entity();
@@ -310,10 +292,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(this.levelCompleteEntity);
   }
 
-  /**
-   * Creates and spawns the game background map and its boundary wall.
-   *
-   */
+  /** Creates and spawns the game background map and its boundary wall. */
   private void spawnMap() {
     Texture texture = loadMapTexture(mapFilePath);
     float viewportHeight = stageHeight * stageToWorldRatio;
@@ -330,10 +309,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnWall();
   }
 
-  /**
-   * Spawns a static defensive wall at the left edge of the map.
-   *
-   */
+  /** Spawns a static defensive wall at the left edge of the map. */
   void spawnWall() {
     for (int i = 0; i < 5; i++) {
       Entity wall = DefenceFactory.createWall();
@@ -1042,10 +1018,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return (deck != null) ? deck.getEntitySupplier().get() : null;
   }
 
-  /**
-   * Reset drag state and selection after any placement.
-   *
-   */
+  /** Reset drag state and selection after any placement. */
   private void resetSelectionUI() {
     setIsCharacterSelected(false);
     setSelectedUnit(null);
@@ -1069,10 +1042,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new Vector2(xOffset + tileSize * col, yOffset + tileSize * row);
   }
 
-  /**
-   * Adds 20 health points to all placed defences and generators on the grid.
-   *
-   */
+  /** Adds 20 health points to all placed defences and generators on the grid. */
   private void healDefences() {
     if (grid == null) {
       logger.warn("Grid not initialised; cannot heal defences.");
@@ -1371,10 +1341,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return new GridPoint2((int) sx, (int) sy);
   }
 
-  /**
-   * Adjusts all entities after a window resize by recalculating world scale and layout.
-   *
-   */
+  /** Adjusts all entities after a window resize by recalculating world scale and layout. */
   public void resize() {
     float oldTile = tileSize;
     float oldX = xOffset;
@@ -1389,10 +1356,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     relayoutRobots(oldTile, oldX, oldY);
   }
 
-  /**
-   * Updates the position of all tiles based on the new scaling.
-   *
-   */
+  /** Updates the position of all tiles based on the new scaling. */
   private void relayoutTiles() {
     for (int row = 0; row < levelRows; row++) {
       for (int col = 0; col < levelCols; col++) {
@@ -1407,10 +1371,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Moves and rescales all units that are placed on tiles.
-   *
-   */
+  /** Moves and rescales all units that are placed on tiles. */
   private void relayoutPlacedUnits() {
     for (int row = 0; row < levelRows; row++) {
       for (int col = 0; col < levelCols; col++) {
@@ -1446,10 +1407,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Checks the game over condition when a robot reaches the end of the grid.
-   *
-   */
+  /** Checks the game over condition when a robot reaches the end of the grid. */
   public void checkGameOver() {
     if (isGameOver) {
       return;
@@ -1509,10 +1467,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Checks if the level is complete.
-   *
-   */
+  /** Checks if the level is complete. */
   public void checkLevelComplete() {
     if (isLevelComplete) {
       return;
@@ -1547,10 +1502,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Display a dialog box informing the user of any new unlocked entities.
-   *
-   */
+  /** Display a dialog box informing the user of any new unlocked entities. */
   private void displayNewEntity() {
     DialogService dialogService = ServiceLocator.getDialogService();
     String unlockedDefences = unlockEntity();
@@ -1614,10 +1566,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /**
-   * Cancels an ongoing drag operation.
-   *
-   */
+  /** Cancels an ongoing drag operation. */
   @Override
   public void cancelDrag() {
     if (dragOverlay != null) {
@@ -1659,16 +1608,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   /**
    * Create symbolic entities to preview the upcoming wave. Positions a couple of placeholder robots
    * per row just off the right edge. These are visual only and removed after the intro camera pan.
-   *
    */
   public void createWavePreview() {
     wavePreview.createWavePreview();
   }
 
-  /**
-   * Remove preview entities created for the intro camera pan.
-   *
-   */
+  /** Remove preview entities created for the intro camera pan. */
   public void clearWavePreview() {
     wavePreview.clearWavePreview();
   }

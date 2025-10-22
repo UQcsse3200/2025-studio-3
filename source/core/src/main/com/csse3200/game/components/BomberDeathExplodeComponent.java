@@ -3,6 +3,8 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component that causes the entity to deal AOE (area-of-effect) damage to nearby entities upon
@@ -24,6 +26,8 @@ public class BomberDeathExplodeComponent extends Component {
 
   float worldRadius;
 
+  private static final Logger logger = LoggerFactory.getLogger(BomberDeathExplodeComponent.class);
+
   /**
    * Creates a BomberDeathExplodeComponent.
    *
@@ -38,12 +42,12 @@ public class BomberDeathExplodeComponent extends Component {
 
   /**
    * Called when the component is created. Registers an event listener on the owning entity so that
-   * when it triggers the "entityDeath" event, the {@link #explode()} method is called.
+   * when it triggers the "entityDeath" event.
    */
   @Override
   public void create() {
     super.create();
-    System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
+    logger.info("[BomberExplosion] Component created for entity {}", getEntity().getId());
     getEntity().getEvents().addListener("entityDeath", this::onDeath);
   }
 
@@ -53,16 +57,6 @@ public class BomberDeathExplodeComponent extends Component {
    */
   private void onDeath() {
     getEntity().getEvents().trigger("bomberPreExplode");
-
-    //    // Schedule explosion after 0.5 seconds
-    //    Timer.schedule(
-    //        new Timer.Task() {
-    //          @Override
-    //          public void run() {
-    //            explode();
-    //          }
-    //        },
-    //        0.5f);
   }
 
   /**
@@ -79,7 +73,7 @@ public class BomberDeathExplodeComponent extends Component {
    * </ol>
    */
   private void explode() {
-    System.out.println("[BomberExplosion] Triggered for " + entity.getId());
+    logger.info("[BomberExplosion] Triggered for {}", entity.getId());
 
     Vector2 center = entity.getPosition();
     if (center == null) return;
@@ -95,16 +89,12 @@ public class BomberDeathExplodeComponent extends Component {
     int centerCol = (int) Math.floor(center.x / tileWidth);
     int centerRow = (int) Math.floor(center.y / tileHeight);
 
-    System.out.println("[BomberExplosion] Tile center row=" + centerRow + " col=" + centerCol);
+    logger.info("[BomberExplosion] Tile center row= {} col= {}", centerRow, centerCol);
 
     for (Entity target : ServiceLocator.getEntityService().getEntities()) {
-
-      // Skip the bomber itself.
-      if (target == entity) continue;
-
-      // Skip entities with no position set.
       Vector2 pos = target.getPosition();
-      if (pos == null) continue;
+      // Skip the bomber itself and Skip entities with no position set.
+      if (target == entity || pos == null) continue;
 
       // Convert target position to tile coordinates.
       int targetCol = Math.round(pos.x / tileWidth);
@@ -117,18 +107,10 @@ public class BomberDeathExplodeComponent extends Component {
       if (dCol <= explosionRadiusTiles && dRow <= explosionRadiusTiles) {
 
         CombatStatsComponent combat = target.getComponent(CombatStatsComponent.class);
-        if (combat == null) continue;
-
-        System.out.println(
-            "[BomberExplosion] Hitting target "
-                + target.getId()
-                + " at row="
-                + targetRow
-                + ", col="
-                + targetCol);
-
-        combat.setHealth(combat.getHealth() - explosionDamage);
-        combat.handleDeath();
+        if (combat != null) {
+          combat.setHealth(combat.getHealth() - explosionDamage);
+          combat.handleDeath();
+        }
       }
     }
   }
