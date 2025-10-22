@@ -1,6 +1,5 @@
 package com.csse3200.game.components.hotbar;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -50,8 +48,6 @@ public class HotbarDisplay extends UIComponent {
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
   private final Map<Entity, Label> generatorCostLabels = new HashMap<>();
   private int lastFurnaceCount = -1;
-  protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
-  protected static final UIFactory ui = new UIFactory(skin, Settings.UIScale.MEDIUM);
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -74,16 +70,59 @@ public class HotbarDisplay extends UIComponent {
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
   private void addActors() {
+    // Creates images for the hotbars (needs to different variables)
+    Image unitHotbar = new Image(new Texture("images/ui/hotbar.png"));
+    Image itemHotbar = new Image(new Texture("images/ui/hotbar.png"));
+
+    // Create hotbars and position them
+    unitHotbarTable = createUnitHotbar(unitHotbar);
+    itemHotbarTable = createItemHotbar(itemHotbar);
+    stage.addActor(itemHotbarTable);
+    itemHotbarTable.toBack();
+    stage.addActor(unitHotbarTable);
+
+    // Listener to cancel placement
+    stage.addListener(
+        new ClickListener() {
+          @Override
+          public boolean touchDown(InputEvent event, float sx, float sy, int pointer, int button) {
+            if (button == Input.Buttons.RIGHT && game.isCharacterSelected()) {
+              cancelSelection();
+              return true;
+            }
+            return false;
+          }
+        });
+
+    // Sets a placeholder message and an event to be called from other classes
+    Table messageTable = new Table();
+    messageTable.setFillParent(true);
+    messageTable.center().bottom().padBottom(50f);
+    stage.addActor(messageTable);
+    UIFactory insufficientScrapUI = new UIFactory(skin, Settings.UIScale.LARGE);
+    insufficientScrapMessage = insufficientScrapUI.text("Insufficient Scrap!");
+    insufficientScrapMessage.setVisible(false);
+    messageTable.add(insufficientScrapMessage);
+    entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
+  }
+
+  /**
+   * Creates the unit hotbar for the game. Places all the available units and their costs in the
+   * slots of the hotbar.
+   *
+   * @param hotbar The image of the unit hotbar
+   * @return The created unit hotbar
+   */
+  private Table createUnitHotbar(Image hotbar) {
+    // create group to store all assets for the hotbar
     Group unitLayers = new Group();
-    // create hotbar image
-    Image hotbar = new Image(new Texture("images/ui/hotbar.png"));
     unitLayers.addActor(hotbar);
     unitLayers.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
     // initialise the values needed for placing unit images in slots
     float hotbarWidth = unitLayers.getWidth();
     cellWidth = hotbarWidth / 9;
-    float startX = cellWidth / 4;
+    float startX = cellWidth / 6;
     float y = 30;
     float currentX = startX;
 
@@ -91,7 +130,7 @@ public class HotbarDisplay extends UIComponent {
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
       Table slot = new Table();
       Image tempUnit = new Image(new Texture(unit.getKey()));
-      tempUnit.setSize(scaling, scaling);
+      tempUnit.setSize((float) (scaling * 1.3), (float) (scaling * 1.3));
       slotImages.add(tempUnit);
 
       // Get the cost of the entity
@@ -100,7 +139,8 @@ public class HotbarDisplay extends UIComponent {
       DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
 
       // Handles displaying the cost in the hotbar
-      Label displayCost = ui.createLabel("50", 50, Color.WHITE);
+      Label displayCost = ui.createLabel("50", 30, Color.WHITE);
+      displayCost.setTouchable(Touchable.disabled);
 
       if (generator != null) {
         generatorCostLabels.put(entity, displayCost);
@@ -143,45 +183,53 @@ public class HotbarDisplay extends UIComponent {
     }
     layoutUnits(startX, y, cellWidth, slotImages);
 
-    // sets the position to the top middle of screen
-    unitHotbarTable = new Table();
-    unitHotbarTable.setFillParent(true);
-    unitHotbarTable.center().top();
+    // create table for hotbar and set position
+    Table tempHotbarTable = new Table();
+    tempHotbarTable.setFillParent(true);
+    tempHotbarTable.center().top();
+
     float targetWidth = stage.getViewport().getWorldWidth() * 0.35f;
     float scale = targetWidth / unitLayers.getWidth();
-
     unitLayers.setScale(scale);
 
     // makes only the images touchable
-    unitHotbarTable.setTouchable(Touchable.childrenOnly);
+    tempHotbarTable.setTouchable(Touchable.childrenOnly);
 
     // changes size to fit screen
-    unitHotbarTable
+    tempHotbarTable
         .add(unitLayers)
         .size(unitLayers.getWidth() * scale, unitLayers.getHeight() * scale);
+    return tempHotbarTable;
+  }
 
-    // creates a new table for item hotbar
-    itemHotbarTable = new Table();
-    itemHotbarTable.setFillParent(true);
-    itemHotbarTable.center().top().padTop(165 * scale);
+  /**
+   * Creates the collapsible item hotbar for the game and button to collapse it. Places all the
+   * available items in the slots of the hotbar and creates the button used to collapse the hotbar.
+   *
+   * @param hotbar The image of the item hotbar
+   * @return The created item hotbar
+   */
+  private Table createItemHotbar(Image hotbar) {
+    // create group to store all assets for the hotbar
     Group itemLayers = new Group();
+    itemLayers.addActor(hotbar);
+    itemLayers.setSize(hotbar.getPrefWidth(), hotbar.getPrefHeight());
 
-    // create hotbar image
-    Image itemHotbar = new Image(new Texture("images/ui/hotbar.png"));
-    itemLayers.addActor(itemHotbar);
+    // initialise the values needed for placing unit images in slots
+    float hotbarWidth = itemLayers.getWidth();
+    cellWidth = hotbarWidth / 9;
+    float startX = cellWidth / 6;
+    float y = 30;
 
-    itemLayers.setSize(itemHotbar.getPrefWidth(), itemHotbar.getPrefHeight());
-
-    startX = cellWidth / 4;
     // creates down arrow image
     Image upDownArrow = new Image(new Texture("images/ui/up_down_arrow.png"));
-    upDownArrow.setSize(scaling, (float) (0.5 * scaling));
+    upDownArrow.setSize((float) (1.5 * scaling), (float) (0.6 * scaling));
     upDownArrow.setPosition((float) (0.45 * hotbarWidth), -40);
 
     // creates all the items
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
       Image tempItem = new Image(new Texture(item.getKey()));
-      tempItem.setSize(scaling, scaling);
+      tempItem.setSize((float) (scaling * 1.3), (float) (scaling * 1.3));
 
       itemImages.add(tempItem);
 
@@ -228,6 +276,13 @@ public class HotbarDisplay extends UIComponent {
     // lays out the items
     layoutUnits(startX, y, cellWidth, itemImages);
 
+    // create table for hotbar and set position
+    Table tempHotbarTable = new Table();
+    tempHotbarTable.setFillParent(true);
+    float targetWidth = stage.getViewport().getWorldWidth() * 0.35f;
+    float scale = targetWidth / itemLayers.getWidth();
+    tempHotbarTable.center().top().padTop(165 * scale);
+
     // handles the collapsing of the item hotbar
     final boolean[] isUp = {false};
     upDownArrow.addListener(
@@ -238,14 +293,14 @@ public class HotbarDisplay extends UIComponent {
 
             if (!isUp[0]) {
               // Move up
-              itemHotbarTable.addAction(Actions.moveBy(0, distance, 0.35f));
+              tempHotbarTable.addAction(Actions.moveBy(0, distance, 0.35f));
               itemLayers.addAction(
                   Actions.sequence(
                       Actions.delay(0.35f), Actions.run(() -> itemLayers.setVisible(false))));
               isUp[0] = true;
             } else {
               // Move down
-              itemHotbarTable.addAction(Actions.moveBy(0, -distance, 0.35f));
+              tempHotbarTable.addAction(Actions.moveBy(0, -distance, 0.35f));
               itemLayers.addAction(
                   Actions.sequence(
                       Actions.delay(0.05f), Actions.run(() -> itemLayers.setVisible(true))));
@@ -256,42 +311,16 @@ public class HotbarDisplay extends UIComponent {
 
     itemLayers.setScale(scale);
     itemLayers.toBack();
-    itemHotbarTable
+    tempHotbarTable
         .add(itemLayers)
         .size(itemLayers.getWidth() * scale, itemLayers.getHeight() * scale);
     // makes only the images touchable
-    itemHotbarTable.setTouchable(Touchable.childrenOnly);
-    itemHotbarTable.row();
-    itemHotbarTable
+    tempHotbarTable.setTouchable(Touchable.childrenOnly);
+    tempHotbarTable.row();
+    tempHotbarTable
         .add(upDownArrow)
         .size(upDownArrow.getWidth() * scale, upDownArrow.getHeight() * scale);
-
-    stage.addActor(itemHotbarTable);
-    itemHotbarTable.toBack();
-    stage.addActor(unitHotbarTable);
-
-    stage.addListener(
-        new ClickListener() {
-          @Override
-          public boolean touchDown(InputEvent event, float sx, float sy, int pointer, int button) {
-            if (button == Input.Buttons.RIGHT && game.isCharacterSelected()) {
-              cancelSelection();
-              return true;
-            }
-            return false;
-          }
-        });
-
-    // Sets a placeholder message and an event to be called from other classes
-    Table messageTable = new Table();
-    messageTable.setFillParent(true);
-    messageTable.center().bottom().padBottom(50f);
-    stage.addActor(messageTable);
-    UIFactory insufficientScrapUI = new UIFactory(skin, Settings.UIScale.LARGE);
-    insufficientScrapMessage = insufficientScrapUI.text("Insufficient Scrap!");
-    insufficientScrapMessage.setVisible(false);
-    messageTable.add(insufficientScrapMessage);
-    entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
+    return tempHotbarTable;
   }
 
   @Override

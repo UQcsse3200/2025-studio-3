@@ -120,6 +120,11 @@ class WaveServiceTest {
           public void onWaveStarted(int waveNumber) {
             // Empty implementation - this test only tracks preparation phase events
           }
+
+          @Override
+          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+            // Empty implementation - this test only tracks preparation phase events
+          }
         });
 
     svc.initialiseNewWave(); // Start wave 1
@@ -155,6 +160,11 @@ class WaveServiceTest {
           @Override
           public void onWaveStarted(int waveNumber) {
             started[0] = (waveNumber == 1);
+          }
+
+          @Override
+          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+            // Empty implementation - this test only tracks wave start events
           }
         });
 

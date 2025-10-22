@@ -14,9 +14,10 @@
   * for assistance in implementing pause functionality and determining where guards/checks were needed.
 
 ## Nathan Vassie
-* ChatGPT was used to create the image of the hotbar.
-* ChatGPT was used to create the image of the down arrow for the hotbar.
+* ChatGPT was used to create the initial image of the hotbar.
+* ChatGPT was used to create the initial image of the down arrow for the hotbar.
 * ChatGPT was used to give possible solutions for how to fix z indexing issue with the two hotbars.
+* ChatGPT was used to give the transparent knob solution for the wave progress bar
 
 ## Noah Trevena
 * ChatGPT was used to assist in debugging and creating unit tests for the LevelCompletedWindowTest.java
