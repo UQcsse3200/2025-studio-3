@@ -678,15 +678,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         stats.addHealth(-damage);
         robot.getEvents().trigger("hitMarker", robot);
 
-        logger.info(
-            "Damaged robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
+        logger.info("Damaged robot at ({}, {}) for {} damage", robotPos.x, robotPos.y, damage);
 
         robotsInRange.add(robot);
       }
     }
 
     for (Entity e : robotsInRange) {
-        e.getComponent(CombatStatsComponent.class).handleDeath();
+      e.getComponent(CombatStatsComponent.class).handleDeath();
     }
   }
 
