@@ -48,10 +48,7 @@ import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.BackgroundMapComponent;
 import com.csse3200.game.rendering.Renderer;
-import com.csse3200.game.services.ConfigService;
-import com.csse3200.game.services.DiscordRichPresenceService;
-import com.csse3200.game.services.GameStateService;
-import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
@@ -101,15 +98,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
   // Level configuration
   private final String currentLevelKey;
+  private String nextLevel;
   private int levelRows = 5; // Default fallback
   private int levelCols = 10; // Default fallback
   private float worldWidth; // background map world width
   private String mapFilePath; // from level config
   private final ItemHandler itemHandler = new ItemHandler(this);
   private final WavePreviewManager wavePreview = new WavePreviewManager(this);
-
-  private static final List<String> levelOrder =
-      List.of("levelOne", "levelTwo", "levelThree", "levelFour", "levelFive");
 
   /**
    * Initialise this LevelGameArea for a specific level.
@@ -143,6 +138,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     BaseLevelConfig levelConfig = configService.getLevelConfig(currentLevelKey);
 
     if (levelConfig != null) {
+      nextLevel = levelConfig.getNextLevel();
       levelRows = levelConfig.getRows();
       levelCols = levelConfig.getCols();
       mapFilePath = levelConfig.getMapFile(); // add this
@@ -223,28 +219,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     createLevelCompleteEntity();
   }
 
-  /** Unlocks all entities that are listed as playing on the current game level */
-  private void unlockAllEntities(Profile profile) {
-    for (String level : levelOrder) {
-      for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-        if (Arsenal.ALL_DEFENCES.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockDefence(key);
-        }
-      }
-      for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-        if (Arsenal.ALL_GENERATORS.get(key).equals(level) && !profile.getArsenal().contains(key)) {
-          profile.getArsenal().unlockGenerator(key);
-        }
-      }
-      if (level.equals(currentLevelKey)) {
-        break;
-      }
-    }
-  }
-
   /** Populates unitList with all available defenders and generators from the player's arsenal. */
   private void populateUnitList(Profile profile, ConfigService configService) {
-    unlockAllEntities(profile);
     for (String defenceKey : profile.getArsenal().getDefenders()) {
       BaseDefenderConfig config = configService.getDefenderConfig(defenceKey);
       if (config != null) {
@@ -547,6 +523,14 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     return (bestCol >= 0) ? new GridPoint2(bestCol, bestRow) : null;
   }
 
+  /**
+   * Spawns a projectile entity at a given position and initiates its behaviour, depending on the
+   * type of projectile (identified by the ProjectileTagComponent.
+   *
+   * @param spawnPos the coordinates the projectile should spawn at
+   * @param projectile the projectile entity to spawn
+   * @param direction the direction the projectile moves in, left or right
+   */
   public void spawnProjectile(
       Vector2 spawnPos,
       Entity projectile,
@@ -559,6 +543,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     projectile.setPosition(spawnPos.x + tileSize / 2f + 1f, spawnPos.y + tileSize / 2f - 5f);
+    // find the type of projectile
     ProjectileTagComponent tag = projectile.getComponent(ProjectileTagComponent.class);
 
     // Scale the projectile so it’s more visible
@@ -1238,6 +1223,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("Level is complete!");
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
+        displayNewEntity();
         levelCompleteEntity.getEvents().trigger("levelComplete");
         // play win sound
         if (ServiceLocator.getResourceService() != null
@@ -1258,6 +1244,54 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         service.lockPlacement();
       }
     }
+  }
+
+  /** Display a dialog box informing the user of any new unlocked entities */
+  private void displayNewEntity() {
+    DialogService dialogService = ServiceLocator.getDialogService();
+    String unlockedDefences = unlockEntity();
+    String nextMessage =
+        (unlockedDefences.isEmpty())
+            ? "You have unlocked all defences"
+            : "You have unlocked the: \n"
+                + unlockedDefences
+                + "\n Go to the dossier to check them out!";
+    dialogService.info("Congratulations!", nextMessage);
+  }
+
+  /**
+   * Unlocks any new entities that the player has unlocked
+   *
+   * @return a readable string listing all unlocked entities
+   */
+  private String unlockEntity() {
+    Profile profile = ServiceLocator.getProfileService().getProfile();
+    List<String> unlockedDefences = new ArrayList<>();
+
+    for (String key : Arsenal.getAllDefences().keySet()) {
+      if (Arsenal.getAllDefences().get(key).getLevelUnlockedOn().equals(this.nextLevel)
+          && !profile.getArsenal().contains(key)) {
+        profile.getArsenal().unlockDefence(key);
+        String name = Arsenal.getAllDefences().get(key).getName();
+        unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
+      }
+    }
+    for (String key : Arsenal.getAllGenerators().keySet()) {
+      if (Arsenal.getAllGenerators().get(key).getLevelUnlockedOn().equals(this.nextLevel)) {
+        profile.getArsenal().unlockGenerator(key);
+        String name = Arsenal.getAllGenerators().get(key).getName();
+        unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
+      }
+    }
+    return String.join(" and ", unlockedDefences);
   }
 
   /**

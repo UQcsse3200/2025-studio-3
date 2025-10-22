@@ -124,4 +124,11 @@ class DefenderStatsComponentTest {
     defender.setCost(150);
     assertEquals(150, defender.getCost());
   }
+
+  @Test
+  void testCostGetterNegative() {
+    DefenderStatsComponent defender = new DefenderStatsComponent(100, 50, 500, 1f, 0.1f, 100);
+    defender.setCost(-150);
+    assertEquals(0, defender.getCost());
+  }
 }

@@ -14,8 +14,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(GameExtension.class)
 class ArsenalTest {
   private Arsenal arsenal;
-  private final Integer numInitialDefences = 2;
-  private final Integer numInitialGenerators = 1;
+  private final Integer numInitialDefences = 0;
+  private final Integer numInitialGenerators = 0;
 
   @BeforeEach
   void setUp() {
@@ -37,9 +37,6 @@ class ArsenalTest {
     List<String> generators = arsenal.getGenerators();
     assertEquals(numInitialDefences, defences.size());
     assertEquals(numInitialGenerators, generators.size());
-    assertTrue(defences.contains("slingshooter"));
-    assertTrue(defences.contains("shield"));
-    assertTrue(generators.contains("furnace"));
   }
 
   @Test
