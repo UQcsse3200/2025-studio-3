@@ -34,7 +34,6 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("moveLeftStart", this::animateMoveLeft);
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
-    entity.getEvents().addListener("teleportStart", this::animateTeleport);
     entity
         .getEvents()
         .addListener(
