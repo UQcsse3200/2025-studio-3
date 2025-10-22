@@ -100,7 +100,9 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
       // Plays the teleport sound
       Sound teleportSound =
           ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
-      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+      if (teleportSound != null) {
+        teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+      }
 
       // Updates state
       currentState = State.DISAPPEARING;
@@ -117,7 +119,9 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
         // Plays the teleport sound
         Sound teleportSound =
             ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
-        teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+        if (teleportSound != null) {
+          teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+        }
       }
     } else if (currentState == State.REAPPEARING) {
       AnimationRenderComponent animator =
