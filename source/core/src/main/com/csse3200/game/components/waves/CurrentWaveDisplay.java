@@ -83,8 +83,8 @@ public class CurrentWaveDisplay extends UIComponent {
 
     // Adds all elements to a table
     table.add(progressBar).padTop(10f).padRight(10f);
-    table.add(waveLabel).padRight(10f).padRight(10f);
-    table.add(waveNumberLabel).padRight(10f);
+    table.add(waveLabel).padTop(10f).padRight(10f);
+    table.add(waveNumberLabel).padTop(10f);
 
     stage.addActor(table);
   }
