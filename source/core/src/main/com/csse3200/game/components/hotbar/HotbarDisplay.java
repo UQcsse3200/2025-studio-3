@@ -70,14 +70,18 @@ public class HotbarDisplay extends UIComponent {
    * This method creates the ui for the hotbar and the units that are selectable within its slots
    */
   private void addActors() {
+    // Creates images for the hotbars (needs to different variables)
     Image unitHotbar = new Image(new Texture("images/ui/hotbar.png"));
     Image itemHotbar = new Image(new Texture("images/ui/hotbar.png"));
+
+    // Create hotbars and position them
     unitHotbarTable = createUnitHotbar(unitHotbar);
     itemHotbarTable = createItemHotbar(itemHotbar);
     stage.addActor(itemHotbarTable);
     itemHotbarTable.toBack();
     stage.addActor(unitHotbarTable);
 
+    // Listener to cancel placement
     stage.addListener(
         new ClickListener() {
           @Override
@@ -102,6 +106,13 @@ public class HotbarDisplay extends UIComponent {
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
   }
 
+  /**
+   * Creates the unit hotbar for the game.
+   * Places all the available units and their costs in the slots of the hotbar.
+   *
+   * @param hotbar The image of the unit hotbar
+   * @return The created unit hotbar
+   */
   private Table createUnitHotbar(Image hotbar) {
     // create group to store all assets for the hotbar
     Group unitLayers = new Group();
@@ -191,6 +202,13 @@ public class HotbarDisplay extends UIComponent {
     return tempHotbarTable;
   }
 
+  /**
+   * Creates the collapsible item hotbar for the game and button to collapse it.
+   * Places all the available items in the slots of the hotbar and creates the button used to collapse the hotbar.
+   *
+   * @param hotbar The image of the item hotbar
+   * @return The created item hotbar
+   */
   private Table createItemHotbar(Image hotbar) {
     // create group to store all assets for the hotbar
     Group itemLayers = new Group();
