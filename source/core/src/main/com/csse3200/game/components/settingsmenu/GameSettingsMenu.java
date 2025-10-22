@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.FocusListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -158,9 +158,9 @@ public class GameSettingsMenu extends UIComponent {
     TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.debug("Apply button clicked");
             applyChanges();
             entity.getEvents().trigger("backtosettingsmenu");
@@ -170,9 +170,9 @@ public class GameSettingsMenu extends UIComponent {
     // Create reset button using UIFactory
     TextButton resetKeysBtn = ui.primaryButton("Reset Keys", buttonWidth);
     resetKeysBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.debug("Reset button clicked");
             resetKeyBinds();
             // Update keybind text fields
