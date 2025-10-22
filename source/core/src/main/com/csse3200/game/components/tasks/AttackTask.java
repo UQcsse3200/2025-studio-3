@@ -1,10 +1,7 @@
 package com.csse3200.game.components.tasks;
 
-import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Allows an entity to attack the closest target entity. This task runs when there is a target
