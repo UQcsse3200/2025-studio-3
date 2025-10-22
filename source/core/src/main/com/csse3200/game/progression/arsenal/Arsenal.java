@@ -18,21 +18,16 @@ public class Arsenal {
    * 0 indicates level 1 is initialised with three defences. This will be used to track which
    * defences should be unlocked on each level */
   private static final String INITIAL_DEFENCE = "levelOne";
+  private static final Integer NUM_INITIAL_DEFENCES = 3;
   private static final Map<String, BaseDefenderConfig> ALL_DEFENCES = new HashMap<>();
   /* The same as above for generators*/
   private static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();
 
   public static Map<String, BaseDefenderConfig> getAllDefences() {
-    //    if (ALL_DEFENCES.isEmpty()) {
-    //      loadFromConfig();
-    //    }
     return ALL_DEFENCES;
   }
 
   public static Map<String, BaseGeneratorConfig> getAllGenerators() {
-    //    if (ALL_GENERATORS.isEmpty()) {
-    //      loadFromConfig();
-    //    }
     return ALL_GENERATORS;
   }
 
@@ -108,24 +103,17 @@ public class Arsenal {
 
   public void initialiseArsenal() {
     loadFromConfig();
+
     for (Map.Entry<String, BaseDefenderConfig> entry : getAllDefences().entrySet()) {
-      if (entry.getValue().getLevelUnlockedOn().equals("levelOne")
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)
           && !entry.getKey().equals("wall")) {
         defences.add(entry.getKey());
-        ServiceLocator.getProfileService()
-            .getProfile()
-            .getStatistics()
-            .incrementStatistic("defencesUnlocked");
       }
     }
 
     for (Map.Entry<String, BaseGeneratorConfig> entry : getAllGenerators().entrySet()) {
-      if (entry.getValue().getLevelUnlockedOn().equals("levelOne")) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)) {
         generators.add(entry.getKey());
-        ServiceLocator.getProfileService()
-            .getProfile()
-            .getStatistics()
-            .incrementStatistic("defencesUnlocked");
       }
     }
   }
