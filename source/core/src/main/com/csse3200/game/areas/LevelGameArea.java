@@ -338,17 +338,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                 robots.remove(wall);
               });
 
-    spawnEntity(wall);
-    wall.getEvents().trigger("idleStart");
+      spawnEntity(wall);
+      wall.getEvents().trigger("idleStart");
 
-    wall.getEvents()
-        .addListener(
-            ENTITY_DEATH_EVENT,
-            () -> {
-              logger.info("Wall has been destroyed!");
-              requestDespawn(wall);
-              checkGameOver();
-            });
+      wall.getEvents()
+          .addListener(
+              ENTITY_DEATH_EVENT,
+              () -> {
+                logger.info("Wall has been destroyed!");
+                requestDespawn(wall);
+                checkGameOver();
+              });
     }
   }
 
