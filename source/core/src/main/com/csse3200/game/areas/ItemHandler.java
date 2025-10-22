@@ -14,7 +14,6 @@ import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,7 +82,7 @@ public class ItemHandler {
                   return Math.abs(entityPos.x - p.x) <= finalRadius
                       && Math.abs(entityPos.y - p.y) <= finalRadius;
                 })
-            .collect(Collectors.toList());
+            .toList();
 
     if (item.getType() == ItemComponent.Type.EMP) {
       area.damageRobotsAtPosition(entityPos, radius, 30);
