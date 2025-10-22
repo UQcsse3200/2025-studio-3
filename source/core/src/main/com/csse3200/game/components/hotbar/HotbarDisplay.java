@@ -1,6 +1,5 @@
 package com.csse3200.game.components.hotbar;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Array;
@@ -50,8 +48,6 @@ public class HotbarDisplay extends UIComponent {
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
   private final Map<Entity, Label> generatorCostLabels = new HashMap<>();
   private int lastFurnaceCount = -1;
-  protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
-  protected static final UIFactory ui = new UIFactory(skin, Settings.UIScale.MEDIUM);
 
   public HotbarDisplay(
       LevelGameArea game,
@@ -83,7 +79,7 @@ public class HotbarDisplay extends UIComponent {
     // initialise the values needed for placing unit images in slots
     float hotbarWidth = unitLayers.getWidth();
     cellWidth = hotbarWidth / 9;
-    float startX = cellWidth / 4;
+    float startX = cellWidth / 6;
     float y = 30;
     float currentX = startX;
 
@@ -91,7 +87,7 @@ public class HotbarDisplay extends UIComponent {
     for (Map.Entry<String, Supplier<Entity>> unit : unitList.entrySet()) {
       Table slot = new Table();
       Image tempUnit = new Image(new Texture(unit.getKey()));
-      tempUnit.setSize(scaling, scaling);
+      tempUnit.setSize((float) (scaling * 1.3), (float) (scaling * 1.3));
       slotImages.add(tempUnit);
 
       // Get the cost of the entity
@@ -100,7 +96,8 @@ public class HotbarDisplay extends UIComponent {
       DefenderStatsComponent defender = entity.getComponent(DefenderStatsComponent.class);
 
       // Handles displaying the cost in the hotbar
-      Label displayCost = ui.createLabel("50", 50, Color.WHITE);
+      Label displayCost = ui.createLabel("50", 30, Color.WHITE);
+      displayCost.setTouchable(Touchable.disabled);
 
       if (generator != null) {
         generatorCostLabels.put(entity, displayCost);
@@ -172,7 +169,7 @@ public class HotbarDisplay extends UIComponent {
 
     itemLayers.setSize(itemHotbar.getPrefWidth(), itemHotbar.getPrefHeight());
 
-    startX = cellWidth / 4;
+    startX = cellWidth / 6;
     // creates down arrow image
     Image upDownArrow = new Image(new Texture("images/ui/up_down_arrow.png"));
     upDownArrow.setSize(scaling, (float) (0.5 * scaling));
@@ -181,7 +178,7 @@ public class HotbarDisplay extends UIComponent {
     // creates all the items
     for (Map.Entry<String, Supplier<Entity>> item : itemList.entrySet()) {
       Image tempItem = new Image(new Texture(item.getKey()));
-      tempItem.setSize(scaling, scaling);
+      tempItem.setSize((float) (scaling * 1.3), (float) (scaling * 1.3));
 
       itemImages.add(tempItem);
 
