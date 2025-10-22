@@ -89,40 +89,15 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     if (currentState == State.NOT_TELEPORTING) {
       // Update will only be called if ready to teleport, otherwise TeleportTask has
       // a priority of -1. Therefore, if we aren't teleporting, we should start teleporting.
-      // Stop moving
-      PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
-      if (phys != null && phys.getBody() != null) {
-        phys.getBody().setLinearVelocity(0f, 0f);
-      }
-
-      // Play animation
-      owner.getEntity().getEvents().trigger("teleportDisappearStart");
-
-      // Plays the teleport sound
-      Sound teleportSound =
-          ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
-      if (teleportSound != null) {
-        teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
-      }
-
-      // Updates state
-      currentState = State.DISAPPEARING;
+      beginTeleport();
     } else if (currentState == State.DISAPPEARING) {
       AnimationRenderComponent animator =
           owner.getEntity().getComponent(AnimationRenderComponent.class);
       // If the animator is null, something went wrong, and we should skip ahead.
       // Otherwise, we wait until the disappear animation is done to teleport.
       if (animator == null || animator.isFinished()) {
-        // The start animation is finished.
-        currentState = State.REAPPEARING;
-        performTeleport();
-        owner.getEntity().getEvents().trigger("teleportReappearStart");
-        // Plays the teleport sound
-        Sound teleportSound =
-            ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
-        if (teleportSound != null) {
-          teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
-        }
+        // The start animation is finished. Finish the teleport
+        finishTeleport();
       }
     } else if (currentState == State.REAPPEARING) {
       AnimationRenderComponent animator =
@@ -133,6 +108,47 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
         // The teleport is finished.
         currentState = State.NOT_TELEPORTING;
       }
+    }
+  }
+
+  /**
+   * Begins the first half of the teleport, stopping movement, and the 'disappear' animation/sound
+   * effect.
+   */
+  private void beginTeleport() {
+    // Stop moving
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+    if (phys != null && phys.getBody() != null) {
+      phys.getBody().setLinearVelocity(0f, 0f);
+    }
+
+    // Play animation
+    owner.getEntity().getEvents().trigger("teleportDisappearStart");
+
+    // Plays the teleport sound
+    Sound teleportSound =
+        ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
+    if (teleportSound != null) {
+      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+    }
+
+    // Updates state
+    currentState = State.DISAPPEARING;
+  }
+
+  /**
+   * Begins the second half of the teleport, the actual teleportation, and the 'reappear'
+   * animation/sound effect.
+   */
+  private void finishTeleport() {
+    currentState = State.REAPPEARING;
+    performTeleport();
+    owner.getEntity().getEvents().trigger("teleportReappearStart");
+    // Plays the teleport sound
+    Sound teleportSound =
+        ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
+    if (teleportSound != null) {
+      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
     }
   }
 
