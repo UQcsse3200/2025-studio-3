@@ -82,6 +82,9 @@ public class SpeedControlDisplay extends UIComponent {
         new ClickListener() {
           @Override
           public void clicked(InputEvent event, float x, float y) {
+            if (speedButton.isDisabled() || isFrozen()) {
+              return;
+            }
             cycleSpeed();
           }
         });
@@ -210,6 +213,15 @@ public class SpeedControlDisplay extends UIComponent {
   public void update() {
     super.update();
     updatePosition();
+    if (speedButton != null) {
+      boolean frozen = isFrozen();
+      speedButton.setDisabled(frozen);
+      speedButton.getColor().a = frozen ? 0.5f : 1f;
+
+      if (tooltip != null) {
+        tooltip.setText(frozen ? "Speed (disabled during preview)" : "Speed");
+      }
+    }
   }
 
   /** Updates button, tooltip and badge position when window is resized */
@@ -231,6 +243,11 @@ public class SpeedControlDisplay extends UIComponent {
             x + (BUTTON_SIZE - badgeLabel.getPrefWidth()) / 2f, y + BUTTON_SIZE - 2f);
       }
     }
+  }
+
+  private boolean isFrozen() {
+    return ServiceLocator.getTimeSource().getRawDeltaTime() > 0f
+        && ServiceLocator.getTimeSource().getDeltaTime() == 0f;
   }
 
   @Override

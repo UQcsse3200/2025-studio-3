@@ -2,7 +2,11 @@ package com.csse3200.game.components.slot;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ServiceLocator;
 import java.util.Random;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,6 +15,21 @@ import org.junit.jupiter.api.Test;
  * behavior.
  */
 class SlotEngineTest {
+
+  private GameTime time;
+
+  @BeforeEach
+  void setUp() {
+    ServiceLocator.clear();
+    time = new GameTime();
+    time.setTimeScale(1f);
+    ServiceLocator.registerTimeSource(time);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ServiceLocator.clear();
+  }
 
   private static boolean allEqual(int[] arr) {
     if (arr == null || arr.length == 0) return false;
