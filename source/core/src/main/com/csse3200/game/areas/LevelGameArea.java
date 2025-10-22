@@ -699,8 +699,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void knockbackRobotsAtPosition(Vector2 pos, int dist) {
     if (robots.isEmpty()) return;
 
-    List<Entity> robotsToRemove = new ArrayList<>();
-
     for (Entity robot : robots) {
       CombatStatsComponent stats = robot.getComponent(CombatStatsComponent.class);
       if (stats == null) continue;
@@ -715,19 +713,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         robot.setPosition(robotPos.x + dist * tileSize, robotPos.y);
 
         logger.info("Robot knocked back {} tiles", dist);
-
-        // Mark robot for removal if dead
-        boolean mark = stats.isDead();
-        if (mark) {
-          robotsToRemove.add(robot);
-        }
       }
-    }
-
-    // Despawn dead robots
-    for (Entity r : robotsToRemove) {
-      requestDespawn(r);
-      robots.remove(r);
     }
   }
 
