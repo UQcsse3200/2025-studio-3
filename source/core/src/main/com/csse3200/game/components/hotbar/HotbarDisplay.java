@@ -375,7 +375,7 @@ public class HotbarDisplay extends UIComponent {
         Label costLabel = entry.getValue();
         GeneratorStatsComponent stats = generatorEntity.getComponent(GeneratorStatsComponent.class);
 
-        int newCost = stats.getCost() + (currentFurnaceCount * 50);
+        int newCost = 50 + (currentFurnaceCount * 50);
         costLabel.setText(String.valueOf(newCost));
       }
       lastFurnaceCount = currentFurnaceCount;
