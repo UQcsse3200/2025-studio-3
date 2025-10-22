@@ -713,7 +713,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   public void spawnBoss(BossFactory.BossTypes bossType) {
     logger.info("Spawning Boss of type {}", bossType);
 
-    Entity firstboss = BossFactory.createBossType(bossType);
+    Entity boss = BossFactory.createBossType(bossType);
     int spawnCol = levelCols;
     final Random random = new Random(System.nanoTime());
     final int firstspawnRow = random.nextInt(levelRows);
@@ -721,39 +721,39 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     float spawnX = xOffset + tileSize * spawnCol;
     float firstspawnY = yOffset + tileSize * firstspawnRow - (tileSize / 1.5f);
 
-    firstboss.setPosition(spawnX, firstspawnY);
-    firstboss.scaleHeight(tileSize * 3.0f);
+    boss.setPosition(spawnX, firstspawnY);
+    boss.scaleHeight(tileSize * 3.0f);
 
     logger.info(
-        "first Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
+        "Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
 
-    spawnEntity(firstboss);
-    robots.add(firstboss);
+    spawnEntity(boss);
+    robots.add(boss);
 
-    firstboss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
+    boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
 
-    firstboss.getEvents().addListener("despawnRobot", (Entity target) -> {});
+    boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
-    final boolean[] isFirstBossDead = {false};
-    firstboss
+    final boolean[] isBossDead = {false};
+    boss
         .getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
-              if (isFirstBossDead[0]) {
+              if (isBossDead[0]) {
                 return;
               }
-              isFirstBossDead[0] = true;
+              isBossDead[0] = true;
 
               logger.info("Boss death triggered");
 
-              AITaskComponent ai = firstboss.getComponent(AITaskComponent.class);
+              AITaskComponent ai = boss.getComponent(AITaskComponent.class);
               if (ai != null) {
                 ai.dispose();
               }
 
               AnimationRenderComponent anim =
-                  firstboss.getComponent(AnimationRenderComponent.class);
+                  boss.getComponent(AnimationRenderComponent.class);
               if (anim != null) {
                 anim.startAnimation("death");
               }
@@ -762,9 +762,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   new Timer.Task() {
                     @Override
                     public void run() {
-                      requestDespawn(firstboss);
-                      robots.remove(firstboss);
-                      logger.info("First Boss defeated");
+                      requestDespawn(boss);
+                      robots.remove(boss);
+                      logger.info("Boss defeated");
                       if (ServiceLocator.getWaveService() != null) {
                         ServiceLocator.getWaveService().onBossDefeated();
                       }
@@ -772,75 +772,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   },
                   1.84f);
             });
-
-    float delayBossSpawn = 13f;
-    Timer.schedule(
-        new Timer.Task() {
-          @Override
-          public void run() {
-            logger.info("Spawning second boss after delay");
-            Entity secondBoss = BossFactory.createBossType(bossType);
-
-            Random secondRandom = new Random(System.nanoTime() + System.currentTimeMillis());
-            int secondBossRow = secondRandom.nextInt(levelRows);
-
-            float secondSpawnY = yOffset + tileSize * secondBossRow - (tileSize / 1.5f);
-            secondBoss.setPosition(spawnX, secondSpawnY);
-            secondBoss.scaleHeight(tileSize * 3.0f);
-            logger.info(
-                "Second boss spawned at random lane {} at x={},y={}",
-                secondBossRow,
-                spawnX,
-                secondSpawnY);
-            spawnEntity(secondBoss);
-            robots.add(secondBoss);
-
-            secondBoss
-                .getEvents()
-                .addListener("fireProjectile", LevelGameArea.this::spawnBossProjectile);
-
-            secondBoss.getEvents().addListener("despawnRobot", (Entity target) -> {});
-            final boolean[] isSecondBossDead = {false};
-            secondBoss
-                .getEvents()
-                .addListener(
-                    ENTITY_DEATH_EVENT,
-                    () -> {
-                      if (isSecondBossDead[0]) {
-                        return;
-                      }
-                      isSecondBossDead[0] = true;
-
-                      logger.info("Boss death triggered");
-
-                      AITaskComponent ai = secondBoss.getComponent(AITaskComponent.class);
-                      if (ai != null) {
-                        ai.dispose();
-                      }
-
-                      AnimationRenderComponent anim =
-                          secondBoss.getComponent(AnimationRenderComponent.class);
-                      if (anim != null) {
-                        anim.startAnimation("death");
-                      }
-
-                      Timer.schedule(
-                          new Timer.Task() {
-                            @Override
-                            public void run() {
-                              requestDespawn(secondBoss);
-                              robots.remove(secondBoss);
-                              logger.info("Second Boss defeated");
-                              if (ServiceLocator.getWaveService() != null) {
-                                ServiceLocator.getWaveService().onBossDefeated();
-                              }
-                            }
-                          },
-                          1.84f);
-                    });
-          }
-        },
-        delayBossSpawn);
   }
 
   public void spawnBossProjectile(Entity boss) {
