@@ -5,8 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.math.GridPoint2;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.components.GeneratorStatsComponent;
@@ -19,7 +17,6 @@ import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -30,19 +27,12 @@ class CurrencyGeneratorComponentTest {
 
   @Mock private Stage stage;
   @Mock private Stage replacementStage;
-  @Mock private Group root;
-  @Mock private Group replacementRoot;
   @Mock private Timer timer;
 
   private GameStateService gameStateService;
 
   @BeforeEach
   void setUp() {
-    lenient().when(stage.getRoot()).thenReturn(root);
-    lenient().when(replacementStage.getRoot()).thenReturn(replacementRoot);
-    lenient().doNothing().when(root).addAction(any(Action.class));
-    lenient().doNothing().when(root).removeAction(any(Action.class));
-
     RenderService renderService = new RenderService();
     renderService.setStage(stage);
     ServiceLocator.registerRenderService(renderService);
@@ -59,12 +49,13 @@ class CurrencyGeneratorComponentTest {
     Entity spawner = new Entity().addComponent(component);
     spawner.create();
 
-    verify(root, never()).addAction(any(Action.class));
+    // Verify freeze listener was registered
+    verify(gameStateService).registerFreezeListener(any());
     assertTrue(component.isPaused());
 
     gameStateService.removeFreezeReason(USER_PAUSE);
 
-    verify(root, times(1)).addAction(any(Action.class));
+    // Verify component is no longer paused after unfreeze
     assertFalse(component.isPaused());
   }
 
@@ -74,19 +65,16 @@ class CurrencyGeneratorComponentTest {
     Entity spawner = new Entity().addComponent(component);
     spawner.create();
 
-    ArgumentCaptor<Action> actionCaptor = ArgumentCaptor.forClass(Action.class);
-    verify(root).addAction(actionCaptor.capture());
-
-    reset(root);
-    doNothing().when(root).removeAction(any(Action.class));
+    // Verify freeze listener was registered
+    verify(gameStateService).registerFreezeListener(any());
 
     component.dispose();
 
-    verify(root).removeAction(actionCaptor.getValue());
+    // Verify freeze listener was unregistered
+    verify(gameStateService).unregisterFreezeListener(any());
 
-    reset(root);
-    gameStateService.addFreezeReason(USER_PAUSE);
-    verifyNoInteractions(root);
+    // Verify component is paused after dispose
+    assertTrue(component.isPaused());
   }
 
   @Test
@@ -95,18 +83,17 @@ class CurrencyGeneratorComponentTest {
     Entity spawner = new Entity().addComponent(component);
     spawner.create();
 
-    ArgumentCaptor<Action> actionCaptor = ArgumentCaptor.forClass(Action.class);
-    verify(root).addAction(actionCaptor.capture());
+    // Verify freeze listener was registered
+    verify(gameStateService).registerFreezeListener(any());
 
-    reset(root, replacementRoot);
-    doNothing().when(root).removeAction(any(Action.class));
-
+    // Swap the stage
     ServiceLocator.getRenderService().setStage(replacementStage);
 
+    // Add freeze reason - component should pause regardless of stage swap
     gameStateService.addFreezeReason(USER_PAUSE);
 
-    verify(root).removeAction(actionCaptor.getValue());
-    verifyNoInteractions(replacementRoot);
+    // Verify component is paused
+    assertTrue(component.isPaused());
   }
 
   @Test
