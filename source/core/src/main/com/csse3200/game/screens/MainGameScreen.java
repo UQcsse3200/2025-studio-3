@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private List<String> textureAtlases = new ArrayList<>();
+  private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level_map_grass.png",
     "images/backgrounds/level_map_town.png",
@@ -279,12 +279,22 @@ public class MainGameScreen extends ScreenAdapter {
     var camComp = renderer.getCamera();
     float halfVW = camComp.getCamera().viewportWidth / 2f;
     float worldWidth = gameArea.getWorldWidth();
-    panStartX = halfVW; // current
-    panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
+    float maxCameraX = Math.max(worldWidth - halfVW, halfVW);
     panElapsed = 0f;
-    panPhase = PanPhase.RIGHT;
-    gameStateService.addFreezeReason(INTRO_PAN);
-    gameStateService.lockPlacement();
+
+    if (halfVW >= maxCameraX) {
+      panStartX = halfVW;
+      panTargetX = halfVW;
+      panPhase = PanPhase.DONE;
+      doIntroPan = false;
+    } else {
+      panStartX = halfVW;
+      float desiredTargetX = halfVW + (worldWidth - halfVW) * 0.35f;
+      panTargetX = Math.clamp(desiredTargetX, halfVW, maxCameraX);
+      panPhase = PanPhase.RIGHT;
+      gameStateService.addFreezeReason(INTRO_PAN);
+      gameStateService.lockPlacement();
+    }
   }
 
   /**
@@ -344,22 +354,22 @@ public class MainGameScreen extends ScreenAdapter {
     Float newCameraX = null;
 
     switch (panPhase) {
-      case RIGHT:
+      case RIGHT -> {
         newCameraX = Interpolation.smoother.apply(panStartX, panTargetX, progress);
         if (progress >= 1f) {
           panPhase = PanPhase.LEFT;
           panElapsed = 0f;
         }
-        break;
-      case LEFT:
+      }
+      case LEFT -> {
         newCameraX = Interpolation.smoother.apply(panTargetX, panStartX, progress);
         if (progress >= 1f) {
           completeIntroPan();
         }
-        break;
-      default:
+      }
+      default -> {
         // No movement required once the pan is done.
-        break;
+      }
     }
 
     if (newCameraX != null) {
@@ -514,11 +524,6 @@ public class MainGameScreen extends ScreenAdapter {
     } else {
       return new LevelGameArea(level);
     }
-  }
-
-  /** Exposes the resolved level key for subclasses and tests. */
-  protected String getLevelKey() {
-    return level;
   }
 
   /** Snaps the camera to the bottom left of the screen */
