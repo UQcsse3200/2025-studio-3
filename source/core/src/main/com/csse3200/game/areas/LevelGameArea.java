@@ -710,7 +710,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+  public void spawnBoss( BossFactory.BossTypes bossType) {
     logger.info("Spawning Boss of type {}", bossType);
 
     Entity firstboss = BossFactory.createBossType(bossType);
@@ -874,7 +874,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .getEvents()
         .addListener(
             DESPAWN_SLINGSHOT_EVENT,
-            (projectileEntity) -> {
+            projectileEntity -> {
               logger.info("Boss projectile hit defense - despawning");
               requestDespawn(projectile);
             });
