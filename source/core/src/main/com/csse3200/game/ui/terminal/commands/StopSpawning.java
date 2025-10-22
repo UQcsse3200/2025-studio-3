@@ -9,7 +9,7 @@ public class StopSpawning implements Command {
   private static final Logger logger = LoggerFactory.getLogger(StopSpawning.class);
 
   /**
-   * Immediately ends the current wave inside a level
+   * Pauses WaveService spawning new enemies.
    *
    * @return true when successful, otherwise false
    */

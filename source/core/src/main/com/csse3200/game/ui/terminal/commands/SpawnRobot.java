@@ -13,7 +13,8 @@ public class SpawnRobot implements Command {
   private static final int DEFAULT_LANE = 0;
 
   /**
-   * Pauses WaveService spawning new enemies.
+   * Spawns the specified robot. robot in the spawn queue in the lane corresponding to the first
+   * argument expressed as an int.
    *
    * @return true when successful, otherwise false
    */
