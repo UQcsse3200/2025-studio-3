@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.TaskRunner;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
@@ -89,12 +90,22 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     if (currentState == State.NOT_TELEPORTING) {
       // Update will only be called if ready to teleport, otherwise TeleportTask has
       // a priority of -1. Therefore, if we aren't teleporting, we should start teleporting.
-      currentState = State.DISAPPEARING;
+      // Stop moving
+      PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+      if (phys != null && phys.getBody() != null) {
+        phys.getBody().setLinearVelocity(0f, 0f);
+      }
+
+      // Play animation
       owner.getEntity().getEvents().trigger("teleportDisappearStart");
+
       // Plays the teleport sound
       Sound teleportSound =
           ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
       teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+
+      // Updates state
+      currentState = State.DISAPPEARING;
     } else if (currentState == State.DISAPPEARING) {
       AnimationRenderComponent animator =
           owner.getEntity().getComponent(AnimationRenderComponent.class);
