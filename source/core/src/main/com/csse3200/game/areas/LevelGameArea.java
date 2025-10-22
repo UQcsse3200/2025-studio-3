@@ -1199,19 +1199,27 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     List<String> unlockedDefences = new ArrayList<>();
 
-    for (String key : Arsenal.ALL_DEFENCES.keySet()) {
-      if (Arsenal.ALL_DEFENCES.get(key).getLevelUnlockedOn().equals(this.nextLevel)
+    for (String key : Arsenal.getAllDefences().keySet()) {
+      if (Arsenal.getAllDefences().get(key).getLevelUnlockedOn().equals(this.nextLevel)
           && !profile.getArsenal().contains(key)) {
         profile.getArsenal().unlockDefence(key);
-        String name = Arsenal.ALL_DEFENCES.get(key).getName();
+        String name = Arsenal.getAllDefences().get(key).getName();
         unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
       }
     }
-    for (String key : Arsenal.ALL_GENERATORS.keySet()) {
-      if (Arsenal.ALL_GENERATORS.get(key).getLevelUnlockedOn().equals(this.nextLevel)) {
+    for (String key : Arsenal.getAllGenerators().keySet()) {
+      if (Arsenal.getAllGenerators().get(key).getLevelUnlockedOn().equals(this.nextLevel)) {
         profile.getArsenal().unlockGenerator(key);
-        String name = Arsenal.ALL_GENERATORS.get(key).getName();
+        String name = Arsenal.getAllGenerators().get(key).getName();
         unlockedDefences.add(name);
+        ServiceLocator.getProfileService()
+            .getProfile()
+            .getStatistics()
+            .incrementStatistic("defencesUnlocked");
       }
     }
     return String.join(" and ", unlockedDefences);
