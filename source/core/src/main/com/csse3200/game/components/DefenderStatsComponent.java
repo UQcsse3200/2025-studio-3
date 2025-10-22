@@ -83,24 +83,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     setCost(cost);
   }
 
-  // unused atm
-  public void healthBuff() {
-    int newHealth = getMaxHealth() * 2;
-    setMaxHealth(newHealth);
-    heal(newHealth);
-    logger.info("Defender buffed! New max health: {}", getMaxHealth());
-  }
-
-  // unused atm
-  public void healthUnBuff() {
-    int newHealth = getMaxHealth() / 2;
-    setMaxHealth(newHealth);
-    if (getHealth() > newHealth) {
-      setHealth(newHealth);
-    }
-    logger.info("Defender unbuffed! New max health: {}", getMaxHealth());
-  }
-
   /** Doubles the defender's attack damage. */
   public void buff() {
     // Double attack damage
@@ -189,14 +171,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     this.critChance = critChance * CRIT_UPGRADE;
   }
 
-  /**
-   * Gets the critical hit chance as a percentage.
-   *
-   * @return critical chance (e.g., 0.25 means 25%)
-   */
-  public float getCritChance() {
-    return critChance;
-  }
 
   /**
    * Sets the scrap cost of the defender. If the provided value is negative, the cost is set to 0.
