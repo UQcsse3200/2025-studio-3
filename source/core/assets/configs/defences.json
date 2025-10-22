@@ -69,6 +69,23 @@
         "critChance": 1,
         "level": "levelThree"
       },
+      "boxer": {
+        "health": 60,
+        "range": 100,
+        "name": "Boxer",
+        "description": "Now this guy packs a punch. He can't hit far, but he sure hits hard",
+        "assetPath": "images/entities/defences/boxer_1.png",
+        "atlasPath": "images/entities/defences/boxer.atlas",
+        "projectilePath": "images/effects/default_projectile.png",
+        "cost": 125,
+        "damage": 15,
+        "soundPath": "sounds/boxer-place.mp3",
+        "direction": "right",
+        "numSprites": 3,
+        "attackSpeed": 1,
+        "critChance": 1,
+        "level": "levelThree"
+      },
       "mortar" : {
         "health": 100,
         "range": 1000,
@@ -116,23 +133,6 @@
         "attackSpeed": 0,
         "critChance": 0,
         "level": "levelOne"
-      },
-      "boxer": {
-        "health": 60,
-        "range": 100,
-        "name": "Boxer",
-        "description": "Now this guy packs a punch. He can't hit far, but he sure hits hard",
-        "assetPath": "images/entities/defences/boxer_1.png",
-        "atlasPath": "images/entities/defences/boxer.atlas",
-        "projectilePath": "images/effects/default_projectile.png",
-        "cost": 125,
-        "damage": 15,
-        "soundPath": "sounds/boxer-place.mp3",
-        "direction": "right",
-        "numSprites": 3,
-        "attackSpeed": 1,
-        "critChance": 1,
-        "level": "levelThree"
       }
     },
     "generators": {
