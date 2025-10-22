@@ -1,11 +1,11 @@
 package com.csse3200.game.components.mainmenu;
 
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
 import net.dermetfan.utils.Pair;
@@ -20,10 +20,6 @@ public class MainMenuDisplay extends UIComponent {
   @Override
   public void create() {
     super.create();
-
-    // Load assets
-    ServiceLocator.getResourceService().loadAll();
-
     addActors();
   }
 
@@ -48,27 +44,27 @@ public class MainMenuDisplay extends UIComponent {
 
     // Button listeners
     newGameBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.info("[MainMenuDisplay] New Game button clicked");
             entity.getEvents().trigger("start");
           }
         });
 
     loadBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.info("[MainMenuDisplay] Load Game button clicked");
             entity.getEvents().trigger("load");
           }
         });
 
     settingsBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.info("[MainMenuDisplay] Settings button clicked");
             entity.getEvents().trigger("settings");
           }
@@ -84,9 +80,9 @@ public class MainMenuDisplay extends UIComponent {
         });
 
     exitBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.info("[MainMenuDisplay] Exit Game button clicked");
             entity.getEvents().trigger("exit");
           }

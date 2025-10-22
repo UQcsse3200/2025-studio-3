@@ -30,10 +30,12 @@ public class DialogService {
     WARNING,
     /** Error dialog type, typically used for error messages with a single "OK" button. */
     ERROR,
-    /**
-     * Skill dialog type, typically used for skill information with "Unlock" and "Close" buttons.
-     */
-    SKILL
+    /** Skill dialog type, used for skill information with "Unlock" and "Close" buttons. */
+    SKILL,
+    /** Game over dialog, with a "Play Again" and "Quit" button */
+    GAME_OVER,
+    /** Win game dialog, with only a "Continue" button */
+    WIN_GAME
   }
 
   /** Creates a new dialog service. */
@@ -53,7 +55,7 @@ public class DialogService {
           ServiceLocator.getGlobalResourceService()
               .getAsset("sounds/achievement_unlock.mp3", Sound.class);
     } catch (Exception e) {
-      logger.debug("[DialogService] Dialog sound assets not loaded yet.");
+      logger.error("[DialogService] Dialog sound assets not loaded yet.");
     }
   }
 
@@ -81,7 +83,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.INFO, title, message, null, null, onClose);
   }
 
@@ -114,7 +118,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.WARNING, title, message, onConfirm, onCancel, null);
   }
 
@@ -142,7 +148,9 @@ public class DialogService {
     if (errorSound == null) {
       initSounds();
     }
-    errorSound.play(volume);
+    if (errorSound != null) {
+      errorSound.play(volume);
+    }
     return createAndShowDialog(DialogType.ERROR, title, message, null, null, onClose);
   }
 
@@ -155,6 +163,72 @@ public class DialogService {
    */
   public DialogComponent skill(String title, String message) {
     return skill(title, message, null, null);
+  }
+
+  /**
+   * Creates and shows a game over dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent gameOver(String title, String message) {
+    return gameOver(title, message, null, null);
+  }
+
+  /**
+   * Creates and shows a game over dialog with callbacks.
+   *
+   * @param title
+   * @param message
+   * @param onPlayAgain
+   * @param onQuit
+   * @return the created dialog component
+   */
+  public DialogComponent gameOver(
+      String title,
+      String message,
+      Consumer<DialogComponent> onPlayAgain,
+      Consumer<DialogComponent> onQuit) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (errorSound == null) {
+      initSounds();
+    }
+    if (errorSound != null) {
+      errorSound.play(volume);
+    }
+    return createAndShowDialog(DialogType.GAME_OVER, title, message, onPlayAgain, onQuit, null);
+  }
+
+  /**
+   * Creates and shows a win game dialog.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @return the created dialog component
+   */
+  public DialogComponent winGame(String title, String message) {
+    return winGame(title, message, null);
+  }
+
+  /**
+   * Creates and shows a win game dialog with callbacks.
+   *
+   * @param title the dialog title
+   * @param message the dialog message
+   * @param onContinue callback when user continues
+   * @return the created dialog component
+   */
+  public DialogComponent winGame(
+      String title, String message, Consumer<DialogComponent> onContinue) {
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    if (dialogSound == null) {
+      initSounds();
+    }
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
+    return createAndShowDialog(DialogType.WIN_GAME, title, message, onContinue, null, null);
   }
 
   /**
@@ -175,7 +249,9 @@ public class DialogService {
     if (dialogSound == null) {
       initSounds();
     }
-    dialogSound.play(volume);
+    if (dialogSound != null) {
+      dialogSound.play(volume);
+    }
     return createAndShowDialog(DialogType.SKILL, title, message, onUnlock, null, onClose);
   }
 
@@ -307,10 +383,11 @@ public class DialogService {
     if (achievementUnlockSound == null) {
       initSounds();
     }
-    achievementUnlockSound.play(volume);
+    if (achievementUnlockSound != null) {
+      achievementUnlockSound.play(volume);
+    }
     AchievementDialogComponent dialogComponent =
-        new AchievementDialogComponent(
-            name.toUpperCase(), description.toUpperCase(), skillPoints, tier != null ? tier : "T1");
+        new AchievementDialogComponent(name.toUpperCase(), skillPoints, tier != null ? tier : "T1");
     Entity dialogEntity = new Entity();
     dialogEntity.addComponent(dialogComponent);
     ServiceLocator.getEntityService().register(dialogEntity);

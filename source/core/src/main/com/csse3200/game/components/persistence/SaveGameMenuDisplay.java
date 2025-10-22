@@ -1,11 +1,11 @@
 package com.csse3200.game.components.persistence;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.persistence.Persistence;
 import com.csse3200.game.persistence.Savefile;
 import com.csse3200.game.services.ServiceLocator;
@@ -58,9 +58,9 @@ public class SaveGameMenuDisplay extends UIComponent {
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
-            new ChangeListener() {
+            new ClickListener() {
               @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
+              public void clicked(InputEvent event, float x, float y) {
                 logger.debug("Save slot {} selected for overwrite", slotIndex);
                 showNameInput();
                 overwrite = true;
@@ -74,9 +74,9 @@ public class SaveGameMenuDisplay extends UIComponent {
 
         final int slotIndex = i;
         saveSlotButtons[i].addListener(
-            new ChangeListener() {
+            new ClickListener() {
               @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
+              public void clicked(InputEvent event, float x, float y) {
                 logger.debug("Empty save slot {} selected", slotIndex);
                 showNameInput();
                 overwrite = false;
@@ -89,9 +89,9 @@ public class SaveGameMenuDisplay extends UIComponent {
     // Save game button
     saveButton = ui.primaryButton("Save Game", 60f);
     saveButton.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             String saveName = nameInput.getText().trim();
             if (saveName.isEmpty()) {
               ServiceLocator.getDialogService().error("Error", "Please enter a save name");
