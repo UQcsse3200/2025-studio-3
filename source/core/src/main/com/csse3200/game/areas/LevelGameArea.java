@@ -295,7 +295,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   void createLevelCompleteEntity() {
     // Handles the level completion window UI
     this.levelCompleteEntity = new Entity();
-    levelCompleteEntity.addComponent(new LevelCompletedWindow());
+    levelCompleteEntity.addComponent(new LevelCompletedWindow(currentLevelKey));
     spawnEntity(this.levelCompleteEntity);
   }
 
