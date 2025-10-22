@@ -18,7 +18,7 @@ public class SetLevel implements Command {
   @Override
   public boolean action(ArrayList<String> args) {
     if (args.isEmpty()) {
-      logger.debug("Invalid arguments received for 'setLevel' command: {}", args);
+      logger.warn("Invalid arguments received for 'setLevel' command: {}", args);
       return false;
     }
     try {
@@ -28,7 +28,7 @@ public class SetLevel implements Command {
       Profile profile = ServiceLocator.getProfileService().getProfile();
       profile.setCurrentLevel(args.getFirst());
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
       return false;
     }
     return true;

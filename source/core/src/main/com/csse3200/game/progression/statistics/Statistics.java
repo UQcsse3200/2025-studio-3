@@ -52,7 +52,7 @@ public class Statistics {
     stats.putIfAbsent("levelsCompleted", 0);
     stats.putIfAbsent("levelsLost", 0);
     stats.putIfAbsent("defencesPlanted", 0);
-    stats.putIfAbsent("defencesUnlocked", 0);
+    stats.putIfAbsent("defencesUnlocked", 3);
     stats.putIfAbsent("defencesLost", 0);
     stats.putIfAbsent("coinsCollected", 30);
     stats.putIfAbsent("coinsSpent", 0);
@@ -61,6 +61,9 @@ public class Statistics {
     stats.putIfAbsent("purchasesMade", 0);
     stats.putIfAbsent("wavesCompleted", 0);
     stats.putIfAbsent("itemsCollected", 0);
+    stats.putIfAbsent("paddleGameCompleted", 0);
+    stats.putIfAbsent("laneRunnerCompleted", 0);
+    stats.putIfAbsent("slotMachineCompleted", 0);
   }
 
   /**

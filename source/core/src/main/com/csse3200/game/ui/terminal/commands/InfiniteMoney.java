@@ -19,7 +19,7 @@ public class InfiniteMoney implements Command {
     try {
       ServiceLocator.getCurrencyService().add(9999);
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
     }
     return true;
   }

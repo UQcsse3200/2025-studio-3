@@ -48,36 +48,53 @@ public class ItemHandler {
                 (float) (area.getXOffset() * 0.25 + area.getLevelCols() * area.getTileSize()),
                 (float) (area.getTileSize() * -0.75)));
 
-    if (isDamagingItem(item)) {
-      applyAreaDamage(entityPos);
+    if (item.getType() == ItemComponent.Type.SCRAPPER) {
+      ServiceLocator.getCurrencyService().add(100);
+    } else if (isDamagingItem(item)) {
+      applyAreaDamage(item, entityPos);
     } else {
       applyBuff(item);
     }
   }
 
   private boolean isDamagingItem(ItemComponent item) {
-    Set<String> damaging = Set.of("GRENADE", "EMP", "NUKE");
+    Set<String> damaging = Set.of("GRENADE", "EMP", "NUKE", "DOOMHACK");
     return damaging.contains(item.getType().toString());
   }
 
   /** Damages all robots in a small radius around entityPos. */
-  private void applyAreaDamage(Vector2 entityPos) {
-    float radius = 1.5f * area.getTileSize();
+  private void applyAreaDamage(ItemComponent item, Vector2 entityPos) {
+
+    float radius = area.getTileSize();
+    if (item.getType() == ItemComponent.Type.EMP || item.getType() == ItemComponent.Type.GRENADE) {
+      radius *= 2.5f;
+    } else if (item.getType() == ItemComponent.Type.NUKE) {
+      radius *= 15f;
+    } else if (item.getType() == ItemComponent.Type.DOOMHACK) {
+      radius *= 0.75f;
+    }
+
+    float finalRadius = radius;
     List<Entity> toRemove =
         area.getRobots().stream()
             .filter(
                 r -> {
                   Vector2 p = r.getPosition();
-                  return Math.abs(entityPos.x - p.x) <= radius
-                      && Math.abs(entityPos.y - p.y) <= radius;
+                  return Math.abs(entityPos.x - p.x) <= finalRadius
+                      && Math.abs(entityPos.y - p.y) <= finalRadius;
                 })
             .collect(Collectors.toList());
 
-    for (Entity r : toRemove) {
-      area.requestDespawn(r);
-      area.getRobots().remove(r);
+    if (item.getType() == ItemComponent.Type.EMP) {
+      area.damageRobotsAtPosition(entityPos, radius, 30);
+    } else {
+      for (Entity r : toRemove) {
+        area.requestDespawn(r);
+        area.getRobots().remove(r);
+        ServiceLocator.getWaveService().onEnemyDispose();
+      }
+      logger.info("Area damage applied to {} robots", toRemove.size());
     }
-    logger.info("Area damage applied to {} robots", toRemove.size());
   }
 
   /** Applies temporary buffs (coffee, buff, etc.) to all placed defences. */
@@ -88,15 +105,20 @@ public class ItemHandler {
     String trigger = config.getTrigger();
 
     int total = area.getGrid().getRows() * area.getGrid().getCols();
+
     for (int i = 0; i < total; i++) {
       Entity entity = area.getGrid().getOccupantIndex(i);
-      if (entity == null) continue;
+
+      if (entity == null) {
+        continue;
+      }
 
       if (entity.getComponent(DefenderStatsComponent.class) != null
           || entity.getComponent(GeneratorStatsComponent.class) != null) {
 
         entity.getEvents().trigger(trigger);
         addAnimationOntoDefence(trigger, entity);
+
         logger.info("Start {} on {}", trigger, entity);
 
         Timer.schedule(
