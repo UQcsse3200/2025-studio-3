@@ -37,6 +37,7 @@ public class MainMenuDisplay extends UIComponent {
     TextButton newGameBtn = ui.primaryButton("New Game", buttonWidth);
     TextButton loadBtn = ui.primaryButton("Load Game", buttonWidth);
     TextButton settingsBtn = ui.primaryButton("Settings", buttonWidth);
+    TextButton creditsBtn = ui.primaryButton("Credits", buttonWidth);
     TextButton exitBtn = ui.primaryButton("Exit Game", buttonWidth);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     float uiScale = ui.getUIScale();
@@ -66,6 +67,15 @@ public class MainMenuDisplay extends UIComponent {
           public void clicked(InputEvent event, float x, float y) {
             logger.info("[MainMenuDisplay] Settings button clicked");
             entity.getEvents().trigger("settings");
+          }
+        });
+
+    creditsBtn.addListener(
+        new ClickListener() {
+          @Override
+          public void clicked(InputEvent changeEvent, float x, float y) {
+            logger.info("[MainMenuDisplay] Credits button clicked");
+            entity.getEvents().trigger("credits");
           }
         });
 
@@ -105,6 +115,12 @@ public class MainMenuDisplay extends UIComponent {
     table.row();
     table
         .add(settingsBtn)
+        .width(buttonDimensions.getKey())
+        .height(buttonDimensions.getValue())
+        .padBottom(10f);
+    table.row();
+    table
+        .add(creditsBtn)
         .width(buttonDimensions.getKey())
         .height(buttonDimensions.getValue())
         .padBottom(10f);

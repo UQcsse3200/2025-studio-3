@@ -7,6 +7,7 @@ public class DialogueState {
   private String text = "";
   private int textProgress;
   private boolean canAdvance;
+  private boolean done;
 
   /**
    * Set the speaker and text parameters
@@ -49,6 +50,10 @@ public class DialogueState {
     return textProgress;
   }
 
+  public boolean isDone() {
+    return done;
+  }
+
   public boolean isCanAdvance() {
     return canAdvance;
   }
@@ -71,5 +76,9 @@ public class DialogueState {
 
   public void setCanAdvance(boolean canAdvance) {
     this.canAdvance = canAdvance;
+  }
+
+  public void setDone(boolean done) {
+    this.done = done;
   }
 }
