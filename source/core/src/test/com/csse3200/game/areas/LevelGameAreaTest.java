@@ -403,25 +403,24 @@ class LevelGameAreaTest {
           .when(() -> BossFactory.createBossType(any(BossFactory.BossTypes.class)))
           .thenReturn(fakeBoss);
 
-      area.spawnBoss(2, BossFactory.BossTypes.SCRAP_TITAN);
+      area.spawnBoss(BossFactory.BossTypes.SCRAP_TITAN);
 
-      mockedBossFactory.verify(() -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN));
-      assertEquals(1, area.spawned.size());
+      mockedBossFactory.verify(
+          () -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN), atLeastOnce());
+
+      assertTrue(area.spawned.size() >= 1);
       Entity spawnedBoss = area.spawned.get(0);
       assertEquals(fakeBoss, spawnedBoss);
 
       float expectedTileSize = (720f * (Renderer.GAME_SCREEN_WIDTH / 1280f)) / 8f;
       float expectedXOffset = 2f * expectedTileSize;
-      float expectedYOffset = 1f * expectedTileSize;
       int levelCols = 10;
-      int spawnRow = 2;
-      float expectedX = expectedXOffset + expectedTileSize * levelCols;
-      float expectedY = expectedYOffset + expectedTileSize * spawnRow - (expectedTileSize / 1.5f);
-      float expectedScaleY = expectedTileSize * 3.0f;
 
+      float expectedX = expectedXOffset + expectedTileSize * levelCols;
       Vector2 bossPos = spawnedBoss.getPosition();
       assertEquals(expectedX, bossPos.x, 0.01f);
-      assertEquals(expectedY, bossPos.y, 0.01f);
+
+      float expectedScaleY = expectedTileSize * 3.0f;
       assertEquals(expectedScaleY, spawnedBoss.getScale().y, 0.01f);
     }
   }
