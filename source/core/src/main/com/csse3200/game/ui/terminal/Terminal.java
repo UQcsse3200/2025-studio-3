@@ -38,6 +38,7 @@ public class Terminal extends Component {
     addCommand("clearRobots", new ClearRobots());
     addCommand("stopSpawning", new StopSpawning());
     addCommand("resumeSpawning", new ResumeSpawning());
+    addCommand("addItem", new AddItem());
   }
 
   /**
