@@ -3,11 +3,6 @@ package com.csse3200.game.persistence;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.csse3200.game.progression.Profile;
-import com.csse3200.game.progression.arsenal.Arsenal;
-import com.csse3200.game.progression.inventory.Inventory;
-import com.csse3200.game.progression.skilltree.SkillSet;
-import com.csse3200.game.progression.statistics.Statistics;
-import com.csse3200.game.progression.wallet.Wallet;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,105 +19,9 @@ import org.slf4j.LoggerFactory;
  */
 public class Persistence {
   private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
-
   private static final String ROOT_DIR = "The Day We Fought Back" + File.separator + "saves";
   private static final String SAVE_FILE_PATTERN = "^(.+?)\\$(\\d{10,13})(?:\\$(\\d+))?\\.json$";
   private static final String FILE_EXTENSION = ".json";
-
-  static final class ProfileSnapshot {
-    private String name;
-    private String currentLevel;
-    private Wallet wallet;
-    private Inventory inventory;
-    private SkillSet skillset;
-    private Statistics statistics;
-    private Arsenal arsenal;
-    private float worldMapX;
-    private float worldMapY;
-    private int worldMapZoomIdx;
-
-    // getters
-    public String getName() {
-      return name;
-    }
-
-    public String getCurrentLevel() {
-      return currentLevel;
-    }
-
-    public Wallet getWallet() {
-      return wallet;
-    }
-
-    public Inventory getInventory() {
-      return inventory;
-    }
-
-    public SkillSet getSkillset() {
-      return skillset;
-    }
-
-    public Statistics getStatistics() {
-      return statistics;
-    }
-
-    public Arsenal getArsenal() {
-      return arsenal;
-    }
-
-    public float getWorldMapX() {
-      return worldMapX;
-    }
-
-    public float getWorldMapY() {
-      return worldMapY;
-    }
-
-    public int getWorldMapZoomIdx() {
-      return worldMapZoomIdx;
-    }
-
-    // setters
-    public void setName(String v) {
-      this.name = v;
-    }
-
-    public void setCurrentLevel(String v) {
-      this.currentLevel = v;
-    }
-
-    public void setWallet(Wallet v) {
-      this.wallet = v;
-    }
-
-    public void setInventory(Inventory v) {
-      this.inventory = v;
-    }
-
-    public void setSkillset(SkillSet v) {
-      this.skillset = v;
-    }
-
-    public void setStatistics(Statistics v) {
-      this.statistics = v;
-    }
-
-    public void setArsenal(Arsenal v) {
-      this.arsenal = v;
-    }
-
-    public void setWorldMapX(float v) {
-      this.worldMapX = v;
-    }
-
-    public void setWorldMapY(float v) {
-      this.worldMapY = v;
-    }
-
-    public void setWorldMapZoomIdx(int v) {
-      this.worldMapZoomIdx = v;
-    }
-  }
 
   /** Prevent instantiation of this static utility class. */
   private Persistence() {
@@ -135,49 +34,19 @@ public class Persistence {
   }
 
   /**
-   * Loads a profile from a savefile.
+   * Load a user profile from a savefile.
    *
-   * <p>Order of attempts:
-   *
-   * <ol>
-   *   <li>Try reading the JSON directly into {@link Profile} (new snapshot JSON maps to the same
-   *       field names).
-   *   <li>If that fails, read {@link ProfileSnapshot} and reconstruct a {@link Profile}.
-   * </ol>
-   *
-   * @param save Savefile descriptor
-   * @return Pair of (Profile, slot)
+   * @param save the savefile object
+   * @return the profile and the slot
    */
   public static Pair<Profile, Integer> load(Savefile save) {
     String path = getPath(save);
-
-    // 1) Prefer reading JSON directly into Profile (field names match the snapshot keys).
-    Profile asProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
-    if (asProfile != null) {
-      // Backward compatibility: ensure currentLevel has a default if missing in old saves.
-      if (asProfile.getCurrentLevel() == null || asProfile.getCurrentLevel().isEmpty()) {
-        asProfile.setCurrentLevel("levelOne");
-      }
-      return new Pair<>(asProfile, save.getSlot());
+    Profile savedProfile = FileLoader.readClass(Profile.class, path, FileLoader.Location.EXTERNAL);
+    if (savedProfile != null) {
+      return new Pair<>(savedProfile, save.getSlot());
+    } else {
+      throw new IllegalStateException("Failed to load profile.");
     }
-
-    // 2) Fallback: read snapshot and reconstruct minimal Profile.
-    ProfileSnapshot dto =
-        FileLoader.readClass(ProfileSnapshot.class, path, FileLoader.Location.EXTERNAL);
-    if (dto != null) {
-      Profile p = new Profile();
-      if (dto.getName() != null) p.setName(dto.getName());
-      p.setCurrentLevel(
-          (dto.getCurrentLevel() == null || dto.getCurrentLevel().isEmpty())
-              ? "levelOne"
-              : dto.getCurrentLevel());
-      p.setWorldMapX(dto.getWorldMapX());
-      p.setWorldMapY(dto.getWorldMapY());
-      p.setWorldMapZoomIdx(dto.getWorldMapZoomIdx());
-      return new Pair<>(p, save.getSlot());
-    }
-
-    throw new IllegalStateException("Failed to load profile, creating new one.");
   }
 
   /**
@@ -192,7 +61,7 @@ public class Persistence {
     if (profileName != null) {
       profile.setName(profileName);
     }
-    save(slot, profile); // Ensure currentLevel is written at creation time
+    save(slot, profile);
     return new Pair<>(profile, slot);
   }
 
@@ -266,12 +135,10 @@ public class Persistence {
   }
 
   /**
-   * Saves the given profile to the specified slot.
+   * Save the current user profile to a specific slot.
    *
-   * <p>This writes a {@link ProfileSnapshot} to guarantee 'currentLevel' is persisted.
-   *
-   * @param slot Slot number (1-3)
-   * @param profile Profile to persist
+   * @param slot the slot to save the profile to
+   * @param profile the profile to save
    */
   public static void save(int slot, Profile profile) {
     if (slot > 3 || slot < 1) {
@@ -279,36 +146,21 @@ public class Persistence {
       return;
     }
 
-    // Remove the existing save in this slot (if any)
+    // Delete any existing save in this slot
     List<Savefile> saves = fetch();
     try {
       if (saves.get(slot - 1) != null) {
         delete(saves.get(slot - 1));
       }
-    } catch (IndexOutOfBoundsException ignored) {
-      // Slot is empty; nothing to delete
+    } catch (IndexOutOfBoundsException e) {
+      // slot is empty
     }
-    // Compose a new filename (includes slot)
+
+    // Create filename with slot information
     String filename =
         profile.getName() + "$" + System.currentTimeMillis() + "$" + slot + FILE_EXTENSION;
     String path = ROOT_DIR + File.separator + filename;
-
-    // Build the snapshot DTO
-    ProfileSnapshot dto = new ProfileSnapshot();
-    dto.setName(profile.getName());
-    dto.setCurrentLevel(profile.getCurrentLevel());
-    dto.setWallet(profile.getWallet());
-    dto.setInventory(profile.getInventory());
-    dto.setSkillset(profile.getSkillset());
-    dto.setStatistics(profile.getStatistics());
-    dto.setArsenal(profile.getArsenal());
-    dto.setWorldMapX(profile.getWorldMapX());
-    dto.setWorldMapY(profile.getWorldMapY());
-    dto.setWorldMapZoomIdx(profile.getWorldMapZoomIdx());
-    FileLoader.writeClass(dto, path, FileLoader.Location.EXTERNAL);
-
-    // Write the snapshot JSON
-    FileLoader.writeClass(dto, path, FileLoader.Location.EXTERNAL);
+    FileLoader.writeClass(profile, path, FileLoader.Location.EXTERNAL);
     logger.info("Saved profile to slot {}: {}", slot, filename);
   }
 

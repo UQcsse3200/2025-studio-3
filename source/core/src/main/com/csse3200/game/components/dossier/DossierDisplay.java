@@ -156,25 +156,42 @@ public class DossierDisplay extends UIComponent {
 
   /** Loads human entities (defenders and generators, excluding wall) */
   private void loadHumanEntities() {
-    // Combine defenders and generators, excluding the wall
-    java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
+    java.util.List<String> unlockedDefenders = new java.util.ArrayList<>();
+    java.util.List<String> lockedDefenders = new java.util.ArrayList<>();
 
     // Filter defenders (excluding wall)
-    for (String defenderKey : defenderConfigs.keySet()) {
-      if (!defenderKey.equals("wall")) {
-        filteredDefenderKeys.add(defenderKey);
+    // List unlocked entities first
+    for (String key : playerArsenal.getDefenders()) {
+      if (!key.equals("wall")) {
+        unlockedDefenders.add(key);
       }
     }
 
-    String[] defenderKeys = filteredDefenderKeys.toArray(new String[0]);
-    String[] generatorKeys = generatorConfigs.keySet().toArray(new String[0]);
-    entities = new String[defenderKeys.length + generatorKeys.length];
-    System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
-    System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
+    for (String key : playerArsenal.getGenerators()) {
+      unlockedDefenders.add(key);
+    }
+
+    for (String defenderKey : defenderConfigs.keySet()) {
+      if (!defenderKey.equals("wall") && !playerArsenal.contains(defenderKey)) {
+        lockedDefenders.add(defenderKey);
+      }
+    }
+
+    for (String defenderKey : generatorConfigs.keySet()) {
+      if (!playerArsenal.contains(defenderKey)) {
+        lockedDefenders.add(defenderKey);
+      }
+    }
+
+    String[] unlockedKeys = unlockedDefenders.toArray(new String[0]);
+    String[] lockedKeys = lockedDefenders.toArray(new String[0]);
+    entities = new String[unlockedKeys.length + lockedKeys.length];
+    System.arraycopy(unlockedKeys, 0, entities, 0, unlockedKeys.length);
+    System.arraycopy(lockedKeys, 0, entities, unlockedKeys.length, lockedKeys.length);
     logger.info(
-        "[DossierDisplay] Human mode - defender count: {}, generator count: {}, total entities: {}",
-        defenderKeys.length,
-        generatorKeys.length,
+        "[DossierDisplay] Human mode - unlocked count: {}, locked count: {}, total entities: {}",
+        unlockedKeys.length,
+        lockedKeys.length,
         entities.length);
     if (logger.isDebugEnabled()) {
       logger.debug("[DossierDisplay] Human mode entities: {}", java.util.Arrays.toString(entities));
@@ -450,6 +467,9 @@ public class DossierDisplay extends UIComponent {
     ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
+
+    // reload if in humanMode to maintain locked -> unlocked order
+    if (!enemyMode) loadHumanEntities();
 
     for (int i = 0; i < entities.length; i++) {
       final int index = i; // capture index for listener

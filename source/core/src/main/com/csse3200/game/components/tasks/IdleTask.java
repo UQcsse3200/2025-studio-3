@@ -22,6 +22,7 @@ public class IdleTask extends TargetDetectionTasks {
     super(attackRange, direction);
   }
 
+  /** Updates the task each game frame */
   @Override
   public void update() {
     owner.getEntity().getEvents().trigger("idleStart");
