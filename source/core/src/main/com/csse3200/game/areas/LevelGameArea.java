@@ -313,24 +313,29 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
           .addListener(
               ENTITY_DEATH_EVENT,
               () -> {
-                spawnEffect(
-                    ServiceLocator.getResourceService()
-                        .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
-                    "shell_explosion",
-                    new Vector2[] {damageTile, damageTile}, // effect stays in place
-                    (int) tileSize, // scale to match tile size
-                    new float[] {0.05f, 0.5f}, // frame duration & total effect time
-                    Animation.PlayMode.NORMAL,
-                    false, // not moving
-                    false);
-                damageRobotsAtPosition(
-                    damageTile,
-                    tileSize,
-                    wall.getComponent(DefenderStatsComponent.class).getBaseAttack());
-                knockbackRobotsAtPosition(knockbackTile, 3);
-                knockbackRobotsAtPosition(knockbackTile2, 3);
-                requestDespawn(wall);
-                robots.remove(wall);
+                  Timer.schedule(new Timer.Task(){
+                      @Override
+                      public void run(){
+                          spawnEffect(
+                                  ServiceLocator.getResourceService()
+                                          .getAsset("images/effects/shell_explosion.atlas", TextureAtlas.class),
+                                  "shell_explosion",
+                                  new Vector2[] {damageTile, damageTile}, // effect stays in place
+                                  (int) tileSize, // scale to match tile size
+                                  new float[] {0.05f, 0.5f}, // frame duration & total effect time
+                                  Animation.PlayMode.NORMAL,
+                                  false, // not moving
+                                  false);
+                          damageRobotsAtPosition(
+                                  damageTile,
+                                  tileSize,
+                                  wall.getComponent(DefenderStatsComponent.class).getBaseAttack());
+                          knockbackRobotsAtPosition(knockbackTile, 3);
+                          knockbackRobotsAtPosition(knockbackTile2, 3);
+                          requestDespawn(wall);
+                          robots.remove(wall);
+                      }
+                  }, 0f);
               });
 
       spawnEntity(wall);
@@ -799,14 +804,22 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     projectile.addComponent(new MoveLeftComponent(150f));
 
+    final boolean[] despawned = {false};
+
     projectile
         .getEvents()
         .addListener(
             "attack",
             (Entity target) -> {
-              logger.info("Boss projectile hit defense at {}", target.getPosition());
-
-              requestDespawn(projectile);
+              if(!despawned[0]) {
+                  despawned[0] = true;
+                  Timer.schedule(new Timer.Task() {
+                      @Override
+                      public void run(){
+                          requestDespawn(projectile);
+                      }
+                  }, 0f);
+              }
             });
 
     projectile
@@ -814,8 +827,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             DESPAWN_SLINGSHOT_EVENT,
             projectileEntity -> {
-              logger.info("Boss projectile hit defense - despawning");
-              requestDespawn(projectile);
+              if(!despawned[0]) {
+                  despawned[0] = true;
+                  Timer.schedule(new Timer.Task() {
+                      @Override
+                      public void run(){
+                          requestDespawn(projectile);
+                      }
+                  }, 0f);
+              }
             });
 
     projectile
@@ -823,8 +843,15 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "despawn",
             () -> {
-              logger.info("Boss projectile lifetime expired");
-              requestDespawn(projectile);
+              if(!despawned[0]) {
+                  despawned[0] = true;
+                  Timer.schedule(new Timer.Task() {
+                      @Override
+                      public void run(){
+                          requestDespawn(projectile);
+                      }
+                  }, 0f);
+              }
             });
 
     spawnEntity(projectile);
