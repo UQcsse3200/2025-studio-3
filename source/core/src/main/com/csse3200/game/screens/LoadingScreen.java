@@ -51,7 +51,7 @@ public class LoadingScreen implements Screen {
   }
 
   private void createUI() {
-    loadingLabel = new Label("Loading...", skin);
+    loadingLabel = new Label("LOADING...", skin);
     Label.LabelStyle st = new Label.LabelStyle(loadingLabel.getStyle());
     loadingLabel.setStyle(st);
     loadingLabel.setFontScale(2f);

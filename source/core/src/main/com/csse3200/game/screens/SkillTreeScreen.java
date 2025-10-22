@@ -1,9 +1,7 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.GdxGame;
@@ -36,9 +34,6 @@ public class SkillTreeScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(SkillTreeScreen.class);
   private final GdxGame game;
   private final Renderer renderer;
-  private final Texture background;
-  private final SpriteBatch batch;
-  protected static final Skin skin = new Skin(Gdx.files.internal("skin/tdwfb.json"));
 
   /**
    * Constructs a SkillTreeScreen, initializing all necessary services and rendering components.
@@ -64,15 +59,13 @@ public class SkillTreeScreen extends ScreenAdapter {
     // Load assets and setup UI
     loadAssets();
     createUI();
-
-    // Create batch and background texture
-    batch = new SpriteBatch();
-    background = new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
   }
 
   /** Loads necessary game assets */
   private void loadAssets() {
     logger.debug("Loading assets");
+    String[] textures = {"images/backgrounds/skilltree_background.png"};
+    ServiceLocator.getResourceService().loadTextures(textures);
     ServiceLocator.getResourceService().loadSounds(new String[] {"sounds/button_unlock_skill.mp3"});
     ServiceLocator.getResourceService().loadAll();
     ServiceLocator.getMusicService().play("sounds/background-music/skilltree_background.mp3");
@@ -80,11 +73,6 @@ public class SkillTreeScreen extends ScreenAdapter {
 
   @Override
   public void render(float delta) {
-    // Draw background
-    batch.begin();
-    batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    batch.end();
-
     // Update entities and render scene
     ServiceLocator.getEntityService().update();
     renderer.render();
@@ -107,7 +95,8 @@ public class SkillTreeScreen extends ScreenAdapter {
 
     // Set background image
     Texture backgroundTexture =
-        new Texture(Gdx.files.internal("images/backgrounds/skilltree_background.png"));
+        ServiceLocator.getResourceService()
+            .getAsset("images/backgrounds/skilltree_background.png", Texture.class);
     Image backgroundImage = new Image(backgroundTexture);
     backgroundImage.setSize(
         stage.getViewport().getWorldWidth(), stage.getViewport().getWorldHeight());

@@ -110,6 +110,8 @@ public class ProjectileFactory {
 
     gunnerProjectile.getComponent(TextureRenderComponent.class).scaleEntity();
     PhysicsUtils.setScaledCollider(gunnerProjectile, 0.1f, 0.1f);
+    // enable continuous collision detection for projectiles
+    gunnerProjectile.getComponent(PhysicsComponent.class).getBody().setBullet(true);
     return gunnerProjectile;
   }
 

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Graphics.DisplayMode;
 import com.badlogic.gdx.Graphics.Monitor;
 import com.badlogic.gdx.Input;
+import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.utils.EnvironmentUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,6 +93,35 @@ public class Settings {
   private int downButton;
   private int leftButton;
   private int rightButton;
+  private int zoomInButton;
+  private int zoomOutButton;
+
+  /*
+   * Allowed keys for buttons.
+   */
+  private static final ArrayList<Integer> ALLOWED_KEYS = new ArrayList<>();
+
+  // Set Allowed Keys
+  static {
+    // Letters (A-Z)
+    for (int l = Input.Keys.A; l <= Input.Keys.Z; l++) {
+      ALLOWED_KEYS.add(l);
+    }
+
+    // Numbers 1-9 (0 sometimes causes issues as a keycode of 0 can represent Unknown)
+    for (int n = Input.Keys.NUM_1; n <= Input.Keys.NUM_9; n++) {
+      ALLOWED_KEYS.add(n);
+    }
+
+    // Special keys
+    ALLOWED_KEYS.add(Input.Keys.SPACE);
+    ALLOWED_KEYS.add(Input.Keys.ESCAPE);
+    ALLOWED_KEYS.add(Input.Keys.UP);
+    ALLOWED_KEYS.add(Input.Keys.DOWN);
+    ALLOWED_KEYS.add(Input.Keys.LEFT);
+    ALLOWED_KEYS.add(Input.Keys.RIGHT);
+    ALLOWED_KEYS.add(Input.Keys.TAB);
+  }
 
   /*
    * Audio settings of the game.
@@ -122,6 +152,8 @@ public class Settings {
     downButton = Input.Keys.S;
     leftButton = Input.Keys.A;
     rightButton = Input.Keys.D;
+    zoomInButton = Input.Keys.Z;
+    zoomOutButton = Input.Keys.X;
 
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
@@ -176,6 +208,8 @@ public class Settings {
     this.downButton = deserializedSettings.getDownButton();
     this.leftButton = deserializedSettings.getLeftButton();
     this.rightButton = deserializedSettings.getRightButton();
+    this.zoomInButton = deserializedSettings.getZoomInButton();
+    this.zoomOutButton = deserializedSettings.getZoomOutButton();
 
     // Display settings
     availableModes.put(Mode.WINDOWED, "Windowed");
@@ -325,6 +359,24 @@ public class Settings {
   }
 
   /**
+   * Gets the key assigned to the zoom in button.
+   *
+   * @return the zoom in button.
+   */
+  public int getZoomInButton() {
+    return zoomInButton;
+  }
+
+  /**
+   * Gets the key assigned to the zoom out button.
+   *
+   * @return the zoom out button.
+   */
+  public int getZoomOutButton() {
+    return zoomOutButton;
+  }
+
+  /**
    * Gets the available resolutions.
    *
    * @return the available resolutions.
@@ -421,6 +473,15 @@ public class Settings {
    */
   public Mode getCurrentMode() {
     return currentMode;
+  }
+
+  /**
+   * Retrieves the list of allowed keys for the keybinds.
+   *
+   * @return a list of integers representing the allowed keys.
+   */
+  public ArrayList<Integer> getAllowedKeys() {
+    return ALLOWED_KEYS;
   }
 
   /**
@@ -531,6 +592,24 @@ public class Settings {
     this.rightButton = rightButton;
   }
 
+  /**
+   * Sets the zoom in button.
+   *
+   * @param zoomInButton the zoom in button.
+   */
+  public void setZoomInButton(int zoomInButton) {
+    this.zoomInButton = zoomInButton;
+  }
+
+  /**
+   * Sets the zoom out button.
+   *
+   * @param zoomOutButton the zoom out button.
+   */
+  public void setZoomOutButton(int zoomOutButton) {
+    this.zoomOutButton = zoomOutButton;
+  }
+
   /** Resets the key binds to their default values. */
   public void resetKeyBinds() {
     pauseButton = Input.Keys.ESCAPE;
@@ -540,6 +619,40 @@ public class Settings {
     downButton = Input.Keys.S;
     leftButton = Input.Keys.A;
     rightButton = Input.Keys.D;
+    zoomInButton = Input.Keys.Z;
+    zoomOutButton = Input.Keys.X;
+  }
+
+  /**
+   * Validates the button settings to ensure they use allowed key bindings and none are Unknown. If
+   * any button is found to have a key that is not allowed, key bindings are set to their default
+   * values.
+   */
+  public void checkButtonSettings() {
+    // Get all currently saved button keys
+    Settings settings = ServiceLocator.getSettingsService().getSettings();
+    ArrayList<Integer> buttons = new ArrayList<>();
+    buttons.add(settings.getPauseButton());
+    buttons.add(settings.getSkipButton());
+    buttons.add(settings.getInteractionButton());
+    buttons.add(settings.getUpButton());
+    buttons.add(settings.getDownButton());
+    buttons.add(settings.getLeftButton());
+    buttons.add(settings.getRightButton());
+    buttons.add(settings.getZoomInButton());
+    buttons.add(settings.getZoomOutButton());
+    logger.info("Current button keys: {}", buttons);
+
+    // Check each button key is valid
+    for (int button : buttons) {
+      if (!ALLOWED_KEYS.contains(button)) { // also ensures none are Unknown (0)
+        // If any is invalid, reset all to default
+        resetKeyBinds();
+        logger.info("Invalid button key found, resetting to defaults.");
+        return;
+      }
+    }
+    logger.info("All button keys valid.");
   }
 
   /**
@@ -707,6 +820,12 @@ public class Settings {
         + "\n"
         + "rightButton = "
         + Input.Keys.toString(rightButton)
+        + "\n"
+        + "zoomInButton = "
+        + Input.Keys.toString(zoomInButton)
+        + "\n"
+        + "zoomOutButton = "
+        + Input.Keys.toString(zoomOutButton)
         + "\n"
         + "windowedResolution = "
         + windowedResolution.toString().replace("[", "").replace(" & ", "x").replace("]", "")
