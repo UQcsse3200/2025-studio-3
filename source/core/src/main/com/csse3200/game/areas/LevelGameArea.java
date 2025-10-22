@@ -1066,7 +1066,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     DefenderStatsComponent defence = occ.getComponent(DefenderStatsComponent.class);
     int cost = 0;
     if (generator != null) {
-      cost = generator.getCost();
+      cost = getFurnaceCost(generator);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1399,5 +1399,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
+  }
+
+  private int getFurnaceCost(GeneratorStatsComponent generator) {
+    List<Entity> entities = new ArrayList<>(areaEntities);
+    int numFurnaces = 0;
+    for (Entity entity : entities) {
+      GeneratorStatsComponent generatorEntity = entity.getComponent(GeneratorStatsComponent.class);
+      if (generatorEntity != null) {
+        numFurnaces++;
+      }
+    }
+    return generator.getCost() * (numFurnaces + 1);
   }
 }
