@@ -11,12 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
-import com.csse3200.game.components.CombatStatsComponent;
-import com.csse3200.game.components.DeckInputComponent;
-import com.csse3200.game.components.DefenderStatsComponent;
-import com.csse3200.game.components.GeneratorStatsComponent;
-import com.csse3200.game.components.ProjectileComponent;
-import com.csse3200.game.components.ProjectileTagComponent;
+import com.csse3200.game.components.*;
 import com.csse3200.game.components.currency.CurrencyGeneratorComponent;
 import com.csse3200.game.components.gamearea.GameAreaDisplay;
 import com.csse3200.game.components.gameover.GameOverWindow;
@@ -52,6 +47,7 @@ import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
+import java.util.Random;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,6 +62,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float Y_MARGIN_TILES = 1f;
   private static final float MAP_HEIGHT_TILES = 8f;
   private static final String ENTITY_DEATH_EVENT = "entityDeath";
+  private static final String DESPAWN_SLINGSHOT_EVENT = "despawnSlingshot";
   private static final String HEAL = "heal";
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private float xOffset;
@@ -508,10 +505,19 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     spawnEntity(unit);
     robots.add(unit);
 
+    int coins;
+    CoinRewardedComponent coinsRewarded = unit.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
     unit.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
+              increaseOutGameCurrency(coins);
               requestDespawn(unit);
               ServiceLocator.getWaveService().onEnemyDispose();
               robots.remove(unit);
@@ -617,7 +623,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
     if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
-      projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+      projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
     }
 
     ServiceLocator.getProfileService()
@@ -638,7 +644,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     projectile.scaleHeight(30f);
     projectile.scaleWidth(30f);
-    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
 
     spawnEntity(projectile);
     logger.info("Gunner projectile spawned at {}", spawnPos);
@@ -708,30 +714,34 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+  public void spawnBoss(BossFactory.BossTypes bossType) {
     logger.info("Spawning Boss of type {}", bossType);
-    Entity boss = BossFactory.createBossType(bossType);
 
+    Entity boss = BossFactory.createBossType(bossType);
     int spawnCol = levelCols;
-    int spawnRow = Math.clamp(row, 0, levelRows - 1);
+    final Random random = new Random(System.nanoTime());
+    final int firstspawnRow = random.nextInt(levelRows);
 
     float spawnX = xOffset + tileSize * spawnCol;
-    float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
+    float firstspawnY = yOffset + tileSize * firstspawnRow - (tileSize / 1.5f);
 
-    boss.setPosition(spawnX, spawnY);
+    boss.setPosition(spawnX, firstspawnY);
     boss.scaleHeight(tileSize * 3.0f);
 
-    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+    logger.info("Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
 
     spawnEntity(boss);
     robots.add(boss);
 
-    boss.getEvents()
-        .addListener(
-            "fireProjectile",
-            (Entity bossEntity) -> {
-              spawnBossProjectile(bossEntity);
-            });
+    int coins;
+    CoinRewardedComponent coinsRewarded = boss.getComponent(CoinRewardedComponent.class);
+    if (coinsRewarded == null) {
+      coins = 0;
+    } else {
+      coins = coinsRewarded.getCoinAmount();
+    }
+
+    boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
 
     boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
 
@@ -743,7 +753,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
               if (isBossDead[0]) {
                 return;
               }
-              isBossDead[0] = true;
+              isBossDead[0] = true; // Set flag to prevent re-entry.
+              increaseOutGameCurrency(coins);
 
               logger.info("Boss death triggered");
 
@@ -774,9 +785,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnBossProjectile(Entity boss) {
-    System.out.println("DEBUG: spawnBossProjectile called for boss at " + boss.getPosition());
+    logger.info("spawnBossProjectile called for boss at {}", boss.getPosition());
 
-    Entity projectile = ProjectileFactory.createBossProjectile(35);
+    Entity projectile = ProjectileFactory.createBossProjectile(20);
 
     Vector2 bossPos = boss.getPosition();
     float projectileX = bossPos.x - (tileSize * 0.5f);
@@ -793,7 +804,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "attack",
             (Entity target) -> {
-              System.out.println("DEBUG: Boss projectile hit defense at " + target.getPosition());
+              logger.info("Boss projectile hit defense at {}", target.getPosition());
 
               requestDespawn(projectile);
             });
@@ -801,9 +812,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     projectile
         .getEvents()
         .addListener(
-            "despawnSlingshot",
-            (projectileEntity) -> {
-              System.out.println("DEBUG: Boss projectile hit defense - despawning");
+            DESPAWN_SLINGSHOT_EVENT,
+            projectileEntity -> {
+              logger.info("Boss projectile hit defense - despawning");
               requestDespawn(projectile);
             });
 
@@ -812,13 +823,12 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "despawn",
             () -> {
-              System.out.println("DEBUG: Boss projectile lifetime expired");
+              logger.info("Boss projectile lifetime expired");
               requestDespawn(projectile);
             });
 
     spawnEntity(projectile);
-    System.out.println(
-        "DEBUG: Boss projectile spawned at (" + projectileX + ", " + projectileY + ")");
+    logger.info("Boss projectile spawned at ({}, {})", projectileX, projectileY);
   }
 
   /**
@@ -1562,5 +1572,25 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       }
     }
     return generator.getCost() * (numFurnaces + 1);
+  }
+
+  /**
+   * Increases out-of-game currency upon enemy death.
+   *
+   * @param coins the amount of coins to add to the player's wallet
+   */
+  public void increaseOutGameCurrency(int coins) {
+    ProfileService profileService = ServiceLocator.getProfileService();
+    if (profileService == null || !profileService.isActive()) return;
+
+    int before = profileService.getProfile().getWallet().getCoins();
+    profileService.getProfile().getStatistics().incrementStatistic("enemiesKilled");
+    profileService.getProfile().getWallet().addCoins(coins);
+    profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
+    logger.info(
+        "[Death] wallet: {} + {} -> {}",
+        before,
+        coins,
+        profileService.getProfile().getWallet().getCoins());
   }
 }
