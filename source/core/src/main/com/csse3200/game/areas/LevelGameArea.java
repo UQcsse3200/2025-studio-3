@@ -1183,6 +1183,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
+  /** Display a dialog box informing the user of any new unlocked entities */
   private void displayNewEntity() {
     DialogService dialogService = ServiceLocator.getDialogService();
     String unlockedDefences = unlockEntity();
@@ -1195,6 +1196,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     dialogService.info("Congratulations!", nextMessage);
   }
 
+  /**
+   * Unlocks any new entitites that the player has unlocked
+   *
+   * @return a readable string listing all unlocked entities
+   */
   private String unlockEntity() {
     Profile profile = ServiceLocator.getProfileService().getProfile();
     List<String> unlockedDefences = new ArrayList<>();

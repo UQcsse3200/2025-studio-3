@@ -22,14 +22,29 @@ public class Arsenal {
   /* The same as above for generators*/
   private static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();
 
+  /**
+   * Gets a record of all defences in the defender config file
+   *
+   * @return a map of defender keys to the respective defender config
+   */
   public static Map<String, BaseDefenderConfig> getAllDefences() {
     return ALL_DEFENCES;
   }
 
+  /**
+   * Gets a record of all generators in the defender config file
+   *
+   * @return a map of generator keys to respective generator config
+   */
   public static Map<String, BaseGeneratorConfig> getAllGenerators() {
     return ALL_GENERATORS;
   }
 
+  /**
+   * Sets the all defences map to be a given map
+   *
+   * @param allDefences the map that will replace the previous allDefences map
+   */
   public static void setAllDefences(Map<String, BaseDefenderConfig> allDefences) {
     for (Map.Entry<String, BaseDefenderConfig> entry : allDefences.entrySet()) {
       if (!entry.getKey().equals("wall")) {
@@ -38,10 +53,16 @@ public class Arsenal {
     }
   }
 
+  /**
+   * Sets the all generators map to be a given map
+   *
+   * @param allGenerators the map that will replace the previous allGenerators map
+   */
   public static void setAllGenerators(Map<String, BaseGeneratorConfig> allGenerators) {
     ALL_GENERATORS.putAll(allGenerators);
   }
 
+  /** Loads the defence and generator maps from the defender config file */
   private static void loadFromConfig() {
     ConfigService configService = ServiceLocator.getConfigService();
 
@@ -100,6 +121,7 @@ public class Arsenal {
     generators.remove(defenceKey);
   }
 
+  /** Unlocks all initial entities to initialise the arsenal */
   public void initialiseArsenal() {
     loadFromConfig();
 
