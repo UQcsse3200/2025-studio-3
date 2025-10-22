@@ -64,6 +64,9 @@ public class WavePreviewManager {
         case "levelFive":
           bossToPreview = BossFactory.BossTypes.GUN_BOT;
           break;
+          default:
+            bossToPreview = null;
+            break;
       }
     }
     if (bossToPreview != null) {
