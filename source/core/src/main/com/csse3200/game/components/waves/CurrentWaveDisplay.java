@@ -89,17 +89,16 @@ public class CurrentWaveDisplay extends UIComponent {
     stage.addActor(table);
   }
 
-    /**
-     * Creates a ProgressBar that displays the current progress
-     * through the current level's waves
-     *
-     * @return The created progress bar
-     */
+  /**
+   * Creates a ProgressBar that displays the current progress through the current level's waves
+   *
+   * @return The created progress bar
+   */
   private ProgressBar createWaveProgressBar() {
     // Initialise progress bar textures and nine patch textures
     Texture backgroundTex = new Texture("images/ui/progress_bar.png");
     Texture fillTex = new Texture("images/ui/progress_bar_fill.png");
-    NinePatch backgroundNine = new NinePatch(new TextureRegion(backgroundTex),   0, 0, 8, 8);
+    NinePatch backgroundNine = new NinePatch(new TextureRegion(backgroundTex), 0, 0, 8, 8);
     NinePatch fillNine = new NinePatch(new TextureRegion(fillTex), 8, 8, 8, 8);
     NinePatchDrawable backgroundDrawable = new NinePatchDrawable(backgroundNine);
     NinePatchDrawable fillDrawable = new NinePatchDrawable(fillNine);
@@ -139,14 +138,14 @@ public class CurrentWaveDisplay extends UIComponent {
     }
   }
 
-    /**
-     * Sets the progress value of the wave progress bar
-     * when the wave number changes
-     *
-     * @param waveNumber the new wave number
-     */
+  /**
+   * Sets the progress value of the wave progress bar when the wave number changes
+   *
+   * @param waveNumber the new wave number
+   */
   public void updateWaveProgressBar(int waveNumber) {
-      progressBar.setValue((float) waveNumber / (ServiceLocator.getWaveService().getTotalWaves() + 1));
+    progressBar.setValue(
+        (float) waveNumber / (ServiceLocator.getWaveService().getTotalWaves() + 1));
   }
 
   /**

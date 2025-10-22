@@ -107,8 +107,8 @@ public class HotbarDisplay extends UIComponent {
   }
 
   /**
-   * Creates the unit hotbar for the game.
-   * Places all the available units and their costs in the slots of the hotbar.
+   * Creates the unit hotbar for the game. Places all the available units and their costs in the
+   * slots of the hotbar.
    *
    * @param hotbar The image of the unit hotbar
    * @return The created unit hotbar
@@ -203,8 +203,8 @@ public class HotbarDisplay extends UIComponent {
   }
 
   /**
-   * Creates the collapsible item hotbar for the game and button to collapse it.
-   * Places all the available items in the slots of the hotbar and creates the button used to collapse the hotbar.
+   * Creates the collapsible item hotbar for the game and button to collapse it. Places all the
+   * available items in the slots of the hotbar and creates the button used to collapse the hotbar.
    *
    * @param hotbar The image of the item hotbar
    * @return The created item hotbar
