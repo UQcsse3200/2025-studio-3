@@ -9,7 +9,7 @@ public class ResumeSpawning implements Command {
   private static final Logger logger = LoggerFactory.getLogger(ResumeSpawning.class);
 
   /**
-   * Immediately ends the current wave inside a level
+   * Makes WaveService resume enemy spawning.
    *
    * @return true when successful, otherwise false
    */

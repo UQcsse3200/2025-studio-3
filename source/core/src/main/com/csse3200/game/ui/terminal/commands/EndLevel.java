@@ -9,7 +9,8 @@ public class EndLevel implements Command {
   private static final Logger logger = LoggerFactory.getLogger(EndLevel.class);
 
   /**
-   * Sets the current wave inside the level to the first argument, expressed as an integer.
+   * Sets the current wave to a value higher than the max wave. Ends the level immediately with a
+   * win.
    *
    * @return true when successful, false when unsuccessful
    */
