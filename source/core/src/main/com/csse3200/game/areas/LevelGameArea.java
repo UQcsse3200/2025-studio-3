@@ -1489,10 +1489,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     profileService.getProfile().getWallet().addCoins(coins);
     profileService.getProfile().getStatistics().incrementStatistic("coinsCollected", coins);
     logger.info(
-            "[Death] wallet: {} + {} -> {}",
-            before,
-            coins,
-            profileService.getProfile().getWallet().getCoins());
+        "[Death] wallet: {} + {} -> {}",
+        before,
+        coins,
+        profileService.getProfile().getWallet().getCoins());
   }
 }
-
