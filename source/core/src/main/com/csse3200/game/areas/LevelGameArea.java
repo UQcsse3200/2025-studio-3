@@ -675,6 +675,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     for (Entity r : robotsToRemove) {
       requestDespawn(r);
       robots.remove(r);
+      ServiceLocator.getWaveService().onEnemyDispose();
     }
   }
 
