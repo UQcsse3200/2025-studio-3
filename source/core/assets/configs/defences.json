@@ -127,7 +127,7 @@
         "assetPath": "images/entities/defences/wall.png",
         "atlasPath": "images/entities/defences/wall.atlas",
         "projectilePath": "",
-        "damage": 0,
+        "damage": 1000,
         "direction": "right",
         "numSprites": 2,
         "attackSpeed": 0,
