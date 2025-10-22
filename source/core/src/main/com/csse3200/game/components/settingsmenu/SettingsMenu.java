@@ -1,9 +1,9 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.GdxGame.ScreenType;
 import com.csse3200.game.services.ServiceLocator;
@@ -59,25 +59,25 @@ public class SettingsMenu extends UIComponent {
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
     displayBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("displaysettings");
           }
         });
 
     gameBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("gamesettings");
           }
         });
 
     audioBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             entity.getEvents().trigger("audiosettings");
           }
         });

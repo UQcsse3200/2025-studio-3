@@ -1,144 +1,204 @@
 package com.csse3200.game.screens;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.minigame.BackgroundRenderComponent;
+import com.csse3200.game.components.minigame.BallComponent;
+import com.csse3200.game.components.minigame.MinigameHUD;
+import com.csse3200.game.components.minigame.PaddleCollisionComponent;
+import com.csse3200.game.components.minigame.PaddleComponent;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.minigame.BallComponent;
-import com.csse3200.game.minigame.CollisionComponent;
-import com.csse3200.game.minigame.PaddleComponent;
-import com.csse3200.game.minigame.PaddleInputComponent;
+import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.entities.factories.RenderFactory;
+import com.csse3200.game.input.InputDecorator;
+import com.csse3200.game.input.InputService;
+import com.csse3200.game.physics.PhysicsLayer;
+import com.csse3200.game.physics.PhysicsService;
+import com.csse3200.game.physics.components.ColliderComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.RenderService;
+import com.csse3200.game.rendering.Renderer;
+import com.csse3200.game.rendering.TextureRenderComponent;
+import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.MinigameService;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+/** The game screen containing the paddle game. */
 public class PaddleGameScreen extends ScreenAdapter {
+  private static final Logger logger = LoggerFactory.getLogger(PaddleGameScreen.class);
   private final GdxGame game;
-  private Stage stage;
-  private Image paddleImage;
-  private Entity paddle;
-  private Entity ball;
-  private Texture paddleTex;
-  private Texture ballTex;
-  private Texture bgTex;
-  private Label scoreLabel;
-  private int ballsHit;
-  private float totalTime = 0f;
-  private Label timeLabel;
+  private final Renderer renderer;
+  private boolean gameOverDialogShown = false;
 
   /**
    * Creates a new PaddleGameScreen and initializes the stage, input processor, and assets.
    *
-   * @param game
+   * @param game the game instance
    */
   public PaddleGameScreen(GdxGame game) {
     this.game = game;
-    stage = new Stage(new ScreenViewport());
-    Gdx.input.setInputProcessor(stage);
-    ballsHit = 0;
+    ServiceLocator.registerInputService(new InputService());
+    ServiceLocator.registerResourceService(new ResourceService());
+    ServiceLocator.registerEntityService(new EntityService());
+    ServiceLocator.registerRenderService(new RenderService());
+    ServiceLocator.registerTimeSource(new GameTime());
+    ServiceLocator.registerPhysicsService(new PhysicsService());
+    ServiceLocator.registerMinigameService(new MinigameService());
 
-    if (ServiceLocator.getResourceService() == null) {
-      ServiceLocator.registerResourceService(new com.csse3200.game.services.ResourceService());
-    }
-    if (ServiceLocator.getSettingsService() == null) {
-      ServiceLocator.registerSettingsService(new com.csse3200.game.services.SettingsService());
-    }
+    renderer = RenderFactory.createRenderer();
+    logger.debug("[PaddleGameScreen] Renderer created");
+
+    renderer.getCamera().getEntity().setPosition(640f, 360f);
     loadAssests();
-    addBackground();
-    createPaddle();
-    createBall();
-    createScoreLabel();
+    createUI();
+    createGameElements();
+
+    ServiceLocator.getMusicService().play("sounds/background-music/level2_music.mp3");
   }
 
+  /** Loads the paddle game's assets. */
   private void loadAssests() {
-    paddleTex = new Texture(Gdx.files.internal("images/entities/minigames/paddle.png"));
-    ballTex = new Texture(Gdx.files.internal("images/entities/minigames/ball.png"));
-    bgTex = new Texture(Gdx.files.internal("images/backgrounds/WallPongbg.png"));
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    String[] textures = {
+      "images/entities/minigames/paddle_new.png",
+      "images/entities/minigames/ball_new.png",
+      "images/backgrounds/WallPongbg.png"
+    };
+    resourceService.loadTextures(textures);
+
+    // Load sounds
+    String[] sounds = {"sounds/bounce.mp3"};
+    resourceService.loadSounds(sounds);
+
+    resourceService.loadAll();
   }
 
-  private void addBackground() {
-    Image bg = new Image(bgTex);
-    bg.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    bg.setPosition(0, 0);
-    stage.addActor(bg);
+  private void createUI() {
+    logger.debug("[PaddleGameScreen] Creating UI");
+    Stage stage = ServiceLocator.getRenderService().getStage();
+
+    // Create the paddle game UI
+    Entity ui =
+        new Entity().addComponent(new InputDecorator(stage, 10)).addComponent(new MinigameHUD());
+
+    ServiceLocator.getEntityService().register(ui);
   }
 
-  private void createPaddle() {
-    paddleImage = new Image(paddleTex);
-    paddleImage.setSize(200, 35);
-    paddleImage.setPosition(Gdx.graphics.getWidth() / 2f - 100, 50);
-    stage.addActor(paddleImage);
+  /** Creates the game elements. */
+  private void createGameElements() {
+    logger.info("[PaddleGameScreen] Creating game elements");
 
-    paddle = new Entity();
-    paddle.addComponent(new PaddleComponent(paddleImage));
-    paddle.addComponent(new PaddleInputComponent(paddle));
-    paddle.create();
-  }
+    // Create background entity with custom render component
+    Entity backgroundEntity =
+        new Entity()
+            .addComponent(new BackgroundRenderComponent("images/backgrounds/WallPongbg.png"));
+    ServiceLocator.getEntityService().register(backgroundEntity);
 
-  private void createBall() {
-    Image ballImage = new Image(ballTex);
-    ballImage.setSize(40, 40);
-    ballImage.setPosition(Gdx.graphics.getWidth() / 2f - 20, 100);
-    stage.addActor(ballImage);
+    // Create paddle entity
+    ColliderComponent paddleCollider = new ColliderComponent();
+    Entity paddle =
+        new Entity()
+            .addComponent(
+                new TextureRenderComponent(
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/entities/minigames/paddle_new.png", Texture.class)))
+            .addComponent(new PaddleComponent())
+            .addComponent(new PaddleCollisionComponent())
+            .addComponent(new PhysicsComponent())
+            .addComponent(paddleCollider);
+    paddleCollider.setAsBox(new Vector2(100f, 30f)).setLayer(PhysicsLayer.PLAYER);
 
-    ball = new Entity();
-    ball.addComponent(new BallComponent(ballImage, 300f, 300f));
-    ball.addComponent(new CollisionComponent(paddleImage));
-    ball.create();
-  }
+    // Set paddle scale and position
+    paddle.setScale(100f, 30f);
+    paddle.setPosition(590f, 50f);
+    logger.info("[PaddleGameScreen] Paddle created at (590, 100) with scale (100, 50)");
+    ServiceLocator.getEntityService().register(paddle);
 
-  private void createScoreLabel() {
+    // Create ball entity
+    ColliderComponent ballCollider = new ColliderComponent();
+    Entity ball =
+        new Entity()
+            .addComponent(
+                new TextureRenderComponent(
+                    ServiceLocator.getResourceService()
+                        .getAsset("images/entities/minigames/ball_new.png", Texture.class)))
+            .addComponent(new BallComponent())
+            .addComponent(new PhysicsComponent())
+            .addComponent(ballCollider);
+    ballCollider.setAsBox(new Vector2(20f, 20f)).setLayer(PhysicsLayer.PROJECTILE);
 
-    BitmapFont font = ServiceLocator.getGlobalResourceService().generateFreeTypeFont("Default", 20);
-    Label.LabelStyle style = new Label.LabelStyle(font, Color.WHITE);
-    scoreLabel = new Label("Score: 0", style);
-    scoreLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 40);
-    stage.addActor(scoreLabel);
-    timeLabel = new Label("Time: 0.00s", style);
-    timeLabel.setPosition(20, Gdx.graphics.getHeight() - (float) 60);
-    stage.addActor(timeLabel);
+    // Set ball scale and position
+    ball.setScale(20f, 20f);
+    ball.setPosition(640f, 400f);
+    logger.info("[PaddleGameScreen] Ball created at (640, 400) with scale (20, 20)");
+    ServiceLocator.getEntityService().register(ball);
   }
 
   @Override
   public void render(float delta) {
-    ServiceLocator.getMusicService().play("sounds/background-music/level2_music.mp3");
-    totalTime += delta;
-    float survivalTime = totalTime;
-    Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-    BallComponent ballComp = ball.getComponent(BallComponent.class);
-    CollisionComponent collisionComp = ball.getComponent(CollisionComponent.class);
-
-    paddle.getComponent(PaddleComponent.class).update();
-    paddle.getComponent(PaddleInputComponent.class).update();
-
-    ballComp.update(delta, collisionComp);
-
-    int score = ballComp.getScore();
-    scoreLabel.setText("Score: " + score);
-    timeLabel.setText(String.format("Time: %.2f s", survivalTime));
-    ballsHit = ballComp.getBallsHit();
-    stage.act(delta);
-    stage.draw();
-
-    if (ballComp.getImage().getY() <= 0) {
-
-      game.setScreen(new WallPongGameOverScreen(game, score, survivalTime, ballsHit));
-      dispose();
+    // Only update game logic if not game over
+    if (!ServiceLocator.getMinigameService().isGameOver()) {
+      ServiceLocator.getPhysicsService().getPhysics().update();
+      ServiceLocator.getEntityService().update();
     }
+
+    renderer.render();
+
+    if (ServiceLocator.getMinigameService().isGameOver() && !gameOverDialogShown) {
+      handleGameOver();
+    }
+  }
+
+  /** Handles the game over state. */
+  private void handleGameOver() {
+    // Add achievement and coins
+    int score = ServiceLocator.getMinigameService().getScore();
+    if (score >= 10) {
+      ServiceLocator.getProfileService()
+          .getProfile()
+          .getStatistics()
+          .incrementStatistic("paddleGameCompleted");
+    }
+    ServiceLocator.getProfileService().getProfile().getWallet().addCoins(score);
+    ServiceLocator.getProfileService()
+        .getProfile()
+        .getStatistics()
+        .incrementStatistic("coinsCollected", score);
+
+    // Show game over dialog
+    gameOverDialogShown = true;
+    String title = "Game Over";
+    float time = ServiceLocator.getTimeSource().getTime();
+    String message = String.format("Final Score: %d%nSurvival Time: %.2fs", score, time / 1000f);
+    ServiceLocator.getDialogService()
+        .gameOver(
+            title,
+            message,
+            d -> game.setScreen(GdxGame.ScreenType.PADDLE_GAME),
+            d -> game.setScreen(GdxGame.ScreenType.MINI_GAMES));
+  }
+
+  @Override
+  public void resize(int width, int height) {
+    logger.debug("[PaddleGameScreen] Resized renderer: ({} x {})", width, height);
+    renderer.resize(width, height);
   }
 
   @Override
   public void dispose() {
-    stage.dispose();
-    if (paddleTex != null) paddleTex.dispose();
-    if (ballTex != null) ballTex.dispose();
-    if (bgTex != null) bgTex.dispose();
+    logger.debug("[PaddleGameScreen] Disposing");
+
+    renderer.dispose();
+    ServiceLocator.getRenderService().dispose();
+    ServiceLocator.getEntityService().dispose();
+
+    logger.debug("[PaddleGameScreen] Services cleared");
+    ServiceLocator.clear();
   }
 }

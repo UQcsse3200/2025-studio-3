@@ -22,12 +22,12 @@ public class SpawnRobot implements Command {
   public boolean action(ArrayList<String> args) {
     WaveService waveService = ServiceLocator.getWaveService();
     if (waveService == null) {
-      logger.debug("spawnRobot service is not available on this screen.");
+      logger.warn("spawnRobot service is not available on this screen.");
       return false;
     }
 
     if (args.isEmpty()) {
-      logger.debug("Invalid arguments received for 'spawnRobot' command: {}", args);
+      logger.warn("Invalid arguments received for 'spawnRobot' command: {}", args);
       return false;
     } else {
       // This will be a standard robot if invalid
@@ -38,7 +38,7 @@ public class SpawnRobot implements Command {
         try {
           lane = Integer.parseInt(args.get(1));
         } catch (NumberFormatException e) {
-          logger.debug("{} is not a valid number. Defaulting to {}", args.get(1), DEFAULT_LANE);
+          logger.warn("{} is not a valid number. Defaulting to {}", args.get(1), DEFAULT_LANE);
         }
       }
       waveService.spawnEnemyDebug(lane, robotType);

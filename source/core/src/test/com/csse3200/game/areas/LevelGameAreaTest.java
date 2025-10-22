@@ -110,10 +110,10 @@ class LevelGameAreaTest {
     lenient().when(resourceService.getProgress()).thenReturn(1);
 
     profile = new Profile();
+    lenient().when(profileService.getProfile()).thenReturn(profile);
     profile.getInventory().addItem("grenade"); // so inventory not null
     profile.getArsenal().unlockDefence("slingshooter"); // Add some defences for testing
     profile.getArsenal().unlockDefence("furnace");
-    lenient().when(profileService.getProfile()).thenReturn(profile);
 
     // Mock config service calls
     lenient().when(configService.getDefenderConfig(anyString())).thenReturn(null);

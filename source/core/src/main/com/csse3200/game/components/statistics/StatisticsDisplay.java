@@ -1,5 +1,6 @@
 package com.csse3200.game.components.statistics;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.progression.statistics.Statistics;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 public class StatisticsDisplay extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(StatisticsDisplay.class);
   private final GdxGame game;
+  private Table rootTable;
+  float uiScale = ui.getUIScale();
 
   /**
    * Creates a StatisticsDisplay for the game instance.
@@ -34,31 +37,49 @@ public class StatisticsDisplay extends UIComponent {
 
   /** Builds and adds the main UI actors for the Statistics screen. */
   private void addActors() {
-    Label titleLabel = ui.title("Statistics");
-    titleLabel.setSize(titleLabel.getPrefWidth(), titleLabel.getPrefHeight());
+    // Create background image
+    Texture backgroundTexture =
+        ServiceLocator.getGlobalResourceService()
+            .getAsset("images/ui/menu_card.png", Texture.class);
+    Image backgroundImage = new Image(backgroundTexture);
+    backgroundImage.setSize(870f * uiScale, 610f * uiScale);
 
-    float pad = ui.getScaledHeight(24f);
-    titleLabel.setPosition(
-        stage.getViewport().getWorldWidth() / 2f - titleLabel.getWidth() / 2f,
-        stage.getViewport().getWorldHeight() - titleLabel.getHeight() - pad);
-    titleLabel.setZIndex(3);
-    stage.addActor(titleLabel);
-    titleLabel.toFront();
+    // Create content table for statistics
+    rootTable = new Table();
+    rootTable.setSize(870f * uiScale, 610f * uiScale);
+    rootTable.center();
 
-    Table statisticsTable = makeStatisticsTable();
-    statisticsTable.center();
-    statisticsTable.top();
-    statisticsTable.setPosition(
-        stage.getViewport().getWorldWidth() / 2f - statisticsTable.getPrefWidth() / 2f,
-        stage.getViewport().getWorldHeight() - titleLabel.getHeight() - pad * 3);
+    // Add title with 10f padding from top
+    Label title = ui.title("Statistics");
+    rootTable.add(title).expandX().center().padTop(25f * uiScale).row();
 
-    stage.addActor(statisticsTable);
-    statisticsTable.toFront();
+    createStatisticsDisplay();
+
+    // Create stack with background and content
+    Stack stack = new Stack();
+    stack.add(backgroundImage);
+    stack.add(rootTable);
+    stack.setSize(1044f * uiScale, 732f * uiScale);
+    stack.setPosition(
+        (stage.getWidth() - stack.getWidth()) / 2, (stage.getHeight() - stack.getHeight()) / 2);
+
+    stage.addActor(stack);
     createCloseButton();
   }
 
+  /** Creates the statistics display with a two-column layout. */
+  private void createStatisticsDisplay() {
+    Table statisticsTable = makeStatisticsTable();
+
+    ScrollPane scrollPane = new ScrollPane(statisticsTable, skin);
+    scrollPane.setFadeScrollBars(false);
+
+    rootTable.row();
+    rootTable.add(scrollPane).expand().fill().row();
+  }
+
   /**
-   * Builds a table displaying the player's Statistics
+   * Builds a table displaying the player's Statistics in a two-column layout
    *
    * @return a table containing formatted Statistics
    */
@@ -80,24 +101,47 @@ public class StatisticsDisplay extends UIComponent {
       {"Skill Points Spent:", statistics.getStatistic("skillPointsSpent")},
       {"Purchases Made:", statistics.getStatistic("purchasesMade")},
       {"Waves Completed:", statistics.getStatistic("wavesCompleted")},
-      {"Items Collected:", statistics.getStatistic("itemsCollected")}
+      {"Items Collected:", statistics.getStatistic("itemsCollected")},
     };
 
-    // Position Components on table
-    Table table = new Table();
+    // Create main table for two-column layout
+    Table mainTable = new Table();
 
-    for (Object[] entry : stats) {
-      Label label = ui.text(entry[0].toString());
-      Label stat = ui.text(entry[1].toString());
-      table.row().padTop(10f);
-      table.add(label).right().padRight(30f);
-      table.add(stat).left();
+    // Create left column table
+    Table leftColumn = new Table();
+    // Create right column table
+    Table rightColumn = new Table();
+
+    // Split statistics into two columns (7 per column)
+    for (int i = 0; i < stats.length; i++) {
+      Object[] entry = stats[i];
+      Label label = ui.subheading(entry[0].toString());
+      Label stat = ui.subheading(entry[1].toString());
+
+      Table statRow = new Table();
+      statRow.add(label).right().padRight(20f * uiScale);
+      statRow.add(stat).left();
+
+      if (i < 7) {
+        // First 7 statistics go in left column
+        leftColumn.add(statRow).left().padBottom(15f * uiScale).row();
+      } else {
+        // Remaining statistics go in right column
+        rightColumn.add(statRow).left().padBottom(15f * uiScale).row();
+      }
     }
-    return table;
+
+    // Add columns to main table
+    mainTable.add(leftColumn).expand().fill().padRight(20f * uiScale);
+    mainTable.add(rightColumn).expand().fill();
+
+    return mainTable;
   }
 
   /** Creates the close button in the top-left corner. */
   private void createCloseButton() {
+    // Create close button using createBackExitButton
+    TextButton closeButton = ui.createBackExitButton(entity.getEvents(), stage.getHeight(), "Back");
     entity
         .getEvents()
         .addListener(
@@ -106,9 +150,15 @@ public class StatisticsDisplay extends UIComponent {
               logger.debug("Back button clicked");
               game.setScreen(GdxGame.ScreenType.WORLD_MAP);
             });
+    stage.addActor(closeButton);
+  }
 
-    // Create UIFactory back button
-    TextButton backButton = ui.createBackButton(entity.getEvents(), stage.getHeight());
-    stage.addActor(backButton);
+  /** Disposes of this UI component. */
+  @Override
+  public void dispose() {
+    if (rootTable != null) {
+      rootTable.clear();
+    }
+    super.dispose();
   }
 }
