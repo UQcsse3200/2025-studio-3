@@ -17,6 +17,12 @@ public class LevelCompletedWindow extends UIComponent {
   private Table container;
   private boolean isDisplayed = false;
   private final ProfileService profileService = ServiceLocator.getProfileService();
+  private final String levelKey;
+
+  public LevelCompletedWindow(String levelKey) {
+    super();
+    this.levelKey = levelKey;
+  }
 
   /** Creates the level completed window and sets up event listening for level completion. */
   @Override
@@ -83,7 +89,9 @@ public class LevelCompletedWindow extends UIComponent {
   private void navigateTo() {
     container.setVisible(false);
     isDisplayed = false;
-    updateLevel(); // Update the current level before changing screens
+    if (profileService.getProfile().getCurrentLevel().equals(this.levelKey)) {
+      updateLevel(); // Update the current level before changing screens
+    }
     Gdx.app.postRunnable(
         () -> {
           GdxGame game = (GdxGame) Gdx.app.getApplicationListener();
