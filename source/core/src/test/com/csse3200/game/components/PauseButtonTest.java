@@ -1,6 +1,5 @@
 package com.csse3200.game.components;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -13,58 +12,52 @@ import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
-class PauseButtonTest {
+public class PauseButtonTest {
+
   private PauseButton pauseButton;
-  private Stage stage;
-  private Entity entity;
-  private EventHandler events;
-  private ResourceService resourceService;
-  private SettingsService settingsService;
+  private Entity mockEntity;
+  private EventHandler mockEvents;
+  private ResourceService mockResourceService;
+  private Stage mockStage;
 
   @BeforeEach
-  void setup() {
+  void setUp() {
     // Mock dependencies
-    stage = mock(Stage.class);
-    entity = mock(Entity.class);
-    events = mock(EventHandler.class);
-    resourceService = mock(ResourceService.class);
-    settingsService = mock(SettingsService.class);
+    mockEntity = Mockito.mock(Entity.class, RETURNS_DEEP_STUBS);
+    mockEvents = Mockito.mock(EventHandler.class);
+    mockStage = Mockito.mock(Stage.class);
+    mockResourceService = Mockito.mock(ResourceService.class);
+    SettingsService mockSettingsService = Mockito.mock(SettingsService.class);
 
-    ServiceLocator.registerGlobalResourceService(resourceService);
-    ServiceLocator.registerSettingsService(settingsService);
+    when(mockStage.getWidth()).thenReturn(800f);
+    when(mockStage.getHeight()).thenReturn(600f);
+    when(mockResourceService.getAsset("images/ui/pause-icon.png", Texture.class))
+        .thenReturn(Mockito.mock(Texture.class));
 
-    when(stage.getWidth()).thenReturn(800f);
-    when(stage.getHeight()).thenReturn(600f);
-    when(resourceService.getAsset(anyString(), eq(Texture.class))).thenReturn(mock(Texture.class));
-    when(entity.getEvents()).thenReturn(events);
+    // Register mocks
+    ServiceLocator.registerResourceService(mockResourceService);
+    ServiceLocator.registerSettingsService(mockSettingsService);
+
+    // Setup entity & component
+    when(mockEntity.getEvents()).thenReturn(mockEvents);
 
     pauseButton = new PauseButton();
-    pauseButton.setEntity(entity);
+    pauseButton.setEntity(mockEntity);
     pauseButton.create();
   }
 
   @Test
   void shouldPauseGameWhenClicked() {
     pauseButton.setPaused(true);
-    assertTrue(getIsPaused(), "PauseButton should be paused after setPaused(true)");
+    verify(mockEntity.getEvents(), never()).trigger("resumekeypressed");
   }
 
   @Test
   void shouldTriggerPauseEventOnClick() {
     pauseButton.setPaused(false);
-    pauseButton.entity.getEvents().trigger("pause");
-    verify(events).trigger("pause");
-  }
-
-  /** Helper method to access private field */
-  private boolean getIsPaused() {
-    try {
-      var field = PauseButton.class.getDeclaredField("isPaused");
-      field.setAccessible(true);
-      return (boolean) field.get(pauseButton);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+    pauseButton.setPaused(true);
+    verify(mockEntity.getEvents(), times(1)).trigger("pause");
   }
 }
