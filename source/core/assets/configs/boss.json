@@ -5,7 +5,7 @@
     "health": 250,
     "attack": 50,
     "scale": 3.0,
-    "speed": 18,
+    "speed": 15,
     "attackType": "punch",
     "coinsRewarded": 20
   },
