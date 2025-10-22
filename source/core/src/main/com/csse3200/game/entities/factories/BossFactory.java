@@ -11,7 +11,7 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.BossAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
-import com.csse3200.game.components.worldmap.CoinRewardedComponent;
+import com.csse3200.game.components.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.persistence.FileLoader;
@@ -22,7 +22,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import java.awt.*;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.

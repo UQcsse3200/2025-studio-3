@@ -10,7 +10,7 @@ import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
 import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.*;
-import com.csse3200.game.components.worldmap.CoinRewardedComponent;
+import com.csse3200.game.components.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.physics.PhysicsLayer;
