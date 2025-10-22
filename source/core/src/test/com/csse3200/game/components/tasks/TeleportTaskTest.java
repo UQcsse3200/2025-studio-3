@@ -9,6 +9,7 @@ import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.extensions.GameExtension;
 import com.csse3200.game.services.GameTime;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,9 @@ class TeleportTaskTest {
     // Fixed timestep so cooldowns are predictable
     gameTime = mock(GameTime.class);
     ServiceLocator.registerTimeSource(gameTime);
+
+    ResourceService mockResourceService = mock(ResourceService.class);
+    ServiceLocator.registerResourceService(mockResourceService);
     when(gameTime.getDeltaTime()).thenReturn(0.5f); // 0.5s/frame
   }
 

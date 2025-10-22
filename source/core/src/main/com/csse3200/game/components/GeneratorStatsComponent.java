@@ -1,11 +1,22 @@
 package com.csse3200.game.components;
 
+/**
+ * A component to store and manage the statistics of a generator unit.
+ *
+ * <p>This includes values such as how frequently the generator produces scrap, how much scrap it
+ * generates per cycle, and how much it costs to place the generator.
+ *
+ * <p>It extends {@link CombatStatsComponent} but disables attack by setting the attack stat to 0.
+ */
 public class GeneratorStatsComponent extends CombatStatsComponent {
 
+  /** The time interval (in seconds) between currency generation cycles. */
   private int interval;
 
+  /** The amount of scrap produced each generation cycle. */
   private int scrapValue;
 
+  /** The scrap cost required to place the generator. */
   private int cost;
 
   /**

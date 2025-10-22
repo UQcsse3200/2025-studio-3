@@ -1,9 +1,9 @@
 package com.csse3200.game.components.settingsmenu;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.SettingsService;
@@ -26,6 +26,7 @@ public class DisplaySettingsMenu extends UIComponent {
   private CheckBox vsyncCheck;
   private SelectBox<String> uiScaleSelect;
   private SelectBox<String> qualitySelect;
+  private boolean displayModeChanged = false;
 
   /** Constructor for DisplaySettingsMenu. */
   public DisplaySettingsMenu() {
@@ -69,14 +70,15 @@ public class DisplaySettingsMenu extends UIComponent {
 
     // Add change listener to show/hide resolution row based on display mode
     displayModeSelect.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             String selectedMode = displayModeSelect.getSelected();
             boolean isWindowed = "WINDOWED".equals(selectedMode);
             resolutionLabel.setVisible(isWindowed);
             resolutionSelect.setVisible(isWindowed);
             applyDisplayModeChange(selectedMode);
+            displayModeChanged = true;
           }
         });
 
@@ -98,9 +100,9 @@ public class DisplaySettingsMenu extends UIComponent {
 
     // Add change listener to apply resolution change immediately
     resolutionSelect.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             applyResolutionChange();
           }
         });
@@ -126,9 +128,9 @@ public class DisplaySettingsMenu extends UIComponent {
     TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.debug("Apply button clicked");
             applyChanges();
           }
@@ -238,6 +240,11 @@ public class DisplaySettingsMenu extends UIComponent {
     }
 
     // Apply remaining display settings
+
+    // Check if settings have changed that need to be updated immediately
+    boolean uiScaleChanged = false;
+    boolean qualityChanged = false;
+
     if (fpsVal != null && vsyncCheck != null && uiScaleSelect != null && qualitySelect != null) {
       Settings.UIScale uiScale;
       try {
@@ -245,6 +252,7 @@ public class DisplaySettingsMenu extends UIComponent {
       } catch (IllegalArgumentException e) {
         uiScale = Settings.UIScale.MEDIUM;
       }
+      uiScaleChanged = settings.getCurrentUIScale() != uiScale;
 
       Settings.Quality quality;
       try {
@@ -252,6 +260,7 @@ public class DisplaySettingsMenu extends UIComponent {
       } catch (IllegalArgumentException e) {
         quality = Settings.Quality.HIGH;
       }
+      qualityChanged = settings.getQuality() != quality;
 
       ServiceLocator.getSettingsService()
           .changeDisplaySettings(fpsVal, vsyncCheck.isChecked(), uiScale, quality);
@@ -260,7 +269,21 @@ public class DisplaySettingsMenu extends UIComponent {
 
     ServiceLocator.getSettingsService().saveSettings();
     logger.info("[DisplaySettingsMenu] Remaining display settings applied");
-    entity.getEvents().trigger("backtosettingsmenu");
+
+    // Check if display mode changed then reset
+    boolean displayChanged = displayModeChanged;
+    displayModeChanged = false;
+
+    // Check if settings have changed that need to be applied immediately (trigger change event),
+    // otherwise return to Settings menu
+    if (uiScaleChanged || qualityChanged || displayChanged) {
+      logger.info("[DisplaySettingsMenu] UIScale, Quality or Display Mode settings changed");
+      entity.getEvents().trigger("displayneedsupdate");
+    } else {
+      logger.info(
+          "[DisplaySettingsMenu] UIScale, Quality and Display Mode settings unchanged, back to settings menu");
+      entity.getEvents().trigger("backtosettingsmenu");
+    }
   }
 
   /**

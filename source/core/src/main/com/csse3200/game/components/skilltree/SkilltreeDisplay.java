@@ -77,6 +77,10 @@ public class SkilltreeDisplay extends UIComponent {
                 ServiceLocator.getResourceService()
                     .getAsset("sounds/button_unlock_skill.mp3", Sound.class);
             unlockSound.play(0.5f * volume);
+            ServiceLocator.getProfileService()
+                .getProfile()
+                .getStatistics()
+                .incrementStatistic("skillPointsSpent", cost);
             stage.addActor(unlockedImage);
             unlockedImage.setZIndex(1);
             dialog.hide();

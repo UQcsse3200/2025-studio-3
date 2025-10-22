@@ -83,6 +83,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/army_guy_1.png",
     "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
+    "images/entities/defences/wall.png",
     "images/effects/hp-up.png",
     "images/effects/attack-up.png",
     "images/effects/speed-up.png",
@@ -115,6 +116,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/sling_shooter.atlas",
     "images/entities/defences/shield.atlas",
     "images/entities/defences/healer.atlas",
+    "images/entities/defences/wall.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
     "images/entities/enemies/standard_robot.atlas",
     "images/effects/hp-up.atlas",
@@ -135,7 +137,14 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/slotmachine/slot_reels.atlas",
     "images/entities/slotmachine/pie_filled.atlas",
     "images/entities/enemies/fast_robot.atlas",
-    "images/entities/enemies/tanky_robot.atlas"
+    "images/entities/enemies/tanky_robot.atlas",
+    "images/entities/enemies/bomber_robot.atlas",
+    "images/entities/enemies/teleport_robot.atlas",
+    "images/entities/enemies/bungee_robot.atlas",
+    "images/effects/doomhack.atlas",
+    "images/effects/doomhack.png",
+    "images/effects/scrapper.atlas",
+    "images/effects/scrapper.png"
   };
   private static final Vector2 CAMERA_POSITION = new Vector2(7.5f, 7.5f);
   protected final GdxGame game;
@@ -180,12 +189,19 @@ public class MainGameScreen extends ScreenAdapter {
     "sounds/shield-place.mp3",
     "sounds/shooter-place.mp3",
     "sounds/robot-death.mp3",
+    "sounds/teleport_end.mp3",
+    "sounds/teleport_start.mp3",
     "sounds/generator-death.mp3",
     "sounds/game-over-voice.mp3",
     "sounds/item_shell_explosion.mp3",
     "sounds/harpoon-place.mp3",
     "sounds/healer-place.mp3",
-    "sounds/boxer-place.mp3"
+    "sounds/boxer-place.mp3",
+    "sounds/item_doomhack.mp3",
+    "sounds/item_scrapper.mp3",
+    "sounds/boxer-place.mp3",
+    "sounds/cha-ching.mp3",
+    "sounds/level-win.mp3"
   };
 
   /**
@@ -224,12 +240,15 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.registerResourceService(new ResourceService());
     ServiceLocator.registerEntityService(new EntityService());
     ServiceLocator.registerRenderService(new RenderService());
-    ServiceLocator.registerCurrencyService(new CurrencyService(125, 10000));
+    ServiceLocator.registerCurrencyService(new CurrencyService(150, 10000));
     ServiceLocator.registerItemEffectsService(new ItemEffectsService());
     ServiceLocator.registerWaveService(new WaveService());
     ServiceLocator.getWaveService().setCurrentLevel(this.level);
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+    // Apply saved gameplay speed so effect matches HUD selection across screen transitions
+    float savedScale = ServiceLocator.getSettingsService().getGameplaySpeedScale();
+    ServiceLocator.getTimeSource().setTimeScale(savedScale);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
     loadAssets();

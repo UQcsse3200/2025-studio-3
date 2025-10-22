@@ -23,6 +23,7 @@ public class DialogueShowAction implements ActionState {
     this.done = false;
 
     this.dialogueState.set(speaker, "");
+    this.dialogueState.setDone(false);
   }
 
   /**
@@ -85,6 +86,7 @@ public class DialogueShowAction implements ActionState {
       nextCharMsCountdown = punctuationDelay();
       charsShown++;
     } else {
+      dialogueState.setDone(true);
       done = true;
     }
   }
@@ -94,6 +96,7 @@ public class DialogueShowAction implements ActionState {
   public void skip() {
     dialogueState.setVisible(true);
     dialogueState.set(speaker, text);
+    dialogueState.setDone(true);
     done = true;
   }
 

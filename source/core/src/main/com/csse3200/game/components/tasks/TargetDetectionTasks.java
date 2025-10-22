@@ -12,16 +12,35 @@ import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.components.HitboxComponent;
 import com.csse3200.game.physics.raycast.RaycastHit;
-import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Abstract base class for AI tasks that detect and prioritize nearby enemy targets within a
+ * specified attack range and direction.
+ *
+ * <p>This class provides core logic for:
+ *
+ * <ul>
+ *   <li>Detecting enemy entities via raycasting
+ *   <li>Filtering targets based on physics layers
+ *   <li>Calculating task priority
+ *   <li>Providing extension points for attack behavior via {@link #getActivePriority} and {@link
+ *       #getInactivePriority}
+ * </ul>
+ *
+ * <p>
+ */
 public abstract class TargetDetectionTasks extends DefaultTask implements PriorityTask {
+  /** Maximum range at which the task can detect targets. */
   protected final float attackRange;
+
+  /** Direction in which to search for targets (left or right). */
   protected final AttackDirection direction;
+
+  /** Reference to the physics engine used for raycasting. */
   protected final PhysicsEngine physics;
-  protected final DebugRenderer debugRenderer;
 
   // temp variables to be reused when getting nearest target
   private final Vector2 castDir = new Vector2();
@@ -29,14 +48,15 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   private final Vector2 end = new Vector2();
   private final RaycastHit tempHit = new RaycastHit();
 
+  /** Enum representing the direction the entity should attack or scan for targets. */
   public enum AttackDirection {
     LEFT,
     RIGHT,
   }
 
   /**
-   * Creates a TargetDirection task to detect an enemy entity in the specified direction and attack
-   * range
+   * Creates a new {@code TargetDetectionTasks} to detect an enemy entity in the specified direction
+   * and attack range
    *
    * @param attackRange, the range an enemey is detected from
    * @param direction the attack direction, left or right
@@ -45,20 +65,20 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     this.attackRange = attackRange;
     this.direction = direction;
     physics = ServiceLocator.getPhysicsService().getPhysics();
-    debugRenderer = ServiceLocator.getRenderService().getDebug();
   }
 
   /**
-   * Gets the distance to the nearest visible target
+   * Gets the distance to the nearest visible target from the current entity.
    *
-   * @return the distance to the nearest target or a MAX VALUE if there is no target
+   * @return the distance to the nearest target or a {@code Float.MAX_VALUE} if there is no target
+   *     found
    */
   protected float getDistanceToTarget() {
     Entity target = getNearestVisibleTarget();
     if (target == null) {
       return Float.MAX_VALUE;
     }
-    return owner.getEntity().getPosition().dst(target.getPosition());
+    return owner.getEntity().getCenterPosition().dst(target.getCenterPosition());
   }
 
   /**
@@ -101,9 +121,13 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
   }
 
   /**
-   * Finds the nearest visible target within attack range.
+   * Performs a raycast in the specified attack direction to find the closest visible enemy within
+   * attack range.
    *
-   * @return the closest visible target within range, or {@code null} if none
+   * <p>Scans vertically from -1 to +1 tile around the entity’s Y-center to improve hit accuracy on
+   * tall or offset targets.
+   *
+   * @return The closest visible entity matching enemy or boss layer, or {@code null} if none found.
    */
   protected Entity getNearestVisibleTarget() {
     Vector2 from = owner.getEntity().getCenterPosition();
@@ -112,26 +136,43 @@ public abstract class TargetDetectionTasks extends DefaultTask implements Priori
     LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
     float tileSize = area.getTileSize();
 
-    // done with the help of OpenAI
-    for (float yOffset = -tileSize; yOffset <= tileSize; yOffset += 0.5) {
-      offsetFrom.set(from.x, from.y + yOffset);
-      end.set(offsetFrom).mulAdd(castDir, attackRange);
+    float forwardOffset = tileSize * 0.45f + 0.05f;
+    if (forwardOffset > attackRange - 0.01f) {
+      forwardOffset = Math.max(0f, attackRange - 0.01f);
+    }
 
-      // find first enemy entity in current entities line of sight in the given direction and range
-      boolean didHit =
-          physics.raycast(
-              offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+    final float backupOffset = 0.10f;
 
-      if (didHit) {
-        Fixture hitFixture = tempHit.getFixture();
-        if (hitFixture != null && hitFixture.getUserData() instanceof Entity entity) {
-          return entity;
-        }
-      }
+    offsetFrom.set(from.x, from.y - 20).mulAdd(castDir, forwardOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset);
+
+    boolean didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
+    }
+
+    // second raycast with small backward offset to catch targets just behind cover
+    offsetFrom.set(from.x - 20, from.y - 20).mulAdd(castDir, -backupOffset);
+    end.set(offsetFrom).mulAdd(castDir, attackRange + forwardOffset + backupOffset);
+
+    didHit =
+        physics.raycast(offsetFrom, end, (short) (PhysicsLayer.ENEMY | PhysicsLayer.BOSS), tempHit);
+
+    if (didHit) {
+      Fixture f = tempHit.getFixture();
+      if (f != null && f.getUserData() instanceof Entity e) return e;
     }
     return null;
   }
 
+  /**
+   * Retrieves all current enemy entities in the game world.
+   *
+   * @return List of all potential attack targets (enemy or boss entities).
+   */
   protected List<Entity> getAllTargets() {
     Array<Entity> allEntities = ServiceLocator.getEntityService().getEntities();
     Array<Entity> copy = new Array<>(allEntities);

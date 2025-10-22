@@ -78,6 +78,30 @@ public class ItemFactory {
   }
 
   /**
+   * Creates a doom hack entity. Place on a tile to kill all enemies on the tile.
+   *
+   * @return a doom hack item entity
+   */
+  public static Entity createDoomHack() {
+    BaseItemConfig config = configService.getItemConfig("doomhack");
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.DOOMHACK));
+  }
+
+  /**
+   * Creates a scrapper entity. Place on a tile to double value of scrap metal for 30 seconds.
+   *
+   * @return a scrapper item entity
+   */
+  public static Entity createScrapper() {
+    BaseItemConfig config = configService.getItemConfig("scrapper");
+    return createBaseItem()
+        .addComponent(new TextureRenderComponent(config.getAssetPath()))
+        .addComponent(new ItemComponent(ItemComponent.Type.SCRAPPER));
+  }
+
+  /**
    * Creates a generic item to be used as a base entity by more specific item creation methods.
    *
    * @return an item entity
