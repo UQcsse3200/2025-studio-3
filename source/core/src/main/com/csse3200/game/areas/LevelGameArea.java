@@ -1410,6 +1410,11 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     this.grid = newGrid;
   }
 
+  /** Getter for currentLevel */
+  public String getCurrentLevelKey() {
+    return currentLevelKey;
+  }
+
   private int getFurnaceCost(GeneratorStatsComponent generator) {
     List<Entity> entities = new ArrayList<>(areaEntities);
     int numFurnaces = 0;
