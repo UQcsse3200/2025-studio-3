@@ -15,7 +15,6 @@ public class AttackTask extends TargetDetectionTasks {
   private final float baseFireCooldown;
   private float fireCooldown; // time between attacks
   private float timeSinceLastFire = 0f;
-  private static final Logger logger = LoggerFactory.getLogger(AttackTask.class);
 
   /**
    * Creates an attack task
@@ -54,7 +53,6 @@ public class AttackTask extends TargetDetectionTasks {
     owner.getEntity().getEvents().trigger("fire", direction);
   }
 
-  /** Updates the task each game frame */
   /**
    * Updates the attack logic each game frame. If a valid target is found in range and the correct
    * lane, and enough time has passed since the last attack, a "fire" event is triggered to spawn
@@ -110,31 +108,5 @@ public class AttackTask extends TargetDetectionTasks {
       return 1; // start task if target is visible, in range, and in the same lane
     }
     return -1;
-  }
-
-  /**
-   * Checks if the target entity is in the same lane as the owner entity. A lane is defined by the
-   * y-coordinate, and entities are considered in the same lane if their vertical distance is less
-   * than half a tile size.
-   *
-   * @param target The entity to check against.
-   * @return true if the target is in the same lane, false otherwise.
-   */
-  private boolean isTargetInSameLane(Entity target) {
-    // This call will now work correctly because we registered the GameArea in LevelGameArea.
-    if (ServiceLocator.getGameArea() instanceof LevelGameArea) {
-      LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
-      float tileSize = area.getTileSize();
-
-      // Get the vertical center position of the owner (slingshooter) and the target
-      float ownerY = owner.getEntity().getCenterPosition().y;
-      float targetY = target.getCenterPosition().y;
-
-      // Check if the absolute vertical distance between the entities' centers
-      // is less than half a tile. This confirms they are on the same row.
-      return Math.abs(ownerY - targetY) < (tileSize);
-    }
-    // If we're not in a LevelGameArea, we can't determine lanes, so fallback to false.
-    return false;
   }
 }
