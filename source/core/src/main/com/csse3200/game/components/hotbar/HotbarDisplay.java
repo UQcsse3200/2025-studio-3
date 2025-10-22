@@ -377,7 +377,6 @@ public class HotbarDisplay extends UIComponent {
 
         Label costLabel = entry.getValue();
 
-
         int newCost = 50 + (currentFurnaceCount * 50);
         costLabel.setText(String.valueOf(newCost));
       }
