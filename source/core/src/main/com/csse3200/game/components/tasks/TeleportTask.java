@@ -22,8 +22,9 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   private final int maxTeleports;
   private final float[] laneYs;
 
-  // Priority during teleporting is higher than walking but lower than attacks
-  private final int teleportPriority = 50;
+  // Priority for teleporting is higher than walking and attacks, so you can't just wall them with
+  // one defence
+  private final int teleportPriority = 200;
 
   // Timing and state
   private float timer;
