@@ -127,13 +127,13 @@ public class Arsenal {
 
     for (Map.Entry<String, BaseDefenderConfig> entry : getAllDefences().entrySet()) {
       if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)
-          && !entry.getKey().equals("wall")) {
+          && !entry.getKey().equals("wall") && !defences.contains(entry.getKey())) {
         defences.add(entry.getKey());
       }
     }
 
     for (Map.Entry<String, BaseGeneratorConfig> entry : getAllGenerators().entrySet()) {
-      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE)) {
+      if (entry.getValue().getLevelUnlockedOn().equals(INITIAL_DEFENCE) && !generators.contains(entry.getKey())) {
         generators.add(entry.getKey());
       }
     }
