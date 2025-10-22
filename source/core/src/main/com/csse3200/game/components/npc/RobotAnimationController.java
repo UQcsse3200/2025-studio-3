@@ -15,7 +15,8 @@ public class RobotAnimationController extends Component {
   private enum State {
     MOVE_LEFT,
     ATTACK,
-    TELEPORT,
+    TELEPORT_START,
+    TELEPORT_END,
     SHOOT,
     NONE
   }
@@ -31,7 +32,8 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("moveLeftStart", this::animateMoveLeft);
     entity.getEvents().addListener("attackStart", this::animateAttack);
     entity.getEvents().addListener("updateHealth", this::updateHealth);
-    entity.getEvents().addListener("teleportStart", this::animateTeleport);
+    entity.getEvents().addListener("teleportDisappearStart", this::animateTeleportStart);
+    entity.getEvents().addListener("teleportReappearStart", this::animateTeleportEnd);
     entity.getEvents().addListener("shootStart", this::animateShoot);
     // Explosion will have to be added later.
   }
@@ -48,12 +50,21 @@ public class RobotAnimationController extends Component {
     }
   }
 
-  void animateTeleport() {
-    currentState = State.TELEPORT;
+  void animateTeleportStart() {
+    currentState = State.TELEPORT_START;
     if (!belowHalfHealth) {
-      animator.startAnimation("teleport");
+      animator.startAnimation("teleportStart");
     } else {
-      animator.startAnimation("teleportDamaged");
+      animator.startAnimation("teleportDamagedStart");
+    }
+  }
+
+  void animateTeleportEnd() {
+    currentState = State.TELEPORT_END;
+    if (!belowHalfHealth) {
+      animator.startAnimation("teleportEnd");
+    } else {
+      animator.startAnimation("teleportDamagedEnd");
     }
   }
 
@@ -89,8 +100,11 @@ public class RobotAnimationController extends Component {
         case MOVE_LEFT:
           animateMoveLeft();
           break;
-        case TELEPORT:
-          animateTeleport();
+        case TELEPORT_START:
+          animateTeleportStart();
+          break;
+        case TELEPORT_END:
+          animateTeleportEnd();
           break;
         case ATTACK:
           animateAttack();

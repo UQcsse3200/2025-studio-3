@@ -1,10 +1,13 @@
 package com.csse3200.game.components.tasks;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.ai.tasks.DefaultTask;
 import com.csse3200.game.ai.tasks.PriorityTask;
 import com.csse3200.game.ai.tasks.TaskRunner;
+import com.csse3200.game.physics.components.PhysicsComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.GameTime;
 import com.csse3200.game.services.ServiceLocator;
 
@@ -19,15 +22,21 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   private final int maxTeleports;
   private final float[] laneYs;
 
-  // Priority during teleporting is higher than walking but lower than attacks
-  private final int teleportPriority = 50;
+  // Priority for teleporting is higher than walking and attacks, so you can't just wall them with
+  // one defence
+  private static final int TELEPORT_PRIORITY = 200;
 
   // Timing and state
   private float timer;
   private int teleportsDone;
-  private boolean isTeleporting = false;
-  private float animTimer = 0.5f;
-  private final float teleportAnimTime = 2f; // Duration to hold animation before teleport happens
+
+  private enum State {
+    NOT_TELEPORTING,
+    DISAPPEARING,
+    REAPPEARING
+  }
+
+  private State currentState;
 
   /**
    * @param cooldownSec seconds between teleport attempts
@@ -46,14 +55,14 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   public void create(TaskRunner taskRunner) {
     super.create(taskRunner);
     this.timer = cooldownSec;
+    teleportsDone = 0;
   }
 
   @Override
   public void start() {
     super.start();
     timer = cooldownSec;
-    teleportsDone = 0;
-    isTeleporting = false;
+    currentState = State.NOT_TELEPORTING;
   }
 
   /**
@@ -65,10 +74,10 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
     if (maxTeleports > 0 && teleportsDone >= maxTeleports) {
       return -1;
     }
-    if (isTeleporting) {
-      return teleportPriority;
+    if (currentState != State.NOT_TELEPORTING) {
+      return TELEPORT_PRIORITY;
     }
-    return readyToTeleport() ? teleportPriority : -1;
+    return readyToTeleport() ? TELEPORT_PRIORITY : -1;
   }
 
   @Override
@@ -77,21 +86,70 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
       return;
     }
 
-    GameTime time = ServiceLocator.getTimeSource();
-    float dt = (time != null) ? time.getDeltaTime() : 1f / 60f;
-
-    if (isTeleporting) {
-      animTimer -= dt;
-      if (animTimer <= 0f) {
-        performTeleport();
-        isTeleporting = false;
+    if (currentState == State.NOT_TELEPORTING) {
+      // Update will only be called if ready to teleport, otherwise TeleportTask has
+      // a priority of -1. Therefore, if we aren't teleporting, we should start teleporting.
+      beginTeleport();
+    } else if (currentState == State.DISAPPEARING) {
+      AnimationRenderComponent animator =
+          owner.getEntity().getComponent(AnimationRenderComponent.class);
+      // If the animator is null, something went wrong, and we should skip ahead.
+      // Otherwise, we wait until the disappear animation is done to teleport.
+      if (animator == null || animator.isFinished()) {
+        // The start animation is finished. Finish the teleport
+        finishTeleport();
       }
-      return;
+    } else if (currentState == State.REAPPEARING) {
+      AnimationRenderComponent animator =
+          owner.getEntity().getComponent(AnimationRenderComponent.class);
+      // If the animator is null, something went wrong, and we should skip ahead.
+      // Otherwise, we wait until the reappear animation is done to reset state.
+      if (animator == null || animator.isFinished()) {
+        // The teleport is finished.
+        currentState = State.NOT_TELEPORTING;
+      }
+    }
+  }
+
+  /**
+   * Begins the first half of the teleport, stopping movement, and the 'disappear' animation/sound
+   * effect.
+   */
+  private void beginTeleport() {
+    // Stop moving
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+    if (phys != null && phys.getBody() != null) {
+      phys.getBody().setLinearVelocity(0f, 0f);
     }
 
-    isTeleporting = true;
-    animTimer = teleportAnimTime;
-    owner.getEntity().getEvents().trigger("teleportStart");
+    // Play animation
+    owner.getEntity().getEvents().trigger("teleportDisappearStart");
+
+    // Plays the teleport sound
+    Sound teleportSound =
+        ServiceLocator.getResourceService().getAsset("sounds/teleport_start.mp3", Sound.class);
+    if (teleportSound != null) {
+      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+    }
+
+    // Updates state
+    currentState = State.DISAPPEARING;
+  }
+
+  /**
+   * Begins the second half of the teleport, the actual teleportation, and the 'reappear'
+   * animation/sound effect.
+   */
+  private void finishTeleport() {
+    currentState = State.REAPPEARING;
+    performTeleport();
+    owner.getEntity().getEvents().trigger("teleportReappearStart");
+    // Plays the teleport sound
+    Sound teleportSound =
+        ServiceLocator.getResourceService().getAsset("sounds/teleport_end.mp3", Sound.class);
+    if (teleportSound != null) {
+      teleportSound.play(ServiceLocator.getSettingsService().getSoundVolume() * 0.4f);
+    }
   }
 
   /** Check if teleport conditions are met (cooldown elapsed, chance succeeded, etc.). */
