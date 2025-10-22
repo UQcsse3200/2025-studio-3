@@ -109,7 +109,7 @@ public class BossFactory {
       animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
     } else {
       animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
-      animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("punch", 0.05f, Animation.PlayMode.REVERSED);
       animator.addAnimation("death", 0.08f, Animation.PlayMode.REVERSED);
     }
     ColliderComponent colliderComponent =

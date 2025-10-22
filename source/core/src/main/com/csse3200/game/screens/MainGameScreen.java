@@ -107,11 +107,6 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/enemies/Scrap-titan2.png",
     "images/entities/enemies/Scrap-titan3.png",
     "images/entities/enemies/Scrap-titan4.png",
-    "images/entities/enemies/Scrap-titan5.png",
-    "images/entities/enemies/Scrap-titan6.png",
-    "images/entities/enemies/Scrap-titan7.png",
-    "images/entities/enemies/Scrap-titan8.png",
-    "images/entities/enemies/Scrap-titan9.png",
     "images/effects/gun_bot_fireball.png",
   };
   private static final String[] MAIN_GAME_TEXTURE_ATLASES = {
