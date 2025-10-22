@@ -48,12 +48,17 @@ public class CurrentWaveDisplay extends UIComponent {
               @Override
               public void onWaveChanged(int waveNumber) {
                 updateWaveDisplay(waveNumber);
-                updateWaveProgressBar(waveNumber);
+                resetWaveProgressBar();
               }
 
               @Override
               public void onWaveStarted(int waveNumber) {
                 updateWaveDisplay(waveNumber);
+              }
+
+              @Override
+              public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+                updateWaveProgressBar(enemiesDisposed, enemiesToSpawn);
               }
             });
 
@@ -80,6 +85,7 @@ public class CurrentWaveDisplay extends UIComponent {
 
     // Creates progress bar
     progressBar = createWaveProgressBar();
+    progressBar.setValue(0.09f);
 
     // Adds all elements to a table
     table.add(progressBar).padTop(10f).padRight(10f);
@@ -90,7 +96,7 @@ public class CurrentWaveDisplay extends UIComponent {
   }
 
   /**
-   * Creates a ProgressBar that displays the current progress through the current level's waves
+   * Creates a ProgressBar that displays the current progress through the current wave's enemies
    *
    * @return The created progress bar
    */
@@ -139,13 +145,17 @@ public class CurrentWaveDisplay extends UIComponent {
   }
 
   /**
-   * Sets the progress value of the wave progress bar when the wave number changes
+   * Sets the progress value of the wave progress bar when an enemy is disposed
    *
-   * @param waveNumber the new wave number
+   * @param enemiesDisposed the new wave number
    */
-  public void updateWaveProgressBar(int waveNumber) {
-    progressBar.setValue(
-        (float) waveNumber / (ServiceLocator.getWaveService().getTotalWaves() + 1));
+  public void updateWaveProgressBar(int enemiesDisposed, int enemiesToSpawn) {
+    progressBar.setValue((float) enemiesDisposed / enemiesToSpawn);
+  }
+
+  /** Resets the wave progress bar when a new wave starts */
+  public void resetWaveProgressBar() {
+    progressBar.setValue(0.09f);
   }
 
   /**

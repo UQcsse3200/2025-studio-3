@@ -42,6 +42,8 @@ public class WaveService implements WaveConfigProvider {
     void onWaveChanged(int waveNumber);
 
     void onWaveStarted(int waveNumber);
+
+    void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn);
   }
 
   private EnemySpawnCallback enemySpawnCallback;
@@ -208,6 +210,10 @@ public class WaveService implements WaveConfigProvider {
         enemiesDisposed,
         enemiesToSpawn,
         currentEnemyPos);
+
+    if (waveEventListener != null) {
+      waveEventListener.onEnemyDisposed(enemiesDisposed, enemiesToSpawn);
+    }
 
     if (enemiesDisposed >= enemiesToSpawn && currentEnemyPos >= enemiesToSpawn && waveActive) {
       logger.info("Wave {} completed! All enemies spawned and disposed.", currentWave);
