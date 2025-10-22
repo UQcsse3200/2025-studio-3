@@ -56,11 +56,10 @@ public class PauseButtonTest {
 
     @Test
     void testPauseButtonTriggersPauseEvent() {
-        // Simulate clicking pause
+
         pauseButton.setPaused(true);
         entity.getEvents().trigger("pause");
 
-        // Verify that the pause event was propagated to each subsystem
         verify(enemySpawner.getEvents(), atLeastOnce()).trigger("pause");
         verify(currencySystem.getEvents(), atLeastOnce()).trigger("pause");
         verify(firingSystem.getEvents(), atLeastOnce()).trigger("pause");
@@ -73,7 +72,6 @@ public class PauseButtonTest {
         pauseButton.setPaused(false);
         entity.getEvents().trigger("resume");
 
-        // Verify that systems are resumed
         verify(enemySpawner.getEvents(), atLeastOnce()).trigger("pause");
         verifyNoMoreInteractions(enemySpawner.getEvents());
     }
@@ -87,7 +85,7 @@ public class PauseButtonTest {
         Assertions.assertFalse(getPrivatePausedState(pauseButton));
     }
 
-    // Helper: use reflection to inspect private 'isPaused'
+
     private boolean getPrivatePausedState(PauseButton button) {
         try {
             var field = PauseButton.class.getDeclaredField("isPaused");
