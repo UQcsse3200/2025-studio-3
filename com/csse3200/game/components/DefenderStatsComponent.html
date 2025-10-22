@@ -97,8 +97,16 @@ loadScripts(document, 'script');</script>
 <span class="extends-implements">extends <a href="CombatStatsComponent.html" title="class in com.csse3200.game.components">CombatStatsComponent</a></span></div>
 <div class="block">An extensions of CombatStatsComponent for defender-type entities.
 
- <p>This component stores additional combat-related stats beyond health and base attack, such as
- range, attack speed, and critical hit chance.</div>
+ <p>In addition to health and base attack, this component manages stats like:
+
+ <ul>
+   <li>Attack range
+   <li>Attack speed
+   <li>Critical hit chance
+   <li>Scrap cost
+ </ul>
+
+ These values may be adjusted based on unlocked player skills from the skill tree.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -126,7 +134,7 @@ loadScripts(document, 'script');</script>
  float&nbsp;critChance,
  int&nbsp;cost)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a new DefenceStatsComponent with the given stats.</div>
+<div class="block">Creates a new <code>DefenderStatsComponent</code> with the given stats.</div>
 </div>
 </div>
 </section>
@@ -149,47 +157,42 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAttackSpeed()" class="member-name-link">getAttackSpeed</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the attack speed of the defender.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCost()" class="member-name-link">getCost</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Returns the scrap cost of the defender.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>float</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCritChance()" class="member-name-link">getCritChance</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRange()" class="member-name-link">getRange</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#healthBuff()" class="member-name-link">healthBuff</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#healthUnBuff()" class="member-name-link">healthUnBuff</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAttackSpeed(float)" class="member-name-link">setAttackSpeed</a><wbr>(float&nbsp;attackSpeed)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRange()" class="member-name-link">getRange</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Returns the attack range of the defender.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAttackSpeed(float)" class="member-name-link">setAttackSpeed</a><wbr>(float&nbsp;attackSpeed)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the defender's attack speed.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCost(int)" class="member-name-link">setCost</a><wbr>(int&nbsp;cost)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCost(int)" class="member-name-link">setCost</a><wbr>(int&nbsp;cost)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the scrap cost of the defender.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCritChance(float)" class="member-name-link">setCritChance</a><wbr>(float&nbsp;critChance)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Sets the defender's critical hit chance (as a percentage).</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRange(int)" class="member-name-link">setRange</a><wbr>(int&nbsp;range)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCritChance(float)" class="member-name-link">setCritChance</a><wbr>(float&nbsp;critChance)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Sets the critical hit chance.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setRange(int)" class="member-name-link">setRange</a><wbr>(int&nbsp;range)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Sets the defender's attack range.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unbuff()" class="member-name-link">unbuff</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unbuff()" class="member-name-link">unbuff</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Halves the defender's attack damage.</div>
 </div>
 </div>
@@ -224,7 +227,7 @@ loadScripts(document, 'script');</script>
  float&nbsp;attackSpeed,
  float&nbsp;critChance,
  int&nbsp;cost)</span></div>
-<div class="block">Creates a new DefenceStatsComponent with the given stats.</div>
+<div class="block">Creates a new <code>DefenderStatsComponent</code> with the given stats.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>health</code> - the maximum health of the defender</dd>
@@ -245,18 +248,6 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="healthBuff()">
-<h3>healthBuff</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">healthBuff</span>()</div>
-</section>
-</li>
-<li>
-<section class="detail" id="healthUnBuff()">
-<h3>healthUnBuff</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">healthUnBuff</span>()</div>
-</section>
-</li>
-<li>
 <section class="detail" id="buff()">
 <h3>buff</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">buff</span>()</div>
@@ -275,15 +266,20 @@ loadScripts(document, 'script');</script>
 <h3>setRange</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setRange</span><wbr><span class="parameters">(int&nbsp;range)</span></div>
 <div class="block">Sets the defender's attack range.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>range</code> - the maximum range; must be non-negative</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getRange()">
 <h3>getRange</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getRange</span>()</div>
+<div class="block">Returns the attack range of the defender.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the defender's maximum attack range</dd>
+<dd>range value in world units</dd>
 </dl>
 </section>
 </li>
@@ -292,15 +288,20 @@ loadScripts(document, 'script');</script>
 <h3>setAttackSpeed</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAttackSpeed</span><wbr><span class="parameters">(float&nbsp;attackSpeed)</span></div>
 <div class="block">Sets the defender's attack speed.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>attackSpeed</code> - the base speed; must be non-negative</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getAttackSpeed()">
 <h3>getAttackSpeed</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getAttackSpeed</span>()</div>
+<div class="block">Returns the attack speed of the defender.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the defender's attack speed</dd>
+<dd>the speed value (e.g., attacks per second)</dd>
 </dl>
 </section>
 </li>
@@ -308,16 +309,10 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="setCritChance(float)">
 <h3>setCritChance</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setCritChance</span><wbr><span class="parameters">(float&nbsp;critChance)</span></div>
-<div class="block">Sets the defender's critical hit chance (as a percentage).</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getCritChance()">
-<h3>getCritChance</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getCritChance</span>()</div>
+<div class="block">Sets the critical hit chance.</div>
 <dl class="notes">
-<dt>Returns:</dt>
-<dd>the defender's critical hit chance (percentage)</dd>
+<dt>Parameters:</dt>
+<dd><code>critChance</code> - percentage chance (e.g., 0.25 for 25%)</dd>
 </dl>
 </section>
 </li>

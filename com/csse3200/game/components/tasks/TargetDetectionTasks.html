@@ -102,6 +102,19 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public abstract class </span><span class="element-name type-name-label">TargetDetectionTasks</span>
 <span class="extends-implements">extends <a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a>
 implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></span></div>
+<div class="block">Abstract base class for AI tasks that detect and prioritize nearby enemy targets within a
+ specified attack range and direction.
+
+ <p>This class provides core logic for:
+
+ <ul>
+   <li>Detecting enemy entities via raycasting
+   <li>Filtering targets based on physics layers
+   <li>Calculating task priority
+   <li>Providing extension points for attack behavior via <a href="#getActivePriority(float,com.csse3200.game.entities.Entity)"><code>getActivePriority(float, com.csse3200.game.entities.Entity)</code></a> and <a href="#getInactivePriority(float,com.csse3200.game.entities.Entity)"><code>getInactivePriority(float, com.csse3200.game.entities.Entity)</code></a>
+ </ul>
+
+ <p></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -116,7 +129,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="TargetDetectionTasks.AttackDirection.html" class="type-name-link" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Enum representing the direction the entity should attack or scan for targets.</div>
+</div>
 </div>
 <div class="inherited-list">
 <h2 id="nested-classes-inherited-from-class-com.csse3200.game.ai.tasks.Task">Nested classes/interfaces inherited from interface&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></h2>
@@ -134,16 +149,19 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected final float</code></div>
 <div class="col-second even-row-color"><code><a href="#attackRange" class="member-name-link">attackRange</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="../../rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#debugRenderer" class="member-name-link">debugRenderer</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code>protected final <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></code></div>
-<div class="col-second even-row-color"><code><a href="#direction" class="member-name-link">direction</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>protected final <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Maximum range at which the task can detect targets.</div>
+</div>
+<div class="col-first odd-row-color"><code>protected final <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#direction" class="member-name-link">direction</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Direction in which to search for targets (left or right).</div>
+</div>
+<div class="col-first even-row-color"><code>protected final <a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></code></div>
+<div class="col-second even-row-color"><code><a href="#physics" class="member-name-link">physics</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Reference to the physics engine used for raycasting.</div>
+</div>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
@@ -163,8 +181,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,com.csse3200.game.components.tasks.TargetDetectionTasks.AttackDirection)" class="member-name-link">TargetDetectionTasks</a><wbr>(float&nbsp;attackRange,
  <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</code></div>
 <div class="col-last even-row-color">
-<div class="block">Creates a TargetDirection task to detect an enemy entity in the specified direction and attack
- range</div>
+<div class="block">Creates a new <code>TargetDetectionTasks</code> to detect an enemy entity in the specified direction
+ and attack range</div>
 </div>
 </div>
 </section>
@@ -188,11 +206,13 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllTargets()" class="member-name-link">getAllTargets</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves all current enemy entities in the game world.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected float</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDistanceToTarget()" class="member-name-link">getDistanceToTarget</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Gets the distance to the nearest visible target</div>
+<div class="block">Gets the distance to the nearest visible target from the current entity.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getInactivePriority(float,com.csse3200.game.entities.Entity)" class="member-name-link">getInactivePriority</a><wbr>(float&nbsp;distance,
@@ -203,7 +223,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNearestVisibleTarget()" class="member-name-link">getNearestVisibleTarget</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Finds the nearest visible target within attack range.</div>
+<div class="block">Performs a raycast in the specified attack direction to find the closest visible enemy within
+ attack range.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPriority()" class="member-name-link">getPriority</a>()</code></div>
@@ -240,24 +261,21 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="attackRange">
 <h3>attackRange</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">attackRange</span></div>
+<div class="block">Maximum range at which the task can detect targets.</div>
 </section>
 </li>
 <li>
 <section class="detail" id="direction">
 <h3>direction</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></span>&nbsp;<span class="element-name">direction</span></div>
+<div class="block">Direction in which to search for targets (left or right).</div>
 </section>
 </li>
 <li>
 <section class="detail" id="physics">
 <h3>physics</h3>
 <div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../physics/PhysicsEngine.html" title="class in com.csse3200.game.physics">PhysicsEngine</a></span>&nbsp;<span class="element-name">physics</span></div>
-</section>
-</li>
-<li>
-<section class="detail" id="debugRenderer">
-<h3>debugRenderer</h3>
-<div class="member-signature"><span class="modifiers">protected final</span>&nbsp;<span class="return-type"><a href="../../rendering/DebugRenderer.html" title="class in com.csse3200.game.rendering">DebugRenderer</a></span>&nbsp;<span class="element-name">debugRenderer</span></div>
+<div class="block">Reference to the physics engine used for raycasting.</div>
 </section>
 </li>
 </ul>
@@ -273,8 +291,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h3>TargetDetectionTasks</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">TargetDetectionTasks</span><wbr><span class="parameters">(float&nbsp;attackRange,
  <a href="TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction)</span></div>
-<div class="block">Creates a TargetDirection task to detect an enemy entity in the specified direction and attack
- range</div>
+<div class="block">Creates a new <code>TargetDetectionTasks</code> to detect an enemy entity in the specified direction
+ and attack range</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>attackRange</code> - , the range an enemey is detected from</dd>
@@ -294,10 +312,11 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="getDistanceToTarget()">
 <h3>getDistanceToTarget</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type">float</span>&nbsp;<span class="element-name">getDistanceToTarget</span>()</div>
-<div class="block">Gets the distance to the nearest visible target</div>
+<div class="block">Gets the distance to the nearest visible target from the current entity.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the distance to the nearest target or a MAX VALUE if there is no target</dd>
+<dd>the distance to the nearest target or a <code>Float.MAX_VALUE</code> if there is no target
+     found</dd>
 </dl>
 </section>
 </li>
@@ -353,10 +372,14 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="getNearestVisibleTarget()">
 <h3>getNearestVisibleTarget</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getNearestVisibleTarget</span>()</div>
-<div class="block">Finds the nearest visible target within attack range.</div>
+<div class="block">Performs a raycast in the specified attack direction to find the closest visible enemy within
+ attack range.
+
+ <p>Scans vertically from -1 to +1 tile around the entity’s Y-center to improve hit accuracy on
+ tall or offset targets.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>the closest visible target within range, or <code>null</code> if none</dd>
+<dd>The closest visible entity matching enemy or boss layer, or <code>null</code> if none found.</dd>
 </dl>
 </section>
 </li>
@@ -364,6 +387,11 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="getAllTargets()">
 <h3>getAllTargets</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</span>&nbsp;<span class="element-name">getAllTargets</span>()</div>
+<div class="block">Retrieves all current enemy entities in the game world.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of all potential attack targets (enemy or boss entities).</dd>
+</dl>
 </section>
 </li>
 </ul>

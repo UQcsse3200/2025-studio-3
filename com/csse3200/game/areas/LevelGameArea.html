@@ -302,7 +302,10 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction,
  int&nbsp;damage)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Spawns a projectile entity at a given position and initiates its behaviour, depending on the
+ type of projectile (identified by the ProjectileTagComponent.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#spawnRobot(int,int,com.csse3200.game.entities.factories.RobotFactory.RobotType)" class="member-name-link">spawnRobot</a><wbr>(int&nbsp;col,
  int&nbsp;row,
@@ -440,6 +443,14 @@ implements <a href="AreaAPI.html" title="interface in com.csse3200.game.areas">A
  <a href="../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;projectile,
  <a href="../components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a>&nbsp;direction,
  int&nbsp;damage)</span></div>
+<div class="block">Spawns a projectile entity at a given position and initiates its behaviour, depending on the
+ type of projectile (identified by the ProjectileTagComponent.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>spawnPos</code> - the coordinates the projectile should spawn at</dd>
+<dd><code>projectile</code> - the projectile entity to spawn</dd>
+<dd><code>direction</code> - the direction the projectile moves in, left or right</dd>
+</dl>
 </section>
 </li>
 <li>

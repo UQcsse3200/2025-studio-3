@@ -99,8 +99,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">AttackTask</span>
 <span class="extends-implements">extends <a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></span></div>
-<div class="block">Allows an entity to attack the closest target entity from a list of potential targets. This task
- runs when there is a target within the entities range of attack and in the same lane.</div>
+<div class="block">Allows an entity to attack the closest target entity. This task runs when there is a target
+ within the defense entities range of attack, in the given direction and in the same lane.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -122,7 +122,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.components.tasks.TargetDetectionTasks">Fields inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></h3>
-<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#debugRenderer">debugRenderer</a>, <a href="TargetDetectionTasks.html#direction">direction</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
+<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#direction">direction</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
 <code><a href="../../ai/tasks/DefaultTask.html#owner">owner</a>, <a href="../../ai/tasks/DefaultTask.html#status">status</a></code></div>
@@ -186,7 +186,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Updates the task each game frame</div>
+<div class="block">Updates the attack logic each game frame.</div>
 </div>
 </div>
 </div>
@@ -225,7 +225,7 @@ loadScripts(document, 'script');</script>
 <dt>Parameters:</dt>
 <dd><code>attackRange</code> - the maximum distance the entity can find a target to attack</dd>
 <dd><code>attackSpeed</code> - attacking speed of the entity</dd>
-<dd><code>direction</code> - the direction the projectile will travel</dd>
+<dd><code>direction</code> - the direction the projectile will travel/the direction of attack</dd>
 </dl>
 </section>
 </li>
@@ -256,7 +256,7 @@ loadScripts(document, 'script');</script>
 <h3>start</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">start</span>()</div>
 <div class="block">Starts the attack task. The closest visible target within the entity's attack range is found
- and ATTACK LOGIC BEGINS.</div>
+ and an event listener is triggered to start attack logic.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/Task.html#start()">start</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
@@ -269,7 +269,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update()">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span>()</div>
-<div class="block">Updates the task each game frame</div>
+<div class="block">Updates the attack logic each game frame. If a valid target is found in range and the correct
+ lane, and enough time has passed since the last attack, a "fire" event is triggered to spawn
+ and fire a projectile.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/Task.html#update()">update</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>

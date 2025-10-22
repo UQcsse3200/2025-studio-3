@@ -91,6 +91,18 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">GeneratorFactory</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></span></div>
+<div class="block">Factory class for creating generator entities used to produce scrap (currency) in the game.
+
+ <p>Generator entities are passive units with:
+
+ <ul>
+   <li>Health
+   <li>Scrap generation interval and value
+   <li>Animations for idle and hit states
+   <li>Optional healing functionality
+ </ul>
+
+ <p>This class provides static factory methods and should not be instantiated.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -112,13 +124,19 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createGeneratorUnit(com.csse3200.game.entities.configs.BaseGeneratorConfig)" class="member-name-link">createGeneratorUnit</a><wbr>(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a complete generator entity using the provided configuration.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getAnimationComponent(com.csse3200.game.entities.configs.BaseGeneratorConfig)" class="member-name-link">getAnimationComponent</a><wbr>(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates an <a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering"><code>AnimationRenderComponent</code></a> and adds animations defined in the config's atlas.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getUnitStats(com.csse3200.game.entities.configs.BaseGeneratorConfig)" class="member-name-link">getUnitStats</a><wbr>(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a <a href="../../components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components"><code>GeneratorStatsComponent</code></a> from configuration.</div>
+</div>
 </div>
 </div>
 </div>
@@ -140,25 +158,55 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="createGeneratorUnit(com.csse3200.game.entities.configs.BaseGeneratorConfig)">
 <h3>createGeneratorUnit</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createGeneratorUnit</span><wbr><span class="parameters">(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</span></div>
+<div class="block">Creates a complete generator entity using the provided configuration.
+
+ <p>Adds components for:
+
+ <ul>
+   <li>Stats
+   <li>Animations
+   <li>Animation control logic
+ </ul></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - Configuration object specifying generator stats and visuals</dd>
+<dt>Returns:</dt>
+<dd>Fully constructed generator <a href="../Entity.html" title="class in com.csse3200.game.entities"><code>Entity</code></a></dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getUnitStats(com.csse3200.game.entities.configs.BaseGeneratorConfig)">
 <h3>getUnitStats</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></span>&nbsp;<span class="element-name">getUnitStats</span><wbr><span class="parameters">(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</span></div>
+<div class="block">Creates a <a href="../../components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components"><code>GeneratorStatsComponent</code></a> from configuration.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - Configuration containing health, interval, scrap value, and cost</dd>
+<dt>Returns:</dt>
+<dd>A new <a href="../../components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components"><code>GeneratorStatsComponent</code></a> with values from the config</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="getAnimationComponent(com.csse3200.game.entities.configs.BaseGeneratorConfig)">
 <h3>getAnimationComponent</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering">AnimationRenderComponent</a></span>&nbsp;<span class="element-name">getAnimationComponent</span><wbr><span class="parameters">(<a href="../configs/BaseGeneratorConfig.html" title="class in com.csse3200.game.entities.configs">BaseGeneratorConfig</a>&nbsp;config)</span></div>
+<div class="block">Creates an <a href="../../rendering/AnimationRenderComponent.html" title="class in com.csse3200.game.rendering"><code>AnimationRenderComponent</code></a> and adds animations defined in the config's atlas.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>config</code> - Configuration containing the path to the texture atlas</dd>
+<dt>Returns:</dt>
+<dd>A render component with idle and hit animations</dd>
+</dl>
 </section>
 </li>
 <li>
 <section class="detail" id="createBaseGenerator()">
 <h3>createBaseGenerator</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBaseGenerator</span>()</div>
-<div class="block">Creates a base generator entity with default physics and collider setup.</div>
+<div class="block">Creates a base generator entity with default physics and collider setup. Used as the foundation
+ for all generators.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>entity with physics and collision components</dd>

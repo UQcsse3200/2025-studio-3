@@ -93,6 +93,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">ProjectileTagComponent</span>
 <span class="extends-implements">extends <a href="Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
+<div class="block">A component used to tag a projectile entity with its type, to allow the game to handle different
+ projectile behaviours.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -114,7 +116,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.csse3200.game.entities.ProjectileType)" class="member-name-link">ProjectileTagComponent</a><wbr>(<a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a>&nbsp;type)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates a new <code>ProjectileTagComponent</code> with the specified projectile type.</div>
+</div>
 </div>
 </section>
 </li>
@@ -131,7 +135,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Gets the projectile's type.</div>
+</div>
 </div>
 </div>
 </div>
@@ -156,6 +162,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.csse3200.game.entities.ProjectileType)">
 <h3>ProjectileTagComponent</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ProjectileTagComponent</span><wbr><span class="parameters">(<a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a>&nbsp;type)</span></div>
+<div class="block">Creates a new <code>ProjectileTagComponent</code> with the specified projectile type.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>type</code> - The <a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities"><code>ProjectileType</code></a> this projectile belongs to.</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -170,6 +181,11 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getType()">
 <h3>getType</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></span>&nbsp;<span class="element-name">getType</span>()</div>
+<div class="block">Gets the projectile's type.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>The <a href="../entities/ProjectileType.html" title="enum class in com.csse3200.game.entities"><code>ProjectileType</code></a> of this projectile.</dd>
+</dl>
 </section>
 </li>
 </ul>

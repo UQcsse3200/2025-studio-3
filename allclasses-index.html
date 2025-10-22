@@ -143,7 +143,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/AttackTask.html" title="class in com.csse3200.game.components.tasks">AttackTask</a></div>
 <div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
-<div class="block">Allows an entity to attack the closest target entity from a list of potential targets.</div>
+<div class="block">Allows an entity to attack the closest target entity.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/csse3200/game/cutscene/models/object/AudioBus.html" title="enum class in com.csse3200.game.cutscene.models.object">AudioBus</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab3">
@@ -673,9 +673,13 @@ loadScripts(document, 'script');</script>
 <div class="block">Enum for all screens.</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/entities/factories/GeneratorFactory.html" title="class in com.csse3200.game.entities.factories">GeneratorFactory</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Factory class for creating generator entities used to produce scrap (currency) in the game.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/GeneratorStatsComponent.html" title="class in com.csse3200.game.components">GeneratorStatsComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A component to store and manage the statistics of a generator unit.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/npc/GhostAnimationController.html" title="class in com.csse3200.game.components.npc">GhostAnimationController</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab2">
 <div class="block">This class listens to events relevant to a ghost entity's state and plays the animation when one
@@ -1034,7 +1038,10 @@ loadScripts(document, 'script');</script>
  shooters).</div>
 </div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/ProjectileTagComponent.html" title="class in com.csse3200.game.components">ProjectileTagComponent</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab2">
+<div class="block">A component used to tag a projectile entity with its type, to allow the game to handle different
+ projectile behaviours.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab3"><a href="com/csse3200/game/entities/ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/utils/math/RandomUtils.html" title="class in com.csse3200.game.utils.math">RandomUtils</a></div>
@@ -1290,9 +1297,14 @@ loadScripts(document, 'script');</script>
 <div class="block">Advance on choice</div>
 </div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab2"><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></div>
-<div class="col-last even-row-color all-classes-table all-classes-table-tab2">&nbsp;</div>
+<div class="col-last even-row-color all-classes-table all-classes-table-tab2">
+<div class="block">Abstract base class for AI tasks that detect and prioritize nearby enemy targets within a
+ specified attack range and direction.</div>
+</div>
 <div class="col-first odd-row-color all-classes-table all-classes-table-tab3"><a href="com/csse3200/game/components/tasks/TargetDetectionTasks.AttackDirection.html" title="enum class in com.csse3200.game.components.tasks">TargetDetectionTasks.AttackDirection</a></div>
-<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">&nbsp;</div>
+<div class="col-last odd-row-color all-classes-table all-classes-table-tab3">
+<div class="block">Enum representing the direction the entity should attack or scan for targets.</div>
+</div>
 <div class="col-first even-row-color all-classes-table all-classes-table-tab1"><a href="com/csse3200/game/ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></div>
 <div class="col-last even-row-color all-classes-table all-classes-table-tab1">
 <div class="block">An AI task can be started and stopped at any time.</div>

@@ -110,7 +110,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createBossProjectile(int)" class="member-name-link">createBossProjectile</a><wbr>(int&nbsp;damage)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Creates a projectile entity for boss enemies to target defenses.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createGunnerProjectile(int,float)" class="member-name-link">createGunnerProjectile</a><wbr>(int&nbsp;damage,
  float&nbsp;speed)</code></div>
@@ -125,7 +127,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getProjectileTypeFromPath(java.lang.String)" class="member-name-link">getProjectileTypeFromPath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Gets the <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities"><code>ProjectileType</code></a> corresponding to a texture path.</div>
+</div>
 </div>
 </div>
 </div>
@@ -147,6 +151,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getProjectileTypeFromPath(java.lang.String)">
 <h3>getProjectileTypeFromPath</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities">ProjectileType</a></span>&nbsp;<span class="element-name">getProjectileTypeFromPath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;path)</span></div>
+<div class="block">Gets the <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities"><code>ProjectileType</code></a> corresponding to a texture path.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>path</code> - the texture file path</dd>
+<dt>Returns:</dt>
+<dd>the <a href="../ProjectileType.html" title="enum class in com.csse3200.game.entities"><code>ProjectileType</code></a> associated with the path, or <code>SLINGSHOT</code> by default</dd>
+</dl>
 </section>
 </li>
 <li>
@@ -160,7 +171,7 @@ loadScripts(document, 'script');</script>
 <dd><code>path</code> - the file path of the projectile's sprite</dd>
 <dd><code>damage</code> - amount of damage that the projectile does</dd>
 <dt>Returns:</dt>
-<dd>projectile entity</dd>
+<dd>fully configured projectile entity</dd>
 </dl>
 </section>
 </li>
@@ -187,6 +198,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="createBossProjectile(int)">
 <h3>createBossProjectile</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">createBossProjectile</span><wbr><span class="parameters">(int&nbsp;damage)</span></div>
+<div class="block">Creates a projectile entity for boss enemies to target defenses.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>damage</code> - the amount of damage the projectile deals</dd>
+<dt>Returns:</dt>
+<dd>a configured projectile entity</dd>
+</dl>
 </section>
 </li>
 </ul>

@@ -120,7 +120,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.components.tasks.TargetDetectionTasks">Fields inherited from class&nbsp;com.csse3200.game.components.tasks.<a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></h3>
-<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#debugRenderer">debugRenderer</a>, <a href="TargetDetectionTasks.html#direction">direction</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
+<code><a href="TargetDetectionTasks.html#attackRange">attackRange</a>, <a href="TargetDetectionTasks.html#direction">direction</a>, <a href="TargetDetectionTasks.html#physics">physics</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.csse3200.game.ai.tasks.DefaultTask">Fields inherited from class&nbsp;com.csse3200.game.ai.tasks.<a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a></h3>
 <code><a href="../../ai/tasks/DefaultTask.html#owner">owner</a>, <a href="../../ai/tasks/DefaultTask.html#status">status</a></code></div>
@@ -158,7 +158,9 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getAllTargets()" class="member-name-link">getAllTargets</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Retrieves all current enemy entities in the game world.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInactivePriority(float,com.csse3200.game.entities.Entity)" class="member-name-link">getInactivePriority</a><wbr>(float&nbsp;dst,
  <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&nbsp;target)</code></div>
@@ -168,7 +170,8 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getNearestVisibleTarget()" class="member-name-link">getNearestVisibleTarget</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Finds the nearest visible target within attack range.</div>
+<div class="block">Performs a raycast in the specified attack direction to find the closest visible enemy within
+ attack range.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
@@ -239,12 +242,16 @@ loadScripts(document, 'script');</script>
 <h3>getNearestVisibleTarget</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a></span>&nbsp;<span class="element-name">getNearestVisibleTarget</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="TargetDetectionTasks.html#getNearestVisibleTarget()">TargetDetectionTasks</a></code></span></div>
-<div class="block">Finds the nearest visible target within attack range.</div>
+<div class="block">Performs a raycast in the specified attack direction to find the closest visible enemy within
+ attack range.
+
+ <p>Scans vertically from -1 to +1 tile around the entity’s Y-center to improve hit accuracy on
+ tall or offset targets.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getNearestVisibleTarget()">getNearestVisibleTarget</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
 <dt>Returns:</dt>
-<dd>the closest visible target within range, or <code>null</code> if none</dd>
+<dd>The closest visible entity matching enemy or boss layer, or <code>null</code> if none found.</dd>
 </dl>
 </section>
 </li>
@@ -284,9 +291,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getAllTargets()">
 <h3>getAllTargets</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../entities/Entity.html" title="class in com.csse3200.game.entities">Entity</a>&gt;</span>&nbsp;<span class="element-name">getAllTargets</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="TargetDetectionTasks.html#getAllTargets()">TargetDetectionTasks</a></code></span></div>
+<div class="block">Retrieves all current enemy entities in the game world.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
 <dd><code><a href="TargetDetectionTasks.html#getAllTargets()">getAllTargets</a></code>&nbsp;in class&nbsp;<code><a href="TargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">TargetDetectionTasks</a></code></dd>
+<dt>Returns:</dt>
+<dd>List of all potential attack targets (enemy or boss entities).</dd>
 </dl>
 </section>
 </li>
