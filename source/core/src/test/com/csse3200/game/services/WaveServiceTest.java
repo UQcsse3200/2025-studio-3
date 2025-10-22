@@ -122,7 +122,9 @@ class WaveServiceTest {
           }
 
           @Override
-          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {}
+          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+            // Empty implementation - this test only tracks preparation phase events
+          }
         });
 
     svc.initialiseNewWave(); // Start wave 1
@@ -161,7 +163,9 @@ class WaveServiceTest {
           }
 
           @Override
-          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {}
+          public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+            // Empty implementation - this test only tracks wave start events
+          }
         });
 
     svc.initialiseNewWave();

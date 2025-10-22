@@ -512,7 +512,9 @@ public class MainGameScreen extends ScreenAdapter {
               }
 
               @Override
-              public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {}
+              public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+                // CurrentWaveDisplay will handle this internally
+              }
             });
 
     ServiceLocator.getEntityService().register(uiEntity);
