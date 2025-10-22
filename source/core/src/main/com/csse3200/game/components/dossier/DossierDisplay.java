@@ -49,6 +49,7 @@ public class DossierDisplay extends UIComponent {
   private static final String COST_LABEL = "\nCost: ";
   private static final String SCRAP_LABEL = "\nScrap Value: ";
   private static final String INTERVAL_LABEL = "\nInterval: ";
+  private static final String NO_ENTRIES_TEXT = "No entries";
 
   /**
    * Constructor to display the dossier.
@@ -63,7 +64,9 @@ public class DossierDisplay extends UIComponent {
     this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
     type = true;
     enemyMode = true;
-    entities = this.enemyConfigs.keySet().toArray(new String[0]);
+
+    // Initialize with filtered entities instead of all enemy configs
+    loadEnemyEntities();
   }
 
   @Override
@@ -214,6 +217,10 @@ public class DossierDisplay extends UIComponent {
     addActors();
     // Trigger change_info event to update display with first entity
     if (entities.length > 0) {
+      // Ensure currentEntity is within bounds
+      if (currentEntity >= entities.length) {
+        currentEntity = 0;
+      }
       entity.getEvents().trigger(CHANGE_INFO, currentEntity);
     }
   }
@@ -315,7 +322,7 @@ public class DossierDisplay extends UIComponent {
             CHANGE_INFO,
             index -> {
               if (entities.length == 0) {
-                nameLabel.setText("No entries");
+                nameLabel.setText(NO_ENTRIES_TEXT);
                 infoLabel.setText("");
                 spriteImage.setDrawable(null);
                 return;
@@ -331,8 +338,20 @@ public class DossierDisplay extends UIComponent {
               }
               // Update current entity index
               currentEntity = (int) index;
+
+              // Bounds checking to prevent issues
+              if (currentEntity < 0 || currentEntity >= entities.length) {
+                logger.warn(
+                    "Invalid entity index: {} (entities.length: {})",
+                    currentEntity,
+                    entities.length);
+                nameLabel.setText(NO_ENTRIES_TEXT);
+                infoLabel.setText("");
+                spriteImage.setDrawable(null);
+                return;
+              }
+
               String currentEntityKey = entities[currentEntity];
-              logger.debug("Updating dossier info for entity key: {}", currentEntityKey);
 
               nameLabel.setText(getEntityName(currentEntityKey));
               infoLabel.setText(getEntityInfo(currentEntityKey));
@@ -394,7 +413,7 @@ public class DossierDisplay extends UIComponent {
     // 2nd column for Entity Info (Right Page)
     Table infoTable = new Table(skin);
 
-    String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
+    String name = entities.length > 0 ? getEntityName(currentEntityKey) : NO_ENTRIES_TEXT;
     Label entityNameLabel = ui.subheading(name);
     entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
