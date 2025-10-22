@@ -18,6 +18,8 @@ public class CutsceneService {
   private final CutscenePipeline cutscenePipeline;
   private final CutsceneOrchestrator orchestrator;
   private Entity cutsceneEntity;
+  private Consumer<String> callback;
+  private String cutsceneName;
 
   /** Constructor for the CutsceneService class. */
   public CutsceneService() {
@@ -34,11 +36,11 @@ public class CutsceneService {
    */
   public void playCutscene(String name, Consumer<String> callback) {
     Cutscene cutscene = this.cutscenePipeline.fromFile(name);
-
     orchestrator.load(cutscene);
-
     end();
-    callback.accept(name);
+
+    this.callback = callback;
+    this.cutsceneName = name;
     ServiceLocator.getMusicService().play("sounds/background-music/cutscene_background.mp3");
     cutsceneEntity =
         new Entity()
@@ -55,5 +57,12 @@ public class CutsceneService {
       ServiceLocator.getMusicService().play("sounds/background-music/progression_background.mp3");
       cutsceneEntity.dispose();
     }
+
+    if (callback != null) {
+      callback.accept(cutsceneName);
+    }
+
+    this.callback = null;
+    this.cutsceneName = null;
   }
 }
