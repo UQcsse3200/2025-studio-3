@@ -1,10 +1,10 @@
 package com.csse3200.game.cutscene.runtime.action;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.cutscene.models.object.actiondata.ChoiceData;
 import com.csse3200.game.cutscene.runtime.ActionState;
 import com.csse3200.game.cutscene.runtime.CutsceneOrchestrator;
@@ -58,9 +58,9 @@ public class ChoiceAction implements ActionState {
                   Button button = ui.primaryButton(choice.getLine(), 1f);
                   button.setFillParent(false);
                   button.addListener(
-                      new ChangeListener() {
+                      new ClickListener() {
                         @Override
-                        public void changed(ChangeEvent event, Actor actor) {
+                        public void clicked(InputEvent event, float x, float y) {
                           orchestrator.choose(choice.getEntryBeatId());
                           orchestrator.state().getChoiceState().setActive(false);
                           orchestrator.state().getChoiceState().clearChoices();

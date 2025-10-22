@@ -240,11 +240,13 @@ class DialogServiceTest {
   @Test
   void testDialogTypeEnum() {
     DialogService.DialogType[] types = DialogService.DialogType.values();
-    assertEquals(4, types.length);
+    assertEquals(6, types.length);
 
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.INFO));
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.WARNING));
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.ERROR));
     assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.SKILL));
+    assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.GAME_OVER));
+    assertTrue(java.util.Arrays.asList(types).contains(DialogService.DialogType.WIN_GAME));
   }
 }
