@@ -186,6 +186,10 @@ public class SlotMachineDisplay extends UIComponent {
   /** Epoch (ms) when local pause started; -1 means not paused. */
   private long pauseStartMs = -1L;
 
+  private float lastHudSpeedMul = 1f;
+
+  private double lastHudEffectiveMul = 1.0;
+
   // ---------- Constructors ---------
 
   /** Creates a display with a bound {@link SlotMachineArea}. */
@@ -217,7 +221,29 @@ public class SlotMachineDisplay extends UIComponent {
     if (entity != null && entity.getEvents() != null) {
       entity.getEvents().addListener("pause", this::pauseSpin);
       entity.getEvents().addListener("resume", this::resumeSpin);
-      entity.getEvents().addListener("speed_changed", slotEngine::setRefillSpeedMul);
+      entity
+          .getEvents()
+          .addListener(
+              "speed_changed",
+              (Float newSpeed) -> {
+                float ns = (newSpeed == null) ? 1f : newSpeed.floatValue();
+
+                double baseSec = Math.max(0.001, slotEngine.getRefillPeriodSeconds());
+                double timeScale = Math.max(0.1, ServiceLocator.getTimeSource().getTimeScale());
+
+                double oldPeriodMs = baseSec * 1000.0 / Math.max(0.1, lastHudSpeedMul * timeScale);
+                double newPeriodMs = baseSec * 1000.0 / Math.max(0.1, ns * timeScale);
+
+                long now = System.currentTimeMillis();
+                double progress = (now - lastRefillEpochMs) / oldPeriodMs;
+                if (progress < 0) progress = 0;
+                if (progress > 1) progress = 1;
+
+                lastRefillEpochMs = (long) (now - progress * newPeriodMs);
+                lastHudSpeedMul = ns;
+
+                slotEngine.setRefillSpeedMul(ns);
+              });
     }
   }
 
@@ -732,12 +758,25 @@ public class SlotMachineDisplay extends UIComponent {
     if (pieImage != null && !pieRegions.isEmpty()) {
       long now = System.currentTimeMillis();
       double baseSec = Math.max(0.001, slotEngine.getRefillPeriodSeconds());
-      double mul =
+
+      double currentMul =
           Math.max(
               0.1, slotEngine.getRefillSpeedMul() * ServiceLocator.getTimeSource().getTimeScale());
-      double effSec = baseSec / mul;
+      if (Math.abs(currentMul - lastHudEffectiveMul) > 1e-6) {
+        double oldPeriodMs = baseSec * 1000.0 / lastHudEffectiveMul;
+        double newPeriodMs = baseSec * 1000.0 / currentMul;
+
+        double progress = (now - lastRefillEpochMs) / Math.max(1.0, oldPeriodMs); // 0..1
+        if (progress < 0) progress = 0;
+        if (progress > 1) progress = 1;
+        lastRefillEpochMs = (long) (now - progress * newPeriodMs);
+
+        lastHudEffectiveMul = currentMul;
+      }
+
+      double effSec = baseSec / currentMul;
       double periodMs = Math.max(1.0, effSec * 1000.0);
-      double f = (now - lastRefillEpochMs) / periodMs; // 0..1
+      double f = (now - lastRefillEpochMs) / periodMs;
       if (f < 0) f = 0;
       if (f > 1) f = 1;
 

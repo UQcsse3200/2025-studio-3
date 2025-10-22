@@ -52,8 +52,21 @@ public class SlotEngine {
 
   private volatile float refillSpeedMul = 1f;
 
+  private volatile double lastEffectiveMul = 1.0;
+
   public void setRefillSpeedMul(float m) {
+    float oldMulParam = this.refillSpeedMul;
     this.refillSpeedMul = Math.max(0.1f, m);
+    final long now = System.nanoTime();
+    double timeScale = Math.max(0.1, ServiceLocator.getTimeSource().getTimeScale());
+    double oldEffMul = Math.max(0.1, timeScale * Math.max(0.1, oldMulParam));
+    double newEffMul = Math.max(0.1, timeScale * Math.max(0.1, this.refillSpeedMul));
+    long oldPeriod = (long) Math.max(1_000_000L, refillPeriodNanos / oldEffMul);
+    long newPeriod = (long) Math.max(1_000_000L, refillPeriodNanos / newEffMul);
+    long elapsedOld = now - lastRefillNano;
+    double progress = Math.clamp((double) elapsedOld / oldPeriod, 0.0, 1.0);
+    lastRefillNano = now - (long) (progress * newPeriod);
+    lastEffectiveMul = newEffMul;
   }
 
   public float getRefillSpeedMul() {
@@ -343,6 +356,11 @@ public class SlotEngine {
     this.refillPeriodNanos = TimeUnit.SECONDS.toNanos(config.getRefillPeriodSeconds());
     this.lastRefillNano = System.nanoTime();
     this.pausedAtNano = -1L;
+    this.lastEffectiveMul =
+        Math.max(
+            0.1,
+            ServiceLocator.getTimeSource().getTimeScale() * Math.max(0.1, this.refillSpeedMul));
+
     startAutoRefill();
   }
 
@@ -404,6 +422,14 @@ public class SlotEngine {
           double timeMul =
               ServiceLocator.getTimeSource().getTimeScale() * Math.max(0.1, refillSpeedMul);
           long effectivePeriod = (long) Math.max(1_000_000L, refillPeriodNanos / timeMul);
+          if (Math.abs(timeMul - lastEffectiveMul) > 1e-9) {
+            long oldPeriod = (long) Math.max(1_000_000L, refillPeriodNanos / lastEffectiveMul);
+            long elapsedOld = now - lastRefillNano;
+            double progress = Math.clamp((double) elapsedOld / oldPeriod, 0.0, 1.0); // 0..1
+            lastRefillNano = now - (long) (progress * effectivePeriod);
+            lastEffectiveMul = timeMul;
+          }
+
           // How many whole periods have elapsed since the last logical tick?
           long elapsed = now - lastRefillNano;
           if (elapsed >= effectivePeriod) {
