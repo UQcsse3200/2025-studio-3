@@ -7,7 +7,9 @@ import com.csse3200.game.components.Component;
  * entity/actor representing a sun if you need ECS-side access.
  */
 public class ScrapComponent extends Component {
-  /** how much currency this sun gives when collected */
+  /**
+   * how much currency this sun gives when collected
+   */
   private int value = 150;
 
   /**
@@ -23,10 +25,5 @@ public class ScrapComponent extends Component {
   public ScrapComponent setValue(int v) {
     this.value = v;
     return this;
-  }
-
-  @Override
-  public void dispose() {
-    super.dispose();
   }
 }
