@@ -137,12 +137,12 @@ public class WaveService implements WaveConfigProvider {
   }
 
   public void debugStopSpawning() {
-      waveActive = false;
+    waveActive = false;
   }
 
-    public void debugResumeSpawning() {
-        waveActive = true;
-    }
+  public void debugResumeSpawning() {
+    waveActive = true;
+  }
 
   /** Tells WaveService to start spawning the next wave */
   public void initialiseNewWave() {

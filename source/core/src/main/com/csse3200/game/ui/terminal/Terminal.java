@@ -34,10 +34,10 @@ public class Terminal extends Component {
     addCommand("spawnNextRobot", new SpawnNextRobot());
     addCommand("errorDialogue", new ErrorDialogue());
     addCommand("unlockEverything", new UnlockEverything());
-      addCommand("endLevel", new EndLevel());
-      addCommand("clearRobots", new ClearRobots());
-      addCommand("stopSpawning", new StopSpawning());
-      addCommand("resumeSpawning", new ResumeSpawning());
+    addCommand("endLevel", new EndLevel());
+    addCommand("clearRobots", new ClearRobots());
+    addCommand("stopSpawning", new StopSpawning());
+    addCommand("resumeSpawning", new ResumeSpawning());
   }
 
   /**
