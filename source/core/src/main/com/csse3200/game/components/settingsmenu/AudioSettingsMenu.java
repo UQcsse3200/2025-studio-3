@@ -1,9 +1,9 @@
 package com.csse3200.game.components.settingsmenu;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.csse3200.game.persistence.Settings;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.ui.UIComponent;
@@ -83,9 +83,9 @@ public class AudioSettingsMenu extends UIComponent {
     TextButton applyBtn = ui.primaryButton("Apply", buttonWidth);
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
     applyBtn.addListener(
-        new ChangeListener() {
+        new ClickListener() {
           @Override
-          public void changed(ChangeEvent changeEvent, Actor actor) {
+          public void clicked(InputEvent event, float x, float y) {
             logger.debug("Apply button clicked");
             applyChanges();
             entity.getEvents().trigger("backtosettingsmenu");

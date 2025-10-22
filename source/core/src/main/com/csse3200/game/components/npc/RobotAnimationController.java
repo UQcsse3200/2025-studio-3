@@ -17,6 +17,8 @@ public class RobotAnimationController extends Component {
     ATTACK,
     TELEPORT,
     EXPLODE,
+    TELEPORT_START,
+    TELEPORT_END,
     SHOOT,
     NONE
   }
@@ -43,6 +45,10 @@ public class RobotAnimationController extends Component {
   void animatePreExplosion() {
     currentState = State.EXPLODE; // or a new state like CHARGING
     animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+    entity.getEvents().addListener("teleportDisappearStart", this::animateTeleportStart);
+    entity.getEvents().addListener("teleportReappearStart", this::animateTeleportEnd);
+    entity.getEvents().addListener("shootStart", this::animateShoot);
+    // Explosion will have to be added later.
   }
 
   void animateMoveLeft() {
@@ -57,12 +63,21 @@ public class RobotAnimationController extends Component {
     }
   }
 
-  void animateTeleport() {
-    currentState = State.TELEPORT;
+  void animateTeleportStart() {
+    currentState = State.TELEPORT_START;
     if (!belowHalfHealth) {
-      animator.startAnimation("teleport");
+      animator.startAnimation("teleportStart");
     } else {
-      animator.startAnimation("teleportDamaged");
+      animator.startAnimation("teleportDamagedStart");
+    }
+  }
+
+  void animateTeleportEnd() {
+    currentState = State.TELEPORT_END;
+    if (!belowHalfHealth) {
+      animator.startAnimation("teleportEnd");
+    } else {
+      animator.startAnimation("teleportDamagedEnd");
     }
   }
 
@@ -98,8 +113,11 @@ public class RobotAnimationController extends Component {
         case MOVE_LEFT:
           animateMoveLeft();
           break;
-        case TELEPORT:
-          animateTeleport();
+        case TELEPORT_START:
+          animateTeleportStart();
+          break;
+        case TELEPORT_END:
+          animateTeleportEnd();
           break;
         case ATTACK:
           animateAttack();

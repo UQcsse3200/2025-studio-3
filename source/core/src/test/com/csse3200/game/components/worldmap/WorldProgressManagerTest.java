@@ -65,7 +65,8 @@ class WorldMapProgressTest {
     fActive.setBoolean(svc, true);
 
     // Act
-    svc.markLevelComplete("levelThree");
+    profile.completeLevel("levelThree");
+    profile.setCurrentLevel("levelFour");
 
     // Assert: only currentLevel advanced; unlocked/completed nodes are not written
     assertEquals(

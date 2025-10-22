@@ -99,36 +99,65 @@ moveLeftDamaged
 moveLeftDamaged
 	index: 7
 	bounds: 384, 128, 64, 64
-teleport
+teleportEnd
 	index: 0
 	bounds: 448, 128, 64, 64
-teleport
+teleportEnd
 	index: 1
 	bounds: 0, 192, 64, 64
-teleport
+teleportEnd
 	index: 2
 	bounds: 64, 192, 64, 64
-teleport
+teleportEnd
 	index: 3
 	bounds: 128, 192, 64, 64
-teleport
+teleportEnd
 	index: 4
 	bounds: 192, 192, 64, 64
-teleport
+teleportEnd
 	index: 5
 	bounds: 256, 192, 64, 64
-teleport
+teleportEnd
 	index: 6
 	bounds: 320, 192, 64, 64
-teleport
+teleportEnd
 	index: 7
 	bounds: 384, 192, 64, 64
-teleport
+teleportEnd
+	index: 8
+	bounds: 448, 192, 64, 64
+teleportEndDamaged
+	index: 0
+	bounds: 448, 128, 64, 64
+teleportEndDamaged
+	index: 1
+	bounds: 0, 192, 64, 64
+teleportEndDamaged
+	index: 2
+	bounds: 64, 192, 64, 64
+teleportEndDamaged
+	index: 3
+	bounds: 128, 192, 64, 64
+teleportEndDamaged
+	index: 4
+	bounds: 192, 192, 64, 64
+teleportEndDamaged
+	index: 5
+	bounds: 256, 192, 64, 64
+teleportEndDamaged
+	index: 6
+	bounds: 320, 192, 64, 64
+teleportEndDamaged
+	index: 7
+	bounds: 384, 192, 64, 64
+teleportEndDamaged
 	index: 8
 	bounds: 448, 192, 64, 64
 invalid
 	bounds: 384, 0, 64, 64
-teleportDamaged
+teleportStart
+    bounds: 384, 0, 64, 64
+teleportStartDamaged
     bounds: 384, 0, 64, 64
 explosion
     bounds: 384, 0, 64, 64
