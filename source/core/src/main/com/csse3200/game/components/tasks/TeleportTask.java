@@ -36,8 +36,6 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   }
 
   private State currentState;
-  private float animTimer = 0.5f;
-  private final float teleportAnimTime = 2f; // Duration to hold animation before teleport happens
 
   /**
    * @param cooldownSec seconds between teleport attempts
