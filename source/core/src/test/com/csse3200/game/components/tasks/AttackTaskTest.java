@@ -223,4 +223,55 @@ class AttackTaskTest {
 
     assertTrue(fireCount.get() >= 4, "Should have fired multiple times over time");
   }
+
+  @Test
+  void enableDoubleFireRateTest() {
+    AttackTask attackTask = new AttackTask(5f, 1f, TargetDetectionTasks.AttackDirection.LEFT);
+
+    Entity entity = new Entity();
+    AITaskComponent aiTask = new AITaskComponent().addTask(attackTask);
+    entity.addComponent(aiTask);
+    entity.create();
+
+    AtomicBoolean eventTriggered = new AtomicBoolean(false);
+    entity.getEvents().addListener("doubleAttackStart", () -> eventTriggered.set(true));
+
+    attackTask.enableDoubleFireRate();
+
+    assertTrue(eventTriggered.get(), "doubleAttackStart event should be triggered");
+
+    try {
+      java.lang.reflect.Field cooldownField = AttackTask.class.getDeclaredField("fireCooldown");
+      cooldownField.setAccessible(true);
+      assertEquals(0.5f, cooldownField.get(attackTask), "Cooldown should be halved");
+    } catch (Exception e) {
+      throw new RuntimeException("fireCooldown field doesn't exist");
+    }
+  }
+
+  @Test
+  void resetFireRateTest() {
+    AttackTask attackTask = new AttackTask(5f, 1f, TargetDetectionTasks.AttackDirection.LEFT);
+
+    Entity entity = new Entity();
+    AITaskComponent aiTask = new AITaskComponent().addTask(attackTask);
+    entity.addComponent(aiTask);
+    entity.create();
+    attackTask.enableDoubleFireRate(); // half cool down
+
+    AtomicBoolean eventTriggered = new AtomicBoolean(false);
+    entity.getEvents().addListener("attackStart", () -> eventTriggered.set(true));
+
+    attackTask.resetFireRate();
+
+    assertTrue(eventTriggered.get(), "attackStart event should be triggered");
+
+    try {
+      java.lang.reflect.Field cooldownField = AttackTask.class.getDeclaredField("fireCooldown");
+      cooldownField.setAccessible(true);
+      assertEquals(1f, cooldownField.get(attackTask), "Cooldown should be reset after halving");
+    } catch (Exception e) {
+      throw new RuntimeException("fireCooldown field doesn't exist");
+    }
+  }
 }
