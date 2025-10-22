@@ -17,11 +17,18 @@ public class ShopActions extends Component {
   @Override
   public void create() {
     entity.getEvents().addListener("back", this::onBack);
+    entity.getEvents().addListener("resetShop", this::onResetShop);
   }
 
   /** Return to the world map. */
   private void onBack() {
     logger.info("Returning to world map");
     game.setScreen(GdxGame.ScreenType.WORLD_MAP);
+  }
+
+  /** Reset the shop screen to show updated sold status. */
+  private void onResetShop() {
+    logger.info("Resetting shop screen");
+    game.setScreen(GdxGame.ScreenType.SHOP);
   }
 }

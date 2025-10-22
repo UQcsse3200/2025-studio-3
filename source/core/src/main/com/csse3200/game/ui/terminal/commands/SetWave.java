@@ -16,13 +16,13 @@ public class SetWave implements Command {
   @Override
   public boolean action(ArrayList<String> args) {
     if (args.isEmpty()) {
-      logger.debug("Invalid arguments received for 'setWave' command: {}", args);
+      logger.warn("Invalid arguments received for 'setWave' command: {}", args);
       return false;
     }
     try {
       ServiceLocator.getWaveService().debugSetCurrentWave(Integer.parseInt(args.getFirst()));
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
       return false;
     }
     return true;
