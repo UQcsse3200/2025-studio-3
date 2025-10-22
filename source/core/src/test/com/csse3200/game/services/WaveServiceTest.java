@@ -9,6 +9,8 @@ import com.csse3200.game.entities.configs.BaseWaveConfig;
 import com.csse3200.game.entities.factories.BossFactory;
 import com.csse3200.game.entities.factories.RobotFactory.RobotType;
 import com.csse3200.game.extensions.GameExtension;
+import com.csse3200.game.progression.Profile;
+import com.csse3200.game.progression.statistics.Statistics;
 import java.util.*;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +26,14 @@ class WaveServiceTest {
   void setUp() {
     mockConfigService = mock(ConfigService.class);
     ServiceLocator.registerConfigService(mockConfigService);
+
+    // Mock ProfileService to prevent NullPointerException in endWave()
+    ProfileService mockProfileService = mock(ProfileService.class);
+    Profile mockProfile = mock(Profile.class);
+    Statistics mockStats = mock(Statistics.class);
+    when(mockProfileService.getProfile()).thenReturn(mockProfile);
+    when(mockProfile.getStatistics()).thenReturn(mockStats);
+    ServiceLocator.registerProfileService(mockProfileService);
 
     mockLevelConfig = mock(BaseLevelConfig.class);
     // WaveService constructor "levelOne" and "LevelOne" configs
