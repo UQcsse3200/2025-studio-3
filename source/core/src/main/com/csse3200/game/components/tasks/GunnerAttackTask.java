@@ -9,13 +9,15 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** GunnerAttackTask: Handles the gunner robot attacking tasks */
 public class GunnerAttackTask extends RobotTargetDetectionTasks {
+  private static final Logger logger = LoggerFactory.getLogger(GunnerAttackTask.class);
+
   private static final int GUNNER_TASK_PRIORITY = 10;
   private static final float FIRE_COOLDOWN = 0.95f;
-
-  private Entity currentTarget;
   private float timeSinceLastFire = 0f;
 
   /**
@@ -39,8 +41,9 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
   @Override
   public void update() {
     // find nearest visible defense
-    currentTarget = getNearestVisibleTarget();
+    Entity currentTarget = getNearestVisibleTarget();
     if (currentTarget == null) {
+      logger.info("No visible defense for {}", owner.getEntity());
       return;
     }
     // check if the target is in range
@@ -115,15 +118,7 @@ public class GunnerAttackTask extends RobotTargetDetectionTasks {
         nearestDistance = dist;
       }
     }
-    return nearest;
-  }
 
-  /**
-   * Get the current target of the gunner
-   *
-   * @return the current target of the gunner
-   */
-  public Entity getCurrentTarget() {
-    return currentTarget;
+    return nearest;
   }
 }

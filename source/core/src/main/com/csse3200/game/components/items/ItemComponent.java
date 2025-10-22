@@ -16,7 +16,9 @@ public class ItemComponent extends Component {
     COFFEE,
     BUFF,
     EMP,
-    NUKE
+    NUKE,
+    DOOMHACK,
+    SCRAPPER
   }
 
   /** Immutable item type assigned upon construction of ItemComponent. */

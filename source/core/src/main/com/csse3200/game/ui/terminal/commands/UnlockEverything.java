@@ -21,7 +21,7 @@ public class UnlockEverything implements Command {
       Profile profile = ServiceLocator.getProfileService().getProfile();
       profile.getWallet().addCoins(9999);
       profile.getWallet().addSkillsPoints(99);
-      for (WorldMapNode node : ServiceLocator.getWorldMapService().getAllNodes()) {
+      for (WorldMapNode node : ServiceLocator.getWorldMapService().getNodesList()) {
         node.setUnlocked(true);
           String currentLevel = ServiceLocator.getProfileService().getProfile().getCurrentLevel();
           String nextLevel = findNextLevel(currentLevel);
@@ -29,7 +29,7 @@ public class UnlockEverything implements Command {
       }
       ServiceLocator.getProfileService().saveCurrentProfile();
     } catch (NullPointerException e) {
-      logger.debug("This service is not available on this screen.");
+      logger.warn("This service is not available on this screen.");
       return false;
     }
     return true;
