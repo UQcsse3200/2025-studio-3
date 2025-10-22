@@ -312,11 +312,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    *
    * @param entity the generator entity that the currency is connected to
    */
-  /**
-   * Spawns a scrap entity to generate currency, linked to a generator entity
-   *
-   * @param entity the generator entity
-   */
   private void spawnScrap(Entity entity) {
     Entity scrapSpawner = new Entity();
     GridPoint2 stagePos =
@@ -1211,7 +1206,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Unlocks any new entitites that the player has unlocked
+   * Unlocks any new entities that the player has unlocked
    *
    * @return a readable string listing all unlocked entities
    */
