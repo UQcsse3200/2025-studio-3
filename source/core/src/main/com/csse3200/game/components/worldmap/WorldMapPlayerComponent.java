@@ -618,33 +618,43 @@ public class WorldMapPlayerComponent extends UIComponent {
   // --------------------------------------------------------------------- //
 
   private void handleNodeInteraction() {
-    if (nearbyNode == null) return;
+
+    final WorldMapNode node = this.nearbyNode;
+    if (node == null) return;
+
     SettingsService settingsService = ServiceLocator.getSettingsService();
     if (!Gdx.input.isKeyJustPressed(settingsService.getSettings().getInteractionButton())) return;
-    if (nearbyNode.isUnlocked()) {
+
+    if (node.isUnlocked()) {
       String message =
-          nearbyNode.isCompleted()
-              ? ("You have completed this level.\nDo you want to re-enter "
-                  + nearbyNode.getLabel()
-                  + "?")
-              : ("Do you want to enter " + nearbyNode.getLabel() + "?");
+          node.isCompleted()
+              ? ("You have completed this level.\nDo you want to re-enter " + node.getLabel() + "?")
+              : ("Do you want to enter " + node.getLabel() + "?");
+
       ServiceLocator.getDialogService()
           .warning(
-              nearbyNode.getLabel(),
+              node.getLabel(),
               message,
               dialog -> {
-                logger.info("[WorldMapPlayerComponent] Entering node: {}", nearbyNode.getLabel());
-                entity.getEvents().trigger("enterNode", nearbyNode);
+                if (!isOnNode(node, entity.getPosition())) {
+                  ServiceLocator.getDialogService()
+                      .error("Error", "You are too far from the node to enter it.");
+                  logger.warn(
+                      "[WorldMapPlayerComponent] Confirmed while off-node: {}", node.getLabel());
+                  return;
+                }
+
+                logger.info("[WorldMapPlayerComponent] Entering node: {}", node.getLabel());
+                entity.getEvents().trigger("enterNode", node);
               },
               null);
       return;
     }
 
-    String reason = nearbyNode.getLockReason();
+    String reason = node.getLockReason();
     ServiceLocator.getDialogService()
-        .error(nearbyNode.getLabel(), reason != null ? reason : "This node is not available.");
-    logger.info(
-        "[WorldMapPlayerComponent] Node '{}' not accessible: {}", nearbyNode.getLabel(), reason);
+        .error(node.getLabel(), reason != null ? reason : "This node is not available.");
+    logger.info("[WorldMapPlayerComponent] Node '{}' not accessible: {}", node.getLabel(), reason);
   }
 
   // --------------------------------------------------------------------- //
