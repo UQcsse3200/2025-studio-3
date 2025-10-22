@@ -7,9 +7,8 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class MoveLeftComponent extends Component {
-  private float speed;
+  private final float speed;
   private boolean shoot = false;
-  private PhysicsComponent physicsComponent;
 
   public MoveLeftComponent(float speed) {
     this.speed = speed;
@@ -17,7 +16,7 @@ public class MoveLeftComponent extends Component {
 
   @Override
   public void create() {
-    physicsComponent = entity.getComponent(PhysicsComponent.class);
+    PhysicsComponent physicsComponent = entity.getComponent(PhysicsComponent.class);
     if (physicsComponent != null) {
       physicsComponent.getBody().setLinearVelocity(-speed, 0);
     }
@@ -35,9 +34,5 @@ public class MoveLeftComponent extends Component {
       entity.getEvents().trigger("spawnProjectile", entity.getPosition());
       shoot = false;
     }
-  }
-
-  public void setShoot(boolean shoot) {
-    this.shoot = shoot;
   }
 }
