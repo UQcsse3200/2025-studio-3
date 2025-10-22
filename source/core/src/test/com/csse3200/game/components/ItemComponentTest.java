@@ -42,6 +42,18 @@ class ItemComponentTest {
   }
 
   @Test
+  void testScrapperTypeStored() {
+      ItemComponent c = new ItemComponent(ItemComponent.Type.SCRAPPER);
+      assertSame(ItemComponent.Type.SCRAPPER, c.getType());
+  }
+
+  @Test
+  void testDoomHackTypeStored() {
+        ItemComponent c = new ItemComponent(ItemComponent.Type.DOOMHACK);
+        assertSame(ItemComponent.Type.DOOMHACK, c.getType());
+  }
+
+  @Test
   void testAttachToEntityAndRetrieve() {
     Entity e = new Entity();
     ItemComponent c = new ItemComponent(ItemComponent.Type.BUFF);
