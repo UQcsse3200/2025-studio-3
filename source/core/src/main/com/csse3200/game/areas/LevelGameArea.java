@@ -934,7 +934,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     final int damage = (defence != null) ? defence.getBaseAttack() : 0;
     int cost = 0;
     if (generator != null) {
-      cost = generator.getCost();
+      cost = getFurnaceCost(generator);
     } else if (defence != null) {
       cost = defence.getCost();
     }
@@ -1045,6 +1045,18 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       logger.info("No unit at position {}", position);
       return;
     }
+
+    // refund
+    GeneratorStatsComponent generator = occ.getComponent(GeneratorStatsComponent.class);
+    DefenderStatsComponent defence = occ.getComponent(DefenderStatsComponent.class);
+    int cost = 0;
+    if (generator != null) {
+      cost = getFurnaceCost(generator);
+    } else if (defence != null) {
+      cost = defence.getCost();
+    }
+    ServiceLocator.getCurrencyService().add(cost / 2);
+
     occ.getEvents().trigger("entityDespawn");
     requestDespawn(occ);
     grid.clearOccupantIndex(position);
@@ -1053,6 +1065,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (tile != null) {
       tile.getComponent(TileStorageComponent.class).removeTileUnit();
     }
+
+    // play sound
+    Sound sound = ServiceLocator.getResourceService().getAsset("sounds/cha-ching.mp3", Sound.class);
+    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+    sound.play(volume);
+    logger.info("Playing sound: sounds/cha-ching.mp3");
+
     logger.info("Unit deleted at position {}", position);
   }
 
@@ -1196,6 +1215,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
       isLevelComplete = true;
       if (levelCompleteEntity != null) {
         levelCompleteEntity.getEvents().trigger("levelComplete");
+        // play win sound
+        if (ServiceLocator.getResourceService() != null
+            && ServiceLocator.getSettingsService() != null) {
+          Sound sound =
+              ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
+          if (sound != null) {
+            float volume = ServiceLocator.getSettingsService().getSoundVolume();
+            sound.play(volume);
+            logger.info("Played sound: sounds/level-win.mp3");
+          }
+        }
       }
 
       GameStateService service = ServiceLocator.getGameStateService();
@@ -1354,5 +1384,17 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
    */
   public void setGrid(LevelGameGrid newGrid) {
     this.grid = newGrid;
+  }
+
+  private int getFurnaceCost(GeneratorStatsComponent generator) {
+    List<Entity> entities = new ArrayList<>(areaEntities);
+    int numFurnaces = 0;
+    for (Entity entity : entities) {
+      GeneratorStatsComponent generatorEntity = entity.getComponent(GeneratorStatsComponent.class);
+      if (generatorEntity != null) {
+        numFurnaces++;
+      }
+    }
+    return generator.getCost() * (numFurnaces + 1);
   }
 }
