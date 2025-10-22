@@ -1,6 +1,7 @@
 package com.csse3200.game.components.tasks;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.utils.Array;
 import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.ai.tasks.Task;
@@ -9,9 +10,11 @@ import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.EntityService;
+import com.csse3200.game.physics.PhysicsEngine;
 import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.raycast.RaycastHit;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.GameTime;
@@ -61,6 +64,7 @@ class TargetDetectionTasksTest {
 
     Entity defender;
     TestTargetDetectionTasks targetTask;
+    PhysicsEngine physicsEngine;
 
     @BeforeEach
     void setup() {
@@ -70,7 +74,11 @@ class TargetDetectionTasksTest {
         GameTime gameTime = mock(GameTime.class);
         when(gameTime.getDeltaTime()).thenReturn(20f / 1000);
         ServiceLocator.registerTimeSource(gameTime);
-        ServiceLocator.registerPhysicsService(new PhysicsService());
+
+        PhysicsService physicsService = mock(PhysicsService.class);
+        physicsEngine = mock(PhysicsEngine.class);
+        ServiceLocator.registerPhysicsService(physicsService);
+        when(physicsService.getPhysics()).thenReturn(physicsEngine);
 
         LevelGameArea gameArea = mock(LevelGameArea.class);
         when(gameArea.getTileSize()).thenReturn(1f); // Define a tile size
@@ -90,6 +98,15 @@ class TargetDetectionTasksTest {
         when(taskRunner.getEntity()).thenReturn(defender);
 
         targetTask.create(taskRunner);
+    }
+
+    @Test
+    void constructorTest() {
+        TestTargetDetectionTasks task = new TestTargetDetectionTasks(5f, TargetDetectionTasks.AttackDirection.LEFT);
+
+        assertEquals(5f, task.attackRange);
+        assertEquals(TargetDetectionTasks.AttackDirection.LEFT, task.direction);
+        assertNotNull(task.physics);
     }
 
     @Test
@@ -166,53 +183,42 @@ class TargetDetectionTasksTest {
         int priorityOut = targetTask.getPriority();
         assertEquals(-1, priorityOut);
     }
-//
-//    @Test
-//    void getNearestVisibleTargetTest() {
-//        Entity target = mock(Entity.class);
-//
-//        // Mock a Fixture that returns the enemy as user data
-//        Fixture fixture = mock(Fixture.class);
-//        when(fixture.getUserData()).thenReturn(target);
-//
-//        PhysicsService physicsService = mock(PhysicsService.class);
-//        PhysicsEngine physicsEngine = mock(PhysicsEngine.class);
-//        when(physicsService.getPhysics()).thenReturn(physicsEngine);
-//        ServiceLocator.registerPhysicsService(physicsService);
-//
-//        RaycastHit mockHit = new RaycastHit();
-////        when(mockHit.getFixture()).thenReturn(fixture);
-//
-//        // OpenAI was used here
-//
-//        doAnswer(invocation -> {
-//            RaycastHit hit = invocation.getArgument(3);
-//            hit.setFixture(fixture);
-//            return true;
-//        }).when(physicsEngine).raycast(any(Vector2.class), any(Vector2.class), anyShort(), any(RaycastHit.class));
-//
-//        // Replace internal tempHit with our realHit (via reflection)
-//        try {
-//            var tempHitField = TargetDetectionTasks.class.getDeclaredField("tempHit");
-//            tempHitField.setAccessible(true);
-//            tempHitField.set(targetTask, mockHit);
-//        } catch (Exception e) {
-//            fail("Failed to access or set tempHit field: " + e.getMessage());
-//        }
-//
-//        Entity result = targetTask.getNearestVisibleTarget();
-//        // hits a target
-//        assertEquals(target, result, "Expected to return the hit enemy entity");
-//        assertSame(fixture, mockHit.getFixture(), "Fixture should be set correctly in tempHit");
-//
-//
-////        // doesn't hit a target
-////        when(physicsEngine.raycast(any(Vector2.class), any(Vector2.class), anyShort(), any(RaycastHit.class)))
-////                .thenReturn(false);
-////        Entity result = task.getNearestVisibleTarget();
-////
-////        assertNull(result, "Expected no entity to be detected");
-//    }
+
+
+    @Test
+    void getNearestVisibleTargetTest() {
+        Entity target = spy(new Entity());
+
+        // Mock a Fixture that returns the enemy as user data
+        Fixture fixture = mock(Fixture.class);
+        when(fixture.getUserData()).thenReturn(target);
+
+
+        // Configure the raycast to hit ONLY on the first call
+        // and avoid executing the second raycast
+        doAnswer(invocation -> {
+            RaycastHit hitArg = invocation.getArgument(3);
+            hitArg.setFixture(fixture);
+            return true;  // Simulate a successful raycast
+        }).when(physicsEngine).raycast(any(), any(), anyShort(), any());
+
+
+        Entity result = targetTask.getNearestVisibleTarget();
+
+        // hits a target
+        assertNotNull(result, "Expected to detect a target entity");
+        assertEquals(target, result, "Expected to return the hit enemy entity");
+
+    }
+
+    @Test
+    void getNearestVisibleTargetNoHitTest() {
+        when(physicsEngine.raycast(any(), any(), anyShort(), any())).thenReturn(false);
+
+        Entity result = targetTask.getNearestVisibleTarget();
+        // no near target found
+        assertNull(result, "No entity detected should return null");
+    }
 
     @Test
     void getAllTargetsTest() {
