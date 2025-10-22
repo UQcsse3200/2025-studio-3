@@ -38,9 +38,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
   // Random number gen for crit chance
   private Random rand = new Random();
 
-  /** Maxhealth upper bound */
-  private int maxHealth;
-
   /** Scrap cost of the defender. */
   private int cost;
 
