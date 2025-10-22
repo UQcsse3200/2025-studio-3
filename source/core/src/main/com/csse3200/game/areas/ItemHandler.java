@@ -30,7 +30,12 @@ public class ItemHandler {
     this.area = area;
   }
 
-  /** Main entry point for spawning and resolving an item's effects. */
+  /**
+   * Main entry point for spawning and resolving an item's effects.
+   *
+   * @param item the item being used
+   * @param entityPos the position of the entity using the item
+   */
   public void handleItemUse(ItemComponent item, Vector2 entityPos) {
     String key = item.getType().toString().toLowerCase(Locale.ROOT);
     Inventory inv = ServiceLocator.getProfileService().getProfile().getInventory();
@@ -61,7 +66,12 @@ public class ItemHandler {
     return damaging.contains(item.getType().toString());
   }
 
-  /** Damages all robots in a small radius around entityPos. */
+  /**
+   * Damages all robots in a small radius around entityPos.
+   *
+   * @param item the item whose damage radius to apply
+   * @param entityPos the position from which to apply the damage
+   */
   private void applyAreaDamage(ItemComponent item, Vector2 entityPos) {
 
     float radius = area.getTileSize();
@@ -96,7 +106,11 @@ public class ItemHandler {
     }
   }
 
-  /** Applies temporary buffs (coffee, buff, etc.) to all placed defences. */
+  /**
+   * Applies temporary buffs (coffee, buff, etc.) to all placed defences.
+   *
+   * @param item the item whose associated buff should be applied
+   */
   private void applyBuff(ItemComponent item) {
     String key = item.getType().toString().toLowerCase(Locale.ROOT);
     BaseItemConfig config = ServiceLocator.getConfigService().getItemConfig(key);
@@ -151,7 +165,7 @@ public class ItemHandler {
     }
 
     // failsafe
-    if (name.equals("")) {
+    if (name.isEmpty()) {
       return;
     }
 
