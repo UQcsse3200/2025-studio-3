@@ -18,7 +18,6 @@ public class Arsenal {
    * 0 indicates level 1 is initialised with three defences. This will be used to track which
    * defences should be unlocked on each level */
   private static final String INITIAL_DEFENCE = "levelOne";
-  private static final Integer NUM_INITIAL_DEFENCES = 3;
   private static final Map<String, BaseDefenderConfig> ALL_DEFENCES = new HashMap<>();
   /* The same as above for generators*/
   private static final Map<String, BaseGeneratorConfig> ALL_GENERATORS = new HashMap<>();

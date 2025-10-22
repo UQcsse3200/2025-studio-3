@@ -156,10 +156,6 @@ public class DossierDisplay extends UIComponent {
 
   /** Loads human entities (defenders and generators, excluding wall) */
   private void loadHumanEntities() {
-    // Combine defenders and generators, excluding the wall
-    java.util.List<String> filteredDefenderKeys = new java.util.ArrayList<>();
-    java.util.List<String> filteredGeneratorKeys = new java.util.ArrayList<>();
-
     java.util.List<String> unlockedDefenders = new java.util.ArrayList<>();
     java.util.List<String> lockedDefenders = new java.util.ArrayList<>();
 
