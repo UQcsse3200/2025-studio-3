@@ -171,7 +171,6 @@ public class DefenderStatsComponent extends CombatStatsComponent {
     this.critChance = critChance * CRIT_UPGRADE;
   }
 
-
   /**
    * Sets the scrap cost of the defender. If the provided value is negative, the cost is set to 0.
    *
