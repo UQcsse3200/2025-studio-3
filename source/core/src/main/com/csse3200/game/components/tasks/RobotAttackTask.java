@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 /**
@@ -41,6 +42,9 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
     timeLeft = TIME_BETWEEN_ATTACKS;
     soundTimeLeft = TIME_BETWEEN_ATTACK_SOUNDS;
     this.owner.getEntity().getEvents().trigger("attackStart");
+    PhysicsComponent phys = owner.getEntity().getComponent(PhysicsComponent.class);
+    if (phys == null || phys.getBody() == null) return;
+    phys.getBody().setLinearVelocity(0f, 0f);
   }
 
   /** Updates the task each game frame */

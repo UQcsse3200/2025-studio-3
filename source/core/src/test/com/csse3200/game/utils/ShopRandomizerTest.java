@@ -65,16 +65,17 @@ class ShopRandomizerTest {
   }
 
   @Test
-  void testGetShopItemIndexes_SameHourDifferentMinutesReturnsSameResult() {
+  void testGetShopItemIndexes_Same15MinuteIntervalReturnsSameResult() {
     String seed = "sameSeed";
+    // Both times are in the 10:30-10:44 interval (round to 10:30)
     LocalDateTime time1 = LocalDateTime.of(2024, 1, 15, 10, 30, 45);
-    LocalDateTime time2 = LocalDateTime.of(2024, 1, 15, 10, 45, 20);
+    LocalDateTime time2 = LocalDateTime.of(2024, 1, 15, 10, 44, 20);
 
     int[] result1 = ShopRandomizer.getShopItemIndexes(seed, 0, 10, time1);
     int[] result2 = ShopRandomizer.getShopItemIndexes(seed, 0, 10, time2);
 
     assertArrayEquals(
-        result1, result2, "Different minutes within same hour should return same indexes");
+        result1, result2, "Times within same 15-minute interval should return same indexes");
   }
 
   @Test

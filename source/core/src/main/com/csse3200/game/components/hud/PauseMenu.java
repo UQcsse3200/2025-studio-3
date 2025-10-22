@@ -45,6 +45,9 @@ public class PauseMenu extends UIComponent {
 
     // Listen for pause events to show the menu
     entity.getEvents().addListener("pause", this::handlePause);
+
+    // Listen for pause key pressed to resume the game rather than clicking the resume button
+    entity.getEvents().addListener("resumekeypressed", this::handleResumeKeyPressed);
   }
 
   /** Creates the dimmed background overlay */
@@ -208,6 +211,13 @@ public class PauseMenu extends UIComponent {
   private void handlePause() {
     logger.info("[PauseMenu] Pause event received");
     setVisible(true);
+  }
+
+  /** Handles resuming the game where pause key is clicked to resume. */
+  private void handleResumeKeyPressed() {
+    logger.info("[PauseMenu] Resume key pressed");
+    entity.getEvents().trigger("resume");
+    setVisible(false);
   }
 
   /**
