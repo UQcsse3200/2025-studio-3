@@ -944,10 +944,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Change the keybinds.</div>
 </dd>
-<dt><a href="com/csse3200/game/ui/tutorial/LevelMapTutorial.html#changeText(boolean)" class="member-name-link">changeText(boolean)</a> - Method in class com.csse3200.game.ui.tutorial.<a href="com/csse3200/game/ui/tutorial/LevelMapTutorial.html" title="class in com.csse3200.game.ui.tutorial">LevelMapTutorial</a></dt>
-<dd>
-<div class="block">Changes the tutorial message depending on which button the user presses.</div>
-</dd>
 <dt><a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html#character()" class="member-name-link">character()</a> - Method in record class com.csse3200.game.cutscene.models.object.actiondata.<a href="com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html" title="class in com.csse3200.game.cutscene.models.object.actiondata">CharacterEnterData</a></dt>
 <dd>
 <div class="block">Returns the value of the <a href="./com/csse3200/game/cutscene/models/object/actiondata/CharacterEnterData.html#param-character"><code>character</code></a> record component.</div>
@@ -3744,6 +3740,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getGameArea()" class="member-name-link">getGameArea()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
 <div class="block">Gets the active game area.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#getGameplaySpeedScale()" class="member-name-link">getGameplaySpeedScale()</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Gets the current gameplay time scale (1.0 = normal speed).</div>
 </dd>
 <dt><a href="com/csse3200/game/services/ServiceLocator.html#getGameStateService()" class="member-name-link">getGameStateService()</a> - Static method in class com.csse3200.game.services.<a href="com/csse3200/game/services/ServiceLocator.html" title="class in com.csse3200.game.services">ServiceLocator</a></dt>
 <dd>
@@ -7433,6 +7433,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Sets the game over state.</div>
 </dd>
+<dt><a href="com/csse3200/game/services/SettingsService.html#setGameplaySpeedScale(float)" class="member-name-link">setGameplaySpeedScale(float)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/SettingsService.html" title="class in com.csse3200.game.services">SettingsService</a></dt>
+<dd>
+<div class="block">Sets the gameplay time scale (1.0 = normal speed).</div>
+</dd>
 <dt><a href="com/csse3200/game/components/player/InventoryComponent.html#setGold(int)" class="member-name-link">setGold(int)</a> - Method in class com.csse3200.game.components.player.<a href="com/csse3200/game/components/player/InventoryComponent.html" title="class in com.csse3200.game.components.player">InventoryComponent</a></dt>
 <dd>
 <div class="block">Sets the player's gold.</div>
@@ -7684,6 +7688,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html#setPosition(com.csse3200.game.cutscene.models.object.Position)" class="member-name-link">setPosition(Position)</a> - Method in class com.csse3200.game.cutscene.runtime.states.<a href="com/csse3200/game/cutscene/runtime/states/CharacterState.html" title="class in com.csse3200.game.cutscene.runtime.states">CharacterState</a></dt>
 <dd>
 <div class="block">Sets the position.</div>
+</dd>
+<dt><a href="com/csse3200/game/services/GameStateService.html#setPreferredTimeScale(float)" class="member-name-link">setPreferredTimeScale(float)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/GameStateService.html" title="class in com.csse3200.game.services">GameStateService</a></dt>
+<dd>
+<div class="block">Sets the preferred gameplay time scale that will be restored when the game unfreezes.</div>
 </dd>
 <dt><a href="com/csse3200/game/services/DiscordRichPresenceService.html#setPresence(java.lang.String)" class="member-name-link">setPresence(String)</a> - Method in class com.csse3200.game.services.<a href="com/csse3200/game/services/DiscordRichPresenceService.html" title="class in com.csse3200.game.services">DiscordRichPresenceService</a></dt>
 <dd>
@@ -9219,6 +9227,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Called once per frame of the game, and should be used for most component logic.</div>
 </dd>
 <dt><a href="com/csse3200/game/components/credits/CreditsDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.credits.<a href="com/csse3200/game/components/credits/CreditsDisplay.html" title="class in com.csse3200.game.components.credits">CreditsDisplay</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/CurrencyGeneratorComponent.html" title="class in com.csse3200.game.components.currency">CurrencyGeneratorComponent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/csse3200/game/components/currency/ScrapHudDisplay.html#update()" class="member-name-link">update()</a> - Method in class com.csse3200.game.components.currency.<a href="com/csse3200/game/components/currency/ScrapHudDisplay.html" title="class in com.csse3200.game.components.currency">ScrapHudDisplay</a></dt>
 <dd>&nbsp;</dd>

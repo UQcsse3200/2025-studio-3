@@ -190,13 +190,18 @@ loadScripts(document, 'script');</script>
 <div class="block">Removes a freeze reason.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockPlacement()" class="member-name-link">unlockPlacement</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPreferredTimeScale(float)" class="member-name-link">setPreferredTimeScale</a><wbr>(float&nbsp;scale)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Unlocks placement interactions.</div>
+<div class="block">Sets the preferred gameplay time scale that will be restored when the game unfreezes.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregisterFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">unregisterFreezeListener</a><wbr>(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unlockPlacement()" class="member-name-link">unlockPlacement</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Unlocks placement interactions.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregisterFreezeListener(com.csse3200.game.services.GameStateService.FreezeListener)" class="member-name-link">unregisterFreezeListener</a><wbr>(<a href="GameStateService.FreezeListener.html" title="interface in com.csse3200.game.services">GameStateService.FreezeListener</a>&nbsp;listener)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Unregisters a previously registered freeze listener.</div>
 </div>
 </div>
@@ -339,6 +344,18 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>listener</code> - listener to remove</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="setPreferredTimeScale(float)">
+<h3>setPreferredTimeScale</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setPreferredTimeScale</span><wbr><span class="parameters">(float&nbsp;scale)</span></div>
+<div class="block">Sets the preferred gameplay time scale that will be restored when the game unfreezes. If the
+ game is not currently frozen, this will also apply immediately to the time source.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>scale</code> - the desired gameplay time scale (clamped to &gt;= 0)</dd>
 </dl>
 </section>
 </li>
