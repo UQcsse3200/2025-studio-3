@@ -47,6 +47,7 @@ import com.csse3200.game.services.*;
 import com.csse3200.game.ui.DragOverlay;
 import com.csse3200.game.ui.tutorial.LevelMapTutorial;
 import java.util.*;
+import java.util.Random;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   private static final float Y_MARGIN_TILES = 1f;
   private static final float MAP_HEIGHT_TILES = 8f;
   private static final String ENTITY_DEATH_EVENT = "entityDeath";
+  private static final String DESPAWN_SLINGSHOT_EVENT = "despawnSlingshot";
   private static final String HEAL = "heal";
   private static final Logger logger = LoggerFactory.getLogger(LevelGameArea.class);
   private float xOffset;
@@ -621,7 +623,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
     if (tag.getType() != ProjectileType.HARPOON_PROJECTILE
         && tag.getType() != ProjectileType.SHELL) {
-      projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+      projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
     }
 
     ServiceLocator.getProfileService()
@@ -642,7 +644,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
 
     projectile.scaleHeight(30f);
     projectile.scaleWidth(30f);
-    projectile.getEvents().addListener("despawnSlingshot", this::requestDespawn);
+    projectile.getEvents().addListener(DESPAWN_SLINGSHOT_EVENT, this::requestDespawn);
 
     spawnEntity(projectile);
     logger.info("Gunner projectile spawned at {}", spawnPos);
@@ -712,20 +714,21 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  public void spawnBoss(int row, BossFactory.BossTypes bossType) {
+  public void spawnBoss(BossFactory.BossTypes bossType) {
     logger.info("Spawning Boss of type {}", bossType);
-    Entity boss = BossFactory.createBossType(bossType);
 
+    Entity boss = BossFactory.createBossType(bossType);
     int spawnCol = levelCols;
-    int spawnRow = Math.clamp(row, 0, levelRows - 1); // Bottom row for now
+    final Random random = new Random(System.nanoTime());
+    final int firstspawnRow = random.nextInt(levelRows);
 
     float spawnX = xOffset + tileSize * spawnCol;
-    float spawnY = yOffset + tileSize * spawnRow - (tileSize / 1.5f);
+    float firstspawnY = yOffset + tileSize * firstspawnRow - (tileSize / 1.5f);
 
-    boss.setPosition(spawnX, spawnY);
+    boss.setPosition(spawnX, firstspawnY);
     boss.scaleHeight(tileSize * 3.0f);
 
-    logger.info("Boss spawned at x={}, y={}, scale={}", spawnX, spawnY, boss.getScale());
+    logger.info("Boss spawned in random lane {} at x={}, y={}", firstspawnRow, spawnX, firstspawnY);
 
     spawnEntity(boss);
     robots.add(boss);
@@ -739,17 +742,16 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
 
     boss.getEvents().addListener("fireProjectile", this::spawnBossProjectile);
-    boss.getEvents().addListener("despawnRobot", target -> {});
 
-    // --- BUG FIX STARTS HERE ---
-    // Use a boolean flag to ensure the death logic only runs ONCE.
+    boss.getEvents().addListener("despawnRobot", (Entity target) -> {});
+
     final boolean[] isBossDead = {false};
     boss.getEvents()
         .addListener(
             ENTITY_DEATH_EVENT,
             () -> {
               if (isBossDead[0]) {
-                return; // If already dead, do nothing.
+                return;
               }
               isBossDead[0] = true; // Set flag to prevent re-entry.
               increaseOutGameCurrency(coins);
@@ -780,22 +782,53 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
                   },
                   1.84f);
             });
-    // --- BUG FIX ENDS HERE ---
   }
 
   public void spawnBossProjectile(Entity boss) {
-    Entity projectile = ProjectileFactory.createBossProjectile(5);
-    Vector2 spawnPos = boss.getCenterPosition().cpy();
-    spawnPos.x -= 1.0f;
-    spawnPos.y -= (tileSize / 6f);
+    logger.info("spawnBossProjectile called for boss at {}", boss.getPosition());
 
-    projectile.setPosition(spawnPos.x, spawnPos.y);
-    projectile.scaleHeight(0.5f * tileSize);
-    projectile.scaleWidth(0.5f * tileSize);
+    Entity projectile = ProjectileFactory.createBossProjectile(20);
+
+    Vector2 bossPos = boss.getPosition();
+    float projectileX = bossPos.x - (tileSize * 0.5f);
+    float projectileY = bossPos.y + (tileSize * 1f);
+
+    projectile.setPosition(projectileX, projectileY);
+    projectile.scaleHeight(0.6f * tileSize);
+    projectile.scaleWidth(0.6f * tileSize);
+
     projectile.addComponent(new MoveLeftComponent(150f));
-    projectile.getEvents().addListener("despawn", () -> requestDespawn(projectile));
+
+    projectile
+        .getEvents()
+        .addListener(
+            "attack",
+            (Entity target) -> {
+              logger.info("Boss projectile hit defense at {}", target.getPosition());
+
+              requestDespawn(projectile);
+            });
+
+    projectile
+        .getEvents()
+        .addListener(
+            DESPAWN_SLINGSHOT_EVENT,
+            projectileEntity -> {
+              logger.info("Boss projectile hit defense - despawning");
+              requestDespawn(projectile);
+            });
+
+    projectile
+        .getEvents()
+        .addListener(
+            "despawn",
+            () -> {
+              logger.info("Boss projectile lifetime expired");
+              requestDespawn(projectile);
+            });
+
     spawnEntity(projectile);
-    logger.info("Boss fired projectile from position {}", spawnPos);
+    logger.info("Boss projectile spawned at ({}, {})", projectileX, projectileY);
   }
 
   /**

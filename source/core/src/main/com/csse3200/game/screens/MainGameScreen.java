@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.components.SkipWaveDebug;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
@@ -267,7 +268,7 @@ public class MainGameScreen extends ScreenAdapter {
 
               @Override
               public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-                gameArea.spawnBoss(row, bossType);
+                gameArea.spawnBoss(bossType);
               }
             });
     gameArea.create();
@@ -480,7 +481,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
+        .addComponent(new CurrentWaveDisplay())
+        .addComponent(new SkipWaveDebug());
 
     if (!isSlotLevel) {
       uiEntity.addComponent(new ScrapHudDisplay());
