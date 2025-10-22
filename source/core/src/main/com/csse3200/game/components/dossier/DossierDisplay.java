@@ -49,6 +49,7 @@ public class DossierDisplay extends UIComponent {
   private static final String COST_LABEL = "\nCost: ";
   private static final String SCRAP_LABEL = "\nScrap Value: ";
   private static final String INTERVAL_LABEL = "\nInterval: ";
+  private static final String NO_ENTRIES_TEXT = "No entries";
 
   /**
    * Constructor to display the dossier.
@@ -63,7 +64,9 @@ public class DossierDisplay extends UIComponent {
     this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
     type = true;
     enemyMode = true;
-    entities = this.enemyConfigs.keySet().toArray(new String[0]);
+
+    // Initialize with filtered entities instead of all enemy configs
+    loadEnemyEntities();
   }
 
   @Override
@@ -147,55 +150,54 @@ public class DossierDisplay extends UIComponent {
 
   /** Loads enemy entities */
   private void loadEnemyEntities() {
-    entities = enemyConfigs.keySet().toArray(new String[0]);
+    // Exclude gunner robot from the dossier
+    java.util.List<String> filtered = new java.util.ArrayList<>();
+    for (String key : enemyConfigs.keySet()) {
+      if (!"gunnerRobot".equals(key)) {
+        filtered.add(key);
+      }
+    }
+    entities = filtered.toArray(new String[0]);
     logger.info("[DossierDisplay] Enemy mode - entities count: {}", entities.length);
     if (logger.isDebugEnabled()) {
       logger.debug("[DossierDisplay] Enemy mode entities: {}", java.util.Arrays.toString(entities));
     }
   }
 
-  /** Loads human entities (defenders and generators, excluding wall) */
+  /** Loads human entities (defenders and generators, excluding wall and locked entities) */
   private void loadHumanEntities() {
     this.playerArsenal = ServiceLocator.getProfileService().getProfile().getArsenal();
-    java.util.List<String> unlockedDefenders = new java.util.ArrayList<>();
-    java.util.List<String> lockedDefenders = new java.util.ArrayList<>();
+    // Combine defenders and generators, excluding the wall and locked entities
+    java.util.List<String> unlockedDefenderKeys = new java.util.ArrayList<>();
+    java.util.List<String> unlockedGeneratorKeys = new java.util.ArrayList<>();
 
-    // Filter defenders (excluding wall)
-    // List unlocked entities first
-    for (String key : playerArsenal.getDefenders()) {
-      if (!key.equals("wall")) {
-        unlockedDefenders.add(key);
-      }
-    }
-
-    for (String key : playerArsenal.getGenerators()) {
-      unlockedDefenders.add(key);
-    }
-
+    // Filter defenders (excluding wall and locked entities)
     for (String defenderKey : defenderConfigs.keySet()) {
-      if (!defenderKey.equals("wall") && !playerArsenal.contains(defenderKey)) {
-        lockedDefenders.add(defenderKey);
+      if (!defenderKey.equals("wall") && playerArsenal.contains(defenderKey)) {
+        unlockedDefenderKeys.add(defenderKey);
       }
     }
 
-    for (String defenderKey : generatorConfigs.keySet()) {
-      if (!playerArsenal.contains(defenderKey)) {
-        lockedDefenders.add(defenderKey);
+    // Filter generators (excluding locked entities)
+    for (String generatorKey : generatorConfigs.keySet()) {
+      if (playerArsenal.contains(generatorKey)) {
+        unlockedGeneratorKeys.add(generatorKey);
       }
     }
 
-    String[] unlockedKeys = unlockedDefenders.toArray(new String[0]);
-    String[] lockedKeys = lockedDefenders.toArray(new String[0]);
-    entities = new String[unlockedKeys.length + lockedKeys.length];
-    System.arraycopy(unlockedKeys, 0, entities, 0, unlockedKeys.length);
-    System.arraycopy(lockedKeys, 0, entities, unlockedKeys.length, lockedKeys.length);
+    String[] defenderKeys = unlockedDefenderKeys.toArray(new String[0]);
+    String[] generatorKeys = unlockedGeneratorKeys.toArray(new String[0]);
+    entities = new String[defenderKeys.length + generatorKeys.length];
+    System.arraycopy(defenderKeys, 0, entities, 0, defenderKeys.length);
+    System.arraycopy(generatorKeys, 0, entities, defenderKeys.length, generatorKeys.length);
     logger.info(
-        "[DossierDisplay] Human mode - unlocked count: {}, locked count: {}, total entities: {}",
-        unlockedKeys.length,
-        lockedKeys.length,
+        "[DossierDisplay] Human mode - unlocked defender count: {}, unlocked generator count: {}, total unlocked entities: {}",
+        defenderKeys.length,
+        generatorKeys.length,
         entities.length);
     if (logger.isDebugEnabled()) {
-      logger.debug("[DossierDisplay] Human mode entities: {}", java.util.Arrays.toString(entities));
+      logger.debug(
+          "[DossierDisplay] Human mode unlocked entities: {}", java.util.Arrays.toString(entities));
     }
   }
 
@@ -216,6 +218,10 @@ public class DossierDisplay extends UIComponent {
     addActors();
     // Trigger change_info event to update display with first entity
     if (entities.length > 0) {
+      // Ensure currentEntity is within bounds
+      if (currentEntity >= entities.length) {
+        currentEntity = 0;
+      }
       entity.getEvents().trigger(CHANGE_INFO, currentEntity);
     }
   }
@@ -317,7 +323,7 @@ public class DossierDisplay extends UIComponent {
             CHANGE_INFO,
             index -> {
               if (entities.length == 0) {
-                nameLabel.setText("No entries");
+                nameLabel.setText(NO_ENTRIES_TEXT);
                 infoLabel.setText("");
                 spriteImage.setDrawable(null);
                 return;
@@ -333,8 +339,20 @@ public class DossierDisplay extends UIComponent {
               }
               // Update current entity index
               currentEntity = (int) index;
+
+              // Bounds checking to prevent issues
+              if (currentEntity < 0 || currentEntity >= entities.length) {
+                logger.warn(
+                    "Invalid entity index: {} (entities.length: {})",
+                    currentEntity,
+                    entities.length);
+                nameLabel.setText(NO_ENTRIES_TEXT);
+                infoLabel.setText("");
+                spriteImage.setDrawable(null);
+                return;
+              }
+
               String currentEntityKey = entities[currentEntity];
-              logger.debug("Updating dossier info for entity key: {}", currentEntityKey);
 
               nameLabel.setText(getEntityName(currentEntityKey));
               infoLabel.setText(getEntityInfo(currentEntityKey));
@@ -396,7 +414,7 @@ public class DossierDisplay extends UIComponent {
     // 2nd column for Entity Info (Right Page)
     Table infoTable = new Table(skin);
 
-    String name = entities.length > 0 ? getEntityName(currentEntityKey) : "No entries";
+    String name = entities.length > 0 ? getEntityName(currentEntityKey) : NO_ENTRIES_TEXT;
     Label entityNameLabel = ui.subheading(name);
     entityNameLabel.setColor(Color.BLACK);
     entityNameLabel.setAlignment(Align.left);
@@ -463,76 +481,21 @@ public class DossierDisplay extends UIComponent {
    * @return a horizontally scrollable table with entity buttons
    */
   private Table makeEntitiesButtons() {
-    Table buttonRow = new Table();
     float uiScale = ui.getUIScale();
-    ButtonGroup<TextButton> group = new ButtonGroup<>();
     float buttonWidth = 280f;
     Pair<Float, Float> buttonDimensions = ui.getScaledDimensions(buttonWidth);
 
-    // reload if in humanMode to maintain locked -> unlocked order
-    if (!enemyMode) loadHumanEntities();
+    // Create button row with all entities
+    Table buttonRow = createEntityButtonRow(buttonWidth, buttonDimensions, uiScale);
 
-    for (int i = 0; i < entities.length; i++) {
-      final int index = i; // capture index for listener
-      String entityKey = entities[i];
-      // Use the display name for button text
-      String displayName = getEntityName(entityKey);
-
-      // Check if entity is unlocked (only applies to human entities)
-      boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
-
-      // Create button with appropriate styling
-      TextButton btn;
-      if (isUnlocked) {
-        btn = ui.secondaryButton(displayName, buttonWidth);
-      } else {
-        // For locked entities, show with locked styling
-        btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
-        btn.setColor(0.5f, 0.5f, 0.5f, 0.7f); // Gray out locked entities
-        btn.setDisabled(true); // Disable interaction
-      }
-
-      group.add(btn);
-      buttonRow
-          .add(btn)
-          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
-          .pad(5f * uiScale);
-
-      // Only add listener for unlocked entities
-      if (isUnlocked) {
-        btn.addListener(
-            new ChangeListener() {
-              @Override
-              public void changed(ChangeEvent changeEvent, Actor actor) {
-                if (btn.isChecked()) {
-                  logger.info(
-                      "Selected entity button {} (key: {}, name: {})",
-                      index,
-                      entityKey,
-                      displayName);
-                  entity.getEvents().trigger(CHANGE_INFO, index);
-                }
-              }
-            });
-      }
-    }
-
-    // create horizontal ScrollPane for entity buttons
+    // Create scroll pane and arrows
     ScrollPane scrollPane = createScrollPane(buttonRow);
-
-    // create arrow button
     float arrowWidth = 60f * uiScale;
     float arrowHeight = buttonDimensions.getValue();
     Table arrowRow = createScrollArrows(scrollPane, arrowWidth, arrowHeight, uiScale);
 
-    // wrap everything in a root table
-    Table root = new Table();
-    root.bottom().padBottom(60f * uiScale);
-    root.padLeft(200f * uiScale);
-    root.padRight(200f * uiScale);
-    root.add(arrowRow).expandX().fillX();
-
-    return root;
+    // Wrap everything in a root table
+    return createButtonRootTable(arrowRow, uiScale);
   }
 
   /**
@@ -727,6 +690,161 @@ public class DossierDisplay extends UIComponent {
 
       return "No information available";
     }
+  }
+
+  /**
+   * Creates the button row containing all entity buttons.
+   *
+   * @param buttonWidth the width of each button
+   * @param buttonDimensions the scaled dimensions of buttons
+   * @param uiScale the UI scaling factor
+   * @return a table containing all entity buttons
+   */
+  private Table createEntityButtonRow(
+      float buttonWidth, Pair<Float, Float> buttonDimensions, float uiScale) {
+    Table buttonRow = new Table();
+    ButtonGroup<TextButton> group = new ButtonGroup<>();
+    String[] allEntities = getAllEntitiesForButtons();
+
+    for (int i = 0; i < allEntities.length; i++) {
+      final int index = i;
+      String entityKey = allEntities[i];
+      TextButton btn = createEntityButton(entityKey, index, buttonWidth);
+
+      group.add(btn);
+      buttonRow
+          .add(btn)
+          .size(buttonDimensions.getKey(), buttonDimensions.getValue())
+          .pad(5f * uiScale);
+    }
+
+    return buttonRow;
+  }
+
+  /**
+   * Creates a single entity button with appropriate styling and listener.
+   *
+   * @param entityKey the entity key
+   * @param index the button index
+   * @param buttonWidth the button width
+   * @return the created button
+   */
+  private TextButton createEntityButton(String entityKey, int index, float buttonWidth) {
+    String displayName = getEntityName(entityKey);
+    boolean isUnlocked = enemyMode || playerArsenal.contains(entityKey);
+
+    TextButton btn;
+    if (isUnlocked) {
+      btn = ui.secondaryButton(displayName, buttonWidth);
+    } else {
+      btn = ui.secondaryButton(displayName + " (Locked)", buttonWidth);
+      btn.setColor(0.5f, 0.5f, 0.5f, 0.7f);
+      btn.setDisabled(true);
+    }
+
+    // Only add listener for unlocked entities
+    if (isUnlocked) {
+      btn.addListener(createEntityButtonListener(entityKey, index, displayName));
+    }
+
+    return btn;
+  }
+
+  /**
+   * Creates a change listener for entity buttons.
+   *
+   * @param entityKey the entity key
+   * @param index the button index
+   * @param displayName the display name
+   * @return the change listener
+   */
+  private ChangeListener createEntityButtonListener(
+      String entityKey, int index, String displayName) {
+    return new ChangeListener() {
+      @Override
+      public void changed(ChangeEvent changeEvent, Actor actor) {
+        if (((TextButton) actor).isChecked()) {
+          logger.info(
+              "Selected entity button {} (key: {}, name: {})", index, entityKey, displayName);
+          int unlockedIndex = findUnlockedEntityIndex(entityKey);
+          if (unlockedIndex >= 0) {
+            entity.getEvents().trigger(CHANGE_INFO, unlockedIndex);
+          }
+        }
+      }
+    };
+  }
+
+  /**
+   * Creates the root table for the button section.
+   *
+   * @param arrowRow the arrow row table
+   * @param uiScale the UI scaling factor
+   * @return the root table
+   */
+  private Table createButtonRootTable(Table arrowRow, float uiScale) {
+    Table root = new Table();
+    root.bottom().padBottom(60f * uiScale);
+    root.padLeft(200f * uiScale);
+    root.padRight(200f * uiScale);
+    root.add(arrowRow).expandX().fillX();
+    return root;
+  }
+
+  /**
+   * Gets all entities (including locked ones) for the button bar display. This is separate from the
+   * navigation entities array which only contains unlocked entities.
+   *
+   * @return array of all entity keys for the current mode
+   */
+  private String[] getAllEntitiesForButtons() {
+    if (type) {
+      // For enemies, return all enemy entities excluding gunner robot
+      java.util.List<String> filtered = new java.util.ArrayList<>();
+      for (String key : enemyConfigs.keySet()) {
+        if (!"gunnerRobot".equals(key)) {
+          filtered.add(key);
+        }
+      }
+      return filtered.toArray(new String[0]);
+    } else {
+      // For humans, return all defenders and generators (excluding wall)
+      java.util.List<String> allDefenderKeys = new java.util.ArrayList<>();
+      java.util.List<String> allGeneratorKeys = new java.util.ArrayList<>();
+
+      // Get all defenders (excluding wall)
+      for (String defenderKey : defenderConfigs.keySet()) {
+        if (!defenderKey.equals("wall")) {
+          allDefenderKeys.add(defenderKey);
+        }
+      }
+
+      // Get all generators
+      allGeneratorKeys.addAll(generatorConfigs.keySet());
+
+      String[] defenderKeys = allDefenderKeys.toArray(new String[0]);
+      String[] generatorKeys = allGeneratorKeys.toArray(new String[0]);
+      String[] allEntities = new String[defenderKeys.length + generatorKeys.length];
+      System.arraycopy(defenderKeys, 0, allEntities, 0, defenderKeys.length);
+      System.arraycopy(generatorKeys, 0, allEntities, defenderKeys.length, generatorKeys.length);
+
+      return allEntities;
+    }
+  }
+
+  /**
+   * Finds the index of an entity in the unlocked entities array.
+   *
+   * @param entityKey the entity key to find
+   * @return the index in the unlocked entities array, or -1 if not found
+   */
+  private int findUnlockedEntityIndex(String entityKey) {
+    for (int i = 0; i < entities.length; i++) {
+      if (entities[i].equals(entityKey)) {
+        return i;
+      }
+    }
+    return -1;
   }
 
   /** Disposes of this UI component. */

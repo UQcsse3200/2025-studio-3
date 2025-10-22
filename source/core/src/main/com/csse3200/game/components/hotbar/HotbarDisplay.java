@@ -45,7 +45,7 @@ public class HotbarDisplay extends UIComponent {
   private final Array<Image> slotImages = new Array<>();
   private final Array<Image> itemImages = new Array<>();
   private float cellWidth;
-  private Label bottomOfScreenTooltip;
+  private Label insufficientScrapMessage;
   private long insufficientScrapStartTime = -1; // -1 means not active
   private static final long SCRAP_MESSAGE_DURATION = 2000; // 2 seconds in ms
   private final Map<Entity, Label> generatorCostLabels = new HashMap<>();
@@ -283,16 +283,14 @@ public class HotbarDisplay extends UIComponent {
         });
 
     // Sets a placeholder message and an event to be called from other classes
-
-    bottomOfScreenTooltip =
-        ui.text(
-            """
-                 Right click to cancel drag / delete placed unit.
-                  [Deleting a unit refunds half the scrap cost]""");
     Table messageTable = new Table();
     messageTable.setFillParent(true);
-    messageTable.add(bottomOfScreenTooltip).expandY().bottom().padBottom(20f);
+    messageTable.center().bottom().padBottom(50f);
     stage.addActor(messageTable);
+    UIFactory insufficientScrapUI = new UIFactory(skin, Settings.UIScale.LARGE);
+    insufficientScrapMessage = insufficientScrapUI.text("Insufficient Scrap!");
+    insufficientScrapMessage.setVisible(false);
+    messageTable.add(insufficientScrapMessage);
     entity.getEvents().addListener("insufficientScrap", this::insufficientScrap);
   }
 
@@ -356,7 +354,8 @@ public class HotbarDisplay extends UIComponent {
 
   /** Displays a message when called and starts a timer. */
   private void insufficientScrap() {
-    bottomOfScreenTooltip.setText("Not enough scrap!");
+    insufficientScrapMessage.setText("Not enough scrap!");
+    insufficientScrapMessage.setVisible(true);
     insufficientScrapStartTime = ServiceLocator.getTimeSource().getTime();
   }
 
@@ -382,14 +381,12 @@ public class HotbarDisplay extends UIComponent {
       }
       lastFurnaceCount = currentFurnaceCount;
     }
+    // Handles the message pop-up when the player doesn't have enough scrap
     if (insufficientScrapStartTime != -1) {
       long elapsed = ServiceLocator.getTimeSource().getTime() - insufficientScrapStartTime;
       if (elapsed >= SCRAP_MESSAGE_DURATION) {
-        bottomOfScreenTooltip.setText(
-            """
-                 Right click to cancel drag / delete placed unit.
-                  [Deleting a unit refunds half the scrap cost]""");
-        insufficientScrapStartTime = -1;
+        insufficientScrapMessage.setVisible(false);
+        insufficientScrapStartTime = -1; // reset timer
       }
     }
   }
