@@ -848,7 +848,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   public void spawnBossProjectile(Entity boss) {
-    System.out.println("DEBUG: spawnBossProjectile called for boss at " + boss.getPosition());
+      logger.info("spawnBossProjectile called for boss at {}", boss.getPosition());
 
     Entity projectile = ProjectileFactory.createBossProjectile(20);
 
@@ -867,7 +867,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "attack",
             (Entity target) -> {
-              System.out.println("DEBUG: Boss projectile hit defense at " + target.getPosition());
+                logger.info("Boss projectile hit defense at {}", target.getPosition());
 
               requestDespawn(projectile);
             });
@@ -877,7 +877,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             DESPAWN_SLINGSHOT_EVENT,
             (projectileEntity) -> {
-              System.out.println("DEBUG: Boss projectile hit defense - despawning");
+                logger.info("Boss projectile hit defense - despawning");
               requestDespawn(projectile);
             });
 
@@ -886,13 +886,13 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
         .addListener(
             "despawn",
             () -> {
-              System.out.println("DEBUG: Boss projectile lifetime expired");
-              requestDespawn(projectile);
+                logger.info("Boss projectile lifetime expired");
+                requestDespawn(projectile);
             });
 
     spawnEntity(projectile);
-    System.out.println(
-        "DEBUG: Boss projectile spawned at (" + projectileX + ", " + projectileY + ")");
+      logger.info("Boss projectile spawned at ({}, {})", projectileX, projectileY);
+
   }
 
   /**
