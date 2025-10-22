@@ -406,8 +406,7 @@ class LevelGameAreaTest {
       area.spawnBoss(2, BossFactory.BossTypes.SCRAP_TITAN);
 
       mockedBossFactory.verify(
-          () -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN),
-          atLeastOnce());
+          () -> BossFactory.createBossType(BossFactory.BossTypes.SCRAP_TITAN), atLeastOnce());
 
       assertTrue(area.spawned.size() >= 1);
       Entity spawnedBoss = area.spawned.get(0);
