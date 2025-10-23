@@ -52,7 +52,7 @@
       "name": "Doom Hack",
       "description": "Hacks an enemy robot, destroying it. One time use.",
       "eventName": "doomhack",
-      "assetPath": "images/entities/items/doomhack.png",
+      "assetPath": "images/entities/items/doomHack.png",
       "cost": 35,
       "trigger": "kill1x1"
     }
