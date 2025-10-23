@@ -97,21 +97,14 @@ public class RobotAnimationController extends Component {
       belowHalfHealth = true;
       // Updates the animation.
       switch (currentState) {
-        case MOVE_LEFT:
-          animateMoveLeft();
-          break;
-        case TELEPORT_START:
-          animateTeleportStart();
-          break;
-        case TELEPORT_END:
-          animateTeleportEnd();
-          break;
-        case ATTACK:
-          animateAttack();
-          break;
-        case SHOOT:
-          animateShoot();
-          break;
+        case MOVE_LEFT -> animateMoveLeft();
+        case TELEPORT_START -> animateTeleportStart();
+        case TELEPORT_END -> animateTeleportEnd();
+        case ATTACK -> animateAttack();
+        case SHOOT -> animateShoot();
+        default -> {
+          // no op
+        }
       }
     }
   }

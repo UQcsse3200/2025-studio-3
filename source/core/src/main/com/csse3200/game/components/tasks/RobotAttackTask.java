@@ -81,10 +81,4 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
       timeLeft = TIME_BETWEEN_ATTACKS;
     }
   }
-
-  /** Stops the attack */
-  @Override
-  public void stop() {
-    super.stop();
-  }
 }

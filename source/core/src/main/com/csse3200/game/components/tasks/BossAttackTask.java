@@ -60,11 +60,7 @@ public class BossAttackTask extends TargetDetectionTasks {
   public void update() {
     Entity target = getNearestVisibleTarget();
 
-    if (target == null) {
-      return;
-    }
-
-    if (!isTargetInSameLane(target)) {
+    if (target == null || !isTargetInSameLane(target)) {
       return;
     }
 
@@ -117,8 +113,7 @@ public class BossAttackTask extends TargetDetectionTasks {
 
   private boolean isTargetInSameLane(Entity target) {
     // This call will now work correctly because we registered the GameArea in LevelGameArea.
-    if (ServiceLocator.getGameArea() instanceof LevelGameArea) {
-      LevelGameArea area = (LevelGameArea) ServiceLocator.getGameArea();
+    if (ServiceLocator.getGameArea() instanceof LevelGameArea area) {
       float tileSize = area.getTileSize();
 
       // Get the vertical center position of the owner (slingshooter) and the target

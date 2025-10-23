@@ -8,7 +8,6 @@ import com.csse3200.game.services.ServiceLocator;
 
 public class JumpTask extends RobotTargetDetectionTasks {
   private boolean hasJumped = false;
-  private static float jumpDuration = 0.75f;
   private float jumpTimer = 0f;
   private boolean isJumping = false;
   private float startY;
@@ -50,6 +49,7 @@ public class JumpTask extends RobotTargetDetectionTasks {
     if (phys == null || phys.getBody() == null) return;
     Body body = phys.getBody();
 
+    float jumpDuration = 0.75f;
     if (isJumping) {
       jumpTimer -= ServiceLocator.getTimeSource().getDeltaTime();
 
@@ -64,7 +64,6 @@ public class JumpTask extends RobotTargetDetectionTasks {
         isJumping = false;
         hasJumped = true;
         this.owner.getEntity().setPosition(this.owner.getEntity().getPosition().x, startY + 1);
-        return;
       }
       return;
     }

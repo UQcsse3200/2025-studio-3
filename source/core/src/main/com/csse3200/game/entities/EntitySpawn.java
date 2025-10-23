@@ -92,21 +92,6 @@ public class EntitySpawn {
     return spawnQueue.isEmpty() ? RobotType.STANDARD : spawnQueue.pollFirst();
   }
 
-  /** Deterministic expansion: build a fixed pattern from 'chance' weights. */
-  private List<String> buildPattern(Map<String, BaseSpawnConfig> configs) {
-    List<String> pattern = new ArrayList<>();
-    // Sort keys so order is stable (alphabetical)
-    List<String> types = new ArrayList<>(configs.keySet());
-    Collections.sort(types);
-    for (String type : types) {
-      int repeat = Math.max(1, Math.round(configs.get(type).getChance()));
-      for (int i = 0; i < repeat; i++) {
-        pattern.add(type);
-      }
-    }
-    return pattern;
-  }
-
   /**
    * Represents an enemy type's spawn configuration entry used for deterministic weighted selection.
    * Used only by EntitySpawn's weighted round-robin algorithm.
@@ -158,10 +143,9 @@ public class EntitySpawn {
     List<TypeEntry> entries = new ArrayList<>();
     for (Map.Entry<String, BaseSpawnConfig> e : configs.entrySet()) {
       BaseSpawnConfig cfg = e.getValue();
-      if (cfg == null) continue;
+      if (!(cfg != null && cfg.getCost() > 0)) continue;
 
       int cost = cfg.getCost();
-      if (cost <= 0) continue;
 
       double w = Math.max(0d, cfg.getChance());
       entries.add(new TypeEntry(e.getKey(), cost, w));
@@ -174,7 +158,7 @@ public class EntitySpawn {
     // Keep spawn order stable
     entries.sort(Comparator.comparing(te -> te.name));
 
-    // Compute cheapest cost and total weight
+    // Compute the cheapest cost and total weight
     int cheapest = Integer.MAX_VALUE;
     double totalWeight = 0d;
     for (TypeEntry te : entries) {
