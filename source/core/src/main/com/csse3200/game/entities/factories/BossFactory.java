@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Timer;
 import com.csse3200.game.ai.tasks.AITaskComponent;
+import com.csse3200.game.components.CoinRewardedComponent;
 import com.csse3200.game.components.CombatStatsComponent;
 import com.csse3200.game.components.HitMarkerComponent;
 import com.csse3200.game.components.TouchAttackComponent;
@@ -11,7 +12,6 @@ import com.csse3200.game.components.npc.RobotAnimationController;
 import com.csse3200.game.components.tasks.BossAttackTask;
 import com.csse3200.game.components.tasks.MoveLeftTask;
 import com.csse3200.game.components.tasks.RobotAttackTask;
-import com.csse3200.game.components.worldmap.CoinRewardedComponent;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.entities.configs.*;
 import com.csse3200.game.persistence.FileLoader;
@@ -22,7 +22,6 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.physics.components.PhysicsMovementComponent;
 import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.services.ServiceLocator;
-import java.awt.*;
 
 /**
  * Factory to create non-playable character (NPC) entities with predefined components.
@@ -80,7 +79,6 @@ public class BossFactory {
 
     boolean isSamurai = config.atlasFilePath.contains("samurai");
     boolean isGunBot = config.atlasFilePath.contains("gun_Bot");
-    System.out.println("DEBUG: isGunBot = " + isGunBot + " for atlas: " + config.atlasFilePath);
 
     AITaskComponent aiComponent;
     if (isGunBot) {
@@ -148,8 +146,6 @@ public class BossFactory {
       animator.startAnimation("moveLeft");
     }
 
-    TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
-    RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
     boss.getEvents()
         .addListener(
             "fire",

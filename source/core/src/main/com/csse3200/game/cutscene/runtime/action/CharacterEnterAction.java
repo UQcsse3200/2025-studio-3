@@ -9,13 +9,13 @@ import com.csse3200.game.cutscene.runtime.ActionState;
 import com.csse3200.game.cutscene.runtime.states.CharacterState;
 
 public class CharacterEnterAction implements ActionState {
-  private CharacterState characterState;
-  private CharacterEnterData characterEnterData;
+  private final CharacterState characterState;
+  private final CharacterEnterData characterEnterData;
   private int transitionMsLeft;
   private final int transitionDurationMs;
   private final boolean await;
   private boolean done;
-  private boolean startedOffScreen;
+  private final boolean startedOffScreen;
 
   public CharacterEnterAction(
       CharacterState characterState, CharacterEnterData characterEnterData) {
@@ -56,9 +56,10 @@ public class CharacterEnterAction implements ActionState {
 
       switch (characterEnterData.transition()) {
         case SLIDE -> {
-          if (startedOffScreen) {
-            characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
+          if (!startedOffScreen) {
+            return;
           }
+          characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
         }
         case FADE -> characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
         case POP ->

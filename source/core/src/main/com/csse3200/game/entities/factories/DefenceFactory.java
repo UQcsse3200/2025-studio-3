@@ -179,6 +179,7 @@ public class DefenceFactory {
     wall.addComponent(stats).addComponent(animator).addComponent(new DefenceAnimationController());
 
     // Scale to tilesize
+    animator.addAnimation("hit", 0.15f, Animation.PlayMode.NORMAL);
     animator.scaleEntity();
     return wall;
   }
@@ -198,7 +199,8 @@ public class DefenceFactory {
                     (PhysicsLayer.DEFAULT
                         | PhysicsLayer.OBSTACLE
                         | PhysicsLayer.ENEMY
-                        | PhysicsLayer.BOSS));
+                        | PhysicsLayer.BOSS
+                        | PhysicsLayer.BOSS_PROJECTILE));
 
     Entity npc =
         new Entity()

@@ -39,9 +39,7 @@ public class DamageMappingSystem {
 
     if (attackerStats != null && victimStats != null) {
       victimStats.hit(attackerStats);
-      if (isProjectile) {
-        entityA.getEvents().trigger("destroy");
-      }
+      entityA.getEvents().trigger("destroy");
     }
   }
 }

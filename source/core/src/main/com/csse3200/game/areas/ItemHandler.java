@@ -14,7 +14,6 @@ import com.csse3200.game.entities.configs.BaseItemConfig;
 import com.csse3200.game.progression.inventory.Inventory;
 import com.csse3200.game.services.ServiceLocator;
 import java.util.*;
-import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +30,12 @@ public class ItemHandler {
     this.area = area;
   }
 
-  /** Main entry point for spawning and resolving an item's effects. */
+  /**
+   * Main entry point for spawning and resolving an item's effects.
+   *
+   * @param item the item being used
+   * @param entityPos the position of the entity using the item
+   */
   public void handleItemUse(ItemComponent item, Vector2 entityPos) {
     String key = item.getType().toString().toLowerCase(Locale.ROOT);
     Inventory inv = ServiceLocator.getProfileService().getProfile().getInventory();
@@ -62,7 +66,12 @@ public class ItemHandler {
     return damaging.contains(item.getType().toString());
   }
 
-  /** Damages all robots in a small radius around entityPos. */
+  /**
+   * Damages all robots in a small radius around entityPos.
+   *
+   * @param item the item whose damage radius to apply
+   * @param entityPos the position from which to apply the damage
+   */
   private void applyAreaDamage(ItemComponent item, Vector2 entityPos) {
 
     float radius = area.getTileSize();
@@ -83,7 +92,7 @@ public class ItemHandler {
                   return Math.abs(entityPos.x - p.x) <= finalRadius
                       && Math.abs(entityPos.y - p.y) <= finalRadius;
                 })
-            .collect(Collectors.toList());
+            .toList();
 
     if (item.getType() == ItemComponent.Type.EMP) {
       area.damageRobotsAtPosition(entityPos, radius, 30);
@@ -97,7 +106,11 @@ public class ItemHandler {
     }
   }
 
-  /** Applies temporary buffs (coffee, buff, etc.) to all placed defences. */
+  /**
+   * Applies temporary buffs (coffee, buff, etc.) to all placed defences.
+   *
+   * @param item the item whose associated buff should be applied
+   */
   private void applyBuff(ItemComponent item) {
     String key = item.getType().toString().toLowerCase(Locale.ROOT);
     BaseItemConfig config = ServiceLocator.getConfigService().getItemConfig(key);
@@ -152,7 +165,7 @@ public class ItemHandler {
     }
 
     // failsafe
-    if (name.equals("")) {
+    if (name.isEmpty()) {
       return;
     }
 

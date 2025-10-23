@@ -17,6 +17,7 @@ public class RobotAnimationController extends Component {
     ATTACK,
     TELEPORT_START,
     TELEPORT_END,
+    EXPLODE,
     SHOOT,
     NONE
   }
@@ -35,7 +36,12 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("teleportDisappearStart", this::animateTeleportStart);
     entity.getEvents().addListener("teleportReappearStart", this::animateTeleportEnd);
     entity.getEvents().addListener("shootStart", this::animateShoot);
-    // Explosion will have to be added later.
+    entity.getEvents().addListener("bomberPreExplode", this::animatePreExplosion);
+  }
+
+  void animatePreExplosion() {
+    currentState = State.EXPLODE; // or a new state like CHARGING
+    animator.startAnimation("explosion"); // e.g. flickering or glowing animation
   }
 
   void animateMoveLeft() {
@@ -97,21 +103,15 @@ public class RobotAnimationController extends Component {
       belowHalfHealth = true;
       // Updates the animation.
       switch (currentState) {
-        case MOVE_LEFT:
-          animateMoveLeft();
-          break;
-        case TELEPORT_START:
-          animateTeleportStart();
-          break;
-        case TELEPORT_END:
-          animateTeleportEnd();
-          break;
-        case ATTACK:
-          animateAttack();
-          break;
-        case SHOOT:
-          animateShoot();
-          break;
+        case MOVE_LEFT -> animateMoveLeft();
+        case TELEPORT_START -> animateTeleportStart();
+        case TELEPORT_END -> animateTeleportEnd();
+        case ATTACK -> animateAttack();
+        case SHOOT -> animateShoot();
+        case EXPLODE -> animatePreExplosion();
+        default -> {
+          // no op
+        }
       }
     }
   }

@@ -26,7 +26,7 @@ public class ScrapHudDisplay extends UIComponent {
 
     table = new Table();
     table.setFillParent(true);
-    table.top().left().padTop(100f).padLeft(0.015f * width);
+    table.top().left().padTop(135f).padLeft(0.015f * width);
     table.add(sunIcon).size(40f, 40f).padRight(8f);
     table.add(amountLabel);
 

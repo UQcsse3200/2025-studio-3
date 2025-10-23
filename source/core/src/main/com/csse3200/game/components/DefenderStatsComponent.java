@@ -1,7 +1,11 @@
 package com.csse3200.game.components;
 
+import com.badlogic.gdx.audio.Sound;
 import com.csse3200.game.progression.skilltree.Skill;
+import com.csse3200.game.services.ResourceService;
 import com.csse3200.game.services.ServiceLocator;
+import com.csse3200.game.services.SettingsService;
+import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +34,9 @@ public class DefenderStatsComponent extends CombatStatsComponent {
 
   /** Chance (percentage) of delivering a critical hit when attacking. */
   private float critChance;
+
+  // Random number gen for crit chance
+  private Random rand = new Random();
 
   /** Scrap cost of the defender. */
   private int cost;
@@ -168,5 +175,30 @@ public class DefenderStatsComponent extends CombatStatsComponent {
    */
   public int getCost() {
     return cost;
+  }
+
+  /**
+   * Hit another entity, affecting their respective component
+   *
+   * @param target the combat stats component of the target
+   */
+  @Override
+  public void hit(CombatStatsComponent target) {
+    // Play damage sound
+    ResourceService resourceService = ServiceLocator.getResourceService();
+    SettingsService settingsService = ServiceLocator.getSettingsService();
+    if (resourceService != null && settingsService != null) {
+      Sound damageSound = resourceService.getAsset("sounds/damage.mp3", Sound.class);
+      float volume = settingsService.getSoundVolume();
+      damageSound.play(0.5f * volume);
+    }
+
+    if (rand.nextDouble() < critChance) {
+      setHealth(getHealth() - target.getBaseAttack() * 2);
+      logger.info("Entity just landed a critical hit!");
+    } else {
+      setHealth(getHealth() - target.getBaseAttack());
+    }
+    handleDeath();
   }
 }

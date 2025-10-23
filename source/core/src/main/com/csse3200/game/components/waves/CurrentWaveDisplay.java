@@ -1,7 +1,13 @@
 package com.csse3200.game.components.waves;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.csse3200.game.services.ServiceLocator;
 import com.csse3200.game.services.WaveService;
 import com.csse3200.game.ui.UIComponent;
@@ -21,6 +27,7 @@ public class CurrentWaveDisplay extends UIComponent {
 
   private Label waveLabel;
   private Label waveNumberLabel;
+  private ProgressBar progressBar;
   private int currentWave = 0;
 
   /** Creates a new current wave display component. */
@@ -41,11 +48,17 @@ public class CurrentWaveDisplay extends UIComponent {
               @Override
               public void onWaveChanged(int waveNumber) {
                 updateWaveDisplay(waveNumber);
+                resetWaveProgressBar();
               }
 
               @Override
               public void onWaveStarted(int waveNumber) {
                 updateWaveDisplay(waveNumber);
+              }
+
+              @Override
+              public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+                updateWaveProgressBar(enemiesDisposed, enemiesToSpawn);
               }
             });
 
@@ -65,16 +78,55 @@ public class CurrentWaveDisplay extends UIComponent {
     table.padTop(73f).padLeft(30f);
 
     // Wave text label
-    waveLabel = ui.text("CURRENT WAVE: ");
+    waveLabel = ui.text("Wave: ");
 
     // Wave number label - start at 0 (no wave active)
     waveNumberLabel = ui.text(NO_WAVE_TEXT);
 
-    // Add labels to table with some spacing
-    table.add(waveLabel).padRight(10f);
-    table.add(waveNumberLabel);
+    // Creates progress bar
+    progressBar = createWaveProgressBar();
+    progressBar.setValue(0.09f);
+
+    // Adds all elements to a table
+    table.add(progressBar).padTop(10f).padRight(10f);
+    table.add(waveLabel).padTop(10f).padRight(10f);
+    table.add(waveNumberLabel).padTop(10f);
 
     stage.addActor(table);
+  }
+
+  /**
+   * Creates a ProgressBar that displays the current progress through the current wave's enemies
+   *
+   * @return The created progress bar
+   */
+  private ProgressBar createWaveProgressBar() {
+    // Initialise progress bar textures and nine patch textures
+    Texture backgroundTex = new Texture("images/ui/progress_bar.png");
+    Texture fillTex = new Texture("images/ui/progress_bar_fill.png");
+    NinePatch backgroundNine = new NinePatch(new TextureRegion(backgroundTex), 0, 0, 8, 8);
+    NinePatch fillNine = new NinePatch(new TextureRegion(fillTex), 8, 8, 8, 8);
+    NinePatchDrawable backgroundDrawable = new NinePatchDrawable(backgroundNine);
+    NinePatchDrawable fillDrawable = new NinePatchDrawable(fillNine);
+
+    // Transparent drawable to avoid issues with progress bar
+    Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+    pixmap.setColor(0, 0, 0, 0);
+    pixmap.fill();
+    Texture transparentTexture = new Texture(pixmap);
+    pixmap.dispose();
+    Drawable transparentKnob = new TextureRegionDrawable(new TextureRegion(transparentTexture));
+
+    // Style for wave progress bar
+    ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
+    style.background = backgroundDrawable;
+    style.knob = transparentKnob;
+    style.knobBefore = fillDrawable;
+
+    // Final progress bar setup and returning
+    ProgressBar newProgressBar = new ProgressBar(0f, 1f, 0.001f, false, style);
+    newProgressBar.setAnimateDuration(0.15f);
+    return newProgressBar;
   }
 
   /**
@@ -90,6 +142,20 @@ public class CurrentWaveDisplay extends UIComponent {
     } else {
       waveNumberLabel.setText(NO_WAVE_TEXT);
     }
+  }
+
+  /**
+   * Sets the progress value of the wave progress bar when an enemy is disposed
+   *
+   * @param enemiesDisposed the new wave number
+   */
+  public void updateWaveProgressBar(int enemiesDisposed, int enemiesToSpawn) {
+    progressBar.setValue((float) enemiesDisposed / enemiesToSpawn);
+  }
+
+  /** Resets the wave progress bar when a new wave starts */
+  public void resetWaveProgressBar() {
+    progressBar.setValue(0.09f);
   }
 
   /**

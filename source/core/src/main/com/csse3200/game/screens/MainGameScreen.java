@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.csse3200.game.GdxGame;
 import com.csse3200.game.areas.LevelGameArea;
 import com.csse3200.game.areas.SlotMachineArea;
+import com.csse3200.game.components.SkipWaveDebug;
 import com.csse3200.game.components.currency.ScrapHudDisplay;
 import com.csse3200.game.components.gamearea.PerformanceDisplay;
 import com.csse3200.game.components.hud.PauseButton;
@@ -49,7 +50,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MainGameScreen extends ScreenAdapter {
   private static final Logger logger = LoggerFactory.getLogger(MainGameScreen.class);
-  private List<String> textureAtlases = new ArrayList<>();
+  private final List<String> textureAtlases = new ArrayList<>();
   private static final String[] MAIN_GAME_TEXTURES = {
     "images/backgrounds/level_map_grass.png",
     "images/backgrounds/level_map_town.png",
@@ -82,6 +83,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/army_guy_1.png",
     "images/entities/defences/harpoon0.png",
     "images/entities/defences/sling_shooter_front.png",
+    "images/entities/defences/wall.png",
     "images/effects/hp-up.png",
     "images/effects/attack-up.png",
     "images/effects/speed-up.png",
@@ -114,6 +116,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/defences/sling_shooter.atlas",
     "images/entities/defences/shield.atlas",
     "images/entities/defences/healer.atlas",
+    "images/entities/defences/wall.atlas",
     "images/entities/enemies/robot_placeholder.atlas",
     "images/entities/enemies/standard_robot.atlas",
     "images/effects/hp-up.atlas",
@@ -135,6 +138,9 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/slotmachine/pie_filled.atlas",
     "images/entities/enemies/fast_robot.atlas",
     "images/entities/enemies/tanky_robot.atlas",
+    "images/entities/enemies/bomber_robot.atlas",
+    "images/entities/enemies/teleport_robot.atlas",
+    "images/entities/enemies/bungee_robot.atlas",
     "images/effects/doomhack.atlas",
     "images/effects/doomhack.png",
     "images/effects/scrapper.atlas",
@@ -240,6 +246,9 @@ public class MainGameScreen extends ScreenAdapter {
     ServiceLocator.getWaveService().setCurrentLevel(this.level);
     renderer = RenderFactory.createRenderer();
     renderer.getCamera().getEntity().setPosition(CAMERA_POSITION);
+    // Apply saved gameplay speed so effect matches HUD selection across screen transitions
+    float savedScale = ServiceLocator.getSettingsService().getGameplaySpeedScale();
+    ServiceLocator.getTimeSource().setTimeScale(savedScale);
     renderer.getDebug().renderPhysicsWorld(physicsEngine.getWorld());
 
     loadAssets();
@@ -259,7 +268,7 @@ public class MainGameScreen extends ScreenAdapter {
 
               @Override
               public void spawnBoss(int row, BossFactory.BossTypes bossType) {
-                gameArea.spawnBoss(row, bossType);
+                gameArea.spawnBoss(bossType);
               }
             });
     gameArea.create();
@@ -271,12 +280,22 @@ public class MainGameScreen extends ScreenAdapter {
     var camComp = renderer.getCamera();
     float halfVW = camComp.getCamera().viewportWidth / 2f;
     float worldWidth = gameArea.getWorldWidth();
-    panStartX = halfVW; // current
-    panTargetX = Math.clamp(halfVW + (worldWidth - halfVW) * 0.35f, halfVW, worldWidth - halfVW);
+    float maxCameraX = Math.max(worldWidth - halfVW, halfVW);
     panElapsed = 0f;
-    panPhase = PanPhase.RIGHT;
-    gameStateService.addFreezeReason(INTRO_PAN);
-    gameStateService.lockPlacement();
+
+    if (halfVW >= maxCameraX) {
+      panStartX = halfVW;
+      panTargetX = halfVW;
+      panPhase = PanPhase.DONE;
+      doIntroPan = false;
+    } else {
+      panStartX = halfVW;
+      float desiredTargetX = halfVW + (worldWidth - halfVW) * 0.35f;
+      panTargetX = Math.clamp(desiredTargetX, halfVW, maxCameraX);
+      panPhase = PanPhase.RIGHT;
+      gameStateService.addFreezeReason(INTRO_PAN);
+      gameStateService.lockPlacement();
+    }
   }
 
   /**
@@ -336,22 +355,22 @@ public class MainGameScreen extends ScreenAdapter {
     Float newCameraX = null;
 
     switch (panPhase) {
-      case RIGHT:
+      case RIGHT -> {
         newCameraX = Interpolation.smoother.apply(panStartX, panTargetX, progress);
         if (progress >= 1f) {
           panPhase = PanPhase.LEFT;
           panElapsed = 0f;
         }
-        break;
-      case LEFT:
+      }
+      case LEFT -> {
         newCameraX = Interpolation.smoother.apply(panTargetX, panStartX, progress);
         if (progress >= 1f) {
           completeIntroPan();
         }
-        break;
-      default:
+      }
+      default -> {
         // No movement required once the pan is done.
-        break;
+      }
     }
 
     if (newCameraX != null) {
@@ -462,7 +481,8 @@ public class MainGameScreen extends ScreenAdapter {
         .addComponent(new Terminal())
         .addComponent(ServiceLocator.getInputService().getInputFactory().createForTerminal())
         .addComponent(new TerminalDisplay())
-        .addComponent(new CurrentWaveDisplay());
+        .addComponent(new CurrentWaveDisplay())
+        .addComponent(new SkipWaveDebug());
 
     if (!isSlotLevel) {
       uiEntity.addComponent(new ScrapHudDisplay());
@@ -490,6 +510,11 @@ public class MainGameScreen extends ScreenAdapter {
               public void onWaveStarted(int waveNumber) {
                 // CurrentWaveDisplay will handle this internally
               }
+
+              @Override
+              public void onEnemyDisposed(int enemiesDisposed, int enemiesToSpawn) {
+                // CurrentWaveDisplay will handle this internally
+              }
             });
 
     ServiceLocator.getEntityService().register(uiEntity);
@@ -506,11 +531,6 @@ public class MainGameScreen extends ScreenAdapter {
     } else {
       return new LevelGameArea(level);
     }
-  }
-
-  /** Exposes the resolved level key for subclasses and tests. */
-  protected String getLevelKey() {
-    return level;
   }
 
   /** Snaps the camera to the bottom left of the screen */

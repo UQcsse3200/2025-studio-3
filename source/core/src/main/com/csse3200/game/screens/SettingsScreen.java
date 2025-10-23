@@ -13,7 +13,7 @@ import java.util.Optional;
 /** The game screen containing the settings. */
 public class SettingsScreen extends BaseScreen {
   public SettingsScreen(GdxGame game) {
-    super(game, Optional.of("images/backgrounds/bg.png"), Optional.empty());
+    super(game, Optional.of("images/backgrounds/title.png"), Optional.empty());
   }
 
   /**

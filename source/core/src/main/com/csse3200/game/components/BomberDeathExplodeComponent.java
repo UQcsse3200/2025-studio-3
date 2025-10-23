@@ -3,26 +3,22 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component that causes the entity to deal AOE (area-of-effect) damage to nearby entities upon
- * death.
- *
- * <p>When the entity with this component dies, it checks surrounding tiles within a given radius
- * and applies damage to any other entities in that area. This can be used for enemy bombers that
- * explode on death, damaging nearby defences.
+ * death, and start the explosion animation when health drops below 30%.
  */
 public class BomberDeathExplodeComponent extends Component {
-  /** Damage dealt to each entity caught in the explosion. */
   private final int explosionDamage;
-
-  /** Radius of the explosion measured in tiles. */
   private final float explosionRadiusTiles;
 
-  /** Conversion factor: number of world units per tile (used for radius calculation). */
-  float tileSize = 1f; // currently unused, but kept for clarity and future refactors
-
+  float tileSize = 1f;
   float worldRadius;
+  boolean triggered = false;
+
+  private static final Logger logger = LoggerFactory.getLogger(BomberDeathExplodeComponent.class);
 
   /**
    * Creates a BomberDeathExplodeComponent.
@@ -38,48 +34,43 @@ public class BomberDeathExplodeComponent extends Component {
 
   /**
    * Called when the component is created. Registers an event listener on the owning entity so that
-   * when it triggers the "entityDeath" event, the {@link #explode()} method is called.
+   * when it triggers the "entityDeath" event.
    */
   @Override
   public void create() {
     super.create();
-    System.out.println("[BomberExplosion] Component created for entity " + getEntity().getId());
-    getEntity().getEvents().addListener("entityDeath", this::onDeath);
+    entity.getEvents().addListener("updateHealth", this::onHealthUpdate);
+    entity.getEvents().addListener("entityDeath", this::onDeath);
+    entity.getEvents().addListener("bomberExplodeAnimComplete", this::explodeAndDispose);
   }
 
-  /**
-   * Handles what happens when the entity dies: first trigger the pre-explosion animation event,
-   * then schedule or directly call explode().
-   */
+  /** Called when health changes. If health hits zero, trigger explosion animation. */
+  private void onHealthUpdate(int currentHealth, int maxHealth) {
+    if (triggered) {
+      return; // Already triggered
+    }
+    if (currentHealth <= maxHealth * 0.3f) {
+      // Trigger the explosion animation on death moment
+      entity.getEvents().trigger("bomberPreExplode");
+      triggered = true;
+    }
+  }
+
+  /** On death event (entityDeath) — start the animation if not already started. */
   private void onDeath() {
-    getEntity().getEvents().trigger("bomberPreExplode");
-
-    //    // Schedule explosion after 0.5 seconds
-    //    Timer.schedule(
-    //        new Timer.Task() {
-    //          @Override
-    //          public void run() {
-    //            explode();
-    //          }
-    //        },
-    //        0.5f);
+    // If not already triggered, trigger it
+    entity.getEvents().trigger("bomberPreExplode");
   }
 
-  /**
-   * Triggers an explosion centered at the bomber's current tile position.
-   *
-   * <p>The method:
-   *
-   * <ol>
-   *   <li>Finds the bomber's tile position using the game grid.
-   *   <li>Iterates over all entities in the game world.
-   *   <li>Skips itself, ignores entities with no position, and checks tile distance.
-   *   <li>If within the explosion radius, subtracts health and triggers death handling on that
-   *       entity.
-   * </ol>
-   */
+  /** Called after animation completes: apply AOE explosion damage, then dispose entity. */
+  private void explodeAndDispose() {
+    explode();
+    entity.dispose();
+  }
+
+  /** Performs AOE explosion damage around the bomber’s position. */
   private void explode() {
-    System.out.println("[BomberExplosion] Triggered for " + entity.getId());
+    logger.info("[BomberExplosion] Triggered for {}", entity.getId());
 
     Vector2 center = entity.getPosition();
     if (center == null) return;
@@ -95,40 +86,32 @@ public class BomberDeathExplodeComponent extends Component {
     int centerCol = (int) Math.floor(center.x / tileWidth);
     int centerRow = (int) Math.floor(center.y / tileHeight);
 
-    System.out.println("[BomberExplosion] Tile center row=" + centerRow + " col=" + centerCol);
+    logger.info("[BomberExplosion] Tile center row= {} col= {}", centerRow, centerCol);
 
     for (Entity target : ServiceLocator.getEntityService().getEntities()) {
-
-      // Skip the bomber itself.
       if (target == entity) continue;
 
-      // Skip entities with no position set.
       Vector2 pos = target.getPosition();
       if (pos == null) continue;
 
-      // Convert target position to tile coordinates.
       int targetCol = Math.round(pos.x / tileWidth);
       int targetRow = Math.round(pos.y / tileHeight);
 
-      // Calculate distance between target and bomber in tile space.
       int dCol = Math.abs(targetCol - centerCol);
       int dRow = Math.abs(targetRow - centerRow);
 
       if (dCol <= explosionRadiusTiles && dRow <= explosionRadiusTiles) {
+        DefenderStatsComponent defence = target.getComponent(DefenderStatsComponent.class);
+        if (defence != null) {
+          defence.setHealth(defence.getHealth() - explosionDamage);
+          defence.handleDeath();
+        }
 
         CombatStatsComponent combat = target.getComponent(CombatStatsComponent.class);
-        if (combat == null) continue;
-
-        System.out.println(
-            "[BomberExplosion] Hitting target "
-                + target.getId()
-                + " at row="
-                + targetRow
-                + ", col="
-                + targetCol);
-
-        combat.setHealth(combat.getHealth() - explosionDamage);
-        combat.handleDeath();
+        if (combat != null) {
+          combat.setHealth(combat.getHealth() - explosionDamage);
+          combat.handleDeath();
+        }
       }
     }
   }

@@ -1,6 +1,4 @@
-package com.csse3200.game.components.worldmap;
-
-import com.csse3200.game.components.Component;
+package com.csse3200.game.components;
 
 public class CoinRewardedComponent extends Component {
   private final int coinAmount;
