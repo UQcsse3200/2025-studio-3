@@ -14,7 +14,7 @@
 
 AI has run out of training data, their solution, take it from humans. You are the first to discover this, and must fight back. Will you be able to save humanity?
 
-This project is being developed by students enrolled in CSSE3200 at the [University of Queensland](https://uq.edu.au/ "UQ Home Page") in Semester 1, 2025.
+This project is being developed by students enrolled in CSSE3200 at the [University of Queensland](https://uq.edu.au/ "UQ Home Page") in Semester 2, 2025.
 
 The engine is built on the [libGDX](https://libgdx.com/ "libGDX Information") framework and is developed in Java.
 
@@ -37,10 +37,10 @@ You can download the latest release of the game as a `.jar` file from the [Relea
 To build the game from source, follow these steps:
 1. Clone the repository:
    ```bash
-   git clone https://github.com/UQcsse3200/2025-studio-1.git
+   git clone https://github.com/UQcsse3200/2025-studio-3.git
 2. Navigate to the project directory:
    ```bash
-    cd 2025-studio-1
+    cd 2025-studio-3
 3. Build and run the project using Gradle:
    ```bash
     ./gradlew run
