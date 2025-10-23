@@ -56,10 +56,10 @@ public class CharacterEnterAction implements ActionState {
 
       switch (characterEnterData.transition()) {
         case SLIDE -> {
-            if (!startedOffScreen) {
-                return;
-            }
-            characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
+          if (!startedOffScreen) {
+            return;
+          }
+          characterState.setxOffset(-((float) transitionMsLeft / transitionDurationMs));
         }
         case FADE -> characterState.setOpacity(1 - (float) transitionMsLeft / transitionDurationMs);
         case POP ->
