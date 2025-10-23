@@ -606,8 +606,7 @@ class LevelGameAreaTest {
     ServiceLocator.registerSettingsService(settings);
 
     Sound goSound = mock(Sound.class);
-    when(resourceService.getAsset(eq("sounds/game-over-voice.mp3"), eq(Sound.class)))
-        .thenReturn(goSound);
+    when(resourceService.getAsset("sounds/game-over-voice.mp3", Sound.class)).thenReturn(goSound);
 
     Entity robot = new Entity();
     robot.setPosition(area.getXOffset() - area.getTileSize(), area.getYOffset());

@@ -13,7 +13,7 @@ public class PhysicsLayer {
   public static final short ALL = ~0;
   // Enemy Collison box
   public static final short ENEMY = (1 << 5);
-  
+
   public static final short BOSS = (1 << 6);
   public static final short BOSS_PROJECTILE = (1 << 7);
 
