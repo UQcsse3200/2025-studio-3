@@ -98,6 +98,7 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 - [JavaDoc](https://uqcsse3200.github.io/2025-studio-3/)
 - [SonarCloud](https://sonarcloud.io/project/overview?id=UQcsse3200_2025-studio-3)
+- [Wiki](https://github.com/UQcsse3200/2025-studio-3/wiki)
 
 ## AI usage
 
