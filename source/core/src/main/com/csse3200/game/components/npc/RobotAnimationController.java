@@ -39,9 +39,21 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("bomberPreExplode", this::animatePreExplosion);
   }
 
-  void animatePreExplosion() {
-    currentState = State.EXPLODE; // or a new state like CHARGING
-    animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+    void animatePreExplosion() {
+        currentState = State.EXPLODE; // or a new state like CHARGING
+        animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+    }
+
+  void animateMoveLeft() {
+    currentState = State.MOVE_LEFT;
+    // Once teleporting task priority is fixed,
+    // this may have to check if the current state is
+    // TELEPORT, and if it is, wait until teleport is done to start walking.
+    if (!belowHalfHealth) {
+      animator.startAnimation("moveLeft");
+    } else {
+      animator.startAnimation("moveLeftDamaged");
+    }
   }
 
   void animateTeleportStart() {
@@ -59,18 +71,6 @@ public class RobotAnimationController extends Component {
       animator.startAnimation("teleportEnd");
     } else {
       animator.startAnimation("teleportDamagedEnd");
-    }
-  }
-
-  void animateMoveLeft() {
-    currentState = State.MOVE_LEFT;
-    // Once teleporting task priority is fixed,
-    // this may have to check if the current state is
-    // TELEPORT, and if it is, wait until teleport is done to start walking.
-    if (!belowHalfHealth) {
-      animator.startAnimation("moveLeft");
-    } else {
-      animator.startAnimation("moveLeftDamaged");
     }
   }
 
@@ -103,24 +103,15 @@ public class RobotAnimationController extends Component {
       belowHalfHealth = true;
       // Updates the animation.
       switch (currentState) {
-        case MOVE_LEFT:
-          animateMoveLeft();
-          break;
-        case TELEPORT_START:
-          animateTeleportStart();
-          break;
-        case TELEPORT_END:
-          animateTeleportEnd();
-          break;
-        case ATTACK:
-          animateAttack();
-          break;
-        case SHOOT:
-          animateShoot();
-          break;
-        case EXPLODE:
-          animatePreExplosion();
-          break;
+        case MOVE_LEFT -> animateMoveLeft();
+        case TELEPORT_START -> animateTeleportStart();
+        case TELEPORT_END -> animateTeleportEnd();
+        case ATTACK -> animateAttack();
+        case SHOOT -> animateShoot();
+          case EXPLODE -> animatePreExplosion();
+        default -> {
+          // no op
+        }
       }
     }
   }

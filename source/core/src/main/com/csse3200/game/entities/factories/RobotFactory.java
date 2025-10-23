@@ -238,7 +238,7 @@ public class RobotFactory {
 
       animator.addAnimation("explosion", 0.1f, Animation.PlayMode.NORMAL);
 
-      System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
+      logger.info("[RobotFactory] Added BomberDeathExplodeComponent to {} ", robot.getId());
     }
 
     // Scales

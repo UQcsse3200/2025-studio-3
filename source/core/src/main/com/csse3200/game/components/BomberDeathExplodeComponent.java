@@ -3,6 +3,8 @@ package com.csse3200.game.components;
 import com.badlogic.gdx.math.Vector2;
 import com.csse3200.game.entities.Entity;
 import com.csse3200.game.services.ServiceLocator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Component that causes the entity to deal AOE (area-of-effect) damage to nearby entities upon
@@ -16,12 +18,24 @@ public class BomberDeathExplodeComponent extends Component {
   float worldRadius;
   boolean triggered = false;
 
+  private static final Logger logger = LoggerFactory.getLogger(BomberDeathExplodeComponent.class);
+
+  /**
+   * Creates a BomberDeathExplodeComponent.
+   *
+   * @param explosionDamage amount of damage to apply to each entity within the explosion radius
+   * @param explosionRadiusTiles radius of the explosion in tiles
+   */
   public BomberDeathExplodeComponent(int explosionDamage, float explosionRadiusTiles) {
     this.explosionDamage = explosionDamage;
     this.explosionRadiusTiles = explosionRadiusTiles;
     this.worldRadius = explosionRadiusTiles * tileSize;
   }
 
+  /**
+   * Called when the component is created. Registers an event listener on the owning entity so that
+   * when it triggers the "entityDeath" event.
+   */
   @Override
   public void create() {
     super.create();
@@ -56,6 +70,8 @@ public class BomberDeathExplodeComponent extends Component {
 
   /** Performs AOE explosion damage around the bomber’s position. */
   private void explode() {
+    logger.info("[BomberExplosion] Triggered for {}", entity.getId());
+
     Vector2 center = entity.getPosition();
     if (center == null) return;
 
@@ -69,6 +85,8 @@ public class BomberDeathExplodeComponent extends Component {
 
     int centerCol = (int) Math.floor(center.x / tileWidth);
     int centerRow = (int) Math.floor(center.y / tileHeight);
+
+    logger.info("[BomberExplosion] Tile center row= {} col= {}", centerRow, centerCol);
 
     for (Entity target : ServiceLocator.getEntityService().getEntities()) {
       if (target == entity) continue;
@@ -87,6 +105,12 @@ public class BomberDeathExplodeComponent extends Component {
         if (defence != null) {
           defence.setHealth(defence.getHealth() - explosionDamage);
           defence.handleDeath();
+        }
+
+        CombatStatsComponent combat = target.getComponent(CombatStatsComponent.class);
+        if (combat != null) {
+          combat.setHealth(combat.getHealth() - explosionDamage);
+          combat.handleDeath();
         }
       }
     }

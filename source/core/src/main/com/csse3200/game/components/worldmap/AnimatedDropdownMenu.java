@@ -217,8 +217,8 @@ public class AnimatedDropdownMenu extends UIComponent {
     if (menuButtons != null) {
       for (int i = 0; i < menuButtons.length; i++) {
         TextButton button = menuButtons[i];
-        button.setZIndex(60);
         if (button != null) {
+          button.setZIndex(60);
           float buttonX = startX - BUTTON_WIDTH + 57f;
           float buttonY = startY - (i + 1) * (BUTTON_HEIGHT + BUTTON_SPACING);
           button.setPosition(buttonX, buttonY);

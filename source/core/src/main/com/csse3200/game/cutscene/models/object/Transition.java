@@ -1,8 +1,7 @@
 package com.csse3200.game.cutscene.models.object;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /** The different transitions that can happen to image (character sprites and backgrounds) */
 public enum Transition {
@@ -58,6 +57,11 @@ public enum Transition {
    * @return A list of strings containing the string values for each enum element
    */
   public static List<String> displayNames() {
-    return Arrays.stream(values()).map(Transition::toString).collect(Collectors.toList());
+    List<String> list = new ArrayList<>();
+    for (Transition transition : values()) {
+      String string = transition.toString();
+      list.add(string);
+    }
+    return list;
   }
 }
