@@ -1334,7 +1334,6 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
             AITaskComponent ai = r.getComponent(AITaskComponent.class);
             if (ai != null) {
               ai.dispose();
-              ;
             }
 
             despawnEntity(r);
@@ -1371,23 +1370,55 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
       logger.info("Level is complete!");
       isLevelComplete = true;
-      if (levelCompleteEntity != null) {
-        displayNewEntity();
-        levelCompleteEntity.getEvents().trigger("levelComplete");
-        // play win sound
-        if (ServiceLocator.getResourceService() != null
-            && ServiceLocator.getSettingsService() != null) {
-          Sound sound =
-              ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
-          if (sound != null) {
-            float volume = ServiceLocator.getSettingsService().getSoundVolume();
-            sound.play(volume);
-            logger.info("Played sound: sounds/level-win.mp3");
-          }
-        }
-      }
+        if (levelCompleteEntity != null) {
+            // ✅ Special handling for Level 3
+            if ("levelThree".equals(currentLevelKey)) {
+                logger.info("Playing post-Level 3 cutscene (cutscene3_the_choice)");
 
-      GameStateService service = ServiceLocator.getGameStateService();
+                // play the cutscene first; game must not be frozen yet
+                ServiceLocator.getCutsceneService().playCutscene("cutscene3_the_choice", (s) -> {
+                    // after cutscene ends, trigger normal level complete behaviour
+                    displayNewEntity();
+                    levelCompleteEntity.getEvents().trigger("levelComplete");
+
+                    // play win sound
+                    if (ServiceLocator.getResourceService() != null && ServiceLocator.getSettingsService() != null) {
+                        Sound sound = ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
+                        if (sound != null) {
+                            float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                            sound.play(volume);
+                            logger.info("Played sound: sounds/level-win.mp3");
+                        }
+                    }
+
+                    // freeze game after cutscene finishes
+                    GameStateService gs = ServiceLocator.getGameStateService();
+                    if (gs != null) {
+                        gs.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+                        gs.lockPlacement();
+                    }
+                });
+
+                // important: don't run rest of the function yet
+                return;
+            }
+
+            // ✅ normal flow for all other levels
+            displayNewEntity();
+            levelCompleteEntity.getEvents().trigger("levelComplete");
+
+            if (ServiceLocator.getResourceService() != null && ServiceLocator.getSettingsService() != null) {
+                Sound sound = ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
+                if (sound != null) {
+                    float volume = ServiceLocator.getSettingsService().getSoundVolume();
+                    sound.play(volume);
+                    logger.info("Played sound: sounds/level-win.mp3");
+                }
+            }
+        }
+
+
+        GameStateService service = ServiceLocator.getGameStateService();
       if (service != null) {
         service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
         service.lockPlacement();
