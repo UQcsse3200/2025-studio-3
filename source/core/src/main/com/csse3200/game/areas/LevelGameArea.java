@@ -499,7 +499,8 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   private void addMinion(Entity unit) {
-    unit.addComponent(new CarrierHealthWatcherComponent(0.4f));
+    // Minion should be spawned upon reaching half health, to match the 'damaged' animation.
+    unit.addComponent(new CarrierHealthWatcherComponent(0.5f));
 
     unit.getEvents()
         .addListener(
