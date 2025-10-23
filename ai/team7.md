@@ -12,6 +12,7 @@
   * to assist with creation of additional unit tests in LevelGameArea
   * plan pause functionality changes and ensure they did not break other features
   * for assistance in implementing pause functionality and determining where guards/checks were needed.
+  * to add @params and @returns to javadocs where it was missing
 
 ## Nathan Vassie
 * ChatGPT was used to create the initial image of the hotbar.

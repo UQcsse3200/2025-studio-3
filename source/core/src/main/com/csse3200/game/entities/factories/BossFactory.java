@@ -79,7 +79,6 @@ public class BossFactory {
 
     boolean isSamurai = config.atlasFilePath.contains("samurai");
     boolean isGunBot = config.atlasFilePath.contains("gun_Bot");
-    System.out.println("DEBUG: isGunBot = " + isGunBot + " for atlas: " + config.atlasFilePath);
 
     AITaskComponent aiComponent;
     if (isGunBot) {
@@ -147,8 +146,6 @@ public class BossFactory {
       animator.startAnimation("moveLeft");
     }
 
-    TouchAttackComponent touch = boss.getComponent(TouchAttackComponent.class);
-    RobotAnimationController controller = boss.getComponent(RobotAnimationController.class);
     boss.getEvents()
         .addListener(
             "fire",

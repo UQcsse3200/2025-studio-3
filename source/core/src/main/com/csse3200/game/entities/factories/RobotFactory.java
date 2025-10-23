@@ -235,7 +235,7 @@ public class RobotFactory {
       BomberDeathExplodeComponent explodeComp =
           new BomberDeathExplodeComponent(config.getExplosionDamage(), 1.0f);
       robot.addComponent(explodeComp);
-      System.out.println("[RobotFactory] Added BomberDeathExplodeComponent to " + robot.getId());
+      logger.info("[RobotFactory] Added BomberDeathExplodeComponent to {} ", robot.getId());
     }
 
     // Scales

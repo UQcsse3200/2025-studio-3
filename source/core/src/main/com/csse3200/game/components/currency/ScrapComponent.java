@@ -24,9 +24,4 @@ public class ScrapComponent extends Component {
     this.value = v;
     return this;
   }
-
-  @Override
-  public void dispose() {
-    super.dispose();
-  }
 }

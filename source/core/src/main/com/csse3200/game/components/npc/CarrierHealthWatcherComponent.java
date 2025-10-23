@@ -9,7 +9,7 @@ public class CarrierHealthWatcherComponent extends Component {
   private int maxHp;
 
   public CarrierHealthWatcherComponent(float thresholdFrac) {
-    this.thresholdFrac = Math.max(0f, Math.min(1f, thresholdFrac));
+    this.thresholdFrac = Math.clamp(thresholdFrac, 0f, 1f);
   }
 
   @Override
