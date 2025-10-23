@@ -34,8 +34,13 @@ public class HitMarkerComponent extends Component {
 
     if (flashTime > 0f) {
       flashTime -= Gdx.graphics.getDeltaTime();
-      render.setColour(FLASH_COLOUR);
-      return;
+      DefenderStatsComponent stats = getEntity().getComponent(DefenderStatsComponent.class);
+      if (stats != null && stats.getBaseAttack() == 1000) { // it's the wall!
+        entity.getEvents().trigger("hit");
+      } else {
+        render.setColour(FLASH_COLOUR);
+        return;
+      }
     }
     render.setColour(Color.WHITE); // Reset to normal colour
   }

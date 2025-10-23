@@ -217,14 +217,14 @@ public class ItemEffectsService {
       case "nuke":
         // Offset effect position so effect is centred around tile spawned at (effect is scaled up
         // to cover 5x5 tiles)
-        position.x = position.x - 2 * tileSize;
-        position.y = position.y - tileSize;
+        position.x = position.x - 3 * tileSize;
+        position.y = position.y - 2 * tileSize;
         spawnEffect(
             ServiceLocator.getResourceService()
                 .getAsset("images/effects/nuke.atlas", TextureAtlas.class),
             "nuke",
             (new Vector2[] {position, bottomCorner}),
-            tileSize * 5,
+            tileSize * 7,
             (new float[] {
               0.1f, 1.5f
             }), // frame duration and total effect time (nuke is an instantaneous effect)

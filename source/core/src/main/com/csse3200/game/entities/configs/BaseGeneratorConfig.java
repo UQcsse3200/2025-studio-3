@@ -10,6 +10,7 @@ public class BaseGeneratorConfig extends BaseEntityConfig {
 
   private int cost;
   private String soundPath;
+  private String level;
 
   /** Creates a new BaseGeneratorConfig with default values. */
   public BaseGeneratorConfig() {
@@ -50,5 +51,14 @@ public class BaseGeneratorConfig extends BaseEntityConfig {
    */
   public String getSoundPath() {
     return soundPath;
+  }
+
+  /**
+   * Gets the first level that the defence entity is playable on
+   *
+   * @return the level key
+   */
+  public String getLevelUnlockedOn() {
+    return level;
   }
 }

@@ -20,7 +20,7 @@ public class LoadGameScreen extends BaseScreen {
    * @param game the game instance
    */
   public LoadGameScreen(GdxGame game) {
-    super(game, Optional.of("images/backgrounds/bg.png"), Optional.empty());
+    super(game, Optional.of("images/backgrounds/title.png"), Optional.empty());
   }
 
   /**

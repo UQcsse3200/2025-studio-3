@@ -1,10 +1,11 @@
 package com.csse3200.game.components.tasks;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import com.csse3200.game.ai.tasks.AITaskComponent;
 import com.csse3200.game.entities.Entity;
+import com.csse3200.game.events.EventHandler;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
@@ -66,5 +67,27 @@ class IdleTaskTest {
 
     int priorityStart = idleTask.getInactivePriority(targetDistance, target);
     assertEquals(-1, priorityStart, "Idle task should not start when target is in range");
+  }
+
+  @Test
+  void updateShouldTriggerIdleStartEvent() {
+    // Mock EventHandler
+    EventHandler mockEventHandler = mock(EventHandler.class);
+
+    // Create an entity and set mocked EventHandler
+    Entity spyEntity = spy(new Entity());
+    when(spyEntity.getEvents()).thenReturn(mockEventHandler);
+
+    // Create IdleTask and mock its owner component
+    IdleTask idleTask = new IdleTask(5f, TargetDetectionTasks.AttackDirection.LEFT);
+    AITaskComponent aiTask = new AITaskComponent().addTask(idleTask);
+    spyEntity.addComponent(aiTask);
+    spyEntity.create();
+
+    // Call update method
+    idleTask.update();
+
+    // Verify that "idleStart" was triggered once
+    verify(mockEventHandler, times(1)).trigger("idleStart");
   }
 }

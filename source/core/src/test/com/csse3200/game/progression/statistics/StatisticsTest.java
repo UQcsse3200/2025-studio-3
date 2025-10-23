@@ -53,7 +53,7 @@ class StatisticsTest {
     assertEquals(0, stats.getStatistic("enemiesKilled"));
     assertEquals(0, stats.getStatistic("shotsFired"));
     assertEquals(0, stats.getStatistic("levelsCompleted"));
-    assertEquals(0, stats.getStatistic("defencesUnlocked"));
+    assertEquals(3, stats.getStatistic("defencesUnlocked"));
     assertEquals(30, stats.getStatistic("coinsCollected"));
     assertEquals(0, stats.getStatistic("coinsSpent"));
     assertEquals(1, stats.getStatistic("skillPointsCollected"));

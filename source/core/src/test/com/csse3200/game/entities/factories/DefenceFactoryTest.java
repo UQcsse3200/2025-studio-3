@@ -38,6 +38,7 @@ import org.junit.jupiter.api.Test;
 
 class DefenceFactoryTest {
   private ConfigService mockConfigService;
+  private static final String HEAL = "heal";
 
   @BeforeEach
   void setUp() {
@@ -294,6 +295,20 @@ class DefenceFactoryTest {
   }
 
   @Test
+  void testDefenderListenForHeal() {
+    for (String defense : new String[] {"slingshooter", "armyguy", "shadow"}) {
+      Entity defender =
+          DefenceFactory.createDefenceUnit(mockConfigService.getDefenderConfig(defense));
+
+      int oldHealth = defender.getComponent(DefenderStatsComponent.class).getHealth();
+      defender.getEvents().trigger(HEAL);
+      int newHealth = defender.getComponent(DefenderStatsComponent.class).getHealth();
+
+      assertEquals(oldHealth + 20, newHealth, "Health should increase by 20 after healing");
+    }
+  }
+
+  @Test
   void testGetTaskComponentLeft() {
     BaseDefenderConfig leftConfig = cfg("", 50, 200, "", "", "", 0, 20, 1, 1, "left");
     AITaskComponent tasksComponent = DefenceFactory.getTaskComponent(leftConfig);
@@ -425,7 +440,11 @@ class DefenceFactoryTest {
     ColliderComponent collider = baseDefender.getComponent(ColliderComponent.class);
     short expectedFilter =
         (short)
-            (PhysicsLayer.DEFAULT | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY | PhysicsLayer.BOSS);
+            (PhysicsLayer.DEFAULT
+                | PhysicsLayer.OBSTACLE
+                | PhysicsLayer.ENEMY
+                | PhysicsLayer.BOSS
+                | PhysicsLayer.BOSS_PROJECTILE);
     assertEquals(
         PhysicsLayer.NPC,
         collider.getFixture().getFilterData().categoryBits,
