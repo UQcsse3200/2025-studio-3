@@ -133,9 +133,10 @@ task createEXE(type: Exec) {
         '--copyright', 'Copyright 2025 CSSE3200',
         '--dest', "${buildDir}/distributions",
         '--type', 'exe',
-        '--win-console',
         '--win-shortcut',
-        '--win-menu'
+        '--win-menu',
+        '--win-dir-chooser',
+        '--icon', '../core/assets/app.ico'
     ]
 }
 
