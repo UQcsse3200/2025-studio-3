@@ -39,10 +39,10 @@ public class RobotAnimationController extends Component {
     entity.getEvents().addListener("bomberPreExplode", this::animatePreExplosion);
   }
 
-    void animatePreExplosion() {
-        currentState = State.EXPLODE; // or a new state like CHARGING
-        animator.startAnimation("explosion"); // e.g. flickering or glowing animation
-    }
+  void animatePreExplosion() {
+    currentState = State.EXPLODE; // or a new state like CHARGING
+    animator.startAnimation("explosion"); // e.g. flickering or glowing animation
+  }
 
   void animateMoveLeft() {
     currentState = State.MOVE_LEFT;
@@ -108,7 +108,7 @@ public class RobotAnimationController extends Component {
         case TELEPORT_END -> animateTeleportEnd();
         case ATTACK -> animateAttack();
         case SHOOT -> animateShoot();
-          case EXPLODE -> animatePreExplosion();
+        case EXPLODE -> animatePreExplosion();
         default -> {
           // no op
         }
