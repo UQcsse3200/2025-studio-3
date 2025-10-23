@@ -40,7 +40,7 @@ To build the game from source, follow these steps:
    git clone https://github.com/UQcsse3200/2025-studio-3.git
 2. Navigate to the project directory:
    ```bash
-    cd 2025-studio-3
+    cd 2025-studio-3/source
 3. Build and run the project using Gradle:
    ```bash
     ./gradlew run
