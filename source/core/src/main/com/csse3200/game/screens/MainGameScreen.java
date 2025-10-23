@@ -140,6 +140,7 @@ public class MainGameScreen extends ScreenAdapter {
     "images/entities/enemies/bungee_robot.atlas",
     "images/effects/doomhack.atlas",
     "images/effects/doomhack.png",
+    "images/entities/defences/machine_gun.atlas",
     "images/effects/scrapper.atlas",
     "images/effects/scrapper.png"
   };
