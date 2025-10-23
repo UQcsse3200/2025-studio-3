@@ -22,6 +22,7 @@ import com.csse3200.game.physics.PhysicsLayer;
 import com.csse3200.game.physics.PhysicsService;
 import com.csse3200.game.physics.components.ColliderComponent;
 import com.csse3200.game.physics.components.HitboxComponent;
+import com.csse3200.game.rendering.AnimationRenderComponent;
 import com.csse3200.game.rendering.DebugRenderer;
 import com.csse3200.game.rendering.RenderService;
 import com.csse3200.game.services.GameTime;
@@ -161,5 +162,60 @@ class BossFactoryTest {
         (short)
             (PhysicsLayer.DEFAULT | PhysicsLayer.NPC | PhysicsLayer.OBSTACLE | PhysicsLayer.ENEMY);
     assertEquals(expectedMask, filter.maskBits);
+  }
+
+  @Test
+  void gunBotFireEvent() {
+    Entity gunBot = BossFactory.createBossType(BossFactory.BossTypes.GUN_BOT);
+    assertNotNull(gunBot, "GunBot should be created");
+    AnimationRenderComponent animator = gunBot.getComponent(AnimationRenderComponent.class);
+    assertNotNull(animator, "GunBot should have an animator");
+
+    assertDoesNotThrow(
+        () -> gunBot.getEvents().trigger("fire"),
+        "Triggering GunBot 'fire' event should not throw");
+
+    assertDoesNotThrow(
+        () -> gunBot.getEvents().trigger("fireProjectile", gunBot),
+        "Directly triggering 'fireProjectile' should not throw");
+  }
+
+  @Test
+  void samuraiAttackEvent() {
+    Entity samurai = BossFactory.createBossType(BossFactory.BossTypes.SAMURAI_BOT);
+    assertNotNull(samurai, "Samurai should be created");
+    AnimationRenderComponent animator = samurai.getComponent(AnimationRenderComponent.class);
+    assertNotNull(animator, "Samurai should have an animator");
+
+    for (int i = 0; i < 4; i++) {
+      final int idx = i;
+      assertDoesNotThrow(
+          () -> samurai.getEvents().trigger("attack", samurai),
+          "Samurai 'attack' event should not throw on iteration " + idx);
+    }
+  }
+
+  @Test
+  void createPreviewBossForAllTypes() {
+    for (BossFactory.BossTypes type : BossFactory.BossTypes.values()) {
+      Entity preview = BossFactory.createPreviewBoss(type);
+      assertNotNull(preview, "Preview entity should not be null for type " + type);
+
+      AnimationRenderComponent animator = preview.getComponent(AnimationRenderComponent.class);
+      assertNotNull(
+          animator, "Preview for " + type + " should contain an AnimationRenderComponent");
+      assertNull(
+          preview.getComponent(CombatStatsComponent.class),
+          "Preview for " + type + " should not have CombatStatsComponent");
+      assertNull(
+          preview.getComponent(ColliderComponent.class),
+          "Preview for " + type + " should not have ColliderComponent");
+      assertNull(
+          preview.getComponent(HitboxComponent.class),
+          "Preview for " + type + " should not have HitboxComponent");
+      assertNull(
+          preview.getComponent(TouchAttackComponent.class),
+          "Preview for " + type + " should not have TouchAttackComponent");
+    }
   }
 }
