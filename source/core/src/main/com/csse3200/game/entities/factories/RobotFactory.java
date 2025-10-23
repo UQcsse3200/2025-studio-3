@@ -24,14 +24,14 @@ import com.csse3200.game.services.ServiceLocator;
 import org.slf4j.Logger;
 
 /**
- * Factory to create non-playable character (NPC) entities with predefined components.
+ * Factory to create a robot (enemy) entity with predefined components.
  *
- * <p>Each NPC entity type should have a creation method that returns a corresponding entity.
- * Predefined entity properties can be loaded from configs stored as json files which are defined in
- * "NPCConfigs".
+ * <p>Each type of robot is defined in the RobotType enum. This enum is primarily used as input to
+ * the createRobotType function, which creates the given robot type and returns it. However, it can
+ * also be used in other functions that want to specify a specific robot type.
  *
- * <p>If needed, this factory can be separated into more specific factories for entities with
- * similar characteristics.
+ * <p>Each robot type corresponds to an entry in the 'enemies' json file. This json files inputs are
+ * defined in "BaseEnemyConfig"
  */
 public class RobotFactory {
   /**
@@ -40,6 +40,7 @@ public class RobotFactory {
    */
   private static final Logger logger = org.slf4j.LoggerFactory.getLogger(RobotFactory.class);
 
+  /** An enum representing all the possible robot types. */
   public enum RobotType {
     STANDARD("standardRobot"),
     FAST("fastRobot"),
@@ -99,9 +100,8 @@ public class RobotFactory {
   }
 
   /**
-   * A basic function to create a specific type of robot depending on the input. make this use
-   * constants of some kind. Or EntityConfig classes If an invalid type is given, a standard robot
-   * is created
+   * A basic function to create a specific type of robot depending on the input. If an invalid type
+   * is given (i.e. the type does not have an associated config), a standard robot is created
    *
    * @param robotType The type of robot to create
    * @return The created robot
@@ -116,18 +116,10 @@ public class RobotFactory {
   }
 
   /**
-   * Creates a Teleport Robot with teleport behaviour attached.
-   *
-   * @param cfg Teleport robot config (stats and teleport params)
-   * @param laneYs Candidate lane Y positions to teleport between (must contain at least 2)
-   * @return Entity with base robot components plus TeleportTask
-   */
-
-  /**
-   * /** Initialises a Base Robot containing the features shared by all robots (e.g. combat stats,
-   * movement left, Physics, Hitbox) This robot can be used as a base entity by more specific
-   * robots. Note: Gunner Robot does not currently spawn (spawning chance was set to 0 to stop it
-   * from spawning from levels.json due to projectile issues)
+   * Initialises the Robot, containing the features shared by all robots (e.g. combat stats,
+   * movement left, Physics, Hitbox), as well as specific components for the robot type. Note:
+   * Gunner Robot does not currently spawn (spawning chance was set to 0 in levels.json to stop it
+   * from spawning due to projectile issues)
    *
    * @param config A config file that contains the robot's stats.
    * @return A robot entity.
@@ -251,6 +243,13 @@ public class RobotFactory {
     return robot;
   }
 
+  /**
+   * Determines the y coordinates of each lane on the map, and returns them as an array of floats.
+   * If less than 2 lanes are found, returns an empty array. This prevents hardcoding the lane count
+   * or coordinates, working for various numbers of lanes.
+   *
+   * @return sorted array of y coordinates of each lane.
+   */
   private static float[] discoverLaneYsFromTiles() {
     var es = com.csse3200.game.services.ServiceLocator.getEntityService();
     if (es == null) return new float[0];

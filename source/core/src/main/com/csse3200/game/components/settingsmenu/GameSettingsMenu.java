@@ -29,7 +29,6 @@ public class GameSettingsMenu extends UIComponent {
   private static final Logger logger = LoggerFactory.getLogger(GameSettingsMenu.class);
   private Table rootTable;
   private Table bottomRow;
-  private SelectBox<String> difficultySelect;
   private Map<String, Integer> keybinds = new HashMap<>();
   private Map<String, Image> keyImages = new HashMap<>();
   private static final String PAUSE_KEY = "pause";
@@ -148,10 +147,6 @@ public class GameSettingsMenu extends UIComponent {
     TextField zoomOutKeyText = ui.createTextField(Input.Keys.toString(settings.getZoomOutButton()));
     zoomOutKeyText.setName(ZOOM_OUT_KEY);
     setupKeybindTextField(zoomOutKeyText);
-
-    Label difficultyLabel = ui.subheading("Difficulty:");
-    difficultySelect = ui.createSelectBox(new String[] {"EASY", "NORMAL", "HARD"});
-    difficultySelect.setSelected(settings.getDifficulty().toString());
 
     // Create apply button using UIFactory
     int buttonWidth = 150;
@@ -275,9 +270,6 @@ public class GameSettingsMenu extends UIComponent {
         .center();
     rootTable.row().padTop(10f * uiScale);
 
-    rootTable.add(difficultyLabel).left().padRight(25f * uiScale);
-    rootTable.add(difficultySelect).width(150f * uiScale).center();
-    rootTable.row().padTop(20f * uiScale);
     stage.addActor(rootTable);
 
     bottomRow = new Table();
@@ -432,26 +424,6 @@ public class GameSettingsMenu extends UIComponent {
   /** Apply changes to the game settings. */
   private void applyChanges() {
     logger.info("[GameSettingsMenu] Applying game settings");
-
-    Settings settings = ServiceLocator.getSettingsService().getSettings();
-
-    // Apply difficulty changes
-    if (difficultySelect != null) {
-      String difficulty = difficultySelect.getSelected();
-      switch (difficulty) {
-        case "EASY":
-          settings.setDifficulty(Settings.Difficulty.EASY);
-          break;
-        case "NORMAL":
-          settings.setDifficulty(Settings.Difficulty.NORMAL);
-          break;
-        case "HARD":
-          settings.setDifficulty(Settings.Difficulty.HARD);
-          break;
-        default:
-          break;
-      }
-    }
 
     ServiceLocator.getSettingsService()
         .changeKeybinds(

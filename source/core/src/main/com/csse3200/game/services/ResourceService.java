@@ -83,7 +83,6 @@ public class ResourceService implements Disposable {
     try {
       assetManager.finishLoading();
     } catch (Exception e) {
-      e.printStackTrace();
       logger.error("[ResourceService] Could not load all assets", e);
       // Log more details about what failed
       logger.error("[ResourceService] AssetManager errors: {}", assetManager.getDiagnostics());
