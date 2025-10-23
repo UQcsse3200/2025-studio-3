@@ -338,7 +338,7 @@ public class HotbarDisplay extends UIComponent {
     itemImages.removeValue(usedUnit, true);
     usedUnit.remove();
     // reformats the layout of the slots so there isn't gaps
-    layoutUnits(cellWidth / 4, 30, cellWidth, itemImages);
+    layoutUnits(cellWidth / 6, 30, cellWidth, itemImages);
   }
 
   /**
