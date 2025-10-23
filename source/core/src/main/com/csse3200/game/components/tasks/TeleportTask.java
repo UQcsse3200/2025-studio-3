@@ -30,9 +30,7 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   private float timer;
   private int teleportsDone;
 
-  /**
-   * Stores possible states of the teleport for the FSM in update()
-   */
+  /** Stores possible states of the teleport for the FSM in update() */
   private enum State {
     NOT_TELEPORTING,
     DISAPPEARING,
@@ -84,8 +82,8 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   }
 
   /**
-   * Update function. Since the priority is -1 unless teleporting or ready to
-   * teleport, this will only be called while teleporting or ready to teleport.
+   * Update function. Since the priority is -1 unless teleporting or ready to teleport, this will
+   * only be called while teleporting or ready to teleport.
    */
   @Override
   public void update() {

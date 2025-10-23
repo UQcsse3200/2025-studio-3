@@ -7,9 +7,8 @@ import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
- * Moves to the left at a given movement speed. Also triggers the moveLeft animation.
- * This task has low priority so will only be called if all other tasks (attack, teleport etc.)
- * are invalid.
+ * Moves to the left at a given movement speed. Also triggers the moveLeft animation. This task has
+ * low priority so will only be called if all other tasks (attack, teleport etc.) are invalid.
  */
 public class MoveLeftTask extends DefaultTask implements PriorityTask {
   private final float moveSpeed;
@@ -46,8 +45,10 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
   }
 
-  /** This was used to switch between moving and waiting when this was wanderTask,
-   * but is no longer being used. Consider deleting */
+  /**
+   * This was used to switch between moving and waiting when this was wanderTask, but is no longer
+   * being used. Consider deleting
+   */
   public void swapTask(Task newTask) {
     if (currentTask != null) {
       currentTask.stop();

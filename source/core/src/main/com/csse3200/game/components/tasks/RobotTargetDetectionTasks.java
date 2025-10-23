@@ -22,6 +22,7 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
 
   /**
    * Creates the target detection task.
+   *
    * @param attackRange The range the target has to be within to trigger the attack
    * @param targetLayer The layer the target must be within to trigger the attack
    */
@@ -46,8 +47,8 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
   }
 
   /**
-   * Determines the task's priority. The priority will be 100 if a target is
-   * within range, otherwise -1.
+   * Determines the task's priority. The priority will be 100 if a target is within range, otherwise
+   * -1.
    *
    * @return the tasks priority
    */

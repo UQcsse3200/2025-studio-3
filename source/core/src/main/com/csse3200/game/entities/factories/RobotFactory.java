@@ -27,11 +27,11 @@ import org.slf4j.Logger;
  * Factory to create a robot (enemy) entity with predefined components.
  *
  * <p>Each type of robot is defined in the RobotType enum. This enum is primarily used as input to
- * the createRobotType function, which creates the given robot type and returns it. However,
- * it can also be used in other functions that want to specify a specific robot type.</p>
+ * the createRobotType function, which creates the given robot type and returns it. However, it can
+ * also be used in other functions that want to specify a specific robot type.
  *
- * <p>Each robot type corresponds to an entry in the 'enemies' json file. This json
- * files inputs are defined in "BaseEnemyConfig"</p>
+ * <p>Each robot type corresponds to an entry in the 'enemies' json file. This json files inputs are
+ * defined in "BaseEnemyConfig"
  */
 public class RobotFactory {
   /**
@@ -40,9 +40,7 @@ public class RobotFactory {
    */
   private static final Logger logger = org.slf4j.LoggerFactory.getLogger(RobotFactory.class);
 
-  /**
-   * An enum representing all the possible robot types.
-   */
+  /** An enum representing all the possible robot types. */
   public enum RobotType {
     STANDARD("standardRobot"),
     FAST("fastRobot"),
@@ -102,9 +100,8 @@ public class RobotFactory {
   }
 
   /**
-   * A basic function to create a specific type of robot depending on the input.
-   * If an invalid type is given (i.e. the type does not have an associated config),
-   * a standard robot is created
+   * A basic function to create a specific type of robot depending on the input. If an invalid type
+   * is given (i.e. the type does not have an associated config), a standard robot is created
    *
    * @param robotType The type of robot to create
    * @return The created robot
@@ -118,12 +115,11 @@ public class RobotFactory {
     return createBaseRobot(config);
   }
 
-
   /**
    * Initialises the Robot, containing the features shared by all robots (e.g. combat stats,
-   * movement left, Physics, Hitbox), as well as specific components for the robot type.
-   * Note: Gunner Robot does not currently spawn (spawning chance was set to 0 in levels.json
-   * to stop it from spawning due to projectile issues)
+   * movement left, Physics, Hitbox), as well as specific components for the robot type. Note:
+   * Gunner Robot does not currently spawn (spawning chance was set to 0 in levels.json to stop it
+   * from spawning due to projectile issues)
    *
    * @param config A config file that contains the robot's stats.
    * @return A robot entity.
@@ -248,10 +244,10 @@ public class RobotFactory {
   }
 
   /**
-   * Determines the y coordinates of each lane on the map, and returns them as
-   * an array of floats. If less than 2 lanes are found, returns an empty
-   * array. This prevents hardcoding the lane count or coordinates, working for
-   * various numbers of lanes.
+   * Determines the y coordinates of each lane on the map, and returns them as an array of floats.
+   * If less than 2 lanes are found, returns an empty array. This prevents hardcoding the lane count
+   * or coordinates, working for various numbers of lanes.
+   *
    * @return sorted array of y coordinates of each lane.
    */
   private static float[] discoverLaneYsFromTiles() {

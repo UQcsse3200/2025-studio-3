@@ -499,11 +499,10 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Adds a component to the given entity that spawns a mini robot upon reaching
-   * half health.
+   * Adds a component to the given entity that spawns a mini robot upon reaching half health.
    *
-   * @param unit The entity who the mini robot will spawn on. Expected to be a giant
-   *             robot but can theoretically be any entity.
+   * @param unit The entity who the mini robot will spawn on. Expected to be a giant robot but can
+   *     theoretically be any entity.
    */
   private void addMinion(Entity unit) {
     // Minion should be spawned upon reaching half health, to match the 'damaged' animation.
@@ -1435,8 +1434,9 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
   }
 
   /**
-   * Handles a robot reaching the end of grid x, by playing a sound effect,
-   * despawning all robots, printing a debug message, and triggering the game over state.
+   * Handles a robot reaching the end of grid x, by playing a sound effect, despawning all robots,
+   * printing a debug message, and triggering the game over state.
+   *
    * @param gridX The lane where a robot reached the end of
    */
   private void handleGameOver(int gridX) {
@@ -1454,9 +1454,7 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     sound.play(volume);
   }
 
-  /**
-   * Despawns all robots in the robots ArrayList.
-   */
+  /** Despawns all robots in the robots ArrayList. */
   private void despawnAllRobots() {
     List<Entity> robotsCopy = new ArrayList<>(robots);
     for (Entity robot : robotsCopy) {

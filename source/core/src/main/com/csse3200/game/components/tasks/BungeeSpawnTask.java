@@ -44,8 +44,8 @@ public class BungeeSpawnTask extends DefaultTask implements PriorityTask {
   }
 
   /**
-   * Updates the bungee spawning. If the animation is finished, records this to
-   * set the priority to -1.
+   * Updates the bungee spawning. If the animation is finished, records this to set the priority to
+   * -1.
    */
   @Override
   public void update() {
