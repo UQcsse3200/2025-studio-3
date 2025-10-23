@@ -187,7 +187,7 @@
       "coinsRewarded": 1,
 
       "explosionDelay": 2.5,
-      "explosionDamage": 20
+      "explosionDamage": 100
     }
   }
 }

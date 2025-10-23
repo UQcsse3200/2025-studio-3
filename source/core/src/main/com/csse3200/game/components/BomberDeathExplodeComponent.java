@@ -41,7 +41,6 @@ public class BomberDeathExplodeComponent extends Component {
     super.create();
     entity.getEvents().addListener("updateHealth", this::onHealthUpdate);
     entity.getEvents().addListener("entityDeath", this::onDeath);
-    entity.getEvents().addListener("bomberExplodeAnimComplete", this::explodeAndDispose);
   }
 
   /** Called when health changes. If health hits zero, trigger explosion animation. */
@@ -60,12 +59,8 @@ public class BomberDeathExplodeComponent extends Component {
   private void onDeath() {
     // If not already triggered, trigger it
     entity.getEvents().trigger("bomberPreExplode");
-  }
 
-  /** Called after animation completes: apply AOE explosion damage, then dispose entity. */
-  private void explodeAndDispose() {
-    explode();
-    entity.dispose();
+    if (triggered) explode();
   }
 
   /** Performs AOE explosion damage around the bomber’s position. */
@@ -101,16 +96,11 @@ public class BomberDeathExplodeComponent extends Component {
       int dRow = Math.abs(targetRow - centerRow);
 
       if (dCol <= explosionRadiusTiles && dRow <= explosionRadiusTiles) {
+        logger.info("Defence explode", target.getId());
         DefenderStatsComponent defence = target.getComponent(DefenderStatsComponent.class);
         if (defence != null) {
           defence.setHealth(defence.getHealth() - explosionDamage);
           defence.handleDeath();
-        }
-
-        CombatStatsComponent combat = target.getComponent(CombatStatsComponent.class);
-        if (combat != null) {
-          combat.setHealth(combat.getHealth() - explosionDamage);
-          combat.handleDeath();
         }
       }
     }
