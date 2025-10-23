@@ -68,6 +68,7 @@ allprojects {
     repositories {
         mavenCentral()
         google()
+        maven { url 'https://jitpack.io' }
     }
 }
 
@@ -119,7 +120,7 @@ project(":core") {
         api "org.slf4j:slf4j-jdk14:$slf4jVersion"
 
         // Discord Rich Presence
-        api files("libs/discord-game-sdk4j-1.0.0.jar")
+        api files("libs/discord-game-sdk4j-1.0.1.jar")
 
         // Unit Testing
         testImplementation "org.junit.jupiter:junit-jupiter-api:$junit5Version"

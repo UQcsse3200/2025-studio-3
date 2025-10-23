@@ -34,6 +34,7 @@ task debug(dependsOn: classes, type: JavaExec) {
 }
 
 task dist(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     manifest {
         attributes 'Main-Class': project.mainClassName
     }
@@ -45,5 +46,97 @@ task dist(type: Jar) {
 }
 
 dist.dependsOn classes
+
+// jpackage configuration for creating native executables
+task jpackage(type: Exec) {
+    dependsOn dist
+    group = 'distribution'
+    description = 'Creates native executable using jpackage'
+    
+    def jpackageArgs = [
+        '--input', "${buildDir}/libs",
+        '--main-jar', "${project.name}-${version}.jar",
+        '--main-class', project.mainClassName,
+        '--name', project.appName,
+        '--app-version', project.version,
+        '--vendor', 'CSSE3200',
+        '--description', 'The Day We Fought Back - Tower Defense Game',
+        '--copyright', 'Copyright 2025 CSSE3200',
+        '--dest', "${buildDir}/distributions"
+    ]
+    
+    // Platform-specific configurations
+    if (OperatingSystem.current().isWindows()) {
+        jpackageArgs.addAll([
+            '--type', 'exe',
+            '--win-console',
+            '--win-shortcut',
+            '--win-menu'
+        ])
+    } else if (OperatingSystem.current().isMacOsX()) {
+        jpackageArgs.addAll([
+            '--type', 'dmg',
+            '--mac-package-identifier', 'com.csse3200.tdwfb',
+            '--mac-package-name', project.appName,
+            '--mac-package-signing-prefix', 'com.csse3200.tdwfb',
+            '--mac-app-category', 'games'
+        ])
+    } else if (OperatingSystem.current().isLinux()) {
+        jpackageArgs.addAll([
+            '--type', 'deb',
+            '--linux-shortcut',
+            '--linux-menu-group', 'Game'
+        ])
+    }
+
+    commandLine (['jpackage'] + jpackageArgs)
+}
+
+// Alternative: Create DMG specifically for macOS
+task createDMG(type: Exec) {
+    dependsOn dist
+    group = 'distribution'
+    description = 'Creates DMG file for macOS distribution'
+    
+    commandLine 'jpackage',
+        '--input', "${buildDir}/libs",
+        '--main-jar', "${project.name}-${version}.jar",
+        '--main-class', project.mainClassName,
+        '--name', project.appName,
+        '--app-version', project.version,
+        '--vendor', 'CSSE3200',
+        '--description', 'The Day We Fought Back - Tower Defense Game',
+        '--copyright', 'Copyright 2025 CSSE3200',
+        '--dest', "${buildDir}/distributions",
+        '--type', 'dmg',
+        '--mac-package-identifier', 'com.csse3200.tdwfb',
+        '--mac-package-name', project.appName,
+        '--mac-app-category', 'games',
+        '--icon', '../core/assets/app.icns',
+        '--java-options', '-XstartOnFirstThread'
+}
+
+// Create Windows EXE
+task createEXE(type: Exec) {
+    dependsOn dist
+    group = 'distribution'
+    description = 'Creates EXE file for Windows distribution'
+    
+    commandLine 'jpackage', [
+        '--input', "${buildDir}/libs",
+        '--main-jar', "${project.name}-${version}.jar",
+        '--main-class', project.mainClassName,
+        '--name', project.appName,
+        '--app-version', project.version,
+        '--vendor', 'CSSE3200',
+        '--description', 'The Day We Fought Back - Tower Defense Game',
+        '--copyright', 'Copyright 2025 CSSE3200',
+        '--dest', "${buildDir}/distributions",
+        '--type', 'exe',
+        '--win-console',
+        '--win-shortcut',
+        '--win-menu'
+    ]
+}
 
 eclipse.project.name = appName + "-desktop"

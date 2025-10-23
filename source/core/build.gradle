@@ -31,6 +31,6 @@ javadoc {
 }
 
 dependencies {
-    implementation files('../libs/discord-game-sdk4j-1.0.0.jar')
+    implementation files('../libs/discord-game-sdk4j-1.0.1.jar')
     implementation 'com.google.code.gson:gson:2.10.1'
 }
