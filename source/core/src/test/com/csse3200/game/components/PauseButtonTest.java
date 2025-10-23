@@ -1,62 +1,81 @@
 package com.csse3200.game.components;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.csse3200.game.components.hud.PauseButton;
+import com.csse3200.game.GdxGame;
+import com.csse3200.game.components.hud.PauseMenuActions;
 import com.csse3200.game.entities.Entity;
-import com.csse3200.game.events.EventHandler;
-import com.csse3200.game.services.ResourceService;
+import com.csse3200.game.services.DialogService;
+import com.csse3200.game.services.DiscordRichPresenceService;
+import com.csse3200.game.services.ProfileService;
 import com.csse3200.game.services.ServiceLocator;
-import com.csse3200.game.services.SettingsService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-public class PauseButtonTest {
+class PauseMenuActionsTest {
 
-  private PauseButton pauseButton;
-  private Entity mockEntity;
-  private EventHandler mockEvents;
-  private ResourceService mockResourceService;
-  private Stage mockStage;
+  private GdxGame mockGame;
+  private DialogService mockDialogService;
+  private ProfileService mockProfileService;
+  private DiscordRichPresenceService mockDiscordService;
+  private Entity entity;
+  private PauseMenuActions pauseMenuActions;
 
   @BeforeEach
-  void setUp() {
-    // Mock dependencies
-    mockEntity = Mockito.mock(Entity.class, RETURNS_DEEP_STUBS);
-    mockEvents = Mockito.mock(EventHandler.class);
-    mockStage = Mockito.mock(Stage.class);
-    mockResourceService = Mockito.mock(ResourceService.class);
-    SettingsService mockSettingsService = Mockito.mock(SettingsService.class);
+  void setup() {
+    mockGame = mock(GdxGame.class);
+    mockDialogService = mock(DialogService.class);
+    mockProfileService = mock(ProfileService.class);
+    mockDiscordService = mock(DiscordRichPresenceService.class);
 
-    when(mockStage.getWidth()).thenReturn(800f);
-    when(mockStage.getHeight()).thenReturn(600f);
-    when(mockResourceService.getAsset("images/ui/pause-icon.png", Texture.class))
-        .thenReturn(Mockito.mock(Texture.class));
+    // Register mocked services
+    ServiceLocator.registerDialogService(mockDialogService);
+    ServiceLocator.registerProfileService(mockProfileService);
+    ServiceLocator.registerDiscordRichPresenceService(mockDiscordService);
 
-    // Register mocks
-    ServiceLocator.registerResourceService(mockResourceService);
-    ServiceLocator.registerSettingsService(mockSettingsService);
-
-    // Setup entity & component
-    when(mockEntity.getEvents()).thenReturn(mockEvents);
-
-    pauseButton = new PauseButton();
-    pauseButton.setEntity(mockEntity);
+    // Create entity and attach PauseMenuActions
+    entity = new Entity();
+    pauseMenuActions = new PauseMenuActions(mockGame);
+    entity.addComponent(pauseMenuActions);
+    entity.create(); // register listeners
   }
 
   @Test
-  void shouldPauseGameWhenClicked() {
-    pauseButton.setPaused(true);
-    verify(mockEntity.getEvents(), never()).trigger("resumekeypressed");
+  void testOnQuitLevelShowsDialog() {
+    // Simulate triggering the event
+    entity.getEvents().trigger("quit_level");
+
+    // Verify dialog service is called
+    verify(mockDialogService)
+        .warning(
+            org.mockito.ArgumentMatchers.eq("Quit Level"),
+            org.mockito.ArgumentMatchers.anyString(),
+            org.mockito.ArgumentMatchers.any(),
+            org.mockito.ArgumentMatchers.isNull());
   }
 
   @Test
-  void shouldTriggerPauseEventOnClick() {
-    pauseButton.setPaused(false);
-    pauseButton.setPaused(true);
-    verify(mockEntity.getEvents(), times(1)).trigger("pause");
+  void testOnMainMenuShowsDialog() {
+    entity.getEvents().trigger("open_main_menu");
+
+    verify(mockDialogService)
+        .warning(
+            org.mockito.ArgumentMatchers.eq("Main Menu"),
+            org.mockito.ArgumentMatchers.anyString(),
+            org.mockito.ArgumentMatchers.any(),
+            org.mockito.ArgumentMatchers.isNull());
+  }
+
+  @Test
+  void testOnExitGameShowsDialog() {
+    entity.getEvents().trigger("exit_game");
+
+    verify(mockDialogService)
+        .warning(
+            org.mockito.ArgumentMatchers.eq("Exit Game"),
+            org.mockito.ArgumentMatchers.anyString(),
+            org.mockito.ArgumentMatchers.any(),
+            org.mockito.ArgumentMatchers.isNull());
   }
 }
