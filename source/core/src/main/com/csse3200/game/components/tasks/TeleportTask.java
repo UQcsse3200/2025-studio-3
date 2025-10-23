@@ -30,6 +30,9 @@ public class TeleportTask extends DefaultTask implements PriorityTask {
   private float timer;
   private int teleportsDone;
 
+  /**
+   * Stores possible states of the teleport for the FSM in update()
+   */
   private enum State {
     NOT_TELEPORTING,
     DISAPPEARING,
