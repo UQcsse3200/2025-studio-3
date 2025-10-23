@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(GameExtension.class)
-public class JumpTaskTest {
+class JumpTaskTest {
   private Entity attacker;
   private Entity defender;
 
