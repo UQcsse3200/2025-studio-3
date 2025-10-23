@@ -18,5 +18,5 @@
 ## Finbar O'Donnell
 - OpenAI was used to generate the following sprites for defence entities: slingshooter, harpoon, mortar, mortar shell, furnace 
 
-Josh Mann
+## Josh Mann
 - OpenAI was used to generate the wall sprite
