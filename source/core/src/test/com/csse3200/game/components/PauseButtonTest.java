@@ -45,7 +45,6 @@ public class PauseButtonTest {
 
     pauseButton = new PauseButton();
     pauseButton.setEntity(mockEntity);
-    pauseButton.create();
   }
 
   @Test
