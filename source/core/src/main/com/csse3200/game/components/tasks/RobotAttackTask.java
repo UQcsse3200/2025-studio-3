@@ -19,9 +19,10 @@ public class RobotAttackTask extends RobotTargetDetectionTasks {
   private float soundTimeLeft = 0f;
 
   /**
-   * Creates an attack task
+   * Creates the attack task
    *
    * @param attackRange the maximum distance the entity can find a target to attack
+   * @param targetLayer the layer that the entity is targeting.
    */
   public RobotAttackTask(float attackRange, short targetLayer) {
     super(attackRange, targetLayer);

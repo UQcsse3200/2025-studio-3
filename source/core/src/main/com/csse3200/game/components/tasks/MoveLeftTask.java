@@ -7,8 +7,8 @@ import com.csse3200.game.ai.tasks.Task;
 import com.csse3200.game.physics.components.PhysicsComponent;
 
 /**
- * Wander around by moving a random position within a range of the starting position. Wait a little
- * bit between movements. Requires an entity with a PhysicsMovementComponent.
+ * Moves to the left at a given movement speed. Also triggers the moveLeft animation. This task has
+ * low priority so will only be called if all other tasks (attack, teleport etc.) are invalid.
  */
 public class MoveLeftTask extends DefaultTask implements PriorityTask {
   private final float moveSpeed;
@@ -32,6 +32,7 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
   public void start() {
     super.start();
     startPos = owner.getEntity().getPosition();
+    // Triggers animation
     owner.getEntity().getEvents().trigger("moveLeftStart");
   }
 
@@ -44,8 +45,10 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     phys.getBody().setLinearVelocity(-moveSpeed, 0f);
   }
 
-  // This was used to switch between moving and waiting when this was wanderTask.
-  // We might use this to implement attacking.
+  /**
+   * This was used to switch between moving and waiting when this was wanderTask, but is no longer
+   * being used. Consider deleting
+   */
   public void swapTask(Task newTask) {
     if (currentTask != null) {
       currentTask.stop();
@@ -53,6 +56,8 @@ public class MoveLeftTask extends DefaultTask implements PriorityTask {
     currentTask = newTask;
     currentTask.start();
   }
+
+  // The following are left-overs from box boy. They are no longer being used.
 
   public Task getCurrentTask() {
     return currentTask;
