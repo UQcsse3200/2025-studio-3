@@ -67,11 +67,8 @@ public class PhysicsEngine implements Disposable {
     // backwards to avoid index shifting issues when removing entities.
     for (int i = entityService.getEntities().size - 1; i >= 0; i--) {
       Entity entity = entityService.getEntities().get(i);
-      if (!entity.getDeathFlag()) {
-        continue;
-      }
       PhysicsComponent pc = entity.getComponent(PhysicsComponent.class);
-      if (pc == null || pc.getBody() == null) {
+      if (!entity.getDeathFlag() && (pc == null || pc.getBody() == null)) {
         continue;
       }
       entity.dispose();
