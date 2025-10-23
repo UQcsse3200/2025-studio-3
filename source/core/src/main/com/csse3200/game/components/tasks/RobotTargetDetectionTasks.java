@@ -20,6 +20,11 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
   protected final RaycastHit hit = new RaycastHit();
   protected short targetLayer;
 
+  /**
+   * Creates the target detection task.
+   * @param attackRange The range the target has to be within to trigger the attack
+   * @param targetLayer The layer the target must be within to trigger the attack
+   */
   protected RobotTargetDetectionTasks(float attackRange, short targetLayer) {
     this.attackRange = attackRange;
     this.targetLayer = targetLayer;
@@ -41,12 +46,8 @@ public abstract class RobotTargetDetectionTasks extends DefaultTask implements P
   }
 
   /**
-   * Determines the tasks priority
-   *
-   * <ul>
-   *   <li>When active: returns {@code 1} if target is in range and visible, otherwise {@code -1}.
-   *   <li>When inactive: returns {@code 1} if target is in range and visible, otherwise {@code -1}.
-   * </ul>
+   * Determines the task's priority. The priority will be 100 if a target is
+   * within range, otherwise -1.
    *
    * @return the tasks priority
    */
