@@ -98,8 +98,8 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">MoveLeftTask</span>
 <span class="extends-implements">extends <a href="../../ai/tasks/DefaultTask.html" title="class in com.csse3200.game.ai.tasks">DefaultTask</a>
 implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></span></div>
-<div class="block">Wander around by moving a random position within a range of the starting position. Wait a little
- bit between movements. Requires an entity with a PhysicsMovementComponent.</div>
+<div class="block">Moves to the left at a given movement speed. Also triggers the moveLeft animation. This task has
+ low priority so will only be called if all other tasks (attack, teleport etc.) are invalid.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -169,7 +169,10 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#swapTask(com.csse3200.game.ai.tasks.Task)" class="member-name-link">swapTask</a><wbr>(<a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a>&nbsp;newTask)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">This was used to switch between moving and waiting when this was wanderTask, but is no longer
+ being used.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -262,6 +265,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="swapTask(com.csse3200.game.ai.tasks.Task)">
 <h3>swapTask</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">swapTask</span><wbr><span class="parameters">(<a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a>&nbsp;newTask)</span></div>
+<div class="block">This was used to switch between moving and waiting when this was wanderTask, but is no longer
+ being used. Consider deleting</div>
 </section>
 </li>
 <li>

@@ -156,7 +156,9 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,short)" class="member-name-link">RobotTargetDetectionTasks</a><wbr>(float&nbsp;attackRange,
  short&nbsp;targetLayer)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Creates the target detection task.</div>
+</div>
 </div>
 </section>
 </li>
@@ -184,10 +186,7 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPriority()" class="member-name-link">getPriority</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determines the tasks priority
-
- 
-   When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</div>
+<div class="block">Determines the task's priority.</div>
 </div>
 </div>
 </div>
@@ -255,6 +254,12 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <h3>RobotTargetDetectionTasks</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">RobotTargetDetectionTasks</span><wbr><span class="parameters">(float&nbsp;attackRange,
  short&nbsp;targetLayer)</span></div>
+<div class="block">Creates the target detection task.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>attackRange</code> - The range the target has to be within to trigger the attack</dd>
+<dd><code>targetLayer</code> - The layer the target must be within to trigger the attack</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -280,12 +285,8 @@ implements <a href="../../ai/tasks/PriorityTask.html" title="interface in com.cs
 <section class="detail" id="getPriority()">
 <h3>getPriority</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPriority</span>()</div>
-<div class="block">Determines the tasks priority
-
- <ul>
-   <li>When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
-   <li>When inactive: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
- </ul></div>
+<div class="block">Determines the task's priority. The priority will be 100 if a target is within range, otherwise
+ -1.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/PriorityTask.html#getPriority()">getPriority</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></code></dd>

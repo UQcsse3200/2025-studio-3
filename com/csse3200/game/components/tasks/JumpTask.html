@@ -99,6 +99,8 @@ loadScripts(document, 'script');</script>
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">JumpTask</span>
 <span class="extends-implements">extends <a href="RobotTargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">RobotTargetDetectionTasks</a></span></div>
+<div class="block">A task that make a robot jump over a defence (that is not the wall) one time. After jumping,
+ should not jump again.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -133,7 +135,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(float,short)" class="member-name-link">JumpTask</a><wbr>(float&nbsp;range,
  short&nbsp;targetLayer)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Initialises the jump task with the range it will jump at, and the target layer to jump over</div>
+</div>
 </div>
 </section>
 </li>
@@ -151,20 +155,17 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPriority()" class="member-name-link">getPriority</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Determines the tasks priority
-
- 
-   When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.</div>
+<div class="block">Determines the task's priority.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#start()" class="member-name-link">start</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Start running this task.</div>
+<div class="block">Begins the jump animation and stores the starting y position.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#update()" class="member-name-link">update</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Run one frame of the task.</div>
+<div class="block">Updates the jump.</div>
 </div>
 </div>
 </div>
@@ -197,6 +198,12 @@ loadScripts(document, 'script');</script>
 <h3>JumpTask</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">JumpTask</span><wbr><span class="parameters">(float&nbsp;range,
  short&nbsp;targetLayer)</span></div>
+<div class="block">Initialises the jump task with the range it will jump at, and the target layer to jump over</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>range</code> - The range from a target entity to trigger a jump</dd>
+<dd><code>targetLayer</code> - Entities in the target layer will be jumped over</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -211,20 +218,15 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="getPriority()">
 <h3>getPriority</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getPriority</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from class:&nbsp;<code><a href="RobotTargetDetectionTasks.html#getPriority()">RobotTargetDetectionTasks</a></code></span></div>
-<div class="block">Determines the tasks priority
-
- <ul>
-   <li>When active: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
-   <li>When inactive: returns <code>1</code> if target is in range and visible, otherwise <code>-1</code>.
- </ul></div>
+<div class="block">Determines the task's priority. For jumpTask, the priority will be 200 (above attackTask) if it
+ is jumping or should jump, -1 otherwise.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/PriorityTask.html#getPriority()">getPriority</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/PriorityTask.html" title="interface in com.csse3200.game.ai.tasks">PriorityTask</a></code></dd>
 <dt>Overrides:</dt>
 <dd><code><a href="RobotTargetDetectionTasks.html#getPriority()">getPriority</a></code>&nbsp;in class&nbsp;<code><a href="RobotTargetDetectionTasks.html" title="class in com.csse3200.game.components.tasks">RobotTargetDetectionTasks</a></code></dd>
 <dt>Returns:</dt>
-<dd>the tasks priority</dd>
+<dd>The task priority</dd>
 </dl>
 </section>
 </li>
@@ -232,8 +234,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="start()">
 <h3>start</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">start</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../ai/tasks/Task.html#start()">Task</a></code></span></div>
-<div class="block">Start running this task. This will usually be called by an AI controller.</div>
+<div class="block">Begins the jump animation and stores the starting y position. There is no jump animation
+ implemented currently, but if one is to be added, it would use an event listener for
+ "jumpStart"</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/Task.html#start()">start</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
@@ -246,8 +249,9 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="update()">
 <h3>update</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">update</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../ai/tasks/Task.html#update()">Task</a></code></span></div>
-<div class="block">Run one frame of the task. Similar to the update() in Components.</div>
+<div class="block">Updates the jump. If the jump is in progress, progresses it. If it is finished, it will set
+ hasJumped to not jump again, and will set the y position to the original position to ensure it
+ stays at the same y level.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../ai/tasks/Task.html#update()">update</a></code>&nbsp;in interface&nbsp;<code><a href="../../ai/tasks/Task.html" title="interface in com.csse3200.game.ai.tasks">Task</a></code></dd>
