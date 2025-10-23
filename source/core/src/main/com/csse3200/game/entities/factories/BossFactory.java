@@ -98,7 +98,7 @@ public class BossFactory {
             ServiceLocator.getResourceService().getAsset(config.atlasFilePath, TextureAtlas.class));
 
     if (isSamurai) {
-      animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP);
+      animator.addAnimation("walk", 0.1f, Animation.PlayMode.LOOP_REVERSED);
       animator.addAnimation("slash", 0.08f, Animation.PlayMode.NORMAL);
       animator.addAnimation("sword", 0.08f, Animation.PlayMode.NORMAL);
       animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
@@ -108,7 +108,7 @@ public class BossFactory {
       animator.addAnimation("death", 0.1f, Animation.PlayMode.REVERSED);
     } else {
       animator.addAnimation("moveLeft", 0.1f, Animation.PlayMode.LOOP_REVERSED);
-      animator.addAnimation("punch", 0.05f, Animation.PlayMode.NORMAL);
+      animator.addAnimation("punch", 0.05f, Animation.PlayMode.REVERSED);
       animator.addAnimation("death", 0.08f, Animation.PlayMode.REVERSED);
     }
     ColliderComponent colliderComponent =
