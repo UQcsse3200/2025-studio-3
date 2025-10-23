@@ -71,4 +71,55 @@ class BomberDeathExplodeComponentTest {
     assertEquals(999, selfStats.getHealth(), "Bomber should not harm itself");
     assertFalse(selfStats.died, "Bomber should not mark itself as dead");
   }
+
+  /*
+    Wait for defences to be fixed.
+      @Test
+      void damagesNearbyEntity() {
+          // Target placed within explosion radius
+          Entity target = new Entity();
+          target.setPosition(new Vector2(220, 200));
+          FakeCombatStatsComponent stats = new FakeCombatStatsComponent(100);
+          target.addComponent(stats);
+          entityService.register(target);
+
+          // Bomber with explosion
+          Entity bomber = new Entity();
+          bomber.setPosition(new Vector2(200, 180));
+          bomber.addComponent(new BomberDeathExplodeComponent(50, 1));
+          entityService.register(bomber);
+
+          bomber.getEvents().trigger("entityDeath");
+
+          assertEquals(50, stats.getHealth(), "Target health should be reduced by damage");
+          assertTrue(stats.died, "Target should register death");
+      }
+      @Test
+      void hitsMultipleNearbyTargets() {
+          Entity t1 = new Entity();
+          t1.setPosition(new Vector2(210, 200));
+          FakeCombatStatsComponent s1 = new FakeCombatStatsComponent(100);
+          t1.addComponent(s1);
+          entityService.register(t1);
+
+          Entity t2 = new Entity();
+          t2.setPosition(new Vector2(180, 180));
+          FakeCombatStatsComponent s2 = new FakeCombatStatsComponent(120);
+          t2.addComponent(s2);
+          entityService.register(t2);
+
+          Entity bomber = new Entity();
+          bomber.setPosition(new Vector2(200, 180));
+          bomber.addComponent(new BomberDeathExplodeComponent(30, 1));
+          entityService.register(bomber);
+
+          bomber.getEvents().trigger("entityDeath");
+
+          assertEquals(70, s1.getHealth(), "First nearby target should be damaged");
+          assertEquals(90, s2.getHealth(), "Second nearby target should be damaged");
+          assertTrue(s1.died, "First target should have death handled");
+          assertTrue(s2.died, "Second target should have death handled");
+      }
+  */
+
 }
