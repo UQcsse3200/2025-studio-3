@@ -94,11 +94,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">BomberDeathExplodeComponent</span>
 <span class="extends-implements">extends <a href="Component.html" title="class in com.csse3200.game.components">Component</a></span></div>
 <div class="block">Component that causes the entity to deal AOE (area-of-effect) damage to nearby entities upon
- death.
-
- <p>When the entity with this component dies, it checks surrounding tiles within a given radius
- and applies damage to any other entities in that area. This can be used for enemy bombers that
- explode on death, damaging nearby defences.</div>
+ death, and start the explosion animation when health drops below 30%.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
