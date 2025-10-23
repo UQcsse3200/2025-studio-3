@@ -7,7 +7,7 @@ import com.csse3200.game.physics.components.PhysicsComponent;
 import com.csse3200.game.services.ServiceLocator;
 
 public class MoveLeftComponent extends Component {
-  private final float speed;
+  private float speed;
   private boolean shoot = false;
 
   public MoveLeftComponent(float speed) {
