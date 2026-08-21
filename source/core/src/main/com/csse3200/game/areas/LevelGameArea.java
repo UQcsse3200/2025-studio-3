@@ -1481,42 +1481,87 @@ public class LevelGameArea extends GameArea implements AreaAPI, EnemySpawner {
     }
   }
 
-  /** Checks if the level is complete. */
-  public void checkLevelComplete() {
-    if (isLevelComplete) {
-      return;
-      // level is already complete, don't check again
-    }
-
-    int currentWave = ServiceLocator.getWaveService().getCurrentWave();
-    if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
-      logger.info("Level is complete!");
-      isLevelComplete = true;
-      if (levelCompleteEntity != null) {
-        displayNewEntity();
-        levelCompleteEntity.getEvents().trigger("levelComplete");
-        // play win sound
-        if (ServiceLocator.getResourceService() != null
-            && ServiceLocator.getSettingsService() != null) {
-          Sound sound =
-              ServiceLocator.getResourceService().getAsset("sounds/level-win.mp3", Sound.class);
-          if (sound != null) {
-            float volume = ServiceLocator.getSettingsService().getSoundVolume();
-            sound.play(volume);
-            logger.info("Played sound: sounds/level-win.mp3");
-          }
+    /** Checks if the level is complete. */
+    public void checkLevelComplete() {
+        if (isLevelComplete) {
+            return; // already handled
         }
-      }
 
-      GameStateService service = ServiceLocator.getGameStateService();
-      if (service != null) {
-        service.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
-        service.lockPlacement();
-      }
+        int currentWave = ServiceLocator.getWaveService().getCurrentWave();
+        if (currentWave > ServiceLocator.getWaveService().getCurrentLevelWaveCount()) {
+            logger.info("Level is complete!");
+            isLevelComplete = true;
+
+            //  Only lock placement so the cutscene can still tick/update.
+            GameStateService gameState = ServiceLocator.getGameStateService();
+            if (gameState != null) {
+                gameState.lockPlacement();
+            }
+
+            // === Play mid-cutscene ONLY after Level 1 ===
+            if ("levelOne".equals(currentLevelKey)) {
+                logger.info("[Cutscene] Playing mid_cutscene_new after Level 1 completion...");
+
+                CutsceneService cs = ServiceLocator.getCutsceneService();
+                if (cs == null) {
+                    logger.error("[Cutscene] CutsceneService was null — registering now.");
+                    ServiceLocator.registerCutsceneService(new CutsceneService());
+                    cs = ServiceLocator.getCutsceneService();
+                }
+
+                if (cs != null) {
+                    cs.playCutscene("mid_cutscene_new", finished -> {
+                        logger.info("[Cutscene] mid_cutscene_new finished -> show level complete popup");
+
+                        //  Now show the usual level complete UI and sound
+                        if (levelCompleteEntity != null) {
+                            displayNewEntity();
+                            levelCompleteEntity.getEvents().trigger("levelComplete");
+
+                            Sound win = ServiceLocator.getResourceService()
+                                    .getAsset("sounds/level-win.mp3", Sound.class);
+                            if (win != null && ServiceLocator.getSettingsService() != null) {
+                                win.play(ServiceLocator.getSettingsService().getSoundVolume());
+                            }
+                        }
+
+                        // (Optional) If you want to freeze during the popup, do it AFTER cutscene:
+                        // if (gameState != null) {
+                        //   gameState.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+                        // }
+
+                        // (Optional) If you want to jump back to the world map automatically instead
+                        // of showing the popup, do this instead of the block above:
+                        // ServiceLocator.getGame().setScreen(GdxGame.ScreenType.WORLD_MAP);
+                    });
+
+                    return; // stop here so we don’t run the default popup path below
+                } else {
+                    logger.error("[Cutscene] Could not obtain CutsceneService; falling back to default popup.");
+                }
+            }
+
+            // === Default: show popup for other levels (or fallback if cutscene unavailable) ===
+            if (levelCompleteEntity != null) {
+                displayNewEntity();
+                levelCompleteEntity.getEvents().trigger("levelComplete");
+
+                Sound win = ServiceLocator.getResourceService()
+                        .getAsset("sounds/level-win.mp3", Sound.class);
+                if (win != null && ServiceLocator.getSettingsService() != null) {
+                    win.play(ServiceLocator.getSettingsService().getSoundVolume());
+                }
+            }
+
+            // If you still want to freeze during the popup for non-levelOne:
+            // if (gameState != null) {
+            //   gameState.addFreezeReason(GameStateService.FreezeReason.LEVEL_COMPLETE);
+            // }
+        }
     }
-  }
 
-  /** Display a dialog box informing the user of any new unlocked entities. */
+
+    /** Display a dialog box informing the user of any new unlocked entities. */
   private void displayNewEntity() {
     DialogService dialogService = ServiceLocator.getDialogService();
     String unlockedDefences = unlockEntity();
